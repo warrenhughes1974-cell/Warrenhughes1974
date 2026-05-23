@@ -1,3 +1,11 @@
+# =============================================================================
+# APPLICATION VERSION
+# =============================================================================
+# Version:     v54.2
+# Date:        2026-05-23
+# Change Note: Optional debug logging for relationship fallback resolution
+# =============================================================================
+
 import pandas as pd
 import os
 import tkinter as tk
@@ -40,6 +48,7 @@ class QLAdminEnterpriseIntegrationSuite:
         
         self.is_running = False
         self.start_time = None
+        self.debug_rel_fallback = os.environ.get("QLA_DEBUG_REL_FALLBACK", "").strip().lower() in ("1", "true", "yes")
         self.setup_ui()
 
     def setup_ui(self):
@@ -245,6 +254,9 @@ class QLAdminEnterpriseIntegrationSuite:
         try:
             self.console.delete(1.0, tk.END)
             self.log("Initializing Migration Engine v54.1...")
+            self._diag_rel_fallback_count = 0
+            if self.debug_rel_fallback:
+                self.log("DEBUG REL: Relationship fallback logging enabled (QLA_DEBUG_REL_FALLBACK)")
             
             trans_path = self.path_vars["Trans"][0].get()
             trans_map = {}
@@ -1066,28 +1078,49 @@ class QLAdminEnterpriseIntegrationSuite:
                         
                     if t_id.lower() == "quikridr" and 'MRIDRID' in row_data and tp in rel_map:
                         rel_id = None
+                        rel_source = None
                         
                         # Phase-level rider insured priority, if that phase exists
                         phase_rel = rel_map[tp].get(tphase, {})
                         
                         if 'RU' in phase_rel:
                             rel_id = phase_rel['RU']
+                            rel_source = f"phase {tphase} RU"
                         elif 'IN' in phase_rel:
                             rel_id = phase_rel['IN']
+                            rel_source = f"phase {tphase} IN"
                         elif 'INSD' in phase_rel:
                             rel_id = phase_rel['INSD']
+                            rel_source = f"phase {tphase} INSD"
                         
                         # Fallback to phase 1 insured even when rider phase is missing
                         if not rel_id and "1" in rel_map[tp]:
                             base_rel = rel_map[tp]["1"]
                             if 'IN' in base_rel:
                                 rel_id = base_rel['IN']
+                                rel_source = f"fallback phase 1 IN (requested phase {tphase})"
                             elif 'INSD' in base_rel:
                                 rel_id = base_rel['INSD']
+                                rel_source = f"fallback phase 1 INSD (requested phase {tphase})"
                         
                         if rel_id:
                             row_data['MRIDRID'] = cw_map.get(rel_id, rel_id)
-
+                        
+                        if self.debug_rel_fallback and self._diag_rel_fallback_count < 25:
+                            if rel_id:
+                                self.log(
+                                    f"DEBUG REL: MPOLICY={tp} MPHASE={tphase} "
+                                    f"MRIDRID={row_data.get('MRIDRID', '')} via {rel_source}"
+                                )
+                            else:
+                                phase_keys = sorted(rel_map[tp].keys())
+                                phase_roles = sorted(phase_rel.keys()) if phase_rel else []
+                                self.log(
+                                    f"DEBUG REL: MPOLICY={tp} MPHASE={tphase} MRIDRID=UNRESOLVED "
+                                    f"policy_phases={phase_keys} phase_roles={phase_roles}"
+                                )
+                            self._diag_rel_fallback_count += 1
+                        
                     # --- BASE PHASE TERMINAL STATUS SYNCHRONIZATION ---
                     if t_id.lower() == "quikridr" and tphase == "1":
                         if getattr(self, '_qm_sync_table', None) != t_id:
