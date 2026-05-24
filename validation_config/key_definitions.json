@@ -1,0 +1,29 @@
+{
+  "quikridr": [
+    {"name": "policy_phase", "fields": ["MPOLICY", "MPHASE"], "severity": "ERROR"}
+  ],
+  "quikclid": [
+    {"name": "client_policy_phase", "fields": ["MCLIENTID", "MPOLICY", "MPHASE"], "severity": "ERROR"}
+  ],
+  "quikmstr": [
+    {"name": "policy", "fields": ["MPOLICY"], "severity": "ERROR"}
+  ],
+  "quikclnt": [
+    {"name": "client", "fields": ["MCLIENTID"], "severity": "ERROR"}
+  ],
+  "quikbenf": [
+    {"name": "policy_beneficiary", "fields": ["MPOLICY", "MBENFID"], "severity": "ERROR"}
+  ],
+  "quikagts": [
+    {"name": "agent", "fields": ["MAGENT"], "severity": "ERROR"}
+  ],
+  "quikdvdp": [
+    {"name": "policy", "fields": ["MPOLICY"], "severity": "ERROR"}
+  ],
+  "quikdvpr": [
+    {"name": "policy_date", "fields": ["MPOLICY", "MDATE"], "severity": "WARN"}
+  ],
+  "quikplan": [
+    {"name": "plan", "fields": ["PLAN"], "severity": "ERROR"}
+  ]
+}

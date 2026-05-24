@@ -1,0 +1,38 @@
+{
+  "quikridr": [
+    {"field": "MPOLICY", "severity": "ERROR"},
+    {"field": "MPHASE", "severity": "ERROR", "blank_if": ["", "0"]},
+    {"field": "MRIDRID", "severity": "ERROR"}
+  ],
+  "quikclid": [
+    {"field": "MCLIENTID", "severity": "ERROR"},
+    {"field": "MPOLICY", "severity": "ERROR"},
+    {"field": "MPHASE", "severity": "ERROR", "blank_if": ["", "0"]},
+    {"field": "MRELATION", "severity": "ERROR"}
+  ],
+  "quikmstr": [
+    {"field": "MPOLICY", "severity": "ERROR"}
+  ],
+  "quikclnt": [
+    {"field": "MCLIENTID", "severity": "ERROR"}
+  ],
+  "quikbenf": [
+    {"field": "MPOLICY", "severity": "ERROR"},
+    {"field": "MBENFID", "severity": "ERROR"}
+  ],
+  "quikagts": [
+    {"field": "MAGENT", "severity": "ERROR"}
+  ],
+  "quikdvdp": [
+    {"field": "MPOLICY", "severity": "ERROR"}
+  ],
+  "quikdvpr": [
+    {"field": "MPOLICY", "severity": "ERROR"}
+  ],
+  "quikprmh": [
+    {"field": "MPOLICY", "severity": "ERROR"}
+  ],
+  "quikplan": [
+    {"field": "PLAN", "severity": "ERROR"}
+  ]
+}

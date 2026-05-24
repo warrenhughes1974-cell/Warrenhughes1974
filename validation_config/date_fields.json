@@ -1,0 +1,12 @@
+{
+  "global_exclusions": ["MBILLDAY", "MBLLDOM", "MORGBLLDOM", "MLOCKTYP", "MPHASE"],
+  "by_table": {
+    "quikclnt": ["MDOB", "MMEMBERDT"],
+    "quikridr": ["MLASTANN", "MPHDOB", "MEFFDATE", "MEXPRY", "MLOCKDT", "MUNLCKDT"],
+    "quikmstr": ["MSTATDATE", "MISSDT", "MPAIDTO", "MBILLTO", "MAPPDATE", "MSUBMDATE", "MRELDATE", "MACHNXTDT"],
+    "quikprmh": ["DATEPAID", "MPAIDTO", "POSTDATE", "MPOSTDATE"],
+    "quikdvdp": ["MINTDATE"],
+    "quikdvpr": ["MDATE"],
+    "quikagts": ["MDATE"]
+  }
+}
