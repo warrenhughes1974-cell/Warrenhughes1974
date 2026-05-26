@@ -1,9 +1,9 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v55.5
+# Version:     v55.7
 # Date:        2026-05-24
-# Change Note: Phase 21B — UAT DBF generation row-aligned to final emitted quikclms/quikclmp CSV only
+# Change Note: Phase 22C — claim domain eligibility tightening (LifePRO 04xx + QLAdmin authoritative semantics)
 # =============================================================================
 
 import pandas as pd
@@ -103,6 +103,17 @@ CLAIMS_UAT_DBF_ALIGNMENT_SUMMARY = "claims_uat_dbf_alignment_summary.txt"
 CLAIMS_UAT_DBF_ROLLBACK_REF = "rollback_snapshot_reference.txt"
 UAT_DBF_GOVERNANCE_POPULATION = "UAT_EMITTED_VALIDATED_ONLY"
 PHASE21B_UAT_DBF_LINEAGE = "PHASE21B_UAT_DBF_FROM_EMITTED_CSV"
+PHASE22_SEMANTIC_GOVERNANCE_LINEAGE = "PHASE22A_SEMANTIC_GOVERNANCE_HOLD|PHASE22B_QLADMIN_DOMAIN_ALIGNMENT|PHASE22C_CLAIM_DOMAIN_ELIGIBILITY"
+SEMANTIC_HOLD_CATEGORY = "SEMANTIC_PSEUDO_CLAIM"
+SEMANTIC_HOLD_EXPLANATION = (
+    "Non-claim loan accounting (LifePRO 04xx Borrowed Money: 0411-0417, 0451) lacks claim payout/benefit "
+    "semantics and belongs in QuikLoan/Loan History per QLAdmin Help — not QUIKCLMS Death Claims. "
+    "Held from UAT emit pending business review — not deleted."
+)
+SEMANTIC_HOLD_REMEDIATION = (
+    "Business review required. Future target domain: QuikLoan (MLOANACCR/MLOANBAL). "
+    "Do not auto-convert in Phase 22. Set QLA_SEMANTIC_GOVERNANCE_HOLD=0 to rollback emit filter."
+)
 CLAIMS_CROSS_TABLE_VALIDATION_REPORT = "claims_cross_table_validation_report.csv"
 CLAIMS_CROSS_TABLE_VALIDATION_SUMMARY = "claims_cross_table_validation_summary.txt"
 PHASE20_RULEBOOK_LINEAGE = "PHASE20_MPOLICY_CROSS_TABLE_VALIDATION"
@@ -135,7 +146,7 @@ CLAIMS_PAYMENT_MHDPMT_MAP = {
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v55.5")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v55.7")
         self.root.geometry("1100x1050")
         
         self.bg_main = "#F1F5F9"
@@ -175,7 +186,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION ENGINE v55.5", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION ENGINE v55.7", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
 
         self._setup_uat_status_banner()
         
@@ -533,6 +544,9 @@ class QLAdminEnterpriseIntegrationSuite:
             "uat_dbf_timeout_seconds": int(
                 rules.get("orchestration_timeout_seconds", DEFAULT_ORCHESTRATION_TIMEOUT_SECONDS)
             ),
+            "semantic_governance_runner": os.path.join(
+                claims_root, "phase22_semantic_governance", "phase22_semantic_governance_runner.py",
+            ),
             "prelsa_source_path": self._resolve_claims_prelsa_path(),
             "pactg_source_path": self._resolve_claims_pactg_path(),
             "app_base_dir": base,
@@ -566,6 +580,12 @@ class QLAdminEnterpriseIntegrationSuite:
     def _claims_uat_dbf_generation_enabled(self):
         flag = os.environ.get("QLA_GENERATE_UAT_CLAIMS_DBF", "").strip().lower() in ("1", "true", "yes")
         return flag and self.CLAIMS_ORCHESTRATION["run_mode"] == "UAT"
+
+    def _claims_semantic_governance_enabled(self):
+        flag = os.environ.get("QLA_SEMANTIC_GOVERNANCE_HOLD", "1").strip().lower()
+        if flag in ("0", "false", "no"):
+            return False
+        return self.CLAIMS_ORCHESTRATION["run_mode"] == "UAT"
 
     def _claims_mpolicy_validation_enabled(self):
         flag = os.environ.get("QLA_VALIDATE_CLAIMS_MPOLICY", "1").strip().lower()
@@ -673,7 +693,118 @@ class QLAdminEnterpriseIntegrationSuite:
             "--- stderr ---",
             stderr_text.rstrip() or "(empty)",
         ])
+        if status == "SUCCESS" and self._claims_semantic_governance_enabled():
+            self._invoke_phase22_semantic_governance(staging_dir)
         return status == "SUCCESS"
+
+    def _phase22_semantic_governance_dir(self):
+        return os.path.normpath(os.path.join(self._claims_analysis_root(), "phase22_semantic_governance"))
+
+    def _invoke_phase22_semantic_governance(self, staging_dir):
+        cfg = self.CLAIMS_ORCHESTRATION
+        runner = cfg.get("semantic_governance_runner")
+        timeout = cfg.get("orchestration_timeout_seconds", DEFAULT_ORCHESTRATION_TIMEOUT_SECONDS)
+        claims_root = self._claims_analysis_root()
+        started = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        if not runner or not os.path.isfile(runner):
+            self.log(f"  PHASE 22 ERROR: semantic governance runner not found: {runner}")
+            return False
+        cmd = [sys.executable, runner]
+        self.log("PHASE 22 SEMANTIC GOVERNANCE (22A/22B): detecting pseudo-claims + QLAdmin alignment...")
+        self.log(f"  Command: {' '.join(cmd)}")
+        self.log("  Authoritative manuals: docs/claims_conversion_reference/QLAdmin_Help.pdf + LifePRO Accounting Transactions")
+        return_code = -1
+        stdout_text = ""
+        stderr_text = ""
+        try:
+            proc = subprocess.run(
+                cmd, cwd=claims_root, capture_output=True, text=True,
+                timeout=timeout, check=False,
+            )
+            return_code = proc.returncode
+            stdout_text = proc.stdout or ""
+            stderr_text = proc.stderr or ""
+        except subprocess.TimeoutExpired as exc:
+            self.log(f"  PHASE 22 ERROR: runner exceeded {timeout}s timeout")
+            stdout_text = (exc.stdout or "") if exc.stdout else ""
+            stderr_text = (exc.stderr or "") if exc.stderr else ""
+        except OSError as exc:
+            self.log(f"  PHASE 22 ERROR: {exc}")
+        self.log(f"PHASE 22 SEMANTIC GOVERNANCE: Completed return_code={return_code}")
+        self._log_subprocess_stream("phase22-stdout", stdout_text)
+        self._log_subprocess_stream("phase22-stderr", stderr_text)
+        self._append_orchestration_execution_log(staging_dir, [
+            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] PHASE22_SEMANTIC_GOVERNANCE",
+            f"started={started}",
+            f"return_code={return_code}",
+            f"runner={runner}",
+            f"rulebook_lineage={PHASE22_SEMANTIC_GOVERNANCE_LINEAGE}",
+            "--- stdout ---",
+            stdout_text.rstrip() or "(empty)",
+            "--- stderr ---",
+            stderr_text.rstrip() or "(empty)",
+        ])
+        if return_code == 0:
+            hold_path = os.path.join(self._phase22_semantic_governance_dir(), "semantic_governance_hold_population.csv")
+            self.log(f"  Phase 22 hold manifest: {hold_path}")
+        return return_code == 0
+
+    def _load_semantic_governance_hold_index(self):
+        hold_path = os.path.join(self._phase22_semantic_governance_dir(), "semantic_governance_hold_population.csv")
+        rc_ids = set()
+        deriv_ids = set()
+        reason_map = {}
+        if not os.path.isfile(hold_path):
+            return rc_ids, deriv_ids, reason_map, hold_path
+        try:
+            df = pd.read_csv(hold_path, dtype=str).fillna("")
+            df.columns = [str(c).strip().lower() for c in df.columns]
+            for _, row in df.iterrows():
+                rc = str(row.get("reconstructed_claim_id", "")).strip()
+                deriv = str(row.get("derivation_candidate_id", "")).strip()
+                reason = str(row.get("reason_excluded", "SEMANTIC_PSEUDO_CLAIM")).strip()
+                if rc:
+                    rc_ids.add(rc)
+                    reason_map[rc] = reason
+                if deriv:
+                    deriv_ids.add(deriv)
+                    reason_map[deriv] = reason
+        except Exception:
+            pass
+        return rc_ids, deriv_ids, reason_map, hold_path
+
+    def _build_semantic_hold_row(
+        self, row, table_key, staged_path, dest_path, reason_excluded, mpolicy_raw,
+        audit_ts, prod_flag,
+    ):
+        row_dict = row.to_dict() if hasattr(row, "to_dict") else dict(row)
+        normalized = {str(k).strip().lower(): v for k, v in row_dict.items()}
+        rc = str(normalized.get("reconstructed_claim_id", "")).strip()
+        deriv = str(normalized.get("derivation_candidate_id", "")).strip()
+        record_type = "CLAIM" if table_key == "quikclms" else "PAYMENT"
+        record_identifier = deriv or rc or str(normalized.get("canonical_payment_stage_id", "")).strip()
+        return {
+            "audit_timestamp": audit_ts,
+            "emit_timestamp": audit_ts,
+            "production_dbf_flag": prod_flag,
+            "hold_category": SEMANTIC_HOLD_CATEGORY,
+            "record_type": record_type,
+            "record_identifier": record_identifier,
+            "record_id": record_identifier,
+            "reconstructed_claim_id": rc,
+            "derivation_candidate_id": deriv,
+            "MPOLICY": mpolicy_raw,
+            "blocker_category": "SEMANTIC_DOMAIN_MISMATCH",
+            "reason_excluded": reason_excluded or "SEMANTIC_PSEUDO_CLAIM",
+            "reason_held": reason_excluded or "SEMANTIC_PSEUDO_CLAIM",
+            "governance_status": "SEMANTIC_GOVERNANCE_HOLD",
+            "business_review_required": "Y",
+            "business_explanation": SEMANTIC_HOLD_EXPLANATION,
+            "remediation_recommendation": SEMANTIC_HOLD_REMEDIATION,
+            "source_file": staged_path,
+            "target_file": dest_path,
+            "rulebook_lineage": PHASE22_SEMANTIC_GOVERNANCE_LINEAGE,
+        }
 
     def _stage_uat_candidate_file(self, staging_dir, table_key, source_path):
         if not source_path or not os.path.isfile(source_path):
@@ -1702,12 +1833,22 @@ class QLAdminEnterpriseIntegrationSuite:
             "total_source_rows": 0,
             "emitted_rows": 0,
             "held_rows": 0,
+            "semantic_hold_rows": 0,
             "blank_mpolicy_rows": 0,
             "missing_mpolicy_rows": 0,
             "missing_derivation_rows": 0,
             "validation_status": "PASS",
         }
         hold_rows = []
+        semantic_rc_ids = set()
+        semantic_deriv_ids = set()
+        semantic_reason_map = {}
+        if self._claims_semantic_governance_enabled():
+            semantic_rc_ids, semantic_deriv_ids, semantic_reason_map, semantic_hold_path = (
+                self._load_semantic_governance_hold_index()
+            )
+            if semantic_rc_ids or semantic_deriv_ids:
+                stats["reference_file"] = f"{quikmstr_path}|semantic_hold={semantic_hold_path}"
         if not os.path.isfile(staged_path):
             stats["validation_status"] = "SOURCE_MISSING"
             return None, hold_rows, stats
@@ -1774,6 +1915,23 @@ class QLAdminEnterpriseIntegrationSuite:
 
             combined = dict(p10_row)
             combined.update(uat_dict)
+            rc = str(uat_dict.get("reconstructed_claim_id", p10_row.get("reconstructed_claim_id", ""))).strip()
+            deriv = str(uat_dict.get("derivation_candidate_id", "")).strip()
+            if self._claims_semantic_governance_enabled():
+                is_semantic_hold = (
+                    (rc and rc in semantic_rc_ids)
+                    or (deriv and deriv in semantic_deriv_ids)
+                )
+                if is_semantic_hold:
+                    stats["semantic_hold_rows"] += 1
+                    stats["held_rows"] += 1
+                    reason = semantic_reason_map.get(deriv) or semantic_reason_map.get(rc) or "SEMANTIC_PSEUDO_CLAIM"
+                    _, converted = self._resolve_row_mpolicy(row, table_key, lookups, crosswalk)
+                    hold_rows.append(self._build_semantic_hold_row(
+                        row, table_key, staged_path, dest_path, reason, converted, audit_ts, prod_flag,
+                    ))
+                    continue
+
             qla_row = self._transform_claims_source_row(combined, table_key, rules, crosswalk)
             mpolicy = self.normalize(qla_row.get("MPOLICY", ""))
 
@@ -2146,6 +2304,10 @@ class QLAdminEnterpriseIntegrationSuite:
                 1 for h in cross_table_holds
                 if str(h.get("record_type", "")).upper() in ("PAYMENT", "QUIKCLMP")
             )
+            semantic_held = sum(
+                1 for h in cross_table_holds
+                if str(h.get("hold_category", "")).upper() == SEMANTIC_HOLD_CATEGORY
+            )
             if quikmstr_missing and validation_enabled:
                 validation_status_label = "BLOCKED — QUIKMSTR MISSING"
                 validation_ok = False
@@ -2174,6 +2336,7 @@ class QLAdminEnterpriseIntegrationSuite:
                 "validation_status_label": validation_status_label,
                 "claims_held_missing_policy": claims_held,
                 "payments_held_missing_policy": payments_held,
+                "semantic_hold_rows": semantic_held,
                 "validation_report_path": validation_report_path,
                 "validation_summary_path": validation_summary_path,
                 "cross_table_hold_count": len(cross_table_holds),
@@ -2207,6 +2370,12 @@ class QLAdminEnterpriseIntegrationSuite:
             return
         self.log("UAT CLAIMS EMIT (Phase 21 — QLA-shaped via Phase 10 + Sync_Rulebook; MPOLICY validated when enabled):")
         self.log(f"  Main output folder: {emit_result['output_dir']}")
+        if self._claims_semantic_governance_enabled():
+            self.log(
+                f"  Phase 22 semantic governance hold: {emit_result.get('semantic_hold_rows', 0)} rows "
+                f"quarantined ({SEMANTIC_HOLD_CATEGORY})"
+            )
+            self.log("  Authoritative manuals: docs/claims_conversion_reference/QLAdmin_Help.pdf + LifePRO Accounting Transactions")
         if emit_result.get("validation_enabled"):
             self.log(f"  MPOLICY validation: {emit_result.get('validation_status_label', 'UNKNOWN')}")
             if emit_result.get("validation_report_path"):
@@ -2691,7 +2860,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def process_data(self, is_batch):
         try:
             self.console.delete(1.0, tk.END)
-            self.log("Initializing Migration Engine v55.5...")
+            self.log("Initializing Migration Engine v55.7...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
