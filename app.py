@@ -1,9 +1,9 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v55.7
-# Date:        2026-05-24
-# Change Note: Phase 22C — claim domain eligibility tightening (LifePRO 04xx + QLAdmin authoritative semantics)
+# Version:     v56.6
+# Date:        2026-05-26
+# Change Note: Phase P3F — quikactg MPLAN authority alignment from PACTG (QLA_CLOSED_MPLAN_AUTHORITY)
 # =============================================================================
 
 import pandas as pd
@@ -20,6 +20,27 @@ import json
 import re
 import csv
 from datetime import datetime
+
+from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA
+from qla_core.quikplan_converter import convert_quikplan_to_output, prepare_quikplan_source
+from qla_core.quikplan_source_loader import load_quikplan_source_csv
+from qla_core.quikactg_converter import convert_quikactg_from_pactg
+from qla_core.crosswalk_enrichment import resolve_crosswalk_overlay_config
+from qla_core.product_catalog_authority import (
+    allow_legacy_mplan_fallback,
+    build_authoritative_mplan_resolver,
+    closed_mplan_authority_enabled,
+    load_crosswalk_authority,
+    load_quikplan_plan_set,
+    resolve_authoritative_mplan,
+)
+from qla_core.mplan_authority import (
+    apply_mplan_emit_filter,
+    resolution_to_trace_row,
+    validate_emitted_quikridr,
+    write_p3e_governance_outputs,
+    write_p3f_governance_outputs,
+)
 
 # --- Phase 18A–20: Claims orchestration, UAT handoff/emit/batch/DBF, MPOLICY validation ---
 VALID_RUN_MODES = ("UAT", "PRODUCTION", "DISABLED")
@@ -141,13 +162,17 @@ CLAIMS_PAYMENT_MHDPMT_MAP = {
     "CLAIM_PAYMENT": "C",
     "CASH_DISBURSEMENT": "C",
 }
+PRODUCT_SETUP_RUNNER_TIMEOUT = 120
+PRODUCT_SETUP_VALIDATION_DIR = os.path.join("plan_analysis", "phase_p2a_validation")
+PRODUCT_SETUP_VALIDATION_SUMMARY = "validation_summary.md"
+PRODUCT_SETUP_DIAGNOSTICS_MANIFEST = os.path.join("plan_governance", "manifests", "product_governance_diagnostics.csv")
 
 
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v55.7")
-        self.root.geometry("1100x1050")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v56.5")
+        self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
         self.bg_card = "#FFFFFF"
@@ -159,7 +184,7 @@ class QLAdminEnterpriseIntegrationSuite:
         self.root.configure(bg=self.bg_main)
 
         self.TABLE_SCHEMAS = {
-            "quikplan": ["PLAN", "FORM", "DESCR", "PAR", "SEX", "BASIS", "NFOINT", "LOANINT", "LOANINTX", "DEPINT", "VARDB", "VARGP", "LOAGE", "HIAGE", "RENEW", "PAYYRS", "PAYAGE", "INSYRS", "INSAGE", "ANNL", "SEMI", "QTRL", "MTHD", "MTHB", "ANNLFEE", "SEMIFEE", "QTRLFEE", "MTHDFEE", "MTHBFEE", "INITVAL", "MKTG", "PRODUCT", "CALCADV", "COMMID", "MINUNIT", "MAXUNIT", "BPOLFEE", "BACTIVE", "RRULE", "AGTRSV", "AUTONFO", "PLANTYPE", "INTMETHTV", "INTMETHCV", "DEFICIENCY", "HDEDMETHOD", "PLANVALOPT", "GDVARYGP", "GDVARYDB", "GDVARYCV", "GDVARYTV", "GDVARYDV", "UWVARYGP", "UWVARYDB", "UWVARYCV", "UWVARYTV", "UWVARYDV", "BDVARYGP", "BDVARYDB", "BDVARYCV", "BDVARYTV", "BDVARYDV", "STVARYGP", "STVARYDB", "STVARYCV", "STVARYTV", "STVARYDV", "CONVCOMM", "PLANNAME", "HRENEW", "HLOB", "HCOMMIP", "HRIGPKEY", "SIMPLEINT", "MLAPSE", "MNOTE10", "MNAICLOB", "MNFOANNV", "MGTDANNV"],
+            "quikplan": QUIKPLAN_SCHEMA,
             "quikmstr": ["MPOLICY","MSTATUS","MSTATDATE","MISSDT","MPAIDTO","MBILLTO","MNFOPT","MDIVOPT","MBILLFRM","MBILLDAY","MACCTNO","MBANKNO","MPREBILL","MMODE","MMODEPREM","MSEMI","MQTRL","MMTHD","MMTHB","MINQUIRY","MISSUEST","MBFCY","MGROUP","MPRIMID","MOWNRID","MPAYRID","MASGNID","MBENPID","MBENCID","MAPPDATE","MSUBMDATE","MRELDATE","MRELOTHER","MORIGBILL","MORIGMODE","MISSCNTRY","MOWNCID","MACHCNT","MACHNXTDT","MRESSTATE","MBLLDOM","MSPCODE","MISSCLASS","MMSMBI","MORGBLLDOM"],
             "quikclnt": ["MCLIENTID", "MTYPE", "MTAXID", "MTAXIDTYPE", "MTITLE", "MFNAME", "MMNAME", "MLNAME", "MSUFFIX", "MADDR1", "MADDR2", "MCITY", "MSTATE", "MZIP", "MZIP2", "MCOUNTRY", "MPHONEHOME", "MPHONEOFC", "MPHOFCEXT", "MPHONECELL", "MPHONEFAX", "MEMAIL", "MDOB", "MSEX", "MMEMBERID", "MLANGUAGE", "MPDFPSSWD", "MEMAILCORR", "MVALID", "MDNC", "MOFAC", "MMEMBERDT", "MMSMBI", "MFOREIGN", "MOCCODE"],
             "quikridr": ["MPOLICY", "MPHASE", "MPHSTAT", "MLASTANN", "MANNSTAT", "MPHDOB", "MSEX", "MPLAN", "MPAR", "MEFFDATE", "MEXPRY", "MPAYUP", "MAGE", "MUNIT", "MVPU", "MPREM", "MANNLFEE", "MSEMIFEE", "MQTRLFEE", "MMTHDFEE", "MMTHBFEE", "MRRULE", "MCOMMID", "MCV0", "MCV1", "MCV2", "MSAVEAGE", "MSAVEUNIT", "MSAVEVPU", "MSAVEPREM", "MRIDRID", "MSSN", "MUWCLASS", "MBAND", "MSAVESTAT", "MCOMMPREM", "MSPCODE", "MLOCKTYP", "MLOCKDT", "MUNLCKDT"],
@@ -168,6 +193,7 @@ class QLAdminEnterpriseIntegrationSuite:
             "quikdvdp": ["MPOLICY", "MDEPOSIT", "MINTYTD", "MDEPINT", "MINTDATE"],
             "quikdvpr": ["MPOLICY", "MDATE", "MDIV"],
             "quikprmh": ["MPOLICY", "DATEPAID", "RENEWAL", "PREMIUM", "MLIFE", "MTERM", "MSUPP", "MANN", "MHEALTH", "XS", "MPAIDTO", "POSTDATE", "MPOSTDATE", "MSOURCE", "MBATCH", "USER_ID", "MBILLFRM", "MMODEPD"],
+            "quikactg": QUIKACTG_SCHEMA,
             "quikagts": ["MAGENT", "MAGTNAME", "MAGTADDR1", "MAGTADDR2", "MAGTCITY", "MAGTST", "MAGTZIP", "MAGTZIP2", "MAGTSSN", "MAGTFEIN", "MCOMP", "MAGENCY", "MAGCYNAME", "MDATE", "MAGTACCT", "MAGTPHONE", "MAGTFAX", "MAGTCELL", "MAGTOFCE", "MAGTEMAIL", "MEMOTEXT", "MSUPPRESS", "MCOMMGRP", "MOTHNAME", "MPREMACCT", "MSTATUS", "MAGTNPN", "MTAXIDTYPE"],
             "quikclms": QUIKCLMS_SCHEMA,
             "quikclmp": QUIKCLMP_SCHEMA,
@@ -181,12 +207,13 @@ class QLAdminEnterpriseIntegrationSuite:
         self.debug_rel_fallback = os.environ.get("QLA_DEBUG_REL_FALLBACK", "").strip().lower() in ("1", "true", "yes")
         self._last_uat_dbf_result = None
         self._last_cross_table_validation = None
+        self._last_product_setup_result = None
         self.setup_ui()
 
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION ENGINE v55.7", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION ENGINE v56.5", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
 
         self._setup_uat_status_banner()
         
@@ -270,11 +297,13 @@ class QLAdminEnterpriseIntegrationSuite:
         tk.Button(btn_frame, text="RUN SINGLE TABLE CONVERSION", bg=self.btn_action, fg="white", width=35, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(False)).pack(side="left", padx=15)
         tk.Button(btn_frame, text="EXECUTE FULL BATCH MIGRATION", bg=self.btn_batch, fg="white", width=35, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(True)).pack(side="left", padx=15)
 
+        self._setup_product_setup_panel()
         self._setup_governance_summary_panel()
 
         self.console = scrolledtext.ScrolledText(self.root, height=16, bg="#F8FAFC", fg="#1E293B", font=("Consolas", 9))
         self.console.pack(padx=30, pady=10, fill="both", expand=True)
         self._refresh_governance_visibility()
+        self._refresh_product_setup_visibility()
 
     def log(self, msg):
         self.console.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] {msg}\n")
@@ -1452,6 +1481,284 @@ class QLAdminEnterpriseIntegrationSuite:
             actions, text="CREATE UAT BUSINESS PACKAGE", width=28, bg=self.btn_batch, fg="white",
             command=self._on_create_uat_business_package,
         ).pack(side="right", padx=4)
+
+    def _product_setup_runner_path(self):
+        return os.path.normpath(os.path.join(
+            self._app_base_dir(), "plan_governance", "phase_p2_product_setup_runner", "product_setup_runner.py",
+        ))
+
+    def _product_setup_isolated(self):
+        flag = os.environ.get("QLA_PRODUCT_SETUP_ISOLATED", "0").strip().lower()
+        if hasattr(self, "product_isolated_var") and self.product_isolated_var.get():
+            return True
+        return flag in ("1", "true", "yes")
+
+    def _closed_mplan_authority_enabled(self):
+        return closed_mplan_authority_enabled()
+
+    def _allow_legacy_mplan_fallback(self):
+        return allow_legacy_mplan_fallback()
+
+    def _init_mplan_authority(self, out_dir: str, cw_path: str):
+        catalog_path = os.path.normpath(os.path.join(self._app_base_dir(), "plan_governance", "product_catalog_crosswalk.csv"))
+        quikplan_path = os.path.normpath(os.path.join(out_dir, "quikplan.csv"))
+        quikplan_set = load_quikplan_plan_set(quikplan_path)
+        authority = load_crosswalk_authority(cw_path, catalog_path) if cw_path and os.path.isfile(cw_path) else load_crosswalk_authority("", catalog_path)
+        resolver = build_authoritative_mplan_resolver(
+            legacy_product_map=authority.legacy_product_map,
+            quikplan_plan_set=quikplan_set,
+            catalog_path=catalog_path,
+        )
+        return resolver, quikplan_set, catalog_path
+
+    def _product_setup_default_paths(self):
+        base = self._app_base_dir()
+        return {
+            "source": os.path.join(base, "plan_analysis", "quikplan_source.csv"),
+            "output": self.path_vars["Out"][0].get().strip() or self._migration_output_dir(),
+            "stage": os.path.join(base, "plan_governance", "staged"),
+        }
+
+    def _setup_product_setup_panel(self):
+        panel = tk.LabelFrame(
+            self.root,
+            text=" Product Setup Conversion (Phase P2C — isolated subprocess) ",
+            bg=self.bg_card,
+            fg=self.accent,
+            padx=16,
+            pady=10,
+            font=("Segoe UI", 10, "bold"),
+        )
+        panel.pack(padx=30, fill="x", pady=(0, 6))
+
+        defaults = self._product_setup_default_paths()
+        self.product_metric_vars = {}
+        metrics = [
+            ("product_status", "Last Run Status:"),
+            ("product_rows", "Staged Rows:"),
+            ("product_validation", "Parallel Validation (P2A):"),
+            ("product_warnings", "Governance Warnings:"),
+            ("product_errors", "Governance Errors:"),
+            ("product_staged_path", "Staged Output:"),
+            ("product_emitted_path", "Emitted Output:"),
+            ("product_isolation", "Batch Isolation:"),
+        ]
+        grid = tk.Frame(panel, bg=self.bg_card)
+        grid.pack(fill="x")
+        for idx, (key, label_text) in enumerate(metrics):
+            row, col = divmod(idx, 2)
+            tk.Label(grid, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(
+                row=row, column=col * 2, sticky="w", padx=(0, 6), pady=2,
+            )
+            var = tk.StringVar(value="NOT YET RUN")
+            self.product_metric_vars[key] = var
+            tk.Label(grid, textvariable=var, bg=self.bg_card, fg=self.accent, font=("Consolas", 9)).grid(
+                row=row, column=col * 2 + 1, sticky="w", padx=(0, 24), pady=2,
+            )
+
+        opts = tk.Frame(panel, bg=self.bg_card)
+        opts.pack(fill="x", pady=(6, 0))
+        self.product_emit_var = tk.BooleanVar(value=False)
+        self.product_overlay_var = tk.BooleanVar(value=False)
+        self.product_isolated_var = tk.BooleanVar(
+            value=os.environ.get("QLA_PRODUCT_SETUP_ISOLATED", "0").strip().lower() in ("1", "true", "yes"),
+        )
+        self.product_block_var = tk.BooleanVar(
+            value=os.environ.get("QLA_PRODUCT_GOVERNANCE_BLOCK", "0").strip().lower() in ("1", "true", "yes"),
+        )
+        self.product_strict_var = tk.BooleanVar(
+            value=os.environ.get("QLA_STRICT_PRODUCT_AUTHORITY", "0").strip().lower() in ("1", "true", "yes"),
+        )
+        self.product_closed_var = tk.BooleanVar(
+            value=os.environ.get("QLA_CLOSED_PRODUCT_AUTHORITY", "1").strip().lower() not in ("0", "false", "no"),
+        )
+        self.product_legacy_fallback_var = tk.BooleanVar(
+            value=os.environ.get("QLA_ALLOW_LEGACY_PRODUCT_FALLBACK", "0").strip().lower() in ("1", "true", "yes"),
+        )
+        tk.Checkbutton(opts, text="Emit to Output (quikplan.csv)", variable=self.product_emit_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+        tk.Checkbutton(opts, text="UAT Product Authority Cutover (Policy Form Crosswalk)", variable=self.product_overlay_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+        tk.Checkbutton(opts, text="Strict Product Authority (P3B)", variable=self.product_strict_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+        tk.Checkbutton(opts, text="Closed Product Catalog (P3C)", variable=self.product_closed_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+        tk.Checkbutton(opts, text="Isolate from batch (QLA_PRODUCT_SETUP_ISOLATED)", variable=self.product_isolated_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+        tk.Checkbutton(opts, text="Block emit on ERROR (QLA_PRODUCT_GOVERNANCE_BLOCK)", variable=self.product_block_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+        tk.Checkbutton(opts, text="Allow Legacy Fallback (rollback only)", variable=self.product_legacy_fallback_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+
+        actions = tk.Frame(panel, bg=self.bg_card)
+        actions.pack(fill="x", pady=(8, 0))
+        tk.Button(
+            actions, text="RUN PRODUCT SETUP CONVERSION", width=32, bg="#7C3AED", fg="white",
+            command=self.start_product_setup_thread,
+        ).pack(side="left", padx=(0, 8))
+        tk.Button(
+            actions, text="Refresh Product Status", width=22,
+            command=self._refresh_product_setup_visibility,
+        ).pack(side="left", padx=4)
+        tk.Label(
+            actions,
+            text=f"Source: {defaults['source']}",
+            bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 8),
+        ).pack(side="right", padx=4)
+
+    def _load_product_validation_status(self):
+        summary_path = os.path.normpath(os.path.join(
+            self._app_base_dir(), PRODUCT_SETUP_VALIDATION_DIR, PRODUCT_SETUP_VALIDATION_SUMMARY,
+        ))
+        if not os.path.isfile(summary_path):
+            return "NOT YET RUN"
+        try:
+            with open(summary_path, encoding="utf-8") as fh:
+                text = fh.read()
+            if "**IDENTICAL**" in text:
+                for line in text.splitlines():
+                    if line.startswith("- Baseline rows:"):
+                        rows = line.split(":")[-1].strip()
+                    if line.startswith("- Baseline columns:"):
+                        cols = line.split(":")[-1].strip()
+                try:
+                    return f"Parallel validation successful — {rows} rows × {cols} columns — 0 differences detected."
+                except NameError:
+                    return "Parallel validation successful — IDENTICAL (see validation_summary.md)"
+            if "DIFFERENCES DETECTED" in text:
+                return "Validation differences detected — review phase_p2a_validation/"
+        except OSError:
+            pass
+        return "Validation summary unreadable"
+
+    def _refresh_product_setup_visibility(self):
+        if not hasattr(self, "product_metric_vars"):
+            return
+        display = {key: "NOT YET RUN" for key in self.product_metric_vars}
+        display["product_validation"] = self._load_product_validation_status()
+        display["product_isolation"] = "ENABLED" if self._product_setup_isolated() else "DISABLED (default)"
+
+        diag_path = os.path.normpath(os.path.join(self._app_base_dir(), PRODUCT_SETUP_DIAGNOSTICS_MANIFEST))
+        staged = os.path.normpath(os.path.join(self._app_base_dir(), "plan_governance", "staged", "quikplan_staged.csv"))
+        if os.path.isfile(staged):
+            try:
+                sdf = pd.read_csv(staged, dtype=str, keep_default_na=False)
+                display["product_rows"] = str(len(sdf))
+                display["product_staged_path"] = staged
+            except Exception:
+                display["product_staged_path"] = staged
+        if os.path.isfile(diag_path):
+            try:
+                ddf = pd.read_csv(diag_path, dtype=str)
+                display["product_warnings"] = str((ddf.get("severity", pd.Series()) == "WARN").sum())
+                display["product_errors"] = str((ddf.get("severity", pd.Series()) == "ERROR").sum())
+            except Exception:
+                pass
+
+        out_path = os.path.normpath(os.path.join(self._product_setup_default_paths()["output"], "quikplan.csv"))
+        display["product_emitted_path"] = out_path if os.path.isfile(out_path) else "NOT EMITTED"
+        if hasattr(self, "_last_product_setup_result") and self._last_product_setup_result:
+            display["product_status"] = self._last_product_setup_result.get("status", "NOT YET RUN")
+        for key, val in display.items():
+            if key in self.product_metric_vars:
+                self.product_metric_vars[key].set(val)
+
+    def _parse_product_setup_stdout(self, stdout_text):
+        parsed = {"status": "UNKNOWN", "warnings": "0", "errors": "0", "staged_path": "", "emitted_path": ""}
+        for line in (stdout_text or "").splitlines():
+            line = line.strip()
+            if line.startswith("PRODUCT_SETUP_STATUS:"):
+                parsed["status"] = line.split(":", 1)[1].strip()
+            elif line.startswith("DIAGNOSTIC_WARNINGS:"):
+                parsed["warnings"] = line.split(":", 1)[1].strip()
+            elif line.startswith("DIAGNOSTIC_ERRORS:"):
+                parsed["errors"] = line.split(":", 1)[1].strip()
+            elif line.startswith("STAGED_PATH:"):
+                parsed["staged_path"] = line.split(":", 1)[1].strip()
+            elif line.startswith("EMITTED_PATH:"):
+                parsed["emitted_path"] = line.split(":", 1)[1].strip()
+        return parsed
+
+    def _invoke_product_setup_runner(self):
+        runner = self._product_setup_runner_path()
+        if not os.path.isfile(runner):
+            self.log(f"PRODUCT SETUP ERROR: runner not found: {runner}")
+            return {"status": "FAILED", "error": "runner not found"}
+
+        paths = self._product_setup_default_paths()
+        os.environ["QLA_PRODUCT_SETUP_ISOLATED"] = "1" if self.product_isolated_var.get() else "0"
+        os.environ["QLA_PRODUCT_UAT_OVERLAY"] = "1" if self.product_overlay_var.get() else "0"
+        os.environ.pop("CROSSWALK_OVERLAY", None)
+        if not self.product_overlay_var.get():
+            os.environ["CROSSWALK_OVERLAY"] = "0"
+        os.environ["QLA_PRODUCT_GOVERNANCE_BLOCK"] = "1" if self.product_block_var.get() else "0"
+        os.environ["QLA_STRICT_PRODUCT_AUTHORITY"] = "1" if self.product_strict_var.get() else "0"
+        os.environ["QLA_CLOSED_PRODUCT_AUTHORITY"] = "1" if self.product_closed_var.get() else "0"
+        os.environ["QLA_ALLOW_LEGACY_PRODUCT_FALLBACK"] = "1" if self.product_legacy_fallback_var.get() else "0"
+
+        cmd = [
+            sys.executable, runner,
+            "--source", paths["source"],
+            "--stage-dir", paths["stage"],
+            "--output-dir", paths["output"],
+        ]
+        if self.product_emit_var.get():
+            cmd.append("--emit")
+
+        if self.product_overlay_var.get():
+            cmd.append("--uat-overlay")
+        if self.product_strict_var.get():
+            cmd.append("--strict-authority")
+        if self.product_closed_var.get():
+            cmd.append("--closed-product-authority")
+        if self.product_legacy_fallback_var.get():
+            cmd.append("--allow-legacy-product-fallback")
+
+        self.log("PRODUCT SETUP: launching isolated subprocess runner...")
+        self.log(f"  QLA_PRODUCT_UAT_OVERLAY={os.environ.get('QLA_PRODUCT_UAT_OVERLAY', '0')}")
+        self.log(f"  QLA_STRICT_PRODUCT_AUTHORITY={os.environ.get('QLA_STRICT_PRODUCT_AUTHORITY', '0')}")
+        self.log(f"  QLA_CLOSED_PRODUCT_AUTHORITY={os.environ.get('QLA_CLOSED_PRODUCT_AUTHORITY', '0')}")
+        self.log(f"  QLA_ALLOW_LEGACY_PRODUCT_FALLBACK={os.environ.get('QLA_ALLOW_LEGACY_PRODUCT_FALLBACK', '0')}")
+        self.log(f"  QLA_PRODUCT_SETUP_ISOLATED={os.environ.get('QLA_PRODUCT_SETUP_ISOLATED', '0')}")
+        try:
+            proc = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=PRODUCT_SETUP_RUNNER_TIMEOUT,
+                cwd=self._app_base_dir(),
+            )
+            stdout_text = proc.stdout or ""
+            stderr_text = proc.stderr or ""
+            self._log_subprocess_stream("product-setup-stdout", stdout_text)
+            self._log_subprocess_stream("product-setup-stderr", stderr_text)
+            parsed = self._parse_product_setup_stdout(stdout_text)
+            parsed["return_code"] = proc.returncode
+            if proc.returncode != 0 and parsed["status"] == "UNKNOWN":
+                parsed["status"] = "FAILED"
+            return parsed
+        except subprocess.TimeoutExpired:
+            self.log("PRODUCT SETUP ERROR: subprocess timeout")
+            return {"status": "TIMEOUT"}
+        except Exception as exc:
+            self.log(f"PRODUCT SETUP ERROR: {exc}")
+            return {"status": "FAILED", "error": str(exc)}
+
+    def start_product_setup_thread(self):
+        if self.is_running:
+            messagebox.showwarning("Busy", "A conversion is already running.")
+            return
+        self.is_running = True
+        self.start_time = time.time()
+        threading.Thread(target=self.update_timer, daemon=True).start()
+        threading.Thread(target=self._run_product_setup_job, daemon=True).start()
+
+    def _run_product_setup_job(self):
+        try:
+            self.log("PRODUCT SETUP CONVERSION (Phase P2C): starting...")
+            self._last_product_setup_result = self._invoke_product_setup_runner()
+            self._refresh_product_setup_visibility()
+            status = self._last_product_setup_result.get("status", "UNKNOWN")
+            self.log(f"PRODUCT SETUP: completed status={status}")
+            if status == "SUCCESS":
+                messagebox.showinfo("Product Setup", "Product setup conversion completed successfully.")
+            elif status == "BLOCKED":
+                messagebox.showwarning("Product Setup", "Conversion completed but emit blocked by governance.")
+            else:
+                messagebox.showerror("Product Setup", f"Product setup conversion status: {status}")
+        finally:
+            self.is_running = False
+            self.lbl_timer.config(text="Elapsed: 00:00")
 
     def _refresh_governance_visibility(self):
         summary = self._build_governance_summary()
@@ -2755,7 +3062,7 @@ class QLAdminEnterpriseIntegrationSuite:
 
         expected_src = (
             "PACTG_Accounting_Extract20260427.csv"
-            if table.lower() in ["quikprmh", "quikdvpr"]
+            if table.lower() in ["quikprmh", "quikdvpr", "quikactg"]
             else (
                 "PPBENTYP.csv"
                 if table.lower() == "quikdvdp"
@@ -2860,7 +3167,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def process_data(self, is_batch):
         try:
             self.console.delete(1.0, tk.END)
-            self.log("Initializing Migration Engine v55.7...")
+            self.log("Initializing Migration Engine v56.6...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -2896,6 +3203,19 @@ class QLAdminEnterpriseIntegrationSuite:
                 self.log(f"Successfully loaded ID Crosswalk from: {os.path.basename(cw_path)}")
             else:
                 self.log("Warning: ID Crosswalk file not found. Legacy linkages may fail.")
+
+            mplan_resolver = None
+            quikplan_plan_set = set()
+            mplan_trace_rows = []
+            mplan_src_file = ""
+            if self._closed_mplan_authority_enabled():
+                out_preview = self.path_vars["Out"][0].get()
+                mplan_resolver, quikplan_plan_set, _ = self._init_mplan_authority(out_preview, cw_path)
+                self.log(
+                    f"P3E CLOSED MPLAN AUTHORITY: enabled "
+                    f"(quikplan PLAN universe={len(quikplan_plan_set)}, "
+                    f"legacy_fallback={'Y' if self._allow_legacy_mplan_fallback() else 'N'})"
+                )
 
             rel_path = self.path_vars["Rel"][0].get()
             rel_map = self._load_rel_map(rel_path, trans_map, log_label="startup relational map")
@@ -2960,6 +3280,8 @@ class QLAdminEnterpriseIntegrationSuite:
                 self.log(f"  Locked rulebook root: {locked_rule_base}")
                 self.log(f"  Output folder: {self.path_vars['Out'][0].get()}")
                 self.log("  NOTE: quikclms/quikclmp are NOT LifePRO source files — they come from Phase 17 UAT governance.")
+                if self._product_setup_isolated():
+                    self.log("  PRODUCT SETUP ISOLATED: quikplan will be SKIPPED in batch (QLA_PRODUCT_SETUP_ISOLATED=1)")
                 self.log("=" * 60)
 
             for t_id in tables:
@@ -2969,6 +3291,16 @@ class QLAdminEnterpriseIntegrationSuite:
 
                 if self._is_claims_table(t_id):
                     self._execute_claims_orchestration(t_id)
+                    continue
+
+                if is_batch and t_id.lower() == "quikplan" and self._product_setup_isolated():
+                    out_dir = self.path_vars["Out"][0].get()
+                    qplan_path = os.path.normpath(os.path.join(out_dir, "quikplan.csv"))
+                    self.log("PRODUCT SETUP ISOLATED: skipping quikplan in batch — use Product Setup Conversion panel.")
+                    if os.path.isfile(qplan_path):
+                        self.log(f"  Using existing catalog: {qplan_path}")
+                    else:
+                        self.log("  WARNING: output/quikplan.csv not found — run Product Setup Conversion first.")
                     continue
                 
                 rule_input = self.path_vars["Rule"][0].get()
@@ -2983,7 +3315,7 @@ class QLAdminEnterpriseIntegrationSuite:
 
                 expected_src = (
                     "PACTG_Accounting_Extract20260427.csv"
-                    if t_id.lower() in ["quikprmh", "quikdvpr"]
+                    if t_id.lower() in ["quikprmh", "quikdvpr", "quikactg"]
                     else (
                         "PPBENTYP.csv"
                         if t_id.lower() == "quikdvdp"
@@ -3108,6 +3440,64 @@ class QLAdminEnterpriseIntegrationSuite:
                     self.log(f"  MMODEPD Distribution: {mode_dist}")
                     
                     continue  # Safely abort the parent processing loop and move to the next batch table
+                if t_id.lower() == "quikactg":
+                    if not os.path.exists(src_path):
+                        self.log(f"Skipping {t_id.upper()} -> Missing Source Data: {src_path}")
+                        continue
+
+                    self.log(f"Working Table: {t_id.upper()} (PACTG plan-level accounting setup)")
+                    closed_actg = self._closed_mplan_authority_enabled()
+                    if closed_actg and mplan_resolver is None:
+                        out_dir_preview = self.path_vars["Out"][0].get()
+                        mplan_resolver, quikplan_plan_set, _ = self._init_mplan_authority(out_dir_preview, cw_path)
+
+                    output_df, trace_df, actg_stats = convert_quikactg_from_pactg(
+                        src_path,
+                        cw_map=cw_map,
+                        resolver=mplan_resolver,
+                        quikplan_plan_set=quikplan_plan_set,
+                        closed_authority=closed_actg,
+                        allow_legacy=self._allow_legacy_mplan_fallback(),
+                        rulebook_path=rb_path if os.path.isfile(rb_path) else None,
+                    )
+
+                    out_dir = self.path_vars["Out"][0].get()
+                    out_path = os.path.normpath(os.path.join(out_dir, f"{t_id}.csv"))
+                    output_df.to_csv(out_path, index=False)
+                    self.log(f"Success: {t_id}.csv - {len(output_df)} plan records.")
+
+                    if closed_actg and not trace_df.empty:
+                        p3f_dir = os.path.normpath(
+                            os.path.join(self._app_base_dir(), "plan_analysis", "phase_p3f_quikactg_authority_alignment")
+                        )
+                        passed, val_stats = validate_emitted_quikridr(output_df, quikplan_plan_set)
+                        write_p3f_governance_outputs(
+                            p3f_dir,
+                            trace_df,
+                            closed_enabled=True,
+                            allow_legacy=self._allow_legacy_mplan_fallback(),
+                            emitted_rows=len(output_df),
+                            validation_passed=passed,
+                            pactg_stats=actg_stats,
+                        )
+                        self.log(f"P3F MPLAN AUTHORITY: validation={'PASSED' if passed else 'FAILED'} stats={val_stats}")
+                        self.log(f"P3F governance outputs: {p3f_dir}")
+
+                    audit_path = os.path.normpath(os.path.join(out_dir, "Migration_Audit_Log.txt"))
+                    is_new_log = not os.path.exists(audit_path)
+                    audit_msg = (
+                        f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TABLE: {t_id.upper():<10} | "
+                        f"SOURCE RECORDS: {actg_stats.get('pactg_rows_read', 0):<8} | "
+                        f"QLA OUTPUT: {len(output_df):<8} | "
+                        f"VARIANCE: {actg_stats.get('pactg_rows_read', 0) - len(output_df)} (Plan-level pivot)\n"
+                    )
+                    with open(audit_path, "a") as f:
+                        if is_new_log:
+                            f.write("=== QLADMIN ENTERPRISE MIGRATION AUDIT LOG ===\n")
+                            f.write("Tracks 1:1 record translation matching to guarantee zero data loss.\n\n")
+                        f.write(audit_msg)
+                    self.log(f"Audit Verified: PACTG -> {len(output_df)} quikactg plan rows. Saved to Audit Log.")
+                    continue
                 # --------------------------------------------------------
 
                 if not os.path.exists(rb_path) or not os.path.exists(src_path): 
@@ -3121,8 +3511,12 @@ class QLAdminEnterpriseIntegrationSuite:
                 rules = pd.read_csv(rb_path, dtype=str)
                 rules.columns = [str(col).strip() for col in rules.columns]
                 
-                source = pd.read_csv(src_path, encoding='latin1', low_memory=False, dtype=str, on_bad_lines='skip').fillna("")
-                source.columns = [str(col).replace('\ufeff', '').strip().upper() for col in source.columns]
+                if t_id.lower() == "quikplan":
+                    source, _ = load_quikplan_source_csv(src_path, collect_trace=False)
+                    source.columns = [str(col).replace('\ufeff', '').strip().upper() for col in source.columns]
+                else:
+                    source = pd.read_csv(src_path, encoding='latin1', low_memory=False, dtype=str, on_bad_lines='skip').fillna("")
+                    source.columns = [str(col).replace('\ufeff', '').strip().upper() for col in source.columns]
 
                 if is_batch and t_id.lower() == "quikclnt" and self._is_preconverted_qla_client_source(source):
                     rna_path = os.path.normpath(os.path.join(src_base, "RelationshipNameAddress_Extract.csv"))
@@ -3390,6 +3784,11 @@ class QLAdminEnterpriseIntegrationSuite:
                         self.log(f"Warning: Failed to load quikclnt cache for quikagts - {e}")
 
                 if t_id.lower() == "quikridr":
+                    mplan_trace_rows = []
+                    mplan_src_file = os.path.basename(src_input) if src_input else "PPBEN.csv"
+                    if self._closed_mplan_authority_enabled() and mplan_resolver is None:
+                        out_dir_preview = self.path_vars["Out"][0].get()
+                        mplan_resolver, quikplan_plan_set, _ = self._init_mplan_authority(out_dir_preview, cw_path)
                     if 'BENEFIT_SEQ' in source.columns:
                         source['BENEFIT_SEQ'] = source['BENEFIT_SEQ'].astype(str).str.strip().str.replace(".0", "", regex=False)
                         source = source[source['BENEFIT_SEQ'].apply(
@@ -3424,7 +3823,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         source = source[source['RELATE_CODE'].isin(['B1', 'B2', 'P', 'C'])]
                         
                 elif t_id.lower() == "quikplan":
-                    if 'COVERAGE_ID' in source.columns: source = source.drop_duplicates(subset=['COVERAGE_ID'], keep='first')
+                    source = prepare_quikplan_source(source)
 
                 elif t_id.lower() == "quikdvpr":
                     credit_match = pd.Series(False, index=source.index)
@@ -3449,415 +3848,476 @@ class QLAdminEnterpriseIntegrationSuite:
                         self.log(f"!!! CRITICAL: 'Target_Field' header is completely missing in your Rulebook.")
                         continue
 
-                output = []
-                for i, src_row in source.iterrows():
-                    if any("---" in str(v) for v in src_row.values[:3]): continue
-                    
-                    row_data = {h: "" for h in schema}
-                    for _, rule in rules.iterrows():
-                        s_f = str(rule.get('Source_Field', '')).strip().upper()
-                        t_f = str(rule.get('Target_Field', '')).strip().upper()
-                        lt = str(rule.get('Lookup_Table', '')).strip() if 'Lookup_Table' in rule else ""
-                        jk = str(rule.get('Join_Key', '')).strip().upper() if 'Join_Key' in rule else ""
+                if t_id.lower() == "quikplan":
+                    overlay_cfg = resolve_crosswalk_overlay_config()
+                    cw_authority = load_crosswalk_authority(cw_path) if cw_path and os.path.exists(cw_path) else None
+                    output = convert_quikplan_to_output(
+                        source, rules, lookups, trans_map, cw_map, schema, overlay_cfg, cw_authority,
+                    )
+                else:
+                    output = []
+                    for i, src_row in source.iterrows():
+                        if any("---" in str(v) for v in src_row.values[:3]): continue
                         
-                        if s_f in ['NAN', 'NONE', 'NULL']: s_f = ""
-                        if t_f in ['NAN', 'NONE', 'NULL']: t_f = ""
-                        
-                        note = ""
-                        if 'Transformation_Note' in rule and pd.notna(rule['Transformation_Note']): note = str(rule['Transformation_Note']).strip().upper()
-                        elif 'Notes' in rule and pd.notna(rule['Notes']): note = str(rule['Notes']).strip().upper()
-                        
-                        if t_f in [h.upper() for h in schema]:
-                            actual_h = [h for h in schema if h.upper() == t_f][0]
+                        row_data = {h: "" for h in schema}
+                        source_plan_code = self.normalize(src_row.get("PLAN_CODE", "")) if t_id.lower() == "quikridr" else ""
+                        mplan_resolution = None
+                        for _, rule in rules.iterrows():
+                            s_f = str(rule.get('Source_Field', '')).strip().upper()
+                            t_f = str(rule.get('Target_Field', '')).strip().upper()
+                            lt = str(rule.get('Lookup_Table', '')).strip() if 'Lookup_Table' in rule else ""
+                            jk = str(rule.get('Join_Key', '')).strip().upper() if 'Join_Key' in rule else ""
                             
-                            val = ""
-                            if lt and jk and lt in lookups and jk in lookups[lt]:
-                                join_val = self.normalize(src_row.get(jk))
-                                if join_val in lookups[lt][jk]:
-                                    val = self.normalize(lookups[lt][jk][join_val].get(s_f, ""))
+                            if s_f in ['NAN', 'NONE', 'NULL']: s_f = ""
+                            if t_f in ['NAN', 'NONE', 'NULL']: t_f = ""
+                            
+                            note = ""
+                            if 'Transformation_Note' in rule and pd.notna(rule['Transformation_Note']): note = str(rule['Transformation_Note']).strip().upper()
+                            elif 'Notes' in rule and pd.notna(rule['Notes']): note = str(rule['Notes']).strip().upper()
+                            
+                            if t_f in [h.upper() for h in schema]:
+                                actual_h = [h for h in schema if h.upper() == t_f][0]
+                                
+                                val = ""
+                                if lt and jk and lt in lookups and jk in lookups[lt]:
+                                    join_val = self.normalize(src_row.get(jk))
+                                    if join_val in lookups[lt][jk]:
+                                        val = self.normalize(lookups[lt][jk][join_val].get(s_f, ""))
+                                    else:
+                                        val = self.normalize(rule.get('Default_Value', ''))
                                 else:
+                                    default_val = str(rule.get('Default_Value', '')).strip()
+                                    if not s_f and default_val and default_val.lower() not in ['nan', 'none']:
+                                        val = self.normalize(default_val)
+                                    else:
+                                        val = self.normalize(src_row.get(s_f)) if (s_f and s_f in source.columns) else (self.normalize(src_row.get(t_f)) if t_f in source.columns else self.normalize(default_val))
+                                
+                                if not val:
                                     val = self.normalize(rule.get('Default_Value', ''))
-                            else:
-                                default_val = str(rule.get('Default_Value', '')).strip()
-                                if not s_f and default_val and default_val.lower() not in ['nan', 'none']:
-                                    val = self.normalize(default_val)
-                                else:
-                                    val = self.normalize(src_row.get(s_f)) if (s_f and s_f in source.columns) else (self.normalize(src_row.get(t_f)) if t_f in source.columns else self.normalize(default_val))
-                            
-                            if not val:
-                                val = self.normalize(rule.get('Default_Value', ''))
-
-                            if t_id.lower() == "quikmstr" and t_f == "MBANKNO":
-                                raw_pol = self.normalize(src_row.get("POLICY_NUMBER", src_row.get("MPOLICY", "")))
-                                pulled_bank = getattr(self, '_ppach_bank_map', {}).get(raw_pol)
-                                if pulled_bank:
-                                    val = pulled_bank
-
-                            if t_id.lower() == "quikridr" and t_f == "MPAR":
-                                pol_key = self.normalize(src_row.get("POLICY_NUMBER", ""))
-                                seq_key = self.normalize(src_row.get("BENEFIT_SEQ", ""))
-                                
-                                pulled_par = quikridr_par_cache.get((pol_key, seq_key))
-                                
-                                if pulled_par is not None:
-                                    normalized_par = self.normalize(pulled_par)
+    
+                                if t_id.lower() == "quikmstr" and t_f == "MBANKNO":
+                                    raw_pol = self.normalize(src_row.get("POLICY_NUMBER", src_row.get("MPOLICY", "")))
+                                    pulled_bank = getattr(self, '_ppach_bank_map', {}).get(raw_pol)
+                                    if pulled_bank:
+                                        val = pulled_bank
+    
+                                if t_id.lower() == "quikridr" and t_f == "MPAR":
+                                    pol_key = self.normalize(src_row.get("POLICY_NUMBER", ""))
+                                    seq_key = self.normalize(src_row.get("BENEFIT_SEQ", ""))
                                     
-                                    translated_par = trans_map.get(
-                                        f"PAR_{normalized_par}",
-                                        normalized_par
-                                    )
+                                    pulled_par = quikridr_par_cache.get((pol_key, seq_key))
                                     
-                                    val = translated_par if translated_par else "0"
-                                else:
-                                    val = "0"
-
-                            # --- MSTATUS COMPOSITE KEY INTERCEPTOR ---
-                            if t_f == 'MSTATUS' and t_id.lower() == "quikmstr":
-                                put = self.normalize(src_row.get('PAID_UP_TYPE', ''))
-                                if put in ['PU', 'RU', 'ET', 'LE', 'LP', 'SP']:
-                                    val = f"PUT_{put}"
-                                else:
-                                    c_code = self.normalize(src_row.get('CONTRACT_CODE', val))
-                                    c_reason = self.normalize(src_row.get('CONTRACT_REASON', ''))
-                                    val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
-                            # -----------------------------------------
-
-                            if t_f in ['MNFOPT', 'MDIVOPT'] and val in ["", "0", "0.0"] and t_id.lower() == "quikmstr":
-                                pol_id = self.normalize(row_data.get('MPOLICY', ''))
-                                
-                                if not pol_id:
-                                    pol_id = self.normalize(src_row.get('POLICY_NUMBER', src_row.get('MPOLICY', src_row.get('POLICY_ID', ''))))
-                                    pol_id = cw_map.get(pol_id, pol_id)
-                                    
-                                legacy_id = reverse_cw_map.get(pol_id, pol_id) 
-
-                                if t_f == 'MNFOPT' and 'NON_FORFEITURE' in lifepro_extra:
-                                    pulled_val = lifepro_extra['NON_FORFEITURE'].get(legacy_id)
-                                    if pulled_val is None: pulled_val = lifepro_extra['NON_FORFEITURE'].get(pol_id, val)
-                                    val = self.normalize(pulled_val)
-                                    
-                                elif t_f == 'MDIVOPT' and 'DIVIDEND' in lifepro_extra:
-                                    pulled_val = lifepro_extra['DIVIDEND'].get(legacy_id)
-                                    if pulled_val is None: pulled_val = lifepro_extra['DIVIDEND'].get(pol_id, val)
-                                    val = self.normalize(pulled_val)
-
-                            if note == "EXTRACT_DAY": val = self.extract_day(val)
-                            elif note == "ROUTE_PAY_YRS":
-                                c_type = str(src_row.get('PREM_CEASE_TYPE', '')).strip().upper()
-                                val = val if c_type == 'D' else '0'
-                            elif note == "ROUTE_PAY_AGE":
-                                c_type = str(src_row.get('PREM_CEASE_TYPE', '')).strip().upper()
-                                val = val if c_type == 'A' else '0'
-                            elif note == "ROUTE_INS_YRS":
-                                c_type = str(src_row.get('BENEFIT_CEASE_TYPE', '')).strip().upper()
-                                val = val if c_type == 'D' else '0'
-                            elif note == "ROUTE_INS_AGE":
-                                c_type = str(src_row.get('BENEFIT_CEASE_TYPE', '')).strip().upper()
-                                val = val if c_type == 'A' else '0'
-                            elif t_id.lower() == "quikprmh" and note == "DERIVE_PRMH_RENEWAL":
-                                p_code = self.normalize(src_row.get("PAYMENT_CODE", ""))
-                                p_reason = self.normalize(src_row.get("PAYMENT_REASON", ""))
-                                loan_amt = self.normalize(src_row.get("LOAN_REPMT_AMOUNT", ""))
-
-                                if loan_amt and loan_amt not in ["0", "0.00", ".00"]:
-                                    val = "L"
-                                elif p_code == "S":
-                                    val = "S"
-                                elif p_code in ["A", "R"]:
-                                    val = "2"
-                                elif p_reason in ["PC", "PREM"]:
-                                    val = "1"
-                                else:
-                                    val = "0"
-                            elif t_id.lower() == "quikprmh" and note == "DERIVE_MODE_COUNT":
-                                bill_mode = self.normalize(src_row.get("BILLING_MODE", ""))
-                                mode_count_map = {
-                                    "12": "1",
-                                    "6": "2",
-                                    "3": "4",
-                                    "1": "12"
-                                }
-                                val = mode_count_map.get(bill_mode, "0")
-                            elif t_id.lower() == "quikprmh" and note == "FORMAT_MONEY":
-                                try:
-                                    val = f"{float(str(val).replace(',', '').strip() or 0):.2f}"
-                                except Exception:
-                                    val = "0.00"
-                            elif t_id.lower() == "quikbenf" and note == "DERIVE_BENF_TYPE":
-                                norm_val = self.normalize(val)
-                                if norm_val in ["B1", "P"]:
-                                    val = "P"
-                                elif norm_val in ["B2", "C"]:
-                                    val = "C"
-                                else:
-                                    val = ""
-                            
-                            if any(k in t_f for k in ['AGE', 'DUR', 'YRS']) and 'VAL' not in t_f and 'VPU' not in t_f and 'PREM' not in t_f:
-                                if val.isdigit() and len(val) == 1:
-                                    val = val.zfill(2)
-                            
-                            # --- ENTERPRISE DATE SANITIZER ---
-                            if t_f in ['MDOB']:
-                                _d = re.sub(r'[^0-9]', '', str(val))
-                                val = _d if len(_d) == 8 and _d >= "19000101" else ""
-                            # ---------------------------------
-                            
-                            # --- QUIKCLNT NAME OVERRIDES & SHIELD ---
-                            if t_f in ['MFNAME', 'MMNAME', 'MLNAME']:
-                                source_row = src_row
-                                # Safely bridge MCLIENTID to NAME_ID lookup
-                                raw_name_id = src_row.get('MCLIENTID', src_row.get('NAME_ID', ''))
-                                norm_name_id = self.normalize(raw_name_id)
-                                cache_matched = False
-                                
-                                if 'INDIVIDUAL_FIRST' not in src_row and rel_name_cache:
-                                    if norm_name_id in rel_name_cache:
-                                        source_row = rel_name_cache[norm_name_id]
-                                        cache_matched = True
+                                    if pulled_par is not None:
+                                        normalized_par = self.normalize(pulled_par)
                                         
-                                if t_f == 'MFNAME':
-                                    if getattr(self, '_diag_name_count', 0) < 5:
-                                        self.log(f"DEBUG ROW: raw JOIN_KEY='{raw_name_id}', norm='{norm_name_id}', matched={cache_matched}, FIRST='{source_row.get('INDIVIDUAL_FIRST', '')}', MIDDLE='{source_row.get('INDIVIDUAL_MIDDLE', '')}', LAST='{source_row.get('INDIVIDUAL_LAST', '')}'")
-                                        self._diag_name_count += 1
+                                        translated_par = trans_map.get(
+                                            f"PAR_{normalized_par}",
+                                            normalized_par
+                                        )
                                         
-                                    if not cache_matched:
-                                        if not hasattr(self, '_diag_fail_count'):
-                                            self._diag_fail_count = 0
-                                        if self._diag_fail_count < 10:
-                                            # Find first 3 similar keys using a 4-character prefix
-                                            prefix_val = norm_name_id[:4] if len(norm_name_id) >= 4 else norm_name_id
-                                            similar = [k for k in rel_name_cache.keys() if str(k).startswith(prefix_val)][:3] if prefix_val else []
-                                            self.log(f"DEBUG FAILED JOIN: raw MCLIENTID='{raw_name_id}', norm='{norm_name_id}', in_cache={norm_name_id in rel_name_cache}, similar_keys={similar}")
-                                            self._diag_fail_count += 1
-                                    
-                                if t_f == 'MFNAME':
-                                    val = source_row.get('INDIVIDUAL_FIRST', val)
-                                elif t_f == 'MLNAME':
-                                    business_name = str(source_row.get('NAME_BUSINESS', '')).strip()
-                                    if business_name and business_name.lower() not in ['nan', 'none']:
-                                        val = business_name
+                                        val = translated_par if translated_par else "0"
                                     else:
-                                        val = source_row.get('INDIVIDUAL_LAST', val)
-                                elif t_f == 'MMNAME':
-                                    temp_val = str(source_row.get('INDIVIDUAL_MIDDLE', val))
-                                    # Harden against padded spaces and trailing decimal artifacts
-                                    clean_temp = temp_val.replace('.0', '').strip()
-                                    
-                                    # Safety shield: blank out only if the ENTIRE value is numeric
-                                    if clean_temp.isdigit():
-                                        val = ""
+                                        val = "0"
+    
+                                # --- MSTATUS COMPOSITE KEY INTERCEPTOR ---
+                                if t_f == 'MSTATUS' and t_id.lower() == "quikmstr":
+                                    put = self.normalize(src_row.get('PAID_UP_TYPE', ''))
+                                    if put in ['PU', 'RU', 'ET', 'LE', 'LP', 'SP']:
+                                        val = f"PUT_{put}"
                                     else:
-                                        val = clean_temp
-                            # ----------------------------------------
-                            
-                            if t_f == "MVALID":
-                                if val in ['Y', 'YES', 'TRUE', '1']: val = 'F' if 'INVALID' in s_f else 'T'
-                                elif val in ['N', 'NO', 'FALSE', '0']: val = 'T' if 'INVALID' in s_f else 'F'
-                                if val not in ['T', 'F']: val = 'T' 
-                            elif t_id.lower() == "quikplan" and t_f == "PAR":
-                                pass
-                            else:
-                                prefix = "BF_" if t_f == "MBILLFRM" else ("PM_" if t_f == "MMODE" else ("DV_" if t_f == "MDIVOPT" else ("NF_" if t_f == "MNFOPT" else ("AG_" if (t_f == "MSTATUS" and t_id.lower() == "quikagts") else ("ST_" if t_f == "MSTATUS" else ("PAR_" if t_f == "MPAR" else ""))))))
-                                if not (t_id.lower() == "quikbenf" and t_f == "MTYPE"):
-                                    val = trans_map.get(f"{prefix}{val}", trans_map.get(val, val))
-                            
-                            # --- STRICT NUMERIC SHIELD FOR DIVIDENDS & NFO ---
-                            if t_f in ['MDIVOPT', 'MNFOPT'] and not str(val).isdigit():
-                                val = "0"
-                            # -------------------------------------------------
-                            
-                            if t_f in ["MPOLICY", "MCLIENTID", "MPRIMID", "MOWNRID", "MPAYRID", "MASGNID", "MBENPID", "MBENCID", "MCID", "MOWNCID", "MRIDRID", "MPLAN", "PLAN"]:
-                                val = cw_map.get(val, val)
-                            
-                            if t_id.lower() == "quikdvdp":
-                                if actual_h in ["MDEPOSIT", "MINTYTD", "MDEPINT"] and val:
+                                        c_code = self.normalize(src_row.get('CONTRACT_CODE', val))
+                                        c_reason = self.normalize(src_row.get('CONTRACT_REASON', ''))
+                                        val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
+                                # -----------------------------------------
+    
+                                if t_f in ['MNFOPT', 'MDIVOPT'] and val in ["", "0", "0.0"] and t_id.lower() == "quikmstr":
+                                    pol_id = self.normalize(row_data.get('MPOLICY', ''))
+                                    
+                                    if not pol_id:
+                                        pol_id = self.normalize(src_row.get('POLICY_NUMBER', src_row.get('MPOLICY', src_row.get('POLICY_ID', ''))))
+                                        pol_id = cw_map.get(pol_id, pol_id)
+                                        
+                                    legacy_id = reverse_cw_map.get(pol_id, pol_id) 
+    
+                                    if t_f == 'MNFOPT' and 'NON_FORFEITURE' in lifepro_extra:
+                                        pulled_val = lifepro_extra['NON_FORFEITURE'].get(legacy_id)
+                                        if pulled_val is None: pulled_val = lifepro_extra['NON_FORFEITURE'].get(pol_id, val)
+                                        val = self.normalize(pulled_val)
+                                        
+                                    elif t_f == 'MDIVOPT' and 'DIVIDEND' in lifepro_extra:
+                                        pulled_val = lifepro_extra['DIVIDEND'].get(legacy_id)
+                                        if pulled_val is None: pulled_val = lifepro_extra['DIVIDEND'].get(pol_id, val)
+                                        val = self.normalize(pulled_val)
+    
+                                if note == "EXTRACT_DAY": val = self.extract_day(val)
+                                elif note == "ROUTE_PAY_YRS":
+                                    c_type = str(src_row.get('PREM_CEASE_TYPE', '')).strip().upper()
+                                    val = val if c_type == 'D' else '0'
+                                elif note == "ROUTE_PAY_AGE":
+                                    c_type = str(src_row.get('PREM_CEASE_TYPE', '')).strip().upper()
+                                    val = val if c_type == 'A' else '0'
+                                elif note == "ROUTE_INS_YRS":
+                                    c_type = str(src_row.get('BENEFIT_CEASE_TYPE', '')).strip().upper()
+                                    val = val if c_type == 'D' else '0'
+                                elif note == "ROUTE_INS_AGE":
+                                    c_type = str(src_row.get('BENEFIT_CEASE_TYPE', '')).strip().upper()
+                                    val = val if c_type == 'A' else '0'
+                                elif t_id.lower() == "quikprmh" and note == "DERIVE_PRMH_RENEWAL":
+                                    p_code = self.normalize(src_row.get("PAYMENT_CODE", ""))
+                                    p_reason = self.normalize(src_row.get("PAYMENT_REASON", ""))
+                                    loan_amt = self.normalize(src_row.get("LOAN_REPMT_AMOUNT", ""))
+    
+                                    if loan_amt and loan_amt not in ["0", "0.00", ".00"]:
+                                        val = "L"
+                                    elif p_code == "S":
+                                        val = "S"
+                                    elif p_code in ["A", "R"]:
+                                        val = "2"
+                                    elif p_reason in ["PC", "PREM"]:
+                                        val = "1"
+                                    else:
+                                        val = "0"
+                                elif t_id.lower() == "quikprmh" and note == "DERIVE_MODE_COUNT":
+                                    bill_mode = self.normalize(src_row.get("BILLING_MODE", ""))
+                                    mode_count_map = {
+                                        "12": "1",
+                                        "6": "2",
+                                        "3": "4",
+                                        "1": "12"
+                                    }
+                                    val = mode_count_map.get(bill_mode, "0")
+                                elif t_id.lower() == "quikprmh" and note == "FORMAT_MONEY":
                                     try:
-                                        val = f"{float(val):.2f}"
-                                    except:
+                                        val = f"{float(str(val).replace(',', '').strip() or 0):.2f}"
+                                    except Exception:
                                         val = "0.00"
-                                elif actual_h == "MINTDATE":
-                                    if not val or str(val).strip().upper() in ["0", "0.0", "0.00", "POLC.PAID_TO_DATE", "NAN", "NONE"]:
-                                        pol_id = self.normalize(row_data.get('MPOLICY', ''))
-                                        if pol_id in quikmstr_paid_to:
-                                            val = quikmstr_paid_to[pol_id]
-                                    if val:
-                                        val = re.sub(r'[^0-9]', '', str(val))
-
-                            # --- FINAL OUTPUT SANITIZATION ---
-                            if actual_h == 'MMNAME':
-                                final_mm = str(val).replace('.0', '').strip()
-                                if final_mm.isdigit():
-                                    val = ""
+                                elif t_id.lower() == "quikbenf" and note == "DERIVE_BENF_TYPE":
+                                    norm_val = self.normalize(val)
+                                    if norm_val in ["B1", "P"]:
+                                        val = "P"
+                                    elif norm_val in ["B2", "C"]:
+                                        val = "C"
+                                    else:
+                                        val = ""
+                                
+                                if any(k in t_f for k in ['AGE', 'DUR', 'YRS']) and 'VAL' not in t_f and 'VPU' not in t_f and 'PREM' not in t_f:
+                                    if val.isdigit() and len(val) == 1:
+                                        val = val.zfill(2)
+                                
+                                # --- ENTERPRISE DATE SANITIZER ---
+                                if t_f in ['MDOB']:
+                                    _d = re.sub(r'[^0-9]', '', str(val))
+                                    val = _d if len(_d) == 8 and _d >= "19000101" else ""
+                                # ---------------------------------
+                                
+                                # --- QUIKCLNT NAME OVERRIDES & SHIELD ---
+                                if t_f in ['MFNAME', 'MMNAME', 'MLNAME']:
+                                    source_row = src_row
+                                    # Safely bridge MCLIENTID to NAME_ID lookup
+                                    raw_name_id = src_row.get('MCLIENTID', src_row.get('NAME_ID', ''))
+                                    norm_name_id = self.normalize(raw_name_id)
+                                    cache_matched = False
                                     
-                            if t_id.lower() == "quikridr" and actual_h == "MPAR":
-                                normalized_mpar = self.normalize(val)
-                                if normalized_mpar in ["", "N", "X", "F"]:
+                                    if 'INDIVIDUAL_FIRST' not in src_row and rel_name_cache:
+                                        if norm_name_id in rel_name_cache:
+                                            source_row = rel_name_cache[norm_name_id]
+                                            cache_matched = True
+                                            
+                                    if t_f == 'MFNAME':
+                                        if getattr(self, '_diag_name_count', 0) < 5:
+                                            self.log(f"DEBUG ROW: raw JOIN_KEY='{raw_name_id}', norm='{norm_name_id}', matched={cache_matched}, FIRST='{source_row.get('INDIVIDUAL_FIRST', '')}', MIDDLE='{source_row.get('INDIVIDUAL_MIDDLE', '')}', LAST='{source_row.get('INDIVIDUAL_LAST', '')}'")
+                                            self._diag_name_count += 1
+                                            
+                                        if not cache_matched:
+                                            if not hasattr(self, '_diag_fail_count'):
+                                                self._diag_fail_count = 0
+                                            if self._diag_fail_count < 10:
+                                                # Find first 3 similar keys using a 4-character prefix
+                                                prefix_val = norm_name_id[:4] if len(norm_name_id) >= 4 else norm_name_id
+                                                similar = [k for k in rel_name_cache.keys() if str(k).startswith(prefix_val)][:3] if prefix_val else []
+                                                self.log(f"DEBUG FAILED JOIN: raw MCLIENTID='{raw_name_id}', norm='{norm_name_id}', in_cache={norm_name_id in rel_name_cache}, similar_keys={similar}")
+                                                self._diag_fail_count += 1
+                                        
+                                    if t_f == 'MFNAME':
+                                        val = source_row.get('INDIVIDUAL_FIRST', val)
+                                    elif t_f == 'MLNAME':
+                                        business_name = str(source_row.get('NAME_BUSINESS', '')).strip()
+                                        if business_name and business_name.lower() not in ['nan', 'none']:
+                                            val = business_name
+                                        else:
+                                            val = source_row.get('INDIVIDUAL_LAST', val)
+                                    elif t_f == 'MMNAME':
+                                        temp_val = str(source_row.get('INDIVIDUAL_MIDDLE', val))
+                                        # Harden against padded spaces and trailing decimal artifacts
+                                        clean_temp = temp_val.replace('.0', '').strip()
+                                        
+                                        # Safety shield: blank out only if the ENTIRE value is numeric
+                                        if clean_temp.isdigit():
+                                            val = ""
+                                        else:
+                                            val = clean_temp
+                                # ----------------------------------------
+                                
+                                if t_f == "MVALID":
+                                    if val in ['Y', 'YES', 'TRUE', '1']: val = 'F' if 'INVALID' in s_f else 'T'
+                                    elif val in ['N', 'NO', 'FALSE', '0']: val = 'T' if 'INVALID' in s_f else 'F'
+                                    if val not in ['T', 'F']: val = 'T' 
+                                elif t_id.lower() == "quikplan" and t_f == "PAR":
+                                    pass
+                                else:
+                                    prefix = "BF_" if t_f == "MBILLFRM" else ("PM_" if t_f == "MMODE" else ("DV_" if t_f == "MDIVOPT" else ("NF_" if t_f == "MNFOPT" else ("AG_" if (t_f == "MSTATUS" and t_id.lower() == "quikagts") else ("ST_" if t_f == "MSTATUS" else ("PAR_" if t_f == "MPAR" else ""))))))
+                                    if not (t_id.lower() == "quikbenf" and t_f == "MTYPE"):
+                                        val = trans_map.get(f"{prefix}{val}", trans_map.get(val, val))
+                                
+                                # --- STRICT NUMERIC SHIELD FOR DIVIDENDS & NFO ---
+                                if t_f in ['MDIVOPT', 'MNFOPT'] and not str(val).isdigit():
                                     val = "0"
-                                elif normalized_mpar == "P":
-                                    val = "1"
-                                    
-                            if t_id.lower() == "quikclid" and actual_h == "MPHASE":
-                                normalized_phase = self.normalize(val)
-                                if not normalized_phase or normalized_phase == "0":
-                                    val = "1"
-                            # ---------------------------------
-
-                            row_data[actual_h] = val
-
-                    tp = self.normalize(row_data.get('MPOLICY', ''))
-                    tphase = self.normalize(row_data.get('MPHASE', ''))
-                    if not tphase: tphase = "1"
-
-                    if t_id.lower() == "quikmstr" and tp in rel_map:
-                        if "1" in rel_map[tp]:
-                            p_rel = rel_map[tp]["1"]
-                            # Includes raw LifePRO source codes alongside standard QLAdmin roles
-                            for r, f in {'IN':'MPRIMID', 'INSD':'MPRIMID', 'PO':'MOWNRID', 'OWNR':'MOWNRID', 'PA':'MPAYRID', 'PAYR':'MPAYRID', 'ASGN':'MASGNID', 'B1':'MBENPID', 'BENP':'MBENPID', 'B2':'MBENCID', 'BENC':'MBENCID'}.items():
-                                if r in p_rel and f in row_data: 
-                                    row_data[f] = cw_map.get(p_rel[r], p_rel[r])
-                        
-                    if t_id.lower() == "quikridr" and 'MRIDRID' in row_data and tp in rel_map:
-                        rel_id = None
-                        rel_source = None
-                        
-                        # Phase-level rider insured priority, if that phase exists
-                        phase_rel = rel_map[tp].get(tphase, {})
-                        
-                        if 'RU' in phase_rel:
-                            rel_id = phase_rel['RU']
-                            rel_source = f"phase {tphase} RU"
-                        elif 'IN' in phase_rel:
-                            rel_id = phase_rel['IN']
-                            rel_source = f"phase {tphase} IN"
-                        elif 'INSD' in phase_rel:
-                            rel_id = phase_rel['INSD']
-                            rel_source = f"phase {tphase} INSD"
-                        
-                        # Fallback to phase 1 insured even when rider phase is missing
-                        if not rel_id and "1" in rel_map[tp]:
-                            base_rel = rel_map[tp]["1"]
-                            if 'IN' in base_rel:
-                                rel_id = base_rel['IN']
-                                rel_source = f"fallback phase 1 IN (requested phase {tphase})"
-                            elif 'INSD' in base_rel:
-                                rel_id = base_rel['INSD']
-                                rel_source = f"fallback phase 1 INSD (requested phase {tphase})"
-                        
-                        if rel_id:
-                            row_data['MRIDRID'] = cw_map.get(rel_id, rel_id)
-                        
-                        if self.debug_rel_fallback and self._diag_rel_fallback_count < 25:
+                                # -------------------------------------------------
+                                
+                                if t_f in ["MPOLICY", "MCLIENTID", "MPRIMID", "MOWNRID", "MPAYRID", "MASGNID", "MBENPID", "MBENCID", "MCID", "MOWNCID", "MRIDRID", "MPLAN", "PLAN"]:
+                                    if (
+                                        t_id.lower() == "quikridr"
+                                        and t_f == "MPLAN"
+                                        and self._closed_mplan_authority_enabled()
+                                        and mplan_resolver is not None
+                                    ):
+                                        candidate = cw_map.get(val, val)
+                                        mplan_resolution = resolve_authoritative_mplan(
+                                            source_plan_code,
+                                            candidate,
+                                            mplan_resolver,
+                                            allow_legacy=self._allow_legacy_mplan_fallback(),
+                                        )
+                                        val = mplan_resolution.resolved_mplan
+                                    else:
+                                        val = cw_map.get(val, val)
+                                
+                                if t_id.lower() == "quikdvdp":
+                                    if actual_h in ["MDEPOSIT", "MINTYTD", "MDEPINT"] and val:
+                                        try:
+                                            val = f"{float(val):.2f}"
+                                        except:
+                                            val = "0.00"
+                                    elif actual_h == "MINTDATE":
+                                        if not val or str(val).strip().upper() in ["0", "0.0", "0.00", "POLC.PAID_TO_DATE", "NAN", "NONE"]:
+                                            pol_id = self.normalize(row_data.get('MPOLICY', ''))
+                                            if pol_id in quikmstr_paid_to:
+                                                val = quikmstr_paid_to[pol_id]
+                                        if val:
+                                            val = re.sub(r'[^0-9]', '', str(val))
+    
+                                # --- FINAL OUTPUT SANITIZATION ---
+                                if actual_h == 'MMNAME':
+                                    final_mm = str(val).replace('.0', '').strip()
+                                    if final_mm.isdigit():
+                                        val = ""
+                                        
+                                if t_id.lower() == "quikridr" and actual_h == "MPAR":
+                                    normalized_mpar = self.normalize(val)
+                                    if normalized_mpar in ["", "N", "X", "F"]:
+                                        val = "0"
+                                    elif normalized_mpar == "P":
+                                        val = "1"
+                                        
+                                if t_id.lower() == "quikclid" and actual_h == "MPHASE":
+                                    normalized_phase = self.normalize(val)
+                                    if not normalized_phase or normalized_phase == "0":
+                                        val = "1"
+                                # ---------------------------------
+    
+                                row_data[actual_h] = val
+    
+                        tp = self.normalize(row_data.get('MPOLICY', ''))
+                        tphase = self.normalize(row_data.get('MPHASE', ''))
+                        if not tphase: tphase = "1"
+    
+                        if t_id.lower() == "quikmstr" and tp in rel_map:
+                            if "1" in rel_map[tp]:
+                                p_rel = rel_map[tp]["1"]
+                                # Includes raw LifePRO source codes alongside standard QLAdmin roles
+                                for r, f in {'IN':'MPRIMID', 'INSD':'MPRIMID', 'PO':'MOWNRID', 'OWNR':'MOWNRID', 'PA':'MPAYRID', 'PAYR':'MPAYRID', 'ASGN':'MASGNID', 'B1':'MBENPID', 'BENP':'MBENPID', 'B2':'MBENCID', 'BENC':'MBENCID'}.items():
+                                    if r in p_rel and f in row_data: 
+                                        row_data[f] = cw_map.get(p_rel[r], p_rel[r])
+                            
+                        if t_id.lower() == "quikridr" and 'MRIDRID' in row_data and tp in rel_map:
+                            rel_id = None
+                            rel_source = None
+                            
+                            # Phase-level rider insured priority, if that phase exists
+                            phase_rel = rel_map[tp].get(tphase, {})
+                            
+                            if 'RU' in phase_rel:
+                                rel_id = phase_rel['RU']
+                                rel_source = f"phase {tphase} RU"
+                            elif 'IN' in phase_rel:
+                                rel_id = phase_rel['IN']
+                                rel_source = f"phase {tphase} IN"
+                            elif 'INSD' in phase_rel:
+                                rel_id = phase_rel['INSD']
+                                rel_source = f"phase {tphase} INSD"
+                            
+                            # Fallback to phase 1 insured even when rider phase is missing
+                            if not rel_id and "1" in rel_map[tp]:
+                                base_rel = rel_map[tp]["1"]
+                                if 'IN' in base_rel:
+                                    rel_id = base_rel['IN']
+                                    rel_source = f"fallback phase 1 IN (requested phase {tphase})"
+                                elif 'INSD' in base_rel:
+                                    rel_id = base_rel['INSD']
+                                    rel_source = f"fallback phase 1 INSD (requested phase {tphase})"
+                            
                             if rel_id:
-                                self.log(
-                                    f"DEBUG REL: MPOLICY={tp} MPHASE={tphase} "
-                                    f"MRIDRID={row_data.get('MRIDRID', '')} via {rel_source}"
-                                )
-                            else:
-                                phase_keys = sorted(rel_map[tp].keys())
-                                phase_roles = sorted(phase_rel.keys()) if phase_rel else []
-                                self.log(
-                                    f"DEBUG REL: MPOLICY={tp} MPHASE={tphase} MRIDRID=UNRESOLVED "
-                                    f"policy_phases={phase_keys} phase_roles={phase_roles}"
-                                )
-                            self._diag_rel_fallback_count += 1
-                        
-                    # --- BASE PHASE TERMINAL STATUS SYNCHRONIZATION ---
-                    if t_id.lower() == "quikridr" and tphase == "1":
-                        if getattr(self, '_qm_sync_table', None) != t_id:
-                            self._qm_sync_table = t_id
-                            self._qm_status_cache = None
+                                row_data['MRIDRID'] = cw_map.get(rel_id, rel_id)
                             
-                        if self._qm_status_cache is None:
-                            self._qm_status_cache = {}
-                            try:
-                                qm_path = os.path.normpath(os.path.join(self.path_vars["Out"][0].get(), "quikmstr.csv"))
-                                if os.path.exists(qm_path):
-                                    qdf = pd.read_csv(qm_path, dtype=str).fillna("")
-                                    qdf.columns = [str(c).strip().upper() for c in qdf.columns]
-                                    if 'MPOLICY' in qdf.columns and 'MSTATUS' in qdf.columns:
-                                        self._qm_status_cache = {self.normalize(k): self.normalize(v) for k, v in zip(qdf['MPOLICY'], qdf['MSTATUS'])}
-                            except Exception:
-                                pass
+                            if self.debug_rel_fallback and self._diag_rel_fallback_count < 25:
+                                if rel_id:
+                                    self.log(
+                                        f"DEBUG REL: MPOLICY={tp} MPHASE={tphase} "
+                                        f"MRIDRID={row_data.get('MRIDRID', '')} via {rel_source}"
+                                    )
+                                else:
+                                    phase_keys = sorted(rel_map[tp].keys())
+                                    phase_roles = sorted(phase_rel.keys()) if phase_rel else []
+                                    self.log(
+                                        f"DEBUG REL: MPOLICY={tp} MPHASE={tphase} MRIDRID=UNRESOLVED "
+                                        f"policy_phases={phase_keys} phase_roles={phase_roles}"
+                                    )
+                                self._diag_rel_fallback_count += 1
+                            
+                        # --- BASE PHASE TERMINAL STATUS SYNCHRONIZATION ---
+                        if t_id.lower() == "quikridr" and tphase == "1":
+                            if getattr(self, '_qm_sync_table', None) != t_id:
+                                self._qm_sync_table = t_id
+                                self._qm_status_cache = None
                                 
-                        qm_status = self._qm_status_cache.get(tp)
-                        # Inherit meaningful policy-level terminal status; block active statuses
-                        if qm_status and qm_status not in ["", "11", "22", "ACTIVE"]:
-                            row_data['MPHSTAT'] = qm_status
-                    # --------------------------------------------
-
-                    # --- QUIKDVDP ENRICHMENT ---
-                    if t_id.lower() == "quikdvdp":
-                        if tp in quikdvdp_tx_cache:
-                            tx_data = quikdvdp_tx_cache[tp]
-                            row_data['MDEPOSIT'] = f"{tx_data['MDEPOSIT']:.2f}"
-                            row_data['MINTYTD'] = f"{tx_data['MINTYTD']:.2f}"
-                            
-                            mdt = tx_data['MINTDATE']
-                            if mdt:
-                                row_data['MINTDATE'] = re.sub(r'[^0-9]', '', str(mdt))
+                            if self._qm_status_cache is None:
+                                self._qm_status_cache = {}
+                                try:
+                                    qm_path = os.path.normpath(os.path.join(self.path_vars["Out"][0].get(), "quikmstr.csv"))
+                                    if os.path.exists(qm_path):
+                                        qdf = pd.read_csv(qm_path, dtype=str).fillna("")
+                                        qdf.columns = [str(c).strip().upper() for c in qdf.columns]
+                                        if 'MPOLICY' in qdf.columns and 'MSTATUS' in qdf.columns:
+                                            self._qm_status_cache = {self.normalize(k): self.normalize(v) for k, v in zip(qdf['MPOLICY'], qdf['MSTATUS'])}
+                                except Exception:
+                                    pass
+                                    
+                            qm_status = self._qm_status_cache.get(tp)
+                            # Inherit meaningful policy-level terminal status; block active statuses
+                            if qm_status and qm_status not in ["", "11", "22", "ACTIVE"]:
+                                row_data['MPHSTAT'] = qm_status
+                        # --------------------------------------------
+    
+                        # --- QUIKDVDP ENRICHMENT ---
+                        if t_id.lower() == "quikdvdp":
+                            if tp in quikdvdp_tx_cache:
+                                tx_data = quikdvdp_tx_cache[tp]
+                                row_data['MDEPOSIT'] = f"{tx_data['MDEPOSIT']:.2f}"
+                                row_data['MINTYTD'] = f"{tx_data['MINTYTD']:.2f}"
+                                
+                                mdt = tx_data['MINTDATE']
+                                if mdt:
+                                    row_data['MINTDATE'] = re.sub(r'[^0-9]', '', str(mdt))
+                                else:
+                                    row_data['MINTDATE'] = ""
                             else:
+                                row_data['MDEPOSIT'] = "0.00"
+                                row_data['MINTYTD'] = "0.00"
                                 row_data['MINTDATE'] = ""
-                        else:
-                            row_data['MDEPOSIT'] = "0.00"
-                            row_data['MINTYTD'] = "0.00"
-                            row_data['MINTDATE'] = ""
-                    # ---------------------------
-
-                    # --- QUIKAGTS ENRICHMENT ---
-                    if t_id.lower() == "quikagts":
-                        name_id = self.normalize(src_row.get("NAME_ID", ""))
-                        if not name_id: name_id = self.normalize(src_row.get("CLIENT_ID", ""))
-                        
-                        magent = self.normalize(src_row.get("AGENT_NUMBER", row_data.get("MAGENT", "")))
-                        row_data["MAGENT"] = magent
-                        
-                        if not row_data.get("MSUPPRESS"):
-                            row_data["MSUPPRESS"] = "F"
+                        # ---------------------------
+    
+                        # --- QUIKAGTS ENRICHMENT ---
+                        if t_id.lower() == "quikagts":
+                            name_id = self.normalize(src_row.get("NAME_ID", ""))
+                            if not name_id: name_id = self.normalize(src_row.get("CLIENT_ID", ""))
                             
-                        clnt = quikagts_clnt_cache.get(name_id, {})
-                        if clnt:
-                            fname = self.normalize(clnt.get("MFNAME", ""))
-                            lname = self.normalize(clnt.get("MLNAME", ""))
-                            if fname or lname:
-                                row_data["MAGTNAME"] = f"{fname} {lname}".strip()
-                                
-                            mapping = {
-                                "MADDR1": "MAGTADDR1", "MADDR2": "MAGTADDR2",
-                                "MCITY": "MAGTCITY", "MSTATE": "MAGTST",
-                                "MZIP": "MAGTZIP", "MZIP2": "MAGTZIP2",
-                                "MEMAIL": "MAGTEMAIL", "MTAXIDTYPE": "MTAXIDTYPE"
-                            }
-                            for c_key, a_key in mapping.items():
-                                val = self.normalize(clnt.get(c_key, ""))
-                                if val: row_data[a_key] = val
-                                
-                            tax_id = self.normalize(clnt.get("MTAXID", ""))
-                            tax_type = self.normalize(clnt.get("MTAXIDTYPE", ""))
-                            if tax_type == "S":
-                                row_data["MAGTSSN"] = tax_id
-                                row_data["MAGTFEIN"] = ""
-                            elif tax_type == "E":
-                                row_data["MAGTSSN"] = ""
-                                row_data["MAGTFEIN"] = tax_id
-                                
-                            ofc = self.normalize(clnt.get("MPHONEOFC", ""))
-                            cell = self.normalize(clnt.get("MPHONECELL", ""))
-                            home = self.normalize(clnt.get("MPHONEHOME", ""))
+                            magent = self.normalize(src_row.get("AGENT_NUMBER", row_data.get("MAGENT", "")))
+                            row_data["MAGENT"] = magent
                             
-                            row_data["MAGTOFCE"] = ofc
-                            row_data["MAGTCELL"] = cell
-                            if ofc:
-                                row_data["MAGTPHONE"] = ofc
-                            elif cell:
-                                row_data["MAGTPHONE"] = cell
-                            elif home:
-                                row_data["MAGTPHONE"] = home
-                    # ---------------------------
+                            if not row_data.get("MSUPPRESS"):
+                                row_data["MSUPPRESS"] = "F"
+                                
+                            clnt = quikagts_clnt_cache.get(name_id, {})
+                            if clnt:
+                                fname = self.normalize(clnt.get("MFNAME", ""))
+                                lname = self.normalize(clnt.get("MLNAME", ""))
+                                if fname or lname:
+                                    row_data["MAGTNAME"] = f"{fname} {lname}".strip()
+                                    
+                                mapping = {
+                                    "MADDR1": "MAGTADDR1", "MADDR2": "MAGTADDR2",
+                                    "MCITY": "MAGTCITY", "MSTATE": "MAGTST",
+                                    "MZIP": "MAGTZIP", "MZIP2": "MAGTZIP2",
+                                    "MEMAIL": "MAGTEMAIL", "MTAXIDTYPE": "MTAXIDTYPE"
+                                }
+                                for c_key, a_key in mapping.items():
+                                    val = self.normalize(clnt.get(c_key, ""))
+                                    if val: row_data[a_key] = val
+                                    
+                                tax_id = self.normalize(clnt.get("MTAXID", ""))
+                                tax_type = self.normalize(clnt.get("MTAXIDTYPE", ""))
+                                if tax_type == "S":
+                                    row_data["MAGTSSN"] = tax_id
+                                    row_data["MAGTFEIN"] = ""
+                                elif tax_type == "E":
+                                    row_data["MAGTSSN"] = ""
+                                    row_data["MAGTFEIN"] = tax_id
+                                    
+                                ofc = self.normalize(clnt.get("MPHONEOFC", ""))
+                                cell = self.normalize(clnt.get("MPHONECELL", ""))
+                                home = self.normalize(clnt.get("MPHONEHOME", ""))
+                                
+                                row_data["MAGTOFCE"] = ofc
+                                row_data["MAGTCELL"] = cell
+                                if ofc:
+                                    row_data["MAGTPHONE"] = ofc
+                                elif cell:
+                                    row_data["MAGTPHONE"] = cell
+                                elif home:
+                                    row_data["MAGTPHONE"] = home
+                        # ---------------------------
+    
+                        if (
+                            t_id.lower() == "quikridr"
+                            and self._closed_mplan_authority_enabled()
+                            and mplan_resolver is not None
+                            and mplan_resolution is not None
+                        ):
+                            mplan_trace_rows.append(resolution_to_trace_row(
+                                mplan_resolution,
+                                source_file=mplan_src_file,
+                                source_row_number=int(i) + 2,
+                                mpolicy=row_data.get("MPOLICY", ""),
+                                mphase=row_data.get("MPHASE", ""),
+                                row_data=row_data,
+                                quikplan_plan_set=quikplan_plan_set,
+                                allow_legacy=self._allow_legacy_mplan_fallback(),
+                                source_benefit_type=str(src_row.get("BENEFIT_TYPE", "")),
+                            ))
+                            row_data["MPLAN"] = mplan_resolution.resolved_mplan
 
-                    output.append([row_data[h] for h in schema])
-                    if i % 1000 == 0: self.progress["value"] = (i/len(source))*100; self.root.update_idletasks()
-                
+                        output.append([row_data[h] for h in schema])
+                        if i % 1000 == 0: self.progress["value"] = (i/len(source))*100; self.root.update_idletasks()
+                    
                 out_dir = self.path_vars["Out"][0].get()
+                if t_id.lower() == "quikridr" and self._closed_mplan_authority_enabled() and mplan_trace_rows:
+                    trace_df = pd.DataFrame(mplan_trace_rows)
+                    quarantine = os.environ.get("QLA_PRODUCT_AUTHORITY_QUARANTINE", "0").strip().lower() in ("1", "true", "yes")
+                    if quarantine:
+                        output, _ = apply_mplan_emit_filter(output, schema, trace_df, quarantine=True)
+                    aligned_df = pd.DataFrame(output, columns=schema)
+                    passed, val_stats = validate_emitted_quikridr(aligned_df, quikplan_plan_set)
+                    p3e_dir = os.path.normpath(os.path.join(self._app_base_dir(), "plan_analysis", "phase_p3e_quikridr_authority_alignment"))
+                    write_p3e_governance_outputs(
+                        p3e_dir,
+                        trace_df,
+                        closed_enabled=True,
+                        allow_legacy=self._allow_legacy_mplan_fallback(),
+                        emitted_rows=len(output),
+                        validation_passed=passed,
+                    )
+                    self.log(f"P3E MPLAN AUTHORITY: validation={'PASSED' if passed else 'FAILED'} stats={val_stats}")
+                    self.log(f"P3E governance outputs: {p3e_dir}")
                 pd.DataFrame(output, columns=schema).to_csv(os.path.normpath(os.path.join(out_dir, f"{t_id}.csv")), index=False)
                 self.log(f"Success: {t_id}.csv - {len(output)} records.")
                 
