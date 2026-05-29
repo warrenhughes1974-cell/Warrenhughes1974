@@ -1,9 +1,9 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v56.6
-# Date:        2026-05-26
-# Change Note: Phase P3F — quikactg MPLAN authority alignment from PACTG (QLA_CLOSED_MPLAN_AUTHORITY)
+# Version:     v56.9
+# Date:        2026-05-28
+# Change Note: Claims status correction — Disbursement/Withdrawal emits CLAIMSTAT 99 override
 # =============================================================================
 
 import pandas as pd
@@ -40,6 +40,12 @@ from qla_core.mplan_authority import (
     validate_emitted_quikridr,
     write_p3e_governance_outputs,
     write_p3f_governance_outputs,
+)
+from qla_core.claims_emit_enhancements import (
+    apply_claims_emit_enhancements,
+    build_plan_metadata_lookup,
+    validate_claims_emit_enhancements,
+    write_claims_emit_enhancement_validation,
 )
 
 # --- Phase 18A–20: Claims orchestration, UAT handoff/emit/batch/DBF, MPOLICY validation ---
@@ -137,6 +143,8 @@ SEMANTIC_HOLD_REMEDIATION = (
 )
 CLAIMS_CROSS_TABLE_VALIDATION_REPORT = "claims_cross_table_validation_report.csv"
 CLAIMS_CROSS_TABLE_VALIDATION_SUMMARY = "claims_cross_table_validation_summary.txt"
+CLAIMS_EMIT_ENHANCEMENT_VALIDATION_REPORT = "claims_emit_enhancement_validation.csv"
+CLAIMS_EMIT_ENHANCEMENT_VALIDATION_SUMMARY = "claims_emit_enhancement_validation_summary.txt"
 PHASE20_RULEBOOK_LINEAGE = "PHASE20_MPOLICY_CROSS_TABLE_VALIDATION"
 PHASE20_HOLD_EXPLANATION = (
     "The claim or payment references a policy that was not present in the converted policy "
@@ -1949,6 +1957,27 @@ class QLAdminEnterpriseIntegrationSuite:
         }
         return paths.get(table_key, "")
 
+    def _build_clms_p10_rc_index(self):
+        index, _ = self._load_phase10_derivation_index("quikclms")
+        by_rc = {}
+        for row in index.values():
+            rc = str(row.get("reconstructed_claim_id", "")).strip()
+            if rc:
+                by_rc[rc] = row
+        return by_rc
+
+    def _enrich_payment_combined_from_claim(self, combined, clms_p10_by_rc):
+        enriched = dict(combined)
+        rc = str(enriched.get("reconstructed_claim_id", "")).strip()
+        parent = clms_p10_by_rc.get(rc, {})
+        for key in (
+            "claimstat", "mclaimstatus", "claim_family", "mclaimfamily",
+            "mclaimtype", "policy_number",
+        ):
+            if parent.get(key) and not enriched.get(key):
+                enriched[key] = parent[key]
+        return enriched
+
     def _load_phase10_derivation_index(self, table_key):
         path = self._phase10_derivation_path(table_key)
         index = {}
@@ -2130,6 +2159,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def _validate_and_filter_staged_claims_csv(
         self, staged_path, table_key, mpolicy_set, quikmstr_path, lookups, crosswalk,
         quikmstr_missing, audit_ts, prod_flag, output_dir, validation_enabled=True,
+        plan_lookup=None, clms_p10_by_rc=None,
     ):
         dest_path = os.path.normpath(os.path.join(output_dir, f"{table_key}.csv"))
         schema = self.TABLE_SCHEMAS[table_key]
@@ -2239,7 +2269,13 @@ class QLAdminEnterpriseIntegrationSuite:
                     ))
                     continue
 
+            if table_key == "quikclmp" and clms_p10_by_rc:
+                combined = self._enrich_payment_combined_from_claim(combined, clms_p10_by_rc)
+
             qla_row = self._transform_claims_source_row(combined, table_key, rules, crosswalk)
+            qla_row = apply_claims_emit_enhancements(
+                qla_row, combined, table_key, plan_lookup or {},
+            )
             mpolicy = self.normalize(qla_row.get("MPOLICY", ""))
 
             if validation_enabled:
@@ -2546,6 +2582,12 @@ class QLAdminEnterpriseIntegrationSuite:
         p10_path = self._phase10_derivation_path("quikclmp")
         self.log(f"PHASE 22 LINEAGE: PRELSA source for payee enrichment = {prelsa_path}")
         self.log(f"PHASE 22 LINEAGE: Phase 10A derivation index = {p10_path}")
+        plan_lookup = build_plan_metadata_lookup(
+            os.path.join(output_dir, "quikridr.csv"),
+            os.path.join(output_dir, "quikplan.csv"),
+        )
+        clms_p10_by_rc = self._build_clms_p10_rc_index()
+        emitted_frames = {}
 
         try:
             for table_key, source_key in (
@@ -2568,6 +2610,8 @@ class QLAdminEnterpriseIntegrationSuite:
                     copy_from, table_key, mpolicy_set or set(), quikmstr_path,
                     lookups, crosswalk, quikmstr_missing, emit_ts, prod_flag, output_dir,
                     validation_enabled=validation_enabled,
+                    plan_lookup=plan_lookup,
+                    clms_p10_by_rc=clms_p10_by_rc,
                 )
                 cross_table_holds.extend(hold_rows)
                 report_rows.append(stats)
@@ -2579,6 +2623,7 @@ class QLAdminEnterpriseIntegrationSuite:
                 tmp_path = dest_path + ".tmp"
                 emit_df.to_csv(tmp_path, index=False, encoding="utf-8")
                 os.replace(tmp_path, dest_path)
+                emitted_frames[table_key] = emit_df
                 emitted[table_key] = {
                     "dest_path": dest_path,
                     "source_path": copy_from,
@@ -2590,6 +2635,8 @@ class QLAdminEnterpriseIntegrationSuite:
             manifest_path = self._write_review_hold_manifest(output_dir, manifest_rows)
             validation_report_path = None
             validation_summary_path = None
+            enhancement_report_path = None
+            enhancement_summary_path = None
             if report_rows:
                 validation_report_path = self._write_cross_table_validation_report(
                     output_dir, report_rows, emit_ts, prod_flag,
@@ -2597,6 +2644,31 @@ class QLAdminEnterpriseIntegrationSuite:
                 validation_summary_path = self._write_cross_table_validation_summary(
                     output_dir, report_rows, cross_table_holds, emit_ts, prod_flag, quikmstr_path,
                 )
+
+            if emitted_frames.get("quikclms") is not None or emitted_frames.get("quikclmp") is not None:
+                enhancement_metrics = validate_claims_emit_enhancements(
+                    emitted_frames.get("quikclms"),
+                    emitted_frames.get("quikclmp"),
+                    QUIKCLMS_SCHEMA,
+                    QUIKCLMP_SCHEMA,
+                )
+                enhancement_report_path, enhancement_summary_path = (
+                    write_claims_emit_enhancement_validation(
+                        output_dir, enhancement_metrics, emit_ts, prod_flag,
+                        CLAIMS_EMIT_ENHANCEMENT_VALIDATION_REPORT,
+                        CLAIMS_EMIT_ENHANCEMENT_VALIDATION_SUMMARY,
+                    )
+                )
+                self.log(
+                    "CLAIMS EMIT ENHANCEMENTS: "
+                    f"CLAIMNUM normalized={enhancement_metrics.get('claimnum_normalized_count', 0)} "
+                    f"ISWL/98={enhancement_metrics.get('iswl_status_98_count', 0)} "
+                    f"MSEQ non-98 violations="
+                    f"{enhancement_metrics.get('non98_clms_mseq_not_zero', 0)}+"
+                    f"{enhancement_metrics.get('non98_clmp_mseq_not_zero', 0)} "
+                    f"status={enhancement_metrics.get('validation_status', '')}"
+                )
+                self.log(f"  Enhancement validation report: {enhancement_report_path}")
 
             hold_by_category = {}
             for row in manifest_rows:
@@ -2646,6 +2718,8 @@ class QLAdminEnterpriseIntegrationSuite:
                 "semantic_hold_rows": semantic_held,
                 "validation_report_path": validation_report_path,
                 "validation_summary_path": validation_summary_path,
+                "enhancement_validation_report_path": enhancement_report_path,
+                "enhancement_validation_summary_path": enhancement_summary_path,
                 "cross_table_hold_count": len(cross_table_holds),
             }
             self._last_cross_table_validation = result
