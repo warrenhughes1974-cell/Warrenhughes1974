@@ -1,0 +1,9 @@
+audit_timestamp,sequence,checkpoint,authorization_required,modify_app_py,production_dbf_flag,rollback_safe,detail,projected_remaining_orphans
+2026-05-24T19:15:46Z,1,phase14a_trustee_qa_signoff,Y,N,N,Y,,
+2026-05-24T19:15:46Z,2,phase14b_lifecycle_replay_signoff,Y,N,N,Y,,
+2026-05-24T19:15:46Z,3,phase14c_surrender_business_triage_signoff,Y,N,N,Y,,
+2026-05-24T19:15:46Z,4,phase14d_orphan_delta_acceptable,Y,N,N,Y,,
+2026-05-24T19:15:46Z,5,explicit_production_dbf_authorization_flag,Y,N,N,Y,,
+2026-05-24T19:15:46Z,105,schema_registration_quikclms,Y,N,N,Y,register_in_TABLE_SCHEMAS_from_layout_reference,
+2026-05-24T19:15:46Z,106,schema_registration_quikclmp,Y,N,N,Y,register_in_TABLE_SCHEMAS_from_layout_reference,
+2026-05-24T19:15:46Z,999,overall_production_readiness,Y,N,N,Y,NOT_READY,374.0

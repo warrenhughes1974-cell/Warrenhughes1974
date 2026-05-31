@@ -1,0 +1,7 @@
+metric,baseline_phase11,phase15_replay,delta,rollback_snapshot_id,production_dbf_flag
+quikclms_row_count,5182,5466,284,PHASE15B-REPLAY-20260524T191013Z,N
+quikclmp_row_count,1910,2078,168,PHASE15B-REPLAY-20260524T191013Z,N
+lifecycle_overlay_claims,0,284,284,PHASE15B-REPLAY-20260524T191013Z,N
+trustee_overlay_payments,0,168,168,PHASE15B-REPLAY-20260524T191013Z,N
+orphan_count,743,374,-369,PHASE15B-REPLAY-20260524T191013Z,N
+reconciliation_pass_count,5001,5361,360,PHASE15B-REPLAY-20260524T191013Z,N

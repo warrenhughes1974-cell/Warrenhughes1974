@@ -1,0 +1,5 @@
+=== Phase 15E Pre-integration Validation ===
+app.py NOT modified
+Integration strategy: isolated_subprocess_or_module_import
+
+production_dbf_flag=N

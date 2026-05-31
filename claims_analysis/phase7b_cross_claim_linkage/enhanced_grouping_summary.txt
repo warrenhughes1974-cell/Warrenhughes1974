@@ -1,0 +1,51 @@
+=== Cross-Claim Settlement Linkage Summary (Phase 7B) ===
+
+Total claims analyzed: 10177
+Linkage candidates evaluated: 10193
+Accepted linkages: 5
+Possible matches (not accepted): 16
+Rejected linkages: 1206
+Cross-family linkages: 5
+Enhanced settlement groups: 10172
+
+Linkage status distribution:
+  CROSS_FAMILY_LINK: 5
+  POSSIBLE_MATCH: 16
+  RETAIN_ORIGINAL_GROUP: 10172
+
+Confidence distribution:
+  INFERRED: 8563
+  LOW_CONFIDENCE: 1162
+  MODERATE_CONFIDENCE: 5
+
+Orphan / funded-no-disbursement impact:
+  Baseline FUNDED_NO_DISBURSEMENT (Phase 7A): 8190
+  Orphan-reduced via accepted linkage: 0
+
+Balancing impact (Phase 6 baseline vs enhanced overlay):
+  Baseline balanced (Phase 6): 4626
+  Enhanced balanced (with linkage overlay): 4630
+  Newly balanced via linkage: 4
+
+Family-specific orphan reduction:
+  DEATH_CLAIM: funded-no-disbursement reduction 0.0% (0/204); balancing +0 claims
+  DISBURSEMENT_CLAIM: funded-no-disbursement reduction 0.0% (0/0); balancing +0 claims
+  SURRENDER_CLAIM: funded-no-disbursement reduction 0.0% (0/7986); balancing +4 claims
+
+Cross-family linkage observations:
+  SURRENDER_CLAIM -> DISBURSEMENT_CLAIM: 5 accepted
+
+Architectural notes:
+  - Original reconstructed_claim_id preserved on all rows
+  - enhanced_settlement_group_id is overlay-only; Phase 4 outputs unchanged
+  - Enhanced balancing is side-by-side measurement only
+
+Output files generated:
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7b_cross_claim_linkage\cross_claim_linkage_rules.json
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7b_cross_claim_linkage\cross_claim_linkage_candidates.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7b_cross_claim_linkage\enhanced_settlement_groups.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7b_cross_claim_linkage\grouping_overlay_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7b_cross_claim_linkage\orphan_reduction_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7b_cross_claim_linkage\cross_family_linkage_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7b_cross_claim_linkage\enhanced_balancing_impact.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7b_cross_claim_linkage\linkage_confidence_analysis.csv

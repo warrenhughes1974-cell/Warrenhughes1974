@@ -1,0 +1,35 @@
+=== Claim Financial Reconciliation Summary (Phase 5) ===
+Headers input: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase4_claim_event_reconstruction\claim_candidate_header.csv
+Financials input: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase4_claim_event_reconstruction\claim_candidate_financials.csv
+Lifecycle input: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase4_claim_event_reconstruction\claim_candidate_lifecycle.csv
+Exceptions input: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase4_claim_event_reconstruction\claim_reconstruction_exceptions.csv
+PACTG input: C:\Users\warren\Documents\GitHub\Warrenhughes1974\docs\claims_conversion_reference\PACTG_Accounting_Extract20260427.csv
+Catalog input: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase2_semantic_catalog\catalog\Claims_Transaction_Code_Catalog.csv
+
+Total claims analyzed: 10177
+Balanced claims: 3270
+Unbalanced claims: 6907
+Average balancing gap: 1145.37
+Largest balancing gap: 91999.48
+Reversal candidates identified: 0
+Most common balancing issues: WITHHOLDING_NOT_OBSERVED(9857); 0411(8833); 0090(8163); 1020(8056); 0560(7485)
+Grouping quality observations: undergroup=953, overgroup=419
+Settlement chain observations: complete=1742, incomplete=8382
+Claim family balancing behavior: DEATH_CLAIM:430/1694 balanced; DISBURSEMENT_CLAIM:0/320 balanced; SURRENDER_CLAIM:2840/8163 balanced
+
+Recommended next-phase priorities:
+  - Family-specific balancing rules for DEATH_CLAIM
+  - Family-specific balancing rules for DISBURSEMENT_CLAIM
+  - Exclude clearing hub from net rollup or pair 0038 with payout/debit codes
+  - Separate surrender/disbursement chains; use payment_amount as net for DISBURSEMENT_CLAIM
+  - Add delayed payout detection across expanded date windows
+
+Output files generated:
+  - claims_analysis/output\balancing_gap_analysis.csv
+  - claims_analysis/output\balancing_component_breakdown.csv
+  - claims_analysis/output\settlement_chain_analysis.csv
+  - claims_analysis/output\reversal_detection_analysis.csv
+  - claims_analysis/output\claim_grouping_quality_analysis.csv
+  - claims_analysis/output\balancing_behavior_by_claim_family.csv
+  - claims_analysis/output\financial_reconciliation_recommendations.csv
+  - claims_analysis/output\claim_reconciliation_summary.txt

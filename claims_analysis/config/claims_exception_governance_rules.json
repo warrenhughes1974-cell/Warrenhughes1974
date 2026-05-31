@@ -1,0 +1,158 @@
+{
+  "version": "1.0",
+  "description": "Phase 12 QA/UAT exception governance and production readiness rules (analysis only, not production deployment).",
+  "production_dbf_flag": "N",
+  "governance_statuses": [
+    "AUTO_APPROVED",
+    "QA_REVIEW_REQUIRED",
+    "BUSINESS_REVIEW_REQUIRED",
+    "MANUAL_REMEDIATION_REQUIRED",
+    "SAFE_TO_REPROCESS",
+    "NEEDS_RULE_REFINEMENT",
+    "STRUCTURAL_EXCEPTION",
+    "PRODUCTION_BLOCKED"
+  ],
+  "severity_levels": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
+  "remediability_levels": ["RECOVERABLE", "PARTIALLY_RECOVERABLE", "NON_RECOVERABLE", "INFORMATIONAL"],
+  "rejected_claim_root_causes": {
+    "UNBALANCED": {
+      "match_validation_issues": ["UNBALANCED"],
+      "match_rejection_patterns": ["NEEDS_MANUAL_REVIEW"],
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "recommended_remediation": "Review Phase 6 family balancing profile; validate offset and lifecycle exclusions before re-gating"
+    },
+    "LOW_CONFIDENCE": {
+      "match_validation_issues": [],
+      "match_confidence": ["LOW_CONFIDENCE", "INFERRED"],
+      "match_rejection_patterns": ["confidence="],
+      "severity": "MEDIUM",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "QA_REVIEW_REQUIRED",
+      "recommended_remediation": "Review balancing confidence and decomposition lineage; re-run derivation after upstream fixes"
+    },
+    "RESIDUAL_EXCESS": {
+      "match_residual_threshold": 0.01,
+      "severity": "MEDIUM",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "recommended_remediation": "Review Phase 7C decomposition and residual analysis; do not force zero residual"
+    },
+    "RULEBOOK_GATING_FAILURE": {
+      "match_rejection_patterns": ["derivation_status=NEEDS_MANUAL_REVIEW", "validation_result="],
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "PRODUCTION_BLOCKED",
+      "recommended_remediation": "Resolve upstream validation issue then re-run Phase 10B and Phase 11 gating"
+    },
+    "DERIVATION_FAILURE": {
+      "match_rejection_patterns": ["missing_"],
+      "severity": "HIGH",
+      "remediability": "RECOVERABLE",
+      "governance_status": "MANUAL_REMEDIATION_REQUIRED",
+      "recommended_remediation": "Populate required derivation fields and re-run prototype generation"
+    }
+  },
+  "rejected_payment_root_causes": {
+    "GATING_FAILURE": {
+      "match_rejection_patterns": ["derivation_status=NEEDS_MANUAL_REVIEW"],
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "QA_REVIEW_REQUIRED",
+      "recommended_remediation": "Review Phase 10A validation issues; resolve payee or confidence gaps"
+    },
+    "TRUSTEE_ROUTING": {
+      "match_rejection_patterns": ["derivation_status=TRUSTEE_DERIVATION"],
+      "severity": "MEDIUM",
+      "remediability": "RECOVERABLE",
+      "governance_status": "NEEDS_RULE_REFINEMENT",
+      "recommended_remediation": "Refine trustee derivation gating in Phase 10A/11; trustee payments may be rulebook-ready with manual QA"
+    },
+    "INFERRED_PAYEE": {
+      "match_rejection_patterns": ["derivation_status=INFERRED_DERIVATION"],
+      "severity": "MEDIUM",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "recommended_remediation": "Review payee hierarchy and PRELSA enrichment; confirm inferred distribution"
+    },
+    "LOW_CONFIDENCE": {
+      "match_rejection_patterns": ["confidence="],
+      "match_confidence": ["LOW_CONFIDENCE", "INFERRED"],
+      "severity": "MEDIUM",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "QA_REVIEW_REQUIRED",
+      "recommended_remediation": "Improve payee confidence via Phase 8 distribution analysis"
+    },
+    "MISSING_PAYEE": {
+      "match_validation_issues": ["MISSING_PAYNAME", "UNRESOLVED_PAYEE"],
+      "severity": "HIGH",
+      "remediability": "RECOVERABLE",
+      "governance_status": "MANUAL_REMEDIATION_REQUIRED",
+      "recommended_remediation": "Resolve payee via PRELSA or beneficiary staging before reprocessing"
+    }
+  },
+  "orphan_governance": {
+    "MISSING_CLAIM_HEADER": {
+      "severity": "CRITICAL",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "PRODUCTION_BLOCKED",
+      "recommended_remediation": "Accept parent claim into prototype or exclude orphan payment until claim balancing resolved"
+    },
+    "MPOLICY_MISMATCH": {
+      "severity": "HIGH",
+      "remediability": "RECOVERABLE",
+      "governance_status": "MANUAL_REMEDIATION_REQUIRED",
+      "recommended_remediation": "Align MPOLICY linkage between QUIKCLMS and QUIKCLMP crosswalk"
+    }
+  },
+  "duplicate_mseq_governance": {
+    "legitimate_multi_payee_threshold": 2,
+    "severity_default": "MEDIUM",
+    "remediability_default": "PARTIALLY_RECOVERABLE",
+    "governance_status_default": "NEEDS_RULE_REFINEMENT",
+    "recommended_remediation": "Review MSEQ derivation per claim; ensure sequence uniqueness within MPOLICY+MPHASE scope"
+  },
+  "reconciliation_failure_categories": {
+    "PAYMENT_COUNT_MISMATCH": {
+      "match_conditions": {"payment_count_match": "N", "quikclmp_payment_count": "0"},
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "QA_REVIEW_REQUIRED",
+      "recommended_remediation": "Rejected or unstaged payments exist for claim; review payment gating and orphan linkage"
+    },
+    "AGGREGATION_MISMATCH": {
+      "match_conditions": {"amount_reconciliation": "VARIANCE"},
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "recommended_remediation": "Compare MPAID vs sum(MAMOUNT); validate Phase 6 balancing and payment staging totals"
+    },
+    "EXPECTED_NON_PAYMENT_CLAIM": {
+      "match_families": ["SURRENDER_CLAIM", "DISBURSEMENT_CLAIM"],
+      "match_conditions": {"quikclmp_payment_count": "0"},
+      "severity": "INFORMATIONAL",
+      "remediability": "INFORMATIONAL",
+      "governance_status": "AUTO_APPROVED",
+      "recommended_remediation": "Financial-only claim without QUIKCLMP staging is expected for some families"
+    },
+    "NET_BALANCING_VARIANCE": {
+      "net_variance_threshold": 0.01,
+      "severity": "MEDIUM",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "recommended_remediation": "Review MNETAMT vs payment totals; preserve residual visibility"
+    }
+  },
+  "production_readiness_thresholds": {
+    "min_reconciliation_pass_pct": 95.0,
+    "max_orphan_payment_pct": 5.0,
+    "max_production_blocked_pct": 10.0,
+    "max_duplicate_mseq_groups": 0
+  },
+  "auto_approved_populations": {
+    "prototype_claim_accepted": true,
+    "prototype_payment_accepted": true,
+    "reconciliation_pass": true
+  }
+}

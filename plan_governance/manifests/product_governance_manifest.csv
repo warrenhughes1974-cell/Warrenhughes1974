@@ -1,0 +1,24 @@
+asset,category,entity_key,severity,detail
+PCOMP.csv,MISSING_PCOMP_ROW,621 PUA,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,665 PUA,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,669 SR GD,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,670 GL8588,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,670 PUA,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,8286 GI 1,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,8286 GI 2+,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,960 65 PUA,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,960 LP PUA,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,960 OL PUA,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,960 PO PUA,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,961 PUA,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,970 PUA,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,980 PUA,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,DISCHO247C,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,L05 10Y LT,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,L10 PRE97,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,L10 PREUNI,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,L10 WP OLD,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,L17 1,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,L17 1 JPO,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,L17 2+,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default
+PCOMP.csv,MISSING_PCOMP_ROW,L17 2+ JPO,WARN,MINUNIT/MAXUNIT lookup may fall back to rulebook default

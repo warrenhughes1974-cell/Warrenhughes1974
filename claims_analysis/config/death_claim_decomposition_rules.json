@@ -1,0 +1,122 @@
+{
+  "version": "1.0",
+  "description": "Phase 7C death claim settlement decomposition rules (read-only validation).",
+  "claim_family": "DEATH_CLAIM",
+  "balance_tolerance": 0.01,
+  "residual_tolerance": 100.0,
+  "residual_ratio_tolerance": 0.05,
+  "exclude_lifecycle_event_types": ["CLAIM_SETTLEMENT"],
+  "focus_chain_statuses": [
+    "PARTIAL_CHAIN",
+    "MULTI_PAYOUT_CHAIN",
+    "FUNDED_NO_DISBURSEMENT",
+    "ORPHAN_CHAIN",
+    "DELAYED_CHAIN"
+  ],
+  "focus_confidence_levels": [
+    "LOW_CONFIDENCE",
+    "MODERATE_CONFIDENCE"
+  ],
+  "decomposition_statuses": [
+    "FULLY_DECOMPOSED",
+    "MULTI_PAYOUT_DECOMPOSED",
+    "PARTIAL_DECOMPOSITION",
+    "OFFSET_EXPLAINS_GAP",
+    "INTEREST_EXPLAINS_GAP",
+    "WITHHOLDING_EXPLAINS_GAP",
+    "RESIDUAL_REMAINS",
+    "CLEARING_ONLY_DISTORTION",
+    "NEEDS_PAYEE_DISTRIBUTION_ANALYSIS"
+  ],
+  "confidence_levels": [
+    "HIGH_CONFIDENCE",
+    "MODERATE_CONFIDENCE",
+    "INFERRED",
+    "LOW_CONFIDENCE"
+  ],
+  "layers": {
+    "funding": {
+      "label": "Funding Layer",
+      "codes": ["0530", "0519"],
+      "role": "FUNDING"
+    },
+    "interest": {
+      "label": "Interest Layer",
+      "codes": ["0630"],
+      "role": "INTEREST"
+    },
+    "offset": {
+      "label": "Offset Layer",
+      "codes": ["0411", "0412"],
+      "role": "OFFSET"
+    },
+    "withholding": {
+      "label": "Withholding Layer",
+      "codes": ["0810", "0820"],
+      "role": "WITHHOLDING"
+    },
+    "payout": {
+      "label": "Payout Layer",
+      "codes": ["0094", "0567", "1900"],
+      "role": "PAYOUT"
+    },
+    "clearing": {
+      "label": "Clearing/Lifecycle Layer",
+      "codes": ["0038"],
+      "role": "LIFECYCLE_ONLY",
+      "exclude_from_financial_rollup": true
+    },
+    "surrender_charge": {
+      "label": "Surrender Charge Layer",
+      "codes": ["1020"],
+      "role": "SURRENDER_CHARGE"
+    }
+  },
+  "pattern_types": [
+    "ONE_FUNDING_ONE_PAYOUT",
+    "ONE_FUNDING_MANY_PAYOUTS",
+    "MANY_FUNDING_ONE_PAYOUT",
+    "MANY_FUNDING_MANY_PAYOUTS",
+    "FUNDING_ONLY",
+    "PAYOUT_ONLY",
+    "OFFSET_ONLY",
+    "INTEREST_ONLY_RESIDUAL",
+    "CLEARING_ONLY"
+  ],
+  "confidence_scoring": {
+    "HIGH_CONFIDENCE": {
+      "requires_balanced": true,
+      "requires_all_core_layers": true,
+      "max_residual": 0.01,
+      "max_payout_count_for_single": 1
+    },
+    "MODERATE_CONFIDENCE": {
+      "requires_component_completeness": 0.75,
+      "allows_multi_payout": true,
+      "max_residual_ratio": 0.15
+    },
+    "INFERRED": {
+      "allows_partial_layers": true,
+      "allows_unbalanced": true
+    },
+    "LOW_CONFIDENCE": {
+      "large_residual": true,
+      "missing_core_layers": true
+    }
+  },
+  "gap_explanation_rules": {
+    "offset_explains_gap_threshold": 0.9,
+    "interest_explains_gap_threshold": 0.9,
+    "withholding_explains_gap_threshold": 0.9,
+    "clearing_distortion_ratio": 0.5
+  },
+  "business_rules": {
+    "clearing_codes_never_funding": ["0038"],
+    "funding_codes": ["0530", "0519"],
+    "interest_codes": ["0630"],
+    "offset_codes": ["0411", "0412"],
+    "withholding_codes": ["0810", "0820"],
+    "payout_codes": ["0094", "0567", "1900"],
+    "multi_payout_payee_analysis_threshold": 2
+  }
+}

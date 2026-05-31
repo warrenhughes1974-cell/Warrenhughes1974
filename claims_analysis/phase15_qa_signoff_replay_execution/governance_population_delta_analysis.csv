@@ -1,0 +1,7 @@
+audit_timestamp,population_metric,baseline_value,replay_value,delta,governance_status,production_dbf_flag
+2026-05-24T19:11:00Z,quikclms_row_count,5182,5466,284,REPLAY_ANALYZED,N
+2026-05-24T19:11:00Z,quikclmp_row_count,1910,2078,168,REPLAY_ANALYZED,N
+2026-05-24T19:11:00Z,lifecycle_overlay_claims,0,284,284,REPLAY_ANALYZED,N
+2026-05-24T19:11:00Z,trustee_overlay_payments,0,168,168,REPLAY_ANALYZED,N
+2026-05-24T19:11:00Z,orphan_count,743,374,-369,REPLAY_ANALYZED,N
+2026-05-24T19:11:00Z,reconciliation_pass_count,5001,5361,360,REPLAY_ANALYZED,N

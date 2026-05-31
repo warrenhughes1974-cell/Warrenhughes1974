@@ -1,0 +1,8 @@
+=== Phase 17D Representative Issue Examples Summary ===
+
+Total examples: 50
+Replay success examples: 10
+Unresolved issue examples: 30
+
+Examples prepared for business/UAT review.
+production_dbf_flag=N

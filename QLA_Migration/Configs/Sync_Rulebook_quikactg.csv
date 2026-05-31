@@ -1,0 +1,19 @@
+Table,Target_Field,Source_File,Source_Field,Transformation_Note,Default_Value,Active
+quikactg,MCOMP,DEFAULT,,Default QLAdmin company code,C,Y
+quikactg,MPLAN,PACTG,PLAN_CODE,Use Master_Crosswalk.csv PLAN crosswalk into QLAdmin plan code,,Y
+quikactg,MPREM1ST,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 110,,Y
+quikactg,MPREMREN,PACTG,CREDIT_ACCOUNT,Use renewal premium account where code = 110,,Y
+quikactg,MDIVCASH,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 515,,Y
+quikactg,MDIVPREM,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 516,,Y
+quikactg,MDIVACCM,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 514,,Y
+quikactg,MDIVPUA,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 517,,Y
+quikactg,MDIVPUT,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 518,,Y
+quikactg,MDVDPINT,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 641,,Y
+quikactg,MLOAN,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 411,,Y
+quikactg,MLOANINT,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 412,,Y
+quikactg,MSCHG,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 1020,,Y
+quikactg,MDEATH,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 530,,Y
+quikactg,MCLAIM,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 567,,Y
+quikactg,MCOM1ST,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 1110,,Y
+quikactg,MCOMREN,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 1111,,Y
+quikactg,MCOMMSGL,PACTG,CREDIT_ACCOUNT,Use account where CREDIT_CODE or DEBIT_CODE = 1115,,Y

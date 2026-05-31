@@ -1,0 +1,16 @@
+dimension,purpose,current_state,readiness,notes,future_phase
+PLAN,Catalog key,POPULATED,READY,Required — 133 rows,N/A
+FORM,Product form attachment,POPULATED,READY,Required for product identity,N/A
+HRIGPKEY,Gross premium rate lookup (QuikPlbd),BLANK,NOT_READY,Future P5 — intentionally blank,P5_ACTUARIAL
+SEX,Gender vary-by,POPULATED,READY,From SEX_BASIS / translation,N/A
+UWCLASS,Underwriting class vary-by,NOT_IN_SCHEMA,NOT_READY,Future — UWVARY* fields blank,P5_ACTUARIAL
+BAND,Band vary-by (BDCODE),PARTIAL,PARTIAL,BDVARYGP/DB defaulted; others blank,P5_ACTUARIAL
+ISSUE_STATE,State vary-by,NOT_IN_SCHEMA,NOT_READY,STVARY* blank — future governance,P5_ACTUARIAL
+ISSUE_COUNTRY,Country vary-by,NOT_IN_SCHEMA,NOT_READY,STVARY* blank — future governance,P5_ACTUARIAL
+EFFDATE,Effective date dimension,NOT_IN_CATALOG,NOT_READY,Comes from policy transaction tables not quikplan,P5_ACTUARIAL
+GDVARY*,Gender vary-by flags,PARTIAL,PARTIAL,GP/DB defaulted to 0,P5_ACTUARIAL
+UWVARY*,UW vary-by flags,BLANK,NOT_READY,Future actuarial attachment,P5_ACTUARIAL
+STVARY*,State/country vary-by,BLANK,NOT_READY,Future actuarial attachment,P5_ACTUARIAL
+BDVARY*,Band vary-by,PARTIAL,PARTIAL,GP/DB=0; CV/TV/DV blank,P5_ACTUARIAL
+VARDB/VARGP,Reserve/premium variation flags,POPULATED,READY,Defaulted in rulebook,N/A
+HRIGPKEY_POPULATION_CHECK,Rate table join readiness,133/133 blank,NOT_READY,Expected — catalog emit must not wait on actuarial,P5_ACTUARIAL

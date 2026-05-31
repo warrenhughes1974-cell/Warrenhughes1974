@@ -1,0 +1,30 @@
+PLAN,RATE_FAMILY,SEX,BAND,UWCLASS,ISSUE_AGE,TEST_DURATION,EXPECTED_RATE_SOURCE,SPECIAL_TEST_REASON,NOTES
+2665ST,GROSS_PREMIUM,M,01,00,00,1,QuikGps.dbf (emitted),GROSS_PREMIUM representative coverage,
+2665ST,GROSS_PREMIUM,M,01,00,00,6,QuikGps.dbf (emitted),GROSS_PREMIUM representative coverage,
+5L01MA,GROSS_PREMIUM,M,01,SM,15,1,QuikGps.dbf (emitted),GROSS_PREMIUM representative coverage,
+5L01MA,GROSS_PREMIUM,M,01,SM,15,6,QuikGps.dbf (emitted),GROSS_PREMIUM representative coverage,
+130JEB,DIVIDEND,M,01,00,00,1,QuikDvs.dbf (emitted),DIVIDEND representative coverage,
+130JEB,DIVIDEND,M,01,00,00,6,QuikDvs.dbf (emitted),DIVIDEND representative coverage,
+170858,DIVIDEND,F,01,00,00,1,QuikDvs.dbf (emitted),DIVIDEND representative coverage,
+170858,DIVIDEND,F,01,00,00,6,QuikDvs.dbf (emitted),DIVIDEND representative coverage,
+1659SR,DEATH_BENEFIT,M,01,SM,00,1,QuikDbs.dbf (emitted),DEATH_BENEFIT representative coverage,
+1659SR,DEATH_BENEFIT,M,01,SM,00,6,QuikDbs.dbf (emitted),DEATH_BENEFIT representative coverage,
+17CSI3,DEATH_BENEFIT,M,01,00,46,1,QuikDbs.dbf (emitted),DEATH_BENEFIT representative coverage,
+17CSI3,DEATH_BENEFIT,M,01,00,46,6,QuikDbs.dbf (emitted),DEATH_BENEFIT representative coverage,
+130JEB,CASH_VALUE,M,01,00,00,1,QuikCvs.dbf (emitted),CASH_VALUE representative coverage,
+130JEB,CASH_VALUE,M,01,00,00,6,QuikCvs.dbf (emitted),CASH_VALUE representative coverage,
+1658C1,CASH_VALUE,F,01,PR,00,1,QuikCvs.dbf (emitted),CASH_VALUE representative coverage,
+1658C1,CASH_VALUE,F,01,PR,00,6,QuikCvs.dbf (emitted),CASH_VALUE representative coverage,
+130JEB,TERMINAL_RESERVE,F,01,00,00,1,QuikTvs.dbf (emitted),TERMINAL_RESERVE representative coverage,
+130JEB,TERMINAL_RESERVE,F,01,00,00,6,QuikTvs.dbf (emitted),TERMINAL_RESERVE representative coverage,
+1658C1,TERMINAL_RESERVE,F,01,PR,00,1,QuikTvs.dbf (emitted),TERMINAL_RESERVE representative coverage,
+1658C1,TERMINAL_RESERVE,F,01,PR,00,6,QuikTvs.dbf (emitted),TERMINAL_RESERVE representative coverage,
+130JEB,NET_PREMIUM,F,01,00,00,1,QuikNps.dbf (emitted),NET_PREMIUM representative coverage,
+130JEB,NET_PREMIUM,F,01,00,00,6,QuikNps.dbf (emitted),NET_PREMIUM representative coverage,
+1658C1,NET_PREMIUM,F,01,PR,00,1,QuikNps.dbf (emitted),NET_PREMIUM representative coverage,
+1658C1,NET_PREMIUM,F,01,PR,00,6,QuikNps.dbf (emitted),NET_PREMIUM representative coverage,
+1L10OD,CASH_VALUE,M,01,ST,99,1,QuikCvs.dbf (emitted),AGE 100 capped to 99 (collision protection),genuine AGE 99 CV retained; capped terminal value dropped + audited
+2665ST,DEATH_BENEFIT,M,01,00,00,1,QuikDbs.dbf (emitted),large DB factor (>9999.99) stored as 7-char text,physically validated storable text; magnitude preserved
+2665ST,DEATH_BENEFIT,M,01,00,00,6,QuikDbs.dbf (emitted),large DB factor (>9999.99) stored as 7-char text,physically validated storable text; magnitude preserved
+A96DAR,CASH_VALUE,M,01,00,00,41,QuikCvs.dbf (emitted),large CV factor (precision-reduced to fit CHAR(7)),magnitude preserved; 2nd decimal reduced to fit 7 chars
+A96DAR,CASH_VALUE,M,01,00,00,46,QuikCvs.dbf (emitted),large CV factor (precision-reduced to fit CHAR(7)),magnitude preserved; 2nd decimal reduced to fit 7 chars

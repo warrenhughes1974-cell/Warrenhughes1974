@@ -1,0 +1,4 @@
+observed_pattern,root_cause,recommended_action,expected_impact,confidence_level
+2153 canonical payment stages marked FUTURE_RULEBOOK_READY,High-confidence payee linkage with normalized staging lineage,Proceed to Phase 10 rulebook field derivation design,HIGH,HIGH_CONFIDENCE
+1280 residual staging records,Balancing/decomposition gaps or unresolved payee distributions,Review canonical_claim_residual_stage.csv before production derivation,MEDIUM,MODERATE_CONFIDENCE
+1054 multi-payee staged payment rows,Multi-beneficiary death claim payout decomposition,Use canonical_claim_beneficiary_stage.csv for QUIKCLMP derivation,HIGH,HIGH_CONFIDENCE

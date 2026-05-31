@@ -1,0 +1,103 @@
+{
+  "phase": "R5 rate loader DRY RUN (no DBFs emitted)",
+  "source": "docs/plan_conversion_reference/Rate_Table_Extract_20260427.csv",
+  "row_status": {
+    "IN_SCOPE": 774400,
+    "EXCLUDED": 354584
+  },
+  "excluded_type_codes": {
+    "NF": {
+      "rows": 82445,
+      "distinct_coverage_ids": 7
+    },
+    "NN": {
+      "rows": 118642,
+      "distinct_coverage_ids": 16
+    },
+    "PN": {
+      "rows": 110852,
+      "distinct_coverage_ids": 15
+    },
+    "SL": {
+      "rows": 24,
+      "distinct_coverage_ids": 2
+    },
+    "TP": {
+      "rows": 22840,
+      "distinct_coverage_ids": 2
+    },
+    "TX": {
+      "rows": 19780,
+      "distinct_coverage_ids": 1
+    },
+    "UF": {
+      "rows": 1,
+      "distinct_coverage_ids": 1
+    }
+  },
+  "factor_rows_by_family": {
+    "CASH_VALUE": {
+      "factor_rows": 25717,
+      "distinct_keys": 25717,
+      "distinct_plans": 36
+    },
+    "DEATH_BENEFIT": {
+      "factor_rows": 1380,
+      "distinct_keys": 1380,
+      "distinct_plans": 10
+    },
+    "NET_PREMIUM": {
+      "factor_rows": 26650,
+      "distinct_keys": 26650,
+      "distinct_plans": 47
+    },
+    "DIVIDEND": {
+      "factor_rows": 3978,
+      "distinct_keys": 3978,
+      "distinct_plans": 15
+    },
+    "TERMINAL_RESERVE": {
+      "factor_rows": 26097,
+      "distinct_keys": 26097,
+      "distinct_plans": 49
+    },
+    "GROSS_PREMIUM": {
+      "factor_rows": 1123,
+      "distinct_keys": 1123,
+      "distinct_plans": 11
+    }
+  },
+  "key_tables": {
+    "QuikPlCv": 70,
+    "QuikPlDb": 12,
+    "QuikPlTv": 112,
+    "QuikPlDv": 20,
+    "QuikPlGp": 13
+  },
+  "age_capping": {
+    "groups": 1,
+    "rows_capped": 3,
+    "cap_induced_collisions_resolved": 3,
+    "rule": "AGE>99 -> 99 (QLAdmin AGE is C2); audited, non-blocking. Capped cells colliding with genuine AGE 99 data yield to the genuine value (retained), capped value dropped + audited."
+  },
+  "validation": {
+    "total_issues": 394,
+    "by_severity": {
+      "WARNING": 394
+    },
+    "by_id": {
+      "V10": 260,
+      "V15": 132,
+      "AGE_CAPPED_TO_99": 1,
+      "AGE_CAP_COLLISION_RESOLVED": 1
+    },
+    "blocker_count": 0
+  },
+  "format_observations": {
+    "does_not_fit": 0,
+    "precision_reduced": 260
+  },
+  "assumption_dependencies_deferred": 132,
+  "emit_ready": true,
+  "emit_note": "DBFs intentionally NOT emitted in R5 dry run."
+}

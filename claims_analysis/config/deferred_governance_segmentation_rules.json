@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "description": "Phase 17B deferred governance population segmentation rules.",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE17B-DEFERRED-GOVERNANCE",
+  "deferred_categories": {
+    "ORPHAN_PAYMENT": {
+      "blocker_category": "UNRESOLVED_ORPHAN",
+      "governance_status": "PRODUCTION_BLOCKED",
+      "business_review_required": "Y",
+      "replay_eligibility": "CONDITIONAL"
+    },
+    "SURRENDER_REVIEW": {
+      "blocker_category": "SURRENDER_OFFSET_REVIEW",
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "business_review_required": "Y",
+      "replay_eligibility": "NOT_ELIGIBLE"
+    },
+    "UNBALANCED_CLAIM": {
+      "blocker_category": "UNRESOLVED_BALANCING",
+      "governance_status": "PRODUCTION_BLOCKED",
+      "business_review_required": "Y",
+      "replay_eligibility": "CONDITIONAL"
+    },
+    "RECONCILIATION_FAIL": {
+      "blocker_category": "RECONCILIATION_FAILURE",
+      "governance_status": "GOVERNANCE_HOLD",
+      "business_review_required": "Y",
+      "replay_eligibility": "NOT_ELIGIBLE"
+    },
+    "GOVERNANCE_HOLD": {
+      "blocker_category": "GENERAL_GOVERNANCE_HOLD",
+      "governance_status": "GOVERNANCE_HOLD",
+      "business_review_required": "Y",
+      "replay_eligibility": "NOT_ELIGIBLE"
+    }
+  },
+  "rulebook_lineage": "phase16_triage|phase17b_deferred_governance"
+}

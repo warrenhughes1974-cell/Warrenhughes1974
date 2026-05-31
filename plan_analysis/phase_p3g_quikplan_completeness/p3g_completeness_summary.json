@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-05-26 12:02:39",
+  "phase": "P3G",
+  "source_coverage_ids": 141,
+  "emitted_quikplan_plans": 140,
+  "authoritative_catalog_size": 140,
+  "missing_catalog_emits": 0,
+  "blank_mplan_count": 2348,
+  "expected_non_product_blank_rows": 2348,
+  "unresolved_product_rows": 0,
+  "governance_errors": 0,
+  "parser_skips_recovered": 8,
+  "before_emitted_quikplan_plans": 140,
+  "after_emitted_quikplan_plans": 140,
+  "completeness_delta": 0
+}

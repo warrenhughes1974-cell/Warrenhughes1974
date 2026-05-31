@@ -1,0 +1,9 @@
+exception_domain,exception_category,exception_count,likely_root_cause,recoverability,recommended_remediation,rule_refinement_opportunity,business_review_required,governance_status,production_dbf_flag
+REJECTED_CLAIM,UNBALANCED,4995,UNBALANCED,PARTIALLY_RECOVERABLE,Review Phase 6 family balancing profile; validate offset and lifecycle exclusions before re-gating,N,Y,BUSINESS_REVIEW_REQUIRED,N
+REJECTED_PAYMENT,GATING_FAILURE,60,GATING_FAILURE,PARTIALLY_RECOVERABLE,Review Phase 10A validation issues; resolve payee or confidence gaps,N,N,QA_REVIEW_REQUIRED,N
+REJECTED_PAYMENT,INFERRED_PAYEE,87,INFERRED_PAYEE,PARTIALLY_RECOVERABLE,Review payee hierarchy and PRELSA enrichment; confirm inferred distribution,N,Y,BUSINESS_REVIEW_REQUIRED,N
+REJECTED_PAYMENT,TRUSTEE_ROUTING,243,TRUSTEE_ROUTING,RECOVERABLE,Refine trustee derivation gating in Phase 10A/11; trustee payments may be rulebook-ready with manual QA,Y,N,NEEDS_RULE_REFINEMENT,N
+ORPHAN_PAYMENT,MISSING_CLAIM_HEADER,743,MISSING_CLAIM_HEADER,PARTIALLY_RECOVERABLE,Accept parent claim into prototype or exclude orphan payment until claim balancing resolved,N,N,PRODUCTION_BLOCKED,N
+DUPLICATE_MSEQ,LEGITIMATE_MULTI_PAYEE,52,LEGITIMATE_MULTI_PAYEE,PARTIALLY_RECOVERABLE,Review MSEQ derivation per claim; ensure sequence uniqueness within MPOLICY+MPHASE scope,Y,N,NEEDS_RULE_REFINEMENT,N
+RECONCILIATION_FAILURE,NET_BALANCING_VARIANCE,458,NET_BALANCING_VARIANCE,PARTIALLY_RECOVERABLE,Review MNETAMT vs payment totals; preserve residual visibility,N,Y,BUSINESS_REVIEW_REQUIRED,N
+RECONCILIATION_FAILURE,PAYMENT_COUNT_MISMATCH,181,PAYMENT_COUNT_MISMATCH,PARTIALLY_RECOVERABLE,Rejected or unstaged payments exist for claim; review payment gating and orphan linkage,N,N,QA_REVIEW_REQUIRED,N

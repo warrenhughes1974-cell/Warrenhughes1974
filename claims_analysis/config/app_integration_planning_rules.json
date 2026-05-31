@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "description": "Phase 13D controlled app.py integration planning (planning only, no code integration).",
+  "production_dbf_flag": "N",
+  "integration_scope": "claims_pipeline_only",
+  "target_tables": ["QUIKCLMS", "QUIKCLMP"],
+  "governance_checkpoints": [
+    "phase4_reconstruction_complete",
+    "phase6_balancing_pass_or_governed_exception",
+    "phase10_derivation_rulebook_ready",
+    "phase11_prototype_dbf_qa_pass",
+    "phase12_exception_governance_review",
+    "phase13_recovery_governance_signoff",
+    "production_dbf_authorization_flag"
+  ],
+  "rollback_controls": [
+    "preserve_claimnum_crosswalk_snapshot",
+    "preserve_prototype_dbf_snapshot",
+    "preserve_audit_csv_outputs",
+    "versioned_rules_json_snapshots",
+    "deterministic_replay_from_phase4_inputs"
+  ],
+  "insertion_strategy": {
+    "pattern": "isolated_subprocess_or_module_import",
+    "avoid": ["inline_rewrite_of_process_data", "monolithic_app_rewrite", "silent_gate_bypass"],
+    "preferred": ["claims_analysis_pipeline_runner", "governance_gate_wrapper", "rollback_safe_output_staging"]
+  },
+  "app_py_observations": {
+    "current_state": "TABLE_SCHEMAS does not include quikclms/quikclmp",
+    "integration_type": "new_table_schema_plus_isolated_pipeline_hook",
+    "modify_app_py": false
+  }
+}

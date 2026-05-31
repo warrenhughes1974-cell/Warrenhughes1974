@@ -1,0 +1,17 @@
+{
+  "38": {"family": "DEATH_CLAIM_CLEARING", "label": "0038 Death Clearing"},
+  "90": {"family": "CASH_DISBURSEMENT", "label": "0090 Cash Disbursements"},
+  "94": {"family": "DEATH_CLAIM_PAYOUT", "label": "0094 Death Claim Payout"},
+  "411": {"family": "LOAN_PRINCIPAL_OFFSET", "label": "0411 Loan Principal"},
+  "412": {"family": "LOAN_INTEREST_OFFSET", "label": "0412 Loan Interest Capitalized"},
+  "519": {"family": "DEATH_CLAIM_PRORATA_SURRENDER", "label": "0519 Death Claim Prorata Surrender"},
+  "530": {"family": "DEATH_BENEFIT", "label": "0530 Death Benefit"},
+  "560": {"family": "TOTAL_CASH", "label": "0560 Total Cash"},
+  "561": {"family": "PARTIAL_SURRENDER", "label": "0561 Partial Surrender"},
+  "567": {"family": "CLAIM_PAYMENT", "label": "0567 Claim Payments"},
+  "630": {"family": "DEATH_BENEFIT_INTEREST", "label": "0630 Interest on Death Benefit"},
+  "810": {"family": "FEDERAL_NON_WITHHOLDING", "label": "0810 Federal Non Withholding"},
+  "820": {"family": "FEDERAL_INTEREST_WITHHOLDING", "label": "0820 Federal Int Withholding"},
+  "1020": {"family": "SURRENDER_CHARGE", "label": "1020 Surrender Charge"},
+  "1900": {"family": "CLAIM_CASH_DISBURSEMENT", "label": "1900 Claim Cash Disbursements"}
+}

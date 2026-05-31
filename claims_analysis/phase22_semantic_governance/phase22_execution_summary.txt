@@ -1,0 +1,7 @@
+Phase 22A/22B/22C Semantic Claim Domain — Complete
+Non-claim accounting held: 3851
+Policies: 663
+QuikLoan candidates (analysis): 3851
+Summary: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase22_semantic_governance\semantic_claim_domain_summary.txt
+production_dbf_flag=N
+Phase 4-17 engines NOT modified

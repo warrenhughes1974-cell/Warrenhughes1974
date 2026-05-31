@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "description": "Phase 15A trustee QA sign-off workflow (simulation only, no auto-approval).",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE15A-TRUSTEE-SIGNOFF",
+  "signoff_controls": {
+    "trustee_recovery_eligible": "Y",
+    "qa_review_required": "Y",
+    "auto_approved": "N",
+    "confidence_elevated": "N",
+    "production_authorized": "N"
+  },
+  "simulated_reviewer": {
+    "enabled": true,
+    "reviewer_id": "QA_SIMULATION",
+    "signoff_status": "SIMULATED_QA_SIGNOFF_COMPLETE",
+    "notes": "Controlled simulation only; not production authorization"
+  },
+  "governance_status_after_signoff": "QA_REVIEW_REQUIRED"
+}

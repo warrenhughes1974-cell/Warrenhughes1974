@@ -1,0 +1,61 @@
+error_type,severity,lifepro_coverage_id,field,value,notes
+COMPAT_PLAN_CONTAINS_SPACE,WARN,0823 960CH,ql_plan_code,0823 960CH,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,0823 960CH,ql_plan_code,0823 960CH,Passthrough compatibility PLAN documented; authoritative target is 960CWP
+COMPAT_PLAN_CONTAINS_SPACE,WARN,0824 P DIS,ql_plan_code,0824 P DIS,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,0824 P DIS,ql_plan_code,0824 P DIS,Passthrough compatibility PLAN documented; authoritative target is 94PDIS
+COMPAT_PLAN_CONTAINS_SPACE,WARN,10827 MN5K,ql_plan_code,10827 MN5K,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,10827 MN5K,ql_plan_code,10827 MN5K,Passthrough compatibility PLAN documented; authoritative target is 1CSIMN
+COMPAT_PLAN_CONTAINS_SPACE,WARN,1578 SPSPU,ql_plan_code,1578 SPSPU,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,1578 SPSPU,ql_plan_code,1578 SPSPU,Passthrough compatibility PLAN documented; authoritative target is 578STR
+COMPAT_PLAN_CONTAINS_SPACE,WARN,1579 GPO,ql_plan_code,1579 GPO,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,1579 GPO,ql_plan_code,1579 GPO,Passthrough compatibility PLAN documented; authoritative target is 9GPO79
+COMPAT_PLAN_CONTAINS_SPACE,WARN,1596 667,ql_plan_code,1596 667,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,1596 667,ql_plan_code,1596 667,Passthrough compatibility PLAN documented; authoritative target is 967ADB
+COMPAT_PLAN_CONTAINS_SPACE,WARN,619 CH PU,ql_plan_code,619 CH PU,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,619 CH PU,ql_plan_code,619 CH PU,Passthrough compatibility PLAN documented; authoritative target is 719CTR
+COMPAT_PLAN_CONTAINS_SPACE,WARN,621 PUA,ql_plan_code,621 PUA,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,621 PUA,ql_plan_code,621 PUA,Passthrough compatibility PLAN documented; authoritative target is 121PUA
+COMPAT_PLAN_CONTAINS_SPACE,WARN,630 JEB,ql_plan_code,630 JEB,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,630 JEB,ql_plan_code,630 JEB,Passthrough compatibility PLAN documented; authoritative target is 130JEB
+COMPAT_PLAN_CONTAINS_SPACE,WARN,646 ART,ql_plan_code,646 ART,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,646 ART,ql_plan_code,646 ART,Passthrough compatibility PLAN documented; authoritative target is 5646AT
+COMPAT_PLAN_CONTAINS_SPACE,WARN,667 ART CR,ql_plan_code,667 ART CR,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,667 ART CR,ql_plan_code,667 ART CR,Passthrough compatibility PLAN documented; authoritative target is 57ATCR
+COMPAT_PLAN_CONTAINS_SPACE,WARN,669 SR GD,ql_plan_code,669 SR GD,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,669 SR GD,ql_plan_code,669 SR GD,Passthrough compatibility PLAN documented; authoritative target is 1669SR
+COMPAT_PLAN_CONTAINS_SPACE,WARN,686S 30MRG,ql_plan_code,686S 30MRG,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,686S 30MRG,ql_plan_code,686S 30MRG,Passthrough compatibility PLAN documented; authoritative target is 7686S3
+COMPAT_PLAN_CONTAINS_SPACE,WARN,687J 30MRG,ql_plan_code,687J 30MRG,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,687J 30MRG,ql_plan_code,687J 30MRG,Passthrough compatibility PLAN documented; authoritative target is 7687J3
+COMPAT_PLAN_CONTAINS_SPACE,WARN,690 DT 65,ql_plan_code,690 DT 65,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,690 DT 65,ql_plan_code,690 DT 65,Passthrough compatibility PLAN documented; authoritative target is 7690DT
+COMPAT_PLAN_CONTAINS_SPACE,WARN,8034 30MRG,ql_plan_code,8034 30MRG,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,8034 30MRG,ql_plan_code,8034 30MRG,Passthrough compatibility PLAN documented; authoritative target is 934SWP
+COMPAT_PLAN_CONTAINS_SPACE,WARN,8034 J30MT,ql_plan_code,8034 J30MT,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,8034 J30MT,ql_plan_code,8034 J30MT,Passthrough compatibility PLAN documented; authoritative target is 934JWP
+COMPAT_PLAN_CONTAINS_SPACE,WARN,8043CTR WP,ql_plan_code,8043CTR WP,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,8043CTR WP,ql_plan_code,8043CTR WP,Passthrough compatibility PLAN documented; authoritative target is 943CWP
+COMPAT_PLAN_CONTAINS_SPACE,WARN,8046 JPO,ql_plan_code,8046 JPO,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,8046 JPO,ql_plan_code,8046 JPO,Passthrough compatibility PLAN documented; authoritative target is 9JPO46
+COMPAT_PLAN_CONTAINS_SPACE,WARN,961 ME65,ql_plan_code,961 ME65,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,961 ME65,ql_plan_code,961 ME65,Passthrough compatibility PLAN documented; authoritative target is 2961ME
+COMPAT_PLAN_CONTAINS_SPACE,WARN,961 PUA,ql_plan_code,961 PUA,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,961 PUA,ql_plan_code,961 PUA,Passthrough compatibility PLAN documented; authoritative target is 261PUA
+COMPAT_PLAN_CONTAINS_SPACE,WARN,970 JEB,ql_plan_code,970 JEB,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,970 JEB,ql_plan_code,970 JEB,Passthrough compatibility PLAN documented; authoritative target is 1970JB
+COMPAT_PLAN_CONTAINS_SPACE,WARN,970 PUA,ql_plan_code,970 PUA,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,970 PUA,ql_plan_code,970 PUA,Passthrough compatibility PLAN documented; authoritative target is 1970PA
+PASSTHROUGH_COMPAT_PLAN,INFO,DISCHO247B,ql_plan_code,DISCHO247B,Passthrough compatibility PLAN documented; authoritative target is 9DS24B
+PASSTHROUGH_COMPAT_PLAN,INFO,DISCHO29,ql_plan_code,DISCHO29,Passthrough compatibility PLAN documented; authoritative target is 9DIS29
+COMPAT_PLAN_CONTAINS_SPACE,WARN,L01 10Y MA,ql_plan_code,L01 10Y MA,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,L01 10Y MA,ql_plan_code,L01 10Y MA,Passthrough compatibility PLAN documented; authoritative target is 5L01MA
+COMPAT_PLAN_CONTAINS_SPACE,WARN,L10 PRE97,ql_plan_code,L10 PRE97,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,L10 PRE97,ql_plan_code,L10 PRE97,Passthrough compatibility PLAN documented; authoritative target is 1L10OD
+COMPAT_PLAN_CONTAINS_SPACE,WARN,L10 PREUNI,ql_plan_code,L10 PREUNI,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,L10 PREUNI,ql_plan_code,L10 PREUNI,Passthrough compatibility PLAN documented; authoritative target is 1L10PR
+COMPAT_PLAN_CONTAINS_SPACE,WARN,L10 SPSWP,ql_plan_code,L10 SPSWP,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,L10 SPSWP,ql_plan_code,L10 SPSWP,Passthrough compatibility PLAN documented; authoritative target is 910SWP
+COMPAT_PLAN_CONTAINS_SPACE,WARN,L10 WP SRN,ql_plan_code,L10 WP SRN,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,L10 WP SRN,ql_plan_code,L10 WP SRN,Passthrough compatibility PLAN documented; authoritative target is 910RWP
+COMPAT_PLAN_CONTAINS_SPACE,WARN,WP 646,ql_plan_code,WP 646,Compatibility emit PLAN contains spaces — not valid for closed authority emission
+PASSTHROUGH_COMPAT_PLAN,INFO,WP 646,ql_plan_code,WP 646,Passthrough compatibility PLAN documented; authoritative target is 9WP646

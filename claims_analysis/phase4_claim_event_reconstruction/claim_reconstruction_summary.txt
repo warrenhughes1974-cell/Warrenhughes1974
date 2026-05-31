@@ -1,0 +1,27 @@
+=== Claim Event Reconstruction Summary (Phase 4 Prototype) ===
+PACTG input: C:\Users\warren\Documents\GitHub\Warrenhughes1974\docs\claims_conversion_reference\PACTG_Accounting_Extract20260427.csv
+Catalog input: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase2_semantic_catalog\catalog\Claims_Transaction_Code_Catalog.csv
+PRELSA input: C:\Users\warren\Documents\GitHub\Warrenhughes1974\docs\claims_conversion_reference\RelationshipNameAddress_Extract.csv
+Relationship rules: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase1_pactg_transaction_profiling\relationship_resolution_recommendations.csv
+
+Total reconstructed claim candidates: 10177
+Claim families identified: DEATH_CLAIM|DISBURSEMENT_CLAIM|SURRENDER_CLAIM
+Policies with reconstructed claims: 2909
+Balanced candidates: 3270
+Unbalanced candidates: 5532
+Reversal candidates: 0
+Unresolved payees: 0
+Trust-related claim count: 0
+Business payee claim count: 879
+Lifecycle statuses identified: FUNDED|INFERRED|PAID|SETTLED
+High confidence claim count: 414
+Medium confidence claim count: 4231
+Low confidence claim count: 5532
+
+Output files generated:
+  - claims_analysis/output\claim_candidate_header.csv
+  - claims_analysis/output\claim_candidate_financials.csv
+  - claims_analysis/output\claim_candidate_payees.csv
+  - claims_analysis/output\claim_candidate_lifecycle.csv
+  - claims_analysis/output\claim_reconstruction_exceptions.csv
+  - claims_analysis/output\claim_reconstruction_summary.txt

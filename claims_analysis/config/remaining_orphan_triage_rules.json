@@ -1,0 +1,56 @@
+{
+  "version": "1.0",
+  "description": "Phase 16A remaining orphan root-cause triage (no auto-remediation).",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE16A-ORPHAN-TRIAGE",
+  "parent_blocker_types": {
+    "SURRENDER_OFFSET_BLOCKED": {
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "remediation_workflow": "SURRENDER_OFFSET_BUSINESS_REVIEW",
+      "business_review_required": "Y"
+    },
+    "DEATH_DECOMPOSITION_BLOCKED": {
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "remediation_workflow": "DEATH_DECOMPOSITION_REVIEW",
+      "business_review_required": "Y"
+    },
+    "LIFECYCLE_BLOCKED": {
+      "governance_status": "NEEDS_RULE_REFINEMENT",
+      "severity": "MEDIUM",
+      "remediability": "RECOVERABLE",
+      "remediation_workflow": "LIFECYCLE_REPLAY_AUTHORIZATION",
+      "business_review_required": "N"
+    },
+    "UNBALANCED_PARENT": {
+      "governance_status": "PRODUCTION_BLOCKED",
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "remediation_workflow": "PARENT_CLAIM_REMEDIATION",
+      "business_review_required": "Y"
+    },
+    "DERIVATION_REJECTED": {
+      "governance_status": "PRODUCTION_BLOCKED",
+      "severity": "HIGH",
+      "remediability": "NON_RECOVERABLE",
+      "remediation_workflow": "MANUAL_DERIVATION_REVIEW",
+      "business_review_required": "Y"
+    },
+    "OTHER_GOVERNED_BLOCK": {
+      "governance_status": "NEEDS_BUSINESS_REVIEW",
+      "severity": "MEDIUM",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "remediation_workflow": "GENERAL_GOVERNANCE_REVIEW",
+      "business_review_required": "Y"
+    }
+  },
+  "priority_weights": {
+    "payment_amount": 0.4,
+    "blocker_severity": 0.3,
+    "remediability": 0.3
+  },
+  "rulebook_lineage": "phase15_orphan_replay|phase16a_orphan_triage"
+}

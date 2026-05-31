@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "description": "Phase 15B authorized Phase 11 replay execution rules (overlay only, not production).",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE15B-REPLAY",
+  "baseline_phase11_output": "phase11_prototype_dbf_generation",
+  "replay_mode": "governance_overlay_extension",
+  "claim_gating_overlay": {
+    "include_baseline_rulebook_ready": true,
+    "include_lifecycle_replay_authorized": true,
+    "lifecycle_projected_statuses": ["PROJECTED_BALANCED", "PROJECTED_MINOR_VARIANCE"],
+    "lifecycle_replay_authorization": "AUTHORIZED",
+    "lifecycle_governance_status": "SAFE_TO_REPROCESS"
+  },
+  "payment_gating_overlay": {
+    "include_baseline_rulebook_ready": true,
+    "include_trustee_qa_signed_off": true,
+    "trustee_allowed_derivation_statuses": ["TRUSTEE_DERIVATION"],
+    "require_trustee_signoff_status": "SIMULATED_QA_SIGNOFF_COMPLETE",
+    "trustee_governance_status": "QA_REVIEW_REQUIRED"
+  },
+  "output_dbf_names": {
+    "quikclms": "QUIKCLMS_PHASE15_REPLAY.DBF",
+    "quikclmp": "QUIKCLMP_PHASE15_REPLAY.DBF"
+  },
+  "governance_thresholds": {
+    "min_reconciliation_pass_pct": 95.0,
+    "max_orphan_payment_pct": 5.0
+  }
+}

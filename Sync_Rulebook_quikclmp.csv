@@ -1,0 +1,26 @@
+Source_Field,Target_Field,Default_Value,Transformation_Note
+policy_number,MPOLICY,,CROSSWALK policy_number via Master_Crosswalk; Phase 10A payment stage
+,MPHASE,1,Default base phase for claim payment
+,MCHECKNO,0,Check number not sourced in prototype path; default zero
+mamount,MAMOUNT,0.00,Payment amount from canonical_claim_payment_stage
+mpayname,MPAYNAME,,Payee name from PRELSA hierarchy / payee stage
+mpayaddr1,MPAYADDR1,,Payee address line 1 from PRELSA hierarchy
+,MPAYADDR2,,Payee address line 2 not populated in prototype path
+mpaycity,MPAYCITY,,Payee city from PRELSA hierarchy
+mpayst,MPAYST,,Payee state from PRELSA hierarchy
+mpayzip,MPAYZIP,,Payee ZIP from PRELSA hierarchy
+,MPAYZIP2,,Payee ZIP+4 not populated in prototype path
+mtin,MTIN,,Payee tax ID from PRELSA hierarchy when available
+,MBANKNO,,Bank account not populated in UAT prototype path
+derived_mhdpmt,MHDPMT,C,Payment disposition from payment_type mapping (default check)
+,MHDCODE,,Hold/disbursement code default blank
+mchkdate,MCHKDATE,,Check date from payout_date
+mpmtdate,MPMTDATE,,Payment date from payout_date
+mseq,MSEQ,0,Payment sequence default; non-zero only for CLAIMSTAT 98 partial surrender emit override
+,MHOLDINT,0.00,Default zero
+mfedtax,MFEDTAX,0.00,Claim-level withholding reference in prototype path
+,MSTTAX,0.00,State tax default zero
+mamount,MGROSS,0.00,Gross payment amount mirrors MAMOUNT in prototype path
+,MDOB,,Payee DOB not populated in UAT prototype path
+,MGENDER,,Payee gender not populated in UAT prototype path
+,MCOUNTRY,,Payee country not populated in UAT prototype path

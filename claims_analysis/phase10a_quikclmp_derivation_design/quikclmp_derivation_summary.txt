@@ -1,0 +1,45 @@
+=== QUIKCLMP Rulebook Derivation Design Summary (Phase 10A) ===
+
+Total derivation candidates: 2300
+
+Derivation status distribution:
+  INFERRED_DERIVATION: 87
+  NEEDS_MANUAL_REVIEW: 60
+  RULEBOOK_READY: 1910
+  TRUSTEE_DERIVATION: 243
+
+Key metrics:
+  Direct derivations: 0
+  Hierarchical derivations: 0
+  Trustee derivations: 243
+  Inferred derivations: 87
+  Fallback derivations: 0
+  Rulebook-ready rows: 2153
+  Manual review candidates: 147
+  Residual-aware derivations: 1670
+  Validation PASS: 2153
+  Validation REVIEW: 147
+
+Confidence distribution:
+  HIGH_CONFIDENCE: 1584
+  INFERRED: 147
+  MODERATE_CONFIDENCE: 569
+
+Architectural notes:
+  - First actual QUIKCLMP target derivation phase; production_dbf_flag=N on all rows
+  - Field derivations driven by quikclmp_derivation_rules.json
+  - Layout reference used for design only; no DBF generation
+
+Recommended next phase:
+  - Phase 10B: QUIKCLMS rulebook derivation design
+
+Output files generated:
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10a_quikclmp_derivation_design\quikclmp_derivation_rules.json
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10a_quikclmp_derivation_design\quikclmp_derivation_candidates.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10a_quikclmp_derivation_design\quikclmp_field_derivation_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10a_quikclmp_derivation_design\quikclmp_payment_type_mapping_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10a_quikclmp_derivation_design\quikclmp_payee_derivation_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10a_quikclmp_derivation_design\quikclmp_residual_derivation_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10a_quikclmp_derivation_design\quikclmp_confidence_gating_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10a_quikclmp_derivation_design\quikclmp_derivation_validation.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10a_quikclmp_derivation_design\quikclmp_derivation_recommendations.csv

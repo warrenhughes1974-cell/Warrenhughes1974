@@ -1,0 +1,1088 @@
+===== PAGE 61 =====
+48
+© 2026 QLAdmin Solutions QLAdmin Solutions
+Policy DisplayQLAdmin - Main Menu
+5.1.1.6
+Claims TabAll pending and finalized death claims, cash surrenders, or health claim details will be displayed in theClaims Tab.  If a claim is deleted for any reason and the policy is reinstated back to an active status,the claim details will be removed while the previous claim memos will be retained.  
+Note:If the policy displayed is a health insurance policy, the Policy Maintenance Claim buttonwill process a  new health claim
+, and the Claims Tab will show all health claimhistory.Policy Display - Claims Tab Data Fields(1)  Ph Phase of coverage that was processed.  Zero indicates all phases wereprocessed.(2)  Number Death claim or health claim number.(3)  Status Status of the claim
+ or surrender.  (4)  Death Date of death.(5)  Reported Date the death or surrender was reported. (6)  CompletedDate the claim or surrender was completed.(7)  Paid Date the claim or surrender was paid, settled, or denied.(8)  Net Payment Net policy benefit paid including dividends, loans, and/or premiums.(9)  Amount Ins Face amount of the policy.(10)  Dividends Amount of dividends on the policy
+.(11)  Ph Phase of coverage that was processed.  Zero indicates all phases wereprocessed.(12)  Disb Benefit disbursement code for the payment (A - ACH, C - Check, E- Escheat,H - Hold).(13)  Check # Check number for benefit.  Check number manually entered, or auto-populated if integrated with accounting.  (14)  Amount Amount of the policy benefit paid. (15)  Name AddressPayee that received benefit.(16)  MemoDeath claim memos.(17)  Memo ActionsAdd, edit, save and print death claim memos.
+209
+114
+134
+
+===== PAGE 62 =====
+49
+Proprietary & Confidential
+QLAdmin - Main Menu Policy Display(18)  Loans Amount of loans outstanding on the policy .*(19)  Net Benefits Net death benefit or cash surrender before premium refunds and deductions.*(20)  Premium Amount of premium to be refunded or deducted.*(21)  Suspense Money held in the suspense account.*(22)  Adjustments Interest or other adjustments on the claim or surrender amount.*(23)  Contest Yes or no indicator for whether the claim was contested.*(24)  Cause Cause of death.*Note:  *Not shown in this image, but data will be visible via the horizontal scroll bar.How do I process a death claim?See Processing a Death Claim.
+How do I finalize a payment that was previously placed on hold?On the Claims tab, one or more payees may have Disbursement Code H and a reason code
+,meaning a life claim
+ or cash surrender disbursement was placed on hold for the reason selected. Double click the Hold code to display the payee transaction window.  The disbursement code defaultsto C to indicate a payment by check.  Update the disbursement code and payee information, then clickthe OK button to complete the disbursement.  The company chart of accounts must include the Dueand Unpaid account.Note:  If any policy disbursements have disbursement code A (ACH), the company mustcreate the Policy Disbursements EFT
+ file at the end of the day and transmit it to thebank for processing.  How do I review matured (endowed) policy benefits before payment?Please contact QLAdmin Solutions if the company would like the option to hold and review Matured/Endowed (57) policy benefits before making the benefit payment.  If this functionality is enabled, the system will calculate the matured value, update the policy status toMatured (57), and add the maturity to the Policy Exhibit.  An entry is recorded to the G/L file as a debitto Maturity Expense and credit to Due and Unpaid. The maturity payment record is displayed on theClaims tab in the Payee Info area with Disbursement code H (Hold).When the maturity benefit is ready to be paid, double-click the Hold code to open the payee transactionwindow.  Enter all payee information and click the OK button to finalize the benefit payment.  Once thematurity payment has been finalized, an entry is recorded to the A/P file as a debit to Due and Unpaidand a credit to Cash.  Create a life claims report called Due and Unpaid Report
+ to see a list of all policies with benefit orclaims payments on Hold.  The company chart of accounts
+ must have the Maturity Expense account.Why is the check number field empty?Unless the company's QLAdmin program is integrated with an accounting program and automatedcheck printing, the check number field will be empty.  After a death claim is paid, click directly into theCheck # field to enter a check number.  
+130
+114
+519
+114
+396
+407
+380
+
+===== PAGE 63 =====
+50
+© 2026 QLAdmin Solutions QLAdmin Solutions
+Policy DisplayQLAdmin - Main MenuHow do I reinstate a death claim?The user must have full Sys-Op rights  to reinstate a policy from a death claim.  If a death claim isreinstated, the claim data in the Claims Tab are removed, however the previous claim memos areretained.  Click the Policy Maintenance button and confirm the date.  Click the Reinstatement button.  Anypremium due that is calculated is for informational purposes only.Which tables are affected?QuikAudt
+Transaction AuditQuikDbs
+Death BenefitsQuikPcde
+Death Claim Pending CodeQuikClcd
+Death Claim Code (ICD-10 Classification)QuikClmp
+Death Claim PayeeQuikClms
+Death Claim Transaction FileRelated Topics:Policy Maintenance
+Claim Status Meanings
+493
+705
+754
+843
+730
+732
+733
+106
+114
+
+===== PAGE 87 =====
+74
+© 2026 QLAdmin Solutions QLAdmin Solutions
+Policy DisplayQLAdmin - Main Menu
+5.1.2.7
+Loan HistoryHow do I view the loan history for a policy?1.Go to the Policy menu and choose either Display by Number or Display by Alpha.  2.Locate and display the desired policy.3.Right-click on any part of the gray area inside the policy display window.4.From this right-click menu select Loan History.The Loan History window will be displayed and shows all loan transactions for the policy. Thisinformation expands on the loan summary
+ shown on the Coverage Tab of Policy Display. Loantransactions include loans granted, loan payments, loan interest charged, and automatic premiumloans processed. The transaction type, date, amount and loan balance are displayed. Current loaninformation is shown and includes the accrued interest, the loan balance and the date to which interestis accrued.  The Loan History for a policy can be printed by clicking the Print button.
+Policy Right Click - Loan History Data Fields(1)  Transaction Type of loan transaction.(2)  Date Date the transaction.(3)  Amount Amount of the transaction.(4)  Balance Loan balance after the transaction.
+32
+
+===== PAGE 88 =====
+75
+Proprietary & Confidential
+QLAdmin - Main Menu Policy Display(5)  Accrued Interest Interest accrued to date.(6)  Current Balance Current loan balance.(7)  Interest Paid ToDate through which interest has been paid.Why is the Policy Display loan balance field highlighted yellow?The policy loan balance field displays the loan balance for the policy, if any. If the loan balance field ishighlighted yellow, this indicates the policy has become overloaned. A policy is overloaned when theloan balance exceeds the cash value, and available dividends/suspense money. Once the policy is nolonger overloaned, or the policy terminates, the highlight will disappear.  Recall that the interest rate on a policy is set in the Plan Information File
+ on the general tab, or onthe plan values options
+ tab for state-specific loan interest rates.
+Which tables are affected?QuikLoan
+Policy LoansRelated Topics:Processing Policy Loans
+524
+533
+827
+130
+
+===== PAGE 127 =====
+114
+© 2026 QLAdmin Solutions QLAdmin Solutions
+Policy DisplayQLAdmin - Main Menu
+5.1.3.2
+Processing a Death ClaimHow do I process a death claim?1.Go to the Policy menu and choose either Display by Number or Display by Alpha.  2.Locate and display the desired policy.3.Click on the Policy Maintenance button. The default maintenance date will be the current date,however the Date of Death should be entered when processing a death claim. This date is used incalculating policy financial values.4.Click the Claim button. The Multiple Phases window will be displayed. Supplemental benefits (plan
+codes
+ starting with 9) must be processed first. Click Yes to process a single phase of coverage.5.Click No to process the entire policy. All phases of coverage with the same client ID as the basecoverage will be included in the claim amount. The remaining phases of coverage will be lapsed.Once the Death Claim window is displayed, follow the steps below to complete the Status, Details andBenefit information. The claim number may already be assigned, depending on the company's settingin System Configuration. All pending and finalized death claim details will be displayed in the ClaimsTab of Policy Display. If the policy displayed is a health insurance policy, the Policy Maintenance Claimbutton will allow health claim adjudication, and the Claims Tab will show all health claim history.      
+Note:  Supplemental benefits (plan codes
+ starting with 9) must be processed first. Repeatthe claim process to finish processing the other phases of coverage.    Step 1 - Select the StatusThe Death Claim window shows four Status options for processing the death claim: Pending,Paid in Full, Settled or Denied. Choose the appropriate status and enter any notes regardingthe insured or the claim applicant. To save the claim for future processing, keep the claim inPending status.
+633
+633
+
+===== PAGE 128 =====
+115
+Proprietary & Confidential
+QLAdmin - Main Menu Policy Display PendingDisplays the calculated death benefit net of any financial values andpremium accruals. Pending claims are excluded from billing,automated correspondence and premium posting. The contingentbeneficiary checkbox is disable while the claim is pending. Paid In Full Displays the calculated death benefit net of any financial values andpremium accruals.Settled Allows for manual entry of a lesser Death Benefit amount.  Denied Displays the calculated gross premiums to be refunded on the policy.Check the Do Not Refund Prem checkbox to deny the claim withoutrefunding all premiums paid. Example: an AD&D policy where causeof death was not an accident.Step 2 - Complete the DetailsA Claim Number, Date of Death, Reported Date, and Cause of Death must be entered beforedeath claim processing can continue. The Cause of Death drop down menu contains the top100 causes of death as listed by the ICD-10 table (compiled and copyrighted by the WorldHealth Organization). The list can be customized by clicking the Add Cause of Death button. If the system is configured to assign the claim number
+, that field will be populated. Claimdata is calculated through the Maintenance Date entered, which should have been the date ofdeath. Manual adjustments to the benefit should be entered in the Interest/Adjustments field.If the date of death is within two years of the issue date or reinstatement date, the policy iswithin its two-year contestable period, and the Contestable checkbox will be checked. Uncheckthe contestable indicator if needed. The Yes/No contestable indicator will appear on theClaims tab of Policy Display.If the claim being processed is an annuity, the Apply Surr Charges checkbox will be enabled.Surrender charges are deducted from the net benefit. If the annuity is subject to Market ValueAdjustments, the Apply MVA checkbox is enabled.Step 3 - Calculate and Review ValuesClick the Calculate button to update the death benefit data. The Calculate button must beclicked each time the claim window is accessed. The system will account for dividenddeposits, policy loans, and premium refunds or deductions. If paying interest on a death claim,the Interest on Death Claims account
+ must be set up. All values will be displayed in theBenefits portion of the Death Claim Window. Click the OK button to finalize the claim and display the Payee window. After the claim isfinalized, the system will print before-and-after policy status pages, including accounting
+information
+ for the death claim transaction, and the policy status will be updated to 53(Death Claim).Step 4 - Complete the Payee TransactionThe payee window appears for multiple policy benefit disbursement transactions, so theTransaction Description field will show what type of transaction is being processed. If the policyhas primary and/or contingent beneficiaries listed, their information will be populated to thepayee fields. Check the Archive checkbox to save a payee to be inserted on future payments.Click the Insert button to select a previously archived payee.  If the policy has an assignee, the payee window will allocate 100% of the disbursement to the
+476
+380
+630
+
+===== PAGE 131 =====
+118
+© 2026 QLAdmin Solutions QLAdmin Solutions
+Policy DisplayQLAdmin - Main Menu save payee disbursement information. Repeat Step 4 to add a multiple beneficiaries. Payee Add/Edit Data Fields(1)  Available Funds Net funds available to be paid to the payee. Calculated field.(2)  Unused Funds Net unused funds (Available Funds less the Amount).Calculated field.(3)  Payee Information Payee mailing address information. TIN required for annuitypayments.(4)  Disbursement Code Disbursement code option. Payment and Settlement fieldsare available based on code selected.
+A   ACH
+Benefit funds are paid with a direct deposit.The system will validate the bank routingnumber.
+C   Check
+Benefit funds are paid with a check. Thesystem will warn the user if Check is selectedwith a bank account entered.
+E   Escheat
+Benefit funds are paid to the State if thebeneficiary cannot be located within the timeallowed.
+H   Hold
+A portion or all of the death benefit funds areheld. Hold reason code drop down menu isactivated.
+I   SettlementOption
+Death benefit funds are placed in a taxable,interest earning deposit. A transaction auditrecord is added to the policy.
+R  SettlementOption
+Death benefit funds are place in a newannuity policy for the inheritor of the IRA. Atransaction audit record is added to thepolicy.
+S  SettlementOption
+Settlement Option - Death benefit funds areplaced in a new SPIA policy to make periodicpayment installments. A transaction auditrecord is added to the policy.
+(5)  Hold Reason User-defined list of disbursement hold reason codes anddescriptions.(6)  Amount Gross amount to be paid to payee. Editable field.(7)  Bank Account Bank routing and account number. Required for ACHdisbursements. (8)  Gross Payment Gross amount to be paid to payee  Calculated field.(9)  Addl Interest Additional interest due to the payee for a previously heldclaim. Accessed from the Claims tab of Policy Display.(10)  Federal Tax Federal withholding tax deducted from gross payment.(11)  State Tax State withholding tax deducted from gross payment.(12)  Net Payment Net amount to be paid to the payee. Calculated field.(13)  Policy New policy number (Settlement options).(14)  Eff Date Effective date of the new policy (Settlement options). (15)  Plan Plan code of the new policy (Settlement options).
+
+===== PAGE 132 =====
+119
+Proprietary & Confidential
+QLAdmin - Main Menu Policy Display(16)  DOB Payee date of birth for the new policy (Settlement options).(17)  Sex Payee sex for the new policy (Settlement options).(18)  Country Country of issue for the new policy (Settlement options).(19)  Clnt If checked, the beneficiary client record will be used on thenew Settlement Option policy.(20)  Archive Payee Save the payee information to be inserted on futurepayments.How do I process a Settlement Option?When processing a death claim and disbursing the funds, there are two Settlement options within thedisbursement code drop down menu; an interest-only account and a Single Premium ImmediateAnnuity (SPIA).If the system has a client record for the beneficiary of the policy, the beneficiary's date of birth and sexwill be added to the Settlement area of the payee window, and the Use Client checkbox will bechecked.
+A prompt will also be displayed to confirm that the beneficiary client record will be used to create thenew settlement option policy. If any changes are then made to the client details, a warning will bedisplayed confirming that all policies associated with that client will be updated.
+What's the difference between the two statuses Paid in Full and Settled?Processing a death claim as Paid in Full means that the full face amount of the policy was paid out, netof any dividend deposits and policy loans. Processing a death claim as Settled means that an amountless than the death benefit was paid out.  
+
+===== PAGE 133 =====
+120
+© 2026 QLAdmin Solutions QLAdmin Solutions
+Policy DisplayQLAdmin - Main MenuCan a claim have multiple payees?Yes. A policy disbursement can have two or more payees. Use the Add button to add another payeeline, or use the Insert button to select a previously saved payee. Click the Save button to save a payeefor later use. Notice the required and optional data fields.Can a claim payment be put on hold?Yes. The company chart of accounts
+ must have the Due and Unpaid account.  A payment to one beneficiary may be held while payments to other beneficiaries are paid out. Selectthe Disbursement Code H (Hold) and then select a hold reason
+ from the Reason drop down menu.Claims on hold, whether life or annuity claims, do not have interest earned calculated. The entire policywill be processed and the policy status will be updated. The claim information will be visible on the Claims tab
+, and the disbursement on hold will remain editable until the disbursement is finalized.Double click the payee on hold to open the payee window.Can an Explanation of Benefits (EOB) be printed?For either a death claim or health claim, an Explanation of Benefits can be created with the system's automated correspondence
+. The QLEOB.rtf document must first exist in the main data folder.Create the QLEOB.rtf document in the Document Editor, then contact QLAdmin Solutions forassistance on the specific data fields that should be printed.Where do I enter the claim check number?There is no manual entry of the claim check number in the benefit payment window. The checknumber in the Claims Tab will show "0" unless the system is integrated with an accounting programand automated check printing. However, after the death claim is finalized, the check number can bemanually entered in the Claims Tab by clicking and typing into the check number field. What changes are made to the policy after the death claim transaction?The Policy Status and Coverage Status will be updated, including accounting information
+ for thedeath claim transaction. The Policy Exhibit transactions will be recorded. The Policy Benefits file will beupdated. Any premium refunds or deductions will be processed through the premium processingroutine. Any necessary agent chargebacks will also be processed.   Why weren't all phases of coverage processed?If the policy has supplemental benefits, such as an AD&D or Waiver of Premium
+ rider, you mustprocess this phase of coverage first. You can then repeat the claim process to finish processing theremaining phases of coverage. Supplemental benefit plan codes
+ begin with a "9." How do I clear a pending death claim?If the policy or phase of coverage was initially processed for a death claim and the policy status is stillPending Death (50), go to Policy Maintenance and click the Claim button. The Claim window will bedisplayed. Next click the Calculate button to update the claim data. Click Clear to remove the pending
+380
+519
+48
+92
+630
+253
+633
+
+===== PAGE 134 =====
+121
+Proprietary & Confidential
+QLAdmin - Main Menu Policy Displayclaim from the policy, then click the OK button. A policy status page will be printed. Clearing a claim willput the policy back to its prior status.How do I reverse or reinstate a death claim?A user must have full Sys-Op
+ rights to reinstate a policy that was processed with a death claim. Ifthe policy or phase of coverage was processed for a death claim and the policy status is Deceased(53), go to Policy Maintenance and click the Reinstate button. The system will confirm whether one orall phases of coverage should be processed. After reinstatement, a policy status page will be printed.Reinstating a policy will put the policy back to its prior status. Can I reinstate a claimed policy with annuity coverage?The system has a unique reinstatement process for policies that were death claimed with annuitycoverage, and will display a Yes/No prompt at the beginning of the reinstatement process. If the Yesbutton is clicked, QLAdmin will reverse the last annuity transaction during the reinstatement process.The last annuity transaction is likely to be a cash surrender or withdrawal where a check wasgenerated to the annuitant.   A second Yes/No prompt will be displayed, and will ask the user whether interest from the prior date oftermination to the effective date of the reinstatement should be excluded from the transaction reversal.This may be applicable if the funds were not invested in the annuity during this period of time. ClickYes to exclude the interest amount from the calculated value, or click No to include the interestamount. The reversal of the last transaction and the policy reinstatement will be completed.  How do I commute the balance on a SPIA?The policy maintenance Claim
+ feature is used to process the commutation of a SPIA balance andenter the payee information for disbursement. When processing SPIA death claim or commutation, theDenied and Apply Surr Chgs checkboxes will be disabled. A SPIA Death Benefit field is available foredit, and interest and adjustments can be added as with a life insurance death claim.Which tables are affected?QuikAudt
+Transaction AuditQuikPolx
+Policy ExhibitQuikDbs
+Death BenefitsQuikPcde
+Death Claim Pending CodeQuikClcd
+Death Claim Code (ICD-10 Classification)QuikClmp
+Death Claim PayeeQuikClms
+Death Claim Transaction FileRelated Topics:Automatic Claim Numbering and other death claim options
+Rebuild Death Benefit Values
+485
+114
+705
+868
+754
+843
+730
+732
+733
+476
+618
+
+===== PAGE 143 =====
+130
+© 2026 QLAdmin Solutions QLAdmin Solutions
+Policy DisplayQLAdmin - Main Menu
+5.1.3.7
+Processing a LoanHow do I process loan transactions on a policy?1.Go to the Policy menu and choose either Display by Number or Display by Alpha.  2.Locate and display the desired policy.  The loan balance field  will be highlighted yellow if thepolicy has become overloaned.3.Click on the Policy Maintenance button and confirm the date for the Loan transaction.  The defaultdate will be the current date.  4.Click the Loan button.  The Loan Maintenance window will be displayed.Note:If a policy has zero cash value, the Loan button cannot be selected, even if the policyhas an outstanding loan. 
+The Loan Maintenance window displays all current loan information for the policy, including thecalculated cash value, existing loan data, and the maximum loan amount currently available.  Loaninterest is calculated as either Interest in Advance, or Interest in Arrears, and is calculated from loananniversary to loan anniversary.  The Loan functions allow for borrowing new funds, making payments on existing loans, assigning ascheduled loan payment to be billed, or editing loan values.  The transaction history for all loanpayments can be seen in the right-click menu option Loan History
+.  From the four loan options,decide how the policy loan should be processed.   1.  Make LoanAfter clicking the Loan button, the system will calculate the maximum loan amount available.  If thepolicy has no cash value, the system will not allow a policy loan or loan payment to be processed.  If the policy has sufficient cash value, the Loan Maintenance window will appear.  Click the Make Loanbutton, then enter the amount of the loan.  Any premiums due will be added to the loan amount if thepolicy paid-to date is less than the loan date. If the loan interest is payable in advance, the interestcapitalized to the policy anniversary will also be added to the loan amount.  The maximum loan amountwill reflect the amount of interest to accrue for interest payable in arrears.
+32
+74
+
+===== PAGE 144 =====
+131
+Proprietary & Confidential
+QLAdmin - Main Menu Policy DisplayThe system will ask for confirmation to continue processing the loan with the additional premium due,and will ask if the loan is to be paid in cash.  If the loan will not be paid out as cash, a record will beadded to the policy's transaction audit history.To manually process a premium loan amount (APL), request a policy loan with due premiums for azero cash amount.  The system will then ask to make a loan for due premiums only.    
+ Note:  If any policy disbursements have disbursement code A (ACH), the company mustcreate the Policy Disbursements EFT
+ file at the end of the day and transmit it to thebank for processing.  2.  Pay LoanLoan payments can be posted via the Premium Application
+ window, or they can be posted viaPolicy Maintenance from Policy Display.  Once in the Loan Maintenance window, click the Pay Loanbutton, then enter the amount of the loan payment.  Interest due on the policy loan will be adjusted toreflect the amount of the payment that is applied to the loan.  Interest is applied to the loan on theMaintenance Date.  
+3.  Bill PaymentA scheduled loan payment can be included on the policy's next billing statement.  Click the BillPayment button, then manually enter the amount of the loan payment to be billed.  This amount can beadjusted any time before the billing cycle is run
+.  Any changes will be reflected on the next billingstatement.  The transaction history for all policy billing can be seen in the right-click menu option Billing
+History
+.
+396
+250
+229
+66
+
+===== PAGE 145 =====
+132
+© 2026 QLAdmin Solutions QLAdmin Solutions
+Policy DisplayQLAdmin - Main Menu
+4.  Edit LoanThe Edit Loan function is most often used to adjust loan balances that were erroneously converted tothe QLAdmin system.  When editing the loan values, the balance of the current loan and the interestpaid-to date for the loan can be changed.  Any adjustment in the loan balance will be recorded ascapitalized interest on the loan, whether the adjustment is positive or negative.  
+How do I enter a loan-payoff payment?When accessing the Loan maintenance feature to view the loan balance and quote a payoff amount,the user must enter a Maintenance Date.  When the loan payoff amount is received from the insured,that same Maintenance Date must be entered to ensure no additional interest is calculated, therebycausing the loan balance to increase.    How do I make a loan for the policy premium only?To create a loan for the amount of the premium due, make a new loan for zero dollars. The premiumdue will be deducted from the new loan amount, and the net effect is a loan for the premium only. How do I reverse a loan payment applied in error?To reverse a loan payment applied in error, make a new loan for the amount that needs to be reversed. Click the Maintenance button at the bottom of policy display, use the same date as the original/incorrect loan payment, then click the Loan button.  See the previous question on making a new loan.How do I reverse a loan granted in error?
+
+===== PAGE 146 =====
+133
+Proprietary & Confidential
+QLAdmin - Main Menu Policy DisplayTo reverse a loan granted in error, edit the loan amount on the policy.  Click the Maintenance button atthe bottom of policy display, use the same date as the original/incorrect loan payment, then click theLoan button.  See the previous question on editing the loan balance. How is the maximum loan value calculated?The maximum loan value is calculated as of the loan date (Maintenance Date) or the paid-to date,whichever is greater.  The maximum loan amount includes the policy cash value, the cash value of anypaid-up additions, and may also include the value of any dividend accumulations
+ if that feature hasbeen specified in System Configuration
+.What changes are made to the policy after the loan transaction?After completing the loan transaction, the system will print a policy status page, including accounting
+information
+ for the loan transaction.  Which tables are affected?QuikAudt
+Transaction AuditQuikDate
+System DatesQuikBene
+Policy BenefitsQuikPolx
+Policy ExhibitQuikLoan
+Policy LoansQuikPrem
+Premium PaymentsQuikCvs
+Cash ValuesQuikMstr
+Policy Master FileQuikRidr
+Coverage Master FileRelated Topics:Loan History
+Define option to include dividends in maximum loan amounts
+72
+476
+630
+705
+753
+709
+868
+827
+870
+750
+832
+887
+74
+476
+
+===== PAGE 827 =====
+814
+© 2026 QLAdmin Solutions QLAdmin Solutions
+QuikIaindex - Indexed Annuity Daily Index ValuesQLAdmin Tables 
+7.138
+QuikIameth - Indexed Annuity Crediting Method IDs (System
+Level)INDEX KEYQuikIameth.ntxMETHIDFIELD NAME FIELD TYPE FIELDLENGTH FIELD DESCRIPTION
+METHID
+CHARACTER
+6.0
+Crediting method ID
+DESCR
+CHARACTER
+40.0
+Crediting method description
+
+===== PAGE 828 =====
+815
+Proprietary & Confidential
+QLAdmin Tables QuikIameth - Indexed Annuity Crediting Method IDs (System Level)
+7.139
+QuikIapol - Indexed Annuity Fund Selections (Policy Level)INDEX KEYQuikIapol.ntx MPOLICY + MBUCKET + DToS(MEFFDATE)FIELD NAME FIELD TYPE FIELDLENGTH FIELD DESCRIPTION
+MPOLICY
+CHARACTER
+10.0
+Policy number
+MBUCKET
+CHARACTER
+2.0
+Indexed annuity bucket (in sequential order)
+MEFFDATE
+DATE
+8.0
+Indexed annuity effective date
+MALLOC
+NUMERIC
+7.2
+Indexed annuity allocation percentage
+MFUNDID
+CHARACTER
+6.0
+Indexed annuity fund ID
+MSTGYID
+CHARACTER
+2.0
+Indexed annuity crediting strategy ID
+MSTGYEFFDT
+DATE
+8.0
+Indexed annuity crediting strategy effectivedate
+PLAN
+CHARACTER
+6.0
+Plan code
+RENEWRATE
+NUMERIC
+7.2
+Crediting strategy renewal rate
+METHID
+CHARACTER
+6.0
+Crediting method ID
+MARGIN
+NUMERIC
+7.2
+Crediting strategy margin
+PARTRATE
+NUMERIC
+7.2
+Crediting strategy participation rate
+CAP
+NUMERIC
+7.2
+Crediting strategy cap
+FLOOR
+NUMERIC
+7.2
+Crediting strategy floor
+HEDGINGFEE
+NUMERIC
+8.4
+Crediting strategy hedging fee rate
+INDEXTERM
+NUMERIC
+3.0
+Crediting strategy index fund term
+
+===== PAGE 729 =====
+716
+© 2026 QLAdmin Solutions QLAdmin Solutions
+QuikBll1 - Billing Direct ModeQLAdmin Tables 
+7.52
+QuikBll2 - Billing Bank Draft ModeINDEX KEYQuikBll2.ntx SUBSTR(MPOLICY,-1,1) + MBILLFRM + MNOTICEFIELD NAME FIELD TYPE FIELDLENGTH FIELD DESCRIPTION
+MPOLICY
+CHARACTER
+10.0
+Policy number
+MGROUP
+CHARACTER
+8.0
+Group number
+MSTATUS
+CHARACTER
+2.0
+Policy status
+MBILLFRM
+CHARACTER
+1.0
+Billing form
+MNOTICE
+CHARACTER
+1.0
+Notice type (1 or 2)
+MISSDT
+DATE
+8.0
+Policy issue date
+MMODE
+NUMERIC
+2.0
+Policy mode
+MMOSDUE1
+NUMERIC
+4.0
+Months due - annual
+MMODEPREM1
+NUMERIC
+10.2
+Premium due - annual
+MMOSDUE2
+NUMERIC
+4.0
+Months due - semi-annual
+MMODEPREM2
+NUMERIC
+10.2
+Premium due - semi-annual
+MMOSDUE3
+NUMERIC
+4.0
+Months due - quarterly
+MMODEPREM3
+NUMERIC
+10.2
+Premium due - quarterly
+MMOSDUE4
+NUMERIC
+4.0
+Months due - monthly
+MMODEPREM4
+NUMERIC
+10.2
+Premium due - monthly
+MLOANBILL
+NUMERIC
+10.2
+Amount billed for policy loan
+MDUEDATE
+DATE
+8.0
+Premium due date
+MINSNAME
+CHARACTER
+30.0
+Insured name
+MACCTNO
+CHARACTER
+35.0
+Billing account number
+MOWNNAME
+CHARACTER
+30.0
+Owner name
+MOWNADDR1
+CHARACTER
+50.0
+Owner address line 1
+MOWNADDR2
+CHARACTER
+50.0
+Owner address line 2
+MOWNCSZ
+CHARACTER
+65.0
+Owner city, state, zip code
+MPAIDTO
+DATE
+8.0
+Paid to date
+MBILLTO
+DATE
+8.0
+Bill to date
+MSYSDATE
+DATE
+8.0
+System date
+MSTARTDATE
+DATE
+8.0
+First day of billing cycle
+MENDDATE
+DATE
+8.0
+Last day of billing cycle
+MAPPLIED
+LOGICAL
+1.0
+Premium applied indicator
+MOWNZIP
+CHARACTER
+12.0
+Owner zip code
+MSUSPENSE
+NUMERIC
+10.2
+Suspense balance
+MMODEDIV
+NUMERIC
+10.2
+Dividend amount for mode billed
+MVALADDR
+LOGICAL
+1.0
+Valid address indicator
+MTESTCYCLE
+LOCIGAL
+1.0
+Test cycle indicator
+
+===== PAGE 730 =====
+717
+Proprietary & Confidential
+QLAdmin Tables QuikBll2 - Billing Bank Draft Mode
+7.53
+QuikBll3 - Billing Group/List Bill ModeINDEX KEYQuikBll3.ntx SUBSTR(MPOLICY,-1,1) + MBILLFRM + MNOTICEFIELD NAME FIELD TYPE FIELDLENGTH FIELD DESCRIPTION
+MPOLICY
+CHARACTER
+10.0
+Policy number
+MGROUP
+CHARACTER
+8.0
+Group number
+MSTATUS
+CHARACTER
+2.0
+Policy status
+MBILLFRM
+CHARACTER
+1.0
+Billing form
+MNOTICE
+CHARACTER
+1.0
+Notice type (1 or 2)
+MISSDT
+DATE
+8.0
+Policy issue date
+MMODE
+NUMERIC
+2.0
+Policy mode
+MMOSDUE1
+NUMERIC
+4.0
+Months due - annual
+MMODEPREM1
+NUMERIC
+10.2
+Premium due - annual
+MMOSDUE2
+NUMERIC
+4.0
+Months due - semi-annual
+MMODEPREM2
+NUMERIC
+10.2
+Premium due - semi-annual
+MMOSDUE3
+NUMERIC
+4.0
+Months due - quarterly
+MMODEPREM3
+NUMERIC
+10.2
+Premium due - quarterly
+MMOSDUE4
+NUMERIC
+4.0
+Months due - monthly
+MMODEPREM4
+NUMERIC
+10.2
+Premium due - monthly
+MLOANBILL
+NUMERIC
+10.2
+Amount billed for policy loan
+MDUEDATE
+DATE
+8.0
+Premium due date
+MINSNAME
+CHARACTER
+30.0
+Insured name
+MACCTNO
+CHARACTER
+35.0
+Billing account number
+MOWNNAME
+CHARACTER
+30.0
+Owner name
+MOWNADDR1
+CHARACTER
+50.0
+Owner address line 1
+MOWNADDR2
+CHARACTER
+50.0
+Owner address line 2
+MOWNCSZ
+CHARACTER
+65.0
+Owner city, state, zip code
+MPAIDTO
+DATE
+8.0
+Paid to date
+MBILLTO
+DATE
+8.0
+Bill to date
+MSYSDATE
+DATE
+8.0
+System date
+MSTARTDATE
+DATE
+8.0
+First day of billing cycle
+MENDDATE
+DATE
+8.0
+Last day of billing cycle
+MSORT
+CHARACTER
+50.0
+Billing sort by account, name, policy numberor SSN
+MOWNZIP
+CHARACTER
+12.0
+Owner zip code
+MSUSPENSE
+NUMERIC
+10.2
+Suspense balance
+MMODEDIV
+NUMERIC
+10.2
+Dividend amount for mode billed
+MVALADDR
+LOGICAL
+1.0
+Valid address indicator
+MTESTCYCLE
+LOGICAL
+1.0
+Test cycle indicator
+
+===== PAGE 731 =====
+718
+© 2026 QLAdmin Solutions QLAdmin Solutions
+QuikBll3 - Billing Group/List Bill ModeQLAdmin Tables 
+7.54
+QuikBll4 - Billing APL ModeINDEX KEYQuikBll4.ntx SUBSTR(MPOLICY,-1,1) + MBILLFRM + MNOTICEFIELD NAME FIELD TYPE FIELDLENGTH FIELD DESCRIPTION
+MPOLICY
+CHARACTER
+10.0
+Policy number
+MGROUP
+CHARACTER
+8.0
+Group number
+MSTATUS
+CHARACTER
+2.0
+Policy status
+MBILLFRM
+CHARACTER
+1.0
+Billing form
+MNOTICE
+CHARACTER
+1.0
+Notice type (1 or 2)
+MISSDT
+DATE
+8.0
+Policy issue date
+MMODE
+NUMERIC
+2.0
+Policy mode
+MMOSDUE1
+NUMERIC
+4.0
+Months due - annual
+MMODEPREM1
+NUMERIC
+10.2
+Premium due - annual
+MMOSDUE2
+NUMERIC
+4.0
+Months due - semi-annual
+MMODEPREM2
+NUMERIC
+10.2
+Premium due - semi-annual
+MMOSDUE3
+NUMERIC
+4.0
+Months due - quarterly
+MMODEPREM3
+NUMERIC
+10.2
+Premium due - quarterly
+MMOSDUE4
+NUMERIC
+4.0
+Months due - monthly
+MMODEPREM4
+NUMERIC
+10.2
+Premium due - monthly
+MLOANBILL
+NUMERIC
+10.2
+Amount billed for policy loan
+MDUEDATE
+DATE
+8.0
+Premium due date
+MINSNAME
+CHARACTER
+30.0
+Insured name
+MACCTNO
+CHARACTER
+35.0
+Billing account number
+MOWNNAME
+CHARACTER
+30.0
+Owner name
+MOWNADDR1
+CHARACTER
+50.0
+Owner address line 1
+MOWNADDR2
+CHARACTER
+50.0
+Owner address line 2
+MOWNCSZ
+CHARACTER
+65.0
+Owner city, state, zip code
+MPAIDTO
+DATE
+8.0
+Paid to date
+MBILLTO
+DATE
+8.0
+Bill to date
+MSYSDATE
+DATE
+8.0
+System date
+MSTARTDATE
+DATE
+8.0
+First day of billing cycle
+MENDDATE
+DATE
+8.0
+Last day of billing cycle
+MAPPLIED
+LOGICAL
+1.0
+Premium applied indicator
+MOWNZIP
+CHARACTER
+12.0
+Owner zip code
+MSUSPENSE
+NUMERIC
+10.2
+Suspense balance
+MMODEDIV
+NUMERIC
+10.2
+Dividend amount for mode billed
+MVALADDR
+LOGICAL
+1.0
+Valid address indicator
+MTESTCYCLE
+LOGICAL
+1.0
+Test cycle indicator
+
+===== PAGE 732 =====
+719
+Proprietary & Confidential
+QLAdmin Tables QuikBll4 - Billing APL Mode
+7.55
+QuikBlla - Billing Coupon Bill ModeINDEX KEYQuikBlla.ntx SUBSTR(MPOLICY,-1,1) + MBILLFRM + MNOTICEFIELD NAME FIELD TYPE FIELDLENGTH FIELD DESCRIPTION
+MPOLICY
+CHARACTER
+10.0
+Policy number
+MGROUP
+CHARACTER
+8.0
+Group number
+MSTATUS
+CHARACTER
+2.0
+Policy status
+MBILLFRM
+CHARACTER
+1.0
+Billing form
+MNOTICE
+CHARACTER
+1.0
+Notice type (1 or 2)
+MISSDT
+DATE
+8.0
+Policy issue date
+MMODE
+NUMERIC
+2.0
+Policy mode
+MMOSDUE1
+NUMERIC
+4.0
+Months due - annual
+MMODEPREM1
+NUMERIC
+10.2
+Premium due - annual
+MMOSDUE2
+NUMERIC
+4.0
+Months due - semi-annual
+MMODEPREM2
+NUMERIC
+10.2
+Premium due - semi-annual
+MMOSDUE3
+NUMERIC
+4.0
+Months due - quarterly
+MMODEPREM3
+NUMERIC
+10.2
+Premium due - quarterly
+MMOSDUE4
+NUMERIC
+4.0
+Months due - monthly
+MMODEPREM4
+NUMERIC
+10.2
+Premium due - monthly
+MLOANBILL
+NUMERIC
+10.2
+Amount billed for policy loan
+MDUEDATE
+DATE
+8.0
+Premium due date
+MINSNAME
+CHARACTER
+30.0
+Insured name
+MACCTNO
+CHARACTER
+35.0
+Billing account number
+MOWNNAME
+CHARACTER
+30.0
+Owner name
+MOWNADDR1
+CHARACTER
+50.0
+Owner address line 1
+MOWNADDR2
+CHARACTER
+50.0
+Owner address line 2
+MOWNCSZ
+CHARACTER
+65.0
+Owner city, state, zip code
+MPAIDTO
+DATE
+8.0
+Paid to date
+MBILLTO
+DATE
+8.0
+Bill to date
+MSYSDATE
+DATE
+8.0
+System date
+MSTARTDATE
+DATE
+8.0
+First day of billing cycle
+MENDDATE
+DATE
+8.0
+Last day of billing cycle
+MOWNZIP
+CHARACTER
+12.0
+Owner zip code
+MSUSPENSE
+NUMERIC
+10.2
+Suspense balance
+MMODEDIV
+NUMERIC
+10.2
+Dividend amount for mode billed
+MVALADDR
+LOGICAL
+1.0
+Valid address indicator
+MTESTCYCLE
+LOGICAL
+1.0
+Test cycle indicator
+
+===== PAGE 733 =====
+720
+© 2026 QLAdmin Solutions QLAdmin Solutions
+QuikBlla - Billing Coupon Bill ModeQLAdmin Tables 
+7.56
+QuikBllc - Billing Credit Card ModeINDEX KEYQuikBllc.ntx SUBSTR(MPOLICY,-1,1) + MBILLFRM + MNOTICEFIELD NAME FIELD TYPE FIELDLENGTH FIELD DESCRIPTION
+MPOLICY
+CHARACTER
+10.0
+Policy number
+MGROUP
+CHARACTER
+8.0
+Group number
+MSTATUS
+CHARACTER
+2.0
+Policy status
+MBILLFRM
+CHARACTER
+1.0
+Billing form
+MNOTICE
+CHARACTER
+1.0
+Notice type (1 or 2)
+MISSDT
+DATE
+8.0
+Policy issue date
+MMODE
+NUMERIC
+2.0
+Policy mode
+MMOSDUE1
+NUMERIC
+4.0
+Months due - annual
+MMODEPREM1
+NUMERIC
+10.2
+Premium due - annual
+MMOSDUE2
+NUMERIC
+4.0
+Months due - semi-annual
+MMODEPREM2
+NUMERIC
+10.2
+Premium due - semi-annual
+MMOSDUE3
+NUMERIC
+4.0
+Months due - quarterly
+MMODEPREM3
+NUMERIC
+10.2
+Premium due - quarterly
+MMOSDUE4
+NUMERIC
+4.0
+Months due - monthly
+MMODEPREM4
+NUMERIC
+10.2
+Premium due - monthly
+MLOANBILL
+NUMERIC
+10.2
+Amount billed for policy loan
+MDUEDATE
+DATE
+8.0
+Premium due date
+MINSNAME
+CHARACTER
+30.0
+Insured name
+MACCTNO
+CHARACTER
+35.0
+Billing account number
+MOWNNAME
+CHARACTER
+30.0
+Owner name
+MOWNADDR1
+CHARACTER
+50.0
+Owner address line 1
+MOWNADDR2
+CHARACTER
+50.0
+Owner address line 2
+MOWNCSZ
+CHARACTER
+65.0
+Owner city, state, zip code
+MPAIDTO
+DATE
+8.0
+Paid to date
+MBILLTO
+DATE
+8.0
+Bill to date
+MSYSDATE
+DATE
+8.0
+System date
+MSTARTDATE
+DATE
+8.0
+First day of billing cycle
+MENDDATE
+DATE
+8.0
+Last day of billing cycle
+MAPPLIED
+LOGIC
+1.0
+Premium applied indicator
+MOWNZIP
+CHARACTER
+12.0
+Owner zip code
+MSUSPENSE
+NUMERIC
+10.2
+Suspense balance
+MMODEDIV
+NUMERIC
+10.2
+Dividend amount for mode billed
+MVALADDR
+LOGICAL
+1.0
+Valid address indicator
+MTESTCYCLE
+LOGICAL
+1.0
+Test cycle indicator
+
+===== PAGE 722 =====
+709
+Proprietary & Confidential
+QLAdmin Tables QuikBadj - Health Claim Adjudication Codes
+7.45
+QuikBene - Policy BenefitsINDEX KEYQuikBene,ntx MPOLICY + DToS(MDATE)FIELD NAME FIELD TYPE FIELDLENGTH FIELD DESCRIPTION
+MPOLICY
+CHARACTER
+10.0
+Policy number
+MBENTYP
+CHARACTER
+2.0
+Policy benefit type code
+MDATE
+DATE
+8.0
+Date of payment
+MBEN
+NUMERIC
+10.2
+Amount of payment
+636
+
+===== PAGE 723 =====
+710
+© 2026 QLAdmin Solutions QLAdmin Solutions
+QuikBene - Policy BenefitsQLAdmin Tables 
+7.46
+QuikBenf - Beneficiary RelationshipsINDEX KEYQuikBenf.ntx MPOLICY + MBENFIDFIELD NAME FIELD TYPE FIELDLENGTH FIELD DESCRIPTION
+MPOLICY
+CHARACTER
+10.0
+Policy number
+MBENFID
+CHARACTER
+12.0
+Client ID number
+MTYPE
+CHARACTER
+1.0
+Beneficiary type (P or C)
+MRELATION
+CHARACTER
+4.0
+Beneficiary relationship code
+MSPLIT
+NUMERIC
+8.4
+Percent of benefit share

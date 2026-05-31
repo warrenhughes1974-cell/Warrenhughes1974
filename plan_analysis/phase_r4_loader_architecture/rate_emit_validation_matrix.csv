@@ -1,0 +1,16 @@
+VALIDATION_ID,VALIDATION,SEVERITY,APPLIES_TO,RULE,DATA_SOURCE,FAILURE_ACTION
+V01,PLAN exists in authoritative catalog,BLOCKER,all families,Resolved PLAN must exist in Policy Form Crosswalk authoritative QL Plan Code set,Policy Form Crosswalk 5.22.26.xlsx,Reject row; report unresolved COVERAGE_ID
+V02,PLAN has no spaces,BLOCKER,all families,PLAN must be non-blank and contain no embedded spaces,transformed PLAN,Reject row
+V03,No duplicate keys (factor),BLOCKER,Quikxxs,No two factor rows share (PLAN+AGE+CNTL+GENDER+UWCLASS+BAND+ISSCNTRY+ISSUEST+EFFDATE),staged factor grid,Reject duplicate; report
+V04,No duplicate keys (rate key),BLOCKER,QuikPlxx,No two key rows share the 7-field segmentation tuple,generated key set,Reject duplicate; report
+V05,Required rate key exists,BLOCKER,Quikxxs->QuikPlxx,Every factor row resolves to a parent QuikPlxx key row (no orphan factors),join check,Block family emit
+V06,Required factor rows exist,WARNING,QuikPlxx->Quikxxs,Every generated key resolves at least one factor row (no empty keys),join check,Warn; report empty keys
+V07,Valid EFFDATE,BLOCKER,all key tables,EFFDATE is a valid YYYYMMDD date that fits D8,business-supplied EFFDATE,Reject; require valid generation date
+V08,Valid AGE,BLOCKER,Quikxxs,AGE numeric 0-99 zero-padded to 2 chars (C2),transformed AGE,Reject row
+V09,Valid CNTL,BLOCKER,Quikxxs,CNTL = QL_DURATION//10 zero-padded 2 chars; within populated page range,transformed duration,Reject row
+V10,Factor fits target field,BLOCKER,Quikxxs,len(format value to 2 decimals) <= 7; positive <= 9999.99; negative >= -999.99,rate_capacity_validator,Block affected plan/family; report in overflow_detail_report.csv
+V11,Required segmentation dimensions present,BLOCKER,all tables,GENDER/UWCLASS/BAND/ISSCNTRY/ISSUEST resolved per VARY flags; no nulls,transformed segmentation,Reject row
+V12,SEX/BAND/UWCLASS within crosswalk domain,BLOCKER,all families,Mapped values must be in {F M J}/{01 02 03}/{00 NS SM PR ST},transformed values,Reject row; report unmapped code
+V13,Duration paging round-trips,WARNING,Quikxxs,QL_DURATION reconstructable from CNTL*10+column,transformed duration,Warn; investigate
+V14,Excluded TYPE_CODE not emitted,BLOCKER,pipeline,TYPE_CODE in {NN PN TP TX UF NF SL} never produces a factor row,classifier,Drop; inventory only
+V15,Assumption fields present (CV/TV/NP),BLOCKER,QuikPlCv QuikPlTv,MORT/RSVINT/RSVMETH/INTMETH*/ETIMORT/NFOINT/STOREMEANS/CALCMIDS supplied per plan,business assumption mapping,Block family emit until supplied

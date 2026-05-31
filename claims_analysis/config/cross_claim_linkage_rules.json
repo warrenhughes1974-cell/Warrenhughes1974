@@ -1,0 +1,128 @@
+{
+  "version": "1.0",
+  "description": "Phase 7B cross-claim settlement linkage rules (read-only validation overlay).",
+  "cross_claim_window_days": 30,
+  "delayed_payout_window_days": 14,
+  "settlement_timing_tolerance_days": 3,
+  "max_linkage_distance_days": 30,
+  "amount_alignment_tolerance": 100.0,
+  "amount_alignment_ratio_tolerance": 0.15,
+  "min_funding_amount": 0.01,
+  "min_payout_amount": 0.01,
+  "balance_tolerance": 0.01,
+  "minor_variance_tolerance": 100.0,
+  "multi_payout_association_enabled": true,
+  "multi_payout_max_targets": 5,
+  "linkage_statuses": [
+    "LINKED_DELAYED_PAYOUT",
+    "CROSS_FAMILY_LINK",
+    "ENHANCED_GROUP",
+    "RETAIN_ORIGINAL_GROUP",
+    "POSSIBLE_MATCH",
+    "REJECTED_LINKAGE",
+    "ORPHAN_REDUCED"
+  ],
+  "confidence_levels": [
+    "HIGH_CONFIDENCE",
+    "MODERATE_CONFIDENCE",
+    "INFERRED",
+    "LOW_CONFIDENCE"
+  ],
+  "confidence_scoring": {
+    "HIGH_CONFIDENCE": {
+      "max_lag_days": 3,
+      "requires_amount_alignment": true,
+      "requires_semantic_pair": true,
+      "same_family_preferred": true
+    },
+    "MODERATE_CONFIDENCE": {
+      "max_lag_days": 14,
+      "requires_amount_alignment": true,
+      "allows_cross_family": true
+    },
+    "INFERRED": {
+      "max_lag_days": 30,
+      "allows_cross_family": true,
+      "allows_partial_amount_alignment": false
+    },
+    "LOW_CONFIDENCE": {
+      "weak_amount_alignment": true,
+      "allows_cross_family": true
+    }
+  },
+  "cross_family_permissions": {
+    "SURRENDER_CLAIM": {
+      "DISBURSEMENT_CLAIM": {
+        "enabled": true,
+        "max_lag_days": 14,
+        "funding_codes_required": ["0560", "0561"],
+        "payout_codes_required": ["0090", "0567", "1900"],
+        "notes": "0560 surrender funding to 0090 disbursement payout on same policy."
+      },
+      "DEATH_CLAIM": {
+        "enabled": false,
+        "max_lag_days": 30,
+        "funding_codes_required": ["0560", "0561"],
+        "payout_codes_required": ["0094", "0567", "1900"],
+        "require_amount_alignment": true,
+        "notes": "Disabled by default; offset-only surrender chains must not link to unrelated death payouts."
+      }
+    },
+    "DEATH_CLAIM": {
+      "DISBURSEMENT_CLAIM": {
+        "enabled": true,
+        "max_lag_days": 14,
+        "funding_codes_required": ["0530", "0519"],
+        "payout_codes_required": ["0090", "0567", "1900"],
+        "notes": "Death benefit funding to standalone disbursement payout."
+      },
+      "SURRENDER_CLAIM": {
+        "enabled": false,
+        "max_lag_days": 0,
+        "notes": "Disabled by default to protect death claim accuracy."
+      }
+    },
+    "DISBURSEMENT_CLAIM": {
+      "DEATH_CLAIM": {
+        "enabled": true,
+        "max_lag_days": 14,
+        "funding_codes_required": [],
+        "payout_codes_required": ["0094", "0567", "1900"],
+        "notes": "Disbursement payout-only to death payout source for lineage overlay."
+      },
+      "SURRENDER_CLAIM": {
+        "enabled": true,
+        "max_lag_days": 14,
+        "funding_codes_required": ["0560", "0561", "0411", "0412"],
+        "payout_codes_required": ["0090"],
+        "notes": "Reverse linkage from disbursement payout to surrender funding source."
+      }
+    }
+  },
+  "linkage_acceptance_rules": {
+    "require_amount_alignment_for_acceptance": true,
+    "minimum_acceptance_confidence": "MODERATE_CONFIDENCE",
+    "allow_inferred_same_policy_funding_payout": true,
+    "reject_offset_only_to_unrelated_payout": true,
+    "reject_low_confidence_cross_family": true,
+    "mark_weak_candidates_as_possible_match": true
+  },
+  "linkage_exclusion_rules": {
+    "reject_if_target_already_linked": true,
+    "reject_if_amount_below_minimum": true,
+    "reject_if_lag_exceeds_max_distance": true,
+    "reject_if_cross_family_disabled": true,
+    "reject_if_no_semantic_codes": true,
+    "reject_death_as_funding_source_to_surrender": true
+  },
+  "source_chain_statuses_eligible": [
+    "FUNDED_NO_DISBURSEMENT",
+    "ORPHAN_CHAIN",
+    "PARTIAL_CHAIN",
+    "DELAYED_CHAIN"
+  ],
+  "payout_reassociation_threshold": {
+    "min_payout_total": 0.01,
+    "require_positive_payout": true
+  }
+}

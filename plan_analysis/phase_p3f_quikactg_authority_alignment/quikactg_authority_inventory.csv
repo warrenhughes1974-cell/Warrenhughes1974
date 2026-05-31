@@ -1,0 +1,2 @@
+component,field,source,rulebook,current_authority,p3f_status,validation_passed,emitted_rows,notes
+quikactg,MPLAN,PACTG.PLAN_CODE,Sync_Rulebook_quikactg.csv,Closed catalog resolver (P3E pattern),IMPLEMENTED,True,87,Plan-level accounting setup; one row per distinct PLAN_CODE

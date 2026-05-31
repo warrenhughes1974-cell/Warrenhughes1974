@@ -1,0 +1,218 @@
+{
+  "version": "1.0",
+  "description": "Phase 10A QUIKCLMP rulebook derivation rules (design validation only, not production DBF).",
+  "target_table": "QUIKCLMP.DBF",
+  "default_mphase": "1",
+  "derivation_statuses": [
+    "DIRECT_DERIVATION",
+    "HIERARCHICAL_DERIVATION",
+    "TRUSTEE_DERIVATION",
+    "INFERRED_DERIVATION",
+    "RESIDUAL_PENDING",
+    "FALLBACK_DERIVATION",
+    "RULEBOOK_READY",
+    "NEEDS_MANUAL_REVIEW"
+  ],
+  "confidence_levels": [
+    "HIGH_CONFIDENCE",
+    "MODERATE_CONFIDENCE",
+    "INFERRED",
+    "LOW_CONFIDENCE"
+  ],
+  "confidence_gating": {
+    "rulebook_ready_minimum": "MODERATE_CONFIDENCE",
+    "manual_review_statuses": ["INFERRED_DERIVATION", "FALLBACK_DERIVATION", "RESIDUAL_PENDING"],
+    "manual_review_confidence": ["LOW_CONFIDENCE", "INFERRED"]
+  },
+  "field_derivations": {
+    "MPOLICY": {
+      "source": "canonical_claim_payment_stage.policy_number",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 10,
+      "required": true
+    },
+    "MPHASE": {
+      "source": "constant",
+      "constant_value": "1",
+      "derivation_type": "DIRECT",
+      "layout_type": "NUMERIC",
+      "layout_length": 2,
+      "required": true
+    },
+    "MCLAIMID": {
+      "source": "canonical_claim_payment_stage.reconstructed_claim_id",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 20,
+      "required": true,
+      "notes": "Staging claim identifier pending final QUIKCLMS CLAIMNUM crosswalk"
+    },
+    "MSEQ": {
+      "source": "canonical_claim_payment_stage.payment_sequence",
+      "derivation_type": "DIRECT",
+      "layout_type": "NUMERIC",
+      "layout_length": 3,
+      "required": true
+    },
+    "MAMOUNT": {
+      "source": "canonical_claim_payment_stage.payment_amount",
+      "derivation_type": "DIRECT",
+      "layout_type": "NUMERIC",
+      "layout_length": 12,
+      "required": true
+    },
+    "MPAYTYPE": {
+      "source": "canonical_claim_payment_stage.payment_type",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 20,
+      "required": false
+    },
+    "MPMTDATE": {
+      "source": "canonical_claim_payment_stage.payout_date",
+      "derivation_type": "DIRECT",
+      "layout_type": "DATE",
+      "layout_length": 8,
+      "required": false
+    },
+    "MCHKDATE": {
+      "source": "canonical_claim_payment_stage.payout_date",
+      "derivation_type": "DIRECT",
+      "layout_type": "DATE",
+      "layout_length": 8,
+      "required": false
+    },
+    "MPAYNAME": {
+      "source": "prelsa.name_display",
+      "fallback_source": "canonical_claim_payee_stage.payee_name_id",
+      "derivation_type": "HIERARCHICAL",
+      "layout_type": "CHARACTER",
+      "layout_length": 50,
+      "required": true,
+      "hierarchy": ["PE", "B1", "B2", "TR", "CU", "PO", "IN"]
+    },
+    "MRELATION": {
+      "source": "canonical_claim_payee_stage.relationship_code",
+      "derivation_type": "HIERARCHICAL",
+      "layout_type": "CHARACTER",
+      "layout_length": 2,
+      "required": true
+    },
+    "MTIN": {
+      "source": "prelsa.tax_id",
+      "derivation_type": "HIERARCHICAL",
+      "layout_type": "CHARACTER",
+      "layout_length": 9,
+      "required": false
+    },
+    "MPAYADDR1": {
+      "source": "prelsa.addr_line_1",
+      "derivation_type": "HIERARCHICAL",
+      "layout_type": "CHARACTER",
+      "layout_length": 25,
+      "required": false
+    },
+    "MPAYCITY": {
+      "source": "prelsa.city",
+      "derivation_type": "HIERARCHICAL",
+      "layout_type": "CHARACTER",
+      "layout_length": 50,
+      "required": false
+    },
+    "MPAYST": {
+      "source": "prelsa.state",
+      "derivation_type": "HIERARCHICAL",
+      "layout_type": "CHARACTER",
+      "layout_length": 2,
+      "required": false
+    },
+    "MPAYZIP": {
+      "source": "prelsa.zip",
+      "derivation_type": "HIERARCHICAL",
+      "layout_type": "CHARACTER",
+      "layout_length": 5,
+      "required": false
+    },
+    "MTRUSTEE": {
+      "source": "canonical_claim_payee_stage.trustee_indicator",
+      "derivation_type": "TRUSTEE",
+      "layout_type": "LOGICAL",
+      "layout_length": 1,
+      "required": false,
+      "true_values": ["Y"]
+    },
+    "MBENEFITTYPE": {
+      "source": "canonical_claim_payment_stage.payment_category",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 20,
+      "required": false
+    },
+    "MPAYSTATUS": {
+      "source": "canonical_claim_payment_stage.settlement_status",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 30,
+      "required": false
+    },
+    "MFEDTAX": {
+      "source": "revised_claim_financials.withholding",
+      "derivation_type": "RESIDUAL_AWARE",
+      "layout_type": "NUMERIC",
+      "layout_length": 12,
+      "required": false,
+      "notes": "Claim-level withholding; payment-level split not forced"
+    },
+    "MINTAMT": {
+      "source": "revised_claim_financials.interest",
+      "derivation_type": "RESIDUAL_AWARE",
+      "layout_type": "NUMERIC",
+      "layout_length": 10,
+      "required": false,
+      "notes": "Claim-level interest reference from Phase 6"
+    },
+    "MRESIDUAL": {
+      "source": "canonical_claim_residual_stage.residual_amount",
+      "derivation_type": "RESIDUAL",
+      "layout_type": "NUMERIC",
+      "layout_length": 12,
+      "required": false
+    },
+    "MCONFIDENCE": {
+      "source": "canonical_claim_payment_stage.confidence_level",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 20,
+      "required": true
+    },
+    "MLINEAGE": {
+      "source": "canonical_claim_payment_stage.derivation_lineage",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 200,
+      "required": true
+    }
+  },
+  "payment_type_mapping": {
+    "DEATH_CLAIM_PAYOUT": {"quikclmp_paytype": "DEATH", "mhdpmt_default": "C"},
+    "CLAIM_PAYMENT": {"quikclmp_paytype": "CLAIM", "mhdpmt_default": "C"},
+    "CASH_DISBURSEMENT": {"quikclmp_paytype": "DISBURSEMENT", "mhdpmt_default": "C"}
+  },
+  "derivation_status_rules": {
+    "TRUSTEE_ROUTED": "TRUSTEE_DERIVATION",
+    "MULTI_PAYEE_STAGED": "HIERARCHICAL_DERIVATION",
+    "PAYMENT_STAGED": "DIRECT_DERIVATION",
+    "INFERRED_DISTRIBUTION": "INFERRED_DERIVATION",
+    "RESIDUAL_PENDING": "RESIDUAL_PENDING"
+  },
+  "fallback_derivation_roles": ["PO", "IN"],
+  "trustee_codes": ["TR", "CU", "PW"],
+  "validation_rules": {
+    "require_mpolicy": true,
+    "require_mamount": true,
+    "require_mseq": true,
+    "flag_missing_payname": true,
+    "flag_low_confidence": true
+  }
+}

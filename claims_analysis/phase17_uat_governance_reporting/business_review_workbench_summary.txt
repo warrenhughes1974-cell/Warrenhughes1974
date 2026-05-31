@@ -1,0 +1,10 @@
+=== Phase 17F Business Review Workbench Summary ===
+
+Surrender review queue: 500
+Orphan review queue: 374
+High-priority business decisions: 60
+Governance-hold workbench (internal): 100
+
+Go-live target: 2026-09-01
+Review queues for business/UAT stakeholders only.
+production_dbf_flag=N

@@ -1,0 +1,4 @@
+python claims_analysis/build_claims_semantic_catalog.py \
+  --pactg docs/claims_conversion_reference/PACTG_Accounting_Extract20260427.csv \
+  --profiler-output claims_analysis/output \
+  --verbose

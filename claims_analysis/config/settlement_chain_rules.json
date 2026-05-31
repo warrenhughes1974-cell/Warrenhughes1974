@@ -1,0 +1,88 @@
+{
+  "version": "1.0",
+  "description": "Phase 7A settlement chain intelligence rules (read-only validation).",
+  "immediate_settlement_days": 0,
+  "payout_lag_window_days": 14,
+  "settlement_timing_tolerance_days": 3,
+  "cross_claim_policy_window_days": 30,
+  "delayed_linkage_enabled": true,
+  "cross_claim_linkage_enabled": true,
+  "orphan_funding_min_amount": 0.01,
+  "amount_alignment_tolerance": 100.0,
+  "amount_alignment_ratio_tolerance": 0.15,
+  "multi_payout_min_count": 2,
+  "exclude_lifecycle_event_types": ["CLAIM_SETTLEMENT"],
+  "chain_statuses": [
+    "IMMEDIATE_CHAIN",
+    "DELAYED_CHAIN",
+    "FUNDED_NO_DISBURSEMENT",
+    "PAYOUT_ONLY",
+    "MULTI_PAYOUT_CHAIN",
+    "ORPHAN_CHAIN",
+    "PARTIAL_CHAIN"
+  ],
+  "confidence_levels": [
+    "HIGH_CONFIDENCE",
+    "MODERATE_CONFIDENCE",
+    "INFERRED",
+    "LOW_CONFIDENCE"
+  ],
+  "confidence_scoring": {
+    "HIGH_CONFIDENCE": {
+      "requires_same_day_funding_payout": true,
+      "requires_semantic_family_match": true,
+      "requires_amount_within_tolerance": true,
+      "min_payout_linkage_quality": "DIRECT"
+    },
+    "MODERATE_CONFIDENCE": {
+      "max_lag_days": 14,
+      "requires_funding_payout_pair": true,
+      "allows_partial_amount_alignment": true
+    },
+    "INFERRED": {
+      "allows_cross_claim_linkage": true,
+      "allows_offset_only_chain": true
+    },
+    "LOW_CONFIDENCE": {
+      "orphan_or_unlinked": true
+    }
+  },
+  "families": {
+    "DEATH_CLAIM": {
+      "label": "Death Claim",
+      "funding_codes": ["0530", "0519"],
+      "interest_codes": ["0630"],
+      "offset_codes": ["0411", "0412"],
+      "withholding_codes": ["0810", "0820"],
+      "payout_codes": ["0094", "0567", "1900"],
+      "lifecycle_only_codes": ["0038"],
+      "allow_delayed_disbursement": false,
+      "expected_chain_pattern": "0530|0630 -> 0094",
+      "notes": "Clearing 0038 supports lifecycle linkage only; payout expected same settlement group."
+    },
+    "SURRENDER_CLAIM": {
+      "label": "Surrender Claim",
+      "funding_codes": ["0560", "0561"],
+      "interest_codes": [],
+      "offset_codes": ["0411", "0412"],
+      "withholding_codes": ["0810", "0820"],
+      "payout_codes": ["0090", "0567", "1900"],
+      "lifecycle_only_codes": [],
+      "allow_delayed_disbursement": true,
+      "expected_chain_pattern": "0560|0561 -> 0090",
+      "notes": "Funded-only chains common; delayed 0090 disbursement may appear in separate reconstruction group."
+    },
+    "DISBURSEMENT_CLAIM": {
+      "label": "Disbursement Claim",
+      "funding_codes": [],
+      "interest_codes": [],
+      "offset_codes": [],
+      "withholding_codes": ["0810", "0820"],
+      "payout_codes": ["0090", "0567", "1900"],
+      "lifecycle_only_codes": [],
+      "allow_delayed_disbursement": true,
+      "expected_chain_pattern": "0090",
+      "notes": "Payout-only event chain; no gross funding reconstruction required."
+    }
+  }
+}

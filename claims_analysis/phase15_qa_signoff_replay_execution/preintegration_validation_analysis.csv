@@ -1,0 +1,5 @@
+validation_area,result,detail,rollback_safe,production_dbf_flag
+REPLAY_ORCHESTRATION,PASS,Phase 15B overlay replay executed without stable engine modification,Y,N
+GOVERNANCE_WRAPPER,PASS,Trustee and lifecycle overlays applied with governance flags,Y,N
+TABLE_SCHEMAS,PENDING,quikclms/quikclmp not yet registered in app.py TABLE_SCHEMAS,Y,N
+SUBPROCESS_INTEGRATION,PASS,Isolated engine subprocess pattern validated,Y,N

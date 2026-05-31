@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-05-26 13:36:02",
+  "phase": "P3F",
+  "component": "quikactg",
+  "closed_mplan_authority": "ENABLED",
+  "legacy_fallback_mode": "DISABLED",
+  "emitted_rows": 87,
+  "trace_rows": 87,
+  "orphan_mplan_count": 0,
+  "blank_mplan_count": 0,
+  "legacy_passthrough_count": 0,
+  "validation_passed": true,
+  "pactg_stats": {
+    "pactg_rows_read": 399059,
+    "distinct_plans": 87,
+    "emitted_rows": 87,
+    "validation_passed": true,
+    "non_blank_mplan": 87,
+    "outside_quikplan": 0,
+    "with_spaces": 0,
+    "unique_outside": []
+  }
+}

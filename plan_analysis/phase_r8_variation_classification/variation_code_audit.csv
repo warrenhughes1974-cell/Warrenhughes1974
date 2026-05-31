@@ -1,0 +1,142 @@
+PLAN,Source_Table,Product_Type,Detected_Structure,Recommended_VARGP,Recommended_VARDB,Confidence,Evidence,Notes
+10L171,NONE,Single Premium Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+10L172,NONE,Single Premium Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+117JPO,NONE,L17 Juvenile Purchase Option,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+121PUA,NONE,Paid Up Adds - Endowment at Age 85,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+130JEB,PAAGERAT,Juvenile Estate Builder Life Pd Up at 65,GP=ATTAINED_AGE|DB=ATTAINED_AGE,3,3,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=15 rows=15 no duration) | DB[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),
+1658C1,NONE,Interest-Sensitive Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1658CS,PAAGERAT,Interest-Sensitive Whole Life,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=41 rows=164 no duration),no rate observations; no DB rate data
+1659C2,NONE,Interest-Sensitive Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1659CR,NONE,Interest-Sensitive Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1659CS,NONE,Interest-Sensitive Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1659SR,Rate_Table,Interest-Sensitive Whole Life,GP=NONE|DB=POLICY_YEAR_ONLY,4,1,LOW,DB[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=100 rows=100),no rate observations; no GP/PR rate data
+165PUA,NONE,Paid Up Adds - Life Paid Up at Age 65,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1666AI,PAAGERAT,Additional Insureds 666 WL,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=86 rows=86 no duration),no rate observations; no DB rate data
+1666WL,NONE,Multiple Insureds Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1668SP,NONE,Single Premium Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1669SR,PAAGERAT,Interest-Sensitive Whole Life,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=41 rows=164 no duration),no rate observations; no DB rate data
+1679CS,NONE,Interest-Sensitive Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+170588,NONE,Life Paid Up at 85/88,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+170858,NONE,Life Paid Up at 85/88,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+17085M,NONE,Life Paid Up at 85/88,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+170PUA,NONE,Paid Up Adds - Life Paid Up at 85/88,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+17CSI3,PAAGERAT+Rate_Table,CSI Life $3000,GP=ATTAINED_AGE|DB=ISSUE_AGE_DURATION,3,2,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=30 rows=60 no duration) | DB[Rate_Table]:ISSUE_AGE_DURATION(AGE values=30 DURATION values=54 rows=1185),
+17CSI5,Rate_Table,CSI Life $5000,GP=NONE|DB=ISSUE_AGE_DURATION,4,2,LOW,DB[Rate_Table]:ISSUE_AGE_DURATION(AGE values=30 DURATION values=54 rows=1185),no rate observations; no GP/PR rate data
+17CSI7,PAAGERAT+Rate_Table,CSI Life $7500,GP=ATTAINED_AGE|DB=ISSUE_AGE_DURATION,3,2,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=30 rows=60 no duration) | DB[Rate_Table]:ISSUE_AGE_DURATION(AGE values=30 DURATION values=54 rows=1185),
+17MJPO,PAAGERAT,L17 Multi Juvenile Purchase Option,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=19 rows=76 no duration),no rate observations; no DB rate data
+185PUA,NONE,Paid Up Adds - Life PU at Age 85-88,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+196065,PAAGERAT,Life Paid Up at Age 65,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=56 rows=112 no duration),no rate observations; no DB rate data
+196085,NONE,Life Paid Up at Age 85-88,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1960OL,PAAGERAT,Ordinary Whole Life,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=71 rows=142 no duration),no rate observations; no DB rate data
+1960PO,PAAGERAT,Preferred Ordinary Whole Life,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=71 rows=142 no duration),no rate observations; no DB rate data
+1970JB,PAAGERAT,Juvenile Est Build PU at 85 Life,GP=ATTAINED_AGE|DB=ATTAINED_AGE,3,3,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=15 rows=15 no duration) | DB[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=96 rows=96 no duration),
+1970PA,NONE,Paid Up Adds - Juv Est Build PU at 85,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1991PL,PAAGERAT,Pension Whole Life,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=61 rows=61 no duration),no rate observations; no DB rate data
+1CSIMN,PAAGERAT+Rate_Table,CSI Life MN $5000,GP=ATTAINED_AGE|DB=ISSUE_AGE_DURATION,3,2,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=30 rows=60 no duration) | DB[Rate_Table]:ISSUE_AGE_DURATION(AGE values=30 DURATION values=54 rows=1185),
+1L1095,NONE,L10 - LPU95     POST 1997 LIFE,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1L10OD,NONE,L10 - LPU95       PRE 1997,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1L10PR,PAAGERAT,L10 - LPU95       PRE 1997,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=1033 no duration),no rate observations; no DB rate data
+1L10SO,PAAGERAT,L10 - LPU95  SR.     PRE 1997,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=3836 no duration),no rate observations; no DB rate data
+1L10SR,NONE,L10 - LPU95   POST 1997  Senior Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1L14SC,PAAGERAT,Whole Life,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=41 rows=268 no duration),no rate observations; no DB rate data
+1L15GD,NONE,Graded Death Benefit Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1L16GD,PAAGERAT+Rate_Table,Graded Death Benefit Whole Life,GP=ATTAINED_AGE|DB=ISSUE_AGE_DURATION,3,2,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=41 rows=124 no duration) | DB[Rate_Table]:ISSUE_AGE_DURATION(AGE values=21 DURATION values=50 rows=1680),
+1L17SP,NONE,Single Premium Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1OLPUA,NONE,Paid Up Adds - Ordinary Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1POPUA,NONE,Paid Up Adds - Pref Ordinary Whole Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1SALMI,PAAGERAT,Multiple Insureds SAL Modified Life,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=66 rows=66 no duration),no rate observations; no DB rate data
+1SALML,NONE,Modified Life,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+1SALOL,PAAGERAT,Ordinary Whole Life,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=69 rows=135 no duration),no rate observations; no DB rate data
+221END,NONE,Endowment at Age 85,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+222END,NONE,20 Pay Endowment at Age 85,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+261PUA,PAAGERAT,Paid Up Adds - Modified Endowment at 65,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=56 rows=112 no duration),no rate observations; no DB rate data
+265PUA,NONE,Paid Up Adds - Statesman Mod Endow at 95,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+2665ST,Rate_Table,Statesman Mod Endow at 95,GP=POLICY_YEAR_ONLY|DB=ISSUE_AGE_DURATION,1,2,HIGH,GP[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=117 rows=117) | DB[Rate_Table]:ISSUE_AGE_DURATION(AGE values=51 DURATION values=100 rows=5100),
+280END,NONE,Endowment at Age 65,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+280PUA,PAAGERAT,Paid Up Adds - Endowment at Age 65,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=56 rows=112 no duration),no rate observations; no DB rate data
+2961ME,NONE,Modified Endowment at 65,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+528CTR,PAAGERAT,Child's Term Insurance,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=19 rows=19 no duration),no rate observations; no DB rate data
+542STR,PAAGERAT,Spouse Term Rider,GP=ATTAINED_AGE|DB=ATTAINED_AGE,3,3,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=38 rows=38 no duration) | DB[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=48 rows=48 no duration),
+543CTR,PAAGERAT,Dependent Child Term Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data
+560STR,PAAGERAT,Paid Up Spouse Term Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=32 rows=32 no duration),no rate observations; no DB rate data
+5646AT,PAAGERAT,Annual Renewable Term,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=51 rows=201 no duration),no rate observations; no DB rate data
+5667AT,PAAGERAT,Annual Renewable Term,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=82 rows=738 no duration),no rate observations; no DB rate data
+578CTR,PAAGERAT,Dependent Child Term Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data
+578STR,PAAGERAT,Paid Up Spouse Term Rider,GP=ATTAINED_AGE|DB=ATTAINED_AGE,3,3,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=41 rows=41 no duration) | DB[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=48 rows=48 no duration),
+57ATCR,PAAGERAT,ART Preferred Credit Life,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=75 rows=75 no duration),no rate observations; no DB rate data
+5CDT10,NONE,L10 CHILD TERM RIDER,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+5L0110,PAAGERAT,Ten Year Level Term to Age 95,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=77 rows=924 no duration),no rate observations; no DB rate data
+5L01MA,Rate_Table,Ten Year Level Term to Age 95,GP=ISSUE_AGE_DURATION|DB=NONE,2,4,LOW,GP[Rate_Table]:ISSUE_AGE_DURATION(AGE values=80 DURATION values=80 rows=9720),no rate observations; no DB rate data
+5L0510,PAAGERAT,Ten Year Term to Age 85,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=67 rows=804 no duration),no rate observations; no DB rate data
+5L075Y,PAAGERAT,Five Year Term to Age 85,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=85 rows=1020 no duration),no rate observations; no DB rate data
+719CDT,PAAGERAT,Child Decreasing Term,GP=ATTAINED_AGE|DB=ATTAINED_AGE,3,3,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=23 rows=23 no duration) | DB[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=23 rows=23 no duration),
+719CTR,NONE,Decr Term Paid Up for Child,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+719SDT,NONE,Spouse Decreasing Term,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+7619DT,PAAGERAT,Decreasing Term,GP=ATTAINED_AGE|DB=ATTAINED_AGE,3,3,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=60 rows=60 no duration) | DB[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=66 rows=66 no duration),
+7619PU,PAAGERAT,Decreasing Term Paid Up for Spouse,GP=ATTAINED_AGE|DB=ATTAINED_AGE,3,3,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=60 rows=60 no duration) | DB[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=66 rows=66 no duration),
+7647CH,NONE,Child - Family Life Decreasing Term,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+7647FP,PAAGERAT,Family Life Decreasing Term,GP=ATTAINED_AGE|DB=ATTAINED_AGE,3,3,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration) | DB[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=49 rows=49 no duration),
+7647SP,PAAGERAT,Spouse - Family Life Decreasing Term,GP=NONE|DB=ATTAINED_AGE,4,3,LOW,DB[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=49 rows=49 no duration),no rate observations; no GP/PR rate data
+7686S3,Rate_Table,Decreasing Term Life,GP=NONE|DB=POLICY_YEAR_ONLY,4,1,LOW,DB[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=30 rows=30),no rate observations; no GP/PR rate data
+7687J3,PAAGERAT,Joint Decreasing Term Life,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=36 rows=320 no duration),no rate observations; no DB rate data
+7690DT,PAAGERAT,Dec Term to 65 Convertible,GP=ATTAINED_AGE|DB=ATTAINED_AGE,3,3,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration) | DB[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=66 rows=66 no duration),
+778FTR,NONE,FAMILY TERM RIDER,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+7SDT10,NONE,L10 Spouse Decreasing Term,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+901ADB,PAAGERAT,Accidental Death Benefit Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=51 rows=51 no duration),no rate observations; no DB rate data
+9065WP,PAAGERAT,Waiver of Premium,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=41 rows=82 no duration),no rate observations; no DB rate data
+9085WP,PAAGERAT,Waiver of Premium - LPU at 85/88,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=44 rows=82 no duration),no rate observations; no DB rate data
+90OLWP,PAAGERAT,Waiver of Premium,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=41 rows=82 no duration),no rate observations; no DB rate data
+90PDTH,PAAGERAT,Payor Death,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=11 rows=11 no duration),no rate observations; no DB rate data
+90POWP,NONE,Waiver of Premium,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+910RWP,PAAGERAT,L10 Waiver of Premium   Post 1997,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=37 rows=74 no duration),no rate observations; no DB rate data
+910SWP,PAAGERAT,L10 Spouse WP,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data
+920ADB,PAAGERAT,Accidental Death Benefit,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data
+934JWP,PAAGERAT,Disability Waiver of Premium Joint 30 MT,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=26 rows=52 no duration),no rate observations; no DB rate data
+934SWP,PAAGERAT,Disability Waiver of Premium 30MRG,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=96 rows=174 no duration),no rate observations; no DB rate data
+943CWP,PAAGERAT,8043 CTR WAIVER OF PREMIUM,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data
+94PDIS,NONE,& Payor Disability Rider,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+9595WP,PAAGERAT,Disability Waiver of Premium,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=42 rows=84 no duration),no rate observations; no DB rate data
+960ADB,NONE,Accidental Death Benefit,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+960CWP,PAAGERAT,Waiver of Premium - Child,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=19 rows=19 no duration),no rate observations; no DB rate data
+960GIO,PAAGERAT,960 Guarantee Insurability Option,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=38 rows=38 no duration),no rate observations; no DB rate data
+960SWP,PAAGERAT,Waiver of Premium - Spouse,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=32 rows=32 no duration),no rate observations; no DB rate data
+965ADB,PAAGERAT,Accidental Death Benefit,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=36 rows=36 no duration),no rate observations; no DB rate data
+9665WP,PAAGERAT,Waiver of Premium,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=36 rows=72 no duration),no rate observations; no DB rate data
+967ADB,PAAGERAT,Accidental Death Benefit Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=99 rows=99 no duration),no rate observations; no DB rate data
+976658,NONE,Disability Waiver of Premium Rider,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+976659,NONE,Disability Waiver of Premium Rider,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+977ADB,PAAGERAT,Accidental Death Benefit Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=46 rows=46 no duration),no rate observations; no DB rate data
+980JPO,PAAGERAT,Juvenile Future Purchase Option Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=22 rows=22 no duration),no rate observations; no DB rate data
+982JPO,PAAGERAT,Juvenile Future Purchase Option,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=19 rows=19 no duration),no rate observations; no DB rate data
+986JPO,NONE,Juvenile Future Purchase Option,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+9896WP,NONE,Waiver of Premium,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+996ADB,NONE,Accidental Death Benefit Rider,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+9ADB10,NONE,L10 Accidental Death Benefit,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+9ADB15,NONE,Inherent Accidental Death (3 yr) for L15,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+9CDTWP,PAAGERAT,L10 Child WP,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data
+9CTRWP,PAAGERAT,1578 CTR Waiver of Premium,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data
+9DIS20,Rate_Table,Home Office Discount 20% 1yr,GP=POLICY_YEAR_ONLY|DB=NONE,1,4,LOW,GP[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=10 rows=10),no rate observations; no DB rate data
+9DIS24,Rate_Table,Home Office Discount - 24.75%,GP=POLICY_YEAR_ONLY|DB=NONE,1,4,LOW,GP[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=10 rows=10),no rate observations; no DB rate data
+9DIS25,Rate_Table,Home Office Discount - 25%-10Yr,GP=POLICY_YEAR_ONLY|DB=NONE,1,4,LOW,GP[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=117 rows=117),no rate observations; no DB rate data
+9DIS29,Rate_Table,Home Office Discount 29% - ModeRule 37,GP=POLICY_YEAR_ONLY|DB=NONE,1,4,LOW,GP[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=10 rows=10),no rate observations; no DB rate data
+9DIS70,Rate_Table,Home Office Discount - 70/13%,GP=POLICY_YEAR_ONLY|DB=NONE,1,4,LOW,GP[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=3 rows=3),no rate observations; no DB rate data
+9DIS80,Rate_Table,Home Office Discount 80% 1 yr,GP=POLICY_YEAR_ONLY|DB=NONE,1,4,LOW,GP[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=10 rows=10),no rate observations; no DB rate data
+9DIS90,Rate_Table,Home Office Discount 90% 1 yr,GP=POLICY_YEAR_ONLY|DB=NONE,1,4,LOW,GP[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=117 rows=117),no rate observations; no DB rate data
+9DS24B,Rate_Table,Home Office Discount - 24.75%,GP=POLICY_YEAR_ONLY|DB=NONE,1,4,LOW,GP[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=10 rows=10),no rate observations; no DB rate data
+9DS24C,Rate_Table,Home Office Discount - 24.75%,GP=POLICY_YEAR_ONLY|DB=NONE,1,4,LOW,GP[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=10 rows=10),no rate observations; no DB rate data
+9FTRWP,PAAGERAT,1578 FTR Waiver of Premium,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data
+9GPO10,NONE,L10 GPO OLD,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+9GPO79,PAAGERAT,Guaranteed Purchase Option Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=41 rows=41 no duration),no rate observations; no DB rate data
+9JPO10,NONE,L10 Juvenile Purchase Option - OLD,GP=NONE|DB=NONE,4,4,LOW,no matching rate rows,no rate observations; no rate observations; no GP/PR rate data; no DB rate data
+9JPO46,PAAGERAT,Juvenile Future Purchase Option Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=22 rows=22 no duration),no rate observations; no DB rate data
+9L01WP,PAAGERAT,Disability Waiver of Premium Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=42 rows=168 no duration),no rate observations; no DB rate data
+9L05WP,PAAGERAT,Disability Waiver of Premium Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=42 rows=168 no duration),no rate observations; no DB rate data
+9L16PF,Rate_Table,Graded Death Benefit,GP=NONE|DB=POLICY_YEAR_ONLY,4,1,LOW,DB[Rate_Table]:POLICY_YEAR_ONLY(AGE=0 duration_values=3 rows=5),no rate observations; no GP/PR rate data
+9OLDWP,PAAGERAT,Waiver of Premium - L10,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=37 rows=222 no duration),no rate observations; no DB rate data
+9POADB,PAAGERAT,Accidental Death Benefit,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=52 rows=52 no duration),no rate observations; no DB rate data
+9SLADB,PAAGERAT,SAL Accidental Death Benefit,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data
+9STRWP,PAAGERAT,8042 STR Waiver of Premium,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data
+9WP646,PAAGERAT,Waiver of Premium,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=40 rows=40 no duration),no rate observations; no DB rate data
+9WPL10,PAAGERAT,L10 Waiver of Premium   Post 1997,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=37 rows=222 no duration),no rate observations; no DB rate data
+A60MIR,PAAGERAT+Rate_Table,Monthly Income Rider,GP=ATTAINED_AGE|DB=ISSUE_AGE_DURATION,3,2,HIGH,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=56 rows=112 no duration) | DB[Rate_Table]:ISSUE_AGE_DURATION(AGE values=41 DURATION values=50 rows=1230),
+A96DAR,PAAGERAT,Deposit Annuity Rider,GP=ATTAINED_AGE|DB=NONE,3,4,LOW,GP[PAAGERAT]:ATTAINED_AGE(PAAGERAT SEQ axis n=117 rows=117 no duration),no rate observations; no DB rate data

@@ -1,0 +1,5 @@
+observed_pattern,root_cause,recommended_action,expected_impact,confidence_level
+333 multi-payout death claims with unexplained residual,Beneficiary or staged payment split not yet modeled,Integrate PRELSA payee distribution in Phase 8 (future-ready),MEDIUM,MODERATE_CONFIDENCE
+75 claims with 0038 clearing distortion signal,0038 lifecycle hub inflates chain perception but is excluded from net rollup,Continue excluding 0038 from financial decomposition; use for lineage only,LOW,HIGH_CONFIDENCE
+547 death claims with unexplained residual,Benefit/payout pairing or missing optional components,Review largest residuals in death_claim_residual_analysis.csv,HIGH,MODERATE_CONFIDENCE
+305 partial decompositions,Incomplete funding/payout pairing within reconstruction group,Evaluate sibling DEATH_CLAIM groups on same policy for split funding/payout,MEDIUM,INFERRED

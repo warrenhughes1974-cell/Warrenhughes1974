@@ -1,0 +1,4 @@
+audit_timestamp,production_dbf_flag,blocker_category,exception_count,claim_count,payment_count,business_explanation,governance_status,business_review_required,rulebook_lineage
+2026-05-28T20:17:54Z,N,RECONCILIATION_FAILURE,60,60,0,Record held for governance review.,GOVERNANCE_HOLD,Y,phase17a|phase17b|phase17c|phase17d|phase17e|phase17f
+2026-05-28T20:17:54Z,N,UNRESOLVED_BALANCING,284,284,0,Record held for governance review.,PRODUCTION_BLOCKED,Y,phase17a|phase17b|phase17c|phase17d|phase17e|phase17f
+2026-05-28T20:17:54Z,N,UNRESOLVED_ORPHAN,374,0,374,Record held for governance review.,PRODUCTION_BLOCKED,Y,phase17a|phase17b|phase17c|phase17d|phase17e|phase17f

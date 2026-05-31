@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "description": "Phase 21+ UAT emit enhancements: CLAIMNUM-13, Disbursement/Withdrawal CLAIMSTAT 99, MSEQ defaults.",
+  "claimstat_iswl_surrender": "99",
+  "default_mseq": "0",
+  "claimnum_max_length": 13,
+  "disbursement_withdrawal_phrase": "Disbursement / Withdrawal",
+  "iswl_indicator_fields": [
+    "mclaimtype",
+    "mclaimstatus",
+    "mclaimfamily",
+    "claim_family",
+    "claim_subtype",
+    "plantype",
+    "product",
+    "hlob",
+    "lob",
+    "mplan"
+  ],
+  "plan_description_fields": [
+    "plan_description",
+    "plan_drescition",
+    "descr",
+    "planname",
+    "ql_plan_description"
+  ],
+  "disbursement_family_tokens": [
+    "DISBURSEMENT_CLAIM",
+    "DISBURSEMENT"
+  ],
+  "source_claim_id_fields": [
+    "reconstructed_claim_id",
+    "mclaimid",
+    "claimnum"
+  ]
+}

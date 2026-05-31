@@ -1,0 +1,4 @@
+audit_timestamp,rollback_snapshot_id,production_dbf_flag,metric,current_value,threshold_value,gap_to_threshold,governance_status,severity,remediability,business_review_required,rulebook_lineage
+2026-05-24T19:22:24Z,PHASE16D-READINESS-FORECAST-20260524T192224Z,N,ORPHAN_PAYMENT_RATE,18.0,5.0,13.0,PRODUCTION_BLOCKED,HIGH,PARTIALLY_RECOVERABLE,Y,phase15_replay|phase16d_readiness_forecast
+2026-05-24T19:22:24Z,PHASE16D-READINESS-FORECAST-20260524T192224Z,N,RECONCILIATION_PASS_RATE,98.08,95.0,3.08,READY,LOW,RECOVERABLE,N,phase15_replay|phase16d_readiness_forecast
+2026-05-24T19:22:24Z,PHASE16D-READINESS-FORECAST-20260524T192224Z,N,SURRENDER_REVIEW_QUEUE,4287.0,0.0,4287.0,BUSINESS_REVIEW_REQUIRED,HIGH,PARTIALLY_RECOVERABLE,Y,phase15_replay|phase16d_readiness_forecast

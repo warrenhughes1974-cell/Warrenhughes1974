@@ -1,0 +1,17 @@
+TABLE_NAME,FILE_PATH,ROW_COUNT,EFFDATE_VALUES,VALIDATION_STATUS,NOTES
+QuikCvs,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikCvs.dbf,25717,19000101,PASS,factor table
+QuikDbs,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikDbs.dbf,1380,19000101,PASS,factor table
+QuikDvs,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikDvs.dbf,3978,19000101,PASS,factor table
+QuikGps,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikGps.dbf,1123,19000101,PASS,factor table
+QuikNps,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikNps.dbf,26650,19000101,PASS,factor table
+QuikPlBd,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlBd.dbf,66,N/A (no EFFDATE field),PASS,member/dimension table
+QuikPlCv,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlCv.dbf,70,19000101,PASS,rate-key table
+QuikPlDb,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlDb.dbf,12,19000101,PASS,rate-key table
+QuikPlDv,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlDv.dbf,20,19000101,PASS,rate-key table
+QuikPlGd,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlGd.dbf,110,N/A (no EFFDATE field),PASS,member/dimension table
+QuikPlGp,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlGp.dbf,13,19000101,PASS,rate-key table
+QuikPlNb,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlNb.dbf,64,19000101,PASS,member/dimension table
+QuikPlSt,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlSt.dbf,64,N/A (no EFFDATE field),PASS,member/dimension table
+QuikPlTv,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlTv.dbf,112,19000101,PASS,rate-key table
+QuikPlUw,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlUw.dbf,80,N/A (no EFFDATE field),PASS,member/dimension table
+QuikTvs,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikTvs.dbf,26097,19000101,PASS,factor table

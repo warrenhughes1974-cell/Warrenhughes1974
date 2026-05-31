@@ -1,0 +1,722 @@
+VALIDATION_ID,SEVERITY,TABLE,DETAIL
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 18508.89 stored as '18508.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20061.21 stored as '20061.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20878.36 stored as '20878.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 22599.44 stored as '22599.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 23505.42 stored as '23505.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 24443.11 stored as '24443.1' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 25413.62 stored as '25413.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 18508.89 stored as '18508.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20061.21 stored as '20061.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20878.36 stored as '20878.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 22599.44 stored as '22599.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 23505.42 stored as '23505.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 24443.11 stored as '24443.1' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 25413.62 stored as '25413.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 18508.89 stored as '18508.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20061.21 stored as '20061.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20878.36 stored as '20878.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 22599.44 stored as '22599.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 23505.42 stored as '23505.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 24443.11 stored as '24443.1' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 18508.89 stored as '18508.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20061.21 stored as '20061.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20878.36 stored as '20878.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 22599.44 stored as '22599.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 23505.42 stored as '23505.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 18508.89 stored as '18508.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20061.21 stored as '20061.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20878.36 stored as '20878.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 22599.44 stored as '22599.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 18508.89 stored as '18508.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20061.21 stored as '20061.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20878.36 stored as '20878.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 18508.89 stored as '18508.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20061.21 stored as '20061.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20878.36 stored as '20878.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 18508.89 stored as '18508.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 20061.21 stored as '20061.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 18508.89 stored as '18508.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 18508.89 stored as '18508.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17771.88 stored as '17771.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 17059.78 stored as '17059.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 16371.77 stored as '16371.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15707.03 stored as '15707.0' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 15064.76 stored as '15064.8' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 14444.21 stored as '14444.2' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13844.65 stored as '13844.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 13265.36 stored as '13265.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12705.66 stored as '12705.7' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 12164.89 stored as '12164.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11642.41 stored as '11642.4' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 11137.59 stored as '11137.6' (decimal precision reduced to fit CHAR(7))
+V10,WARNING,QuikCvs,value 10649.85 stored as '10649.9' (decimal precision reduced to fit CHAR(7))
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 130JEB: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1658C1: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1658CS: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1659C2: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1659CR: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1659CS: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1659SR: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1666WL: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1669SR: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1679CS: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 170588: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 170858: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 17CSI3: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 17CSI5: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 17CSI7: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 196065: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1960OL: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1960PO: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1970JB: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1991PL: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1CSIMN: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1L1095: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1L10OD: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1L10PR: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1L14SC: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1L15GD: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1L16GD: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 1SALOL: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 221END: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 222END: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 2665ST: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 280END: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 2961ME: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 560STR: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN 578STR: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlCv,"assumptions deferred for PLAN A96DAR: MORT,ETIMORT,NFOINT,INTMETHCV"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 130JEB: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1658C1: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1658CS: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1659C2: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1659CR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1659CS: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1659SR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1666WL: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 170858: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 17CSI3: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 17CSI5: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 17CSI7: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 196065: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1960OL: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1960PO: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1970JB: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1991PL: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1CSIMN: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1L1095: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1L10SR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1L14SC: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1L15GD: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1L16GD: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 221END: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 222END: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 2665ST: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 280END: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 2961ME: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 528CTR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 542STR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 543CTR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 560STR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 578STR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 5CDT10: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 5L01MA: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 719CTR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 719SDT: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7619DT: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7619PU: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7647FP: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7686S3: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7687J3: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7690DT: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 778FTR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7SDT10: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN A60MIR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN A96DAR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 130JEB: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1658C1: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1658CS: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1659C2: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1659CR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1659CS: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1659SR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1666WL: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 170858: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 17CSI3: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 17CSI5: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 17CSI7: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 196065: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1960OL: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1960PO: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1970JB: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1991PL: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1CSIMN: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1L1095: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1L10SR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1L14SC: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1L15GD: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1L16GD: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 1SALOL: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 221END: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 222END: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 2665ST: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 280END: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 2961ME: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 528CTR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 542STR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 543CTR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 560STR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 5646AT: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 578STR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 5CDT10: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 5L01MA: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 719CTR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 719SDT: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7619DT: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7619PU: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7647FP: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7686S3: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7687J3: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7690DT: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 778FTR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN 7SDT10: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN A60MIR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+V15,WARNING,QuikPlTv,"assumptions deferred for PLAN A96DAR: MORT,RSVINT,RSVMETH,INTMETHTV,STOREMEANS,CALCMIDS"
+AGE_CAPPED_TO_99,WARNING,CASH_VALUE,PLAN 1L10OD CV: AGE 100 capped to 99 (3 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 100 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 101 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 102 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 103 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 104 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 105 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 106 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 107 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 108 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 109 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 110 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 111 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 112 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 113 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 114 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 115 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 116 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10PR PR: AGE 117 capped to 99 (2 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 100 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 101 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 102 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 103 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 104 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 105 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 106 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 107 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 108 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 109 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 110 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 111 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 112 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 113 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 114 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 115 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 116 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 1L10SO PR: AGE 117 capped to 99 (8 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 543CTR PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 5667AT PR: AGE 100 capped to 99 (5 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 578CTR PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 57ATCR PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7647FP PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 7690DT PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 910SWP PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 920ADB PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 934SWP PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 943CWP PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 967ADB PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CDTWP PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9CTRWP PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9FTRWP PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9SLADB PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN 9STRWP PR: AGE 117 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 100 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 101 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 102 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 103 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 104 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 105 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 106 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 107 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 108 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 109 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 110 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 111 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 112 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 113 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 114 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 115 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 116 capped to 99 (1 rows)
+AGE_CAPPED_TO_99,WARNING,GROSS_PREMIUM,PLAN A96DAR PR: AGE 117 capped to 99 (1 rows)
+AGE_CAP_COLLISION_RESOLVED,WARNING,CASH_VALUE,"PLAN 1L10OD CV: 3 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 1L10PR PR: 36 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 1L10SO PR: 144 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 543CTR PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 5667AT PR: 5 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 578CTR PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 57ATCR PR: 1 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 7647FP PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 7690DT PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 910SWP PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 920ADB PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 934SWP PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 943CWP PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 967ADB PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 9CDTWP PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 9CTRWP PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 9FTRWP PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 9SLADB PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN 9STRWP PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"
+AGE_CAP_COLLISION_RESOLVED,WARNING,GROSS_PREMIUM,"PLAN A96DAR PR: 18 capped cell(s) collided with genuine AGE 99 data; genuine value retained, capped value dropped (audited)"

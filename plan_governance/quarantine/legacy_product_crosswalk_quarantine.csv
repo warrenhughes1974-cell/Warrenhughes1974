@@ -1,0 +1,289 @@
+old_value,new_value,original_source,mapping_class,quarantine_reason,rollback_action,removed_from_master_crosswalk,governance_status
+901122D991,01122D991C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901142D978,01142D978C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901154D174,01154D174C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901159D276,01159D276C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901185D536,01185D536C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901222DC,01222DCC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901222DD,01222DDC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9012FG8217,012FG8217C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901330D153,01330D153C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901353D732,01353D732C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9013FG8217,013FG8217C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014048,014048C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014059,014059C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014075A,014075AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014075B,014075BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014098A,014098AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014098B,014098BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014100B,014100BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014100C,014100CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014100D,014100DC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014100E,014100EC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014112,014112C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014126A,014126AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014130,014130C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901422D089,01422D089C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9014FG8217,014FG8217C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9015FG8217,015FG8217C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9016FG8217,016FG8217C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018009B,018009BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018021,018021C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018163,018163C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018166C,018166CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018167C,018167CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018167D,018167DC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018167E,018167EC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018185,018185C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018187,018187C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018222A,018222AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018222B,018222BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018234,018234C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018236B,018236BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018236C,018236CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018237C,018237CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018237D,018237DC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018237E,018237EC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018237F,018237FC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018237G,018237GC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018252,018252C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018253,018253C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018253A,018253AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018253B,018253BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018258A,018258AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018258B,018258BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018258C,018258CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018270,018270C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018284A,018284AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018284C,018284CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018284D,018284DC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018306F,018306FC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018313A,018313AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018313B,018313BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018313D,018313DC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018330A,018330AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018330B,018330BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018330C,018330CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018355,018355C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018386,018386C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018465C,018465CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018465D,018465DC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018491,018491C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018492,018492C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018495A,018495AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018495B,018495BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018495C,018495CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018499A,018499AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018499B,018499BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018499C,018499CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018499D,018499DC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018509,018509C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018510,018510C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018528,018528C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018529,018529C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018586,018586C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018645A,018645AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018645B,018645BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018645C,018645CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018646,018646C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018712,018712C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018712F,018712FC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018719,018719C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018721,018721C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018737A,018737AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018737B,018737BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018845B,018845BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018845C,018845CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018900,018900C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018907,018907C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018909,018909C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018910,018910C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9018912,018912C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9019002,019002C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8033B,01FG8033BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8033C,01FG8033CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8217A,01FG8217AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8217B,01FG8217BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8217C,01FG8217CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8217D,01FG8217DC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8302B,01FG8302BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8314B,01FG8314BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8314D,01FG8314DC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8314E,01FG8314EC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8314F,01FG8314FC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8563,01FG8563C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901FG8801,01FG8801C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML4012A,01ML4012AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML4054,01ML4054C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML4096,01ML4096C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML4107,01ML4107C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML4134,01ML4134C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML4140B,01ML4140BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML4140C,01ML4140CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML4150,01ML4150C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8007,01ML8007C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8123,01ML8123C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8143,01ML8143C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8151,01ML8151C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8171,01ML8171C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8195,01ML8195C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8209,01ML8209C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8211,01ML8211C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8214,01ML8214C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8225,01ML8225C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8246,01ML8246C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8250,01ML8250C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8251,01ML8251C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8267,01ML8267C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8303,01ML8303C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8307,01ML8307C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8314B,01ML8314BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8367,01ML8367C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8378A,01ML8378AC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8378B,01ML8378BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8378C,01ML8378CC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8378D,01ML8378DC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8378E,01ML8378EC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8438,01ML8438C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8450B,01ML8450BC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8457,01ML8457C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8464,01ML8464C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8487,01ML8487C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8493,01ML8493C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8501,01ML8501C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8515,01ML8515C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8522,01ML8522C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8535,01ML8535C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8556,01ML8556C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8557,01ML8557C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8565,01ML8565C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8570,01ML8570C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8584,01ML8584C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8597,01ML8597C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8678,01ML8678C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8772,01ML8772C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8791,01ML8791C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+901ML8804,01ML8804C,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+658 CEN I,1658C1,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1578 FTR,778FTR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1576 658,976658,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1580 JPO,980JPO,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1577 ADB,977ADB,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1578FTR WP,9FTRWP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1578 CTR,578CTR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1578CTR WP,9CTRWP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+8042 STR,542STR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+8042STR WP,9STRWP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+DISCHO80,9DIS80,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+DISCHO90,9DIS90,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+658 CEN SD,1658CS,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+659 CEN II,1659C2,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1576 659,976659,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+8043 CTR,543CTR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+659 CEN SD,1659CS,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+659 CEN SR,1659CR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+659 SR GD,1659SR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+666 WL,1666WL,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+897 666,1666AI,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+668 SPWL,1668SP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+679 CEN SD,1679CS,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 LP95,1L1095,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 JPO,9JPO10,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 WP,9WPL10,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 ADB,9ADB10,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 GPO,9GPO10,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 CDT,5CDT10,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 WP CDT,9CDTWP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+DISCHO2475,9DIS25,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 LP95SR,1L10SR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 OLD,1L10OD,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+DISCHO247C,9DIS25,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 WP OLD,9OLDWP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 SDT,7SDT10,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 SR OLD,1L10SO,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L10 WP OLD,9WPO10,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L14,1L14SC,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L17,1L17SP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L17 2+ JPO,17MJPO,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L17 1 JPO,117JPO,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+8286 GI 1,986JPO,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L17 1,10L171,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L17 2+,10L172,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+8286 GI 2+,982JPO,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+10827 CSI3,17CSI3,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+10827 CSI5,17CSI5,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+10827 CSI7,17CSI7,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+991 PWL,1991PL,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L15,1L15GD,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L15 ADB,9ADB15,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L16,1L16GD,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+619 DT,7619DT,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+DISCHO25,9DIS25,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+619 DT SP,719SDT,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+619 DT CH,719CDT,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+619 SPS PU,7619PU,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+647 FLP,7647FP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+647 FLP SP,7647SP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+647 FLP CH,7647CH,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+667 ART,5667AT,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1595,9595WP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L01 10Y LT,5L0110,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+8115 L01,9L01WP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+DISCHO70,9DIS70,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1596 L01,901ADB,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L05 10Y LT,5L0510,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+8115,9L05WP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1596,996ADB,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+L07 5Y LT,5L075Y,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+621 END85,221END,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0822 620,920ADB,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+622 END85,222END,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+665 STME95,2665ST,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0823 665,9665WP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0822 665,965ADB,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+896 DAR,A96DAR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0823 896,9896WP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+665 PUA,265PUA,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+980 END65,280END,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+980 PUA,280PUA,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+670 GL8588,170588,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+670 PUA,170PUA,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+670 GL85-8,170858,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+670 GL85-M,17085M,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+960 LP65,196065,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+960 65 PUA,165PUA,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0823 960LP,9065WP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+828,528CTR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+960 LP85-M,196085,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+960 LP PUA,185PUA,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0823 96085,9085WP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0822 960,960ADB,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+826,560STR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0823 960SP,960SWP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+863,A60MIR,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+960 OL,1960OL,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+960 OL PUA,1OLPUA,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0823 960OL,90OLWP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+889 960,960GIO,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0824 P DTH,90PDTH,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+960 PO,1960PO,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+960 PO PUA,1POPUA,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0823 960PO,90POWP,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+0822 960PO,9POADB,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+SAL ML,1SALML,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+SAL MULTPL,1SALMI,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+SAL ADB,9SLADB,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+SAL OL,1SALOL,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+"*Plan Code  is 6 Digits, Beginning with:",,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+FIRST POSITION,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+1,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+2,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+3,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+4,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+5,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+7,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+8,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+9,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+A,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY
+B through Z,,Master_Crosswalk.csv,PRODUCT_OR_ENTITY,Legacy product mapping — migrate authority to product_catalog_crosswalk.csv,Restore from this quarantine file if needed,N,QUARANTINED_COPY

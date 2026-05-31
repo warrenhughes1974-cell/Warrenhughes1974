@@ -1,0 +1,8 @@
+metric,value
+baseline_rows,133
+generated_rows,133
+baseline_columns,79
+generated_columns,79
+row_count_match,Y
+column_count_match,Y
+crosswalk_overlay_enabled,N

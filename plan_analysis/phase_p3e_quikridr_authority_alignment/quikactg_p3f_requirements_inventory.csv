@@ -1,0 +1,2 @@
+component,field,source,rulebook,current_authority,p3e_status,p3f_requirement,risk
+quikactg,MPLAN,PACTG.PLAN_CODE,Sync_Rulebook_quikactg.csv,Flat Master_Crosswalk passthrough,NOT_IMPLEMENTED,Extend closed MPLAN authority to quikactg after quikridr validation,Accounting MPLAN drift from authoritative quikplan catalog

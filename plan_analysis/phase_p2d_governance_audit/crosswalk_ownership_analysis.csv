@@ -1,0 +1,11 @@
+field_or_mapping_type,current_owner,proposed_owner,ownership_status,overlap_risk,governance_recommendation
+PLAN,Master_Crosswalk Old_Value->New_Value on COVERAGE_ID,Policy Form Crosswalk ql_plan_code,OVERLAP,Master_Crosswalk drives current emit; crosswalk is future authority,Migrate PLAN authority to Policy Form Crosswalk after overlay signoff
+FORM,LifePRO POLICY_FORM_NUM via rulebook,Policy Form Crosswalk ql_form_number,OVERLAP,Overlay would override LifePRO form number,Confirm FORM authority before overlay
+DESCR,LifePRO DESCRIPTION via rulebook,Policy Form Crosswalk ql_plan_description,PARTIAL,Mostly aligned; overlay normalizes casing,Crosswalk owns display description at cutover
+PLANNAME,LifePRO DESCRIPTION duplicated via rulebook,Policy Form Crosswalk ql_friendly_name,CONFLICT,Current output uses DESCRIPTION not friendly name,Crosswalk owns PLANNAME at cutover
+Policy_Number,Master_Crosswalk (901xxxxxxxx rows),Master_Crosswalk,CONFIRMED,4920 policy-number mappings,Keep policy mappings separate from PLAN catalog
+Value_Translation,Master_Value_Translation.csv,Master_Value_Translation.csv,CONFIRMED,Applied post-mapping except PAR,Maintain translation table for coded LifePRO values
+Rulebook_Transforms,Sync_Rulebook_quikplan.csv,Sync_Rulebook_quikplan.csv,CONFIRMED,Authoritative field routing/defaults,No redesign — audit coverage only
+PCOMP_Lookup,PCOMP.csv via rulebook join,PCOMP.csv,CONFIRMED,MINUNIT/MAXUNIT from MIN/MAX_ISSUE_AMT1,Ensure PCOMP completeness for all COVERAGE_ID
+HRIGPKEY,Rulebook default blank,Future actuarial governance (P5),FUTURE,Not populated — correct for catalog phase,Do not populate until actuarial phase
+MPLAN,quikridr transactional reference,quikplan.PLAN catalog,DOWNSTREAM,Orphan MPLAN codes indicate catalog gaps,Resolve via catalog completeness not crosswalk

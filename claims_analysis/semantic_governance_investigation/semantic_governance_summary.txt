@@ -1,0 +1,174 @@
+QLAdmin Enterprise Claims — Semantic Governance Summary
+Policy 010331768C / Loan Capitalization vs. Surrender Claims
+================================================================
+Authoritative reference: docs/claims_conversion_reference/QLAdmin_Help.pdf
+Investigation date: 2026-05-24
+Rulebook lineage: PHASE21B_SEMANTIC_GOVERNANCE_QLADMIN_MANUAL
+production_dbf_flag=N (investigation only; no classification changes applied)
+
+EXECUTIVE FINDING
+-----------------
+Policy 010331768C (LifePRO 9010331768) demonstrates a material domain-routing conflict
+between the current LifePRO→claims pipeline and QLAdmin target semantics.
+
+LifePRO posts recurring 451↔412 "Loan Interest Capitalized" accounting entries.
+The pipeline converts these into eight annual QUIKCLMS rows labeled Surrendered
+(CLAIMSTAT=99) with MINTAMT populated and MPAID=0, while QUIKCLMP remains empty
+and the policy stays active.
+
+Per QLAdmin Help (authoritative target specification), recurring loan interest
+accrual/capitalization belongs in the POLICY LOAN domain (QuikLoan, Loan History,
+Coverage Tab loan fields) — NOT in QUIKCLMS/QUIKCLMP as repeated surrender claims.
+
+VERDICT: SEMANTICALLY MISALIGNED — governance hold recommended pending business
+sign-off on a new non-claim loan-maintenance classification path.
+
+
+QLADMIN MANUAL — DOMAIN OWNERSHIP (CITED)
+-----------------------------------------
+
+1) QUIKCLMS = DEATH CLAIMS (not loan accounting)
+   Source: QLAdmin Help PDF, Section 7.67 "QuikClms - Death Claims" (p.733)
+   Table title in manual: "QuikClms - Death Claims"
+   Key fields:
+     - CLAIMSTAT: Pending-1; Paid in Full-2; Settled-3; Denied-4; Matured-98;
+                  Surrenders-99
+     - DTOFDEATH: Date of death
+     - MINTAMT: "Amount of interest earned" (claim-benefit interest context)
+     - LOAN: "Loan balance" (deduction on a claim settlement, not loan posting)
+     - MPAID: "Amount paid"
+   Interpretation: QUIKCLMS stores death claim and surrender claim transaction
+   headers after Policy Maintenance claim/surrender processing — not internal
+   loan ledger capitalization cycles on active policies.
+
+2) Claims Tab scope (UI business semantics)
+   Source: QLAdmin Help PDF, Policy Display §5.1.1.6 (p.44, p.48)
+   Manual text: "Displays all death claim and surrender data for a life policy"
+   and "All pending and finalized death claims, cash surrenders, or health claim
+   details will be displayed in the Claims Tab."
+   Claims Tab fields include Status, Death, Reported, Completed, Paid, Net Payment,
+   Disbursement code, Check #, Payee.
+   Interpretation: Claims Tab entries represent benefit settlement events with
+   claim/surrender lifecycle — not annual loan interest accrual on active policies.
+
+3) QUIKCLMP = DEATH CLAIM PAYEE DETAILS
+   Source: QLAdmin Help PDF, Section 7.67 "QuikClmp - Death Claim Payee Details" (p.733)
+   Death claim workflow requires Payee Transaction completion (p.116-117).
+   Interpretation: Absence of QUIKCLMP rows for 010331768C is consistent with
+   non-claim loan events; presence of QUIKCLMS surrender rows without payees is
+   inconsistent with QLAdmin finalized claim/surrender behavior.
+
+4) QuikLoan = POLICY LOANS (authoritative home for loan capitalization)
+   Source: QLAdmin Help PDF, Section 7.150 "QuikLoan - Policy Loans" (p.827-828)
+   Key fields (manual field dictionary):
+     - MLOANPRIN: Loan principal
+     - MLOANBAL: Loan balance
+     - MLOANINT: Loan interest rate
+     - MLOANINTX: Loan interest type (A=advance, R=arrears)
+     - MLOANIDT: Interest paid to date
+     - MLOANDATE: Loan balance date
+     - MLOANACCR: Accrued interest
+     - MLOANBILL: Billing loan payment
+   Interpretation: Recurring capitalized loan interest semantically belongs here,
+   not in QUIKCLMS.MINTAMT.
+
+5) Loan History / Policy Maintenance Loan processing
+   Source: QLAdmin Help PDF, §5.1.2.7 Loan History (p.74-75); §5.1.3.7 Processing
+   a Loan (p.130-132)
+   Manual text: "Loan transactions include loans granted, loan payments, loan
+   interest charged, and automatic premium loans processed."
+   "Current loan information is shown and includes the accrued interest, the
+   loan balance and the date to which interest is accrued."
+   "Which tables are affected? QuikLoan Policy Loans"
+   Edit Loan: "Any adjustment in the loan balance will be recorded as capitalized
+   interest on the loan, whether the adjustment is positive or negative."
+   Interpretation: LifePRO 451↔412 capitalization maps to QLAdmin loan maintenance,
+   not claim creation.
+
+6) Anniversary Processing
+   Source: QLAdmin Help PDF, Anniversary Processing overview (p.26)
+   Manual text includes: "Process policy loans and capitalize interest."
+   Interpretation: Annual loan interest capitalization is scheduled policy/loan
+   processing — aligned with observed Jul-24 recurrence on 010331768C.
+
+7) QuikBlll — Billing Loan Interest (operational, non-claim)
+   Source: QLAdmin Help PDF, §7.58 QuikBlll (p.722-723)
+   Field MLOANBILL: "Amount billed for policy loan"
+   Interpretation: Loan interest may also surface in billing notices — still not
+   in QUIKCLMS.
+
+
+LIFEPRO vs QLADMIN ROUTING COMPARISON (010331768C)
+--------------------------------------------------
+
+| LifePRO observed          | Current pipeline routing        | QLAdmin intended domain      |
+|---------------------------|---------------------------------|------------------------------|
+| 451↔412 capitalization    | SURRENDER_CLAIM → QUIKCLMS      | QuikLoan + Loan History      |
+| ~$600 annual accrual      | MINTAMT on claim header         | MLOANACCR / MLOANBAL update  |
+| No cash disbursement      | MPAID=0, no QUIKCLMP            | No claim payee (correct)     |
+| Active policy             | CLAIMSTAT=99 (Surrendered) x8  | Policy remains active; no    |
+|                           |                                 | repeated surrender claims    |
+| Jul-24 annual pattern     | 60-day cluster → new claim ID   | Loan anniversary/accrual     |
+
+
+ROOT CAUSE (PIPELINE vs MANUAL)
+-------------------------------
+Phase 4 FAMILY_GROUPS maps LOAN_INTEREST_OFFSET (0412) into SURRENDER_CLAIM.
+Phase 10B applies SURRENDER claimstat_default=99 even when lifecycle=INFERRED.
+Phase 6 balancing treats offset-only chains as BALANCED without requiring
+surrender funding/payout codes (0560/0561/0090/1020).
+Phase 17 governance clears on reconciliation PASS without QLAdmin domain alignment.
+
+The QLAdmin manual explicitly separates:
+  - Loan interest charged / capitalized → QuikLoan, Loan History, Anniversary
+  - Death claims / cash surrenders → Claims Tab, QUIKCLMS, QUIKCLMP
+
+Current routing collapses these domains.
+
+
+POPULATION IMPACT
+-----------------
+Pattern: SURRENDER_CLAIM + INFERRED + 0412-only source codes
+  Claims:  2,840
+  Policies: 551
+  UAT QUIKCLMS share: 55.4% (2,840 of 5,122)
+Broader emitted pattern (CLAIMSTAT=99, MPAID=0, MINTAMT>0):
+  Rows: 3,851 across 663 policies
+
+Policy 010331768C: 8 claims (CLM0000005–CLM0000012), 0 payments.
+
+
+GOVERNANCE RECOMMENDATIONS (NO AUTO-RECLASSIFICATION)
+-----------------------------------------------------
+1. IMMEDIATE: Defer 0412-only INFERRED SURRENDER_CLAIM population from UAT emit
+   pending business review (Phase 17 governance hold — reversible).
+2. SHORT-TERM: Introduce POLICY_LOAN_INTEREST / ACCOUNTING_ONLY family; exclude
+   from QUIKCLMS/QUIKCLMP per QLAdmin manual domain boundaries.
+3. MEDIUM-TERM: Stand up QuikLoan conversion path for 451/412 capitalization with
+   Loan History transaction typing ("loan interest charged").
+4. STATUS GUARD: Do not assign CLAIMSTAT=99 unless Policy Maintenance surrender
+   or NFO cash surrender evidence exists (0560/0561/0090 and/or payee settlement).
+5. MINTAMT GUARD: Reserve QUIKCLMS.MINTAMT for claim-benefit interest (death claim
+   / held payment interest per manual p.115); route loan accrual to MLOANACCR.
+
+BLAST RADIUS IF UNCORRECTED
+---------------------------
+- 551+ policies may show false "Surrendered" claim history in QLAdmin UAT import.
+- Active policies appear to have repeated full surrenders while billing continues.
+- Claims analytics, orphan/reconciliation metrics, and UAT sign-off are polluted.
+- True surrender/death claim populations are mixed with loan-maintenance artifacts.
+
+ROLLBACK-SAFE PATH
+------------------
+Governance hold at Phase 17 does not require Phase 4–10 engine rewrites.
+Existing artifacts remain intact. Re-enable only after business-approved target
+mapping to QuikLoan is validated.
+
+
+ARTIFACTS
+---------
+- claims_analysis/semantic_governance_investigation/qladmin_domain_alignment_analysis.csv
+- claims_analysis/semantic_governance_investigation/semantic_governance_summary.txt
+- Supporting manual extract: claims_analysis/phase17_uat_governance_reporting/_qladmin_table_defs.txt
+
+Manual reference file: docs/claims_conversion_reference/QLAdmin_Help.pdf

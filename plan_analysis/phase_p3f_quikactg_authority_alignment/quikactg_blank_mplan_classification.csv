@@ -1,0 +1,1 @@
+source_file,source_row_number,mpolicy,mphase,source_plan_code,candidate_mplan,resolved_mplan,is_authoritative,exists_in_quikplan,contains_spaces,is_blank,resolution_path,fallback_value,governance_status,error_category,remediation_hint,blank_classification

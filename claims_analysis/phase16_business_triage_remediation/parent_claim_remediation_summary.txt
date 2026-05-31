@@ -1,0 +1,10 @@
+=== Phase 16C Parent-Claim Remediation Prioritization ===
+
+Rollback snapshot: PHASE16C-PARENT-REMEDIATION-20260524T192223Z
+Parent claims with orphan payments: 206
+Total orphan payments attached: 374
+Projected orphans resolved if remediated: 310
+High-value remediation queue: 21
+
+Prioritization only. No auto-remediation.
+production_dbf_flag=N

@@ -1,0 +1,76 @@
+{
+  "version": "1.0",
+  "description": "Phase 8 PRELSA payee distribution and payment staging rules (read-only validation).",
+  "claim_family": "DEATH_CLAIM",
+  "payout_codes": ["0094", "0567", "1900"],
+  "exclude_lifecycle_event_types": ["CLAIM_SETTLEMENT"],
+  "equal_split_tolerance": 0.02,
+  "amount_match_tolerance": 0.01,
+  "focus_decomposition_statuses": [
+    "NEEDS_PAYEE_DISTRIBUTION_ANALYSIS",
+    "MULTI_PAYOUT_DECOMPOSED",
+    "PARTIAL_DECOMPOSITION"
+  ],
+  "focus_settlement_patterns": [
+    "ONE_FUNDING_MANY_PAYOUTS",
+    "MANY_FUNDING_MANY_PAYOUTS",
+    "MANY_FUNDING_ONE_PAYOUT"
+  ],
+  "payee_statuses": [
+    "SINGLE_PAYEE_MATCH",
+    "MULTI_BENEFICIARY_SPLIT",
+    "TRUSTEE_MANAGED_DISTRIBUTION",
+    "STAGED_PAYEE_DISTRIBUTION",
+    "BENEFICIARY_INFERRED",
+    "PAYEE_UNRESOLVED",
+    "OWNER_FALLBACK",
+    "INSURED_FALLBACK"
+  ],
+  "confidence_levels": [
+    "HIGH_CONFIDENCE",
+    "MODERATE_CONFIDENCE",
+    "INFERRED",
+    "LOW_CONFIDENCE"
+  ],
+  "relationship_priority_tiers": {
+    "primary": ["PE", "B1", "B2"],
+    "secondary": ["TR", "CU", "PW", "AS"],
+    "fallback": ["PO", "IN", "PA"]
+  },
+  "trustee_codes": ["TR", "CU", "PW"],
+  "beneficiary_codes": ["B1", "B2"],
+  "explicit_payee_codes": ["PE"],
+  "fallback_owner_codes": ["PO"],
+  "fallback_insured_codes": ["IN"],
+  "death_claim_scenario": "death_claim_payment",
+  "confidence_scoring": {
+    "HIGH_CONFIDENCE": {
+      "requires_address": true,
+      "requires_tax_id": true,
+      "requires_payout_beneficiary_count_match": true,
+      "requires_explicit_pe_or_b1": true
+    },
+    "MODERATE_CONFIDENCE": {
+      "requires_beneficiary_or_payee_present": true,
+      "allows_count_alignment_inference": true
+    },
+    "INFERRED": {
+      "allows_equal_split_inference": true,
+      "allows_fallback_roles": false
+    },
+    "LOW_CONFIDENCE": {
+      "unresolved_or_fallback_only": true
+    }
+  },
+  "staging_prefixes": {
+    "payment_event": "PESC",
+    "payee_distribution": "PDC",
+    "beneficiary_distribution": "BDC"
+  },
+  "business_rules": {
+    "do_not_force_percentages_unless_equal_split": true,
+    "preserve_ambiguity": true,
+    "trustee_precedence_when_present": true,
+    "allow_multi_payout_single_payee_staging": true
+  }
+}

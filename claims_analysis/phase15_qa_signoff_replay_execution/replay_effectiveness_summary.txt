@@ -1,0 +1,6 @@
+=== Phase 15C Replay Effectiveness Summary ===
+Orphan rate: 18.0%
+Reconciliation pass: 98.08%
+Trustee payments added: 168
+
+production_dbf_flag=N

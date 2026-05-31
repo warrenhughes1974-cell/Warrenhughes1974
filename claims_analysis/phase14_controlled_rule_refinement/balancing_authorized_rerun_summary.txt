@@ -1,0 +1,16 @@
+=== Phase 14B Balancing Authorized Rerun Summary ===
+
+Rollback snapshot: PHASE14B-LIFECYCLE-REPLAY-20260524T191540Z
+Authorized replay population: 407
+Projected BALANCED after replay: 275
+Projected still UNBALANCED: 123
+
+No forced balancing applied. Phase 6 engine NOT modified.
+production_dbf_flag=N
+
+Output files:
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\lifecycle_balancing_replay_rules.json
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\lifecycle_replay_authorization_population.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\lifecycle_balancing_replay_results.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\balancing_replay_governance_audit.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\balancing_authorized_rerun_summary.txt

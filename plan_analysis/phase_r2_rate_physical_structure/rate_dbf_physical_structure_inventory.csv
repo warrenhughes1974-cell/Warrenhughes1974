@@ -1,0 +1,300 @@
+TABLE_NAME,FIELD_ORDER,FIELD_NAME,TYPE,LENGTH,DECIMALS,IS_KEY_FIELD,LIKELY_BUSINESS_MEANING,NOTES
+QuikGps,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikGps,2,AGE,C,2,0,Y,Issue age (or 00 when grid varies by policy-year/duration only),
+QuikGps,3,CNTL,C,2,0,Y,Duration page: column n = duration (CNTL*10 + n). CONFIRMED,
+QuikGps,4,GP0,C,7,0,N,gross premium factor for duration (CNTL*10 + 0); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikGps,5,GP1,C,7,0,N,gross premium factor for duration (CNTL*10 + 1); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikGps,6,GP2,C,7,0,N,gross premium factor for duration (CNTL*10 + 2); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikGps,7,GP3,C,7,0,N,gross premium factor for duration (CNTL*10 + 3); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikGps,8,GP4,C,7,0,N,gross premium factor for duration (CNTL*10 + 4); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikGps,9,GP5,C,7,0,N,gross premium factor for duration (CNTL*10 + 5); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikGps,10,GP6,C,7,0,N,gross premium factor for duration (CNTL*10 + 6); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikGps,11,GP7,C,7,0,N,gross premium factor for duration (CNTL*10 + 7); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikGps,12,GP8,C,7,0,N,gross premium factor for duration (CNTL*10 + 8); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikGps,13,GP9,C,7,0,N,gross premium factor for duration (CNTL*10 + 9); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikGps,14,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikGps,15,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikGps,16,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikGps,17,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikGps,18,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikGps,19,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikNps,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikNps,2,AGE,C,2,0,Y,Issue age (or 00 when grid varies by policy-year/duration only),
+QuikNps,3,CNTL,C,2,0,Y,Duration page: column n = duration (CNTL*10 + n). CONFIRMED,
+QuikNps,4,NP0,C,7,0,N,net premium factor for duration (CNTL*10 + 0); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikNps,5,NP1,C,7,0,N,net premium factor for duration (CNTL*10 + 1); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikNps,6,NP2,C,7,0,N,net premium factor for duration (CNTL*10 + 2); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikNps,7,NP3,C,7,0,N,net premium factor for duration (CNTL*10 + 3); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikNps,8,NP4,C,7,0,N,net premium factor for duration (CNTL*10 + 4); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikNps,9,NP5,C,7,0,N,net premium factor for duration (CNTL*10 + 5); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikNps,10,NP6,C,7,0,N,net premium factor for duration (CNTL*10 + 6); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikNps,11,NP7,C,7,0,N,net premium factor for duration (CNTL*10 + 7); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikNps,12,NP8,C,7,0,N,net premium factor for duration (CNTL*10 + 8); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikNps,13,NP9,C,7,0,N,net premium factor for duration (CNTL*10 + 9); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikNps,14,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikNps,15,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikNps,16,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikNps,17,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikNps,18,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikNps,19,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikCvs,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikCvs,2,AGE,C,2,0,Y,Issue age (or 00 when grid varies by policy-year/duration only),
+QuikCvs,3,CNTL,C,2,0,Y,Duration page: column n = duration (CNTL*10 + n). CONFIRMED,
+QuikCvs,4,CV0,C,7,0,N,cash value factor for duration (CNTL*10 + 0); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikCvs,5,CV1,C,7,0,N,cash value factor for duration (CNTL*10 + 1); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikCvs,6,CV2,C,7,0,N,cash value factor for duration (CNTL*10 + 2); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikCvs,7,CV3,C,7,0,N,cash value factor for duration (CNTL*10 + 3); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikCvs,8,CV4,C,7,0,N,cash value factor for duration (CNTL*10 + 4); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikCvs,9,CV5,C,7,0,N,cash value factor for duration (CNTL*10 + 5); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikCvs,10,CV6,C,7,0,N,cash value factor for duration (CNTL*10 + 6); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikCvs,11,CV7,C,7,0,N,cash value factor for duration (CNTL*10 + 7); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikCvs,12,CV8,C,7,0,N,cash value factor for duration (CNTL*10 + 8); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikCvs,13,CV9,C,7,0,N,cash value factor for duration (CNTL*10 + 9); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikCvs,14,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikCvs,15,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikCvs,16,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikCvs,17,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikCvs,18,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikCvs,19,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikDbs,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikDbs,2,AGE,C,2,0,Y,Issue age (or 00 when grid varies by policy-year/duration only),
+QuikDbs,3,CNTL,C,2,0,Y,Duration page: column n = duration (CNTL*10 + n). CONFIRMED,
+QuikDbs,4,DB0,C,7,0,N,death benefit factor for duration (CNTL*10 + 0); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDbs,5,DB1,C,7,0,N,death benefit factor for duration (CNTL*10 + 1); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDbs,6,DB2,C,7,0,N,death benefit factor for duration (CNTL*10 + 2); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDbs,7,DB3,C,7,0,N,death benefit factor for duration (CNTL*10 + 3); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDbs,8,DB4,C,7,0,N,death benefit factor for duration (CNTL*10 + 4); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDbs,9,DB5,C,7,0,N,death benefit factor for duration (CNTL*10 + 5); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDbs,10,DB6,C,7,0,N,death benefit factor for duration (CNTL*10 + 6); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDbs,11,DB7,C,7,0,N,death benefit factor for duration (CNTL*10 + 7); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDbs,12,DB8,C,7,0,N,death benefit factor for duration (CNTL*10 + 8); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDbs,13,DB9,C,7,0,N,death benefit factor for duration (CNTL*10 + 9); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDbs,14,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikDbs,15,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikDbs,16,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikDbs,17,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikDbs,18,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikDbs,19,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikDvs,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikDvs,2,AGE,C,2,0,Y,Issue age (or 00 when grid varies by policy-year/duration only),
+QuikDvs,3,CNTL,C,2,0,Y,Duration page: column n = duration (CNTL*10 + n). CONFIRMED,
+QuikDvs,4,DV0,C,7,0,N,dividend factor for duration (CNTL*10 + 0); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDvs,5,DV1,C,7,0,N,dividend factor for duration (CNTL*10 + 1); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDvs,6,DV2,C,7,0,N,dividend factor for duration (CNTL*10 + 2); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDvs,7,DV3,C,7,0,N,dividend factor for duration (CNTL*10 + 3); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDvs,8,DV4,C,7,0,N,dividend factor for duration (CNTL*10 + 4); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDvs,9,DV5,C,7,0,N,dividend factor for duration (CNTL*10 + 5); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDvs,10,DV6,C,7,0,N,dividend factor for duration (CNTL*10 + 6); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDvs,11,DV7,C,7,0,N,dividend factor for duration (CNTL*10 + 7); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDvs,12,DV8,C,7,0,N,dividend factor for duration (CNTL*10 + 8); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDvs,13,DV9,C,7,0,N,dividend factor for duration (CNTL*10 + 9); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikDvs,14,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikDvs,15,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikDvs,16,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikDvs,17,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikDvs,18,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikDvs,19,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikTvs,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikTvs,2,AGE,C,2,0,Y,Issue age (or 00 when grid varies by policy-year/duration only),
+QuikTvs,3,CNTL,C,2,0,Y,Duration page: column n = duration (CNTL*10 + n). CONFIRMED,
+QuikTvs,4,TV0,C,7,0,N,terminal reserve factor for duration (CNTL*10 + 0); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikTvs,5,TV1,C,7,0,N,terminal reserve factor for duration (CNTL*10 + 1); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikTvs,6,TV2,C,7,0,N,terminal reserve factor for duration (CNTL*10 + 2); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikTvs,7,TV3,C,7,0,N,terminal reserve factor for duration (CNTL*10 + 3); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikTvs,8,TV4,C,7,0,N,terminal reserve factor for duration (CNTL*10 + 4); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikTvs,9,TV5,C,7,0,N,terminal reserve factor for duration (CNTL*10 + 5); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikTvs,10,TV6,C,7,0,N,terminal reserve factor for duration (CNTL*10 + 6); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikTvs,11,TV7,C,7,0,N,terminal reserve factor for duration (CNTL*10 + 7); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikTvs,12,TV8,C,7,0,N,terminal reserve factor for duration (CNTL*10 + 8); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikTvs,13,TV9,C,7,0,N,terminal reserve factor for duration (CNTL*10 + 9); stored as CHAR text,C7 text => max '9999.99'; FACTOR OVERFLOW RISK if value>=10000
+QuikTvs,14,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikTvs,15,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikTvs,16,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikTvs,17,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikTvs,18,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikTvs,19,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikPlGp,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikPlGp,2,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikPlGp,3,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikPlGp,4,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikPlGp,5,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikPlGp,6,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikPlGp,7,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikPlCv,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikPlCv,2,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikPlCv,3,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikPlCv,4,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikPlCv,5,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikPlCv,6,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikPlCv,7,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikPlCv,8,MORT,C,2,0,Y,Mortality table code -> QuikQxs / manual appendix 6.9,Cash-value assumption lives on the KEY table
+QuikPlCv,9,ETIMORT,C,2,0,N,Extended-term-insurance mortality table code,Cash-value assumption lives on the KEY table
+QuikPlCv,10,NFOINT,C,1,0,N,Non-forfeiture / NFO interest (rebate) code,Cash-value assumption lives on the KEY table
+QuikPlCv,11,INTMETHCV,C,1,0,N,Cash value interest method (0=curtate-style default observed),Cash-value assumption lives on the KEY table
+QuikPlDb,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikPlDb,2,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikPlDb,3,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikPlDb,4,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikPlDb,5,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikPlDb,6,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikPlDb,7,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikPlDv,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikPlDv,2,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikPlDv,3,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikPlDv,4,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikPlDv,5,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikPlDv,6,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikPlDv,7,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikPlTv,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikPlTv,2,GENDER,C,1,0,Y,Gender segment: 0=N/A/unisex F=female M=male,
+QuikPlTv,3,UWCLASS,C,2,0,Y,Underwriting risk class: 00=default NT/TB/SM/RG/UR/US etc (company-defined),
+QuikPlTv,4,BAND,C,2,0,Y,Insurance band: 00=default 01/99/FM/IN etc (company-defined),
+QuikPlTv,5,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikPlTv,6,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikPlTv,7,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikPlTv,8,MORT,C,2,0,Y,Mortality table code -> QuikQxs / manual appendix 6.9,"Reserve assumption lives on the KEY table, not the factor grid"
+QuikPlTv,9,RSVINT,C,1,0,N,Reserve interest rate code,"Reserve assumption lives on the KEY table, not the factor grid"
+QuikPlTv,10,RSVMETH,C,1,0,N,Reserve method: 1=NetLevel 2=FullPrelimTerm 3=CRVM 4=ModifiedRVM (manual),"Reserve assumption lives on the KEY table, not the factor grid"
+QuikPlTv,11,INTMETHTV,C,1,0,N,Reserve interest method: 0=Curtate 1=Continuous (manual),"Reserve assumption lives on the KEY table, not the factor grid"
+QuikPlTv,12,STOREMEANS,L,1,0,N,Logical: store mean reserves (T/F),Logical field; empty in supplied template data
+QuikPlTv,13,CALCMIDS,L,1,0,N,Logical: calculate mid-terminal/interpolated reserves (T/F),Logical field; empty in supplied template data
+QuikPlGd,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikPlGd,2,GDCODE,C,1,0,Y,Gender member code for this plan (PVO Gender option member),
+QuikPlGd,3,GDDESCR,C,20,0,N,Gender member description (e.g. MALE/FEMALE/NOT APPLICABLE),
+QuikPlNb,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikPlNb,2,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikPlNb,3,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikPlNb,4,EFFDATE,D,8,0,Y,Rate generation effective date (19000101=default generation),Date type D(8); part of uniqueness key; supports multi-generation
+QuikPlNb,5,TERMDATE,D,8,0,N,Plan availability termination date for this country/state (new-business window),
+QuikPlSt,1,PLAN,C,6,0,Y,Authoritative 6-char QLAdmin plan code (root of all rate lookup),
+QuikPlSt,2,ISSCNTRY,C,4,0,Y,Issue country segment (0000=default/all),
+QuikPlSt,3,CNTRYTXT,C,25,0,N,Issue country description text (e.g. ALL (OTHER)),
+QuikPlSt,4,ISSUEST,C,2,0,Y,Issue state segment (00=default/all),
+QuikPlSt,5,STATETXT,C,20,0,N,Issue state description text (e.g. ALL (OTHER)),
+QuikPlSt,6,MLOANINT,N,5,2,N,State-specific loan interest rate override (per manual; overrides plan general tab),State loan-rate override; NUMERIC N5.2
+QuikPlSt,7,MLOANINTX,C,1,0,N,Loan interest type for the state override (A=advance R=arrears),
+QuikQxs,1,MORT,C,2,0,Y,Mortality table code -> QuikQxs / manual appendix 6.9,UNIQUENESS KEY of QuikQxs; shared global mortality library (no PLAN)
+QuikQxs,2,TABLENAME,C,22,0,N,Human-readable mortality table name (e.g. '1980 CSO Male'),
+QuikQxs,3,RADIX,N,9,0,N,Mortality table radix/scaling indicator (value 200 observed),
+QuikQxs,4,Q000,N,9,4,N,"Mortality rate qx at attained age 0 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,5,Q001,N,9,4,N,"Mortality rate qx at attained age 1 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,6,Q002,N,9,4,N,"Mortality rate qx at attained age 2 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,7,Q003,N,9,4,N,"Mortality rate qx at attained age 3 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,8,Q004,N,9,4,N,"Mortality rate qx at attained age 4 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,9,Q005,N,9,4,N,"Mortality rate qx at attained age 5 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,10,Q006,N,9,4,N,"Mortality rate qx at attained age 6 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,11,Q007,N,9,4,N,"Mortality rate qx at attained age 7 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,12,Q008,N,9,4,N,"Mortality rate qx at attained age 8 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,13,Q009,N,9,4,N,"Mortality rate qx at attained age 9 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,14,Q010,N,9,4,N,"Mortality rate qx at attained age 10 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,15,Q011,N,9,4,N,"Mortality rate qx at attained age 11 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,16,Q012,N,9,4,N,"Mortality rate qx at attained age 12 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,17,Q013,N,9,4,N,"Mortality rate qx at attained age 13 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,18,Q014,N,9,4,N,"Mortality rate qx at attained age 14 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,19,Q015,N,9,4,N,"Mortality rate qx at attained age 15 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,20,Q016,N,9,4,N,"Mortality rate qx at attained age 16 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,21,Q017,N,9,4,N,"Mortality rate qx at attained age 17 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,22,Q018,N,9,4,N,"Mortality rate qx at attained age 18 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,23,Q019,N,9,4,N,"Mortality rate qx at attained age 19 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,24,Q020,N,9,4,N,"Mortality rate qx at attained age 20 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,25,Q021,N,9,4,N,"Mortality rate qx at attained age 21 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,26,Q022,N,9,4,N,"Mortality rate qx at attained age 22 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,27,Q023,N,9,4,N,"Mortality rate qx at attained age 23 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,28,Q024,N,9,4,N,"Mortality rate qx at attained age 24 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,29,Q025,N,9,4,N,"Mortality rate qx at attained age 25 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,30,Q026,N,9,4,N,"Mortality rate qx at attained age 26 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,31,Q027,N,9,4,N,"Mortality rate qx at attained age 27 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,32,Q028,N,9,4,N,"Mortality rate qx at attained age 28 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,33,Q029,N,9,4,N,"Mortality rate qx at attained age 29 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,34,Q030,N,9,4,N,"Mortality rate qx at attained age 30 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,35,Q031,N,9,4,N,"Mortality rate qx at attained age 31 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,36,Q032,N,9,4,N,"Mortality rate qx at attained age 32 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,37,Q033,N,9,4,N,"Mortality rate qx at attained age 33 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,38,Q034,N,9,4,N,"Mortality rate qx at attained age 34 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,39,Q035,N,9,4,N,"Mortality rate qx at attained age 35 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,40,Q036,N,9,4,N,"Mortality rate qx at attained age 36 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,41,Q037,N,9,4,N,"Mortality rate qx at attained age 37 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,42,Q038,N,9,4,N,"Mortality rate qx at attained age 38 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,43,Q039,N,9,4,N,"Mortality rate qx at attained age 39 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,44,Q040,N,9,4,N,"Mortality rate qx at attained age 40 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,45,Q041,N,9,4,N,"Mortality rate qx at attained age 41 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,46,Q042,N,9,4,N,"Mortality rate qx at attained age 42 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,47,Q043,N,9,4,N,"Mortality rate qx at attained age 43 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,48,Q044,N,9,4,N,"Mortality rate qx at attained age 44 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,49,Q045,N,9,4,N,"Mortality rate qx at attained age 45 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,50,Q046,N,9,4,N,"Mortality rate qx at attained age 46 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,51,Q047,N,9,4,N,"Mortality rate qx at attained age 47 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,52,Q048,N,9,4,N,"Mortality rate qx at attained age 48 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,53,Q049,N,9,4,N,"Mortality rate qx at attained age 49 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,54,Q050,N,9,4,N,"Mortality rate qx at attained age 50 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,55,Q051,N,9,4,N,"Mortality rate qx at attained age 51 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,56,Q052,N,9,4,N,"Mortality rate qx at attained age 52 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,57,Q053,N,9,4,N,"Mortality rate qx at attained age 53 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,58,Q054,N,9,4,N,"Mortality rate qx at attained age 54 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,59,Q055,N,9,4,N,"Mortality rate qx at attained age 55 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,60,Q056,N,9,4,N,"Mortality rate qx at attained age 56 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,61,Q057,N,9,4,N,"Mortality rate qx at attained age 57 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,62,Q058,N,9,4,N,"Mortality rate qx at attained age 58 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,63,Q059,N,9,4,N,"Mortality rate qx at attained age 59 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,64,Q060,N,9,4,N,"Mortality rate qx at attained age 60 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,65,Q061,N,9,4,N,"Mortality rate qx at attained age 61 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,66,Q062,N,9,4,N,"Mortality rate qx at attained age 62 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,67,Q063,N,9,4,N,"Mortality rate qx at attained age 63 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,68,Q064,N,9,4,N,"Mortality rate qx at attained age 64 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,69,Q065,N,9,4,N,"Mortality rate qx at attained age 65 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,70,Q066,N,9,4,N,"Mortality rate qx at attained age 66 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,71,Q067,N,9,4,N,"Mortality rate qx at attained age 67 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,72,Q068,N,9,4,N,"Mortality rate qx at attained age 68 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,73,Q069,N,9,4,N,"Mortality rate qx at attained age 69 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,74,Q070,N,9,4,N,"Mortality rate qx at attained age 70 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,75,Q071,N,9,4,N,"Mortality rate qx at attained age 71 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,76,Q072,N,9,4,N,"Mortality rate qx at attained age 72 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,77,Q073,N,9,4,N,"Mortality rate qx at attained age 73 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,78,Q074,N,9,4,N,"Mortality rate qx at attained age 74 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,79,Q075,N,9,4,N,"Mortality rate qx at attained age 75 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,80,Q076,N,9,4,N,"Mortality rate qx at attained age 76 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,81,Q077,N,9,4,N,"Mortality rate qx at attained age 77 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,82,Q078,N,9,4,N,"Mortality rate qx at attained age 78 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,83,Q079,N,9,4,N,"Mortality rate qx at attained age 79 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,84,Q080,N,9,4,N,"Mortality rate qx at attained age 80 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,85,Q081,N,9,4,N,"Mortality rate qx at attained age 81 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,86,Q082,N,9,4,N,"Mortality rate qx at attained age 82 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,87,Q083,N,9,4,N,"Mortality rate qx at attained age 83 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,88,Q084,N,9,4,N,"Mortality rate qx at attained age 84 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,89,Q085,N,9,4,N,"Mortality rate qx at attained age 85 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,90,Q086,N,9,4,N,"Mortality rate qx at attained age 86 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,91,Q087,N,9,4,N,"Mortality rate qx at attained age 87 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,92,Q088,N,9,4,N,"Mortality rate qx at attained age 88 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,93,Q089,N,9,4,N,"Mortality rate qx at attained age 89 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,94,Q090,N,9,4,N,"Mortality rate qx at attained age 90 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,95,Q091,N,9,4,N,"Mortality rate qx at attained age 91 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,96,Q092,N,9,4,N,"Mortality rate qx at attained age 92 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,97,Q093,N,9,4,N,"Mortality rate qx at attained age 93 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,98,Q094,N,9,4,N,"Mortality rate qx at attained age 94 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,99,Q095,N,9,4,N,"Mortality rate qx at attained age 95 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,100,Q096,N,9,4,N,"Mortality rate qx at attained age 96 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,101,Q097,N,9,4,N,"Mortality rate qx at attained age 97 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,102,Q098,N,9,4,N,"Mortality rate qx at attained age 98 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,103,Q099,N,9,4,N,"Mortality rate qx at attained age 99 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,104,Q100,N,9,4,N,"Mortality rate qx at attained age 100 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,105,Q101,N,9,4,N,"Mortality rate qx at attained age 101 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,106,Q102,N,9,4,N,"Mortality rate qx at attained age 102 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,107,Q103,N,9,4,N,"Mortality rate qx at attained age 103 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,108,Q104,N,9,4,N,"Mortality rate qx at attained age 104 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,109,Q105,N,9,4,N,"Mortality rate qx at attained age 105 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,110,Q106,N,9,4,N,"Mortality rate qx at attained age 106 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,111,Q107,N,9,4,N,"Mortality rate qx at attained age 107 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,112,Q108,N,9,4,N,"Mortality rate qx at attained age 108 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,113,Q109,N,9,4,N,"Mortality rate qx at attained age 109 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,114,Q110,N,9,4,N,"Mortality rate qx at attained age 110 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,115,Q111,N,9,4,N,"Mortality rate qx at attained age 111 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,116,Q112,N,9,4,N,"Mortality rate qx at attained age 112 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,117,Q113,N,9,4,N,"Mortality rate qx at attained age 113 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,118,Q114,N,9,4,N,"Mortality rate qx at attained age 114 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,119,Q115,N,9,4,N,"Mortality rate qx at attained age 115 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,120,Q116,N,9,4,N,"Mortality rate qx at attained age 116 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,121,Q117,N,9,4,N,"Mortality rate qx at attained age 117 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,122,Q118,N,9,4,N,"Mortality rate qx at attained age 118 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,123,Q119,N,9,4,N,"Mortality rate qx at attained age 119 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,124,Q120,N,9,4,N,"Mortality rate qx at attained age 120 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)
+QuikQxs,125,Q121,N,9,4,N,"Mortality rate qx at attained age 121 (NUMERIC, per radix); keyed by MORT",NUMERIC N9.4 (contrast factor grids which are CHAR)

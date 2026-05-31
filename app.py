@@ -1,9 +1,9 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v56.9
-# Date:        2026-05-28
-# Change Note: Claims status correction — Disbursement/Withdrawal emits CLAIMSTAT 99 override
+# Version:     v57.3
+# Date:        2026-05-29
+# Change Note: Product Business Test Cut (P3C/P3E/P3G + R7B packaged for business testing)
 # =============================================================================
 
 import pandas as pd
@@ -22,8 +22,14 @@ import csv
 from datetime import datetime
 
 from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA
-from qla_core.quikplan_converter import convert_quikplan_to_output, prepare_quikplan_source
+from qla_core.quikplan_converter import convert_quikplan_to_output, prepare_quikplan_source, apply_rate_variation_flag_enrichment
 from qla_core.quikplan_source_loader import load_quikplan_source_csv
+from qla_core.variation_classification import (
+    VariationClassificationConfig,
+    classify_all_plans,
+    recommendations_by_plan,
+    write_variation_audit_csv,
+)
 from qla_core.quikactg_converter import convert_quikactg_from_pactg
 from qla_core.crosswalk_enrichment import resolve_crosswalk_overlay_config
 from qla_core.product_catalog_authority import (
@@ -179,7 +185,7 @@ PRODUCT_SETUP_DIAGNOSTICS_MANIFEST = os.path.join("plan_governance", "manifests"
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v56.5")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.3 — Product Business Test Cut")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -221,7 +227,8 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION ENGINE v56.5", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION ENGINE v57.3", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="Product Business Test Cut", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
         
@@ -3241,7 +3248,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def process_data(self, is_batch):
         try:
             self.console.delete(1.0, tk.END)
-            self.log("Initializing Migration Engine v56.6...")
+            self.log("Initializing Migration Engine v57.3 (Product Business Test Cut)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -3925,9 +3932,21 @@ class QLAdminEnterpriseIntegrationSuite:
                 if t_id.lower() == "quikplan":
                     overlay_cfg = resolve_crosswalk_overlay_config()
                     cw_authority = load_crosswalk_authority(cw_path) if cw_path and os.path.exists(cw_path) else None
+                    var_cfg = VariationClassificationConfig.from_env_and_defaults(self._app_base_dir())
+                    audit_rows = classify_all_plans(var_cfg)
+                    audit_path = os.path.normpath(os.path.join(out_dir, "variation_code_audit.csv"))
+                    write_variation_audit_csv(audit_rows, audit_path)
+                    self.log(f"Variation audit: {audit_path} ({len(audit_rows)} plans, "
+                             f"auto_apply={'Y' if var_cfg.auto_apply_variation_codes else 'N'})")
+                    variation_recs = recommendations_by_plan(audit_rows)
                     output = convert_quikplan_to_output(
                         source, rules, lookups, trans_map, cw_map, schema, overlay_cfg, cw_authority,
+                        variation_recs, var_cfg.auto_apply_variation_codes,
                     )
+                    qdf = pd.DataFrame(output, columns=schema)
+                    qdf = apply_rate_variation_flag_enrichment(qdf, self._app_base_dir())
+                    output = qdf[schema].values.tolist()
+                    self.log(f"Rate variation flags applied (R7B): {int((qdf['PLANVALOPT'] == 'Y').sum())} plans PLANVALOPT=Y")
                 else:
                     output = []
                     for i, src_row in source.iterrows():

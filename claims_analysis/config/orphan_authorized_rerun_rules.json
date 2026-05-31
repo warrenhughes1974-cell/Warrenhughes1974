@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "description": "Phase 14D orphan resolution authorized rerun governance.",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE14D-ORPHAN-RERUN",
+  "baseline_orphan_source": "phase11_prototype_orphan_analysis",
+  "prerequisite_phases": ["14A", "14B"],
+  "resolution_logic": {
+    "orphan_resolved_when_parent_in_prototype": true,
+    "preserve_unresolved_orphans": true
+  }
+}

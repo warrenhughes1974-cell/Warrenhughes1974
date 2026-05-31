@@ -1,0 +1,10 @@
+=== Phase 17A UAT Candidate Segmentation Summary ===
+
+Rollback snapshot: PHASE17A-UAT-SEGMENTATION-20260528T201744Z
+UAT candidate QUIKCLMS: 5122
+UAT candidate QUIKCLMP: 1335
+Deferred from UAT (claims): 344
+
+UAT inclusion: reconciliation PASS, no orphan payments, not surrender-hold, not rejected-unbalanced.
+CSV outputs only. production_dbf_flag=N
+No production DBFs generated.

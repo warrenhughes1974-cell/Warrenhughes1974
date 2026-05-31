@@ -1,0 +1,4 @@
+claim_family,baseline_funded_no_disbursement,linkage_accepted_count,funded_no_disbursement_reduction_pct,baseline_orphan_count,orphan_reduced_count,orphan_reduction_pct,baseline_balanced_count,enhanced_balanced_count,balancing_improvement_count,balancing_improvement_pct
+DEATH_CLAIM,204,0,0.0,219,0,0.0,430,430,0,0.0
+DISBURSEMENT_CLAIM,0,0,0.0,0,0,0.0,320,320,0,0.0
+SURRENDER_CLAIM,7986,0,0.0,8009,0,0.0,3876,3880,4,0.05

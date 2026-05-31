@@ -1,0 +1,21 @@
+=== Phase 13A Trustee Payment Recovery Governance Summary ===
+
+Total trustee-routing payments analyzed: 243
+QA recovery candidates (not auto-approved): 168
+Rulebook-eligible (gating-only block): 168
+Parent-claim-blocked: 75
+
+Recovery scenario distribution:
+  TRUSTEE_RULEBOOK_READY_ELIGIBLE: 168
+  TRUSTEE_PARENT_CLAIM_BLOCKED: 75
+
+Enterprise notes:
+  - No trustee payments auto-approved
+  - Primary recoverable population blocked by derivation_status gating only
+  - production_dbf_flag=N on all outputs
+
+Output files:
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase13_controlled_enterprise_integration\trustee_payment_recovery_rules.json
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase13_controlled_enterprise_integration\trustee_routing_recovery_analysis.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase13_controlled_enterprise_integration\trustee_recovery_candidate_population.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase13_controlled_enterprise_integration\trustee_rule_refinement_recommendations.csv

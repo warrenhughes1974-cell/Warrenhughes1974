@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "description": "Phase 14B lifecycle balancing replay authorization (no forced balancing).",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE14B-LIFECYCLE-REPLAY",
+  "authorized_failure_pattern": "LIFECYCLE_EXCLUSION_GAP",
+  "authorized_governance_status": "SAFE_TO_REPROCESS",
+  "replay_authorization": {
+    "require_failure_pattern": "LIFECYCLE_EXCLUSION_GAP",
+    "require_min_lifecycle_excluded": 0.01,
+    "projected_balance_tolerance": 0.01,
+    "allow_large_residual_after_replay": true
+  },
+  "governance_status_default": "SAFE_TO_REPROCESS",
+  "severity_default": "MEDIUM",
+  "remediability_default": "RECOVERABLE"
+}

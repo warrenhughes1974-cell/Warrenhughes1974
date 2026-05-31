@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "description": "Phase 17C-17F governance reporting and workbench rules.",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE17-GOVERNANCE-REPORTING",
+  "go_live_target_date": "2026-09-01",
+  "baseline_metrics": {
+    "phase15_quikclms_count": 5466,
+    "phase15_quikclmp_count": 2078,
+    "phase11_quikclms_count": 5182,
+    "phase11_quikclmp_count": 1910,
+    "phase15_orphan_count": 374,
+    "phase11_orphan_count": 743,
+    "phase15_recon_pass_rate_pct": 98.08,
+    "phase11_recon_pass_rate_pct": 96.51
+  },
+  "example_sample_sizes": {
+    "orphan_examples": 10,
+    "surrender_examples": 10,
+    "trustee_replay_examples": 10,
+    "lifecycle_replay_examples": 10,
+    "unresolved_balancing_examples": 10,
+    "replay_success_examples": 10
+  },
+  "workbench_queue_limits": {
+    "surrender_review": 500,
+    "orphan_review": 374,
+    "high_priority_decisions": 50
+  },
+  "business_explanation_templates": {
+    "ORPHAN_PAYMENT": "This payment cannot be linked to an accepted claim header in the prototype. The parent claim must be remediated before UAT testing can include this payment.",
+    "SURRENDER_REVIEW": "This surrender claim has offset/residual activity that requires business review before it can enter the UAT candidate population.",
+    "UNBALANCED_CLAIM": "Financial components for this claim do not balance within tolerance. Business or rule refinement is required before UAT inclusion.",
+    "RECONCILIATION_FAIL": "Claim header and payment totals do not reconcile. This claim is held from UAT until reconciliation passes.",
+    "UAT_CLEARED": "This record passed governance checks and is cleared for UAT candidate testing."
+  },
+  "rulebook_lineage": "phase17a|phase17b|phase17c|phase17d|phase17e|phase17f"
+}

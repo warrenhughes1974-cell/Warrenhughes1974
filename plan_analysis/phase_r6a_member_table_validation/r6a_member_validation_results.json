@@ -1,0 +1,65 @@
+{
+  "phase": "R6A MEMBER TABLE VALIDATION",
+  "emit_dir": "plan_analysis/phase_r5_rate_loader/emitted_dbf",
+  "member_tables": 5,
+  "total_member_rows": 384,
+  "distinct_plans_in_keys": 64,
+  "structural": [
+    {
+      "table": "QuikPlGd",
+      "row_count": 110,
+      "distinct_plan_count": 64,
+      "status": "PASS",
+      "issues": [],
+      "placeholders": {}
+    },
+    {
+      "table": "QuikPlUw",
+      "row_count": 80,
+      "distinct_plan_count": 64,
+      "status": "PASS",
+      "issues": [],
+      "placeholders": {}
+    },
+    {
+      "table": "QuikPlBd",
+      "row_count": 66,
+      "distinct_plan_count": 64,
+      "status": "PASS",
+      "issues": [],
+      "placeholders": {
+        "BDLOWVAL_ZERO": 66
+      }
+    },
+    {
+      "table": "QuikPlSt",
+      "row_count": 64,
+      "distinct_plan_count": 64,
+      "status": "PASS",
+      "issues": [],
+      "placeholders": {
+        "MLOANINT_BLANK": 64
+      }
+    },
+    {
+      "table": "QuikPlNb",
+      "row_count": 64,
+      "distinct_plan_count": 64,
+      "status": "PASS",
+      "issues": [],
+      "placeholders": {
+        "TERMDATE_OPEN": 64
+      }
+    }
+  ],
+  "referential_issues": [],
+  "referential_pass": true,
+  "placeholder_governance": {
+    "BDLOWVAL": "0 \u2014 MEMBER_PLACEHOLDER_DEFERRED (band breakpoints; business input pending)",
+    "MLOANINT": "blank \u2014 MEMBER_PLACEHOLDER_DEFERRED (loan interest; business input pending)",
+    "TERMDATE": "open/blank \u2014 MEMBER_PLACEHOLDER_DEFERRED (availability end date pending)",
+    "note": "These are expected and must NOT be treated as defects."
+  },
+  "sample_validation_rows": 31,
+  "overall_pass": true
+}

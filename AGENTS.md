@@ -25,6 +25,7 @@ WHEN MAKING CHANGES:
 BUSINESS RULES:
 - MPHASE 1 = base coverage
 - riders/supplementals use MPHASE > 1
+- BENEFIT_SEQ 99 / BENEFIT_TYPE UV (blank PLAN) = EXPECTED_NON_PRODUCT_ROW — non-convertible; see plan_governance/non_product_row_governance_rule.md
 - preserve relationship priority:
   RU -> INSD -> IN
 - preserve existing crosswalk behavior unless explicitly requested

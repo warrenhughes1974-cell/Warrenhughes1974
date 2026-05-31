@@ -1,0 +1,152 @@
+{
+  "version": "1.0",
+  "description": "QLAdmin Help PDF domain alignment reference rows for Phase 22B analysis.",
+  "manual_path": "docs/claims_conversion_reference/QLAdmin_Help.pdf",
+  "production_dbf_flag": "N",
+  "rows": [
+    {
+      "qladmin_manual_section": "7.150 QuikLoan - Policy Loans (p.827-828)",
+      "qladmin_table": "QuikLoan",
+      "qladmin_field": "MLOANACCR",
+      "field_description": "Accrued interest on policy loan",
+      "observed_lifepro_pattern": "451<->412 loan interest capitalization (0412 LOAN_INTEREST_OFFSET)",
+      "current_conversion_route": "SURRENDER_CLAIM -> QUIKCLMS.MINTAMT",
+      "potential_target_domain": "QuikLoan.MLOANACCR + Loan History (loan interest charged)",
+      "semantic_alignment_assessment": "MISALIGNED",
+      "business_interpretation": "Annual loan interest accrual belongs in policy loan domain, not claim interest.",
+      "recommended_governance_action": "SEMANTIC_GOVERNANCE_HOLD — exclude from QUIKCLMS emit pending QuikLoan design"
+    },
+    {
+      "qladmin_manual_section": "7.150 QuikLoan - Policy Loans (p.827-828)",
+      "qladmin_table": "QuikLoan",
+      "qladmin_field": "MLOANBAL",
+      "field_description": "Loan balance including capitalized interest",
+      "observed_lifepro_pattern": "451<->412 pairs increasing loan balance",
+      "current_conversion_route": "Not populated; misrouted as claim header only",
+      "potential_target_domain": "QuikLoan.MLOANBAL",
+      "semantic_alignment_assessment": "MISALIGNED",
+      "business_interpretation": "Capitalization increases loan balance per Loan Maintenance and Anniversary Processing.",
+      "recommended_governance_action": "Future QuikLoan conversion spike — not in scope Phase 22"
+    },
+    {
+      "qladmin_manual_section": "7.150 QuikLoan - Policy Loans (p.827-828)",
+      "qladmin_table": "QuikLoan",
+      "qladmin_field": "MLOANINT",
+      "field_description": "Loan interest rate",
+      "observed_lifepro_pattern": "Policy loan rate on Coverage Tab / Plan Information",
+      "current_conversion_route": "QUIKCLMS.MINTRATE=0 on pseudo-claims",
+      "potential_target_domain": "QuikLoan.MLOANINT",
+      "semantic_alignment_assessment": "MISALIGNED",
+      "business_interpretation": "Loan rate is policy-loan attribute, not claim MINTRATE.",
+      "recommended_governance_action": "Hold pseudo-claims; do not populate claim interest rate fields"
+    },
+    {
+      "qladmin_manual_section": "7.150 QuikLoan - Policy Loans (p.827-828)",
+      "qladmin_table": "QuikLoan",
+      "qladmin_field": "MLOANINTX",
+      "field_description": "Loan interest type (A=advance, R=arrears)",
+      "observed_lifepro_pattern": "LifePRO loan interest timing",
+      "current_conversion_route": "Not mapped",
+      "potential_target_domain": "QuikLoan.MLOANINTX",
+      "semantic_alignment_assessment": "NOT_IMPLEMENTED",
+      "business_interpretation": "Interest in advance vs arrears affects capitalization timing per manual p.130-132.",
+      "recommended_governance_action": "Document for future QuikLoan mapping"
+    },
+    {
+      "qladmin_manual_section": "7.150 QuikLoan - Policy Loans (p.827-828)",
+      "qladmin_table": "QuikLoan",
+      "qladmin_field": "MLOANIDT",
+      "field_description": "Interest paid to date (manual: MLOANIDT; alias MLOANPDT in business spec)",
+      "observed_lifepro_pattern": "Loan anniversary interest capitalization dates (~Jul 24 annual)",
+      "current_conversion_route": "QUIKCLMS.RPTDATE only",
+      "potential_target_domain": "QuikLoan.MLOANIDT",
+      "semantic_alignment_assessment": "MISALIGNED",
+      "business_interpretation": "Report date on pseudo-surrender claim misrepresents loan paid-to semantics.",
+      "recommended_governance_action": "SEMANTIC_GOVERNANCE_HOLD"
+    },
+    {
+      "qladmin_manual_section": "7.150 QuikLoan - Policy Loans (p.827-828)",
+      "qladmin_table": "QuikLoan",
+      "qladmin_field": "MLOANDATE",
+      "field_description": "Loan balance date",
+      "observed_lifepro_pattern": "PACTG effective dates on 0412 transactions",
+      "current_conversion_route": "Mapped to claim RPTDATE",
+      "potential_target_domain": "QuikLoan.MLOANDATE + Loan History transaction date",
+      "semantic_alignment_assessment": "MISALIGNED",
+      "business_interpretation": "Loan transaction dates belong in Loan History, not claim report dates.",
+      "recommended_governance_action": "SEMANTIC_GOVERNANCE_HOLD"
+    },
+    {
+      "qladmin_manual_section": "7.150 QuikLoan - Policy Loans (p.827-828)",
+      "qladmin_table": "QuikLoan",
+      "qladmin_field": "MLOANPRIN",
+      "field_description": "Loan principal",
+      "observed_lifepro_pattern": "0411 loan principal offsets (absent in 0412-only pattern)",
+      "current_conversion_route": "QUIKCLMS.LOAN=0 on pseudo-claims",
+      "potential_target_domain": "QuikLoan.MLOANPRIN",
+      "semantic_alignment_assessment": "PARTIAL",
+      "business_interpretation": "0412-only cycles adjust accrued/capitalized interest, not principal surrender.",
+      "recommended_governance_action": "Do not treat as surrender claim"
+    },
+    {
+      "qladmin_manual_section": "7.150 QuikLoan - Policy Loans (p.827-828)",
+      "qladmin_table": "QuikLoan",
+      "qladmin_field": "MLOANBILL",
+      "field_description": "Billing loan payment amount",
+      "observed_lifepro_pattern": "Loan interest billing notices",
+      "current_conversion_route": "Not mapped",
+      "potential_target_domain": "QuikBlll.MLOANBILL (p.722-723)",
+      "semantic_alignment_assessment": "NOT_IMPLEMENTED",
+      "business_interpretation": "Billing loan interest is operational billing domain, not claims.",
+      "recommended_governance_action": "Exclude from claims pipeline"
+    },
+    {
+      "qladmin_manual_section": "7.67 QuikClms - Death Claims (p.733-734)",
+      "qladmin_table": "QUIKCLMS",
+      "qladmin_field": "CLAIMSTAT",
+      "field_description": "Claim status: Pending-1; Paid in Full-2; Settled-3; Denied-4; Matured-98; Surrenders-99",
+      "observed_lifepro_pattern": "0412-only INFERRED chains assigned 99",
+      "current_conversion_route": "Phase10B SURRENDER_CLAIM claimstat_default=99",
+      "potential_target_domain": "N/A — should not enter QUIKCLMS for loan-cap-only events",
+      "semantic_alignment_assessment": "MISALIGNED",
+      "business_interpretation": "Status 99 requires cash surrender/death claim processing via Policy Maintenance, not loan capitalization.",
+      "recommended_governance_action": "SEMANTIC_GOVERNANCE_HOLD — block emit"
+    },
+    {
+      "qladmin_manual_section": "7.67 QuikClms - Death Claims (p.733-734)",
+      "qladmin_table": "QUIKCLMS",
+      "qladmin_field": "MINTAMT",
+      "field_description": "Amount of interest earned (claim benefit interest context)",
+      "observed_lifepro_pattern": "0412 loan interest capitalized amounts",
+      "current_conversion_route": "mintamt <- interest_amount / loan_interest_offset",
+      "potential_target_domain": "QuikLoan.MLOANACCR (not QUIKCLMS.MINTAMT)",
+      "semantic_alignment_assessment": "MISALIGNED",
+      "business_interpretation": "Manual defines MINTAMT as claim interest earned; loan capitalization is not claim interest.",
+      "recommended_governance_action": "SEMANTIC_GOVERNANCE_HOLD"
+    },
+    {
+      "qladmin_manual_section": "5.1.1.6 Claims Tab (p.44, p.48)",
+      "qladmin_table": "Claims Tab (UI)",
+      "qladmin_field": "Status / Net Payment / Payee",
+      "field_description": "Displays pending/finalized death claims and cash surrenders with settlement semantics",
+      "observed_lifepro_pattern": "Repeated annual zero-payment surrender rows on active policies",
+      "current_conversion_route": "QUIKCLMS without QUIKCLMP",
+      "potential_target_domain": "Loan History + QuikLoan (not Claims Tab)",
+      "semantic_alignment_assessment": "MISALIGNED",
+      "business_interpretation": "Active policy with recurring surrendered claims violates Claims Tab business semantics.",
+      "recommended_governance_action": "SEMANTIC_GOVERNANCE_HOLD + business review workbench"
+    },
+    {
+      "qladmin_manual_section": "5.1.2.7 Loan History (p.74-75)",
+      "qladmin_table": "Loan History / QuikLoan",
+      "qladmin_field": "Transaction Type / Accrued Interest / Current Balance",
+      "field_description": "Loan transactions include loan interest charged; tables affected: QuikLoan",
+      "observed_lifepro_pattern": "451<->412 annual cycles",
+      "current_conversion_route": "SURRENDER_CLAIM reconstruction",
+      "potential_target_domain": "Loan History transaction type = loan interest charged",
+      "semantic_alignment_assessment": "CORRECT_TARGET",
+      "business_interpretation": "QLAdmin manual explicitly places loan interest charged in Loan History/QuikLoan.",
+      "recommended_governance_action": "Future architecture: route 0412/451 to loan domain"
+    }
+  ]
+}

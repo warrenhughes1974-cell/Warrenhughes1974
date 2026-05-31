@@ -1,0 +1,9 @@
+issue_type,observed_pattern,recommended_refinement,expected_impact,implementation_priority,confidence_level
+claim_family_balancing,DEATH_CLAIM has 1264/1694 unbalanced,Family-specific balancing rules for DEATH_CLAIM,HIGH,P1,MEDIUM
+claim_family_balancing,DISBURSEMENT_CLAIM has 320/320 unbalanced,Family-specific balancing rules for DISBURSEMENT_CLAIM,HIGH,P1,MEDIUM
+clearing_hub_inflation,976 claims include 0038 clearing in raw totals,Exclude clearing hub from net rollup or pair 0038 with payout/debit codes,HIGH,P1,HIGH
+disbursement_rollup,320 disbursement claims lack benefit component in net formula,Separate surrender/disbursement chains; use payment_amount as net for DISBURSEMENT_CLAIM,HIGH,P1,HIGH
+delayed_payout,1555 claims span multiple days,Add delayed payout detection across expanded date windows,MEDIUM,P2,LOW
+grouping_window,953 claims have more PACTG rows in window than grouped count,Expand settlement window or refine benefit_seq grouping,MEDIUM,P2,MEDIUM
+loan_offset_chains,Loan interest offset-only chains balance when isolated,Improve loan offset grouping separate from cash surrender events,MEDIUM,P3,HIGH
+withholding_linkage,0810/0820 codes largely unobserved in extract,Improve withholding linkage when tax codes appear in future extracts,LOW,P3,MEDIUM

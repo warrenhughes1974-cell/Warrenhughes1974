@@ -1,0 +1,10 @@
+=== Phase 16D Production Readiness Threshold Forecast ===
+
+Rollback snapshot: PHASE16D-READINESS-FORECAST-20260524T192224Z
+Current orphan count: 374 (18.0%)
+Orphans to resolve for <=5% rate: 271
+Estimated parent claims needed: 149
+Scenarios modeled: 5
+
+Forecast only. No auto-remediation.
+production_dbf_flag=N

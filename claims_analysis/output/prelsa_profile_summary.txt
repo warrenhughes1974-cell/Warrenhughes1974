@@ -1,0 +1,27 @@
+=== PRELSA Relationship Profile Summary ===
+PRELSA input: C:\Users\warren\Documents\GitHub\Warrenhughes1974\docs\claims_conversion_reference\RelationshipNameAddress_Extract.csv
+PACTG cross-reference: C:\Users\warren\Documents\GitHub\Warrenhughes1974\docs\claims_conversion_reference\PACTG_Accounting_Extract20260427.csv
+Total rows read: 46877
+Separator rows skipped: 1
+Usable rows: 46876
+Distinct policies: 5083
+Distinct NAME_ID count: 13565
+Distinct relationship codes: 19
+Relationship codes observed: AS|B1|B2|BK|CU|GP|GU|IN|JE|ML|O1|P1|PA|PE|PO|PW|SA|TR|WA
+Individual rows: 38518
+Business rows: 8358
+Address completeness (ADDR_LINE_1): 94.34%
+Tax ID completeness (SSN or TIN): 92.77%
+Top relationship overlaps: INSURED_OWNER_SAME|INSURED_PAYOR_OWNER_SAME(2621); BENEFICIARY_PAYEE_SAME(1800); INSURED_OWNER_SAME|INSURED_PAYEE_SAME|INSURED_PAYOR_OWNER_SAME(1215); GENERAL_ROLE_OVERLAP(1032); MULTI_ROLE_COMPLEX(450)
+Claim-active policies (PACTG): 2909
+Claim-linked policies in PRELSA: 2909
+
+Output files generated:
+  - claims_analysis/output\relationship_code_frequency.csv
+  - claims_analysis/output\relationship_hierarchy_analysis.csv
+  - claims_analysis/output\beneficiary_sequence_analysis.csv
+  - claims_analysis/output\relationship_overlap_analysis.csv
+  - claims_analysis/output\payee_candidate_analysis.csv
+  - claims_analysis/output\address_quality_analysis.csv
+  - claims_analysis/output\tax_identifier_analysis.csv
+  - claims_analysis/output\relationship_resolution_recommendations.csv

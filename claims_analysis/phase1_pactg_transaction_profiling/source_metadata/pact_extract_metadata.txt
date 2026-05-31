@@ -1,0 +1,26 @@
+Source File:
+PACTG_Accounting_Extract20260427.csv
+
+Sanitized:
+YES
+
+Total Rows:
+399,059
+
+Usable Rows:
+399,058
+
+Distinct Policies:
+4,627
+
+Date Range:
+20040326 - 50500904
+
+TRANS_AMOUNT Populated:
+100%
+
+Profiler Version:
+v1
+
+Generated:
+2026-05-24

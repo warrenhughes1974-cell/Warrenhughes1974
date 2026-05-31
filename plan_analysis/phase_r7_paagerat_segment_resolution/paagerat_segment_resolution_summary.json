@@ -1,0 +1,25 @@
+{
+  "phase": "R7 PAAGERAT SEGMENT RESOLUTION",
+  "sources": {
+    "paagerat": "plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv",
+    "pcovrsgt": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
+    "pcovr": "plan_analysis/source_data/coverage/PCOVR.csv",
+    "crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx"
+  },
+  "business_rules": {
+    "join": "PAAGERAT.COVERAGE_ID -> PCOVRSGT.SEGT_ID -> PCOVRSGT.COVERAGE_ID -> PCOVR -> crosswalk PLAN",
+    "type_code_filter": "PR only for policy premium rates"
+  },
+  "row_status": {
+    "IN_SCOPE": 14772,
+    "EXCLUDED": 9466,
+    "BAD_VALUE": 186
+  },
+  "distinct_plans_resolved": 75,
+  "distinct_plans_emitted_quikgps": 11,
+  "overlap_plans": 0,
+  "paagerat_only_plans": 75,
+  "unresolved_pr_segments": 0,
+  "segment_keys_loaded": 222,
+  "all_pr_segments_resolved": true
+}

@@ -1,0 +1,65 @@
+TABLE_NAME,FIELD_NAME,DATA_TYPE,BUSINESS_MEANING,LIKELY_RUNTIME_USAGE,SOURCE_DEPENDENCY,NOTES
+QuikPlan,PLAN,"CHAR(6)",6-position plan code; pos 1 = product type (system-defined) pos 2-6 = client-defined,Primary plan identity; root of every rate lookup,LifePRO plan/form crosswalk,CONFIRMED meaning (manual p537); already emitted by current quikplan conversion
+QuikPlan,PAR,"CHAR(1)",Participating code 0=non-par 1=participating,Gates whether Dividend (DV) rates apply,LifePRO par indicator,CONFIRMED (manual p538); dividends enabled only when PAR=1
+QuikPlan,VARGP,"CHAR(1)/NUM",Gross premium variation code 0 Level 1 Policy-yr 2 IssueAge+PolicyYr 3 Attained-age 4 Not-on-file,Determines GP factor-grid shape (single vs duration vs age-duration),LifePRO premium structure,CONFIRMED (manual p538 Var GP Code)
+QuikPlan,VARDB,"CHAR(1)/NUM",Death benefit variation code 0 Level 1 Policy-yr 2 IssueAge+PolicyYr 3 Attained-age 4 Not-on-file,Determines DB factor-grid shape,LifePRO DB structure,CONFIRMED (manual p537 Var DB Code)
+QuikPlan,PLANVALOPT,"CHAR(1)",PVO indicator Y/N - whether Plan Values Options + Rate File Options are enabled (V5),Master switch enabling segmented rate resolution,QLAdmin version + plan creation date,LIKELY = manual PVO indicator (p544); CONFIRMED concept UNKNOWN exact field name
+QuikPlan,GDVARYGP,"CHAR(1)/LOGICAL",Does Gross Premium vary by GENDER,Adds Gender to GP key cardinality when Y,Plan segmentation design,CONFIRMED matrix meaning (manual p544); field present in QUIKPLAN_SCHEMA
+QuikPlan,GDVARYDB,"CHAR(1)/LOGICAL",Does Death Benefit vary by GENDER,Adds Gender to DB key when Y,Plan segmentation design,CONFIRMED meaning
+QuikPlan,GDVARYCV,"CHAR(1)/LOGICAL",Does Cash Value vary by GENDER,Adds Gender to CV key when Y,Plan segmentation design,CONFIRMED meaning
+QuikPlan,GDVARYTV,"CHAR(1)/LOGICAL",Does Terminal Reserve vary by GENDER,Adds Gender to TV key when Y,Plan segmentation design,CONFIRMED meaning
+QuikPlan,GDVARYDV,"CHAR(1)/LOGICAL",Does Dividend vary by GENDER,Adds Gender to DV key when Y,Plan segmentation design,CONFIRMED meaning
+QuikPlan,UWVARYGP,"CHAR(1)/LOGICAL",Does Gross Premium vary by UW RISK CLASS,Adds UW class to GP key when Y,Plan segmentation design,CONFIRMED meaning
+QuikPlan,UWVARYDB,"CHAR(1)/LOGICAL",Does Death Benefit vary by UW RISK CLASS,Adds UW class to DB key when Y,Plan segmentation design,CONFIRMED meaning
+QuikPlan,UWVARYCV,"CHAR(1)/LOGICAL",Does Cash Value vary by UW RISK CLASS,Adds UW class to CV key when Y,Plan segmentation design,CONFIRMED meaning
+QuikPlan,UWVARYTV,"CHAR(1)/LOGICAL",Does Terminal Reserve vary by UW RISK CLASS,Adds UW class to TV key when Y,Plan segmentation design,CONFIRMED meaning
+QuikPlan,UWVARYDV,"CHAR(1)/LOGICAL",Does Dividend vary by UW RISK CLASS,Adds UW class to DV key when Y,Plan segmentation design,CONFIRMED meaning
+QuikPlan,BDVARYGP,"CHAR(1)/LOGICAL",Does Gross Premium vary by BAND,Adds Band to GP key when Y,Plan band design,CONFIRMED meaning (BD = insurance band)
+QuikPlan,BDVARYDB,"CHAR(1)/LOGICAL",Does Death Benefit vary by BAND,Adds Band to DB key when Y,Plan band design,CONFIRMED meaning
+QuikPlan,BDVARYCV,"CHAR(1)/LOGICAL",Does Cash Value vary by BAND,Adds Band to CV key when Y,Plan band design,CONFIRMED meaning
+QuikPlan,BDVARYTV,"CHAR(1)/LOGICAL",Does Terminal Reserve vary by BAND,Adds Band to TV key when Y,Plan band design,CONFIRMED meaning
+QuikPlan,BDVARYDV,"CHAR(1)/LOGICAL",Does Dividend vary by BAND,Adds Band to DV key when Y,Plan band design,CONFIRMED meaning
+QuikPlan,STVARYGP,"CHAR(1)/LOGICAL",Does Gross Premium vary by ISSUE STATE/COUNTRY,Adds State/country to GP key when Y,Plan state design,CONFIRMED meaning
+QuikPlan,STVARYDB,"CHAR(1)/LOGICAL",Does Death Benefit vary by ISSUE STATE/COUNTRY,Adds State/country to DB key when Y,Plan state design,CONFIRMED meaning
+QuikPlan,STVARYCV,"CHAR(1)/LOGICAL",Does Cash Value vary by ISSUE STATE/COUNTRY,Adds State/country to CV key when Y,Plan state design,CONFIRMED meaning
+QuikPlan,STVARYTV,"CHAR(1)/LOGICAL",Does Terminal Reserve vary by ISSUE STATE/COUNTRY,Adds State/country to TV key when Y,Plan state design,CONFIRMED meaning
+QuikPlan,STVARYDV,"CHAR(1)/LOGICAL",Does Dividend vary by ISSUE STATE/COUNTRY,Adds State/country to DV key when Y,Plan state design,CONFIRMED meaning
+QuikPlan,INTMETHCV,"CHAR(1)/NUM",Cash value interest method (stored behind Cash Values button in V5),Drives CV interpolation/compounding at runtime,Actuarial product spec,CONFIRMED placement (manual p543/546); enum UNKNOWN
+QuikPlan,INTMETHTV,"CHAR(1)/NUM",Reserve (terminal value) interest method,Drives TV/NP reserve compounding,Actuarial product spec,CONFIRMED placement; LIKELY same enum as Reserve Interest Method 0=Curtate 1=Continuous
+QuikPlan,DEFICIENCY,"CHAR(1)",Calc Dfcy - compute deficiency reserves in valuation (N = manual),Triggers deficiency reserve calc when stat net premium > gross premium,Actuarial product spec,CONFIRMED (manual p538)
+QuikPlan,NFOINT,"NUM",Non-forfeiture / NFO interest rate (rebate),Used in NFO and surrender value calcs,Actuarial product spec,LIKELY = NFO interest rebate stored behind Cash Values button
+QuikRidr,(plan/phase keys),"CHAR",Coverage Master File - links a policy coverage/phase to its PLAN,Resolves which plan rate set a coverage uses,Existing quikridr conversion,CONFIRMED table role (manual p543); already emitted today
+QuikQxs,(mortality code + qx),"MIXED",Mortality Rates table keyed by mortality table code,Supplies qx for reserve / NP / CV / deficiency calcs,Actuarial mortality libraries,CONFIRMED table exists; codes per Appendix 6.9 (e.g. A1 1980 CSO Male / 11 2001 CSO Male / 51 2017 CSO Male)
+QUIKPLGP,PLAN,"CHAR(6)",Plan code owning this GP rate-file-option key,Join root to QuikGps factors,quikplan,LIKELY key-layer column; UNKNOWN exact layout (table name user-supplied not in manual)
+QUIKPLGP,GENDER,"CHAR",Gender segment of the key (default 0),Selects GP segmentation branch,Plan values options,LIKELY; populated only when GDVARYGP=Y else default 0
+QUIKPLGP,UWCLASS,"CHAR(2)",UW risk class segment (default 00),Selects GP segmentation branch,Plan values options,LIKELY; populated only when UWVARYGP=Y
+QUIKPLGP,BAND,"CHAR(2)",Insurance band segment (default 00),Selects GP segmentation branch,Plan values options,LIKELY; populated only when BDVARYGP=Y
+QUIKPLGP,ISSCNTRY,"CHAR",Issue country segment,Selects GP segmentation branch,Plan values options,LIKELY; pairs with ISSUEST
+QUIKPLGP,ISSUEST,"CHAR(2)",Issue state segment,Selects GP segmentation branch,Plan values options,LIKELY; populated only when STVARYGP=Y
+QUIKPLGP,EFFDATE,"DATE",Effective date / rate generation,Selects which rate generation applies,Actuarial rate filing,LIKELY; CONFIRMED that state/country rate files can have different effective dates (manual p545)
+QUIKPLGP,VALUES,"CHAR(1)",Values present indicator Y/N,Prevents delete of in-use keys; signals whether QuikGps rows exist,QLAdmin maintenance,CONFIRMED concept (manual p546 Values column); LIKELY a stored flag
+QUIKPLCV,(same key columns),"MIXED",Cash Value rate-file-option keys,Join root to QuikCvs,quikplan + PVO,LIKELY mirror of QUIKPLGP for CV family
+QUIKPLDB,(same key columns),"MIXED",Death Benefit rate-file-option keys,Join root to QuikDbs,quikplan + PVO,LIKELY mirror for DB family
+QUIKPLDV,(same key columns),"MIXED",Dividend rate-file-option keys,Join root to QuikDvs,quikplan + PVO,LIKELY mirror for DV family (only when PAR=1)
+QUIKPLTV,(same key columns),"MIXED",Reserve/Terminal Value rate-file-option keys; also carries reserve assumptions,Join root to QuikTvs + QuikNps; holds mortality/reserve method/interest,quikplan + PVO + Reserves button,LIKELY holds RSVINT/RSVMETH/MORT/ETIMORT/INTMETH per manual 'Reserves button' description; CONFIRMED these assumptions live behind PVO Reserves button
+QuikGps,PLAN,"CHAR(6)",Plan code,Lookup root,QUIKPLGP key,LIKELY uniqueness component
+QuikGps,GENDER,"CHAR",Gender segment,Segment selector,policy gender,LIKELY uniqueness component (when GDVARYGP=Y)
+QuikGps,UWCLASS,"CHAR(2)",UW class segment,Segment selector,policy UW class,LIKELY uniqueness component
+QuikGps,BAND,"CHAR(2)",Band segment,Segment selector,policy band,LIKELY uniqueness component
+QuikGps,ISSUEST,"CHAR(2)",Issue state segment,Segment selector,policy issue state,LIKELY uniqueness component
+QuikGps,EFFDATE,"DATE",Rate generation effective date,Generation selector,rate filing,LIKELY uniqueness component
+QuikGps,AGE,"NUM",Issue age (or attained age per VARGP code),Row selector by age,policy issue age,LIKELY; CONFIRMED valuation sorts by issue age
+QuikGps,CNTL,"NUM",Duration page control (decade selector),Selects which 10-duration block GP0-GP9 represent,n/a,UNKNOWN - user hypothesis: CNTL=0 -> dur 0-9 CNTL=1 -> 10-19; NOT in manual
+QuikGps,GP0..GP9,"NUM(10 cols)",Gross premium factor for durations 0-9 within the CNTL page,Factor retrieval,actuarial rate file,UNKNOWN exact width/precision; user-supplied layout only
+QuikCvs,CV0..CV9,"NUM(10 cols)",Cash value factors per duration within CNTL page,Factor retrieval,actuarial rate file,UNKNOWN exact layout; mirrors GP structure (LIKELY)
+QuikDbs,DB0..DB9,"NUM(10 cols)",Death benefit factors per duration,Factor retrieval,actuarial rate file,UNKNOWN exact layout
+QuikDvs,DV0..DV9,"NUM(10 cols)",Dividend factors per duration,Factor retrieval,actuarial rate file,UNKNOWN exact layout; only when PAR=1
+QuikTvs,TV0..TV9,"NUM(10 cols)",Terminal reserve factors per duration,Factor retrieval in valuation,actuarial reserve file,UNKNOWN exact layout; per-plan in V5 (no basis+subplan sharing)
+QuikNps,NP0..NP9,"NUM(10 cols)",Net premium factors per duration,Reserve + deficiency calc,actuarial reserve file,UNKNOWN exact layout; coupled with TV
+QuikTvs/QUIKPLTV,RSVINT,"NUM",Reserve interest rate,Reserve discounting,actuarial reserve assumption,CONFIRMED concept (Reserve Interest Rate); UNKNOWN which table physically stores it
+QuikTvs/QUIKPLTV,RSVMETH,"CHAR/NUM",Reserve method 1 NetLevel 2 FullPrelimTerm 3 CRVM 4 ModifiedRVM,Selects reserve formula,actuarial reserve assumption,CONFIRMED enum (manual p558)
+QuikTvs/QUIKPLTV,INTMETHCV,"CHAR/NUM",Cash value interest method,CV calc compounding,actuarial assumption,CONFIRMED concept; UNKNOWN enum
+QuikTvs/QUIKPLTV,MORT,"CHAR(2)",Mortality table code reference,Selects QuikQxs qx set,Mortality Table Codes appendix,CONFIRMED mortality-code system; code list confirmed (p651-656)
+QuikTvs/QUIKPLTV,ETIMORT,"CHAR(2)",ETI (extended term) mortality table code,Selects qx for ETI NFO calc,Mortality Table Codes appendix,CONFIRMED ETI mortality stored behind Cash Values button (p543); code = appendix
+QuikTvs/QUIKPLTV,STOREMEANS,"CHAR/LOGICAL",Store mean reserves flag (mean vs terminal storage),Controls whether mean reserves are stored/used,n/a,UNKNOWN - not in manual extract; LIKELY mean-reserve storage option requires SME confirmation
+QuikTvs/QUIKPLTV,CALCMIDS,"CHAR/LOGICAL",Calculate mid-terminal / interpolated reserves flag,Controls mid-year reserve interpolation,n/a,UNKNOWN - not in manual extract; LIKELY mid-terminal reserve calc flag requires SME confirmation

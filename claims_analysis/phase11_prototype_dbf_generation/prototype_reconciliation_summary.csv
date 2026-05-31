@@ -1,0 +1,11 @@
+metric,value
+prototype_quikclms_rows,5182.0
+prototype_quikclmp_rows,1910.0
+rejected_claim_rows,4995.0
+rejected_payment_rows,390.0
+orphan_payment_count,743.0
+reconciliation_pass_pct,96.51
+duplicate_mseq_count,52.0
+residual_preserved_count,557.0
+payment_aggregation_variance_count,0.0
+balancing_variance_count,458.0

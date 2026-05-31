@@ -1,0 +1,4 @@
+claim_family,claim_count,balanced_count,unbalanced_count,avg_balancing_gap,median_balancing_gap,largest_balancing_gap,most_common_missing_components,most_common_reversal_patterns,reconciliation_risk_level
+DEATH_CLAIM,1694,430,1264,1865.17,45.02,77457.2,0411(1694); 0412(1694); 0810(1694),,HIGH
+DISBURSEMENT_CLAIM,320,0,320,2416.1,77.02,36564.48,0567(320); 1900(320); PAYOUT_ONLY_ROLLUP(320),,HIGH
+SURRENDER_CLAIM,8163,2840,5323,946.18,138.25,91999.48,0090(8163); WITHHOLDING_NOT_OBSERVED(8163); 1020(8056),,MEDIUM

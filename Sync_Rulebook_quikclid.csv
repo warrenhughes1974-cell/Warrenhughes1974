@@ -1,5 +1,0 @@
-Source_Field,Target_Field,Default_Value,Lookup_Table,Join_Key,Transformation_Note
-NAME_ID,MCLIENTID,,,
-POLICY_NUMBER,MPOLICY,,,
-BENEFIT_SEQ_NUMBER,MPHASE,,,
-RELATE_CODE,MRELATION

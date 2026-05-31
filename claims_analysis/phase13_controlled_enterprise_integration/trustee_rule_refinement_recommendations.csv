@@ -1,0 +1,3 @@
+observed_pattern,root_cause,recommended_rule_refinement,governance_status,expected_recovery_impact,production_dbf_flag
+75 trustee payments classified as TRUSTEE_PARENT_CLAIM_BLOCKED,PARENT_CLAIM_UNBALANCED,Preserve MODERATE_CONFIDENCE minimum; never auto-elevate INFERRED,PRODUCTION_BLOCKED,75,N
+168 trustee payments classified as TRUSTEE_RULEBOOK_READY_ELIGIBLE,DERIVATION_STATUS_GATING,Allow TRUSTEE_DERIVATION with validation PASS + rulebook_ready=Y + MODERATE+ confidence into QA-reviewed prototype subset,QA_REVIEW_REQUIRED,168,N

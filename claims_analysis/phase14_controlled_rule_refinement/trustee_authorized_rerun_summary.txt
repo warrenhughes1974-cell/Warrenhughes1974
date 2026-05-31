@@ -1,0 +1,17 @@
+=== Phase 14A Trustee Authorized Rerun Summary ===
+
+Rollback snapshot: PHASE14A-TRUSTEE-GATE-20260524T191539Z
+Trustee payments analyzed: 168
+Refined gate PASS (QA subset): 168
+Gate delta (baseline reject -> refined pass): 168
+
+Controls: trustee_recovery_eligible=Y, qa_review_required=Y, auto_approved=N
+Stable Phase 10A/11 engines NOT modified
+production_dbf_flag=N
+
+Output files:
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\trustee_gate_refinement_rules.json
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\trustee_refined_gate_results.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\trustee_qa_review_population.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\trustee_rulebook_gate_diff_analysis.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\trustee_authorized_rerun_summary.txt

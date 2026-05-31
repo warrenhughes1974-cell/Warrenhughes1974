@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "description": "Phase 13C orphan resolution governance (analysis only, no orphan suppression).",
+  "production_dbf_flag": "N",
+  "resolution_workflows": {
+    "PARENT_CLAIM_REMEDIATION": {
+      "parent_remediability": ["RECOVERABLE", "PARTIALLY_RECOVERABLE"],
+      "governance_status": "SAFE_TO_REPROCESS",
+      "severity": "HIGH",
+      "recommended_action": "Resolve parent UNBALANCED claim via Phase 13B workflow then re-run prototype generation"
+    },
+    "ORPHAN_QUARANTINE": {
+      "parent_remediability": ["NON_RECOVERABLE"],
+      "governance_status": "PRODUCTION_BLOCKED",
+      "severity": "CRITICAL",
+      "recommended_action": "Quarantine orphan payment in audit outputs; exclude from production DBF until parent resolved"
+    },
+    "PRODUCTION_EXCLUDE_POLICY": {
+      "governance_status": "PRODUCTION_BLOCKED",
+      "severity": "CRITICAL",
+      "recommended_action": "Maintain orphan in governance reports; never silently drop from audit trail"
+    }
+  },
+  "recoverability_thresholds": {
+    "parent_balanced_replay_eligible": true,
+    "orphan_amount_tolerance": 0.01
+  }
+}

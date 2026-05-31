@@ -1,0 +1,241 @@
+﻿pages with hits: 280
+--- PAGE 2 KEYS ['Loan History', 'Claims Tab']
+.................................................................................................................... 74 Loan History......................................................................................................................................................... 76 Premium History......................................................................................................................................................... 80 UL/ISWL History............................................
+
+--- PAGE 3 KEYS ['loan interest', 'Pending']
+................................................................................................................... 244 Loan Interest Notices.......................................................................................................................................................... 245 Email Group Bills .......................................................................................................................................................... 249 Post Premiums .............................
+
+--- PAGE 6 KEYS ['claim status', 'Pending']
+.......................................................................................................... 637 7 Health Claim Status Codes ................................................................................................................................... 638 8 Health Dependent Relationship Codes ................................................................................................................................... 639 9 Mortality Table Codes ...............................................
+
+--- PAGE 8 KEYS ['loan interest', 'QUIKCLMS', 'QUIKCLMP']
+............................................................................................. 722 58 QuikBlll - Billing Loan Interest ................................................................................................................................... 723 59 QuikBlss - Billing Social Security Days ................................................................................................................................... 724 60 QuikBnft - Health Plan Benefit Information .........................
+
+--- PAGE 9 KEYS ['Pending']
+............................................................................. 789 113 QuikHcsvpc - Health Claim Service Pending Codes ................................................................................................................................... 790 114 QuikHcsvrc - Health Claim Service ................................................................................................................................... 791 115 QuikHcwf - Medicare Supplement Claim Queue .............................
+
+--- PAGE 10 KEYS ['QuikLoan', 'QUIKLOAN', 'Surrender', 'surrender', 'policy loan']
+............................................................................................................... 827 150 QuikLoan - Policy Loans ................................................................................................................................... 828 151 QuikMemo - Policy Memos ................................................................................................................................... 829 152 QuikMib - MIB Documents ................................................
+
+--- PAGE 11 KEYS ['Pending']
+........................................................................................ 843 165 QuikPcde - Death Claim Pending Codes ................................................................................................................................... 844 166 QuikPcwa - Policy CWA Records ................................................................................................................................... 845 167 QuikPdoc - Plan Documents ..................................................
+
+--- PAGE 17 KEYS ['Pending']
+port staff is available during the hours of 7am CST to 6pm CST. Limited support may be available outside those hours, depending on staff availability or criticalsituations, and may be subject to a premium in addition to the clientÆs monthly support fee. Request Employee TrainingCustomized training is available for your team. Contact QLAdmin Support to discuss your trainingneeds, receive a quote, and schedule your training sessions..QLAdmin Support ExclusionsQLA is responsible for the QLAdmin program and program-rel
+
+--- PAGE 26 KEYS ['capitaliz', 'policy loan', 'Pending']
+s for policies that become paid-up, expired or matured. Process policies on Waiver of Premium. Process policy loans and capitalize interest. Process participating policies for the current dividend  and interest capitalization, updatethe next anniversary dividend. Archive reports that are scheduled to be archived .  Print scheduled policy correspondence  due to be printed, and record skipped policies ondaily Transaction Audit Report. Print automated policy correspondence  when a policy's status changes. Generate the
+
+--- PAGE 27 KEYS ['Pending']
+LWVR.rtf is generated. When the proof of continuing disability notice is generated, the waiver status will be updated toPending.  The policy will remain with policy status 32 and waiver status Pending until it is manuallyedited to Permanent or Approved.  If the status is updated to Approved, the cycle begins again. The policy premium waived will be all premiums through the next policy anniversary.  A record will beadded to the Premium History table with source code WVR, and a record will be added to the policy'stra
+
+--- PAGE 28 KEYS ['QuikLoan', 'QUIKLOAN', 'policy loan']
+ter FileQuikRidr Coverage Master FileQuikAbal Annuity BalanceQuikIswl Policy Values for UL/Interest Sensitive Whole LifeQuikLoan Policy LoansQuikDvs DividendsQuikDbs Death BenefitsQuikLetr Scheduled LettersRelated Topics:System Date 424 646 832 887 660 822 827 760 754 824 500
+
+--- PAGE 31 KEYS ['Pending']
+18 ⌐ 2026 QLAdmin Solutions QLAdmin Solutions  QLAdmin - Tutorial VideosTUTORIAL & VIDEO HELP TOPIC release it from a Pending status.  Billing/Premium TUTORIAL & VIDEO HELP TOPIC 1. Run a Billing Cycle Learn how to run direct notice and bank draft billing cycles . 2. Add Annuity to Auto- Withdrawal Schedule Learn how to add an annuity to the annuity auto-withdrawal schedule.  3. Process Auto-Annuity Withdrawals Learn to process auto annuity withdrawals  for regular, RMD, andSPIA.  Agency TUTORIAL & VIDEO HELP TOP
+
+--- PAGE 34 KEYS ['Pending']
+ enabled if a custom utility has not been created for that client. The available menu choices may vary for each user, depending on their individual system security settings . In addition, the menu options in Policy, Accounting and Data Maintenance may varydepending on whether the Health Insurance and Reinsurance modules are installed with QLAdmin. 489
+
+--- PAGE 43 KEYS ['policy loan']
+ the client and their policy.1.  Coverage Tab  Displays all coverage, insured and agent information, and any cashvalue, policy loan, or dividends for the policy. 228 205 106 32
+
+--- PAGE 44 KEYS ['Surrender', 'surrender', 'Claims Tab']
+ the data stored in a user-defined table which is customized by the user .6.  Claims Tab  Displays all death claim  and surrender data for a life policy, or health claim  data for a health policy.7.  Reinsurance Tab  Shows how much of a policy is retained and reinsured, the reinsurancecompany, treaty, and the reinsurance billing history.  Only clients thatare using the Reinsurance module will see this tab.8.  Underwriting Tab  Shows all underwriting information  on the policy. Users must havethe appropriate securit
+
+--- PAGE 46 KEYS ['loan interest', 'capitaliz', 'Surrender', 'surrender', 'policy loan', 'loan balance']
+r interestpayable in arrears. For interest payable in advance, this value is negativeand represents the unearned policy loan interest.(33)  Div Deposit Dividend accumulation deposit as of last anniversary or last dividendtransaction date. Not used for loan/overloan processing.(34)  Int Rate Rate of interest to be credited to dividend accumulations, based on therate in the Plan Information File at each policy anniversary.(35)  Accrued Int Accrued interest since the last anniversary or last dividend transaction.(36) 
+
+--- PAGE 48 KEYS ['loan interest', 'Surrender', 'surrender', 'policy loan', 'loan balance']
+ a policy is set in the Plan Information File  on the general tab, or onthe plan values options  tab for state-specific loan interest rates. When does an overloaned policy terminate?As part of Anniversary Processing, if a policy is overloaned, QLAdmin will search for the overloannotice named QLOVL.rtf  in the system data folder.áIf the document is found, the system willgenerate the overloan notice and wait 45 days to surrender the policy. If a loan payment is applied tothe policy within the 45 day period yet the po
+
+--- PAGE 56 KEYS ['Pending']
+isplay 5.1.1.4 Memo TabPolicy memos can be added as needed, or forced by the system after policy edits or maintenance,depending on the System Configuration  settings.  These main policy memos are separate from theUnderwriting memos and Claim memos.  Click the Edit button to add a policy memo .  The Policy Edit mode will change the policy tabs fromthe bottom of the window to the top of the window.  Only users with Sys-Op rights  can edit or deletememos.The most recent memos are listed first.  QLAdmin records the dat
+
+--- PAGE 59 KEYS ['Surrender', 'surrender', 'Pending']
+(leave empty fornon-qualified) X1035 LOGICAL 1 Annuity 1035 transfer (will prompt forcost basis) GMSV LOGICAL 1 Annuity surrender processed withNFO interest rate and a GuaranteedMinimum Surrender Value calculationwill have this box checked. RATE_LOCK DATE 8 Annuity rate lock date. Use interestrate as of application signed date ifthe policy effective date is less than orequal to rate lock date.  PRODCODE CHARACTER 6 SPIA product code used in valuationreport (overrides plan product code) 894
+
+--- PAGE 61 KEYS ['Surrender', 'surrender', 'Claims Tab', 'Pending']
+ions QLAdmin Solutions Policy DisplayQLAdmin - Main Menu 5.1.1.6 Claims TabAll pending and finalized death claims, cash surrenders, or health claim details will be displayed in theClaims Tab.  If a claim is deleted for any reason and the policy is reinstated back to an active status,the claim details will be removed while the previous claim memos will be retained.   Note:If the policy displayed is a health insurance policy, the Policy Maintenance Claim buttonwill process a  new health claim , and the Claims Tab wil
+
+--- PAGE 62 KEYS ['Surrender', 'surrender', 'Claims Tab']
+Menu Policy Display(18)  Loans Amount of loans outstanding on the policy .*(19)  Net Benefits Net death benefit or cash surrender before premium refunds and deductions.*(20)  Premium Amount of premium to be refunded or deducted.*(21)  Suspense Money held in the suspense account.*(22)  Adjustments Interest or other adjustments on the claim or surrender amount.*(23)  Contest Yes or no indicator for whether the claim was contested.*(24)  Cause Cause of death.*Note:  *Not shown in this image, but data will be visible v
+
+--- PAGE 63 KEYS ['QUIKCLMS', 'QUIKCLMP', 'Claims Tab', 'claim status', 'Pending']
+ath BenefitsQuikPcde Death Claim Pending CodeQuikClcd Death Claim Code (ICD-10 Classification)QuikClmp Death Claim PayeeQuikClms Death Claim Transaction FileRelated Topics:Policy Maintenance Claim Status Meanings 493 705 754 843 730 732 733 106 114
+
+--- PAGE 65 KEYS ['Pending']
+ed/retained amounts based on the established limits.á Areinsurance record is automatically created and added to the new pending policy.  If a reinsurancerecord was added to the policy, the calculated values can still be edited if needed.  What are the Reinsurance reports?The reinsurance module also produces three reinsurance reports .  The new business report showsnew policies reinsured during the period.  The premium report shows reinsurance premiums due to thereinsurer.  The terminations report shows premiums to 
+
+--- PAGE 66 KEYS ['Pending']
+y Display 5.1.1.8 Underwriting TabThe Underwriting tab and the Notes section may or may not be visible or accessible, depending on theuser's security settings.  See the Security Levels  for a description of the Underwriting privileges forLevel 1 and Level 2.  To edit the underwriting reasons , click the Edit button.   Note:  Application Information Dates: All except the App Date are populated by QLAdmin, andall are only visible after the policy is submitted.Policy Display - Underwriting Tab Data Fields(1)  Issue Cl
+
+--- PAGE 67 KEYS ['Pending']
+uires Sys-Op rights.(18)  Print Memo Print the memo history for the policy.How do I edit the underwriting reasons for a pending (10) policy?To edit the underwriting reasons, see Policy Issue Window - Underwriting Tab .How do I generate a notice for an underwriting requirement?To create a notice to be generated with certain underwriting requirements on a pending policy, edit thepolicy and go to the Underwriting tab.In the Reason Pending section, click Add to display the pendingreason selection window.  Next click th
+
+--- PAGE 68 KEYS ['Pending']
+o determine when a notice should be generatedand when it is not needed. Which tables are affected?QuikUndw Underwriting Pending ReasonsQuikUwcd Underwriting Pending Reason CodesQuikUwmm Underwriting Pending Reason NotesRelated Topics:Input New Underwriting Policy Issue Window - Underwriting Tab 911 914 915 183 160
+
+--- PAGE 70 KEYS ['Loan History', 'Surrender', 'surrender']
+sactions, sources of payments.(6)  Dividend History  Dividend history, dates, amounts (for participating policies).(7)  Loan History  Loan history, dates, amounts and transaction type history.(8)  Premium History Premium history, dates, premium components, user, report info.(9)  UL/ISWL History  Account balance, cash and loan values, premium, interest andexpense charges, cost of insurance charges and cost of ridercharges.(10)  Health Benefit History Health plan deductible, deductible balances, plan benefits andtota
+
+--- PAGE 76 KEYS ['interest earned']
+63 Proprietary & Confidential QLAdmin - Main Menu Policy Display T    TransferI      Interest EarnedV    Roth ConversionW   Withdrawal D    Death ClaimC    CancellationV    Roth Conversions reported on form 5498X    FIA AllocationY    FIA Reallocation for withdrawals in excess of FixedAccountZ    FIA Reallocation for premiums paid during the policy year (3)  Tax Tax year, which could be different from the Transaction year.(4)  Gross Gross amount of the transaction.(5)  Load Sales 
+
+--- PAGE 79 KEYS ['policy loan', 'Pending']
+ed and shows all billing statements  on record for thepolicy. The Billing History also includes any amount billed for a policy loan, the policy status at thebilling time, the group or account number, and the billing address.The Billing History for a policy can be printed by clicking the Print button. Policy Right Click - Billing History Data Fields(1)  Sys Date System date when the billing cycle was run.(2)  Start Date Beginning date of the billing cycle.(3)  End Date Ending date of the billing cycle.(4)  Form Bill
+
+--- PAGE 81 KEYS ['loan interest']
+Billing Notices available for printing are Bank Draft/ACH bills , Group bills ,Automatic Premium Loan (APL) bills , and Loan Interest bills . These bills are also generated inthe Create Billing Notices  function.How do I view the billing history for a bill account?1.Go to the Policy menu and choose either Display by Account.2.Locate and display the desired bill account.3.Click the Prem History button to display past premium application dates (left side) and the policiesthat had premium applied (right side)4.Alterna
+
+--- PAGE 84 KEYS ['Pending']
+Confidential QLAdmin - Main Menu Policy Display 5.1.2.5 Cash With ApplicationHow do I apply Cash with Application for a pending policy?1.Go to the Policy menu and choose either Display by Number or Display by Alpha.  2.Locate and display the desired pending policy.3.Right-click on any part of the gray area inside the policy display window. 4.From this right-click menu select Cash with Application. If the policy is not in Pending (10) status,the user will receive a warning.The Cash with Application window will be di
+
+--- PAGE 87 KEYS ['loan interest', 'Loan History', 'loan balance', 'accrued interest']
+n the loan summary  shown on the Coverage Tab of Policy Display. Loantransactions include loans granted, loan payments, loan interest charged, and automatic premiumloans processed. The transaction type, date, amount and loan balance are displayed. Current loaninformation is shown and includes the accrued interest, the loan balance and the date to which interestis accrued.  The Loan History for a policy can be printed by clicking the Print button. Policy Right Click - Loan History Data Fields(1)  Transaction Type of
+
+--- PAGE 88 KEYS ['QuikLoan', 'QUIKLOAN', 'loan interest', 'policy loan', 'loan balance', 'accrued interest']
+on the general tab, or onthe plan values options  tab for state-specific loan interest rates. Which tables are affected?QuikLoan Policy LoansRelated Topics:Processing Policy Loans 524 533 827 130
+
+--- PAGE 89 KEYS ['Pending']
+ntarybenefits, annuity and health premiums.  Extra premium amounts are applied to the over/short orsuspense accounts, depending on the System Configuration  settings.  The paid-to date, thepayment source, system user and report number are also shown.  The total amount of premiumapplied over the life of the policy is shown in the lower left corner. The Premium History for a policy can be printed by clicking the Print button. Policy Right Click - Premium History Data Fields(1)  Date PaidDate the premium transaction w
+
+--- PAGE 90 KEYS ['Surrender', 'surrender', 'policy loan']
+ayment LOA Policy Loan LPS Lapse MO Money Order OTH Other Income PAC Bank Draft REI Reinstated  RPU Reduced Paid Up SUR Surrender TRN Annuity Withdrawal Transfer WIR Wire Transfer How do I view premium history for a bill account?1.Go to the Policy menu and choose either Display by Account.2.Locate and display the desired bill account.3.Click the Prem History button to display past premium application dates (left side) and the policiesthat had premium applied (right side)4.Alternatively, double-click an individual p
+
+--- PAGE 93 KEYS ['Surrender', 'surrender', 'Claims Tab']
+ To see the policy'sprojected future values, go the right-click menu option Projected Policy Values .  Note:  A partial surrender transaction will be visible in the UL/ISWL history window on the nextmonthiversary (at which time the policy units will also be updated if the plan code hasdeath benefit option 1).  Partial surrender transaction information is visible on theClaims tab of Policy Display.  Policy Right Click - UL/ISWL History Data Fields(1)  Policy # Policy number.(2)  LOB Line of Business as designated in
+
+--- PAGE 94 KEYS ['Surrender', 'surrender']
+onth.(4)  Month Number of months the policy has been inforce.(5)  Acct Bal Account balance for that month.(6)  Surr Chg Surrender charge that would be deducted from the cash value if the policywere to be surrendered.(7)  Cash Val Cash value of the policy for that month.(8)  Loan Bal Balance of any outstanding loans.(9)  Premiums Premium applied to the policy that month.(10)  Interest Interest credited to the policy that month.(11)  Exp Chg Expense charge applied to the policy that month.(12)  Death BenCurrent death
+
+--- PAGE 97 KEYS ['Pending']
+tory Data Fields(1)  Seq Sequence/order of rate increases implemented on this policy.(2)  Stat Rate increase status.0 - Pending1 - Notice generated2 - Implemented3 - Voided(3)  Notice Date the rate increase notice is scheduled to be generated.(4)  Prem Chg Date the premium is scheduled to change.(5)  Mode Policy premium mode when rate increase was implemented.  (6)  Curr PremCurrent premium when rate increase was implemented.(7)  New PremNew premium after rate increase (upon Prem Chg date).(8)  % Increase Percentag
+
+--- PAGE 100 KEYS ['Surrender', 'surrender']
+al print options are unchecked, each NFO option will be included in the letter.Policy Right Click - NFO Quote (1)  Cash Surrender Value Gross cash surrender value.(2)  Premium Refund Premium paid beyond the NFO date that would be refunded
+
+--- PAGE 101 KEYS ['Surrender', 'surrender', 'Pending']
+88 ⌐ 2026 QLAdmin Solutions QLAdmin Solutions Policy DisplayQLAdmin - Main Menu upon surrender.(3)  Net Value Cash surrender value plus any premium refund value.(4)  Surrender Amount Total cash surrender value.(5)  Print Surrender Only Generate the printed, emailed or queued cash surrenderletter.(6)  ETI Period Years and days of extended term insurance.(7)  ETI Expiration Date Date the policy would expire if ETI were processed.(8)  Pure Endowment Endowment value of the policy afte
+
+--- PAGE 102 KEYS ['Pending']
+ted to confirm the policy assumptions before the system can calculate and display the ProjectedPolicy Values window.á Depending on the product type, one of two Assumptions windows will bedisplayed.      For Annuity Products For Universal Life/Interest Sensitive Whole Life ProductsThe projected values are calculated based on the current mode and modal premium shown on thepolicy, and on current or guaranteed assumptions for UL policies.á Because the mode premium andmode are editable, this tool creates varied future p
+
+--- PAGE 103 KEYS ['Pending']
+ review.Policy Right Click - Policy Values Data The columns displayed in the Projected Policy Values windows may vary depending on the type ofpolicy (Annuity, UL, ISWL, Traditional Life, etc.).  All possible columns for each possible ProjectedPolicy Values window are listed below, but you will only see those fields applicable to the policy typebeing viewed.1.End of Year (Duration)2.Attained Age
+
+--- PAGE 104 KEYS ['Surrender', 'surrender', 'policy loan', 'loan balance']
+y Premium13.Annuity Premium Expense Load14.Net Annuity Premium 15.Annuity Interest Credited16.Annuity Balance17.Annuity Surrender Charge18.Annuity Cash Value19.Policy Loan Balance20.ISWL/UL Premium21.ISWL/UL Interest Credited22.ISWL/UL Expense Charge23.ISWL/UL Death Benefit24.ISWL/UL Net Amount at Risk25.ISWL/UL Cost of Insurance26.ISWL/UL Rider Cost of Insurance27.ISWL/UL Account Balance 28.ISWL/UL Surrender Charge29.ISWL/UL Cash Value30.Projected Total Cash Value31.Projected Total Death BenefitWhich tables are af
+
+--- PAGE 110 KEYS ['Pending']
+Admin has a selection of documents  that can be automatically printed during various systemevents, such as release from pending , policy maintenance  or anniversary processing .  If thedocument exists in the QLAdmin data folder with the specified file name, the correspondence will begenerated with the appropriate client information at the time of the system event.  If the Client Information File  has the Invalid Address indicator checked, the system will not produceautomated or scheduled correspondence for this pol
+
+--- PAGE 119 KEYS ['Surrender', 'surrender']
+exit back to the Policy Display screen. Policy Maintenance Menu Options(1)  NFO Process a non-forfeiture option of cash surrender, automatic premium loan,extended term insurance or reduced paid up insurance.  For premium payinglife policies, manual NFO processing will set the NFO date equal to the earlierof the maintenance date or the policy's Paid to Date.  There is no way to resetthe date. Be sure that selecting the NFO button is the correct action.(2)  ClaimCreate or service a death claim or health claim.(3)  La
+
+--- PAGE 120 KEYS ['Surrender', 'surrender', 'policy loan', 'Pending']
+(6)  SuspendSuspend or unsuspend a policy from the billing cycle.(7)  Loan Create or service a policy loan.(8)  DividendSurrender or edit accumulated dividends.(9)  Annuity Review values, make withdrawals or edit annuity values.What correspondence is automatically generated during Policy Maintenance?QLAdmin will automatically print policy status updates  when a policy's status changes as a result ofcertain policy maintenance functions.  If the Client Information File  has the Invalid Address boxchecked, the policy 
+
+--- PAGE 122 KEYS ['Surrender', 'surrender', 'policy loan']
+l be calculated. Toview NFO Quotes  only, go to the Policy Display right-click menu. The Non-forfeiture options areCash Surrender, Automatic Premium Loan (APL), Extended Term Insurance (ETI), and Reduced PaidUp (RPU). QLAdmin displays the available cash value as of the Non-forfeiture Date entered, including anydividend deposits and net of policy loans. Click the desired NFO button, and follow the prompts toprocess the policy. For premium paying policies, manual NFO processing will set the NFO date equal to the earl
+
+--- PAGE 123 KEYS ['Surrender', 'surrender', 'Claims Tab']
+LAdmin Solutions QLAdmin Solutions Policy DisplayQLAdmin - Main Menuthe NFO button is the correct action.1.  NFO - Cash Surrender (Full or Partial)Full cash surrender processing is for life policies only (not annuities), and shows the net cash value asof the Paid to Date. Partial cash surrender processing is for UL/ISWL policies only. To process a partialsurrender for policies with UL/ISWL plans, change the Surrender Amount to a lesser value. Thistransaction will be visible in the UL/ISWL history  window on the pol
+
+--- PAGE 124 KEYS ['policy loan']
+nt, and will beincreased by any dividend additions and dividend deposits, and decreased by the amount of anyoutstanding policy loans. After clicking the Yes button, the system will print before-and-after policystatus pages, including accounting information  for the Extended Term Insurance transaction.  The Policy Status and Coverage Status will be updated. Policy Exhibit transactions will be recorded.The Policy Benefits file will be updated. Any premium refund will be processed through the premiumprocessing routine
+
+--- PAGE 125 KEYS ['loan interest', 'Surrender', 'surrender', 'policy loan', 'loan balance']
+ to equal to the Paid-To Date. From this point on, thepolicy premiums will be paid with a loan from the cash value, and loan interest will accrue.When will a policy become overloaned?Policy cash values will continue to grow and all policy benefits continue as if the policyholder were stillpaying premium. Policy loans created by borrowing cash value to pay premiums will also continue toaccumulate interest.áPolicy loans and interest will usually increase faster than the cash value. Unlessthe policyholder begins to ma
+
+--- PAGE 126 KEYS ['QuikLoan', 'QUIKLOAN', 'Surrender', 'surrender', 'policy loan']
+fitsQuikIswl Policy Values for UL/ISWLQuikIsrr Partial surrender values for UL and ISWL policies QuikPolx Policy ExhibitQuikLoan Policy LoansQuikMstr Policy Master FileQuikRidr Coverage Master FileQuikPrem Premium PaymentsRelated Topics:NFO Quotes Define Days for Automatic NFO Processing Automatic NFO Options Rebuild Cash/NSP Values 12 705 750 754 757 753 709 822 819 868 827 832 887 870 87 476 150 618
+
+--- PAGE 127 KEYS ['Claims Tab', 'Pending', 'Paid in Full']
+isplayed is a health insurance policy, the Policy Maintenance Claimbutton will allow health claim adjudication, and the Claims Tab will show all health claim history.       Note:  Supplemental benefits (plan codes  starting with 9) must be processed first. Repeatthe claim process to finish processing the other phases of coverage.    Step 1 - Select the StatusThe Death Claim window shows four Status options for processing the death claim: Pending,Paid in Full, Settled or Denied. Choose the appropriate status and ent
+
+--- PAGE 128 KEYS ['Surrender', 'surrender', 'policy loan', 'Claims Tab', 'Pending', 'Paid in Full']
+laims tab of Policy Display.If the claim being processed is an annuity, the Apply Surr Charges checkbox will be enabled.Surrender charges are deducted from the net benefit. If the annuity is subject to Market ValueAdjustments, the Apply MVA checkbox is enabled.Step 3 - Calculate and Review ValuesClick the Calculate button to update the death benefit data. The Calculate button must beclicked each time the claim window is accessed. The system will account for dividenddeposits, policy loans, and premium refunds or ded
+
+--- PAGE 130 KEYS ['Pending']
+ Unpaid account  and the hold reasons are maintained in Data Maintenance .  Both Settlement Options will initiate a new pending policy  with a suggested new policynumber based on the previous policy number. Two new characters will be added before thelast company code character. This new policy number can be changed if desired. The newpending policy will be visible in the Release from Pending window. For disbursement code S(SPIA), go to Auto Annuity Withdrawals  to add the policy to the scheduled for automatedwithdr
+
+--- PAGE 131 KEYS ['Claims Tab']
+ Calculated field.(9)  Addl Interest Additional interest due to the payee for a previously heldclaim. Accessed from the Claims tab of Policy Display.(10)  Federal Tax Federal withholding tax deducted from gross payment.(11)  State Tax State withholding tax deducted from gross payment.(12)  Net Payment Net amount to be paid to the payee. Calculated field.(13)  Policy New policy number (Settlement options).(14)  Eff Date Effective date of the new policy (Settlement options). (15)  Plan Plan code of the new policy (Se
+
+--- PAGE 132 KEYS ['policy loan', 'Paid in Full']
+death claim as Paid in Full means that the full face amount of the policy was paid out, netof any dividend deposits and policy loans. Processing a death claim as Settled means that an amountless than the death benefit was paid out.  
+
+--- PAGE 133 KEYS ['interest earned', 'Claims Tab', 'Pending']
+d then select a hold reason  from the Reason drop down menu.Claims on hold, whether life or annuity claims, do not have interest earned calculated. The entire policywill be processed and the policy status will be updated. The claim information will be visible on the Claims tab , and the disbursement on hold will remain editable until the disbursement is finalized.Double click the payee on hold to open the payee window.Can an Explanation of Benefits (EOB) be printed?For either a death claim or health claim, an Expla
+
+--- PAGE 134 KEYS ['QUIKCLMS', 'QUIKCLMP', 'Surrender', 'surrender', 'Pending']
+ath BenefitsQuikPcde Death Claim Pending CodeQuikClcd Death Claim Code (ICD-10 Classification)QuikClmp Death Claim PayeeQuikClms Death Claim Transaction FileRelated Topics:Automatic Claim Numbering and other death claim options Rebuild Death Benefit Values 485 114 705 868 754 843 730 732 733 476 618
+
+--- PAGE 136 KEYS ['Pending']
+lapse and can contact the carrier for policy service if needed. What's the difference between canceling, lapsing and suspending a policy?Cancelling a policy terminates the insurance coverage as of the effective date of the policy, the paid-todate is moved back to equal the effective date, and all premiums/CWA are refunded. The policy statusis changed to Not Taken (96). This is typically used with new policies during the free-look period. Lapsing a policy causes the insurance coverage to be terminated as of the paid
+
+--- PAGE 138 KEYS ['Pending']
+payor.  Any necessary agent chargebacks  will also be processed.What's the difference between canceling, lapsing and suspending a policy?Cancelling a policy terminates the insurance coverage as of the effective date of the policy, the paid-todate is moved back to equal the effective date, and all premiums/CWA are refunded.  The policy statusis changed to Not Taken (96).  This is typically used with new policies during the free-look period. Lapsing a policy causes the insurance coverage to be terminated as of the pa
+
+--- PAGE 139 KEYS ['Pending']
+126 ⌐ 2026 QLAdmin Solutions QLAdmin Solutions Policy DisplayQLAdmin - Main MenuSuspending a policy puts a hold on the policy's billing cycle.  A Suspended (20) policy will be excludedfrom all billing cycles, will not be auto-lapsed, and is excluded from anniversary processing.  Thecarrier is liable for policy benefits through the current paid-to date of the policy. A suspended policy isstill an active status but will remain suspended indefinitely until the policy is unsuspended
+
+--- PAGE 140 KEYS ['Claims Tab']
+ny premiumdue on the policy including interest.  The policy's cash values will be updated.  Any claim information inthe Claims tab will be deleted.  The Policy Status and Coverage Status will be updated.  Accountingledger transactions will be updated.  The Policy Exhibit transactions will be recorded.  The PolicyBenefits file will be updated.  Can individual riders or phases of coverage be reinstated?A policy rider or phase of coverage can only be reinstated if the claim was processed separately fromthe base covera
+
+--- PAGE 141 KEYS ['Pending']
+128 ⌐ 2026 QLAdmin Solutions QLAdmin Solutions Policy DisplayQLAdmin - Main Menu 5.1.3.6 Suspending a PolicyHow do I suspend a policy?1.Go to the Policy menu and choose either Display by Number or Display by Alpha.  2.Locate and display the desired policy.3.Click on the Policy Maintenance button and confirm the date for the Suspend transaction.  Thedefault date will be the current date.  4.Click the Suspend button.5.Click the Yes button and select and process one phase of coverage.  Clic
+
+--- PAGE 142 KEYS ['Pending']
+, policy dates, number ofdays suspended and the suspend reason. What's the difference between canceling, lapsing and suspending a policy?Cancelling a policy terminates the insurance coverage as of the effective date of the policy, the paid-todate is moved back to equal the effective date, and all premiums/CWA are refunded.  The policy statusis changed to Not Taken (96).  This is typically used with new policies during the free-look period. Lapsing a policy causes the insurance coverage to be terminated as of the pa
+
+--- PAGE 143 KEYS ['loan interest', 'Loan History', 'capitaliz', 'policy loan', 'loan balance']
+e loan.  Any premiums due will be added to the loan amount if thepolicy paid-to date is less than the loan date. If the loan interest is payable in advance, the interestcapitalized to the policy anniversary will also be added to the loan amount.  The maximum loan amountwill reflect the amount of interest to accrue for interest payable in arrears. 32 74
+
+--- PAGE 144 KEYS ['policy loan']
+ecord will beadded to the policy's transaction audit history.To manually process a premium loan amount (APL), request a policy loan with due premiums for azero cash amount.  The system will then ask to make a loan for due premiums only.      Note:  If any policy disbursements have disbursement code A (ACH), the company mustcreate the Policy Disbursements EFT  file at the end of the day and transmit it to thebank for processing.  2.  Pay LoanLoan payments can be posted via the Premium Application  window, or they ca
+
+--- PAGE 145 KEYS ['capitaliz', 'loan balance']
+t loan and the interestpaid-to date for the loan can be changed.  Any adjustment in the loan balance will be recorded ascapitalized interest on the loan, whether the adjustment is positive or negative.   How do I enter a loan-payoff payment?When accessing the Loan maintenance feature to view the loan balance and quote a payoff amount,the user must enter a Maintenance Date.  When the loan payoff amount is received from the insured,that same Maintenance Date must be entered to ensure no additional interest is calcula
+
+--- PAGE 146 KEYS ['QuikLoan', 'QUIKLOAN', 'Loan History', 'policy loan', 'loan balance']
+Which tables are affected?QuikAudt Transaction AuditQuikDate System DatesQuikBene Policy BenefitsQuikPolx Policy ExhibitQuikLoan Policy LoansQuikPrem Premium PaymentsQuikCvs Cash ValuesQuikMstr Policy Master FileQuikRidr Coverage Master FileRelated Topics:Loan History Define option to include dividends in maximum loan amounts 72 476 630 705 753 709 868 827 870 750 832 887 74 476
+
+--- PAGE 147 KEYS ['Surrender', 'surrender']
+134 ⌐ 2026 QLAdmin Solutions QLAdmin Solutions Policy DisplayQLAdmin - Main Menu 5.1.3.8 Processing DividendsHow do I surrender or edit dividends on a policy?1.Go to the Policy menu and choose either Display by Number or Display by Alpha.  2.Locate and display the desired policy.3.Click on the Policy Maintenance button and confirm the date for the Dividend transaction.  Thedefault date will be the current date.  4.Click the Dividend button.  The Dividend Processing window will be displayed. Note: Dividends are no
+
+--- PAGE 149 KEYS ['Surrender', 'surrender', 'Claims Tab']
+nnuity button. The Annuity Processing window will be displayed.  Note:  Do not use the NFO button to process an annuity surrender. The NFO button is for lifeinsurance policies only.The Annuity function allows for the partial or complete surrender of an annuity for a living annuitant,and allows the annuity balance and interest values to be edited as needed. The transaction history forall annuity transactions can be seen in the right-click menu option Annuity History .If the annuitant has died and the annuity balance
+
+--- PAGE 150 KEYS ['Surrender', 'surrender']
+le if the company does not have theseproducts created in the Plan Information File.Step 2 - Annuity plan codes may have surrender charges, withdrawal rules, and/or MVA settingsconfigured in the Surrender Charge table in Annuity Rate Files. If checked, WaiveSurrender Charges will override all surrender charges. If checked, Exclude FreeWithdrawal will disregard the Free Withdrawal percentage and apply any applicablesurrender charges to the entire amount being withdrawn.  Step 3 - Review the selections and click the O
+
+--- PAGE 151 KEYS ['Surrender', 'surrender']
+tcreate the Policy Disbursements EFT  file at the end of the day and transmit it tothe bank for processing.2.  How do I surrender or do a full withdrawal from an annuity?Step 1 - Click the Withdraw button to display the Annuity Withdrawal window.áEnter the total annuitybalance for a full surrender.áThe system will first verify that the policy has a current annuity balance.áIf the client wantsfederal or state income taxes to be withheld, enter the appropriate income tax rates.áNext,select the IRS distribution code ,
+
+--- PAGE 152 KEYS ['Surrender', 'surrender']
+le if the company does not have theseproducts created in the Plan Information File.Step 2 - Annuity plan codes may have surrender charges, withdrawal rules, and/or MVA settingsconfigured in the Surrender Charge table in Annuity Rate Files. If checked, WaiveSurrender Charges will override all surrender charges. If checked, Exclude FreeWithdrawal will disregard the Free Withdrawal percentage and apply any applicablesurrender charges to the entire amount being withdrawn.  Step 3 - Review the selections and click the O
+
+--- PAGE 153 KEYS ['Surrender', 'surrender']
+140 ⌐ 2026 QLAdmin Solutions QLAdmin Solutions Policy DisplayQLAdmin - Main Menu adjustment to the surrender charge to ensure the adjusted net surrender value is notless than the GMSV. The system will display all elements of the calculation includingany surrender charges, market value adjustments, tax withheld and any adjustmentsto the MVA and surrender charges to meet the GMSV requirements.The surrender process is then added to the policyÆs transaction audit. If the logicaluser defined field n
+
+--- PAGE 156 KEYS ['Surrender', 'surrender']
+ todisplay the Annuity Withdrawal window.  If the Transfer to SPIA box is checked, the system will also check the Waive SurrenderCharges box and set the IRS distribution code to Internal Transfer (Z).  The WithdrawalAmount is populated with the full value of the annuity account.  Because this transaction isan Internal Exchange, it is not a taxable event.  Click the OK button to process the annuitytransfer.
+
+--- PAGE 157 KEYS ['Surrender', 'surrender', 'Pending']
+in order for the Transfer to SPIAcheckbox to appear.Step 2 - The system will display a confirmation window and list the surrender charges, tax withheld andthe net withdrawn.  Click the Yes button to continue with the Transfer to SPIA transaction. You may be prompted to record a memo regarding this transaction, depending on the System Configuration  settings.  Click the No button to stop the annuity transfer andreturn to the Annuity Withdrawal window.  Step 3 - After clicking the Yes button, the system will complete
+
+--- PAGE 158 KEYS ['Surrender', 'surrender', 'Pending']
+t calculated?The Free Withdrawal is the portion of the annuity value that can be withdrawn each year withoutincurring a surrender charge.  This percentage is established in the Annuity Rate Files  in theSurrender Charge table.To compute the Free Withdrawal amount, start with the annuity balance at the beginning of the policyyear and add any new contributions for the current policy year.  Next subtract any withdrawals made for 286 574 471 574
+
+--- PAGE 159 KEYS ['Surrender', 'surrender']
+erse the last annuity transaction during the reinstatement process.  The last annuity transactionis likely to be a cash surrender or withdrawal where a check was generated to the annuitant.   A second Yes/No prompt will be displayed, and will ask the user whether interest from the prior date oftermination to the effective date of the reinstatement should be excluded from the transaction reversal. This may be applicable if the funds were not invested in the annuity during this period of time.  ClickYes to exclude th
+
+--- PAGE 160 KEYS ['Surrender', 'surrender']
+ changes are made to the policy after the annuity transaction?After confirmation of the partial cash withdrawal or full surrender, the system prints a policy statuspage, including accounting information  for the annuity withdrawal transaction.  The Policy Annuityfile and Policy Benefits file will be updated.15. How do I process an annuity death claim?An annuity death claim is processed like a life insurance death claim .  16. How do I commute the balance of a SPIA?The death claim  feature is used to commute the bal
+
+--- PAGE 161 KEYS ['Pending']
+underwriting.(7)  Record Cash with Application Record initial premium received with a new application.(8)  Release from Pending to Issued After underwriting requirements are resolved, release anew policy from a pending to issued status.(9)  Policy Issue Related Reports Run new business reports showing pending cases inunderwriting, and pending cases submitted with cash.(10)  Policy Issue Pages Print one or more queued polices, or print a singlepolicy.Global Buttons for Policy Issue/Edit TabsThese two buttons are dis
+

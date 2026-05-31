@@ -1,0 +1,258 @@
+{
+  "version": "1.0",
+  "description": "Claim domain eligibility — authoritative LifePRO Accounting Transactions + QLAdmin Help semantics.",
+  "production_dbf_flag": "N",
+  "rulebook_lineage": "PHASE22C_CLAIM_DOMAIN_ELIGIBILITY|LIFEPRO_ACCOUNTING_TXN|QLADMIN_HELP",
+  "authoritative_references": [
+    "docs/claims_conversion_reference/QLAdmin_Help.pdf",
+    "docs/claims_conversion_reference/LifePRO Accounting Transaction Information (4).pdf"
+  ],
+  "hold_category": "SEMANTIC_PSEUDO_CLAIM",
+  "governance_status": "SEMANTIC_GOVERNANCE_HOLD",
+  "claim_domain_payout_codes": [
+    "0090", "0094", "0560", "0561", "0567", "0570", "1900"
+  ],
+  "claim_domain_benefit_codes": [
+    "0038", "0519", "0530", "0630", "1020"
+  ],
+  "claim_domain_eligible_codes": [
+    "0038", "0090", "0094", "0519", "0530", "0560", "0561", "0567", "0570", "0630", "1020", "1900"
+  ],
+  "non_claim_accounting_codes": [
+    "0411", "0412", "0413", "0414", "0415", "0416", "0417", "0451"
+  ],
+  "borrowed_money_codes": [
+    "0411", "0412", "0413", "0414", "0415", "0416", "0417", "0451"
+  ],
+  "require_no_claim_domain_codes_for_accounting_hold": true,
+  "require_accounting_codes_subset_of_non_claim": true,
+  "enable_annual_cadence_check": true,
+  "annual_cadence_min_days": 330,
+  "annual_cadence_max_days": 400,
+  "annual_cadence_min_claims_per_policy": 3,
+  "annual_cadence_match_ratio": 0.6,
+  "eligible_claim_families_for_hold_scan": [
+    "SURRENDER_CLAIM", "DEATH_CLAIM", "DISBURSEMENT_CLAIM"
+  ],
+  "reason_codes": [
+    "NON_CLAIM_ACCOUNTING_ACTIVITY",
+    "BORROWED_MONEY_ONLY_CHAIN",
+    "NO_CLAIM_PAYOUT_SEMANTICS",
+    "LOAN_INTEREST_CAPITALIZATION_PATTERN",
+    "LOAN_PRINCIPAL_ACCOUNTING_PATTERN",
+    "UNEARNED_INTEREST_INCOME_PATTERN",
+    "QLADMIN_DOMAIN_MISMATCH_QUIKLOAN",
+    "ACTIVE_POLICY_SURRENDER_CONTRADICTION",
+    "ANNUAL_LOAN_CAPITALIZATION_PATTERN"
+  ],
+  "transactions": [
+    {
+      "transaction_code": "0411",
+      "lifepro_definition": "Loan Principal",
+      "accounting_category": "04xx Borrowed Money",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.5 (04xx Borrowed Money)",
+      "current_claim_family_assignment": "LOAN_PRINCIPAL_OFFSET",
+      "phase4_family": "LOAN_PRINCIPAL_OFFSET (claim-relevant flag Y — over-expanded)",
+      "phase10_routing": "Grouped into SURRENDER_CLAIM / DEATH_CLAIM chains when paired",
+      "qladmin_target_domain": "QuikLoan.MLOANPRIN + Loan History",
+      "claims_domain_eligible": "N",
+      "rationale": "LifePRO classifies 0411 under Borrowed Money, not death/surrender claims. QLAdmin Help p.827-828: policy loan principal belongs in QuikLoan.",
+      "recommended_governance_action": "SEMANTIC_GOVERNANCE_HOLD when chain lacks claim payout/benefit codes"
+    },
+    {
+      "transaction_code": "0412",
+      "lifepro_definition": "Loan Interest Capitalized",
+      "accounting_category": "04xx Borrowed Money",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.5, p.10 (Loan Interest Capitalized indicator 0412)",
+      "current_claim_family_assignment": "LOAN_INTEREST_OFFSET",
+      "phase4_family": "LOAN_INTEREST_OFFSET -> SURRENDER_CLAIM inference",
+      "phase10_routing": "QUIKCLMS CLAIMSTAT=99, MINTAMT populated",
+      "qladmin_target_domain": "QuikLoan.MLOANACCR / MLOANBAL + Loan History",
+      "claims_domain_eligible": "N",
+      "rationale": "Authoritative LifePRO definition: capitalization is loan accounting. QLAdmin Anniversary Processing capitalizes loan interest to QuikLoan — not QUIKCLMS Death Claims.",
+      "recommended_governance_action": "SEMANTIC_GOVERNANCE_HOLD — exclude from UAT emit"
+    },
+    {
+      "transaction_code": "0413",
+      "lifepro_definition": "Loan Payment",
+      "accounting_category": "04xx Borrowed Money",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.5",
+      "current_claim_family_assignment": "Not mapped in Phase 4 extract",
+      "phase4_family": "N/A — not observed",
+      "phase10_routing": "N/A",
+      "qladmin_target_domain": "QuikLoan + Loan History (loan repayment)",
+      "claims_domain_eligible": "N",
+      "rationale": "Loan repayment is policy-loan maintenance, not a claim event.",
+      "recommended_governance_action": "NEVER route to QUIKCLMS"
+    },
+    {
+      "transaction_code": "0414",
+      "lifepro_definition": "Non-collateralized Loan",
+      "accounting_category": "04xx Borrowed Money",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.5, p.10",
+      "current_claim_family_assignment": "Not mapped",
+      "phase4_family": "N/A",
+      "phase10_routing": "N/A",
+      "qladmin_target_domain": "QuikLoan.MLOANBAL",
+      "claims_domain_eligible": "N",
+      "rationale": "Non-collateralized loan taken — borrowed money domain.",
+      "recommended_governance_action": "NEVER route to QUIKCLMS"
+    },
+    {
+      "transaction_code": "0415",
+      "lifepro_definition": "Non-collateralized Loan Interest",
+      "accounting_category": "04xx Borrowed Money",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.5, p.10",
+      "current_claim_family_assignment": "Not mapped",
+      "phase4_family": "N/A",
+      "phase10_routing": "N/A",
+      "qladmin_target_domain": "QuikLoan.MLOANACCR / MLOANINT",
+      "claims_domain_eligible": "N",
+      "rationale": "Loan interest accrual/capitalization on non-collateralized loans.",
+      "recommended_governance_action": "NEVER route to QUIKCLMS"
+    },
+    {
+      "transaction_code": "0416",
+      "lifepro_definition": "Non-collateralized Payment",
+      "accounting_category": "04xx Borrowed Money",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.5",
+      "current_claim_family_assignment": "Not mapped",
+      "phase4_family": "N/A",
+      "phase10_routing": "N/A",
+      "qladmin_target_domain": "QuikLoan + Loan History",
+      "claims_domain_eligible": "N",
+      "rationale": "Loan payment activity — not claim disbursement.",
+      "recommended_governance_action": "NEVER route to QUIKCLMS"
+    },
+    {
+      "transaction_code": "0417",
+      "lifepro_definition": "Loan Write Off",
+      "accounting_category": "04xx Borrowed Money",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.5",
+      "current_claim_family_assignment": "Not mapped",
+      "phase4_family": "N/A",
+      "phase10_routing": "N/A",
+      "qladmin_target_domain": "QuikLoan + accounting adjustment",
+      "claims_domain_eligible": "N",
+      "rationale": "Loan write-off is borrowed-money accounting, not claim payout.",
+      "recommended_governance_action": "NEVER route to QUIKCLMS"
+    },
+    {
+      "transaction_code": "0451",
+      "lifepro_definition": "Unearned Interest Income",
+      "accounting_category": "04xx Borrowed Money (offset pair to 0412)",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.5, p.10",
+      "current_claim_family_assignment": "Paired offset to LOAN_INTEREST_OFFSET",
+      "phase4_family": "451<->412 capitalization offset",
+      "phase10_routing": "Misclassified as SURRENDER_CLAIM component",
+      "qladmin_target_domain": "QuikLoan / loan accounting (non-claim)",
+      "claims_domain_eligible": "N",
+      "rationale": "LifePRO defines 0451 as Unearned Interest Income under Borrowed Money — internal accounting offset, not claim interest (MINTAMT).",
+      "recommended_governance_action": "SEMANTIC_GOVERNANCE_HOLD with 0412 chains"
+    },
+    {
+      "transaction_code": "0530",
+      "lifepro_definition": "Death Benefit",
+      "accounting_category": "05xx Policy Owner Benefits",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.5-6, p.10",
+      "current_claim_family_assignment": "DEATH_BENEFIT",
+      "phase4_family": "DEATH_CLAIM",
+      "phase10_routing": "QUIKCLMS death claim header",
+      "qladmin_target_domain": "QUIKCLMS (Death Claims)",
+      "claims_domain_eligible": "Y",
+      "rationale": "Core death benefit establishment — QLAdmin QuikClms Death Claims domain.",
+      "recommended_governance_action": "EMIT to QUIKCLMS when part of validated death claim chain"
+    },
+    {
+      "transaction_code": "0560",
+      "lifepro_definition": "Total Cash (full surrender)",
+      "accounting_category": "05xx Policy Owner Benefits",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.6",
+      "current_claim_family_assignment": "TOTAL_CASH",
+      "phase4_family": "SURRENDER_CLAIM",
+      "phase10_routing": "QUIKCLMS surrender",
+      "qladmin_target_domain": "QUIKCLMS CLAIMSTAT=99",
+      "claims_domain_eligible": "Y",
+      "rationale": "Authoritative surrender payout semantics per LifePRO and QLAdmin.",
+      "recommended_governance_action": "EMIT — required evidence for true surrender claims"
+    },
+    {
+      "transaction_code": "0561",
+      "lifepro_definition": "Partial Surrender",
+      "accounting_category": "05xx Policy Owner Benefits",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.6",
+      "current_claim_family_assignment": "PARTIAL_SURRENDER",
+      "phase4_family": "SURRENDER_CLAIM",
+      "phase10_routing": "QUIKCLMS surrender",
+      "qladmin_target_domain": "QUIKCLMS",
+      "claims_domain_eligible": "Y",
+      "rationale": "Partial surrender benefit/payout activity.",
+      "recommended_governance_action": "EMIT when present with disbursement evidence"
+    },
+    {
+      "transaction_code": "0090",
+      "lifepro_definition": "Cash Payout / Cash Disbursements",
+      "accounting_category": "Disbursement",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.9-10",
+      "current_claim_family_assignment": "CASH_DISBURSEMENT",
+      "phase4_family": "DISBURSEMENT_CLAIM / SURRENDER_CLAIM",
+      "phase10_routing": "QUIKCLMS + QUIKCLMP",
+      "qladmin_target_domain": "QUIKCLMS + QUIKCLMP",
+      "claims_domain_eligible": "Y",
+      "rationale": "Actual cash disbursement to payee — claim payment semantics.",
+      "recommended_governance_action": "EMIT"
+    },
+    {
+      "transaction_code": "0094",
+      "lifepro_definition": "Death Claim Payout",
+      "accounting_category": "Death claim disbursement",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.10 (Death Claims section)",
+      "current_claim_family_assignment": "DEATH_CLAIM_PAYOUT",
+      "phase4_family": "DEATH_CLAIM",
+      "phase10_routing": "QUIKCLMS + QUIKCLMP",
+      "qladmin_target_domain": "QUIKCLMS + QUIKCLMP",
+      "claims_domain_eligible": "Y",
+      "rationale": "Death claim payee distribution.",
+      "recommended_governance_action": "EMIT"
+    },
+    {
+      "transaction_code": "1020",
+      "lifepro_definition": "Surrender Charge",
+      "accounting_category": "Policy Values / surrender",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.9",
+      "current_claim_family_assignment": "SURRENDER_CHARGE",
+      "phase4_family": "SURRENDER_CLAIM component",
+      "phase10_routing": "QUIKCLMS MSURRCHG",
+      "qladmin_target_domain": "QUIKCLMS surrender claim",
+      "claims_domain_eligible": "Y",
+      "rationale": "Surrender charge is part of true surrender claim lifecycle.",
+      "recommended_governance_action": "EMIT as surrender component"
+    },
+    {
+      "transaction_code": "0630",
+      "lifepro_definition": "Interest on Death Benefit",
+      "accounting_category": "05xx / death claim interest",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.10",
+      "current_claim_family_assignment": "DEATH_BENEFIT_INTEREST",
+      "phase4_family": "DEATH_CLAIM",
+      "phase10_routing": "QUIKCLMS MINTAMT (death context)",
+      "qladmin_target_domain": "QUIKCLMS",
+      "claims_domain_eligible": "Y",
+      "rationale": "Death benefit interest — claim domain, distinct from loan capitalization.",
+      "recommended_governance_action": "EMIT in death claim context"
+    },
+    {
+      "transaction_code": "0038",
+      "lifepro_definition": "Death Clearing",
+      "accounting_category": "Death claim clearing hub",
+      "lifepro_manual_section": "LifePRO Accounting Transactions p.10",
+      "current_claim_family_assignment": "DEATH_CLAIM_CLEARING",
+      "phase4_family": "DEATH_CLAIM",
+      "phase10_routing": "QUIKCLMS clearing",
+      "qladmin_target_domain": "QUIKCLMS",
+      "claims_domain_eligible": "Y",
+      "rationale": "Death claim clearing — part of claim lifecycle, not loan accounting.",
+      "recommended_governance_action": "EMIT in death claim chains"
+    }
+  ]
+}

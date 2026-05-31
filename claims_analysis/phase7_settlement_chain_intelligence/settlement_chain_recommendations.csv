@@ -1,0 +1,5 @@
+claim_family,observed_pattern,current_rule_issue,recommended_adjustment,expected_balancing_impact,confidence_level
+ALL,27 delayed in-group chains,Same-day assumption too strict,Use payout_lag_window_days=14 for staged settlement,MEDIUM,HIGH
+DEATH_CLAIM,204 FUNDED_NO_DISBURSEMENT chains,Payout not in same reconstruction group,Enable cross-claim delayed linkage within policy window,MEDIUM,MODERATE
+DEATH_CLAIM,480 multi-payout chains,Single-payout assumption insufficient,Stage beneficiary distribution linkage (future-ready),LOW,MODERATE
+SURRENDER_CLAIM,7986 FUNDED_NO_DISBURSEMENT chains,Payout not in same reconstruction group,Enable cross-claim delayed linkage within policy window,MEDIUM,HIGH

@@ -1,0 +1,49 @@
+=== QUIKCLMS Rulebook Derivation Design Summary (Phase 10B) ===
+
+Total claim derivation candidates: 10177
+
+Claim family distribution:
+  DEATH_CLAIM: 1694
+  DISBURSEMENT_CLAIM: 320
+  SURRENDER_CLAIM: 8163
+
+Derivation status distribution:
+  NEEDS_MANUAL_REVIEW: 4995
+  RULEBOOK_READY: 5182
+
+Key metrics:
+  Lifecycle derivations: 0
+  Financial derivations: 0
+  Aggregated payment derivations: 0
+  Residual pending: 0
+  Inferred derivations: 0
+  Rulebook-ready claims: 5182
+  Manual review candidates: 4995
+  Residual-aware derivations: 5552
+  Validation PASS: 5182
+  Validation REVIEW: 4995
+
+Confidence distribution:
+  HIGH_CONFIDENCE: 4626
+  LOW_CONFIDENCE: 4995
+  MODERATE_CONFIDENCE: 556
+
+Architectural notes:
+  - QUIKCLMS companion to Phase 10A QUIKCLMP derivation
+  - production_dbf_flag=N on all outputs
+  - JSON-driven field derivations
+
+Recommended next phase:
+  - Phase 11: Prototype DBF generation & QA/UAT reconciliation
+
+Output files generated:
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10b_quikclms_derivation_design\quikclms_derivation_rules.json
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10b_quikclms_derivation_design\quikclms_derivation_candidates.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10b_quikclms_derivation_design\quikclms_field_derivation_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10b_quikclms_derivation_design\quikclms_claim_status_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10b_quikclms_derivation_design\quikclms_financial_derivation_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10b_quikclms_derivation_design\quikclms_payment_aggregation_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10b_quikclms_derivation_design\quikclms_residual_derivation_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10b_quikclms_derivation_design\quikclms_confidence_gating_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10b_quikclms_derivation_design\quikclms_derivation_validation.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase10b_quikclms_derivation_design\quikclms_derivation_recommendations.csv

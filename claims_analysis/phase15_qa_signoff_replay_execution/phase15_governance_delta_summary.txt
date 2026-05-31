@@ -1,0 +1,12 @@
+=== Phase 15B Authorized Phase 11 Replay Summary ===
+
+Rollback snapshot: PHASE15B-REPLAY-20260524T191013Z
+QUIKCLMS replay rows: 5466 (baseline 5182, +284)
+QUIKCLMP replay rows: 2078 (baseline 1910, +168)
+Lifecycle overlay claims authorized: 284
+Trustee overlay payments signed-off: 168
+Orphans: 374 (baseline 743, delta -369)
+Reconciliation PASS: 5361 (baseline 5001)
+
+Stable Phase 11 engine NOT modified — overlay wrapper only
+production_dbf_flag=N

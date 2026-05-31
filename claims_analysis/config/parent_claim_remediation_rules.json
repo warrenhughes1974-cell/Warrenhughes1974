@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "description": "Phase 16C parent-claim remediation prioritization (analysis only).",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE16C-PARENT-REMEDIATION",
+  "priority_weights": {
+    "orphan_payment_count": 0.35,
+    "orphan_payment_amount": 0.25,
+    "remediability_score": 0.2,
+    "blocker_severity": 0.1,
+    "business_review_complexity": 0.1
+  },
+  "remediability_scores": {
+    "RECOVERABLE": 1.0,
+    "PARTIALLY_RECOVERABLE": 0.6,
+    "NON_RECOVERABLE": 0.2
+  },
+  "severity_scores": {
+    "HIGH": 1.0,
+    "MEDIUM": 0.6,
+    "LOW": 0.3
+  },
+  "high_value_threshold_percentile": 0.9,
+  "rulebook_lineage": "phase16a_orphan_triage|phase16c_parent_remediation"
+}

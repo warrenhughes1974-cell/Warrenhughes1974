@@ -1,0 +1,19 @@
+# Semantic Assumptions
+
+## 0038
+Assumed to represent death claim clearing hub based on observed pairings:
+- 94|38
+- 38|530
+- 38|630
+
+Confidence: HIGH
+
+## 0411
+Assumed to represent loan principal offset against claim value.
+
+Confidence: HIGH
+
+## 0090
+Meaning may vary by claim/surrender context.
+
+Confidence: MEDIUM

@@ -1,0 +1,33 @@
+Source_Field,Target_Field,Default_Value,Transformation_Note
+policy_number,MPOLICY,,CROSSWALK policy_number via Master_Crosswalk; Phase 10B claim header
+,MPHASE,1,Default base phase for claim header
+prototype_claimnum,CLAIMNUM,,Phase 11 deterministic prototype claim number crosswalk
+claimstat,CLAIMSTAT,1,Lifecycle status mapping from Phase 10B MCLAIMSTATUS
+mlossdate,DTOFDEATH,,Death claim loss date (MLOSSDATE); blank for non-death families
+mnoticedate,RPTDATE,,Report/notice date from first claim activity
+pddate,PDDATE,,Paid/processed date from payment aggregation
+mpaid,MPAID,0.00,Aggregated payment total from canonical payment stage
+mgrossamt,MFACE,0.00,Gross benefit amount from claim financials
+,DIVIDENDS,0.00,Default zero; dividends not separately derived in prototype
+mloan,LOAN,0.00,Loan offset total from claim financial derivation
+netdb,NETDB,0.00,Net death benefit; fallback to mnetamt when netdb blank
+,PREMIUM,0.00,Default zero
+,SUSPENSE,0.00,Default zero
+,ADJUST,0.00,Default zero
+,CAUSE,,Reserved cause code; not populated in UAT prototype path
+mlineage,MEMOTEXT,,Derivation lineage audit text from Phase 10B
+claimstat,ORIGSTTUS,,Original lifecycle status snapshot
+msettledate,ACCPTDATE,,Settlement/acceptance date when lifecycle settled
+,MCONTEST,F,Default not contested
+,MINTST,,Interest status not derived in prototype path
+,MINTDAYS,0,Default zero
+,MINTRATE,0,Default zero
+mintamt,MINTAMT,0.00,Interest amount from claim financials
+,MSURRCHG,F,Surrender charge flag default false
+,MSEQ,0,Claim header sequence default; non-zero only for CLAIMSTAT 98 partial surrender emit override
+,MHOLDINT,0.00,Default zero
+mfedtax,MFEDTAX,0.00,Federal withholding from claim financials
+,MSTTAX,0.00,State tax default zero
+,MCLMPNDLTR,0,Default zero
+,MFACPMT,F,Default false
+pddate,MPHPAIDTO,,Paid-to date reference from payout aggregation

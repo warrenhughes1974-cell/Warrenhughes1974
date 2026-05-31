@@ -1,0 +1,4 @@
+blocker_type,blocker_count,blocker_detail,governance_status,production_dbf_flag
+ORPHAN_RATE,374,Orphan rate 18.0% exceeds 5% threshold,PRODUCTION_BLOCKED,N
+SURRENDER_OFFSET_REVIEW,4287,Surrender offset business review queue pending,BUSINESS_REVIEW_REQUIRED,N
+UNBALANCED_CLAIMS,4711,Claims still UNBALANCED after partial lifecycle overlay,PRODUCTION_BLOCKED,N

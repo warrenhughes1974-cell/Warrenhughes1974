@@ -1,0 +1,4 @@
+observed_pattern,root_cause,recommended_action,expected_impact,confidence_level
+5182 prototype QUIKCLMS rows generated from 5182 gated candidates,Rulebook-ready claim subset passed validation gates,Use claimnum_crosswalk.csv for all downstream QA/UAT joins,HIGH,HIGH_CONFIDENCE
+743 orphan payment rows detected,Payments accepted without matching prototype claim header,Review prototype_orphan_analysis.csv before production cutover,MEDIUM,MODERATE_CONFIDENCE
+Reconciliation pass rate 96.51%,MPAID vs sum(MAMOUNT) variance on multi-payee or non-death families,Review prototype_claim_payment_reconciliation.csv variances,MEDIUM,MODERATE_CONFIDENCE

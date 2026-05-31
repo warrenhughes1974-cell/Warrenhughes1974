@@ -1,0 +1,3 @@
+audit_timestamp,metric,baseline_phase11,phase15_replay,delta_pct,production_dbf_flag
+2026-05-24T19:11:00Z,reconciliation_pass_pct,96.51,98.08,1.57,N
+2026-05-24T19:11:00Z,trustee_payments_recovered,0.0,168.0,168.0,N

@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-05-31 14:45:44",
+  "closed_mplan_authority": "ENABLED",
+  "legacy_fallback_mode": "DISABLED",
+  "emitted_rows": 11698,
+  "trace_rows": 11698,
+  "orphan_mplan_count": 0,
+  "blank_mplan_count": 2348,
+  "unresolved_blank_count": 0,
+  "expected_non_product_blank_count": 2348,
+  "non_product_governance_rule": "plan_governance/non_product_row_governance_rule.md",
+  "legacy_passthrough_count": 0,
+  "validation_passed": true
+}

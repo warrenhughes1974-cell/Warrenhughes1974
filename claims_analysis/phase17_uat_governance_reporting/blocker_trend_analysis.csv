@@ -1,0 +1,5 @@
+audit_timestamp,production_dbf_flag,trend_metric,phase11_value,phase15_value,delta,trend_direction
+2026-05-28T20:17:57Z,N,orphan_payments,743,374,369,IMPROVING
+2026-05-28T20:17:57Z,N,reconciliation_pass_rate,96.51,98.08,1.57,IMPROVING
+2026-05-28T20:17:57Z,N,quikclms_rows,5182,5466,284,IMPROVING
+2026-05-28T20:17:57Z,N,orphans_to_production_threshold,,271,,PENDING_REMEDIATION

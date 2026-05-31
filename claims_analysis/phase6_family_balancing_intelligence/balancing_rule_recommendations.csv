@@ -1,0 +1,6 @@
+claim_family,observed_pattern,current_rule_issue,recommended_adjustment,expected_balancing_impact,confidence_level
+DEATH_CLAIM,976 claims with 0038 lifecycle-only amounts excluded,Clearing hub inflates generic raw totals,Keep 0038 lifecycle-only exclusion in net rollup,HIGH,HIGH
+DISBURSEMENT_CLAIM,Improved 320 balanced claims,Generic Phase 4 formula insufficient,Adopt DISBURSEMENT_CLAIM profile in future reconstruction pass,HIGH,HIGH
+DISBURSEMENT_CLAIM,Payment-event-only profile balances disbursement chains,Gross benefit required incorrectly in Phase 4,Treat DISBURSEMENT_CLAIM as payout-only event chains,HIGH,HIGH
+SURRENDER_CLAIM,4287 surrender claims remain unbalanced after rules,Missing linked disbursement (0090) on funded-only chains,Add delayed payout detection or separate funded vs disbursed chains,MEDIUM,MEDIUM
+SURRENDER_CLAIM,Improved 1036 balanced claims,Generic Phase 4 formula insufficient,Adopt SURRENDER_CLAIM profile in future reconstruction pass,HIGH,HIGH

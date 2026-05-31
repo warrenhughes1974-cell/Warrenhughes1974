@@ -1,0 +1,22 @@
+QLAdmin Enterprise Claims — Semantic Claim Domain Summary (Phase 22C)
+========================================================================
+
+EXECUTIVE SUMMARY
+--------------------
+Course correction: 04xx Borrowed Money transactions are LOAN ACCOUNTING ACTIVITY,
+not QUIKCLMS claim events. Claim-domain eligibility now requires payout/benefit semantics
+(0530, 0560, 0561, 0090, 0094, 1020, etc.) — not internal loan offsets alone.
+production_dbf_flag=N
+Non-claim accounting rows held: 3851
+Affected policies: 663
+UAT QUIKCLMS baseline (pre-hold): 5122
+Estimated UAT emit after hold: 1271
+
+AUTHORITATIVE DOCUMENTATION
+--------------------
+LifePRO Accounting Transactions: C:\Users\warren\Documents\GitHub\Warrenhughes1974\docs/claims_conversion_reference/LifePRO Accounting Transaction Information (4).pdf
+- 04xx Borrowed Money: 0411 Loan Principal, 0412 Loan Interest Capitalized,
+  0413 Loan Payment, 0414-0416 Non-collateralized loan, 0417 Loan Write Off,
+  0451 Unearned Interest Income.
+
+(See semantic_claim_domain_summary.txt for full report)

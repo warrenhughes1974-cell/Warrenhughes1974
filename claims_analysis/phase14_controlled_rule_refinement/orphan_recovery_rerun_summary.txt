@@ -1,0 +1,16 @@
+=== Phase 14D Orphan Authorized Rerun Summary ===
+
+Rollback snapshot: PHASE14D-ORPHAN-RERUN-20260524T191545Z
+Baseline orphans: 743
+Projected resolved: 369
+Projected remaining: 374
+Reduction: 49.66%
+
+Orphans NOT suppressed. Unresolved orphans remain visible.
+production_dbf_flag=N
+
+Output files:
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\orphan_authorized_rerun_rules.json
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\orphan_resolution_rerun_results.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\orphan_population_delta_analysis.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\orphan_recovery_rerun_summary.txt

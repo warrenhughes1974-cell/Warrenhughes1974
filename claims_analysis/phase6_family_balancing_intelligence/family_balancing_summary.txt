@@ -1,0 +1,37 @@
+=== Family Balancing Rule Validation Summary (Phase 6) ===
+
+Balancing improvement by family:
+  DEATH_CLAIM: 430 -> 430 (+0)
+  DISBURSEMENT_CLAIM: 0 -> 320 (+320)
+  SURRENDER_CLAIM: 2840 -> 3876 (+1036)
+
+Total balanced before: 3270
+Total balanced after: 4626
+Total improvement: 1356
+Largest avg gap reduction: 146.13
+
+Lifecycle-only impact: 976 claims with excluded hub amounts
+Payout chain findings: 4626 payout chains balanced under rules
+Optional withholding observations: not forced when codes absent
+
+Remaining major balancing risks:
+  - Death claims with benefit/payout mismatch remain after clearing exclusion
+  - Surrender funded-only chains without 0090 disbursement
+  - Withholding codes largely unobserved (optional, not forced)
+
+Recommended next-phase priorities:
+  - Keep 0038 lifecycle-only exclusion in net rollup
+  - Adopt DISBURSEMENT_CLAIM profile in future reconstruction pass
+  - Treat DISBURSEMENT_CLAIM as payout-only event chains
+  - Add delayed payout detection or separate funded vs disbursed chains
+  - Adopt SURRENDER_CLAIM profile in future reconstruction pass
+
+Output files generated:
+  - claims_analysis/phase6_family_balancing_intelligence\claim_family_balancing_rules.json
+  - claims_analysis/phase6_family_balancing_intelligence\family_balancing_validation_results.csv
+  - claims_analysis/phase6_family_balancing_intelligence\revised_claim_financials.csv
+  - claims_analysis/phase6_family_balancing_intelligence\lifecycle_only_transaction_analysis.csv
+  - claims_analysis/phase6_family_balancing_intelligence\payout_chain_analysis.csv
+  - claims_analysis/phase6_family_balancing_intelligence\optional_component_analysis.csv
+  - claims_analysis/phase6_family_balancing_intelligence\balancing_rule_recommendations.csv
+  - claims_analysis/phase6_family_balancing_intelligence\family_balancing_summary.txt

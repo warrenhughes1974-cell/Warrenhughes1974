@@ -1,0 +1,7 @@
+claim_scenario,recommended_priority_order,fallback_order,confidence_level,notes
+annuity_payment,PE|PO|IN|PA,PO|PE|IN,LOW,Annuity payment routing requires product-specific validation; PRELSA payee/owner roles are primary signals.
+business_owned_policy,PE|PO|AS|TR|B1,PO|PE|AS|B1,MEDIUM,Business owner policies should prefer explicit payee and owner roles with TIN-bearing entities.
+death_claim_payment,PE|B1|TR|CU|PO|B2|AS,PO|B1|TR|PE|B2|IN,MEDIUM,"Death claim payee resolution should prefer explicit PE, then primary beneficiary, then trust roles."
+missing_payee_relationship,B1|PE|PO|TR|B2|IN,PO|B1|IN|PE,LOW,PACTG blank PAYEE_RELA_CODE rows require PRELSA fallback; beneficiary/owner resolution is most common.
+surrender_payment,PE|PO|IN|PA|AS,PO|PE|IN|PA,MEDIUM,Surrender disbursements commonly route to owner or explicit payee when PE is absent on PACTG.
+trust_owned_policy,TR|CU|PE|PO|B1,TR|CU|PO|B1,MEDIUM,Trustee/custodian precedence expected when trust indicators or business owner patterns are present.

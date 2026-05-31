@@ -1,7 +1,0 @@
-Source_Field,Target_Field,Default_Value,Transformation_Note,Lookup_Table,Join_Key
-POLICY_NUMBER,MPOLICY,,,
-ACCUM_DIVIDENDS,MDEPOSIT,0,Pulled from Benefit Extract,PPBENTYP,POLICY_NUMBER
-DV_ACCRU_INT,MINTYTD,0,Pulled from Non-Forfeiture Events,PEVNTNONFC,POLICY_NUMBER
-DV_INT_PD_TO_DATE,MINTDATE,,Pulled from Non-Forfeiture Events,PEVNTNONFC,POLICY_NUMBER
-,MDEPINT,4.00,Hardcoded Product Rate (Change Default_Value to your actual rate),,
-DV_INT_PD_TO_DATE,MINTDATE,POLC.PAID_TO_DATE,"If Source is 0/Blank, use Policy Paid-To-Date. Convert YYYYMMDD to Date format."

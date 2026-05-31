@@ -1,0 +1,12 @@
+=== Phase 16A Remaining Orphan Root-Cause Triage ===
+
+Rollback snapshot: PHASE16A-ORPHAN-TRIAGE-20260524T192216Z
+Remaining orphan payments triaged: 374
+
+Parent blocker distribution:
+  UNBALANCED_PARENT: 207
+  LIFECYCLE_BLOCKED: 167
+
+Analysis only. No auto-remediation.
+production_dbf_flag=N
+app.py NOT modified

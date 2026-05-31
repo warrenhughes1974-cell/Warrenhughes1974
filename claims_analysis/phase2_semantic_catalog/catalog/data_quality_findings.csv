@@ -1,0 +1,8 @@
+finding_category,finding_description,row_count,distinct_policy_count,min_trans_amount,max_trans_amount,sample_policy_number,sample_effective_date,sample_source_row_numbers,severity,notes
+FUTURE_EFFECTIVE_DATE,EFFECTIVE_DATE after conversion cutoff 20301231,2,2,7.14,134.03,9011105386,22180111,205708|264147,HIGH,Includes sentinel/garbage dates such as 50500904 observed in extract.
+INVALID_EFFECTIVE_DATE,EFFECTIVE_DATE present but not parseable as YYYYMMDD,0,0,,,,,,HIGH,Profiler earliest/latest: 20040326 / 50500904
+NEGATIVE_TRANS_AMOUNT,Row with negative TRANS_AMOUNT,355,6,-6.74,-1.8,9010828370,20180203,105121|170867|170870|170873|170876,HIGH,Potential reversal/correction activity; cross-reference reversal_candidate_analysis.csv.
+BENEFIT_SEQ_ZERO,Claim-relevant row with BENEFIT_SEQ = 0,4,4,6.91,5380.4,9010786152,20220621,73844|162124|228673|339532,LOW,May be valid for base benefit; flag for lifecycle review.
+BLANK_RELATIONSHIP_CODE,Claim-relevant row with blank PAYEE_RELA_CODE,37848,2852,0.01,150000.0,9010149834,20180302,131|162|163|164|172,MEDIUM,Payee relationship may be required for QUIKCLMP distribution reconstruction.
+MISSING_DISTRIBUTION_CODE,Claim payment/disbursement row with blank DISTRIBUTION_CODE,227,125,2.14,50000.0,9010376540,20190220,2424|3022|4141|5000|5001,MEDIUM,Distribution code often present on payout rows (e.g. code 94 with PE relationship).
+UNUSUALLY_LARGE_AMOUNT,"TRANS_AMOUNT absolute value >= 50,000",113,63,50000.0,150000.0,9010722345,20240719,37425|38235|38236|38371|38375,MEDIUM,Large-value transactions warrant manual review during claim reconstruction.

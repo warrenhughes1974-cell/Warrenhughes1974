@@ -1,0 +1,11 @@
+{
+  "APPLY_RATE_VARIATION_FLAGS": true,
+  "SKIP_RATE_VARIATION_FLAGS": false,
+  "emitted_dbf_dir": "plan_analysis/phase_r5_rate_loader/emitted_dbf",
+  "integration_audit_dir": "plan_analysis/phase_r7b_quikplan_rate_variation_integration",
+  "rate_table_extract": "",
+  "paagerat_extract": "",
+  "pcovrsgt_csv": "",
+  "pcovr_csv": "",
+  "plan_form_crosswalk": ""
+}

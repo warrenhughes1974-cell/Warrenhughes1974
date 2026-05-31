@@ -1,0 +1,23 @@
+=== PACTG Transaction Profile Summary ===
+Input file: C:\Users\warren\Documents\GitHub\Warrenhughes1974\docs\claims_conversion_reference\PACTG_Accounting_Extract20260427.csv
+Total rows read: 399059
+Separator rows skipped: 1
+Usable rows: 399058
+TRANS_AMOUNT populated count: 399058
+Malformed amount count: 0
+Distinct policies: 4627
+Distinct CREDIT_CODE count: 50
+Distinct DEBIT_CODE count: 58
+Earliest EFFECTIVE_DATE: 20040326
+Latest EFFECTIVE_DATE: 50500904
+
+Output files generated:
+  - claims_analysis/output\transaction_code_frequency.csv
+  - claims_analysis/output\transaction_amount_statistics.csv
+  - claims_analysis/output\transaction_pair_analysis.csv
+  - claims_analysis/output\account_pair_analysis.csv
+  - claims_analysis/output\relationship_distribution_analysis.csv
+  - claims_analysis/output\distribution_code_analysis.csv
+  - claims_analysis/output\benefit_sequence_analysis.csv
+  - claims_analysis/output\potential_claim_activity.csv
+  - claims_analysis/output\reversal_candidate_analysis.csv

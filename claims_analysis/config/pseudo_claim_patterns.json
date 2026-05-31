@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "description": "Pseudo-claim detection patterns for Phase 22 semantic governance.",
+  "pattern_id": "LOAN_INTEREST_CAPITALIZATION_PSEUDO_SURRENDER",
+  "required_claim_family": "SURRENDER_CLAIM",
+  "required_lifecycle_status": "INFERRED",
+  "allowed_transaction_codes": ["0412", "451"],
+  "forbidden_payout_codes": ["0560", "0561", "0090", "1020", "0567", "1900", "0094"],
+  "require_zero_fields": {
+    "mpaid": true,
+    "mface": true,
+    "netdb": true
+  },
+  "require_positive_fields": {
+    "mintamt": true
+  },
+  "require_tx_codes_only_from_allowed": true,
+  "require_no_forbidden_codes_present": true,
+  "reason_codes": [
+    "LOAN_INTEREST_CAPITALIZATION_PATTERN",
+    "ACTIVE_POLICY_SURRENDER_CONTRADICTION",
+    "0412_ONLY_OFFSET_CHAIN",
+    "NO_SURRENDER_DISBURSEMENT",
+    "ANNUAL_LOAN_CAPITALIZATION_PATTERN",
+    "QLADMIN_DOMAIN_MISMATCH_QUIKLOAN"
+  ]
+}

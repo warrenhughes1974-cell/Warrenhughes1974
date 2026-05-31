@@ -1,0 +1,4 @@
+observed_pattern,root_cause,recommended_action,expected_impact,confidence_level
+219 unresolved payee distributions,Missing PRELSA beneficiaries or zero payout events in reconstruction group,Review unresolved_payee_analysis.csv; validate PRELSA completeness per policy,MEDIUM,MODERATE_CONFIDENCE
+379 multi-beneficiary splits detected,Payout count aligns with PRELSA beneficiary hierarchy,Use payment_payee_staging_candidates.csv for future QUIKCLMP derivation,HIGH,HIGH_CONFIDENCE
+21 inferred beneficiary distributions,Payout count exceeds named beneficiary count,Manual validation before production payee assignment,MEDIUM,INFERRED

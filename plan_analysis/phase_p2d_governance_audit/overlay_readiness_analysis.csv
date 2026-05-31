@@ -1,0 +1,2 @@
+simulation_date,crosswalk_overlay_flag,cell_differences,field_difference_count,duplicate_plan_codes,unique_plan_baseline,unique_plan_overlay,safe_to_enable,readiness_notes
+2026-05-26 09:12:43,0 (default — DO NOT enable),249,4,,132,133,N,Overlay NOT safe for production enablement — differences detected or duplicate PLAN risk

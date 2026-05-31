@@ -1,0 +1,4 @@
+claim_family,original_balanced_count,revised_balanced_count,balancing_improvement,avg_gap_before,avg_gap_after,largest_gap_before,largest_gap_after,major_improvement_flag
+DEATH_CLAIM,430,430,0,1865.17,1865.17,77457.2,77457.2,N
+DISBURSEMENT_CLAIM,0,320,320,2416.1,0.0,36564.48,0.0,Y
+SURRENDER_CLAIM,2840,3876,1036,946.18,858.72,91999.48,71843.33,Y

@@ -1,0 +1,12 @@
+planning_area,detail,avoid,preferred,modify_app_py,production_dbf_flag,sequence,required_before_production,rollback_safe,audit_timestamp
+INSERTION_PATTERN,isolated_subprocess_or_module_import,inline_rewrite_of_process_data|monolithic_app_rewrite|silent_gate_bypass,claims_analysis_pipeline_runner|governance_gate_wrapper|rollback_safe_output_staging,False,N,,,,
+TABLE_SCHEMA_GAP,TABLE_SCHEMAS does not include quikclms/quikclmp,inline_schema_hack,add_quikclms_quikclmp_to_TABLE_SCHEMAS_with_isolated_pipeline,False,N,,,,
+PIPELINE_SEQUENCE,phase4->phase6->phase8->phase9->phase10->phase11->phase12->phase13->authorized_dbf,skip_governance_phases,deterministic_replay_runner,False,N,,,,
+PRODUCTION_READINESS_GATE,Current overall readiness: NOT_READY,production_dbf_without_signoff,explicit_production_dbf_authorization_flag,False,N,,,,
+,phase4_reconstruction_complete,,,,N,1.0,Y,Y,2026-05-24T19:18:42Z
+,phase6_balancing_pass_or_governed_exception,,,,N,2.0,Y,Y,2026-05-24T19:18:42Z
+,phase10_derivation_rulebook_ready,,,,N,3.0,Y,Y,2026-05-24T19:18:42Z
+,phase11_prototype_dbf_qa_pass,,,,N,4.0,Y,Y,2026-05-24T19:18:42Z
+,phase12_exception_governance_review,,,,N,5.0,Y,Y,2026-05-24T19:18:42Z
+,phase13_recovery_governance_signoff,,,,N,6.0,Y,Y,2026-05-24T19:18:42Z
+,production_dbf_authorization_flag,,,,N,7.0,Y,Y,2026-05-24T19:18:42Z

@@ -1,0 +1,424 @@
+legacy_old_value,legacy_new_value,in_product_catalog_crosswalk,authoritative_plan,legacy_matches_authoritative,contains_spaces_old,contains_spaces_new,still_used_by_quikridr_path,p3c_status,dependency_type
+901122D991,01122D991C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901142D978,01142D978C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901154D174,01154D174C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901159D276,01159D276C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901185D536,01185D536C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901222DC,01222DCC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901222DD,01222DDC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9012FG8217,012FG8217C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901330D153,01330D153C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901353D732,01353D732C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9013FG8217,013FG8217C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014048,014048C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014059,014059C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014075A,014075AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014075B,014075BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014098A,014098AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014098B,014098BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014100B,014100BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014100C,014100CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014100D,014100DC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014100E,014100EC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014112,014112C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014126A,014126AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014130,014130C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901422D089,01422D089C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9014FG8217,014FG8217C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9015FG8217,015FG8217C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9016FG8217,016FG8217C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018009B,018009BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018021,018021C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018163,018163C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018166C,018166CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018167C,018167CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018167D,018167DC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018167E,018167EC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018185,018185C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018187,018187C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018222A,018222AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018222B,018222BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018234,018234C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018236B,018236BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018236C,018236CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018237C,018237CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018237D,018237DC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018237E,018237EC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018237F,018237FC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018237G,018237GC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018252,018252C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018253,018253C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018253A,018253AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018253B,018253BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018258A,018258AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018258B,018258BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018258C,018258CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018270,018270C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018284A,018284AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018284C,018284CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018284D,018284DC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018306F,018306FC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018313A,018313AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018313B,018313BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018313D,018313DC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018330A,018330AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018330B,018330BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018330C,018330CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018355,018355C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018386,018386C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018465C,018465CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018465D,018465DC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018491,018491C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018492,018492C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018495A,018495AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018495B,018495BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018495C,018495CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018499A,018499AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018499B,018499BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018499C,018499CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018499D,018499DC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018509,018509C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018510,018510C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018528,018528C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018529,018529C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018586,018586C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018645A,018645AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018645B,018645BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018645C,018645CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018646,018646C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018712,018712C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018712F,018712FC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018719,018719C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018721,018721C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018737A,018737AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018737B,018737BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018845B,018845BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018845C,018845CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018900,018900C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018907,018907C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018909,018909C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018910,018910C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9018912,018912C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9019002,019002C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8033B,01FG8033BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8033C,01FG8033CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8217A,01FG8217AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8217B,01FG8217BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8217C,01FG8217CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8217D,01FG8217DC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8302B,01FG8302BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8314B,01FG8314BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8314D,01FG8314DC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8314E,01FG8314EC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8314F,01FG8314FC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8563,01FG8563C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901FG8801,01FG8801C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML4012A,01ML4012AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML4054,01ML4054C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML4096,01ML4096C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML4107,01ML4107C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML4134,01ML4134C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML4140B,01ML4140BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML4140C,01ML4140CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML4150,01ML4150C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8007,01ML8007C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8123,01ML8123C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8143,01ML8143C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8151,01ML8151C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8171,01ML8171C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8195,01ML8195C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8209,01ML8209C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8211,01ML8211C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8214,01ML8214C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8225,01ML8225C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8246,01ML8246C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8250,01ML8250C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8251,01ML8251C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8267,01ML8267C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8303,01ML8303C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8307,01ML8307C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8314B,01ML8314BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8367,01ML8367C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8378A,01ML8378AC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8378B,01ML8378BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8378C,01ML8378CC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8378D,01ML8378DC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8378E,01ML8378EC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8438,01ML8438C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8450B,01ML8450BC,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8457,01ML8457C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8464,01ML8464C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8487,01ML8487C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8493,01ML8493C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8501,01ML8501C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8515,01ML8515C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8522,01ML8522C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8535,01ML8535C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8556,01ML8556C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8557,01ML8557C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8565,01ML8565C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8570,01ML8570C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8584,01ML8584C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8597,01ML8597C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8678,01ML8678C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8772,01ML8772C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8791,01ML8791C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+901ML8804,01ML8804C,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+658 CEN I,1658C1,Y,1658C1,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578 FTR,778FTR,Y,778FTR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1576 658,976658,Y,976658,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1580 JPO,980JPO,Y,980JPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1577 ADB,977ADB,Y,977ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578FTR WP,9FTRWP,Y,9FTRWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578 CTR,578CTR,Y,578CTR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578CTR WP,9CTRWP,Y,9CTRWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8042 STR,542STR,Y,542STR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8042STR WP,9STRWP,Y,9STRWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO80,9DIS80,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO90,9DIS90,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+658 CEN SD,1658CS,Y,1658CS,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578 FTR,778FTR,Y,778FTR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+659 CEN II,1659C2,Y,1659C2,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO90,9DIS90,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578 FTR,778FTR,Y,778FTR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1576 659,976659,Y,976659,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1577 ADB,977ADB,Y,977ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1580 JPO,980JPO,Y,980JPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578FTR WP,9FTRWP,Y,9FTRWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8043 CTR,543CTR,Y,543CTR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+659 CEN SD,1659CS,Y,1659CS,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+659 CEN SR,1659CR,Y,1659CR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+659 SR GD,1659SR,Y,1659SR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+666 WL,1666WL,Y,1666WL,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+897 666,1666AI,Y,1666AI,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+668 SPWL,1668SP,Y,1668SP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+679 CEN SD,1679CS,Y,1679CS,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 LP95,1L1095,Y,1L1095,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 JPO,9JPO10,Y,9JPO10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 WP,9WPL10,Y,9WPL10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 ADB,9ADB10,Y,9ADB10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 GPO,9GPO10,Y,9GPO10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 CDT,5CDT10,Y,5CDT10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 WP CDT,9CDTWP,Y,9CDTWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO2475,9DIS25,Y,9DIS24,N,N,N,Y,OBSOLETE_FOR_QUIKPLAN,Master_Crosswalk product row
+L10 LP95SR,1L10SR,Y,1L10SR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 OLD,1L10OD,N,,N,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO247C,9DIS25,Y,9DS24C,N,N,N,Y,OBSOLETE_FOR_QUIKPLAN,Master_Crosswalk product row
+L10 CDT,5CDT10,Y,5CDT10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 ADB,9ADB10,Y,9ADB10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 WP OLD,9OLDWP,Y,9OLDWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 GPO,9GPO10,Y,9GPO10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 JPO,9JPO10,Y,9JPO10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 SDT,7SDT10,Y,7SDT10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 SR OLD,1L10SO,Y,1L10SO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 WP OLD,9WPO10,Y,9OLDWP,N,Y,N,Y,OBSOLETE_FOR_QUIKPLAN,Master_Crosswalk product row
+L10 ADB,9ADB10,Y,9ADB10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 JPO,9JPO10,Y,9JPO10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L14,1L14SC,Y,1L14SC,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L17,1L17SP,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L17 2+ JPO,17MJPO,Y,17MJPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L17 1 JPO,117JPO,Y,117JPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8286 GI 1,986JPO,Y,986JPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L17 1,10L171,Y,10L171,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L17 2+,10L172,Y,10L172,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8286 GI 2+,982JPO,Y,982JPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+10827 CSI3,17CSI3,Y,17CSI3,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+10827 CSI5,17CSI5,Y,17CSI5,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+10827 CSI7,17CSI7,Y,17CSI7,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+991 PWL,1991PL,Y,1991PL,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L15,1L15GD,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L15 ADB,9ADB15,Y,9ADB15,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L16,1L16GD,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+619 DT,7619DT,Y,7619DT,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO25,9DIS25,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+619 DT SP,719SDT,Y,719SDT,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+619 DT CH,719CDT,Y,719CDT,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+619 SPS PU,7619PU,Y,7619PU,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+647 FLP,7647FP,Y,7647FP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+647 FLP SP,7647SP,Y,7647SP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+647 FLP CH,7647CH,Y,7647CH,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+667 ART,5667AT,Y,5667AT,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1595,9595WP,Y,9595WP,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L01 10Y LT,5L0110,Y,5L0110,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8115 L01,9L01WP,Y,9L01WP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO70,9DIS70,Y,9DIS70,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1596 L01,901ADB,Y,901ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L05 10Y LT,5L0510,Y,5L0510,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8115,9L05WP,Y,9L05WP,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1596,996ADB,Y,996ADB,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L07 5Y LT,5L075Y,Y,5L075Y,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1596,996ADB,Y,996ADB,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+621 END85,221END,Y,221END,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0822 620,920ADB,Y,920ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+622 END85,222END,Y,222END,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+665 STME95,2665ST,Y,2665ST,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 665,9665WP,Y,9665WP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0822 665,965ADB,Y,965ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+896 DAR,A96DAR,Y,A96DAR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 896,9896WP,Y,9896WP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+665 PUA,265PUA,Y,265PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+980 END65,280END,Y,280END,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+980 PUA,280PUA,Y,280PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+670 GL8588,170588,Y,170588,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+670 PUA,170PUA,Y,170PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+670 GL85-8,170858,Y,170858,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+670 PUA,170PUA,Y,170PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+670 GL85-M,17085M,Y,17085M,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+670 PUA,170PUA,Y,170PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 LP65,196065,Y,196065,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 65 PUA,165PUA,Y,165PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 960LP,9065WP,Y,9065WP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+828,528CTR,Y,528CTR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 LP85-M,196085,Y,196085,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 LP PUA,185PUA,Y,185PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 96085,9085WP,Y,9085WP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0822 960,960ADB,Y,960ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+826,560STR,Y,560STR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 960SP,960SWP,Y,960SWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+863,A60MIR,Y,A60MIR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 OL,1960OL,Y,1960OL,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 OL PUA,1OLPUA,Y,1OLPUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0822 960,960ADB,Y,960ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 960OL,90OLWP,Y,90OLWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+889 960,960GIO,Y,960GIO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+826,560STR,Y,560STR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+828,528CTR,Y,528CTR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0824 P DTH,90PDTH,Y,90PDTH,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 PO,1960PO,Y,1960PO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 PO PUA,1POPUA,Y,1POPUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 960PO,90POWP,Y,90POWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0822 960PO,9POADB,Y,9POADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+863,A60MIR,Y,A60MIR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+828,528CTR,Y,528CTR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+826,560STR,Y,560STR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 960SP,960SWP,Y,960SWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+SAL ML,1SALML,Y,1SALML,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+SAL MULTPL,1SALMI,Y,1SALMI,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+SAL ADB,9SLADB,Y,9SLADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+SAL OL,1SALOL,Y,1SALOL,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+"*Plan Code  is 6 Digits, Beginning with:",,N,,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+FIRST POSITION,,N,,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+2,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+3,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+4,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+5,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+7,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+9,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+A,,N,,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+B through Z,,N,,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+658 CEN I,1658C1,Y,1658C1,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578 FTR,778FTR,Y,778FTR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1576 658,976658,Y,976658,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1580 JPO,980JPO,Y,980JPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1577 ADB,977ADB,Y,977ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578FTR WP,9FTRWP,Y,9FTRWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578 CTR,578CTR,Y,578CTR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1578CTR WP,9CTRWP,Y,9CTRWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8042 STR,542STR,Y,542STR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8042STR WP,9STRWP,Y,9STRWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO80,9DIS80,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO90,9DIS90,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+658 CEN SD,1658CS,Y,1658CS,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+659 CEN II,1659C2,Y,1659C2,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1576 659,976659,Y,976659,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8043 CTR,543CTR,Y,543CTR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+659 CEN SD,1659CS,Y,1659CS,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+659 CEN SR,1659CR,Y,1659CR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+659 SR GD,1659SR,Y,1659SR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+666 WL,1666WL,Y,1666WL,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+897 666,1666AI,Y,1666AI,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+668 SPWL,1668SP,Y,1668SP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+679 CEN SD,1679CS,Y,1679CS,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 LP95,1L1095,Y,1L1095,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 JPO,9JPO10,Y,9JPO10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 WP,9WPL10,Y,9WPL10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 ADB,9ADB10,Y,9ADB10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 GPO,9GPO10,Y,9GPO10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 CDT,5CDT10,Y,5CDT10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 WP CDT,9CDTWP,Y,9CDTWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO2475,9DIS25,Y,9DIS24,N,N,N,Y,OBSOLETE_FOR_QUIKPLAN,Master_Crosswalk product row
+L10 LP95SR,1L10SR,Y,1L10SR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 OLD,1L10OD,N,,N,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO247C,9DIS25,Y,9DS24C,N,N,N,Y,OBSOLETE_FOR_QUIKPLAN,Master_Crosswalk product row
+L10 WP OLD,9OLDWP,Y,9OLDWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 SDT,7SDT10,Y,7SDT10,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L10 SR OLD,1L10SO,Y,1L10SO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L14,1L14SC,Y,1L14SC,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L17,1L17SP,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L17 2+ JPO,17MJPO,Y,17MJPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L17 1 JPO,117JPO,Y,117JPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8286 GI 1,986JPO,Y,986JPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L17 1,10L171,Y,10L171,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L17 2+,10L172,Y,10L172,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8286 GI 2+,982JPO,Y,982JPO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+10827 CSI3,17CSI3,Y,17CSI3,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+10827 CSI5,17CSI5,Y,17CSI5,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+10827 CSI7,17CSI7,Y,17CSI7,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+991 PWL,1991PL,Y,1991PL,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L15,1L15GD,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L15 ADB,9ADB15,Y,9ADB15,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L16,1L16GD,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+619 DT,7619DT,Y,7619DT,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO25,9DIS25,N,,N,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+619 DT SP,719SDT,Y,719SDT,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+619 DT CH,719CDT,Y,719CDT,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+619 SPS PU,7619PU,Y,7619PU,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+647 FLP,7647FP,Y,7647FP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+647 FLP SP,7647SP,Y,7647SP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+647 FLP CH,7647CH,Y,7647CH,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+667 ART,5667AT,Y,5667AT,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1595,9595WP,Y,9595WP,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L01 10Y LT,5L0110,Y,5L0110,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8115 L01,9L01WP,Y,9L01WP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+DISCHO70,9DIS70,Y,9DIS70,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1596 L01,901ADB,Y,901ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L05 10Y LT,5L0510,Y,5L0510,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+8115,9L05WP,Y,9L05WP,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+1596,996ADB,Y,996ADB,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+L07 5Y LT,5L075Y,Y,5L075Y,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+621 END85,221END,Y,221END,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0822 620,920ADB,Y,920ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+622 END85,222END,Y,222END,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+665 STME95,2665ST,Y,2665ST,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 665,9665WP,Y,9665WP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0822 665,965ADB,Y,965ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+896 DAR,A96DAR,Y,A96DAR,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 896,9896WP,Y,9896WP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+665 PUA,265PUA,Y,265PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+980 END65,280END,Y,280END,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+980 PUA,280PUA,Y,280PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+670 GL8588,170588,Y,170588,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+670 PUA,170PUA,Y,170PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+670 GL85-8,170858,Y,170858,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+670 GL85-M,17085M,Y,17085M,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 LP65,196065,Y,196065,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 65 PUA,165PUA,Y,165PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 960LP,9065WP,Y,9065WP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+828,528CTR,Y,528CTR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 LP85-M,196085,Y,196085,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 LP PUA,185PUA,Y,185PUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 96085,9085WP,Y,9085WP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0822 960,960ADB,Y,960ADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+826,560STR,Y,560STR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 960SP,960SWP,Y,960SWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+863,A60MIR,Y,A60MIR,Y,N,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 OL,1960OL,Y,1960OL,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 OL PUA,1OLPUA,Y,1OLPUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 960OL,90OLWP,Y,90OLWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+889 960,960GIO,Y,960GIO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0824 P DTH,90PDTH,Y,90PDTH,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 PO,1960PO,Y,1960PO,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+960 PO PUA,1POPUA,Y,1POPUA,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0823 960PO,90POWP,Y,90POWP,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+0822 960PO,9POADB,Y,9POADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+SAL ML,1SALML,Y,1SALML,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+SAL MULTPL,1SALMI,Y,1SALMI,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+SAL ADB,9SLADB,Y,9SLADB,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row
+SAL OL,1SALOL,Y,1SALOL,Y,Y,N,Y,ACTIVE_LEGACY,Master_Crosswalk product row

@@ -1,0 +1,61 @@
+TEST_ID,TEST_TYPE,PLAN,TABLE,EXPECTED_RESULT,ACTUAL_RESULT,PASS_FAIL,TESTER,TEST_DATE,NOTES
+R6B-001,IMPORT_VERIFY,,QuikPlGd,Import succeeds; row count = 110,,,,,Load sequence 1; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlGd.dbf
+R6B-002,IMPORT_VERIFY,,QuikPlUw,Import succeeds; row count = 80,,,,,Load sequence 2; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlUw.dbf
+R6B-003,IMPORT_VERIFY,,QuikPlBd,Import succeeds; row count = 66,,,,,Load sequence 3; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlBd.dbf
+R6B-004,IMPORT_VERIFY,,QuikPlSt,Import succeeds; row count = 64,,,,,Load sequence 4; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlSt.dbf
+R6B-005,IMPORT_VERIFY,,QuikPlNb,Import succeeds; row count = 64,,,,,Load sequence 5; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlNb.dbf
+R6B-006,IMPORT_VERIFY,,QuikPlGp,Import succeeds; row count = 13,,,,,Load sequence 6; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlGp.dbf
+R6B-007,IMPORT_VERIFY,,QuikPlDv,Import succeeds; row count = 20,,,,,Load sequence 7; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlDv.dbf
+R6B-008,IMPORT_VERIFY,,QuikPlDb,Import succeeds; row count = 12,,,,,Load sequence 8; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlDb.dbf
+R6B-009,IMPORT_VERIFY,,QuikPlCv,Import succeeds; row count = 70,,,,,Load sequence 9; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlCv.dbf
+R6B-010,IMPORT_VERIFY,,QuikPlTv,Import succeeds; row count = 112,,,,,Load sequence 10; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlTv.dbf
+R6B-011,IMPORT_VERIFY,,QuikGps,Import succeeds; row count = 1123,,,,,Load sequence 11; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikGps.dbf
+R6B-012,IMPORT_VERIFY,,QuikDvs,Import succeeds; row count = 3978,,,,,Load sequence 12; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikDvs.dbf
+R6B-013,IMPORT_VERIFY,,QuikDbs,Import succeeds; row count = 1380,,,,,Load sequence 13; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikDbs.dbf
+R6B-014,IMPORT_VERIFY,,QuikCvs,Import succeeds; row count = 25717,,,,,Load sequence 14; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikCvs.dbf
+R6B-015,IMPORT_VERIFY,,QuikTvs,Import succeeds; row count = 26097,,,,,Load sequence 15; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikTvs.dbf
+R6B-016,IMPORT_VERIFY,,QuikNps,Import succeeds; row count = 26650,,,,,Load sequence 16; source plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikNps.dbf
+R6B-017,STRUCTURAL,,ALL,No orphan PLAN references; no import errors; EFFDATE-bearing tables = 19000101,,,,,Cross-check member + key + factor PLAN alignment after full load
+R6B-018,PLAN_LOOKUP,130JEB,QuikPlan,Plan exists and opens in QLAdmin plan maintenance,,,,,
+R6B-019,PLAN_LOOKUP,2665ST,QuikPlan,Large-factor plan exists and is selectable,,,,,
+R6B-020,PLAN_LOOKUP,A96DAR,QuikPlan,Large CV plan exists and is selectable,,,,,
+R6B-021,PLAN_LOOKUP,1L10OD,QuikPlan,AGE-cap scenario plan exists and is selectable,,,,,
+R6B-022,GENDER_DISPLAY,130JEB,QuikPlGd,M: MALE displays in plan maintenance,,,,,
+R6B-023,GENDER_DISPLAY,130JEB,QuikPlGd,F: FEMALE displays in plan maintenance,,,,,
+R6B-024,GENDER_DISPLAY,7687J3,QuikPlGd,J: JOINT displays in plan maintenance,,,,,
+R6B-025,UWCLASS_DISPLAY,1658C1,QuikPlUw,PR: PREFERRED displays in plan maintenance,,,,,
+R6B-026,UWCLASS_DISPLAY,1L14SC,QuikPlUw,NS: NON-SMOKER displays in plan maintenance,,,,,
+R6B-027,UWCLASS_DISPLAY,1L1095,QuikPlUw,ST: STANDARD displays in plan maintenance,,,,,
+R6B-028,BAND_DISPLAY,5L01MA,QuikPlBd,02: BAND 2 displays in plan maintenance,,,,,
+R6B-029,BAND_DISPLAY,5L01MA,QuikPlBd,03: BAND 3 displays in plan maintenance,,,,,
+R6B-030,STATE_COUNTRY_DISPLAY,130JEB,QuikPlSt,0000/00: ALL (OTHER) / ALL (OTHER) displays,,,,,
+R6B-031,NEW_BUSINESS_DISPLAY,130JEB,QuikPlNb,0000/00: EFFDATE=19000101 TERMDATE=open,,,,,
+R6B-032,PLACEHOLDER_GOVERNANCE,2665ST,QuikPlBd,BDLOWVAL=0: MEMBER_PLACEHOLDER_DEFERRED — not a defect,,,,,
+R6B-033,RATE_KEY_RECOGNITION,,QuikPlGp,Rate key table QuikPlGp recognized; keys link to factors,,,,,Verify in QLAdmin plan rate key maintenance
+R6B-034,RATE_KEY_RECOGNITION,,QuikPlDv,Rate key table QuikPlDv recognized; keys link to factors,,,,,Verify in QLAdmin plan rate key maintenance
+R6B-035,RATE_KEY_RECOGNITION,,QuikPlDb,Rate key table QuikPlDb recognized; keys link to factors,,,,,Verify in QLAdmin plan rate key maintenance
+R6B-036,RATE_KEY_RECOGNITION,,QuikPlCv,Rate key table QuikPlCv recognized; keys link to factors,,,,,Verify in QLAdmin plan rate key maintenance
+R6B-037,RATE_KEY_RECOGNITION,,QuikPlTv,Rate key table QuikPlTv recognized; keys link to factors,,,,,Verify in QLAdmin plan rate key maintenance
+R6B-038,GROSS_PREMIUM_RETRIEVAL,2665ST,QuikGps,Factor retrieval succeeds,,,,,
+R6B-039,DIVIDEND_RETRIEVAL,130JEB,QuikDvs,Factor retrieval succeeds,,,,,
+R6B-040,DEATH_BENEFIT_RETRIEVAL,2665ST,QuikDbs,Factor retrieval succeeds,,,,,
+R6B-041,CASH_VALUE_RETRIEVAL,130JEB,QuikCvs,Factor retrieval succeeds,,,,,
+R6B-042,TERMINAL_RESERVE_RETRIEVAL,130JEB,QuikTvs,Factor/reserve retrieval succeeds,,,,,
+R6B-043,NET_PREMIUM_RETRIEVAL,130JEB,QuikNps,Factor retrieval succeeds,,,,,
+R6B-044,GROSS_PREMIUM_LOOKUP,2665ST,QuikGps,Factor=222.22 at AGE=00 DURATION=1 SEX=M UW=00 BAND=01,,,,,GROSS_PREMIUM representative
+R6B-045,GROSS_PREMIUM_LOOKUP,5L01MA,QuikGps,Factor=1.39 at AGE=15 DURATION=1 SEX=M UW=SM BAND=01,,,,,GROSS_PREMIUM representative
+R6B-046,DIVIDEND_LOOKUP,130JEB,QuikDvs,Factor=.00 at AGE=00 DURATION=1 SEX=M UW=00 BAND=01,,,,,DIVIDEND representative
+R6B-047,DIVIDEND_LOOKUP,130JEB,QuikDvs,Factor=2.80 at AGE=00 DURATION=6 SEX=M UW=00 BAND=01,,,,,DIVIDEND representative
+R6B-048,DEATH_BENEFIT_LOOKUP,1659SR,QuikDbs,Factor=300.00 at AGE=00 DURATION=1 SEX=M UW=SM BAND=01,,,,,DEATH_BENEFIT representative
+R6B-049,DEATH_BENEFIT_LOOKUP,17CSI3,QuikDbs,Factor=4.00 at AGE=46 DURATION=1 SEX=M UW=00 BAND=01,,,,,DEATH_BENEFIT representative
+R6B-050,CASH_VALUE_LOOKUP,130JEB,QuikCvs,Factor=.00 at AGE=00 DURATION=1 SEX=M UW=00 BAND=01,,,,,CASH_VALUE representative
+R6B-051,CASH_VALUE_LOOKUP,1658C1,QuikCvs,Factor=11.00 at AGE=00 DURATION=6 SEX=F UW=PR BAND=01,,,,,CASH_VALUE representative
+R6B-052,RESERVE_LOOKUP,130JEB,QuikTvs,Factor=164.19 at AGE=00 DURATION=6 SEX=F UW=00 BAND=01,,,,,TERMINAL_RESERVE representative
+R6B-053,RESERVE_LOOKUP,1658C1,QuikTvs,Factor=1.00 at AGE=00 DURATION=1 SEX=F UW=PR BAND=01,,,,,TERMINAL_RESERVE representative
+R6B-054,NET_PREMIUM_LOOKUP,130JEB,QuikNps,Factor=22.03 at AGE=00 DURATION=1 SEX=F UW=00 BAND=01,,,,,NET_PREMIUM representative
+R6B-055,NET_PREMIUM_LOOKUP,1658C1,QuikNps,Factor=11.00 at AGE=00 DURATION=6 SEX=F UW=PR BAND=01,,,,,NET_PREMIUM representative
+R6B-056,AGE_99_SCENARIO,1L10OD,QuikCvs,Factor=1000.00 at AGE=99 DURATION=1 SEX=M UW=ST BAND=01,,,,,AGE 100 capped to 99; genuine AGE-99 retained
+R6B-057,LARGE_FACTOR_2665ST,2665ST,QuikDbs,Factor=28134.0 at AGE=00 DURATION=1 SEX=M UW=00 BAND=01,,,,,Large DB factor (>9999.99) as 7-char text
+R6B-058,LARGE_FACTOR_2665ST,2665ST,QuikDbs,Factor=28134.0 at AGE=00 DURATION=6 SEX=M UW=00 BAND=01,,,,,Large DB factor (>9999.99) as 7-char text
+R6B-059,LARGE_FACTOR_A96DAR,A96DAR,QuikCvs,Factor=9723.28 at AGE=00 DURATION=41 SEX=M UW=00 BAND=01,,,,,Large CV factor (precision-reduced)
+R6B-060,LARGE_FACTOR_A96DAR,A96DAR,QuikCvs,Factor=12164.9 at AGE=00 DURATION=46 SEX=M UW=00 BAND=01,,,,,Large CV factor (precision-reduced)

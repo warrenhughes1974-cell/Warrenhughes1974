@@ -1,0 +1,2 @@
+phase,timestamp,product_catalog_rows,quarantine_rows,inventory_product_mappings,inventory_policy_mappings,p2a_identical,p2a_cell_diffs,overlay_cell_diffs,passthrough_review_rows
+P2E,2026-05-26 09:27:39,133,288,423,4920,Y,0,249,31

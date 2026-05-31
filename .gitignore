@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+.eggs/
+
+# LifePRO source extracts & conversion outputs (regenerate locally)
+QLA_Migration/Source/
+QLA_Migration/Output/
+docs/claims_conversion_reference/PACTG_Accounting_Extract20260427.csv
+docs/claims_conversion_reference/RelationshipNameAddress_Extract.csv
+
+# Large reference DBFs (schema templates; keep README only)
+plan_analysis/source_data/reference_dbf/*.dbf
+plan_analysis/source_data/reference_dbf/*.DBF
+
+# Large analysis outputs
+claims_analysis/**/quikclms_field_derivation_analysis.csv
+
+# Rate DBF sandbox emit (regenerate: rate_loader_emit.py)
+plan_analysis/phase_r5_rate_loader/emitted_dbf/
+
+# UAT packages & large generated manifests
+plan_analysis/**/UAT_PACKAGE*.zip
+plan_analysis/claims_uat_packages/
+plan_analysis/phase_p3g_quikplan_completeness/blank_mplan_business_review_report.csv
+
+# Local test sandboxes
+Z_SOURCEFORTESTING/
+**/desktop.ini

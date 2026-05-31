@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "description": "Phase 16B surrender offset business triage workbench (no automated balancing).",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE16B-SURRENDER-WORKBENCH",
+  "workbench_buckets": {
+    "LARGE_RESIDUAL_FAMILY": {
+      "min_abs_difference": 1000.0,
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "severity": "HIGH",
+      "remediability": "NON_RECOVERABLE",
+      "review_priority": 1
+    },
+    "CROSS_CLAIM_DEPENDENCY_GROUP": {
+      "requires_linkage": true,
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "review_priority": 2
+    },
+    "OFFSET_ONLY_CYCLE": {
+      "max_abs_difference": 100.0,
+      "governance_status": "QA_REVIEW_REQUIRED",
+      "severity": "MEDIUM",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "review_priority": 3
+    },
+    "DUPLICATE_OFFSET_LOOP_CANDIDATE": {
+      "min_group_member_count": 2,
+      "governance_status": "NEEDS_BUSINESS_REVIEW",
+      "severity": "MEDIUM",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "review_priority": 4
+    },
+    "STANDARD_LARGE_OFFSET": {
+      "min_abs_difference": 100.0,
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "severity": "HIGH",
+      "remediability": "NON_RECOVERABLE",
+      "review_priority": 5
+    }
+  },
+  "future_replay_eligible_categories": [
+    "OFFSET_ONLY_CYCLE",
+    "CROSS_CLAIM_DEPENDENCY_GROUP"
+  ],
+  "rulebook_lineage": "phase14c_surrender_triage|phase16b_surrender_workbench"
+}

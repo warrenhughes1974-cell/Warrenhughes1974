@@ -1,0 +1,10 @@
+{
+  "_comment": "Variation Classification Engine — audit-first by default.",
+  "AUTO_APPLY_VARIATION_CODES": false,
+  "rate_table_extract": "plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv",
+  "paagerat_extract": "plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv",
+  "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
+  "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
+  "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",
+  "_note": "Set AUTO_APPLY_VARIATION_CODES true (or QLA_AUTO_APPLY_VARIATION_CODES=1) to write VARGP/VARDB into quikplan.csv"
+}

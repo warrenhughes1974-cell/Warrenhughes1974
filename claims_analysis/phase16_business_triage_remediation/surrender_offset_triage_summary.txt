@@ -1,0 +1,13 @@
+=== Phase 16B Surrender Offset Business Triage Workbench ===
+
+Rollback snapshot: PHASE16B-SURRENDER-WORKBENCH-20260524T192219Z
+Surrender offset claims classified: 4287
+Dependency groups: 4287
+
+Workbench bucket distribution:
+  STANDARD_LARGE_OFFSET: 3542
+  LARGE_RESIDUAL_FAMILY: 744
+  CROSS_CLAIM_DEPENDENCY_GROUP: 1
+
+Business triage only. No automated balancing.
+production_dbf_flag=N

@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "description": "Phase 22A/22B semantic governance hold rules (UAT-only, reversible quarantine).",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE22-SEMANTIC-GOVERNANCE",
+  "hold_category": "SEMANTIC_PSEUDO_CLAIM",
+  "governance_status": "SEMANTIC_GOVERNANCE_HOLD",
+  "rulebook_lineage": "PHASE22A_SEMANTIC_GOVERNANCE_HOLD|PHASE22B_QLADMIN_DOMAIN_ALIGNMENT",
+  "qladmin_manual_path": "docs/claims_conversion_reference/QLAdmin_Help.pdf",
+  "enable_annual_cadence_check": true,
+  "annual_cadence_min_days": 330,
+  "annual_cadence_max_days": 400,
+  "annual_cadence_min_claims_per_policy": 3,
+  "annual_cadence_match_ratio": 0.6,
+  "exclude_from_uat_emit": true,
+  "exclude_from_uat_dbf": true,
+  "preserve_lineage": true,
+  "preserve_manifests": true,
+  "preserve_workbenches": true
+}

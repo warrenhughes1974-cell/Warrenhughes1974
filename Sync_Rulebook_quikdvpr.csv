@@ -1,5 +1,0 @@
-Source_Field,Target_Field,Default_Value,Transformation_Note,Lookup_Table,Join_Key
-POLICY_NUMBER,MPOLICY,,Crosswalk Policy Number,,
-EFFECTIVE_DATE,MDATE,,Use Dividend Transaction Date,,
-TRANS_AMOUNT,MDIV,,Use Dividend Amount,,
-CREDIT_CODE,,,FILTER_DIVIDEND_PREMIUM,,

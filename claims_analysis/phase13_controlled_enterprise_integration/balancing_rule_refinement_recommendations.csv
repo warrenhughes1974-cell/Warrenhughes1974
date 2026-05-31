@@ -1,0 +1,4 @@
+failure_pattern,claim_count,recommended_rule_refinement,governance_status,remediability,replay_candidate_count,production_dbf_flag
+DEATH_DECOMPOSITION_GAP,301,Review Phase 7C decomposition and payee distribution before balancing replay,BUSINESS_REVIEW_REQUIRED,PARTIALLY_RECOVERABLE,0,N
+LIFECYCLE_EXCLUSION_GAP,407,Validate lifecycle-only exclusion (0038) handling in balancing replay,SAFE_TO_REPROCESS,RECOVERABLE,0,N
+SURRENDER_OFFSET_CYCLE,4287,Review offset-only surrender cycles and cross-claim linkage overlay,BUSINESS_REVIEW_REQUIRED,PARTIALLY_RECOVERABLE,0,N

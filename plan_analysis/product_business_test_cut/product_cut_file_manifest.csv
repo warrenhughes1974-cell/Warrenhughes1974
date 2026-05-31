@@ -1,0 +1,7 @@
+ASSET,RELATIVE_PATH,DESCRIPTION,EXISTS,SIZE_BYTES,SHA256_PREFIX,MODIFIED_UTC
+quikplan,QLA_Migration/Output/quikplan.csv,Authoritative product master,Y,41607,47ec37d1e191412f,2026-05-31T19:40:56.867103Z
+quikridr,QLA_Migration/Output/quikridr.csv,Rider/product linkage,Y,1286738,266901cff165e2eb,2026-05-31T19:45:43.962600Z
+product_catalog,plan_governance/product_catalog_crosswalk.csv,Closed product catalog,Y,33431,fcdda9ca5f7ac4be,2026-05-28T15:42:21.571740Z
+quikplan_source,plan_analysis/quikplan_source.csv,Quikplan source extract,Y,496782,4394d0daa557310e,2026-05-02T17:09:37.296715Z
+rate_variation_config,QLA_Migration/Configs/rate_variation_enrichment_config.example.json,R7B config template,Y,375,5f8df87c1637b3b2,2026-05-31T19:40:38.165948Z
+non_product_rule,plan_governance/non_product_row_governance_rule.md,Non-product row governance,Y,3358,d4c94b30a4ecccc6,2026-05-28T15:42:21.448609Z

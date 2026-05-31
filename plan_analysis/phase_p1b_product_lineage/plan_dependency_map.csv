@@ -1,0 +1,186 @@
+dependency_id,consumer_table,consumer_field,provider_table,provider_field,dependency_type,severity_if_changed,notes,affected_row_count
+DEP-quikridr-MPLAN,quikridr,MPLAN,quikplan,PLAN,FK_REFERENCE,ERROR,Every policy phase references a plan code; orphan MPLAN breaks rider linkage.,11698
+DEP-quikactg-MPLAN,quikactg,MPLAN,quikplan,PLAN,FK_REFERENCE,HIGH,Accounting transaction rows carry plan code via PACTG.PLAN_CODE + Master_Crosswalk.,11698
+DEP-quikplan-PLAN,quikplan,PLAN,validation_config,key_definitions.plan,PRIMARY_KEY,ERROR,PLAN is the sole uniqueness key for quikplan validation.,
+DEP-quikplan-FORM,quikplan,FORM,QLAdmin,PolicyForm,BUSINESS_REFERENCE,HIGH,FORM identifies policy form; must align with crosswalk QL Form Number.,
+DEP-quikplan-PLANNAME,quikplan,PLANNAME,QLAdmin,DisplayName,BUSINESS_REFERENCE,MEDIUM,Friendly display name; crosswalk QL Friendly Name is business authority.,
+DEP-quikplan-DESCR,quikplan,DESCR,QLAdmin,PlanDescription,BUSINESS_REFERENCE,MEDIUM,Plan description shown in QLAdmin screens.,
+DEP-quikplan-PLANTYPE,quikplan,PLANTYPE,QLAdmin,PlanType,BUSINESS_REFERENCE,HIGH,Currently blank in output; QLAdmin expects plan type classification.,
+DEP-quikplan-HRIGPKEY,quikplan,HRIGPKEY,QuikPlbd,RateLookupKey,FUTURE_ACTUARIAL,CRITICAL,Logical gross premium rate lookup; not populated yet.,
+DEP-quikplan-UWVARY*,quikplan,UWVARY*,QuikPlbd,UWClassVary,FUTURE_ACTUARIAL,HIGH,Underwriting class vary-by dimension for rate attachment.,
+DEP-quikplan-BDVARY*,quikplan,BDVARY*,QuikPlbd,BandVary,FUTURE_ACTUARIAL,HIGH,Band vary-by dimension; QuikPlbd index key includes PLAN + BDCODE.,
+DEP-quikplan-STVARY*,quikplan,STVARY*,QuikPlbd,StateVary,FUTURE_ACTUARIAL,HIGH,State/country vary-by dimension for rate tables.,
+DEP-quikplan-GDVARY*,quikplan,GDVARY*,QuikPlbd,GenderVary,FUTURE_ACTUARIAL,HIGH,Gender vary-by dimension for rate tables.,
+DEP-quikplan-MINUNIT/MAXUNIT,quikplan,MINUNIT/MAXUNIT,PCOMP,IssueAmounts,LOOKUP_JOIN,MEDIUM,Rulebook joins PCOMP on COVERAGE_ID for unit limits.,
+DEP-quikridr-MPHASE,quikridr,MPHASE,BusinessRule,MPHASE=1 base,BUSINESS_RULE,CRITICAL,Confirmed: MPHASE 1 = base coverage; riders use MPHASE > 1.,
+DEP-quikmstr-MPOLICY,quikmstr,MPOLICY,quikridr,MPOLICY,INDIRECT,MEDIUM,Policy master indirectly depends on plan catalog via quikridr MPLAN.,
+DEP-DBF_generation-PLAN,DBF_generation,PLAN,quikplan.csv,PLAN,UAT_EMIT,HIGH,UAT DBF generation reads final emitted quikplan.csv.,
+DEP-Master_Crosswalk.csv-Old_Value,Master_Crosswalk.csv,Old_Value,quikplan/quikridr,PLAN/MPLAN,LEGACY_MAPPING,CRITICAL,Currently contains ~240 plan mappings mixed with policy mappings — governance risk.,
+DEP-MPLAN-USAGE-1659C2,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=1659C2 referenced by 3422 quikridr rows.,3422
+DEP-MPLAN-USAGE-1659CR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=1659CR referenced by 645 quikridr rows.,645
+DEP-MPLAN-USAGE-1L10SO,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=1L10SO referenced by 449 quikridr rows.,449
+DEP-MPLAN-USAGE-1658C1,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=1658C1 referenced by 438 quikridr rows.,438
+DEP-MPLAN-USAGE-170PUA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=170PUA referenced by 417 quikridr rows.,417
+DEP-MPLAN-USAGE-1L1095,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=1L1095 referenced by 382 quikridr rows.,382
+DEP-MPLAN-USAGE-170858,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=170858 referenced by 294 quikridr rows.,294
+DEP-MPLAN-USAGE-1L14SC,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=1L14SC referenced by 232 quikridr rows.,232
+DEP-MPLAN-USAGE-5L0110,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=5L0110 referenced by 220 quikridr rows.,220
+DEP-MPLAN-USAGE-17085M,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=17085M referenced by 212 quikridr rows.,212
+DEP-MPLAN-USAGE-976659,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=976659 referenced by 206 quikridr rows.,206
+DEP-MPLAN-USAGE-5667AT,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=5667AT referenced by 198 quikridr rows.,198
+DEP-MPLAN-USAGE-1668SP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=1668SP referenced by 160 quikridr rows.,160
+DEP-MPLAN-USAGE-1L10SR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=1L10SR referenced by 159 quikridr rows.,159
+DEP-MPLAN-USAGE-1SALMI,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=1SALMI referenced by 153 quikridr rows.,153
+DEP-MPLAN-USAGE-1SALML,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=1SALML referenced by 152 quikridr rows.,152
+DEP-MPLAN-USAGE-L10 PRE97,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=L10 PRE97 referenced by 143 quikridr rows.,143
+DEP-MPLAN-USAGE-977ADB,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=977ADB referenced by 114 quikridr rows.,114
+DEP-MPLAN-USAGE-9JPO10,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=9JPO10 referenced by 111 quikridr rows.,111
+DEP-MPLAN-USAGE-976658,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,HIGH,MPLAN=976658 referenced by 108 quikridr rows.,108
+DEP-MPLAN-USAGE-1960OL,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1960OL referenced by 80 quikridr rows.,80
+DEP-MPLAN-USAGE-980JPO,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=980JPO referenced by 61 quikridr rows.,61
+DEP-MPLAN-USAGE-9WPL10,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9WPL10 referenced by 51 quikridr rows.,51
+DEP-MPLAN-USAGE-9ADB10,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9ADB10 referenced by 45 quikridr rows.,45
+DEP-MPLAN-USAGE-9L01WP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9L01WP referenced by 44 quikridr rows.,44
+DEP-MPLAN-USAGE-1960PO,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1960PO referenced by 40 quikridr rows.,40
+DEP-MPLAN-USAGE-9595WP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9595WP referenced by 38 quikridr rows.,38
+DEP-MPLAN-USAGE-9DIS25,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9DIS25 referenced by 34 quikridr rows.,34
+DEP-MPLAN-USAGE-1OLPUA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1OLPUA referenced by 32 quikridr rows.,32
+DEP-MPLAN-USAGE-778FTR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=778FTR referenced by 32 quikridr rows.,32
+DEP-MPLAN-USAGE-196065,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=196065 referenced by 26 quikridr rows.,26
+DEP-MPLAN-USAGE-960ADB,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=960ADB referenced by 24 quikridr rows.,24
+DEP-MPLAN-USAGE-9OLDWP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9OLDWP referenced by 24 quikridr rows.,24
+DEP-MPLAN-USAGE-5CDT10,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=5CDT10 referenced by 23 quikridr rows.,23
+DEP-MPLAN-USAGE-1POPUA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1POPUA referenced by 22 quikridr rows.,22
+DEP-MPLAN-USAGE-5L0510,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=5L0510 referenced by 20 quikridr rows.,20
+DEP-MPLAN-USAGE-L17 BASE,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=L17 BASE referenced by 20 quikridr rows.,20
+DEP-MPLAN-USAGE-17CSI5,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=17CSI5 referenced by 18 quikridr rows.,18
+DEP-MPLAN-USAGE-165PUA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=165PUA referenced by 16 quikridr rows.,16
+DEP-MPLAN-USAGE-90OLWP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=90OLWP referenced by 16 quikridr rows.,16
+DEP-MPLAN-USAGE-7619DT,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=7619DT referenced by 16 quikridr rows.,16
+DEP-MPLAN-USAGE-1659CS,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1659CS referenced by 15 quikridr rows.,15
+DEP-MPLAN-USAGE-9POADB,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9POADB referenced by 14 quikridr rows.,14
+DEP-MPLAN-USAGE-221END,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=221END referenced by 13 quikridr rows.,13
+DEP-MPLAN-USAGE-1666WL,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1666WL referenced by 13 quikridr rows.,13
+DEP-MPLAN-USAGE-1659SR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1659SR referenced by 13 quikridr rows.,13
+DEP-MPLAN-USAGE-1658CS,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1658CS referenced by 13 quikridr rows.,13
+DEP-MPLAN-USAGE-9DIS90,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9DIS90 referenced by 12 quikridr rows.,12
+DEP-MPLAN-USAGE-719CDT,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=719CDT referenced by 11 quikridr rows.,11
+DEP-MPLAN-USAGE-901ADB,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=901ADB referenced by 11 quikridr rows.,11
+DEP-MPLAN-USAGE-1L15GD,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1L15GD referenced by 11 quikridr rows.,11
+DEP-MPLAN-USAGE-9ADB15,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9ADB15 referenced by 11 quikridr rows.,11
+DEP-MPLAN-USAGE-1SALOL,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1SALOL referenced by 11 quikridr rows.,11
+DEP-MPLAN-USAGE-90POWP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=90POWP referenced by 10 quikridr rows.,10
+DEP-MPLAN-USAGE-9FTRWP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9FTRWP referenced by 10 quikridr rows.,10
+DEP-MPLAN-USAGE-543CTR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=543CTR referenced by 10 quikridr rows.,10
+DEP-MPLAN-USAGE-8046 JPO,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=8046 JPO referenced by 10 quikridr rows.,10
+DEP-MPLAN-USAGE-719SDT,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=719SDT referenced by 10 quikridr rows.,10
+DEP-MPLAN-USAGE-9CDTWP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9CDTWP referenced by 10 quikridr rows.,10
+DEP-MPLAN-USAGE-9GPO10,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9GPO10 referenced by 10 quikridr rows.,10
+DEP-MPLAN-USAGE-17CSI7,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=17CSI7 referenced by 10 quikridr rows.,10
+DEP-MPLAN-USAGE-920ADB,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=920ADB referenced by 9 quikridr rows.,9
+DEP-MPLAN-USAGE-1666AI,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1666AI referenced by 8 quikridr rows.,8
+DEP-MPLAN-USAGE-1596 667,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1596 667 referenced by 8 quikridr rows.,8
+DEP-MPLAN-USAGE-5L075Y,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=5L075Y referenced by 8 quikridr rows.,8
+DEP-MPLAN-USAGE-528CTR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=528CTR referenced by 7 quikridr rows.,7
+DEP-MPLAN-USAGE-9DIS80,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9DIS80 referenced by 7 quikridr rows.,7
+DEP-MPLAN-USAGE-10L171,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=10L171 referenced by 7 quikridr rows.,7
+DEP-MPLAN-USAGE-17CSI3,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=17CSI3 referenced by 7 quikridr rows.,7
+DEP-MPLAN-USAGE-280END,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=280END referenced by 6 quikridr rows.,6
+DEP-MPLAN-USAGE-2665ST,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=2665ST referenced by 6 quikridr rows.,6
+DEP-MPLAN-USAGE-8043CTR WP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=8043CTR WP referenced by 6 quikridr rows.,6
+DEP-MPLAN-USAGE-17MJPO,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=17MJPO referenced by 6 quikridr rows.,6
+DEP-MPLAN-USAGE-982JPO,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=982JPO referenced by 6 quikridr rows.,6
+DEP-MPLAN-USAGE-9SLADB,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9SLADB referenced by 6 quikridr rows.,6
+DEP-MPLAN-USAGE-560STR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=560STR referenced by 5 quikridr rows.,5
+DEP-MPLAN-USAGE-196085,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=196085 referenced by 4 quikridr rows.,4
+DEP-MPLAN-USAGE-960GIO,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=960GIO referenced by 4 quikridr rows.,4
+DEP-MPLAN-USAGE-A96DAR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=A96DAR referenced by 4 quikridr rows.,4
+DEP-MPLAN-USAGE-578CTR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=578CTR referenced by 4 quikridr rows.,4
+DEP-MPLAN-USAGE-1578 SPSPU,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1578 SPSPU referenced by 4 quikridr rows.,4
+DEP-MPLAN-USAGE-117JPO,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=117JPO referenced by 4 quikridr rows.,4
+DEP-MPLAN-USAGE-986JPO,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=986JPO referenced by 4 quikridr rows.,4
+DEP-MPLAN-USAGE-222END,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=222END referenced by 3 quikridr rows.,3
+DEP-MPLAN-USAGE-280PUA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=280PUA referenced by 3 quikridr rows.,3
+DEP-MPLAN-USAGE-1991PL,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1991PL referenced by 3 quikridr rows.,3
+DEP-MPLAN-USAGE-170588,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=170588 referenced by 3 quikridr rows.,3
+DEP-MPLAN-USAGE-9CTRWP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9CTRWP referenced by 3 quikridr rows.,3
+DEP-MPLAN-USAGE-686S 30MRG,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=686S 30MRG referenced by 3 quikridr rows.,3
+DEP-MPLAN-USAGE-9DIS70,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9DIS70 referenced by 3 quikridr rows.,3
+DEP-MPLAN-USAGE-7SDT10,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=7SDT10 referenced by 3 quikridr rows.,3
+DEP-MPLAN-USAGE-10L172,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=10L172 referenced by 3 quikridr rows.,3
+DEP-MPLAN-USAGE-10827 MN5K,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=10827 MN5K referenced by 3 quikridr rows.,3
+DEP-MPLAN-USAGE-9085WP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9085WP referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-A60MIR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=A60MIR referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-960SWP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=960SWP referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-9065WP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9065WP referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-90PDTH,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=90PDTH referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-DISCHO20 B,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=DISCHO20 B referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-669 SR GD,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=669 SR GD referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-687J 30MRG,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=687J 30MRG referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-8034 J30MT,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=8034 J30MT referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-1679CS,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1679CS referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-8034 30MRG,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=8034 30MRG referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-996ADB,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=996ADB referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-L10 SPSWP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=L10 SPSWP referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-DISCHO247B,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=DISCHO247B referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-DISCHO29,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=DISCHO29 referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-1L16GD,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1L16GD referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-L16POLFEE,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=L16POLFEE referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-7619PU,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=7619PU referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-619 CH PU,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=619 CH PU referenced by 2 quikridr rows.,2
+DEP-MPLAN-USAGE-621 PUA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=621 PUA referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-961 ME65,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=961 ME65 referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-961 PUA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=961 PUA referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-185PUA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=185PUA referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-970 JEB,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=970 JEB referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-970 PUA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=970 PUA referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-0823 960CH,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=0823 960CH referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-7647FP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=7647FP referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-7647SP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=7647SP referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-7647CH,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=7647CH referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-630 JEB,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=630 JEB referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-9665WP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9665WP referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-965ADB,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=965ADB referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-9896WP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9896WP referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-646 ART,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=646 ART referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-WP 646,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=WP 646 referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-0824 P DIS,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=0824 P DIS referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-690 DT 65,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=690 DT 65 referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-265PUA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=265PUA referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-667 ART CR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=667 ART CR referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-542STR,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=542STR referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-9STRWP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9STRWP referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-L01 10Y MA,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=L01 10Y MA referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-1579 GPO,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=1579 GPO referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-9L05WP,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=9L05WP referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-L10 PREUNI,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=L10 PREUNI referenced by 1 quikridr rows.,1
+DEP-MPLAN-USAGE-L10 WP SRN,quikridr,MPLAN,quikplan,PLAN,RUNTIME_USAGE,MEDIUM,MPLAN=L10 WP SRN referenced by 1 quikridr rows.,1
+DEP-MPLAN-BLANK,quikridr,MPLAN,quikplan,PLAN,DATA_QUALITY,HIGH,Blank MPLAN rows cannot resolve to quikplan.,2348
+DEP-RB-Sync_Rulebook_quikplan-PLAN-COVERAGE_ID,quikplan,PLAN,COVERAGE_ID,COVERAGE_ID,RULEBOOK_ROUTING,HIGH,Map to crosswalk via engine,
+DEP-RB-Sync_Rulebook_quikplan-FORM-POLICY_FORM_NUM,quikplan,FORM,POLICY_FORM_NUM,POLICY_FORM_NUM,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-PLANTYPE-,quikplan,PLANTYPE,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-GDVARYGP-,quikplan,GDVARYGP,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-GDVARYDB-,quikplan,GDVARYDB,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-GDVARYCV-,quikplan,GDVARYCV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-GDVARYTV-,quikplan,GDVARYTV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-GDVARYDV-,quikplan,GDVARYDV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-UWVARYGP-,quikplan,UWVARYGP,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-UWVARYDB-,quikplan,UWVARYDB,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-UWVARYCV-,quikplan,UWVARYCV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-UWVARYTV-,quikplan,UWVARYTV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-UWVARYDV-,quikplan,UWVARYDV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-BDVARYGP-,quikplan,BDVARYGP,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-BDVARYDB-,quikplan,BDVARYDB,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-BDVARYCV-,quikplan,BDVARYCV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-BDVARYTV-,quikplan,BDVARYTV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-BDVARYDV-,quikplan,BDVARYDV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-STVARYGP-,quikplan,STVARYGP,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-STVARYDB-,quikplan,STVARYDB,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-STVARYCV-,quikplan,STVARYCV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-STVARYTV-,quikplan,STVARYTV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-STVARYDV-,quikplan,STVARYDV,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-PLANNAME-DESCRIPTION,quikplan,PLANNAME,DESCRIPTION,DESCRIPTION,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikplan-HRIGPKEY-,quikplan,HRIGPKEY,DEFAULT/RULEBOOK,Default_Value,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikridr-MPLAN-PLAN_CODE,quikridr,MPLAN,PLAN_CODE,PLAN_CODE,RULEBOOK_ROUTING,HIGH,,
+DEP-RB-Sync_Rulebook_quikactg-MPLAN-PLAN_CODE,quikactg,MPLAN,PLAN_CODE,PLAN_CODE,RULEBOOK_ROUTING,HIGH,Use Master_Crosswalk.csv PLAN crosswalk into QLAdmin plan code,
+DEP-KEY-plan,validation_pipeline,PLAN,quikplan,PLAN,VALIDATION_KEY,ERROR,Defined in validation_config/key_definitions.json,

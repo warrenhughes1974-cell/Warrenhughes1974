@@ -1,0 +1,8 @@
+rule_id,scope,source_field,condition,classification,governance_status,hard_fail,authority,notes
+NP-001,quikridr_MPLAN,BENEFIT_SEQ,equals 99,EXPECTED_NON_PRODUCT_ROW,BLANK_ALLOWED,N,LifePRO Product Book + P3G PPBEN analysis,BENEFIT_SEQ 99 is non-convertible administrative structure; do not force MPLAN
+NP-002,quikridr_MPLAN,BENEFIT_TYPE,UV with blank PLAN_CODE,EXPECTED_NON_PRODUCT_ROW,BLANK_ALLOWED,N,LifePRO Product Book + P3G PPBEN analysis,UV value/admin rows without PLAN are non-product
+NP-003,quikridr_MPLAN,PLAN_CODE,blank on non-base BENEFIT_SEQ,EXPECTED_NON_PRODUCT_ROW,BLANK_ALLOWED,N,P3G governance,Blank PLAN on non-base sequence — admin/relationship row unless business override
+NP-004,quikridr_MPLAN,PLAN_CODE,blank any,EXPECTED_NON_PRODUCT_ROW,CLASSIFIED_OK,N,P3G business review,Preserve exact source; classify separately from product failures
+NP-005,quikplan,COVERAGE_ID,N/A,DO_NOT_SYNTHESIZE,N/A,N,Product Book governance,Do not create synthetic catalog rows for BENEFIT_SEQ 99 structures
+NP-006,P3F_quikactg,MPLAN,future,EXPECTED_NON_PRODUCT_ROW,BLANK_ALLOWED,N,P3F scope,Apply same rule via non_product_row_governance.py
+NP-007,P3H_batch,MPLAN,future,EXPECTED_NON_PRODUCT_ROW,BLANK_ALLOWED,N,P3H scope,Batch parity must not hard-fail non-product rows

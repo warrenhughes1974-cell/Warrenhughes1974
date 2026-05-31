@@ -1,0 +1,3 @@
+observed_pattern,root_cause,recommended_action,expected_impact,confidence_level
+5182 QUIKCLMS claim derivation candidates rulebook-ready,Lifecycle + financial + payment aggregation lineage complete,Proceed to Phase 11 prototype DBF generation design,HIGH,HIGH_CONFIDENCE
+4995 claims flagged for validation review,Unbalanced status or settled-without-payment detection,Review quikclms_derivation_validation.csv before prototype DBF,MEDIUM,MODERATE_CONFIDENCE

@@ -1,0 +1,35 @@
+lifepro_coverage_id,obsolete_emit_value,authoritative_value,obsolete_reason,still_emitted_by_quikridr,still_emitted_by_quikplan_p3c,remediation_owner
+0823 960CH,0823 960CH,960CWP,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+0824 P DIS,0824 P DIS,94PDIS,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+10827 MN5K,10827 MN5K,1CSIMN,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+1578 SPSPU,1578 SPSPU,578STR,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+1579 GPO,1579 GPO,9GPO79,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+1596 667,1596 667,967ADB,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+619 CH PU,619 CH PU,719CTR,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+621 PUA,621 PUA,121PUA,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+630 JEB,630 JEB,130JEB,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+646 ART,646 ART,5646AT,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+667 ART CR,667 ART CR,57ATCR,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+669 SR GD,669 SR GD,1669SR,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+686S 30MRG,686S 30MRG,7686S3,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+687J 30MRG,687J 30MRG,7687J3,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+690 DT 65,690 DT 65,7690DT,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+8034 30MRG,8034 30MRG,934SWP,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+8034 J30MT,8034 J30MT,934JWP,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+8043CTR WP,8043CTR WP,943CWP,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+8046 JPO,8046 JPO,9JPO46,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+961 ME65,961 ME65,2961ME,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+961 PUA,961 PUA,261PUA,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+970 JEB,970 JEB,1970JB,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+970 PUA,970 PUA,1970PA,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+DISCHO2475,9DIS25,9DIS24,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+DISCHO247B,DISCHO247B,9DS24B,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+DISCHO247C,9DIS25,9DS24C,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+DISCHO29,DISCHO29,9DIS29,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+L01 10Y MA,L01 10Y MA,5L01MA,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+L10 PRE97,L10 PRE97,1L10OD,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+L10 PREUNI,L10 PREUNI,1L10PR,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+L10 SPSWP,L10 SPSWP,910SWP,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+L10 WP SRN,L10 WP SRN,910RWP,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+WP 646,WP 646,9WP646,CROSSWALK_DIVERGENT compat passthrough superseded by P3C crosswalk_ql_plan_code,LIKELY_IF_PLAN_CODE_MATCHES_COMPAT,N,P3E quikridr alignment
+ENGINE,"cw_map.get(val,val) passthrough",product_catalog crosswalk_ql_plan_code,Flat Master_Crosswalk passthrough on quikridr/quikactg MPLAN path,Y,N,P3E/P3F closed authority extension

@@ -1,0 +1,11 @@
+{
+  "description": "LifePRO source path resolution for claims pipeline (prefer QLA_Migration/Source over reference docs).",
+  "prelsa_candidates": [
+    "QLA_Migration/Source/RelationshipNameAddress_Extract.csv",
+    "docs/claims_conversion_reference/RelationshipNameAddress_Extract.csv"
+  ],
+  "pactg_candidates": [
+    "QLA_Migration/Source/PACTG_Accounting_Extract20260427.csv",
+    "docs/claims_conversion_reference/PACTG_Accounting_Extract20260427.csv"
+  ]
+}

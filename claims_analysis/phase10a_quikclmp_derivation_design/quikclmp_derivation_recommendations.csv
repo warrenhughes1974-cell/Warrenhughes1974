@@ -1,0 +1,4 @@
+observed_pattern,root_cause,recommended_action,expected_impact,confidence_level
+147 derivation candidates require manual review,"Low confidence, inferred distribution, or missing PRELSA payee name",Review quikclmp_confidence_gating_analysis.csv before Phase 10B,MEDIUM,MODERATE_CONFIDENCE
+2153 rulebook-ready QUIKCLMP derivation candidates,Canonical staging with confidence-gated field derivation,Proceed to Phase 10B QUIKCLMS derivation design,HIGH,HIGH_CONFIDENCE
+147 candidates flagged for validation review,Missing payname or low confidence per validation rules,Use quikclmp_derivation_validation.csv for QA/UAT triage,MEDIUM,MODERATE_CONFIDENCE

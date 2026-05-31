@@ -1,0 +1,17 @@
+TABLE_NAME,ROW_COUNT,SOURCE_PATH,LOAD_SEQUENCE,IMPORT_STATUS,NOTES
+QuikPlGd,110,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlGd.dbf,1,,member/dimension — gender members
+QuikPlUw,80,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlUw.dbf,2,,member/dimension — UW-class members
+QuikPlBd,66,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlBd.dbf,3,,member/dimension — band members (BDLOWVAL=0 placeholder)
+QuikPlSt,64,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlSt.dbf,4,,member/dimension — state/country members (MLOANINT blank)
+QuikPlNb,64,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlNb.dbf,5,,member/dimension — new-business window (TERMDATE open)
+QuikPlGp,13,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlGp.dbf,6,,rate key — gross premium
+QuikPlDv,20,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlDv.dbf,7,,rate key — dividend
+QuikPlDb,12,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlDb.dbf,8,,rate key — death benefit
+QuikPlCv,70,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlCv.dbf,9,,rate key — cash value
+QuikPlTv,112,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikPlTv.dbf,10,,rate key — terminal reserve + net premium (shared)
+QuikGps,1123,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikGps.dbf,11,,factor — gross premium
+QuikDvs,3978,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikDvs.dbf,12,,factor — dividend
+QuikDbs,1380,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikDbs.dbf,13,,factor — death benefit
+QuikCvs,25717,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikCvs.dbf,14,,factor — cash value
+QuikTvs,26097,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikTvs.dbf,15,,factor — terminal reserve
+QuikNps,26650,plan_analysis/phase_r5_rate_loader/emitted_dbf/QuikNps.dbf,16,,factor — net premium

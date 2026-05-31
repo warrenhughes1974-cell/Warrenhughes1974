@@ -1,0 +1,2 @@
+source_file,source_row_number,source_coverage_id,source_form,attempted_plan,attempted_form,attempted_descr,authority_column_used,authoritative_plan,resolution_path,fallback_value_used,failure_reason,governance_status,remediation_hint
+C:\Users\warren\Documents\GitHub\Warrenhughes1974\plan_analysis\quikplan_source.csv,104,DISCHO25,,9DIS25,DISCHO25,HOME OFFICE DISCOUNT - 25%-10YR,crosswalk_ql_plan_code,,POLICY_FORM_CROSSWALK_OVERLAY,,MISSING_CATALOG_MAPPING,UNAUTHORIZED,Add Coverage_ID to product_catalog_crosswalk.csv with authoritative PLAN

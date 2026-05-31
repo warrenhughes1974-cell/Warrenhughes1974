@@ -1,0 +1,58 @@
+Claims	QUIKCLMS.DBF	MPOLICY	CHARACTER	10	Policy number
+Claims	QUIKCLMS.DBF	MPHASE	NUMERIC	2	Phase of coverage
+Claims	QUIKCLMS.DBF	CLAIMNUM	CHARACTER	20	Claim number
+Claims	QUIKCLMS.DBF	CLAIMSTAT	NUMERIC	2	Claim status (Pending - 1; Paid in Full - 2; Settled - 3; Denied - 4, Matured - 98; Surrenders - 99)
+Claims	QUIKCLMS.DBF	DTOFDEATH	DATE	8	Date of death
+Claims	QUIKCLMS.DBF	RPTDATE	DATE	8	Reported date
+Claims	QUIKCLMS.DBF	PDDATE	DATE	8	Paid date
+Claims	QUIKCLMS.DBF	MPAID	NUMERIC	10	Amount paid
+Claims	QUIKCLMS.DBF	MFACE	NUMERIC	10	Face amount
+Claims	QUIKCLMS.DBF	DIVIDENDS	NUMERIC	10	Dividend accumulations
+Claims	QUIKCLMS.DBF	LOAN	NUMERIC	10	Loan balance
+Claims	QUIKCLMS.DBF	NETDB	NUMERIC	10	Net death benefit
+Claims	QUIKCLMS.DBF	PREMIUM	NUMERIC	10	Premium accrual
+Claims	QUIKCLMS.DBF	SUSPENSE	NUMERIC	10	Suspense refunded
+Claims	QUIKCLMS.DBF	ADJUST	NUMERIC	10	Manual adjustment
+Claims	QUIKCLMS.DBF	CAUSE	CHARACTER	3	ICD-1- cause of death
+Claims	QUIKCLMS.DBF	MEMOTEXT	MEMO	10	Claim memo
+Claims	QUIKCLMS.DBF	ORIGSTTUS	CHARACTER	2	Original status
+Claims	QUIKCLMS.DBF	ACCPTDATE	DATE	8	Completed date
+Claims	QUIKCLMS.DBF	MCONTEST	LOGICAL	1	Contestable claim indicator
+Claims	QUIKCLMS.DBF	MINTST	CHARACTER	2	State where interest is applicable
+Claims	QUIKCLMS.DBF	MINTDAYS	NUMERIC	5	Days to earn interest
+Claims	QUIKCLMS.DBF	MINTRATE	NUMERIC	8	Interest rate
+Claims	QUIKCLMS.DBF	MINTAMT	NUMERIC	10	Amount of interest earned
+Claims	QUIKCLMS.DBF	MSURRCHG	LOGICAL	1	Surrender charge
+Claims	QUIKCLMS.DBF	MSEQ	NUMERIC	3	Order of benefit payments
+Claims	QUIKCLMS.DBF	MHOLDINT	NUMERIC	12	Interest earned on held payment
+Claims	QUIKCLMS.DBF	MFEDTAX	NUMERIC	12	Federal tax withheld
+Claims	QUIKCLMS.DBF	MSTTAX	NUMERIC	12	State tax withheld
+Claims	QUIKCLMS.DBF	MCLMPNDLTR	NUMERIC	3	Pending claim notice number of days
+Claims	QUIKCLMS.DBF	MFACPMT	LOGICAL	1	MedSupp - facility payment code
+Claims	QUIKCLMS.DBF	MPHPAIDTO	DATE	8	Phase paid-to date
+					
+Claims	QUIKCLMP.DBF	MPOLICY	CHARACTER	10	Policy number
+Claims	QUIKCLMP.DBF	MPHASE	NUMERIC	2	Phase of coverage
+Claims	QUIKCLMP.DBF	MCHECKNO	NUMERIC	7	Check number
+Claims	QUIKCLMP.DBF	MAMOUNT	NUMERIC	12	Payee amount
+Claims	QUIKCLMP.DBF	MPAYNAME	CHARACTER	50	Payee name
+Claims	QUIKCLMP.DBF	MPAYADDR1	CHARACTER	25	Payee address line 1
+Claims	QUIKCLMP.DBF	MPAYADDR2	CHARACTER	25	Payee address line 2
+Claims	QUIKCLMP.DBF	MPAYCITY	CHARACTER	50	Payee city
+Claims	QUIKCLMP.DBF	MPAYST	CHARACTER	2	Payee State
+Claims	QUIKCLMP.DBF	MPAYZIP	CHARACTER	5	Payee zip code
+Claims	QUIKCLMP.DBF	MPAYZIP2	CHARACTER	4	Payee zip code +4
+Claims	QUIKCLMP.DBF	MTIN	CHARACTER	9	Payee tax ID number
+Claims	QUIKCLMP.DBF	MBANKNO	CHARACTER	30	Payee bank account number
+Claims	QUIKCLMP.DBF	MHDPMT	CHARACTER	1	Disbursement method: C - Check, A - ACH, H - Held or Due and Unpaid, S - Settlement Option SPIA, I - Settlement Option Interest, R - Settlement Option Inherited IRA, E - Escheat
+Claims	QUIKCLMP.DBF	MHDCODE	CHARACTER	4	Payment hold reason code
+Claims	QUIKCLMP.DBF	MCHKDATE	DATE	8	Check date
+Claims	QUIKCLMP.DBF	MPMTDATE	DATE	8	Payment date
+Claims	QUIKCLMP.DBF	MSEQ	NUMERIC	3	Order of benefit payments
+Claims	QUIKCLMP.DBF	MHOLDINT	NUMERIC	12	Interest on held benefits
+Claims	QUIKCLMP.DBF	MFEDTAX	NUMERIC	12	Federal tax withheld
+Claims	QUIKCLMP.DBF	MSTTAX	NUMERIC	12	State tax withheld
+Claims	QUIKCLMP.DBF	MGROSS	NUMERIC	12	Gross benefit amount
+Claims	QUIKCLMP.DBF	MDOB	DATE	8	Payee date of birth
+Claims	QUIKCLMP.DBF	MGENDER	CHARACTER	1	Payee gender
+Claims	QUIKCLMP.DBF	MCOUNTRY	CHARACTER	1	Payee country of residence

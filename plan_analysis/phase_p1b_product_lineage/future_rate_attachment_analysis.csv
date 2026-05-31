@@ -1,0 +1,22 @@
+field_name,field_group,qla_purpose,current_populated_rows,total_plan_rows,unique_values,hrigpkey_required,implementation_status,future_dependency,governance_note
+GDVARYGP,GDVARY,Gender vary-by for rate tables,133,133,0,Y,PARTIAL_DEFAULT,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+GDVARYDB,GDVARY,Gender vary-by for rate tables,133,133,0,Y,PARTIAL_DEFAULT,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+GDVARYCV,GDVARY,Gender vary-by for rate tables,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+GDVARYTV,GDVARY,Gender vary-by for rate tables,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+GDVARYDV,GDVARY,Gender vary-by for rate tables,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+UWVARYGP,UWVARY,Underwriting class vary-by for gross premium rates,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+UWVARYDB,UWVARY,Underwriting class vary-by for gross premium rates,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+UWVARYCV,UWVARY,Underwriting class vary-by for gross premium rates,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+UWVARYTV,UWVARY,Underwriting class vary-by for gross premium rates,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+UWVARYDV,UWVARY,Underwriting class vary-by for gross premium rates,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+BDVARYGP,BDVARY,Band vary-by; QuikPlbd keyed by PLAN + BDCODE,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+BDVARYDB,BDVARY,Band vary-by; QuikPlbd keyed by PLAN + BDCODE,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+BDVARYCV,BDVARY,Band vary-by; QuikPlbd keyed by PLAN + BDCODE,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+BDVARYTV,BDVARY,Band vary-by; QuikPlbd keyed by PLAN + BDCODE,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+BDVARYDV,BDVARY,Band vary-by; QuikPlbd keyed by PLAN + BDCODE,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+STVARYGP,STVARY,State/country vary-by for rate tables,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+STVARYDB,STVARY,State/country vary-by for rate tables,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+STVARYCV,STVARY,State/country vary-by for rate tables,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+STVARYTV,STVARY,State/country vary-by for rate tables,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+STVARYDV,STVARY,State/country vary-by for rate tables,0,133,,Y,REVIEW,QuikPlbd rate load; reserve/dividend tables,Do NOT populate HRIGPKEY until plan catalog governance signoff.
+HRIGPKEY,HRIGPKEY,Logical indicator for gross premium rate lookup in QuikPlbd,0,133,,Y,NOT_IMPLEMENTED,All gross premium rate attachment,Requires deterministic PLAN + vary-by + actuarial load strategy.

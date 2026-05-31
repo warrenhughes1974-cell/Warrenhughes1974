@@ -1,0 +1,117 @@
+{
+  "version": "1.0",
+  "description": "Phase 9 canonical QUIKCLMP staging derivation rules (validation only, not production DBF).",
+  "claim_family_default": "DEATH_CLAIM",
+  "staging_id_prefixes": {
+    "payment": "CPS",
+    "payee": "CPYS",
+    "beneficiary": "CBS",
+    "residual": "CRS"
+  },
+  "canonical_statuses": [
+    "PAYMENT_STAGED",
+    "PAYEE_STAGED",
+    "BENEFICIARY_STAGED",
+    "TRUSTEE_ROUTED",
+    "MULTI_PAYEE_STAGED",
+    "RESIDUAL_PENDING",
+    "INFERRED_DISTRIBUTION",
+    "FUTURE_RULEBOOK_READY"
+  ],
+  "confidence_levels": [
+    "HIGH_CONFIDENCE",
+    "MODERATE_CONFIDENCE",
+    "INFERRED",
+    "LOW_CONFIDENCE"
+  ],
+  "payout_code_categories": {
+    "0094": {
+      "payment_type": "DEATH_CLAIM_PAYOUT",
+      "payment_category": "DEATH_BENEFIT",
+      "payment_family": "DEATH_CLAIM"
+    },
+    "0567": {
+      "payment_type": "CLAIM_PAYMENT",
+      "payment_category": "GENERAL_CLAIM",
+      "payment_family": "DEATH_CLAIM"
+    },
+    "1900": {
+      "payment_type": "CASH_DISBURSEMENT",
+      "payment_category": "DISBURSEMENT",
+      "payment_family": "DEATH_CLAIM"
+    }
+  },
+  "payee_role_mapping": {
+    "PE": {"payee_role": "EXPLICIT_PAYEE", "beneficiary_indicator": "N", "trustee_indicator": "N", "fallback_indicator": "N"},
+    "B1": {"payee_role": "PRIMARY_BENEFICIARY", "beneficiary_indicator": "Y", "trustee_indicator": "N", "fallback_indicator": "N"},
+    "B2": {"payee_role": "SECONDARY_BENEFICIARY", "beneficiary_indicator": "Y", "trustee_indicator": "N", "fallback_indicator": "N"},
+    "TR": {"payee_role": "TRUSTEE", "beneficiary_indicator": "N", "trustee_indicator": "Y", "fallback_indicator": "N"},
+    "CU": {"payee_role": "CUSTODIAN", "beneficiary_indicator": "N", "trustee_indicator": "Y", "fallback_indicator": "N"},
+    "PW": {"payee_role": "POWER_OF_ATTORNEY", "beneficiary_indicator": "N", "trustee_indicator": "Y", "fallback_indicator": "N"},
+    "PO": {"payee_role": "POLICY_OWNER", "beneficiary_indicator": "N", "trustee_indicator": "N", "fallback_indicator": "Y"},
+    "IN": {"payee_role": "INSURED", "beneficiary_indicator": "N", "trustee_indicator": "N", "fallback_indicator": "Y"},
+    "AS": {"payee_role": "ASSIGNEE", "beneficiary_indicator": "N", "trustee_indicator": "N", "fallback_indicator": "N"}
+  },
+  "distribution_status_mapping": {
+    "SINGLE_PAYEE_MATCH": {
+      "canonical_status": "PAYMENT_STAGED",
+      "settlement_status": "SINGLE_PAYEE_STAGED"
+    },
+    "MULTI_BENEFICIARY_SPLIT": {
+      "canonical_status": "MULTI_PAYEE_STAGED",
+      "settlement_status": "MULTI_BENEFICIARY_STAGED"
+    },
+    "TRUSTEE_MANAGED_DISTRIBUTION": {
+      "canonical_status": "TRUSTEE_ROUTED",
+      "settlement_status": "TRUSTEE_MANAGED_STAGED"
+    },
+    "STAGED_PAYEE_DISTRIBUTION": {
+      "canonical_status": "PAYMENT_STAGED",
+      "settlement_status": "STAGED_PAYOUT"
+    },
+    "BENEFICIARY_INFERRED": {
+      "canonical_status": "INFERRED_DISTRIBUTION",
+      "settlement_status": "INFERRED_PAYEE_STAGED"
+    },
+    "PAYEE_UNRESOLVED": {
+      "canonical_status": "RESIDUAL_PENDING",
+      "settlement_status": "UNRESOLVED"
+    },
+    "OWNER_FALLBACK": {
+      "canonical_status": "PAYEE_STAGED",
+      "settlement_status": "OWNER_FALLBACK_STAGED"
+    },
+    "INSURED_FALLBACK": {
+      "canonical_status": "PAYEE_STAGED",
+      "settlement_status": "INSURED_FALLBACK_STAGED"
+    }
+  },
+  "beneficiary_distribution_types": {
+    "MULTI_BENEFICIARY_ORDER": "SEQUENTIAL_SPLIT",
+    "EXPLICIT_PE": "EXPLICIT_PAYEE",
+    "PRIMARY_BENEFICIARY": "PRIMARY_BENEFICIARY",
+    "TRUSTEE_PRECEDENCE": "TRUSTEE_ROUTED",
+    "STAGED_SINGLE_PAYEE": "STAGED_SINGLE",
+    "INFERRED_CYCLIC": "INFERRED_CYCLIC",
+    "FALLBACK_ONLY": "FALLBACK",
+    "PHASE4_CLAIM_PAYEE": "PHASE4_RESOLVED"
+  },
+  "residual_type_mapping": {
+    "PAYOUT_EXCESS": "PAYOUT_EXCESS_RESIDUAL",
+    "PAYOUT_SHORTFALL": "PAYOUT_SHORTFALL_RESIDUAL",
+    "NONE": "NO_RESIDUAL",
+    "UNRESOLVED": "UNRESOLVED_PAYEE_RESIDUAL"
+  },
+  "rulebook_readiness": {
+    "minimum_confidence": "MODERATE_CONFIDENCE",
+    "requires_payee_assigned": true,
+    "exclude_statuses": ["RESIDUAL_PENDING", "INFERRED_DISTRIBUTION"],
+    "allow_inferred_with_equal_split": true
+  },
+  "sequencing_rules": {
+    "order_by": ["reconstructed_claim_id", "payment_sequence"],
+    "staged_payout_date_change_threshold_days": 1
+  },
+  "trustee_codes": ["TR", "CU", "PW"],
+  "beneficiary_codes": ["B1", "B2", "PE"]
+}

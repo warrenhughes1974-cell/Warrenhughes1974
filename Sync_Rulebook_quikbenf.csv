@@ -1,6 +1,0 @@
-Source_Field,Target_Field,Default_Value,Transformation_Note
-POLICY_NUMBER,MPOLICY,,Policy Number Driver
-NAME_ID,MBENFID,,Crosswalked Identity
-RELATE_CODE,MTYPE,,DERIVE_BENF_TYPE
-,MRELATION,1000,Default Relationship Code
-,MSPLIT,100.00,Default 100% split

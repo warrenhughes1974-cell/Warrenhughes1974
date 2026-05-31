@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "description": "Phase 14A trustee gate refinement overlay (QA-reviewed subset only, not production).",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE14A-TRUSTEE-GATE",
+  "refined_payment_gating": {
+    "enabled": true,
+    "baseline_require_derivation_status": "RULEBOOK_READY",
+    "trustee_allowed_derivation_statuses": ["TRUSTEE_DERIVATION"],
+    "require_validation_result": "PASS",
+    "require_rulebook_ready": "Y",
+    "minimum_confidence": "MODERATE_CONFIDENCE",
+    "require_parent_in_prototype_quikclms": true,
+    "require_mpayname_present": true,
+    "require_mtrustee": true
+  },
+  "governance_flags": {
+    "trustee_recovery_eligible": "Y",
+    "qa_review_required": "Y",
+    "auto_approved": "N",
+    "production_authorized": "N",
+    "confidence_elevated": "N"
+  },
+  "governance_status": "QA_REVIEW_REQUIRED",
+  "severity": "MEDIUM",
+  "remediability": "RECOVERABLE"
+}

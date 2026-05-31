@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "description": "Phase 14E controlled app.py authorization prep (planning only).",
+  "production_dbf_flag": "N",
+  "modify_app_py": false,
+  "authorization_checkpoints": [
+    "phase14a_trustee_qa_signoff",
+    "phase14b_lifecycle_replay_signoff",
+    "phase14c_surrender_business_triage_signoff",
+    "phase14d_orphan_delta_acceptable",
+    "explicit_production_dbf_authorization_flag"
+  ],
+  "schema_registration": {
+    "quikclms": "register_in_TABLE_SCHEMAS_from_layout_reference",
+    "quikclmp": "register_in_TABLE_SCHEMAS_from_layout_reference"
+  },
+  "integration_wrapper": "governance_gate_wrapper_subprocess_runner"
+}

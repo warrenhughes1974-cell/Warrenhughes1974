@@ -1,0 +1,34 @@
+=== Phase 13D Controlled app.py Integration Planning Summary ===
+
+Planning timestamp: 2026-05-24T19:18:42Z
+Current production readiness: NOT_READY
+Modify app.py in this phase: NO
+
+Governance checkpoints:
+  1. phase4_reconstruction_complete
+  2. phase6_balancing_pass_or_governed_exception
+  3. phase10_derivation_rulebook_ready
+  4. phase11_prototype_dbf_qa_pass
+  5. phase12_exception_governance_review
+  6. phase13_recovery_governance_signoff
+  7. production_dbf_authorization_flag
+
+Rollback controls:
+  - preserve_claimnum_crosswalk_snapshot
+  - preserve_prototype_dbf_snapshot
+  - preserve_audit_csv_outputs
+  - versioned_rules_json_snapshots
+  - deterministic_replay_from_phase4_inputs
+
+Insertion strategy:
+  Pattern: isolated_subprocess_or_module_import
+  Preferred: claims_analysis_pipeline_runner, governance_gate_wrapper, rollback_safe_output_staging
+  Avoid: inline_rewrite_of_process_data, monolithic_app_rewrite, silent_gate_bypass
+
+app.py observation:
+  TABLE_SCHEMAS does not include quikclms/quikclmp
+
+Output files:
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase13_controlled_enterprise_integration\app_integration_planning_rules.json
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase13_controlled_enterprise_integration\app_integration_planning_analysis.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase13_controlled_enterprise_integration\app_integration_planning_summary.txt

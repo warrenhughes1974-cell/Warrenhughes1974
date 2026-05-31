@@ -1,0 +1,92 @@
+{
+  "roles": {
+    "IN": {"label": "Insured", "category": "insured", "payee_relevance": "LOW", "resolution_priority": 5},
+    "PO": {"label": "Policyowner", "category": "owner", "payee_relevance": "MEDIUM", "resolution_priority": 3},
+    "PA": {"label": "Payor", "category": "payor", "payee_relevance": "LOW", "resolution_priority": 6},
+    "PE": {"label": "Payee", "category": "payee", "payee_relevance": "HIGH", "resolution_priority": 1},
+    "B1": {"label": "Beneficiary Primary", "category": "beneficiary", "payee_relevance": "HIGH", "resolution_priority": 2},
+    "B2": {"label": "Beneficiary Secondary", "category": "beneficiary", "payee_relevance": "MEDIUM", "resolution_priority": 4},
+    "TR": {"label": "Trustee", "category": "trustee", "payee_relevance": "HIGH", "resolution_priority": 2},
+    "CU": {"label": "Custodian", "category": "custodian", "payee_relevance": "HIGH", "resolution_priority": 2},
+    "PW": {"label": "Power-of-Attorney", "category": "authority", "payee_relevance": "MEDIUM", "resolution_priority": 4},
+    "SA": {"label": "Servicing Agent", "category": "agent", "payee_relevance": "NONE", "resolution_priority": 99},
+    "WA": {"label": "Writing Agent", "category": "agent", "payee_relevance": "NONE", "resolution_priority": 99},
+    "AS": {"label": "Assignee", "category": "assignee", "payee_relevance": "HIGH", "resolution_priority": 2},
+    "BK": {"label": "Bank", "category": "institution", "payee_relevance": "MEDIUM", "resolution_priority": 3},
+    "ML": {"label": "Mail Recipient", "category": "correspondence", "payee_relevance": "LOW", "resolution_priority": 8},
+    "GP": {"label": "Grantor", "category": "trust", "payee_relevance": "LOW", "resolution_priority": 7},
+    "GU": {"label": "Guardian", "category": "authority", "payee_relevance": "MEDIUM", "resolution_priority": 4},
+    "O1": {"label": "Other Role 1", "category": "other", "payee_relevance": "LOW", "resolution_priority": 9},
+    "P1": {"label": "Other Role P1", "category": "other", "payee_relevance": "LOW", "resolution_priority": 9},
+    "JE": {"label": "Joint Entity", "category": "other", "payee_relevance": "LOW", "resolution_priority": 9}
+  },
+  "category_codes": {
+    "insured": ["IN"],
+    "owner": ["PO"],
+    "payor": ["PA"],
+    "payee": ["PE"],
+    "beneficiary": ["B1", "B2"],
+    "trustee": ["TR"],
+    "custodian": ["CU"],
+    "assignee": ["AS"],
+    "agent": ["SA", "WA"]
+  },
+  "overlap_patterns": [
+    {"codes": ["IN", "PO"], "overlap_type": "INSURED_OWNER_SAME", "risk": "LOW"},
+    {"codes": ["IN", "PA", "PO"], "overlap_type": "INSURED_PAYOR_OWNER_SAME", "risk": "LOW"},
+    {"codes": ["IN", "PE"], "overlap_type": "INSURED_PAYEE_SAME", "risk": "MEDIUM"},
+    {"codes": ["B1", "PE"], "overlap_type": "BENEFICIARY_PAYEE_SAME", "risk": "MEDIUM"},
+    {"codes": ["B2", "PE"], "overlap_type": "SECONDARY_BENEFICIARY_PAYEE_SAME", "risk": "MEDIUM"},
+    {"codes": ["TR", "B1"], "overlap_type": "TRUSTEE_BENEFICIARY_SAME", "risk": "HIGH"},
+    {"codes": ["TR", "B2"], "overlap_type": "TRUSTEE_BENEFICIARY_SAME", "risk": "HIGH"},
+    {"codes": ["AS", "PO"], "overlap_type": "ASSIGNEE_OWNER_CONFLICT", "risk": "HIGH"},
+    {"codes": ["AS", "B1"], "overlap_type": "ASSIGNEE_BENEFICIARY_CONFLICT", "risk": "HIGH"},
+    {"codes": ["PW", "B1"], "overlap_type": "POA_BENEFICIARY_SAME", "risk": "MEDIUM"},
+    {"codes": ["PW", "B2"], "overlap_type": "POA_BENEFICIARY_SAME", "risk": "MEDIUM"},
+    {"codes": ["CU", "TR"], "overlap_type": "CUSTODIAN_TRUSTEE_SAME", "risk": "MEDIUM"}
+  ],
+  "resolution_scenarios": [
+    {
+      "claim_scenario": "death_claim_payment",
+      "recommended_priority_order": "PE|B1|TR|CU|PO|B2|AS",
+      "fallback_order": "PO|B1|TR|PE|B2|IN",
+      "confidence_level": "MEDIUM",
+      "notes": "Death claim payee resolution should prefer explicit PE, then primary beneficiary, then trust roles."
+    },
+    {
+      "claim_scenario": "surrender_payment",
+      "recommended_priority_order": "PE|PO|IN|PA|AS",
+      "fallback_order": "PO|PE|IN|PA",
+      "confidence_level": "MEDIUM",
+      "notes": "Surrender disbursements commonly route to owner or explicit payee when PE is absent on PACTG."
+    },
+    {
+      "claim_scenario": "annuity_payment",
+      "recommended_priority_order": "PE|PO|IN|PA",
+      "fallback_order": "PO|PE|IN",
+      "confidence_level": "LOW",
+      "notes": "Annuity payment routing requires product-specific validation; PRELSA payee/owner roles are primary signals."
+    },
+    {
+      "claim_scenario": "trust_owned_policy",
+      "recommended_priority_order": "TR|CU|PE|PO|B1",
+      "fallback_order": "TR|CU|PO|B1",
+      "confidence_level": "MEDIUM",
+      "notes": "Trustee/custodian precedence expected when trust indicators or business owner patterns are present."
+    },
+    {
+      "claim_scenario": "business_owned_policy",
+      "recommended_priority_order": "PE|PO|AS|TR|B1",
+      "fallback_order": "PO|PE|AS|B1",
+      "confidence_level": "MEDIUM",
+      "notes": "Business owner policies should prefer explicit payee and owner roles with TIN-bearing entities."
+    },
+    {
+      "claim_scenario": "missing_payee_relationship",
+      "recommended_priority_order": "B1|PE|PO|TR|B2|IN",
+      "fallback_order": "PO|B1|IN|PE",
+      "confidence_level": "LOW",
+      "notes": "PACTG blank PAYEE_RELA_CODE rows require PRELSA fallback; beneficiary/owner resolution is most common."
+    }
+  ]
+}

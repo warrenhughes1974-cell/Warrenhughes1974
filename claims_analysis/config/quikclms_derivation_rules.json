@@ -1,0 +1,233 @@
+{
+  "version": "1.0",
+  "description": "Phase 10B QUIKCLMS rulebook derivation rules (design validation only, not production DBF).",
+  "target_table": "QUIKCLMS.DBF",
+  "default_mphase": "1",
+  "derivation_statuses": [
+    "DIRECT_DERIVATION",
+    "LIFECYCLE_DERIVATION",
+    "FINANCIAL_DERIVATION",
+    "AGGREGATED_PAYMENT_DERIVATION",
+    "RESIDUAL_PENDING",
+    "INFERRED_DERIVATION",
+    "RULEBOOK_READY",
+    "NEEDS_MANUAL_REVIEW"
+  ],
+  "confidence_levels": [
+    "HIGH_CONFIDENCE",
+    "MODERATE_CONFIDENCE",
+    "INFERRED",
+    "LOW_CONFIDENCE"
+  ],
+  "confidence_gating": {
+    "rulebook_ready_minimum": "MODERATE_CONFIDENCE",
+    "manual_review_confidence": ["LOW_CONFIDENCE", "INFERRED"],
+    "manual_review_balancing": ["UNBALANCED"]
+  },
+  "claim_family_mapping": {
+    "DEATH_CLAIM": {"mclaimtype": "DEATH", "claimstat_default": "3", "notes": "Settled death claim"},
+    "SURRENDER_CLAIM": {"mclaimtype": "SURRENDER", "claimstat_default": "99", "notes": "Surrender/maturity family"},
+    "DISBURSEMENT_CLAIM": {"mclaimtype": "DISBURSEMENT", "claimstat_default": "2", "notes": "Payment/disbursement event"}
+  },
+  "lifecycle_status_mapping": {
+    "SETTLED": {"mclaimstatus": "SETTLED", "claimstat": "3"},
+    "FUNDED": {"mclaimstatus": "FUNDED", "claimstat": "1"},
+    "PARTIAL": {"mclaimstatus": "PARTIAL", "claimstat": "1"},
+    "OPEN": {"mclaimstatus": "OPEN", "claimstat": "1"},
+    "UNKNOWN": {"mclaimstatus": "UNKNOWN", "claimstat": "1"}
+  },
+  "field_derivations": {
+    "MPOLICY": {
+      "source": "claim_candidate_header.policy_number",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 10,
+      "required": true
+    },
+    "MPHASE": {
+      "source": "constant",
+      "constant_value": "1",
+      "derivation_type": "DIRECT",
+      "layout_type": "NUMERIC",
+      "layout_length": 2,
+      "required": true
+    },
+    "MCLAIMID": {
+      "source": "claim_candidate_header.reconstructed_claim_id",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 20,
+      "required": true,
+      "notes": "Staging claim identifier; final CLAIMNUM crosswalk in Phase 11"
+    },
+    "CLAIMNUM": {
+      "source": "claim_candidate_header.reconstructed_claim_id",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 20,
+      "required": true
+    },
+    "MCLAIMTYPE": {
+      "source": "claim_family_mapping.mclaimtype",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 20,
+      "required": true
+    },
+    "MCLAIMFAMILY": {
+      "source": "claim_candidate_header.claim_family",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 20,
+      "required": true
+    },
+    "MCLAIMSTATUS": {
+      "source": "claim_candidate_header.reconstructed_lifecycle_status",
+      "derivation_type": "LIFECYCLE",
+      "layout_type": "CHARACTER",
+      "layout_length": 20,
+      "required": true
+    },
+    "CLAIMSTAT": {
+      "source": "lifecycle_status_mapping.claimstat",
+      "derivation_type": "LIFECYCLE",
+      "layout_type": "NUMERIC",
+      "layout_length": 2,
+      "required": false
+    },
+    "MLOSSDATE": {
+      "source": "claim_candidate_header.first_activity_date",
+      "derivation_type": "LIFECYCLE",
+      "layout_type": "DATE",
+      "layout_length": 8,
+      "required": false,
+      "family_filter": ["DEATH_CLAIM"]
+    },
+    "MNOTICEDATE": {
+      "source": "claim_candidate_header.first_activity_date",
+      "derivation_type": "LIFECYCLE",
+      "layout_type": "DATE",
+      "layout_length": 8,
+      "required": false
+    },
+    "MSETTLEDATE": {
+      "source": "claim_candidate_header.latest_activity_date",
+      "derivation_type": "LIFECYCLE",
+      "layout_type": "DATE",
+      "layout_length": 8,
+      "required": false,
+      "requires_lifecycle": ["SETTLED"]
+    },
+    "PDDATE": {
+      "source": "payment_aggregation.max_payout_date",
+      "derivation_type": "AGGREGATED",
+      "layout_type": "DATE",
+      "layout_length": 8,
+      "required": false
+    },
+    "MGROSSAMT": {
+      "source": "claim_candidate_financials.gross_benefit_amount",
+      "derivation_type": "FINANCIAL",
+      "layout_type": "NUMERIC",
+      "layout_length": 10,
+      "required": false
+    },
+    "MNETAMT": {
+      "source": "revised_claim_financials.revised_net_payment",
+      "derivation_type": "FINANCIAL",
+      "layout_type": "NUMERIC",
+      "layout_length": 10,
+      "required": true
+    },
+    "NETDB": {
+      "source": "revised_claim_financials.revised_net_payment",
+      "derivation_type": "FINANCIAL",
+      "layout_type": "NUMERIC",
+      "layout_length": 10,
+      "required": false,
+      "family_filter": ["DEATH_CLAIM"]
+    },
+    "MPAID": {
+      "source": "payment_aggregation.total_payment_amount",
+      "derivation_type": "AGGREGATED",
+      "layout_type": "NUMERIC",
+      "layout_length": 10,
+      "required": false
+    },
+    "MINTAMT": {
+      "source": "claim_candidate_financials.interest_amount",
+      "derivation_type": "FINANCIAL",
+      "layout_type": "NUMERIC",
+      "layout_length": 10,
+      "required": false
+    },
+    "MFEDTAX": {
+      "source": "claim_candidate_financials.withholding_amount",
+      "derivation_type": "FINANCIAL",
+      "layout_type": "NUMERIC",
+      "layout_length": 12,
+      "required": false
+    },
+    "MLOAN": {
+      "source": "derived.loan_total",
+      "derivation_type": "FINANCIAL",
+      "layout_type": "NUMERIC",
+      "layout_length": 10,
+      "required": false
+    },
+    "MCLAIMCONF": {
+      "source": "revised_claim_financials.balancing_confidence",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 10,
+      "required": false
+    },
+    "MPAYCOUNT": {
+      "source": "payment_aggregation.payment_count",
+      "derivation_type": "AGGREGATED",
+      "layout_type": "NUMERIC",
+      "layout_length": 3,
+      "required": false
+    },
+    "MRESIDUAL": {
+      "source": "death_claim_decomposition.residual_amount",
+      "derivation_type": "RESIDUAL",
+      "layout_type": "NUMERIC",
+      "layout_length": 12,
+      "required": false
+    },
+    "MCHAINSTATUS": {
+      "source": "death_claim_decomposition.decomposition_status",
+      "derivation_type": "INFERRED",
+      "layout_type": "CHARACTER",
+      "layout_length": 30,
+      "required": false,
+      "family_filter": ["DEATH_CLAIM"]
+    },
+    "MLINEAGE": {
+      "source": "derived.lineage",
+      "derivation_type": "DIRECT",
+      "layout_type": "CHARACTER",
+      "layout_length": 200,
+      "required": true
+    },
+    "MBALANCINGSTATUS": {
+      "source": "revised_claim_financials.revised_balancing_status",
+      "derivation_type": "FINANCIAL",
+      "layout_type": "CHARACTER",
+      "layout_length": 20,
+      "required": true
+    }
+  },
+  "validation_rules": {
+    "require_mpolicy": true,
+    "require_mclaimid": true,
+    "require_mnetamt": false,
+    "flag_unbalanced": true,
+    "flag_missing_payment_when_settled": true
+  },
+  "payment_aggregation": {
+    "primary_source": "canonical_claim_payment_stage",
+    "fallback_source": "claim_candidate_financials.reconstructed_net_payment"
+  }
+}

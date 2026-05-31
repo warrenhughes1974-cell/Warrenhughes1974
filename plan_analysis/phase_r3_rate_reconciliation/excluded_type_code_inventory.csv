@@ -1,0 +1,8 @@
+TYPE_CODE,ROW_COUNT,DISTINCT_COVERAGE_IDS,NOTES
+NF,82445,7,out-of-scope per business decision; not converted to QLAdmin
+NN,118642,16,out-of-scope per business decision; not converted to QLAdmin
+PN,110852,15,out-of-scope per business decision; not converted to QLAdmin
+SL,24,2,out-of-scope per business decision; not converted to QLAdmin
+TP,22840,2,out-of-scope per business decision; not converted to QLAdmin
+TX,19780,1,out-of-scope per business decision; not converted to QLAdmin
+UF,1,1,out-of-scope per business decision; not converted to QLAdmin

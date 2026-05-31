@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "description": "Phase 17A UAT candidate segmentation rules (no production DBFs).",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE17A-UAT-SEGMENTATION",
+  "uat_inclusion_criteria": {
+    "require_generation_status": "ACCEPTED",
+    "require_reconciliation_status": "PASS",
+    "exclude_orphan_payments": true,
+    "exclude_surrender_review_parents": true,
+    "exclude_unbalanced_rejected_parents": true
+  },
+  "uat_segment_tags": {
+    "BASELINE": "governance_cleared",
+    "LIFECYCLE_REPLAY_OVERLAY": "replay_approved",
+    "TRUSTEE_QA_OVERLAY": "trustee_qa_approved"
+  },
+  "rulebook_lineage": "phase15_replay|phase16_triage|phase17a_uat_segmentation"
+}

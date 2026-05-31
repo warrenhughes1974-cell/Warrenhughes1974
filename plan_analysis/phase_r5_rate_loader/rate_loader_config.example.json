@@ -1,0 +1,18 @@
+{
+  "_comment": "Externalized R5 rate-loader configuration. Business/actuarial maintained. Copy to rate_loader_config.json and complete before emit.",
+  "source_rate_extract": "plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv",
+  "paagerat_pr_extract": "plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv",
+  "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
+  "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
+  "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",
+  "_paagerat_note": "PAAGERAT PR: VARGP=3 attained-age grid. SEQ->QuikGps.AGE, CNTL=00/GP0. Join: PAAGERAT -> PCOVRSGT -> PCOVR -> crosswalk PLAN.",
+  "segmentation_defaults": {
+    "effdate": "19000101",
+    "isscntry": "0000",
+    "issuest": "00",
+    "source_decimals": 2,
+    "_note": "Authoritative single rate generation EFFDATE=19000101 (no effective-date variants). EFFDATE != 19000101 is a BLOCKER."
+  },
+  "assumption_mapping_csv": "plan_analysis/phase_r4_loader_architecture/business_inputs/plan_rate_key_assumption_mapping_template.csv",
+  "_assumption_note": "Actuarial assumption fields (MORT/RSVINT/RSVMETH/INTMETHCV/INTMETHTV/ETIMORT/NFOINT/STOREMEANS/CALCMIDS) are deferred. Blank values remain blank placeholders; they are NOT invented."
+}

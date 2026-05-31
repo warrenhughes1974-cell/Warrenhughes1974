@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "description": "Phase 16D production readiness threshold forecasting.",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE16D-READINESS-FORECAST",
+  "thresholds": {
+    "orphan_payment_rate_max_pct": 5.0,
+    "reconciliation_pass_rate_min_pct": 95.0,
+    "trustee_qa_signoff_rate_min_pct": 100.0,
+    "surrender_review_queue_max": 0
+  },
+  "baseline_metrics": {
+    "phase15_quikclmp_row_count": 2078,
+    "phase15_quikclms_row_count": 5466,
+    "phase15_orphan_count": 374,
+    "phase15_orphan_rate_pct": 18.0,
+    "phase15_reconciliation_pass_count": 5361,
+    "phase15_reconciliation_pass_rate_pct": 98.08,
+    "phase15_surrender_review_count": 4287,
+    "phase15_unbalanced_claim_count": 4711
+  },
+  "remediation_scenarios": {
+    "conservative_remediation": {
+      "parent_remediation_fraction": 0.25,
+      "orphans_resolved_per_parent": 0.8,
+      "reconciliation_lift_per_100_orphans": 0.5
+    },
+    "moderate_remediation": {
+      "parent_remediation_fraction": 0.5,
+      "orphans_resolved_per_parent": 0.85,
+      "reconciliation_lift_per_100_orphans": 0.8
+    },
+    "aggressive_remediation": {
+      "parent_remediation_fraction": 0.75,
+      "orphans_resolved_per_parent": 0.9,
+      "reconciliation_lift_per_100_orphans": 1.0
+    },
+    "trustee_lifecycle_only_baseline": {
+      "parent_remediation_fraction": 0.1,
+      "orphans_resolved_per_parent": 0.95,
+      "reconciliation_lift_per_100_orphans": 0.3,
+      "filter_blocker_types": ["LIFECYCLE_BLOCKED"]
+    },
+    "surrender_focused_recovery": {
+      "parent_remediation_fraction": 0.3,
+      "orphans_resolved_per_parent": 0.5,
+      "reconciliation_lift_per_100_orphans": 0.2,
+      "filter_blocker_types": ["SURRENDER_OFFSET_BLOCKED"]
+    }
+  },
+  "rulebook_lineage": "phase15_replay|phase16d_readiness_forecast"
+}

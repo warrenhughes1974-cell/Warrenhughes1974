@@ -1,0 +1,51 @@
+{
+  "version": "1.0",
+  "description": "Phase 13B balancing remediation workflow governance (analysis only, no forced balancing).",
+  "production_dbf_flag": "N",
+  "balance_tolerance": 0.01,
+  "minor_variance_threshold": 100.0,
+  "replay_diff_threshold": 100.0,
+  "failure_patterns": {
+    "LARGE_RESIDUAL": {
+      "min_abs_difference": 100.0,
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "recommended_action": "Review family balancing formula and offset classification; do not force zero"
+    },
+    "LIFECYCLE_EXCLUSION_GAP": {
+      "min_lifecycle_excluded": 0.01,
+      "severity": "MEDIUM",
+      "remediability": "RECOVERABLE",
+      "governance_status": "SAFE_TO_REPROCESS",
+      "recommended_action": "Validate lifecycle-only exclusion (0038) handling in balancing replay"
+    },
+    "OPTIONAL_COMPONENT_ABSENT": {
+      "match_notes": ["Optional components absent"],
+      "severity": "MEDIUM",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "NEEDS_RULE_REFINEMENT",
+      "recommended_action": "Review optional component policy per family profile"
+    },
+    "SURRENDER_OFFSET_CYCLE": {
+      "families": ["SURRENDER_CLAIM"],
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "recommended_action": "Review offset-only surrender cycles and cross-claim linkage overlay"
+    },
+    "DEATH_DECOMPOSITION_GAP": {
+      "families": ["DEATH_CLAIM"],
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "recommended_action": "Review Phase 7C decomposition and payee distribution before balancing replay"
+    },
+    "GENERAL_UNBALANCED": {
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "governance_status": "MANUAL_REMEDIATION_REQUIRED",
+      "recommended_action": "Manual balancing review with full lineage audit"
+    }
+  }
+}

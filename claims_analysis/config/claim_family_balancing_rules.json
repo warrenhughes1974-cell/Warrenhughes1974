@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "description": "Phase 6 family-specific claim balancing rules (validation only, not production conversion).",
+  "balance_tolerance": 0.01,
+  "families": {
+    "DEATH_CLAIM": {
+      "label": "Death Claim",
+      "balancing_formula": "gross + interest - loan_principal - loan_interest - surrender_charge - withholding = payout",
+      "gross_component_codes": ["0530", "0519"],
+      "interest_component_codes": ["0630"],
+      "offset_component_codes": ["0411", "0412"],
+      "surrender_charge_codes": ["1020"],
+      "withholding_component_codes": ["0810", "0820"],
+      "payout_component_codes": ["0094", "0567", "1900"],
+      "lifecycle_only_codes": ["0038"],
+      "excluded_from_net_rollup_codes": ["0038"],
+      "optional_components": ["0810", "0820", "0411", "0412", "1020", "0630"],
+      "settlement_chain_guidance": "0038 supports lifecycle and settlement linkage only; pair 0094 payout to 0530/0630 funding chain.",
+      "confidence_notes": "Clearing hub must not inflate net rollup. Withholding optional when codes absent."
+    },
+    "SURRENDER_CLAIM": {
+      "label": "Surrender Claim",
+      "balancing_formula": "total_cash + partial_surrender - surrender_charge - loan_principal - loan_interest = disbursement",
+      "gross_component_codes": ["0560", "0561"],
+      "interest_component_codes": [],
+      "offset_component_codes": ["0411", "0412"],
+      "surrender_charge_codes": ["1020"],
+      "withholding_component_codes": ["0810", "0820"],
+      "payout_component_codes": ["0090", "0567", "1900"],
+      "lifecycle_only_codes": [],
+      "excluded_from_net_rollup_codes": [],
+      "optional_components": ["0810", "0820", "0090", "0567", "1900", "1020"],
+      "offset_only_chain_net_zero": true,
+      "settlement_chain_guidance": "Loan offset-only chains may balance at zero until disbursement codes appear.",
+      "confidence_notes": "Disbursement codes optional for funded-only surrender events."
+    },
+    "DISBURSEMENT_CLAIM": {
+      "label": "Disbursement Claim",
+      "balancing_formula": "payout = net_payment",
+      "gross_component_codes": [],
+      "interest_component_codes": [],
+      "offset_component_codes": [],
+      "surrender_charge_codes": [],
+      "withholding_component_codes": ["0810", "0820"],
+      "payout_component_codes": ["0090", "0567", "1900"],
+      "lifecycle_only_codes": [],
+      "excluded_from_net_rollup_codes": [],
+      "optional_components": ["0810", "0820"],
+      "payment_event_only": true,
+      "settlement_chain_guidance": "Treat as payment/disbursement event chain; do not require gross benefit reconstruction.",
+      "confidence_notes": "Net payment equals payout total by profile design."
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "description": "Phase 14C surrender offset cycle business triage (no automated remediation).",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE14C-SURRENDER-TRIAGE",
+  "target_failure_pattern": "SURRENDER_OFFSET_CYCLE",
+  "triage_categories": {
+    "OFFSET_ONLY_BALANCED_CYCLE": {
+      "max_abs_difference": 100.0,
+      "governance_status": "QA_REVIEW_REQUIRED",
+      "severity": "MEDIUM",
+      "remediability": "PARTIALLY_RECOVERABLE"
+    },
+    "CROSS_CLAIM_DEPENDENT": {
+      "requires_enhanced_settlement_group": true,
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "severity": "HIGH",
+      "remediability": "PARTIALLY_RECOVERABLE"
+    },
+    "LARGE_OFFSET_RESIDUAL": {
+      "min_abs_difference": 100.0,
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "severity": "HIGH",
+      "remediability": "NON_RECOVERABLE"
+    }
+  },
+  "business_review_queue_status": "BUSINESS_REVIEW_REQUIRED"
+}

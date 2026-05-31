@@ -1,0 +1,45 @@
+{
+  "version": "1.0",
+  "description": "Phase 13A trustee payment recovery governance (analysis only, no auto-approval).",
+  "production_dbf_flag": "N",
+  "trustee_codes": ["TR", "CU", "PW"],
+  "recovery_scenarios": {
+    "TRUSTEE_RULEBOOK_READY_ELIGIBLE": {
+      "requires_validation_pass": true,
+      "requires_rulebook_ready": true,
+      "minimum_confidence": "MODERATE_CONFIDENCE",
+      "requires_trustee_indicator": true,
+      "requires_payname": true,
+      "primary_blocker": "DERIVATION_STATUS_GATING",
+      "governance_status": "QA_REVIEW_REQUIRED",
+      "remediability": "RECOVERABLE",
+      "severity": "MEDIUM"
+    },
+    "TRUSTEE_PARENT_CLAIM_BLOCKED": {
+      "parent_claim_not_in_prototype": true,
+      "governance_status": "PRODUCTION_BLOCKED",
+      "remediability": "NON_RECOVERABLE",
+      "severity": "HIGH",
+      "primary_blocker": "PARENT_CLAIM_UNBALANCED"
+    },
+    "TRUSTEE_PAYEE_DATA_GAP": {
+      "requires_payname": false,
+      "governance_status": "MANUAL_REMEDIATION_REQUIRED",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "severity": "HIGH",
+      "primary_blocker": "MISSING_PAYEE"
+    },
+    "TRUSTEE_CONFIDENCE_GAP": {
+      "maximum_confidence": "INFERRED",
+      "governance_status": "BUSINESS_REVIEW_REQUIRED",
+      "remediability": "PARTIALLY_RECOVERABLE",
+      "severity": "MEDIUM",
+      "primary_blocker": "LOW_CONFIDENCE"
+    }
+  },
+  "rule_refinement_recommendations": {
+    "derivation_status_gating": "Allow TRUSTEE_DERIVATION with validation PASS + rulebook_ready=Y + MODERATE+ confidence into QA-reviewed prototype subset",
+    "prototype_dbf_gate": "Add trustee_recovery_eligible flag without elevating to AUTO_APPROVED",
+    "confidence_floor": "Preserve MODERATE_CONFIDENCE minimum; never auto-elevate INFERRED"
+  }
+}

@@ -1,0 +1,17 @@
+=== Phase 14C Surrender Offset Triage Summary ===
+
+Rollback snapshot: PHASE14C-SURRENDER-TRIAGE-20260524T191541Z
+SURRENDER_OFFSET_CYCLE claims triaged: 4287
+
+Triage category distribution:
+  LARGE_OFFSET_RESIDUAL: 4282
+  CROSS_CLAIM_DEPENDENT: 5
+
+Business triage only. No automated remediation.
+production_dbf_flag=N
+
+Output files:
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\surrender_offset_review_rules.json
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\surrender_offset_cycle_pattern_analysis.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\surrender_offset_business_review_queue.csv
+  - c:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase14_controlled_rule_refinement\surrender_offset_governance_summary.txt

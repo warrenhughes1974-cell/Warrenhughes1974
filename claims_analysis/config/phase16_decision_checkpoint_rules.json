@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "description": "Phase 16F pre-production decision checkpoint rules.",
+  "production_dbf_flag": "N",
+  "rollback_snapshot_prefix": "PHASE16F-DECISION-CHECKPOINT",
+  "decision_categories": {
+    "READY_FOR_MORE_REPLAY": {
+      "requires_orphan_rate_below_pct": 10.0,
+      "requires_remediation_queue_pct_complete": 0.25,
+      "requires_no_production_blockers": false
+    },
+    "NEEDS_BUSINESS_REVIEW": {
+      "trigger_if_surrender_queue_min": 1,
+      "trigger_if_business_review_required_pct": 0.5
+    },
+    "NEEDS_RULE_REFINEMENT": {
+      "trigger_if_lifecycle_blocked_min": 1,
+      "trigger_if_derivation_rejected_min": 1
+    },
+    "PRODUCTION_BLOCKED": {
+      "trigger_if_orphan_rate_above_pct": 5.0,
+      "trigger_if_unbalanced_claims_min": 1000
+    },
+    "DEFER_TO_MANUAL_REMEDIATION": {
+      "trigger_if_non_recoverable_pct": 0.4
+    }
+  },
+  "overall_readiness_weights": {
+    "orphan_rate": 0.35,
+    "reconciliation_rate": 0.25,
+    "surrender_review_burden": 0.25,
+    "unbalanced_claims": 0.15
+  },
+  "rulebook_lineage": "phase16a|phase16b|phase16c|phase16d|phase16f_decision_checkpoint"
+}

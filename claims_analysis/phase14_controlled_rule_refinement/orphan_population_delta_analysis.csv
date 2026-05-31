@@ -1,0 +1,7 @@
+metric,value,rollback_snapshot_id,production_dbf_flag
+baseline_orphan_count,743.0,PHASE14D-ORPHAN-RERUN-20260524T191545Z,N
+projected_resolved_orphans,369.0,PHASE14D-ORPHAN-RERUN-20260524T191545Z,N
+projected_remaining_orphans,374.0,PHASE14D-ORPHAN-RERUN-20260524T191545Z,N
+orphan_reduction_pct,49.66,PHASE14D-ORPHAN-RERUN-20260524T191545Z,N
+trustee_qa_payments_authorized,168.0,PHASE14D-ORPHAN-RERUN-20260524T191545Z,N
+lifecycle_replay_authorized_claims,407.0,PHASE14D-ORPHAN-RERUN-20260524T191545Z,N

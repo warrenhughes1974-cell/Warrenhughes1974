@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "description": "Phase 18A app.py claims UAT orchestration configuration (not production cutover).",
+  "production_dbf_flag": "N",
+  "production_authorization_flag": "N",
+  "go_live_target": "2026-09-01",
+  "default_run_mode": "UAT",
+  "valid_run_modes": ["UAT", "PRODUCTION", "DISABLED"],
+  "uat_staging_subdir": "claims_uat_staging",
+  "orchestration_timeout_seconds": 600,
+  "external_runner_env_flag": "QLA_CLAIMS_ORCHESTRATE",
+  "allow_inline_claims_conversion": false,
+  "batch_include_claims_tables": false,
+  "registered_tables": ["quikclms", "quikclmp"],
+  "uat_candidate_sources": {
+    "quikclms": "claims_analysis/phase17_uat_governance_reporting/uat_candidate_quikclms.csv",
+    "quikclmp": "claims_analysis/phase17_uat_governance_reporting/uat_candidate_quikclmp.csv"
+  },
+  "orchestration_runners": {
+    "phase17_uat_governance": "claims_analysis/phase17_uat_governance_reporting/phase17_uat_governance_reporting_runner.py",
+    "phase16_business_triage": "claims_analysis/phase16_business_triage/phase16_business_triage_runner.py"
+  },
+  "governance_notes": [
+    "Claims tables use external pipeline orchestration only.",
+    "app.py registers schema awareness and stages UAT candidate CSVs when RUN_MODE=UAT.",
+    "No production DBF generation from app.py in Phase 18A.",
+    "Set QLA_PRODUCTION_DBF_AUTHORIZED=Y only after explicit enterprise sign-off."
+  ],
+  "rulebook_lineage": "phase17_uat_governance|phase18a_app_orchestration"
+}

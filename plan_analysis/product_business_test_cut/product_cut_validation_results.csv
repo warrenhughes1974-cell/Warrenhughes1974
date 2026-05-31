@@ -1,0 +1,27 @@
+CHECK_NAME,STATUS,DETAILS
+QUIKPLAN_ROW_COUNT,PASS,rows=140 expected=140
+QUIKPLAN_SCHEMA,PASS,cols=79 expected=79
+ALL_CATALOG_PLANS_EMITTED,PASS,all 140 present
+NO_UNAUTHORIZED_PLANS,PASS,none
+NO_PLAN_SPACES,PASS,none
+NO_PASSTHROUGH_PLANS,PASS,none
+ROW_COUNT_PRESERVED,PASS,before=140 after=140
+SCHEMA_COLUMN_ORDER,PASS,expected 79 cols; orig=79 enr=79
+ONLY_APPROVED_FIELDS_CHANGED,PASS,blockers=0
+PLANVALOPT_CONSISTENCY,PASS,plans_checked=120
+STVARY_REMAINS_N_UNLESS_STATE_VARIATION,PASS,none
+DEFERRED_ACTUARIAL_ASSUMPTIONS_UNCHANGED,PASS,unchanged
+PLAN_NO_SPACES,PASS,invalid=[]
+NP_VARIATION_FIELDS_NOT_CREATED,PASS,NP has no quikplan VARY fields; excluded by design
+EXCLUDED_TYPE_CODES_NOT_USED,PASS,"excluded=NF,NN,PN,SL,TP,TX,UF"
+EMITTED_MATCHES_RATE_DERIVATION,PASS,aligned
+RATE_VARIATION_ENRICHMENT_ENABLED,PASS,enabled
+PLANVALOPT_Y_COUNT,PASS,count=75
+QUIKRIDR_MPLAN_ALIGNMENT,PASS,"{'emitted_rows': 11698, 'non_blank_mplan': 9350, 'outside_quikplan': 0, 'with_spaces': 0, 'unique_outside': []}"
+QUIKRIDR_NO_ORPHAN_MPLAN,PASS,outside=0
+QUIKRIDR_NO_MPLAN_SPACES,PASS,spaced=0
+QUIKRIDR_BLANK_MPLAN_ROWS,PASS,blank_mplan_rows=2348
+NON_PRODUCT_ROWS_CLASSIFIED,PASS,expected_non_product_source_rows_sampled=11699 (BENEFIT_SEQ 99/UV)
+RATE_EMIT_DBF_PRESENT,PASS,key_tables_present=6/6 dir=C:\Users\warren\Documents\GitHub\Warrenhughes1974\plan_analysis\phase_r5_rate_loader\emitted_dbf
+RATE_DBF_PLAN_OVERLAP,PASS,quikplan_rate_plan_overlap=85
+RATE_LOADER_ISOLATED,PASS,Rate DBFs under plan_analysis/phase_r5_rate_loader/emitted_dbf; production DBFs untouched

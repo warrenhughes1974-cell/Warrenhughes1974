@@ -1,0 +1,2 @@
+validation_area,result,detail,rollback_safe,production_dbf_flag
+GOVERNANCE_WRAPPER,PASS,Trustee and lifecycle overlays applied with governance flags,Y,N

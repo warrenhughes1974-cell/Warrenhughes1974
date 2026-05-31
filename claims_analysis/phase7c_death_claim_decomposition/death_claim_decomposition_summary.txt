@@ -1,0 +1,64 @@
+=== Death Claim Settlement Decomposition Summary (Phase 7C) ===
+
+Total DEATH_CLAIM analyzed: 1694
+Focus population (partial/multi/unbalanced): 1389
+
+Decomposition status distribution:
+  CLEARING_ONLY_DISTORTION: 75
+  FULLY_DECOMPOSED: 306
+  INTEREST_EXPLAINS_GAP: 19
+  MULTI_PAYOUT_DECOMPOSED: 109
+  NEEDS_PAYEE_DISTRIBUTION_ANALYSIS: 333
+  PARTIAL_DECOMPOSITION: 305
+  RESIDUAL_REMAINS: 547
+
+Key metrics:
+  Fully decomposed: 306
+  Multi-payout decomposed: 109
+  Partial decompositions: 305
+  Offset-explained gaps: 0
+  Interest-explained gaps: 19
+  Withholding-explained gaps: 0
+  Residual remains: 547
+  Clearing-only distortion: 75
+  Needs payee distribution analysis: 333
+  Average |residual|: 1865.17
+  Largest |residual|: 77457.2
+
+Settlement pattern distribution:
+  CLEARING_ONLY: 17
+  FUNDING_ONLY: 202
+  MANY_FUNDING_MANY_PAYOUTS: 66
+  MANY_FUNDING_ONE_PAYOUT: 4
+  ONE_FUNDING_MANY_PAYOUTS: 357
+  ONE_FUNDING_ONE_PAYOUT: 995
+  PAYOUT_ONLY: 53
+
+Confidence distribution:
+  HIGH_CONFIDENCE: 306
+  INFERRED: 692
+  LOW_CONFIDENCE: 368
+  MODERATE_CONFIDENCE: 328
+
+Phase 6 balancing on death claims:
+  UNBALANCED: 708
+  MINOR_VARIANCE: 556
+  BALANCED: 430
+
+Architectural notes:
+  - 0038 clearing excluded from financial rollup on all layers
+  - No Phase 4/6/7A/7B outputs modified
+  - No QUIKCLMS/QUIKCLMP generation
+
+Recommended next phase:
+  - Phase 8: PRELSA payee distribution linkage for NEEDS_PAYEE_DISTRIBUTION_ANALYSIS claims
+
+Output files generated:
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7c_death_claim_decomposition\death_claim_decomposition_rules.json
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7c_death_claim_decomposition\death_claim_decomposition_summary.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7c_death_claim_decomposition\death_claim_component_layers.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7c_death_claim_decomposition\death_claim_multi_payout_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7c_death_claim_decomposition\death_claim_partial_chain_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7c_death_claim_decomposition\death_claim_residual_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7c_death_claim_decomposition\death_claim_offset_interest_withholding_analysis.csv
+  - C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase7c_death_claim_decomposition\death_claim_decomposition_recommendations.csv
