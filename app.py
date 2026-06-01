@@ -1,11 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.4
+# Version:     v57.5
 # Date:        2026-06-01
-# Change Note: CSO Mortality Crosswalk — plan-level CV assumptions (MORT/ETIMORT/NFOINT/
-#              INTMETHCV) resolved from CSO_Mortiality_Crosswalk.csv; quikplan NFOINT/
-#              INTMETHCV populated via isolated resolver. (Builds on v57.3 Product Cut.)
+# Change Note: UI polish for demo readiness — neutral business-facing labels, staged
+#              progress feedback with stage names + success/error states. Cosmetic only;
+#              no change to fields, schemas, conversion logic, or backend module/file names.
+#              (Builds on v57.4 CSO Mortality Crosswalk.)
 # =============================================================================
 
 import pandas as pd
@@ -192,7 +193,7 @@ PRODUCT_SETUP_DIAGNOSTICS_MANIFEST = os.path.join("plan_governance", "manifests"
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.4 — CSO CV Assumptions")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.5")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -234,8 +235,8 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION ENGINE v57.4", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
-        tk.Label(header, text="Product Business Test Cut + CSO CV Assumptions", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.5", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
         
@@ -312,7 +313,12 @@ class QLAdminEnterpriseIntegrationSuite:
         self.lbl_timer = tk.Label(self.root, text="Elapsed: 00:00", bg=self.bg_main, fg=self.accent, font=("Consolas", 10, "bold"))
         self.lbl_timer.pack()
         self.progress = ttk.Progressbar(self.root, orient="horizontal", length=1040, mode="determinate")
-        self.progress.pack(pady=10)
+        self.progress.pack(pady=(10, 2))
+        self.stage_color_idle = self.text_color
+        self.stage_color_success = self.btn_batch
+        self.stage_color_error = "#DC2626"
+        self.lbl_stage = tk.Label(self.root, text="Ready", bg=self.bg_main, fg=self.stage_color_idle, font=("Segoe UI", 10, "bold"))
+        self.lbl_stage.pack(pady=(0, 8))
 
         btn_frame = tk.Frame(self.root, bg=self.bg_main)
         btn_frame.pack(pady=10)
@@ -1438,7 +1444,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def _setup_governance_summary_panel(self):
         panel = tk.LabelFrame(
             self.root,
-            text=" Claims UAT Governance & Handoff (Phase 18C–20 — read-only) ",
+            text=" Claims UAT Readiness & Handoff (read-only) ",
             bg=self.bg_card,
             fg=self.accent,
             padx=16,
@@ -1484,7 +1490,7 @@ class QLAdminEnterpriseIntegrationSuite:
         actions = tk.Frame(panel, bg=self.bg_card)
         actions.pack(fill="x", pady=(8, 0))
         tk.Button(
-            actions, text="Refresh Governance Summary", width=24,
+            actions, text="Refresh Validation Summary", width=26,
             command=self._refresh_governance_visibility,
         ).pack(side="left", padx=(0, 8))
         tk.Button(
@@ -1559,8 +1565,8 @@ class QLAdminEnterpriseIntegrationSuite:
             ("product_status", "Last Run Status:"),
             ("product_rows", "Staged Rows:"),
             ("product_validation", "Parallel Validation (P2A):"),
-            ("product_warnings", "Governance Warnings:"),
-            ("product_errors", "Governance Errors:"),
+            ("product_warnings", "Validation Warnings:"),
+            ("product_errors", "Validation Errors:"),
             ("product_staged_path", "Staged Output:"),
             ("product_emitted_path", "Emitted Output:"),
             ("product_isolation", "Batch Isolation:"),
@@ -1775,7 +1781,7 @@ class QLAdminEnterpriseIntegrationSuite:
             if status == "SUCCESS":
                 messagebox.showinfo("Product Setup", "Product setup conversion completed successfully.")
             elif status == "BLOCKED":
-                messagebox.showwarning("Product Setup", "Conversion completed but emit blocked by governance.")
+                messagebox.showwarning("Product Setup", "Conversion completed but output was blocked by validation controls.")
             else:
                 messagebox.showerror("Product Setup", f"Product setup conversion status: {status}")
         finally:
@@ -1826,7 +1832,7 @@ class QLAdminEnterpriseIntegrationSuite:
         banner = (
             f"RUN MODE: {summary['run_mode']}  |  "
             f"PRODUCTION STATUS: {summary['production_status']}  |  "
-            f"Governance Thresholds: {summary['threshold_status']}  |  "
+            f"Review Thresholds: {summary['threshold_status']}  |  "
             f"Go-Live Target: {summary['go_live_target']}  |  "
             f"production_dbf_flag={self.CLAIMS_ORCHESTRATION['production_dbf_flag']}"
         )
@@ -1835,10 +1841,10 @@ class QLAdminEnterpriseIntegrationSuite:
     def _log_governance_console_summary(self):
         summary = self._build_governance_summary()
         if not summary["files_present"]:
-            self.log("GOVERNANCE SUMMARY: Phase 17 outputs NOT YET GENERATED")
+            self.log("VALIDATION SUMMARY: Phase 17 outputs NOT YET GENERATED")
             return
         lines = [
-            "GOVERNANCE EXECUTION SUMMARY (Phase 17 UAT reporting — read-only)",
+            "VALIDATION SUMMARY (UAT reporting — read-only)",
             f"  UAT Candidate Claims: {self._format_governance_metric(summary['uat_claims'])}",
             f"  UAT Candidate Payments: {self._format_governance_metric(summary['uat_payments'])}",
             f"  Deferred Claims: {self._format_governance_metric(summary['deferred_claims'])}",
@@ -3252,10 +3258,31 @@ class QLAdminEnterpriseIntegrationSuite:
             self.lbl_timer.config(text=f"Elapsed: {m:02d}:{s:02d}")
             time.sleep(1)
 
+    def update_progress(self, stage_percent, stage_message, state="running"):
+        """Cosmetic staged progress feedback. Updates the progress bar (when a percent
+        is supplied) and the adjacent stage label. Never touches conversion data and is
+        safe to call before the widgets exist. Pass stage_percent=None to update only the
+        stage message without disturbing in-flight per-record bar movement."""
+        try:
+            if stage_percent is not None and hasattr(self, "progress"):
+                self.progress["value"] = max(0, min(100, stage_percent))
+            if hasattr(self, "lbl_stage"):
+                color = {
+                    "success": self.stage_color_success,
+                    "error": self.stage_color_error,
+                }.get(state, self.stage_color_idle)
+                self.lbl_stage.config(text=stage_message, fg=color)
+            if hasattr(self, "root"):
+                self.root.update_idletasks()
+        except Exception:
+            # Presentation-only helper — must never interrupt a conversion run.
+            pass
+
     def process_data(self, is_batch):
         try:
             self.console.delete(1.0, tk.END)
-            self.log("Initializing Migration Engine v57.4 (Product Business Test Cut + CSO CV Assumptions)...")
+            self.update_progress(5, "Preparing conversion run…")
+            self.log("Initializing Migration Engine v57.5 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -3307,6 +3334,7 @@ class QLAdminEnterpriseIntegrationSuite:
 
             rel_path = self.path_vars["Rel"][0].get()
             rel_map = self._load_rel_map(rel_path, trans_map, log_label="startup relational map")
+            self.update_progress(None, "Loading source data…")
 
             # --- RelationshipNameAddress Extract Cache ---
             rel_name_cache = {}
@@ -3367,7 +3395,7 @@ class QLAdminEnterpriseIntegrationSuite:
                 self.log(f"  Locked source root: {locked_src_base}")
                 self.log(f"  Locked rulebook root: {locked_rule_base}")
                 self.log(f"  Output folder: {self.path_vars['Out'][0].get()}")
-                self.log("  NOTE: quikclms/quikclmp are NOT LifePRO source files — they come from Phase 17 UAT governance.")
+                self.log("  NOTE: quikclms/quikclmp are NOT LifePRO source files — they come from Phase 17 UAT validation reporting.")
                 if self._product_setup_isolated():
                     self.log("  PRODUCT SETUP ISOLATED: quikplan will be SKIPPED in batch (QLA_PRODUCT_SETUP_ISOLATED=1)")
                 self.log("=" * 60)
@@ -3376,6 +3404,8 @@ class QLAdminEnterpriseIntegrationSuite:
                 if not t_id: 
                     if not is_batch: self.log("!!! ERROR: Please select a table from the dropdown first.")
                     continue
+
+                self.update_progress(None, f"Building QLAdmin output tables… ({t_id})")
 
                 if self._is_claims_table(t_id):
                     self._execute_claims_orchestration(t_id)
@@ -3952,6 +3982,7 @@ class QLAdminEnterpriseIntegrationSuite:
                     )
                     qdf = pd.DataFrame(output, columns=schema)
                     qdf = apply_rate_variation_flag_enrichment(qdf, self._app_base_dir())
+                    self.update_progress(None, "Applying plan/rate enrichments…")
                     self.log(f"Rate variation flags applied (R7B): {int((qdf['PLANVALOPT'] == 'Y').sum())} plans PLANVALOPT=Y")
 
                     cso_path = default_crosswalk_path(self._app_base_dir())
@@ -4474,6 +4505,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         rel_map = self._load_rel_map(fresh_rel, trans_map, log_label="batch relational map")
                         self.path_vars["Rel"][0].set(fresh_rel)
 
+            self.update_progress(None, "Writing output files…")
             batch_claims_result = None
             if is_batch:
                 batch_claims_result = self._execute_batch_claims_uat_finale()
@@ -4495,7 +4527,10 @@ class QLAdminEnterpriseIntegrationSuite:
                 )
             else:
                 messagebox.showinfo("Complete", "Conversion Finished.")
-        except Exception as e: self.log(f"!!! ERROR: {str(e)}")
+            self.update_progress(100, "Conversion completed successfully.", state="success")
+        except Exception as e:
+            self.log(f"!!! ERROR: {str(e)}")
+            self.update_progress(None, "Conversion stopped. Review the log for details.", state="error")
         finally: self.is_running = False
 
 if __name__ == "__main__":
