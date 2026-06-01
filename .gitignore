@@ -9,6 +9,10 @@ __pycache__/
 # LifePRO source extracts & conversion outputs (regenerate locally)
 QLA_Migration/Source/
 QLA_Migration/Output/
+
+# Operational run artifacts (v57.8): centralized error logs & relocated diagnostics
+QLA_Migration/Error_Logs/
+QLA_Migration/Reports/
 docs/claims_conversion_reference/PACTG_Accounting_Extract20260427.csv
 docs/claims_conversion_reference/RelationshipNameAddress_Extract.csv
 

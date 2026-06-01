@@ -1,11 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.7
+# Version:     v57.8
 # Date:        2026-06-01
-# Change Note: Rate Table Generation panel — R5 rate factors/keys/members from the
-#              application (no CLI). Optional include-in-batch hook. Uses existing
-#              rate_pipeline + rate_dbf_writer; CSVs to Output/rates/. (Builds on v57.6.)
+# Change Note: Operations hardening (presentation only) — staged progress with stage
+#              names + elapsed + success/fail states; centralized error logs under
+#              QLA_Migration/Error_Logs/run_<ts>; Output kept CSV-only (non-CSV moved,
+#              never deleted, to Reports/sandbox/Error_Logs). No business logic, schema,
+#              mapping, CSO, rate, or claims behavior changed. (Builds on v57.7.)
 # =============================================================================
 
 import pandas as pd
@@ -24,6 +26,7 @@ import csv
 from datetime import datetime
 
 from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA
+from qla_core import run_logging as RL
 from qla_core.quikplan_converter import convert_quikplan_to_output, prepare_quikplan_source, apply_rate_variation_flag_enrichment
 from qla_core.cso_mortality_crosswalk import (
     apply_quikplan_cv_assumptions,
@@ -194,7 +197,7 @@ RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runne
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.7")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.8")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -236,7 +239,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.7", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.8", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -311,20 +314,27 @@ class QLAdminEnterpriseIntegrationSuite:
         
         tk.Button(controls, text="FULL PROJECT BACKUP", bg=self.btn_backup, fg="white", width=40, command=self.create_snapshot).pack(side="right", padx=10)
 
-        self.lbl_timer = tk.Label(self.root, text="Elapsed: 00:00", bg=self.bg_main, fg=self.accent, font=("Consolas", 10, "bold"))
+        self.lbl_timer = tk.Label(self.root, text="Elapsed: 00:00:00", bg=self.bg_main, fg=self.accent, font=("Consolas", 10, "bold"))
         self.lbl_timer.pack()
         self.progress = ttk.Progressbar(self.root, orient="horizontal", length=1040, mode="determinate")
         self.progress.pack(pady=(10, 2))
         self.stage_color_idle = self.text_color
         self.stage_color_success = self.btn_batch
         self.stage_color_error = "#DC2626"
-        self.lbl_stage = tk.Label(self.root, text="Ready", bg=self.bg_main, fg=self.stage_color_idle, font=("Segoe UI", 10, "bold"))
-        self.lbl_stage.pack(pady=(0, 8))
+        self.lbl_stage = tk.Label(self.root, text="Stage 0 — Ready", bg=self.bg_main, fg=self.stage_color_idle, font=("Segoe UI", 10, "bold"))
+        self.lbl_stage.pack(pady=(0, 0))
+        self.lbl_stage_detail = tk.Label(self.root, text="", bg=self.bg_main, fg=self.text_color, font=("Segoe UI", 9))
+        self.lbl_stage_detail.pack(pady=(0, 8))
+        self._progress_plan = None
+        self._run_start_time = None
 
-        btn_frame = tk.Frame(self.root, bg=self.bg_main)
-        btn_frame.pack(pady=10)
-        tk.Button(btn_frame, text="RUN SINGLE TABLE CONVERSION", bg=self.btn_action, fg="white", width=35, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(False)).pack(side="left", padx=15)
-        tk.Button(btn_frame, text="EXECUTE FULL BATCH MIGRATION", bg=self.btn_batch, fg="white", width=35, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(True)).pack(side="left", padx=15)
+        run_controls = tk.LabelFrame(self.root, text=" Run Controls ", bg=self.bg_main, fg=self.accent, font=("Segoe UI", 10, "bold"), padx=10, pady=8)
+        run_controls.pack(padx=30, fill="x", pady=(0, 4))
+        btn_frame = tk.Frame(run_controls, bg=self.bg_main)
+        btn_frame.pack()
+        tk.Button(btn_frame, text="RUN SINGLE TABLE CONVERSION", bg=self.btn_action, fg="white", width=33, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(False)).pack(side="left", padx=10)
+        tk.Button(btn_frame, text="EXECUTE FULL BATCH MIGRATION", bg=self.btn_batch, fg="white", width=33, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(True)).pack(side="left", padx=10)
+        tk.Button(btn_frame, text="GENERATE RATE TABLES", bg="#0D9488", fg="white", width=28, height=2, font=("Segoe UI", 9, "bold"), command=self.start_rate_loader_thread).pack(side="left", padx=10)
 
         self._setup_product_setup_panel()
         self._setup_rate_loader_panel()
@@ -1784,21 +1794,38 @@ class QLAdminEnterpriseIntegrationSuite:
         threading.Thread(target=self._run_product_setup_job, daemon=True).start()
 
     def _run_product_setup_job(self):
+        run_error_log = self._new_run_error_log()
         try:
+            self.start_run_progress("product_setup")
+            self.update_run_progress(1, detail="Preparing product setup")
             self.log("PRODUCT SETUP CONVERSION (Phase P2C): starting...")
+            self.update_run_progress(3, detail="Converting quikplan + CSO assumptions")
             self._last_product_setup_result = self._invoke_product_setup_runner()
             self._refresh_product_setup_visibility()
             status = self._last_product_setup_result.get("status", "UNKNOWN")
+            self.update_run_progress(4, detail=f"validation — status={status}")
             self.log(f"PRODUCT SETUP: completed status={status}")
+            self._run_output_hygiene(run_error_log)
             if status == "SUCCESS":
+                self.complete_run_progress("Complete — quikplan.csv written to QLA_Migration\\Output")
                 messagebox.showinfo("Product Setup", "Product setup conversion completed successfully.")
             elif status == "BLOCKED":
+                run_error_log.write_failed_stage("Validation and blocker checks",
+                                                 "Product setup emit blocked by validation controls.")
+                self.fail_run_progress("Validation and blocker checks",
+                                       "Emit blocked by validation controls", run_error_log.folder)
                 messagebox.showwarning("Product Setup", "Conversion completed but output was blocked by validation controls.")
             else:
+                run_error_log.write_failed_stage("Product setup", f"status={status}")
+                self.fail_run_progress("Product setup", f"status={status}", run_error_log.folder)
                 messagebox.showerror("Product Setup", f"Product setup conversion status: {status}")
+        except Exception as e:
+            run_error_log.write_exception("Product setup", e)
+            self.fail_run_progress("Product setup", str(e), run_error_log.folder)
+            messagebox.showerror("Product Setup", f"Product setup failed.\n\nDetails:\n{run_error_log.folder}")
         finally:
             self.is_running = False
-            self.lbl_timer.config(text="Elapsed: 00:00")
+            self.lbl_timer.config(text="Elapsed: 00:00:00")
 
     def _rate_loader_runner_path(self):
         return os.path.normpath(os.path.join(self._repo_root(), RATE_LOADER_RUNNER))
@@ -1992,36 +2019,56 @@ class QLAdminEnterpriseIntegrationSuite:
         threading.Thread(target=self._run_rate_loader_job, kwargs={"from_batch": False}, daemon=True).start()
 
     def _run_rate_loader_job(self, from_batch=False):
+        run_error_log = self._new_run_error_log()
         try:
-            self.update_progress(None, "Generating rate tables (factors, keys, members)…")
+            if not from_batch:
+                self.start_run_progress("rate_only")
+                self.update_run_progress(2, detail="rate extracts + segmentation")
             self.log("RATE TABLE GENERATION (Phase R5): starting...")
             if not from_batch:
                 if not self.rate_emit_csv_var.get() and not self.rate_emit_dbf_var.get():
                     self.log("RATE LOADER: skipped — no emit format selected.")
                     return
+                self.update_run_progress(3, detail="building factor / key / member tables")
             result = self._invoke_rate_loader_runner()
             self._last_rate_loader_result = result
             self._refresh_rate_loader_visibility()
             status = result.get("status", "UNKNOWN")
             self.log(f"RATE LOADER: completed status={status} blockers={result.get('blockers', '?')}")
             if not from_batch:
+                self.update_run_progress(4, detail=f"validation — status={status}")
+                self._run_output_hygiene(run_error_log)
                 if status == "SUCCESS":
+                    self.complete_run_progress("Complete — rate CSV outputs written to QLA_Migration\\Output\\rates")
                     msg = "Rate tables generated successfully."
                     if result.get("csv_dir"):
                         msg += f"\n\nCSV folder:\n{result['csv_dir']}"
                     messagebox.showinfo("Rate Tables", msg)
                 elif status == "BLOCKED":
+                    run_error_log.write_failed_stage("Rate validation",
+                                                     f"{result.get('blockers', '?')} blocker(s) prevented emit.")
+                    self.fail_run_progress("Rate validation and blocker checks",
+                                           f"{result.get('blockers', '?')} blocker(s)", run_error_log.folder)
                     messagebox.showwarning(
                         "Rate Tables",
                         f"Rate validation blocked emit ({result.get('blockers', '?')} blocker(s)).\n"
                         "Review the conversion log and phase_r5_rate_loader validation reports.",
                     )
                 else:
+                    run_error_log.write_failed_stage("Rate table generation", f"status={status}")
+                    self.fail_run_progress("Rate table generation", f"status={status}", run_error_log.folder)
                     messagebox.showerror("Rate Tables", f"Rate table generation status: {status}")
+        except Exception as e:
+            if not from_batch:
+                run_error_log.write_exception("Rate table generation", e)
+                self.fail_run_progress("Rate table generation", str(e), run_error_log.folder)
+                messagebox.showerror("Rate Tables", f"Rate generation failed.\n\nDetails:\n{run_error_log.folder}")
+            else:
+                raise
         finally:
             if not from_batch:
                 self.is_running = False
-                self.lbl_timer.config(text="Elapsed: 00:00")
+                self.lbl_timer.config(text="Elapsed: 00:00:00")
 
     def _refresh_governance_visibility(self):
         summary = self._build_governance_summary()
@@ -3489,9 +3536,81 @@ class QLAdminEnterpriseIntegrationSuite:
 
     def update_timer(self):
         while self.is_running:
-            m, s = divmod(int(time.time() - self.start_time), 60)
-            self.lbl_timer.config(text=f"Elapsed: {m:02d}:{s:02d}")
+            self.lbl_timer.config(text=f"Elapsed: {RL.fmt_elapsed(time.time() - self.start_time)}")
             time.sleep(1)
+
+    # ------------------------------------------------------------------
+    # Staged run progress (presentation only — never affects output data)
+    # ------------------------------------------------------------------
+    def _error_logs_root(self):
+        return os.path.normpath(os.path.join(self._migration_root(), "Error_Logs"))
+
+    def _reports_dir(self):
+        return os.path.normpath(os.path.join(self._migration_root(), "Reports"))
+
+    def _new_run_error_log(self):
+        self._run_error_log = RL.RunErrorLog(self._error_logs_root())
+        return self._run_error_log
+
+    def start_run_progress(self, run_type):
+        self._progress_plan = RL.stage_plan(run_type)
+        self._progress_run_type = run_type
+        self._run_start_time = time.time()
+        self.update_progress(0, "Stage 0 — Ready")
+        if hasattr(self, "lbl_stage_detail"):
+            self.lbl_stage_detail.config(text="")
+
+    def update_run_progress(self, stage_number, stage_name=None, detail=None):
+        plan = self._progress_plan or RL.stage_plan("full_batch")
+        total = len(plan)
+        pct = None
+        name = stage_name
+        for (no, nm, p) in plan:
+            if no == stage_number:
+                pct = p
+                name = stage_name or nm
+                break
+        label = f"Stage {stage_number} of {total} — {name}" if name else f"Stage {stage_number} of {total}"
+        self.update_progress(pct, label)
+        if hasattr(self, "lbl_stage_detail"):
+            self.lbl_stage_detail.config(text=detail or "")
+        self.log(label + (f" — {detail}" if detail else ""))
+
+    def complete_run_progress(self, message=None):
+        msg = message or "Complete — CSV outputs written to QLA_Migration\\Output"
+        self.update_progress(100, msg, state="success")
+        if hasattr(self, "lbl_stage_detail"):
+            self.lbl_stage_detail.config(text="")
+
+    def fail_run_progress(self, stage_name, error_message, error_log_folder=None):
+        msg = f"Failed at {stage_name}. See logs."
+        if error_log_folder:
+            msg = f"Failed at {stage_name}. See {error_log_folder}"
+        self.update_progress(None, msg, state="error")
+        if hasattr(self, "lbl_stage_detail"):
+            self.lbl_stage_detail.config(text=str(error_message)[:160])
+        self.log(f"!!! {msg}")
+
+    def _run_output_hygiene(self, error_log=None):
+        """Keep QLA_Migration/Output CSV-only. Moves (never deletes) non-CSV files
+        to Reports / rate sandbox / Error_Logs and reports the result in the log."""
+        try:
+            out_dir = self.path_vars["Out"][0].get().strip() or self._migration_output_dir()
+            if not out_dir or not os.path.isdir(out_dir):
+                return
+            reports = self._reports_dir()
+            sandbox = self._rate_loader_dbf_dir()
+            res = RL.relocate_non_csv(out_dir, reports, sandbox, error_log)
+            if res["moved"]:
+                self.log(f"Output hygiene: moved {len(res['moved'])} non-CSV file(s) out of Output "
+                         f"(Reports/sandbox/Error_Logs). Output is CSV-only.")
+            if res["skipped"]:
+                self.log(f"Output hygiene WARNING: {len(res['skipped'])} non-CSV file(s) could not be moved "
+                         f"(left in place, not deleted):")
+                for src, reason in res["skipped"]:
+                    self.log(f"  - {os.path.basename(src)}: {reason}")
+        except Exception as exc:
+            self.log(f"Output hygiene skipped (non-fatal): {exc}")
 
     def update_progress(self, stage_percent, stage_message, state="running"):
         """Cosmetic staged progress feedback. Updates the progress bar (when a percent
@@ -3514,10 +3633,13 @@ class QLAdminEnterpriseIntegrationSuite:
             pass
 
     def process_data(self, is_batch):
+        run_error_log = self._new_run_error_log()
+        current_stage = "Initializing run and folders"
         try:
             self.console.delete(1.0, tk.END)
-            self.update_progress(5, "Preparing conversion run…")
-            self.log("Initializing Migration Engine v57.7 (LifePRO → QLAdmin Conversion Platform)...")
+            self.start_run_progress("full_batch" if is_batch else "single_table")
+            self.update_run_progress(1, detail="Preparing conversion run")
+            self.log("Initializing Migration Engine v57.8 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -3569,7 +3691,8 @@ class QLAdminEnterpriseIntegrationSuite:
 
             rel_path = self.path_vars["Rel"][0].get()
             rel_map = self._load_rel_map(rel_path, trans_map, log_label="startup relational map")
-            self.update_progress(None, "Loading source data…")
+            current_stage = "Loading source extracts"
+            self.update_run_progress(2, detail="Loading source data and lookups")
 
             # --- RelationshipNameAddress Extract Cache ---
             rel_name_cache = {}
@@ -3640,11 +3763,14 @@ class QLAdminEnterpriseIntegrationSuite:
                     if not is_batch: self.log("!!! ERROR: Please select a table from the dropdown first.")
                     continue
 
-                self.update_progress(None, f"Building QLAdmin output tables… ({t_id})")
-
                 if self._is_claims_table(t_id):
+                    current_stage = "Running claims / payment outputs"
+                    self.update_run_progress(6, detail=f"claims table {t_id}")
                     self._execute_claims_orchestration(t_id)
                     continue
+
+                current_stage = "Building QLAdmin policy/client/rider outputs"
+                self.update_run_progress(5, detail=f"building {t_id}")
 
                 if is_batch and t_id.lower() == "quikplan" and self._product_setup_isolated():
                     out_dir = self.path_vars["Out"][0].get()
@@ -4217,7 +4343,8 @@ class QLAdminEnterpriseIntegrationSuite:
                     )
                     qdf = pd.DataFrame(output, columns=schema)
                     qdf = apply_rate_variation_flag_enrichment(qdf, self._app_base_dir())
-                    self.update_progress(None, "Applying plan/rate enrichments…")
+                    current_stage = "Applying rulebooks and crosswalks"
+                    self.update_run_progress(4, detail="plan/rate enrichments + CSO assumptions")
                     self.log(f"Rate variation flags applied (R7B): {int((qdf['PLANVALOPT'] == 'Y').sum())} plans PLANVALOPT=Y")
 
                     cso_path = default_crosswalk_path(self._app_base_dir())
@@ -4740,14 +4867,15 @@ class QLAdminEnterpriseIntegrationSuite:
                         rel_map = self._load_rel_map(fresh_rel, trans_map, log_label="batch relational map")
                         self.path_vars["Rel"][0].set(fresh_rel)
 
-            self.update_progress(None, "Writing output files…")
+            current_stage = "Running claims / payment outputs"
             batch_claims_result = None
             if is_batch:
                 batch_claims_result = self._execute_batch_claims_uat_finale()
 
             if is_batch and hasattr(self, "rate_include_batch_var") and self.rate_include_batch_var.get():
                 if self.rate_emit_csv_var.get() or self.rate_emit_dbf_var.get():
-                    self.update_progress(None, "Generating rate tables (factors, keys, members)…")
+                    current_stage = "Generating rate tables"
+                    self.update_run_progress(7, detail="factors, keys, member tables")
                     self.log("RATE TABLE GENERATION (Phase R5): batch finale — starting...")
                     self._last_rate_loader_result = self._invoke_rate_loader_runner()
                     self._refresh_rate_loader_visibility()
@@ -4776,10 +4904,20 @@ class QLAdminEnterpriseIntegrationSuite:
                 )
             else:
                 messagebox.showinfo("Complete", "Conversion Finished.")
-            self.update_progress(100, "Conversion completed successfully.", state="success")
+            current_stage = "Writing final CSV outputs and summaries"
+            self.update_run_progress(9, detail="finalizing")
+            self._run_output_hygiene(run_error_log)
+            self.complete_run_progress()
         except Exception as e:
             self.log(f"!!! ERROR: {str(e)}")
-            self.update_progress(None, "Conversion stopped. Review the log for details.", state="error")
+            run_error_log.write_exception(current_stage, e)
+            run_error_log.write_summary("full_batch" if is_batch else "single_table", "FAILED",
+                                        [f"Failed at stage: {current_stage}", f"Error: {e}"])
+            self._run_output_hygiene(run_error_log)
+            self.fail_run_progress(current_stage, str(e), run_error_log.folder)
+            self.log(f"Error details written to: {run_error_log.folder}")
+            messagebox.showerror("Conversion Failed",
+                                 f"Failed at: {current_stage}\n\nDetails:\n{run_error_log.folder}")
         finally: self.is_running = False
 
 if __name__ == "__main__":
