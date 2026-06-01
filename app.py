@@ -1,9 +1,11 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.3
-# Date:        2026-05-29
-# Change Note: Product Business Test Cut (P3C/P3E/P3G + R7B packaged for business testing)
+# Version:     v57.4
+# Date:        2026-06-01
+# Change Note: CSO Mortality Crosswalk — plan-level CV assumptions (MORT/ETIMORT/NFOINT/
+#              INTMETHCV) resolved from CSO_Mortiality_Crosswalk.csv; quikplan NFOINT/
+#              INTMETHCV populated via isolated resolver. (Builds on v57.3 Product Cut.)
 # =============================================================================
 
 import pandas as pd
@@ -23,6 +25,11 @@ from datetime import datetime
 
 from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA
 from qla_core.quikplan_converter import convert_quikplan_to_output, prepare_quikplan_source, apply_rate_variation_flag_enrichment
+from qla_core.cso_mortality_crosswalk import (
+    apply_quikplan_cv_assumptions,
+    default_crosswalk_path,
+    load_cso_mortality_crosswalk,
+)
 from qla_core.quikplan_source_loader import load_quikplan_source_csv
 from qla_core.variation_classification import (
     VariationClassificationConfig,
@@ -185,7 +192,7 @@ PRODUCT_SETUP_DIAGNOSTICS_MANIFEST = os.path.join("plan_governance", "manifests"
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.3 — Product Business Test Cut")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.4 — CSO CV Assumptions")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -227,8 +234,8 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION ENGINE v57.3", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
-        tk.Label(header, text="Product Business Test Cut", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION ENGINE v57.4", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="Product Business Test Cut + CSO CV Assumptions", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
         
@@ -3248,7 +3255,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def process_data(self, is_batch):
         try:
             self.console.delete(1.0, tk.END)
-            self.log("Initializing Migration Engine v57.3 (Product Business Test Cut)...")
+            self.log("Initializing Migration Engine v57.4 (Product Business Test Cut + CSO CV Assumptions)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -3945,8 +3952,38 @@ class QLAdminEnterpriseIntegrationSuite:
                     )
                     qdf = pd.DataFrame(output, columns=schema)
                     qdf = apply_rate_variation_flag_enrichment(qdf, self._app_base_dir())
-                    output = qdf[schema].values.tolist()
                     self.log(f"Rate variation flags applied (R7B): {int((qdf['PLANVALOPT'] == 'Y').sum())} plans PLANVALOPT=Y")
+
+                    cso_path = default_crosswalk_path(self._app_base_dir())
+                    cso_resolver = load_cso_mortality_crosswalk(cso_path)
+                    if cso_resolver.plans_loaded:
+                        cso_qa = apply_quikplan_cv_assumptions(qdf, cso_resolver, log=self.log)
+                        self.log(
+                            f"CSO crosswalk (CV assumptions): loaded={cso_qa['plans_loaded']} "
+                            f"matched={cso_qa['plans_matched']} missing={cso_qa['plans_missing']} "
+                            f"review_flagged={cso_qa['plans_with_review_flag']} "
+                            f"NFOINT/INTMETHCV cells updated={cso_qa['cells_updated']} "
+                            f"(overwrites={cso_qa['cells_overwritten']})"
+                        )
+                        cso_qa_path = os.path.normpath(os.path.join(out_dir, "cso_mortality_crosswalk_qa.csv"))
+                        with open(cso_qa_path, "w", newline="", encoding="utf-8") as f:
+                            w = csv.writer(f)
+                            w.writerow(["METRIC", "VALUE"])
+                            for k in ("plans_loaded", "plans_matched", "plans_missing",
+                                      "plans_using_default", "plans_with_review_flag",
+                                      "cells_updated", "cells_overwritten", "blank_values_preserved"):
+                                w.writerow([k, cso_qa.get(k, "")])
+                            w.writerow(["missing_plan_codes", ";".join(cso_qa.get("missing_plan_codes", []))])
+                            w.writerow(["review_flag_plan_codes", ";".join(cso_qa.get("review_flag_plan_codes", []))])
+                            w.writerow([])
+                            w.writerow(["PLAN", "FIELD", "OLD_VALUE", "NEW_VALUE"])
+                            for d in cso_qa.get("diffs", []):
+                                w.writerow([d["PLAN"], d["FIELD"], d["OLD"], d["NEW"]])
+                        self.log(f"CSO crosswalk QA: {cso_qa_path}")
+                    else:
+                        self.log(f"CSO crosswalk not found at {cso_path}; quikplan CV assumptions left as-is.")
+
+                    output = qdf[schema].values.tolist()
                 else:
                     output = []
                     for i, src_row in source.iterrows():

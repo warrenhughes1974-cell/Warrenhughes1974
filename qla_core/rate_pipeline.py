@@ -52,7 +52,12 @@ class PipelineResult:
         return self.blocker_count == 0
 
 
-def load_assumptions(path):
+def load_assumptions(path, cso_path=None):
+    # CSO Mortality Crosswalk is authoritative for CV assumptions (MORT/ETIMORT/
+    # NFOINT/INTMETHCV) when delivered; otherwise fall back to the static mapping.
+    if cso_path and os.path.exists(cso_path):
+        from qla_core.cso_mortality_crosswalk import load_cso_mortality_crosswalk
+        return K.CSOAssumptionProvider(load_cso_mortality_crosswalk(cso_path))
     if not path or not os.path.exists(path):
         return K.AssumptionProvider()
     with open(path, encoding="utf-8") as f:
@@ -70,7 +75,12 @@ def run(config_path, repo_root):
     src = _resolve_path(repo_root, cfg["source_rate_extract"])
     xlsx = _resolve_path(repo_root, cfg["plan_form_crosswalk"])
     config = L.LoaderConfig.from_dict(cfg.get("segmentation_defaults"))
-    assumptions = load_assumptions(_resolve_path(repo_root, cfg.get("assumption_mapping_csv", "")))
+    cso_cfg = cfg.get("cso_mortality_crosswalk",
+                      os.path.join("plan_analysis", "source_data", "rates", "CSO_Mortiality_Crosswalk.csv"))
+    assumptions = load_assumptions(
+        _resolve_path(repo_root, cfg.get("assumption_mapping_csv", "")),
+        _resolve_path(repo_root, cso_cfg),
+    )
 
     res = PipelineResult()
     cov2plan, res.plan2desc = L.load_plan_crosswalk(xlsx)
