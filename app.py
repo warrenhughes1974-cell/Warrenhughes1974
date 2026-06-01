@@ -1,12 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.5
+# Version:     v57.6
 # Date:        2026-06-01
-# Change Note: UI polish for demo readiness — neutral business-facing labels, staged
-#              progress feedback with stage names + success/error states. Cosmetic only;
-#              no change to fields, schemas, conversion logic, or backend module/file names.
-#              (Builds on v57.4 CSO Mortality Crosswalk.)
+# Change Note: CSO CV assumptions now applied in the authoritative quikplan path
+#              (run_quikplan_conversion / product setup), so product-setup quikplan.csv
+#              carries NFOINT/INTMETHCV identically to the GUI path. Isolated + blank-safe;
+#              no schema/field/rulebook changes. (Builds on v57.5 UI polish.)
 # =============================================================================
 
 import pandas as pd
@@ -193,7 +193,7 @@ PRODUCT_SETUP_DIAGNOSTICS_MANIFEST = os.path.join("plan_governance", "manifests"
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.5")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.6")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -235,7 +235,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.5", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.6", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -3282,7 +3282,7 @@ class QLAdminEnterpriseIntegrationSuite:
         try:
             self.console.delete(1.0, tk.END)
             self.update_progress(5, "Preparing conversion run…")
-            self.log("Initializing Migration Engine v57.5 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.6 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False

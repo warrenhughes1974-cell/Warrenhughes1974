@@ -140,6 +140,7 @@ def main():
         overlay_config=overlay,
         product_catalog_path=args.product_catalog,
     )
+    cso_qa = df.attrs.get("cso_cv_qa")
 
     source_df = _load_source_df(args.source)
     unauthorized_manifest = pd.DataFrame()
@@ -251,6 +252,26 @@ def main():
         planvalopt_y = int((df["PLANVALOPT"] == "Y").sum()) if "PLANVALOPT" in df.columns else 0
         df.to_csv(emitted_path, index=False)
         print(f"RATE_VARIATION_FLAGS: PLANVALOPT_Y={planvalopt_y}")
+        if cso_qa and cso_qa.get("applied"):
+            cso_qa_path = os.path.join(args.output_dir, "cso_mortality_crosswalk_qa.csv")
+            import csv as _csv
+            with open(cso_qa_path, "w", newline="", encoding="utf-8") as _f:
+                _w = _csv.writer(_f)
+                _w.writerow(["METRIC", "VALUE"])
+                for _k in ("plans_loaded", "plans_matched", "plans_missing",
+                           "plans_using_default", "plans_with_review_flag",
+                           "cells_updated", "cells_overwritten", "blank_values_preserved"):
+                    _w.writerow([_k, cso_qa.get(_k, "")])
+                _w.writerow(["missing_plan_codes", ";".join(cso_qa.get("missing_plan_codes", []))])
+                _w.writerow(["review_flag_plan_codes", ";".join(cso_qa.get("review_flag_plan_codes", []))])
+                _w.writerow([])
+                _w.writerow(["PLAN", "FIELD", "OLD_VALUE", "NEW_VALUE"])
+                for _d in cso_qa.get("diffs", []):
+                    _w.writerow([_d["PLAN"], _d["FIELD"], _d["OLD"], _d["NEW"]])
+            print(f"CSO_CV_ASSUMPTIONS: loaded={cso_qa.get('plans_loaded')} "
+                  f"matched={cso_qa.get('plans_matched')} updated={cso_qa.get('cells_updated')} "
+                  f"overwrites={cso_qa.get('cells_overwritten')}")
+            print(f"CSO_QA_PATH: {cso_qa_path}")
     elif args.emit and block and err_count > 0:
         print(f"PRODUCT_SETUP_EMIT_BLOCKED: Y (QLA_PRODUCT_GOVERNANCE_BLOCK=1, errors={err_count})")
 

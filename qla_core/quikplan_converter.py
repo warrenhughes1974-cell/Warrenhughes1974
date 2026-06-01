@@ -314,7 +314,9 @@ def run_quikplan_conversion(
         source, rules, lookups, trans_map, cw_map, schema, overlay_config, crosswalk_authority,
         variation_recommendations, auto_apply,
     )
-    return apply_rate_variation_flag_enrichment(df)
+    df = apply_rate_variation_flag_enrichment(df)
+    df = apply_cso_cv_assumptions(df)
+    return df
 
 
 def apply_rate_variation_flag_enrichment(
@@ -346,3 +348,35 @@ def apply_rate_variation_flag_enrichment(
     if audit_dir in ("1", "true", "yes", "y") and cfg.integration_audit_dir:
         write_r7b_integration_outputs(result, cfg.integration_audit_dir)
     return out
+
+
+def apply_cso_cv_assumptions(
+    df: pd.DataFrame,
+    repo_root: str | None = None,
+    log=None,
+) -> pd.DataFrame:
+    """Populate quikplan NFOINT / INTMETHCV from the CSO Mortality Crosswalk (isolated,
+    blank-safe, rollback-safe). Mirrors the GUI conversion path so the authoritative
+    product-setup quikplan carries the same CV assumptions. The per-plan QA summary is
+    stashed on df.attrs['cso_cv_qa'] for callers that emit a QA artifact. No-op if the
+    crosswalk module/file is unavailable (deferred behavior preserved)."""
+    try:
+        from qla_core.cso_mortality_crosswalk import (
+            apply_quikplan_cv_assumptions,
+            default_crosswalk_path,
+            load_cso_mortality_crosswalk,
+        )
+    except ImportError:
+        return df
+
+    repo_root = repo_root or os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
+    resolver = load_cso_mortality_crosswalk(default_crosswalk_path(repo_root))
+    if not resolver.plans_loaded:
+        return df
+
+    qa = apply_quikplan_cv_assumptions(df, resolver, log=log)
+    try:
+        df.attrs["cso_cv_qa"] = qa
+    except Exception:
+        pass
+    return df
