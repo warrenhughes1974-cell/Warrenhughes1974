@@ -1,12 +1,11 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.6
+# Version:     v57.7
 # Date:        2026-06-01
-# Change Note: CSO CV assumptions now applied in the authoritative quikplan path
-#              (run_quikplan_conversion / product setup), so product-setup quikplan.csv
-#              carries NFOINT/INTMETHCV identically to the GUI path. Isolated + blank-safe;
-#              no schema/field/rulebook changes. (Builds on v57.5 UI polish.)
+# Change Note: Rate Table Generation panel — R5 rate factors/keys/members from the
+#              application (no CLI). Optional include-in-batch hook. Uses existing
+#              rate_pipeline + rate_dbf_writer; CSVs to Output/rates/. (Builds on v57.6.)
 # =============================================================================
 
 import pandas as pd
@@ -188,12 +187,14 @@ PRODUCT_SETUP_RUNNER_TIMEOUT = 120
 PRODUCT_SETUP_VALIDATION_DIR = os.path.join("plan_analysis", "phase_p2a_validation")
 PRODUCT_SETUP_VALIDATION_SUMMARY = "validation_summary.md"
 PRODUCT_SETUP_DIAGNOSTICS_MANIFEST = os.path.join("plan_governance", "manifests", "product_governance_diagnostics.csv")
+RATE_LOADER_RUNNER_TIMEOUT = 900
+RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 
 
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.6")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.7")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -235,7 +236,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.6", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.7", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -243,10 +244,10 @@ class QLAdminEnterpriseIntegrationSuite:
         card = tk.LabelFrame(self.root, text=" System Configuration & Path Mapping ", bg=self.bg_card, fg=self.accent, padx=20, pady=15, font=("Segoe UI", 10, "bold"))
         card.pack(padx=30, fill="x", pady=5)
 
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        parent_dir = os.path.dirname(base_dir)
+        base_dir = self._repo_root()
+        parent_dir = os.path.dirname(os.path.abspath(__file__))
         mig_map = os.path.join(base_dir, "QLA_Migration", "Mapping")
-        mig_src = os.path.join(base_dir, "QLA_Migration", "Source", "quikplan.csv")
+        mig_src = os.path.join(base_dir, "QLA_Migration", "Source", "quikmstr.csv")
         mig_out = os.path.join(base_dir, "QLA_Migration", "Output")
 
         def auto_locate(search_paths, keywords):
@@ -326,12 +327,14 @@ class QLAdminEnterpriseIntegrationSuite:
         tk.Button(btn_frame, text="EXECUTE FULL BATCH MIGRATION", bg=self.btn_batch, fg="white", width=35, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(True)).pack(side="left", padx=15)
 
         self._setup_product_setup_panel()
+        self._setup_rate_loader_panel()
         self._setup_governance_summary_panel()
 
         self.console = scrolledtext.ScrolledText(self.root, height=16, bg="#F8FAFC", fg="#1E293B", font=("Consolas", 9))
         self.console.pack(padx=30, pady=10, fill="both", expand=True)
         self._refresh_governance_visibility()
         self._refresh_product_setup_visibility()
+        self._refresh_rate_loader_visibility()
 
     def log(self, msg):
         self.console.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] {msg}\n")
@@ -345,8 +348,17 @@ class QLAdminEnterpriseIntegrationSuite:
     def _app_base_dir(self):
         return os.path.dirname(os.path.abspath(__file__))
 
+    def _repo_root(self):
+        """Repository root (parent when app.py lives under QLA_Migration/)."""
+        base = self._app_base_dir()
+        parent = os.path.dirname(base)
+        if os.path.basename(os.path.normpath(base)).lower() == "qla_migration":
+            if os.path.isdir(os.path.join(parent, "qla_core")):
+                return parent
+        return base
+
     def _migration_root(self):
-        return os.path.normpath(os.path.join(self._app_base_dir(), "QLA_Migration"))
+        return os.path.normpath(os.path.join(self._repo_root(), "QLA_Migration"))
 
     def _migration_source_dir(self):
         return os.path.normpath(os.path.join(self._migration_root(), "Source"))
@@ -1540,11 +1552,11 @@ class QLAdminEnterpriseIntegrationSuite:
         return resolver, quikplan_set, catalog_path
 
     def _product_setup_default_paths(self):
-        base = self._app_base_dir()
+        root = self._repo_root()
         return {
-            "source": os.path.join(base, "plan_analysis", "quikplan_source.csv"),
+            "source": os.path.join(root, "plan_analysis", "quikplan_source.csv"),
             "output": self.path_vars["Out"][0].get().strip() or self._migration_output_dir(),
-            "stage": os.path.join(base, "plan_governance", "staged"),
+            "stage": os.path.join(root, "plan_governance", "staged"),
         }
 
     def _setup_product_setup_panel(self):
@@ -1744,7 +1756,7 @@ class QLAdminEnterpriseIntegrationSuite:
         try:
             proc = subprocess.run(
                 cmd, capture_output=True, text=True, timeout=PRODUCT_SETUP_RUNNER_TIMEOUT,
-                cwd=self._app_base_dir(),
+                cwd=self._repo_root(),
             )
             stdout_text = proc.stdout or ""
             stderr_text = proc.stderr or ""
@@ -1787,6 +1799,229 @@ class QLAdminEnterpriseIntegrationSuite:
         finally:
             self.is_running = False
             self.lbl_timer.config(text="Elapsed: 00:00")
+
+    def _rate_loader_runner_path(self):
+        return os.path.normpath(os.path.join(self._repo_root(), RATE_LOADER_RUNNER))
+
+    def _rate_loader_config_path(self):
+        phase = os.path.join(self._repo_root(), "plan_analysis", "phase_r5_rate_loader")
+        preferred = os.path.join(phase, "rate_loader_config.json")
+        example = os.path.join(phase, "rate_loader_config.example.json")
+        return preferred if os.path.isfile(preferred) else example
+
+    def _rate_loader_csv_dir(self):
+        out_var = self.path_vars.get("Out") if hasattr(self, "path_vars") else None
+        out = out_var[0].get().strip() if out_var else ""
+        if out:
+            return os.path.normpath(os.path.join(out, "rates"))
+        return os.path.normpath(os.path.join(self._repo_root(), "QLA_Migration", "Output", "rates"))
+
+    def _rate_loader_dbf_dir(self):
+        return os.path.normpath(os.path.join(
+            self._repo_root(), "plan_analysis", "phase_r5_rate_loader", "emitted_dbf",
+        ))
+
+    def _setup_rate_loader_panel(self):
+        panel = tk.LabelFrame(
+            self.root,
+            text=" Rate Table Generation (Phase R5 — factors, keys, member tables) ",
+            bg=self.bg_card,
+            fg=self.accent,
+            padx=16,
+            pady=10,
+            font=("Segoe UI", 10, "bold"),
+        )
+        panel.pack(padx=30, fill="x", pady=(0, 6))
+
+        self.rate_metric_vars = {}
+        metrics = [
+            ("rate_status", "Last Run Status:"),
+            ("rate_blockers", "Validation Blockers:"),
+            ("rate_tables", "Tables Written:"),
+            ("rate_csv_rows", "CSV Rows Written:"),
+            ("rate_csv_dir", "CSV Output Folder:"),
+            ("rate_dbf_dir", "Sandbox DBF Folder:"),
+        ]
+        grid = tk.Frame(panel, bg=self.bg_card)
+        grid.pack(fill="x")
+        for idx, (key, label_text) in enumerate(metrics):
+            row, col = divmod(idx, 2)
+            tk.Label(grid, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(
+                row=row, column=col * 2, sticky="w", padx=(0, 6), pady=2,
+            )
+            var = tk.StringVar(value="NOT YET RUN")
+            self.rate_metric_vars[key] = var
+            tk.Label(grid, textvariable=var, bg=self.bg_card, fg=self.accent, font=("Consolas", 9)).grid(
+                row=row, column=col * 2 + 1, sticky="w", padx=(0, 24), pady=2,
+            )
+
+        opts = tk.Frame(panel, bg=self.bg_card)
+        opts.pack(fill="x", pady=(6, 0))
+        self.rate_emit_csv_var = tk.BooleanVar(value=True)
+        self.rate_emit_dbf_var = tk.BooleanVar(value=False)
+        self.rate_include_batch_var = tk.BooleanVar(
+            value=os.environ.get("QLA_BATCH_INCLUDE_RATE_TABLES", "0").strip().lower() in ("1", "true", "yes"),
+        )
+        tk.Checkbutton(opts, text="Emit append-ready CSV tables (Output/rates/)", variable=self.rate_emit_csv_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+        tk.Checkbutton(opts, text="Emit sandbox DBF tables (phase_r5 emitted_dbf/)", variable=self.rate_emit_dbf_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+        tk.Checkbutton(opts, text="Include in full batch migration", variable=self.rate_include_batch_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+
+        actions = tk.Frame(panel, bg=self.bg_card)
+        actions.pack(fill="x", pady=(8, 0))
+        tk.Button(
+            actions, text="GENERATE RATE TABLES", width=28, bg="#0D9488", fg="white",
+            command=self.start_rate_loader_thread,
+        ).pack(side="left", padx=(0, 8))
+        tk.Button(
+            actions, text="Refresh Rate Status", width=20,
+            command=self._refresh_rate_loader_visibility,
+        ).pack(side="left", padx=4)
+        tk.Label(
+            actions,
+            text=f"Config: {self._rate_loader_config_path()}",
+            bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 8),
+        ).pack(side="right", padx=4)
+
+    def _parse_rate_loader_stdout(self, stdout_text):
+        parsed = {
+            "status": "UNKNOWN", "blockers": "", "tables": "", "csv_rows": "",
+            "csv_dir": "", "dbf_dir": "", "csv_manifest": "", "config": "",
+        }
+        for line in (stdout_text or "").splitlines():
+            line = line.strip()
+            if line.startswith("RATE_LOADER_STATUS:"):
+                parsed["status"] = line.split(":", 1)[1].strip()
+            elif line.startswith("RATE_LOADER_BLOCKERS:"):
+                parsed["blockers"] = line.split(":", 1)[1].strip()
+            elif line.startswith("RATE_TABLES_WRITTEN:"):
+                parsed["tables"] = line.split(":", 1)[1].strip()
+            elif line.startswith("RATE_CSV_ROWS:"):
+                parsed["csv_rows"] = line.split(":", 1)[1].strip()
+            elif line.startswith("RATE_CSV_DIR:"):
+                parsed["csv_dir"] = line.split(":", 1)[1].strip()
+            elif line.startswith("RATE_DBF_DIR:"):
+                parsed["dbf_dir"] = line.split(":", 1)[1].strip()
+            elif line.startswith("RATE_CSV_MANIFEST:"):
+                parsed["csv_manifest"] = line.split(":", 1)[1].strip()
+            elif line.startswith("RATE_CONFIG:"):
+                parsed["config"] = line.split(":", 1)[1].strip()
+        return parsed
+
+    def _invoke_rate_loader_runner(self, emit_csv=None, emit_dbf=None, dry_run=False):
+        runner = self._rate_loader_runner_path()
+        if not os.path.isfile(runner):
+            self.log(f"RATE LOADER ERROR: runner not found: {runner}")
+            return {"status": "FAILED", "error": "runner not found"}
+
+        emit_csv = self.rate_emit_csv_var.get() if emit_csv is None else emit_csv
+        emit_dbf = self.rate_emit_dbf_var.get() if emit_dbf is None else emit_dbf
+        csv_dir = self._rate_loader_csv_dir()
+        dbf_dir = self._rate_loader_dbf_dir()
+        config = self._rate_loader_config_path()
+
+        cmd = [
+            sys.executable, runner,
+            "--repo-root", self._repo_root(),
+            "--config", config,
+            "--csv-dir", csv_dir,
+            "--dbf-dir", dbf_dir,
+        ]
+        if emit_csv:
+            cmd.append("--emit-csv")
+        if emit_dbf:
+            cmd.append("--emit-dbf")
+        if dry_run:
+            cmd.append("--dry-run")
+
+        self.log("RATE TABLE GENERATION (Phase R5): launching isolated subprocess...")
+        self.log(f"  Config: {config}")
+        self.log(f"  CSV dir: {csv_dir}")
+        if emit_dbf:
+            self.log(f"  DBF dir: {dbf_dir}")
+        try:
+            proc = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=RATE_LOADER_RUNNER_TIMEOUT,
+                cwd=self._repo_root(),
+            )
+            stdout_text = proc.stdout or ""
+            stderr_text = proc.stderr or ""
+            self._log_subprocess_stream("rate-loader-stdout", stdout_text)
+            self._log_subprocess_stream("rate-loader-stderr", stderr_text)
+            parsed = self._parse_rate_loader_stdout(stdout_text)
+            parsed["return_code"] = proc.returncode
+            if proc.returncode != 0 and parsed["status"] == "UNKNOWN":
+                parsed["status"] = "FAILED"
+            return parsed
+        except subprocess.TimeoutExpired:
+            self.log("RATE LOADER ERROR: subprocess timeout")
+            return {"status": "TIMEOUT"}
+        except Exception as exc:
+            self.log(f"RATE LOADER ERROR: {exc}")
+            return {"status": "FAILED", "error": str(exc)}
+
+    def _refresh_rate_loader_visibility(self):
+        if not hasattr(self, "rate_metric_vars"):
+            return
+        display = {key: "NOT YET RUN" for key in self.rate_metric_vars}
+        last = getattr(self, "_last_rate_loader_result", None) or {}
+        if last:
+            display["rate_status"] = last.get("status", "NOT YET RUN")
+            display["rate_blockers"] = last.get("blockers", "")
+            display["rate_tables"] = last.get("tables", "")
+            display["rate_csv_rows"] = last.get("csv_rows", "")
+            display["rate_csv_dir"] = last.get("csv_dir", "") or self._rate_loader_csv_dir()
+            display["rate_dbf_dir"] = last.get("dbf_dir", "")
+        else:
+            manifest = os.path.join(self._rate_loader_csv_dir(), "rate_csv_manifest.csv")
+            if os.path.isfile(manifest):
+                display["rate_status"] = "PRIOR RUN (see manifest)"
+                display["rate_csv_dir"] = self._rate_loader_csv_dir()
+        for key, var in self.rate_metric_vars.items():
+            var.set(display.get(key, "NOT YET RUN"))
+
+    def start_rate_loader_thread(self):
+        if self.is_running:
+            messagebox.showwarning("Busy", "A conversion is already running.")
+            return
+        if not self.rate_emit_csv_var.get() and not self.rate_emit_dbf_var.get():
+            messagebox.showwarning("Rate Tables", "Select at least one output format (CSV and/or DBF).")
+            return
+        self.is_running = True
+        self.start_time = time.time()
+        threading.Thread(target=self.update_timer, daemon=True).start()
+        threading.Thread(target=self._run_rate_loader_job, kwargs={"from_batch": False}, daemon=True).start()
+
+    def _run_rate_loader_job(self, from_batch=False):
+        try:
+            self.update_progress(None, "Generating rate tables (factors, keys, members)…")
+            self.log("RATE TABLE GENERATION (Phase R5): starting...")
+            if not from_batch:
+                if not self.rate_emit_csv_var.get() and not self.rate_emit_dbf_var.get():
+                    self.log("RATE LOADER: skipped — no emit format selected.")
+                    return
+            result = self._invoke_rate_loader_runner()
+            self._last_rate_loader_result = result
+            self._refresh_rate_loader_visibility()
+            status = result.get("status", "UNKNOWN")
+            self.log(f"RATE LOADER: completed status={status} blockers={result.get('blockers', '?')}")
+            if not from_batch:
+                if status == "SUCCESS":
+                    msg = "Rate tables generated successfully."
+                    if result.get("csv_dir"):
+                        msg += f"\n\nCSV folder:\n{result['csv_dir']}"
+                    messagebox.showinfo("Rate Tables", msg)
+                elif status == "BLOCKED":
+                    messagebox.showwarning(
+                        "Rate Tables",
+                        f"Rate validation blocked emit ({result.get('blockers', '?')} blocker(s)).\n"
+                        "Review the conversion log and phase_r5_rate_loader validation reports.",
+                    )
+                else:
+                    messagebox.showerror("Rate Tables", f"Rate table generation status: {status}")
+        finally:
+            if not from_batch:
+                self.is_running = False
+                self.lbl_timer.config(text="Elapsed: 00:00")
 
     def _refresh_governance_visibility(self):
         summary = self._build_governance_summary()
@@ -3282,7 +3517,7 @@ class QLAdminEnterpriseIntegrationSuite:
         try:
             self.console.delete(1.0, tk.END)
             self.update_progress(5, "Preparing conversion run…")
-            self.log("Initializing Migration Engine v57.6 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.7 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -4509,6 +4744,20 @@ class QLAdminEnterpriseIntegrationSuite:
             batch_claims_result = None
             if is_batch:
                 batch_claims_result = self._execute_batch_claims_uat_finale()
+
+            if is_batch and hasattr(self, "rate_include_batch_var") and self.rate_include_batch_var.get():
+                if self.rate_emit_csv_var.get() or self.rate_emit_dbf_var.get():
+                    self.update_progress(None, "Generating rate tables (factors, keys, members)…")
+                    self.log("RATE TABLE GENERATION (Phase R5): batch finale — starting...")
+                    self._last_rate_loader_result = self._invoke_rate_loader_runner()
+                    self._refresh_rate_loader_visibility()
+                    br = self._last_rate_loader_result
+                    self.log(
+                        f"RATE LOADER (batch finale): status={br.get('status', '?')} "
+                        f"blockers={br.get('blockers', '?')} tables={br.get('tables', '?')}"
+                    )
+                else:
+                    self.log("RATE LOADER (batch finale): skipped — enable CSV or DBF emit in Rate Table Generation panel.")
 
             if is_batch and batch_claims_result and batch_claims_result.get("emit_result"):
                 emit_info = batch_claims_result["emit_result"]
