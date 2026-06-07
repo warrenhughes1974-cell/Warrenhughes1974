@@ -1,13 +1,11 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.8
-# Date:        2026-06-01
-# Change Note: Operations hardening (presentation only) — staged progress with stage
-#              names + elapsed + success/fail states; centralized error logs under
-#              QLA_Migration/Error_Logs/run_<ts>; Output kept CSV-only (non-CSV moved,
-#              never deleted, to Reports/sandbox/Error_Logs). No business logic, schema,
-#              mapping, CSO, rate, or claims behavior changed. (Builds on v57.7.)
+# Version:     v57.14
+# Date:        2026-06-06
+# Change Note: QUIKRIDR — cap MEXPRY/MPAYUP year >= 2100 (e.g. 21000302, 9999 sentinels) to high-date
+#              20991231 so QLAdmin valuation =>DATE no longer returns NIL.
+#              (Builds on v57.13: UV/FV BENEFIT_TYPE exclusion.)
 # =============================================================================
 
 import pandas as pd
@@ -25,7 +23,7 @@ import re
 import csv
 from datetime import datetime
 
-from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA
+from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA, QUIKLOAN_SCHEMA
 from qla_core import run_logging as RL
 from qla_core.quikplan_converter import convert_quikplan_to_output, prepare_quikplan_source, apply_rate_variation_flag_enrichment
 from qla_core.cso_mortality_crosswalk import (
@@ -41,6 +39,7 @@ from qla_core.variation_classification import (
     write_variation_audit_csv,
 )
 from qla_core.quikactg_converter import convert_quikactg_from_pactg
+from qla_core.quikloan_converter import convert_quikloan_from_ploan, load_derivation_rules
 from qla_core.crosswalk_enrichment import resolve_crosswalk_overlay_config
 from qla_core.product_catalog_authority import (
     allow_legacy_mplan_fallback,
@@ -69,6 +68,24 @@ VALID_RUN_MODES = ("UAT", "PRODUCTION", "DISABLED")
 DEFAULT_RUN_MODE = "UAT"
 DEFAULT_ORCHESTRATION_TIMEOUT_SECONDS = 600
 CLAIMS_TABLE_IDS = ("quikclms", "quikclmp")
+
+# Paid-Up Addition rider products (PLAN_CODE authority) — inherit Phase 1 MPLAN/MEXPRY/MPAYUP.
+PAID_UP_ADDITION_PRODUCTS = frozenset({
+    "280PUA",
+    "121PUA",
+    "1970PA",
+    "170PUA",
+    "165PUA",
+    "185PUA",
+    "261PUA",
+    "1OLPUA",
+    "1POPUA",
+    "265PUA",
+})
+# LifePRO PPBEN PLAN_CODE labels not present in Master_Crosswalk (catalog authority elsewhere).
+PAID_UP_ADDITION_LIFEPRO_SOURCE_CODES = frozenset({
+    "970 PUA",
+})
 QUIKCLMS_SCHEMA = [
     "MPOLICY", "MPHASE", "CLAIMNUM", "CLAIMSTAT", "DTOFDEATH", "RPTDATE", "PDDATE",
     "MPAID", "MFACE", "DIVIDENDS", "LOAN", "NETDB", "PREMIUM", "SUSPENSE", "ADJUST",
@@ -197,7 +214,7 @@ RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runne
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.8")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.14")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -220,6 +237,7 @@ class QLAdminEnterpriseIntegrationSuite:
             "quikdvpr": ["MPOLICY", "MDATE", "MDIV"],
             "quikprmh": ["MPOLICY", "DATEPAID", "RENEWAL", "PREMIUM", "MLIFE", "MTERM", "MSUPP", "MANN", "MHEALTH", "XS", "MPAIDTO", "POSTDATE", "MPOSTDATE", "MSOURCE", "MBATCH", "USER_ID", "MBILLFRM", "MMODEPD"],
             "quikactg": QUIKACTG_SCHEMA,
+            "quikloan": QUIKLOAN_SCHEMA,
             "quikagts": ["MAGENT", "MAGTNAME", "MAGTADDR1", "MAGTADDR2", "MAGTCITY", "MAGTST", "MAGTZIP", "MAGTZIP2", "MAGTSSN", "MAGTFEIN", "MCOMP", "MAGENCY", "MAGCYNAME", "MDATE", "MAGTACCT", "MAGTPHONE", "MAGTFAX", "MAGTCELL", "MAGTOFCE", "MAGTEMAIL", "MEMOTEXT", "MSUPPRESS", "MCOMMGRP", "MOTHNAME", "MPREMACCT", "MSTATUS", "MAGTNPN", "MTAXIDTYPE"],
             "quikclms": QUIKCLMS_SCHEMA,
             "quikclmp": QUIKCLMP_SCHEMA,
@@ -234,12 +252,13 @@ class QLAdminEnterpriseIntegrationSuite:
         self._last_uat_dbf_result = None
         self._last_cross_table_validation = None
         self._last_product_setup_result = None
+        self._last_output_validation_result = None
         self.setup_ui()
 
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.8", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.14", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -1548,6 +1567,49 @@ class QLAdminEnterpriseIntegrationSuite:
 
     def _allow_legacy_mplan_fallback(self):
         return allow_legacy_mplan_fallback()
+
+    def _is_paid_up_addition_product(self, source_plan_code, cw_map=None):
+        """True when LifePRO PLAN_CODE or its crosswalk catalog code is a PUA product."""
+        code = self.normalize(source_plan_code).upper()
+        if code in PAID_UP_ADDITION_PRODUCTS:
+            return True
+        if code in PAID_UP_ADDITION_LIFEPRO_SOURCE_CODES:
+            return True
+        if cw_map:
+            mapped = self.normalize(cw_map.get(code, "")).upper()
+            if mapped in PAID_UP_ADDITION_PRODUCTS:
+                return True
+        return False
+
+    def _cache_quikridr_base_phase(self, base_phase_cache, mpolicy, row_data):
+        """Store converted Phase 1 MPLAN/MEXPRY/MPAYUP for PUA inheritance (quikridr only)."""
+        if not mpolicy:
+            return
+        base_phase_cache[mpolicy] = {
+            "MPLAN": self.normalize(row_data.get("MPLAN", "")),
+            "MEXPRY": self.normalize(row_data.get("MEXPRY", "")),
+            "MPAYUP": self.normalize(row_data.get("MPAYUP", "")),
+        }
+
+    def _apply_pua_rider_inheritance(self, row_data, mpolicy, source_plan_code, base_phase_cache, cw_map=None):
+        """PUA riders inherit MPLAN/MEXPRY/MPAYUP from same-policy Phase 1 base coverage."""
+        if not self._is_paid_up_addition_product(source_plan_code, cw_map):
+            return row_data
+        entry = base_phase_cache.get(mpolicy)
+        if not entry:
+            self.log(f"PUA RULE WARNING: Base phase not found for policy {mpolicy}")
+            return row_data
+        base_mplan = entry.get("MPLAN", "")
+        new_mplan = (base_mplan[:4] + "PA") if base_mplan else ""
+        row_data["MPLAN"] = new_mplan
+        row_data["MEXPRY"] = entry.get("MEXPRY", row_data.get("MEXPRY", ""))
+        row_data["MPAYUP"] = entry.get("MPAYUP", row_data.get("MPAYUP", ""))
+        self.log(
+            "PUA RULE APPLIED: "
+            f"MPOLICY={mpolicy} BASE_MPLAN={base_mplan} PUA_MPLAN={new_mplan} "
+            f"BASE_MEXPRY={entry.get('MEXPRY', '')} BASE_MPAYUP={entry.get('MPAYUP', '')}"
+        )
+        return row_data
 
     def _init_mplan_authority(self, out_dir: str, cw_path: str):
         catalog_path = os.path.normpath(os.path.join(self._app_base_dir(), "plan_governance", "product_catalog_crosswalk.csv"))
@@ -3440,15 +3502,19 @@ class QLAdminEnterpriseIntegrationSuite:
             "PACTG_Accounting_Extract20260427.csv"
             if table.lower() in ["quikprmh", "quikdvpr", "quikactg"]
             else (
-                "PPBENTYP.csv"
-                if table.lower() == "quikdvdp"
+                "PLOAN.csv"
+                if table.lower() == "quikloan"
                 else (
-                    "PPBEN.csv"
-                    if table.lower() == "quikridr"
+                    "PPBENTYP.csv"
+                    if table.lower() == "quikdvdp"
                     else (
-                        "PAGNT.csv"
-                        if table.lower() == "quikagts"
-                        else f"{table}.csv"
+                        "PPBEN.csv"
+                        if table.lower() == "quikridr"
+                        else (
+                            "PAGNT.csv"
+                            if table.lower() == "quikagts"
+                            else f"{table}.csv"
+                        )
                     )
                 )
             )
@@ -3591,6 +3657,99 @@ class QLAdminEnterpriseIntegrationSuite:
             self.lbl_stage_detail.config(text=str(error_message)[:160])
         self.log(f"!!! {msg}")
 
+    def _run_post_conversion_validation(self, error_log=None):
+        """Run validate_output.py priority + standard checks after full batch (v57.10)."""
+        if os.environ.get("QLA_SKIP_OUTPUT_VALIDATION", "").strip() == "1":
+            self.log("OUTPUT VALIDATION: skipped (QLA_SKIP_OUTPUT_VALIDATION=1)")
+            return {"status": "SKIPPED", "errors": 0, "warnings": 0}
+
+        repo = self._repo_root()
+        if repo not in sys.path:
+            sys.path.insert(0, repo)
+        import validate_output as vo
+
+        out_dir = self.path_vars["Out"][0].get().strip() if hasattr(self, "path_vars") else ""
+        if not out_dir or not os.path.isdir(out_dir):
+            out_dir = self._migration_output_dir()
+        source_dir = self._migration_source_dir()
+        config_dir = os.path.join(repo, "validation_config")
+        reports_dir = os.path.normpath(os.path.join(self._reports_dir(), "validation"))
+        os.makedirs(reports_dir, exist_ok=True)
+        stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        text_report = os.path.join(reports_dir, f"validation_report_{stamp}.txt")
+        csv_report = os.path.join(reports_dir, f"validation_findings_{stamp}.csv")
+
+        self.log("OUTPUT VALIDATION: starting (25 priority + schema/critical/dates/duplicates)...")
+        try:
+            config = vo.load_all_config(config_dir)
+            files = vo.discover_output_files(out_dir)
+            if not files:
+                self.log("OUTPUT VALIDATION: no quik*.csv in Output — skipped")
+                return {"status": "SKIPPED", "errors": 0, "warnings": 0}
+
+            enabled = set(vo.CATEGORIES) - {"regression"}
+            tables = vo.load_all_tables(files)
+            results = []
+            for path in files:
+                results.append(vo.validate_table(path, config, enabled))
+            priority_findings = vo.run_priority_checks(
+                tables, config, out_dir,
+                repo_root=repo, source_dir=source_dir if os.path.isdir(source_dir) else None,
+            )
+            results.append({
+                "table": "priority_checks",
+                "file": "priority_rules.json",
+                "path": os.path.join(config_dir, "priority_rules.json"),
+                "row_count": 0,
+                "metrics": {"priority_findings": len(priority_findings)},
+                "findings": priority_findings,
+            })
+
+            report_text = vo.format_text_report(results, out_dir, sorted(enabled), sample_limit=25)
+            with open(text_report, "w", encoding="utf-8") as fh:
+                fh.write(report_text + "\n")
+            vo.write_csv_report(results, csv_report, sample_limit=500)
+
+            errors = sum(1 for r in results for f in r["findings"] if f["severity"] == "ERROR")
+            warns = sum(1 for r in results for f in r["findings"] if f["severity"] == "WARN")
+            status = "PASS" if errors == 0 else "FAIL"
+            self.log(f"OUTPUT VALIDATION: {status} — ERROR={errors} WARN={warns}")
+            self.log(f"OUTPUT VALIDATION report: {text_report}")
+            self.log(f"OUTPUT VALIDATION findings CSV: {csv_report}")
+
+            if error_log and errors:
+                rows = []
+                for r in results:
+                    for f in r["findings"]:
+                        if f["severity"] != "ERROR":
+                            continue
+                        vid = (f.get("context") or {}).get("validation_id", "")
+                        rows.append([
+                            f["severity"],
+                            f.get("category", ""),
+                            f.get("table", ""),
+                            f"{vid} {f.get('message', '')}".strip(),
+                        ])
+                        if len(rows) >= 200:
+                            break
+                    if len(rows) >= 200:
+                        break
+                if rows:
+                    error_log.write_validation_errors(rows)
+
+            return {
+                "status": status,
+                "errors": errors,
+                "warnings": warns,
+                "text_report": text_report,
+                "csv_report": csv_report,
+            }
+        except Exception as exc:
+            self.log(f"OUTPUT VALIDATION: non-fatal failure — {exc}")
+            if error_log:
+                error_log.write_warnings([("WARN", "priority", "validate_output", str(exc))])
+            return {"status": "ERROR", "errors": 0, "warnings": 0, "error": str(exc)}
+
     def _run_output_hygiene(self, error_log=None):
         """Keep QLA_Migration/Output CSV-only. Moves (never deletes) non-CSV files
         to Reports / rate sandbox / Error_Logs and reports the result in the log."""
@@ -3639,7 +3798,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log("Initializing Migration Engine v57.8 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.14 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -3796,15 +3955,19 @@ class QLAdminEnterpriseIntegrationSuite:
                     "PACTG_Accounting_Extract20260427.csv"
                     if t_id.lower() in ["quikprmh", "quikdvpr", "quikactg"]
                     else (
-                        "PPBENTYP.csv"
-                        if t_id.lower() == "quikdvdp"
+                        "PLOAN.csv"
+                        if t_id.lower() == "quikloan"
                         else (
-                            "PPBEN.csv"
-                            if t_id.lower() == "quikridr"
+                            "PPBENTYP.csv"
+                            if t_id.lower() == "quikdvdp"
                             else (
-                                "PAGNT.csv"
-                                if t_id.lower() == "quikagts"
-                                else f"{t_id}.csv"
+                                "PPBEN.csv"
+                                if t_id.lower() == "quikridr"
+                                else (
+                                    "PAGNT.csv"
+                                    if t_id.lower() == "quikagts"
+                                    else f"{t_id}.csv"
+                                )
                             )
                         )
                     )
@@ -3976,6 +4139,37 @@ class QLAdminEnterpriseIntegrationSuite:
                             f.write("Tracks 1:1 record translation matching to guarantee zero data loss.\n\n")
                         f.write(audit_msg)
                     self.log(f"Audit Verified: PACTG -> {len(output_df)} quikactg plan rows. Saved to Audit Log.")
+                    continue
+                if t_id.lower() == "quikloan":
+                    if os.environ.get("QLA_ENABLE_QUIKLOAN_EMIT", "").strip() != "1":
+                        self.log(
+                            "Skipping QUIKLOAN — set QLA_ENABLE_QUIKLOAN_EMIT=1 for Phase L1 staging "
+                            "(or run plan_analysis/phase_l1_quikloan/quikloan_runner.py)."
+                        )
+                        continue
+                    if not os.path.exists(src_path):
+                        self.log(f"Skipping {t_id.upper()} -> Missing Source Data: {src_path}")
+                        continue
+                    self.log(f"Working Table: {t_id.upper()} (PLOAN-primary Phase L1 staging)")
+                    phase_l1_dir = os.path.normpath(
+                        os.path.join(self._app_base_dir(), "plan_analysis", "phase_l1_quikloan")
+                    )
+                    rules = load_derivation_rules()
+                    passed_df, trace_df, exceptions_df, ql_stats = convert_quikloan_from_ploan(
+                        src_path,
+                        cw_map=cw_map,
+                        rules=rules,
+                        output_dir=phase_l1_dir,
+                    )
+                    self.log(
+                        f"QUIKLOAN Phase L1: {ql_stats.get('emit_passed', 0)} emit candidates, "
+                        f"{ql_stats.get('emit_exceptions', 0)} exceptions; reports -> {phase_l1_dir}"
+                    )
+                    if os.environ.get("QLA_QUIKLOAN_WRITE_OUTPUT", "").strip() == "1":
+                        out_dir = self.path_vars["Out"][0].get()
+                        out_path = os.path.normpath(os.path.join(out_dir, "quikloan.csv"))
+                        passed_df.to_csv(out_path, index=False)
+                        self.log(f"GATED OUTPUT: {out_path} ({len(passed_df)} rows)")
                     continue
                 # --------------------------------------------------------
 
@@ -4268,6 +4462,15 @@ class QLAdminEnterpriseIntegrationSuite:
                     if self._closed_mplan_authority_enabled() and mplan_resolver is None:
                         out_dir_preview = self.path_vars["Out"][0].get()
                         mplan_resolver, quikplan_plan_set, _ = self._init_mplan_authority(out_dir_preview, cw_path)
+                    if 'BENEFIT_TYPE' in source.columns:
+                        _qr_bt = source['BENEFIT_TYPE'].astype(str).str.strip().str.upper()
+                        _qr_uv_removed = int((_qr_bt == 'UV').sum())
+                        _qr_fv_removed = int((_qr_bt == 'FV').sum())
+                        source = source[~_qr_bt.isin(['UV', 'FV'])]
+                        self.log(
+                            f"QUIKRIDR BENEFIT TYPE FILTER: Removed {_qr_uv_removed + _qr_fv_removed} UV/FV rows from PPBEN source."
+                        )
+                        self.log(f"Remaining PPBEN rows for QUIKRIDR: {len(source)}")
                     if 'BENEFIT_SEQ' in source.columns:
                         source['BENEFIT_SEQ'] = source['BENEFIT_SEQ'].astype(str).str.strip().str.replace(".0", "", regex=False)
                         source = source[source['BENEFIT_SEQ'].apply(
@@ -4379,6 +4582,8 @@ class QLAdminEnterpriseIntegrationSuite:
                     output = qdf[schema].values.tolist()
                 else:
                     output = []
+                    base_phase_cache = {} if t_id.lower() == "quikridr" else None
+                    pua_pending_rows = [] if t_id.lower() == "quikridr" else None
                     for i, src_row in source.iterrows():
                         if any("---" in str(v) for v in src_row.values[:3]): continue
                         
@@ -4532,6 +4737,16 @@ class QLAdminEnterpriseIntegrationSuite:
                                     _d = re.sub(r'[^0-9]', '', str(val))
                                     val = _d if len(_d) == 8 and _d >= "19000101" else ""
                                 # ---------------------------------
+
+                                # --- QUIKRIDR HIGH-DATE CEILING (v57.14) ---
+                                # QLAdmin valuation =>DATE returns NIL for year >= 2100
+                                # (e.g. 21000302 maturity sentinels, 9999 high-date). Cap
+                                # expiry/pay-up dates to the platform high-date 20991231.
+                                if t_id.lower() == "quikridr" and t_f in ['MEXPRY', 'MPAYUP']:
+                                    _hd = re.sub(r'[^0-9]', '', str(val))
+                                    if len(_hd) == 8 and _hd[:4].isdigit() and int(_hd[:4]) >= 2100:
+                                        val = "20991231"
+                                # -------------------------------------------
                                 
                                 # --- QUIKCLNT NAME OVERRIDES & SHIELD ---
                                 if t_f in ['MFNAME', 'MMNAME', 'MLNAME']:
@@ -4819,8 +5034,25 @@ class QLAdminEnterpriseIntegrationSuite:
                             ))
                             row_data["MPLAN"] = mplan_resolution.resolved_mplan
 
+                        if t_id.lower() == "quikridr":
+                            if tphase == "1" and tp:
+                                self._cache_quikridr_base_phase(base_phase_cache, tp, row_data)
+                            if self._is_paid_up_addition_product(source_plan_code, cw_map):
+                                pua_pending_rows.append((dict(row_data), tp, source_plan_code))
+                                if i % 1000 == 0:
+                                    self.progress["value"] = (i / len(source)) * 100
+                                    self.root.update_idletasks()
+                                continue
+
                         output.append([row_data[h] for h in schema])
                         if i % 1000 == 0: self.progress["value"] = (i/len(source))*100; self.root.update_idletasks()
+
+                    if t_id.lower() == "quikridr" and pua_pending_rows:
+                        for pua_row, pua_pol, pua_plan_code in pua_pending_rows:
+                            self._apply_pua_rider_inheritance(
+                                pua_row, pua_pol, pua_plan_code, base_phase_cache, cw_map,
+                            )
+                            output.append([pua_row[h] for h in schema])
                     
                 out_dir = self.path_vars["Out"][0].get()
                 if t_id.lower() == "quikridr" and self._closed_mplan_authority_enabled() and mplan_trace_rows:
@@ -4887,6 +5119,22 @@ class QLAdminEnterpriseIntegrationSuite:
                 else:
                     self.log("RATE LOADER (batch finale): skipped — enable CSV or DBF emit in Rate Table Generation panel.")
 
+            val_note = ""
+            if is_batch:
+                current_stage = "Running validation and blocker checks"
+                self.update_run_progress(8, detail="validate_output — 25 priority checks")
+                self._last_output_validation_result = self._run_post_conversion_validation(run_error_log)
+                vr = self._last_output_validation_result or {}
+                if vr.get("status") == "PASS":
+                    val_note = "\n\nOutput validation: PASS (see QLA_Migration/Reports/validation/)"
+                elif vr.get("status") == "FAIL":
+                    val_note = (
+                        f"\n\nOutput validation: FAIL — {vr.get('errors', 0)} ERROR(s), "
+                        f"{vr.get('warnings', 0)} WARN(s).\nReport: {vr.get('text_report', 'Reports/validation')}"
+                    )
+                elif vr.get("status") == "SKIPPED":
+                    val_note = "\n\nOutput validation: skipped."
+
             if is_batch and batch_claims_result and batch_claims_result.get("emit_result"):
                 emit_info = batch_claims_result["emit_result"]
                 dbf_info = batch_claims_result.get("dbf_result")
@@ -4900,10 +5148,13 @@ class QLAdminEnterpriseIntegrationSuite:
                     "Batch conversion finished.\n\n"
                     "UAT claims (quikclms/quikclmp) emitted to main output.\n"
                     f"Review holds: {emit_info.get('hold_count', 0)} records in claims_review_hold_manifest.csv"
-                    f"{dbf_note}",
+                    f"{dbf_note}{val_note}",
                 )
             else:
-                messagebox.showinfo("Complete", "Conversion Finished.")
+                done_msg = "Conversion Finished."
+                if is_batch and val_note:
+                    done_msg += val_note
+                messagebox.showinfo("Complete", done_msg)
             current_stage = "Writing final CSV outputs and summaries"
             self.update_run_progress(9, detail="finalizing")
             self._run_output_hygiene(run_error_log)
