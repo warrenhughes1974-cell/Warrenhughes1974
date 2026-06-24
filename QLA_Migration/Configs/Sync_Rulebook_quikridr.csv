@@ -31,7 +31,7 @@ MODE_PREMIUM,MPREM,,
 NAME_ID,MRIDRID,,Injected by Engine
 ,MSSN,,
 UNDERWRITING_CLASS,MUWCLASS,,
-,MBAND,0,
+,MBAND,01,Band aligned to LifePRO base band 1 -> QLAdmin 01 to match QuikPlCv/QuikCvs rate keys
 ,MSAVESTAT,,
 ,MCOMMPREM,,
 ,MSPCODE,,

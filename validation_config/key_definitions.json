@@ -25,5 +25,18 @@
   ],
   "quikplan": [
     {"name": "plan", "fields": ["PLAN"], "severity": "ERROR"}
+  ],
+  "quikclms": [
+    {"name": "claimnum", "fields": ["CLAIMNUM"], "severity": "ERROR"},
+    {"name": "policy_claim", "fields": ["MPOLICY", "CLAIMNUM"], "severity": "ERROR"}
+  ],
+  "quikclmp": [
+    {"name": "policy_seq", "fields": ["MPOLICY", "MSEQ"], "severity": "ERROR"}
+  ],
+  "quikloan": [
+    {"name": "policy", "fields": ["MPOLICY"], "severity": "ERROR"}
+  ],
+  "quikprmh": [
+    {"name": "policy", "fields": ["MPOLICY"], "severity": "WARN"}
   ]
 }

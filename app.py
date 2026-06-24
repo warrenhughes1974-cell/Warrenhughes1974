@@ -1,11 +1,11 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.14
-# Date:        2026-06-06
-# Change Note: QUIKRIDR — cap MEXPRY/MPAYUP year >= 2100 (e.g. 21000302, 9999 sentinels) to high-date
-#              20991231 so QLAdmin valuation =>DATE no longer returns NIL.
-#              (Builds on v57.13: UV/FV BENEFIT_TYPE exclusion.)
+# Version:     v57.29
+# Date:        2026-06-24
+# Change Note: v57.29 — Issue 21I: quikbenf dedupe by (MPOLICY, MBENFID, MTYPE) and equal MSPLIT
+#              within each (MPOLICY, MTYPE) primary/contingent group (100.00 total per group).
+#              v57.28 — block LifePRO PRIMARY_PERSON type flags (e.g. "I") from quikmstr.MPRIMID.
 # =============================================================================
 
 import pandas as pd
@@ -56,12 +56,14 @@ from qla_core.mplan_authority import (
     write_p3e_governance_outputs,
     write_p3f_governance_outputs,
 )
+from qla_core.lifepro_source_resolver import resolve_table_source, expected_legacy_filename
 from qla_core.claims_emit_enhancements import (
     apply_claims_emit_enhancements,
     build_plan_metadata_lookup,
     validate_claims_emit_enhancements,
     write_claims_emit_enhancement_validation,
 )
+from validation import run_final_output_validation
 
 # --- Phase 18A–20: Claims orchestration, UAT handoff/emit/batch/DBF, MPOLICY validation ---
 VALID_RUN_MODES = ("UAT", "PRODUCTION", "DISABLED")
@@ -214,7 +216,7 @@ RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runne
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.14")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.29")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -253,12 +255,13 @@ class QLAdminEnterpriseIntegrationSuite:
         self._last_cross_table_validation = None
         self._last_product_setup_result = None
         self._last_output_validation_result = None
+        self._last_final_validation_result = None
         self.setup_ui()
 
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.14", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.29", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -354,6 +357,7 @@ class QLAdminEnterpriseIntegrationSuite:
         tk.Button(btn_frame, text="RUN SINGLE TABLE CONVERSION", bg=self.btn_action, fg="white", width=33, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(False)).pack(side="left", padx=10)
         tk.Button(btn_frame, text="EXECUTE FULL BATCH MIGRATION", bg=self.btn_batch, fg="white", width=33, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(True)).pack(side="left", padx=10)
         tk.Button(btn_frame, text="GENERATE RATE TABLES", bg="#0D9488", fg="white", width=28, height=2, font=("Segoe UI", 9, "bold"), command=self.start_rate_loader_thread).pack(side="left", padx=10)
+        tk.Button(btn_frame, text="RUN FINAL OUTPUT VALIDATION", bg="#7C2D12", fg="white", width=30, height=2, font=("Segoe UI", 9, "bold"), command=self.start_final_validation_thread).pack(side="left", padx=10)
 
         self._setup_product_setup_panel()
         self._setup_rate_loader_panel()
@@ -471,12 +475,67 @@ class QLAdminEnterpriseIntegrationSuite:
             return migration_cfg
         return self._app_base_dir()
 
-    def _load_rel_map(self, rel_path, trans_map, log_label="relational map"):
+    def _resolve_table_source_path(self, table_id, src_dir):
+        """Resolve LifePRO or legacy source CSV for a conversion table."""
+        path, label = resolve_table_source(src_dir, table_id)
+        if path and label:
+            self.log(f"  Source resolved ({label})")
+        return path
+
+    def _build_client_name_lookup(self, rel_name_cache=None, quikclnt_path=None):
+        """Build NAME_ID -> name hints for rel_map duplicate-role resolution."""
+        lookup = {}
+        if rel_name_cache:
+            for cid, row in rel_name_cache.items():
+                first = str(row.get("INDIVIDUAL_FIRST", "")).strip()
+                last = str(row.get("INDIVIDUAL_LAST", "")).strip()
+                lookup[self.normalize(cid)] = {"first": first, "last": last}
+        if quikclnt_path and os.path.isfile(quikclnt_path):
+            try:
+                clnt = pd.read_csv(quikclnt_path, dtype=str).fillna("")
+                clnt.columns = [c.strip().upper() for c in clnt.columns]
+                id_col = "MCLIENTID" if "MCLIENTID" in clnt.columns else None
+                if id_col:
+                    for _, row in clnt.iterrows():
+                        cid = self.normalize(row.get(id_col, ""))
+                        if not cid:
+                            continue
+                        first = str(row.get("MFNAME", "")).strip()
+                        last = str(row.get("MLNAME", "")).strip()
+                        if cid not in lookup or (first or last):
+                            lookup[cid] = {"first": first, "last": last}
+            except Exception:
+                pass
+        return lookup
+
+    def _client_is_entity_name(self, cid, name_lookup):
+        """LifePRO entity rows (FAMILY, ESTATE, TRUST) are not person insureds."""
+        info = name_lookup.get(self.normalize(cid), {})
+        first = str(info.get("first", "")).strip().upper()
+        return first in ("FAMILY", "ESTATE", "TRUST", "THE", "UNKNOWN")
+
+    def _pick_rel_client_id(self, rel_code, candidates, resolved_phase, name_lookup):
+        """When multiple clients share a role, pick the best insured/owner match."""
+        if not candidates:
+            return ""
+        if len(candidates) == 1:
+            return candidates[-1]
+        if rel_code in ("IN", "INSD"):
+            owner = resolved_phase.get("PO") or resolved_phase.get("OWNR")
+            if owner and owner in candidates:
+                return owner
+            non_entity = [c for c in candidates if not self._client_is_entity_name(c, name_lookup)]
+            if non_entity:
+                return non_entity[-1]
+        return candidates[-1]
+
+    def _load_rel_map(self, rel_path, trans_map, log_label="relational map", name_lookup=None):
         rel_map = {}
         if not rel_path or not os.path.exists(rel_path):
             return rel_map
         clid_df = pd.read_csv(rel_path, dtype=str).fillna("")
         clid_df.columns = [c.strip().upper() for c in clid_df.columns]
+        candidates_map = {}
         for _, row in clid_df.iterrows():
             pol = self.normalize(row.get("MPOLICY", ""))
             rel_raw = self.normalize(row.get("MRELATION", ""))
@@ -485,15 +544,100 @@ class QLAdminEnterpriseIntegrationSuite:
             if not phase or phase == "0":
                 phase = "1"
             rel = trans_map.get(rel_raw, rel_raw)
-            if pol:
-                if pol not in rel_map:
-                    rel_map[pol] = {}
-                if phase not in rel_map[pol]:
-                    rel_map[pol][phase] = {}
-                rel_map[pol][phase][rel] = cid
+            if not pol or not rel or not cid:
+                continue
+            candidates_map.setdefault(pol, {}).setdefault(phase, {}).setdefault(rel, [])
+            if cid not in candidates_map[pol][phase][rel]:
+                candidates_map[pol][phase][rel].append(cid)
+
+        name_lookup = name_lookup or {}
+        for pol, phases in candidates_map.items():
+            rel_map[pol] = {}
+            for phase, rels in phases.items():
+                resolved = {}
+                for rel, cids in rels.items():
+                    if rel in ("IN", "INSD") and len(cids) > 1:
+                        continue
+                    resolved[rel] = cids[-1] if cids else ""
+                for rel in ("IN", "INSD"):
+                    if rel in rels:
+                        if len(rels[rel]) > 1:
+                            resolved[rel] = self._pick_rel_client_id(rel, rels[rel], resolved, name_lookup)
+                        elif rel not in resolved:
+                            resolved[rel] = rels[rel][-1] if rels[rel] else ""
+                rel_map[pol][phase] = resolved
+
         policy_count = len(rel_map)
         self.log(f"Loaded {log_label} from: {rel_path} ({policy_count} policies)")
         return rel_map
+
+    @staticmethod
+    def _compute_quikbenf_equal_splits(n):
+        """Return N MSPLIT percentage strings summing exactly to 100.00 (Issue 21I)."""
+        if n <= 0:
+            return []
+        if n == 1:
+            return ["100.00"]
+        total_cents = 10000
+        base_cents = total_cents // n
+        remainder = total_cents - (base_cents * n)
+        splits = []
+        for i in range(n):
+            cents = base_cents + (remainder if i == n - 1 else 0)
+            splits.append(f"{cents / 100:.2f}")
+        return splits
+
+    def _apply_quikbenf_dedupe_and_equal_split(self, output, schema):
+        """Dedupe quikbenf rows and assign equal MSPLIT per (MPOLICY, MTYPE) group (Issue 21I)."""
+        col_index = {h: i for i, h in enumerate(schema)}
+        ipol = col_index.get("MPOLICY")
+        ibenf = col_index.get("MBENFID")
+        imtype = col_index.get("MTYPE")
+        isplit = col_index.get("MSPLIT")
+        if ipol is None or ibenf is None or imtype is None or isplit is None:
+            return output, {"dedupe_removed": 0, "groups_recalculated": 0}
+
+        seen = set()
+        deduped = []
+        dedupe_removed = 0
+        for row in output:
+            key = (
+                self.normalize(row[ipol]),
+                self.normalize(row[ibenf]),
+                self.normalize(row[imtype]),
+            )
+            if key in seen:
+                dedupe_removed += 1
+                continue
+            seen.add(key)
+            deduped.append(list(row))
+
+        groups = {}
+        group_order = []
+        for row in deduped:
+            gkey = (self.normalize(row[ipol]), self.normalize(row[imtype]))
+            if gkey not in groups:
+                groups[gkey] = []
+                group_order.append(gkey)
+            groups[gkey].append(row)
+
+        groups_recalculated = 0
+        result = []
+        for gkey in group_order:
+            rows = groups[gkey]
+            if not gkey[1]:
+                result.extend(rows)
+                continue
+            splits = self._compute_quikbenf_equal_splits(len(rows))
+            groups_recalculated += 1
+            for row, split in zip(rows, splits):
+                row[isplit] = split
+                result.append(row)
+
+        return result, {
+            "dedupe_removed": dedupe_removed,
+            "groups_recalculated": groups_recalculated,
+        }
 
     def _is_preconverted_qla_client_source(self, source_df):
         cols = {str(c).strip().upper() for c in source_df.columns}
@@ -600,6 +744,129 @@ class QLAdminEnterpriseIntegrationSuite:
             self.log(f"PHASE 22 LINEAGE REFRESH ERROR: {exc}")
             return False
 
+    def _resolve_claims_uat_candidate_sources(self):
+        """Prefer client-decision populations (Phases 23–24) for UAT emit; fall back to Phase 17."""
+        claims_root = self._claims_analysis_root()
+        p17 = os.path.join(claims_root, "phase17_uat_governance_reporting")
+        p23 = os.path.join(claims_root, "phase23_client_decision_application")
+        p24 = os.path.join(claims_root, "phase24_client_balancing_rerun")
+        candidates = [
+            (
+                "Phase24 post-rebalance (client Items 14–16)",
+                os.path.join(p24, "uat_candidate_quikclms_post_rebalance.csv"),
+                os.path.join(p24, "uat_candidate_quikclmp_post_rebalance.csv"),
+            ),
+            (
+                "Phase23 client-decision refresh (Items 14–19)",
+                os.path.join(p23, "uat_candidate_quikclms_refreshed.csv"),
+                os.path.join(p23, "uat_candidate_quikclmp_refreshed.csv"),
+            ),
+            (
+                "Phase17 governance baseline",
+                os.path.join(p17, "uat_candidate_quikclms.csv"),
+                os.path.join(p17, "uat_candidate_quikclmp.csv"),
+            ),
+        ]
+        for label, clms_path, clmp_path in candidates:
+            if os.path.isfile(clms_path) and os.path.isfile(clmp_path):
+                return label, clms_path, clmp_path
+        return "Phase17 governance baseline (paths missing — check claims_analysis)", \
+            os.path.join(p17, "uat_candidate_quikclms.csv"), \
+            os.path.join(p17, "uat_candidate_quikclmp.csv")
+
+    @staticmethod
+    def _claimnum_prefix(reconstructed_claim_id):
+        text = str(reconstructed_claim_id or "").strip()
+        return text[:13] if text else ""
+
+    def _client_claim_overlay_paths(self):
+        claims_root = self._claims_analysis_root()
+        p23 = os.path.join(claims_root, "phase23_client_decision_application")
+        return {
+            "combined_amounts": os.path.join(p23, "combined_claim_amount_adjustments.csv"),
+            "payee_overrides": os.path.join(p23, "payee_override_application.csv"),
+        }
+
+    def _apply_client_claim_decision_overlays(self, output_dir):
+        """Apply Item 18 (combined amounts) and Item 19 (payee overrides) post-emit."""
+        paths = self._client_claim_overlay_paths()
+        clms_out = os.path.normpath(os.path.join(output_dir, "quikclms.csv"))
+        clmp_out = os.path.normpath(os.path.join(output_dir, "quikclmp.csv"))
+        result = {"item18": {}, "item19": {}, "applied": False}
+
+        adj_path = paths["combined_amounts"]
+        if os.path.isfile(clms_out) and os.path.isfile(adj_path):
+            try:
+                clms = pd.read_csv(clms_out, dtype=str).fillna("")
+                adj = pd.read_csv(adj_path, dtype=str)
+                adj["combined_claim_amount"] = pd.to_numeric(adj["combined_claim_amount"], errors="coerce")
+                adj = adj.dropna(subset=["combined_claim_amount"])
+                prefix_map = {
+                    self._claimnum_prefix(row["reconstructed_claim_id"]): row["combined_claim_amount"]
+                    for _, row in adj.iterrows()
+                }
+                applied = 0
+                for idx, row in clms.iterrows():
+                    claimnum = str(row.get("CLAIMNUM", "")).strip()
+                    amount = prefix_map.get(claimnum)
+                    if amount is None:
+                        continue
+                    amt_str = f"{float(amount):.2f}"
+                    for field in ("NETDB", "MPAID", "MFACE"):
+                        if field in clms.columns:
+                            clms.at[idx, field] = amt_str
+                    applied += 1
+                clms.to_csv(clms_out, index=False, encoding="utf-8")
+                result["item18"] = {"applied": applied, "eligible": len(adj), "source": adj_path}
+            except Exception as exc:
+                result["item18"] = {"applied": 0, "error": str(exc)}
+        else:
+            result["item18"] = {"applied": 0, "reason": "missing_file"}
+
+        ovr_path = paths["payee_overrides"]
+        if os.path.isfile(clmp_out) and os.path.isfile(ovr_path):
+            try:
+                clmp = pd.read_csv(clmp_out, dtype=str).fillna("")
+                ovr = pd.read_csv(ovr_path, dtype=str)
+                applied = 0
+                details = []
+                for _, spec in ovr.iterrows():
+                    policy = str(spec.get("policy_number", "")).strip()
+                    new_payee = str(spec.get("new_payee", "")).strip()
+                    if not policy or not new_payee:
+                        continue
+                    mask = clmp["MPOLICY"].astype(str).str.strip() == policy
+                    count = int(mask.sum())
+                    if count:
+                        clmp.loc[mask, "MPAYNAME"] = new_payee
+                        applied += count
+                        details.append({
+                            "policy_number": policy,
+                            "rows_updated": count,
+                            "new_payee": new_payee,
+                        })
+                clmp.to_csv(clmp_out, index=False, encoding="utf-8")
+                result["item19"] = {"applied": applied, "details": details, "source": ovr_path}
+            except Exception as exc:
+                result["item19"] = {"applied": 0, "error": str(exc)}
+        else:
+            result["item19"] = {"applied": 0, "reason": "missing_file"}
+
+        result["applied"] = bool(result.get("item18", {}).get("applied") or result.get("item19", {}).get("applied"))
+        return result
+
+    def _log_client_claim_overlay_summary(self, overlay_result):
+        if not overlay_result:
+            return
+        i18 = overlay_result.get("item18", {})
+        i19 = overlay_result.get("item19", {})
+        self.log("CLIENT CLAIM OVERLAYS (Items 18–19, post-emit):")
+        self.log(f"  Item 18 combined amounts: applied={i18.get('applied', 0)} eligible={i18.get('eligible', 'n/a')}")
+        self.log(f"  Item 19 payee overrides:  applied={i19.get('applied', 0)}")
+        if i19.get("details"):
+            for detail in i19["details"]:
+                self.log(f"    payee override: {detail.get('policy_number')} -> {detail.get('new_payee')}")
+
     def _load_claims_orchestration_rules(self):
         rules_path = os.path.join(self._claims_analysis_root(), "config", "app_claims_uat_orchestration_rules.json")
         if not os.path.isfile(rules_path):
@@ -615,6 +882,7 @@ class QLAdminEnterpriseIntegrationSuite:
         claims_root = self._claims_analysis_root()
         rules = self._load_claims_orchestration_rules()
         phase17_out = os.path.join(claims_root, "phase17_uat_governance_reporting")
+        uat_label, uat_clms, uat_clmp = self._resolve_claims_uat_candidate_sources()
         auth_flag = os.environ.get(
             "QLA_PRODUCTION_DBF_AUTHORIZED",
             rules.get("production_authorization_flag", "N"),
@@ -626,8 +894,9 @@ class QLAdminEnterpriseIntegrationSuite:
             "go_live_target": rules.get("go_live_target", "2026-09-01"),
             "allow_inline_claims_conversion": False,
             "uat_candidate_dir": phase17_out,
-            "uat_quikclms_source": os.path.join(phase17_out, "uat_candidate_quikclms.csv"),
-            "uat_quikclmp_source": os.path.join(phase17_out, "uat_candidate_quikclmp.csv"),
+            "uat_source_label": uat_label,
+            "uat_quikclms_source": uat_clms,
+            "uat_quikclmp_source": uat_clmp,
             "orchestration_runner": os.path.join(
                 claims_root, "phase17_uat_governance_reporting", "phase17_uat_governance_reporting_runner.py",
             ),
@@ -3330,6 +3599,7 @@ class QLAdminEnterpriseIntegrationSuite:
         t_id = table_id.lower()
         phase_label = "Phase 18A–20" if batch_context else "Phase 18A–20"
         self.log(f"CLAIMS ORCHESTRATION: {t_id.upper()} ({phase_label} — external pipeline + UAT emit)")
+        self.log(f"  UAT population source: {cfg.get('uat_source_label', 'Phase17')}")
         if batch_context:
             self.log("  Batch context: full UAT population (quikclms + quikclmp)")
         self.log(f"  RUN_MODE={cfg['run_mode']} | production_dbf_flag={cfg['production_dbf_flag']} | go_live={cfg['go_live_target']}")
@@ -3422,6 +3692,12 @@ class QLAdminEnterpriseIntegrationSuite:
         if self._claims_uat_emit_enabled():
             emit_result = self._emit_uat_claims_to_main_output(staging_dir)
             self._log_uat_emit_summary(emit_result)
+            if emit_result and os.path.isfile(os.path.join(emit_result.get("output_dir", ""), "quikclms.csv")):
+                overlay_result = self._apply_client_claim_decision_overlays(
+                    emit_result.get("output_dir") or self._resolve_output_base_dir()
+                )
+                emit_result["client_overlays"] = overlay_result
+                self._log_client_claim_overlay_summary(overlay_result)
         else:
             self.log("  UAT emit skipped (RUN_MODE != UAT or QLA_CLAIMS_UAT_EMIT=0).")
 
@@ -3442,6 +3718,8 @@ class QLAdminEnterpriseIntegrationSuite:
             return None
         self.log("=" * 60)
         self.log("BATCH UAT CLAIMS FINALE (Phase 18F — after standard table batch)")
+        self.log(f"  UAT population source: {self.CLAIMS_ORCHESTRATION.get('uat_source_label', 'Phase17')}")
+        self.log("  Client-decision overlays (Items 18–19) applied automatically after emit.")
         self.log("  Governance-cleared UAT candidates only; deferred populations excluded.")
         self.log(f"  production_dbf_flag={self.CLAIMS_ORCHESTRATION.get('production_dbf_flag', 'N')}")
         orch_result = self._execute_claims_orchestration(
@@ -3498,36 +3776,16 @@ class QLAdminEnterpriseIntegrationSuite:
         map_dir = self._migration_mapping_dir()
         cfg_dir = self._migration_configs_dir()
 
-        expected_src = (
-            "PACTG_Accounting_Extract20260427.csv"
-            if table.lower() in ["quikprmh", "quikdvpr", "quikactg"]
-            else (
-                "PLOAN.csv"
-                if table.lower() == "quikloan"
-                else (
-                    "PPBENTYP.csv"
-                    if table.lower() == "quikdvdp"
-                    else (
-                        "PPBEN.csv"
-                        if table.lower() == "quikridr"
-                        else (
-                            "PAGNT.csv"
-                            if table.lower() == "quikagts"
-                            else f"{table}.csv"
-                        )
-                    )
-                )
-            )
-        )
-
         rb_path = self._first_existing_file(
             os.path.join(cfg_dir, f"Sync_Rulebook_{table}.csv"),
             self._find_migration_file(f"Sync_Rulebook_{table}.csv", search_dirs=[cfg_dir]),
         )
-        src_path = self._first_existing_file(
-            os.path.join(src_dir, expected_src),
-            self._find_migration_file(expected_src, search_dirs=[src_dir], exclude_output_paths=True),
-        )
+        src_path = self._resolve_table_source_path(table, src_dir)
+        if not src_path:
+            legacy_hint = expected_legacy_filename(table)
+            src_path = self._first_existing_file(
+                self._find_migration_file(legacy_hint, search_dirs=[src_dir], exclude_output_paths=True),
+            )
         trans_path = self._first_existing_file(
             os.path.join(map_dir, "Master_Value_Translation.csv"),
             self._find_migration_file("Master_Value_Translation.csv", search_dirs=[map_dir]),
@@ -3592,6 +3850,117 @@ class QLAdminEnterpriseIntegrationSuite:
             parts = d.split('/')
             if len(parts) >= 2: return parts[1].zfill(2)
         return ""
+
+    def _parse_conversion_date(self, raw):
+        """Parse LifePRO/QLA date values to datetime.date for duration math."""
+        cleaned = re.sub(r'[^0-9/]', '', str(raw).strip())
+        for fmt in ("%m/%d/%Y", "%m/%d/%y", "%Y-%m-%d"):
+            try:
+                return datetime.strptime(cleaned[:10], fmt).date()
+            except ValueError:
+                continue
+        digits = re.sub(r'[^0-9]', '', str(raw).strip())
+        if len(digits) == 8 and int(digits[:4]) >= 1900:
+            try:
+                return datetime(int(digits[:4]), int(digits[4:6]), int(digits[6:8])).date()
+            except ValueError:
+                return None
+        return None
+
+    def _compute_quikridr_mlastann(self, issue_date_raw, valuation_date=None):
+        """
+        Current policy year for QUIKRIDR.MLASTANN.
+        Issue source: PPBEN.ISSUE_DATE (converted to MEFFDATE).
+        Valuation source: conversion run date (datetime.now().date()).
+        Methodology: valuation_year - issue_year (calendar-year duration).
+        """
+        val = valuation_date or datetime.now().date()
+        issue = self._parse_conversion_date(issue_date_raw)
+        if not issue or issue > val:
+            return ""
+        duration = val.year - issue.year
+        return str(duration) if duration >= 0 else ""
+
+    def _apply_quikridr_mlastann(self, row_data, src_row, valuation_date):
+        issue_raw = row_data.get("MEFFDATE") or src_row.get("ISSUE_DATE", "")
+        row_data["MLASTANN"] = self._compute_quikridr_mlastann(issue_raw, valuation_date)
+
+    def _normalize_yyyymmdd_date(self, raw):
+        """Return 8-digit YYYYMMDD when value is a valid calendar date, else blank."""
+        digits = re.sub(r'[^0-9]', '', str(raw).strip())
+        if len(digits) != 8 or digits < "19000101":
+            return ""
+        try:
+            datetime(int(digits[:4]), int(digits[4:6]), int(digits[6:8]))
+            return digits
+        except ValueError:
+            return ""
+
+    def _derive_mphdob_from_issue_age(self, issue_raw, age_raw):
+        """Derive DOB as issue date minus issue age (same month/day)."""
+        issue = self._parse_conversion_date(issue_raw)
+        if not issue:
+            return ""
+        try:
+            age = int(re.sub(r'[^0-9]', '', str(age_raw).strip() or "0"))
+        except ValueError:
+            return ""
+        if age <= 0 or age > 120:
+            return ""
+        birth_year = issue.year - age
+        if birth_year < 1900:
+            return ""
+        try:
+            datetime(birth_year, issue.month, issue.day)
+            return f"{birth_year:04d}{issue.month:02d}{issue.day:02d}"
+        except ValueError:
+            return ""
+
+    def _resolve_quikridr_mphdob(self, row_data, src_row, rel_name_cache):
+        """
+        Harden QUIKRIDR.MPHDOB against corrupt LifePRO dates (e.g. 19291131).
+        Priority: valid PPBEN value -> RNA by MRIDRID -> derive from issue+age.
+        """
+        original = self.normalize(row_data.get("MPHDOB", ""))
+        current = self._normalize_yyyymmdd_date(row_data.get("MPHDOB", ""))
+        if current:
+            row_data["MPHDOB"] = current
+            return False
+
+        rel_id = self.normalize(row_data.get("MRIDRID", ""))
+        if rel_id and rel_name_cache and rel_id in rel_name_cache:
+            rna = rel_name_cache[rel_id]
+            for key in ("DATE_OF_BIRTH", "BIRTH_DATE", "MDOB"):
+                candidate = self._normalize_yyyymmdd_date(rna.get(key, ""))
+                if candidate:
+                    row_data["MPHDOB"] = candidate
+                    if original and original != candidate:
+                        self.log(
+                            f"QUIKRIDR MPHDOB FIX: MPOLICY={row_data.get('MPOLICY', '')} "
+                            f"MRIDRID={rel_id} {original} -> {candidate} (RNA {key})"
+                        )
+                    return True
+
+        derived = self._derive_mphdob_from_issue_age(
+            row_data.get("MEFFDATE") or src_row.get("ISSUE_DATE", ""),
+            row_data.get("MAGE") or src_row.get("ISSUE_AGE", ""),
+        )
+        if derived:
+            row_data["MPHDOB"] = derived
+            if original and original != derived:
+                self.log(
+                    f"QUIKRIDR MPHDOB FIX: MPOLICY={row_data.get('MPOLICY', '')} "
+                    f"MRIDRID={rel_id} {original} -> {derived} (derived issue-age)"
+                )
+            return True
+
+        row_data["MPHDOB"] = ""
+        if original:
+            self.log(
+                f"QUIKRIDR MPHDOB WARNING: MPOLICY={row_data.get('MPOLICY', '')} "
+                f"MRIDRID={rel_id} could not resolve invalid DOB {original}"
+            )
+        return bool(original)
 
     def start_thread(self, batch):
         if not self.is_running:
@@ -3771,6 +4140,60 @@ class QLAdminEnterpriseIntegrationSuite:
         except Exception as exc:
             self.log(f"Output hygiene skipped (non-fatal): {exc}")
 
+    def start_final_validation_thread(self):
+        if self.is_running:
+            messagebox.showwarning("Validation", "A conversion or batch job is already running.")
+            return
+        threading.Thread(target=self._run_final_output_validation_ui, daemon=True).start()
+
+    def _run_final_output_validation_ui(self):
+        """On-demand read-only final output validation (v57.17)."""
+        try:
+            self.is_running = True
+            self.log("FINAL OUTPUT VALIDATION: starting (read-only, output/ folder)...")
+            out_dir = self.path_vars["Out"][0].get().strip() if hasattr(self, "path_vars") else ""
+            if not out_dir or not os.path.isdir(out_dir):
+                out_dir = self._migration_output_dir()
+            repo = self._repo_root()
+            source_dir = self._migration_source_dir()
+            result = run_final_output_validation(
+                out_dir,
+                repo_root=repo,
+                source_dir=source_dir if os.path.isdir(source_dir) else None,
+                app_table_schemas=self.TABLE_SCHEMAS,
+            )
+            self._last_final_validation_result = result
+            sm = result.get("summary") or {}
+            status = result.get("status", "UNKNOWN")
+            self.log("FINAL OUTPUT VALIDATION COMPLETE:")
+            self.log(f"  Overall Status: {status}")
+            self.log(f"  Rules Known: {sm.get('total_rules_known', 0)} | Executed: {sm.get('total_rules_executed', 0)} | "
+                     f"With Findings: {sm.get('rules_with_findings', 0)} | Skipped: {sm.get('rules_skipped', 0)} | "
+                     f"Failed: {sm.get('rules_failed_internally', 0)}")
+            self.log(f"  Records Scanned: {sm.get('total_records_scanned', 0)}")
+            self.log(f"  Block: {sm.get('block_count', 0)} | Hold: {sm.get('hold_count', 0)} | "
+                     f"Warning: {sm.get('warning_count', 0)} | Report-only: {sm.get('report_only_count', 0)}")
+            reports = result.get("reports") or {}
+            if reports.get("reports_dir"):
+                self.log(f"  Reports: {reports['reports_dir']}")
+            if reports.get("rule_audit_csv"):
+                self.log(f"  Rule Audit CSV: {reports['rule_audit_csv']}")
+            if reports.get("summary_csv"):
+                self.log(f"  Summary CSV: {reports['summary_csv']}")
+            if status == "BLOCKED":
+                messagebox.showerror("Final Output Validation", f"Status: BLOCKED\nSee {reports.get('reports_dir', 'validation_reports')}")
+            elif status == "HOLD":
+                messagebox.showwarning("Final Output Validation", f"Status: HOLD\nSee {reports.get('reports_dir', 'validation_reports')}")
+            elif status == "WARNING":
+                messagebox.showwarning("Final Output Validation", f"Status: WARNING\nSee {reports.get('reports_dir', 'validation_reports')}")
+            else:
+                messagebox.showinfo("Final Output Validation", f"Status: PASS\nReports: {reports.get('reports_dir', '')}")
+        except Exception as exc:
+            self.log(f"FINAL OUTPUT VALIDATION ERROR: {exc}")
+            messagebox.showerror("Final Output Validation", str(exc))
+        finally:
+            self.is_running = False
+
     def update_progress(self, stage_percent, stage_message, state="running"):
         """Cosmetic staged progress feedback. Updates the progress bar (when a percent
         is supplied) and the adjacent stage label. Never touches conversion data and is
@@ -3798,7 +4221,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log("Initializing Migration Engine v57.14 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.29 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -3951,30 +4374,14 @@ class QLAdminEnterpriseIntegrationSuite:
                     os.path.dirname(src_input) if src_input else os.path.dirname(os.path.abspath(__file__))
                 )
 
-                expected_src = (
-                    "PACTG_Accounting_Extract20260427.csv"
-                    if t_id.lower() in ["quikprmh", "quikdvpr", "quikactg"]
-                    else (
-                        "PLOAN.csv"
-                        if t_id.lower() == "quikloan"
-                        else (
-                            "PPBENTYP.csv"
-                            if t_id.lower() == "quikdvdp"
-                            else (
-                                "PPBEN.csv"
-                                if t_id.lower() == "quikridr"
-                                else (
-                                    "PAGNT.csv"
-                                    if t_id.lower() == "quikagts"
-                                    else f"{t_id}.csv"
-                                )
-                            )
-                        )
-                    )
-                )
-
                 rb_path = os.path.normpath(os.path.join(rule_base, f"Sync_Rulebook_{t_id}.csv")) if is_batch else rule_input
-                src_path = os.path.normpath(os.path.join(src_base, expected_src)) if is_batch else src_input
+                if is_batch:
+                    src_path = self._resolve_table_source_path(t_id, src_base)
+                    if not src_path:
+                        legacy_hint = expected_legacy_filename(t_id)
+                        src_path = os.path.normpath(os.path.join(src_base, legacy_hint))
+                else:
+                    src_path = src_input
 
                 if is_batch:
                     self.log(f"Working Table: {t_id.upper()}")
@@ -3996,7 +4403,7 @@ class QLAdminEnterpriseIntegrationSuite:
                     for i, src_row in source.iterrows():
                         credit_code = self.normalize(src_row.get("CREDIT_CODE", ""))
                         debit_code = self.normalize(src_row.get("DEBIT_CODE", ""))
-                        excluded_codes = {"12", "96", "412", "413", "514", "641", "710", "1110", "1111"}
+                        excluded_codes = {"96", "412", "413", "514", "641", "710", "1110", "1111"}
                         
                         if credit_code == "110" and credit_code not in excluded_codes and debit_code not in excluded_codes:
                             filtered_count += 1
@@ -4283,6 +4690,24 @@ class QLAdminEnterpriseIntegrationSuite:
                                 
                         # --- PPACH BANKING CACHE ---
                         self._ppach_bank_map = {}
+                        # Issue 21H: full 9-digit ABA recovery. PPACH E_ABA_NUM is leading-/trailing-
+                        # truncated; the authoritative full routing number comes from PPCOM
+                        # (E_TRAN_ABA_NUMBER), joined by bank account number and pre-resolved into
+                        # aba_routing_lookup.csv (UNIQUE accounts only). Falls back to the raw PPACH
+                        # value when no lookup file or no unique match exists (rollback-safe).
+                        aba_lookup = {}
+                        try:
+                            aba_lk_path = find_extract('aba_routing_lookup')
+                            if aba_lk_path:
+                                ldf = pd.read_csv(aba_lk_path, encoding='latin1', low_memory=False, dtype=str).fillna("")
+                                ldf.columns = [str(c).strip().upper() for c in ldf.columns]
+                                if 'ACCOUNT_DIGITS' in ldf.columns and 'FULL_ABA' in ldf.columns:
+                                    aba_lookup = dict(zip(
+                                        ldf['ACCOUNT_DIGITS'].astype(str).str.strip(),
+                                        ldf['FULL_ABA'].astype(str).str.strip()))
+                                    self.log(f"Auto-loaded ABA routing lookup (Issue 21H): {len(aba_lookup)} accounts")
+                        except Exception as e:
+                            self.log(f"Warning: Could not load ABA routing lookup - {e}")
                         ppach_path = find_extract('ppach')
                         if ppach_path:
                             try:
@@ -4292,6 +4717,7 @@ class QLAdminEnterpriseIntegrationSuite:
                                     if 'CHANGE_DATE' in pdf.columns and 'CHANGE_TIME' in pdf.columns:
                                         pdf = pdf.sort_values(by=['CHANGE_DATE', 'CHANGE_TIME'], ascending=[True, True])
                                         
+                                    aba_recovered = 0
                                     for _, r in pdf.iterrows():
                                         pol = self.normalize(r.get('POLICY_NUMBER'))
                                         aba = str(r.get('E_ABA_NUM')).strip()
@@ -4300,11 +4726,39 @@ class QLAdminEnterpriseIntegrationSuite:
                                         if acct.endswith('.0'): acct = acct[:-2]
                                         
                                         if pol and aba and acct and aba.lower() not in ['nan', 'none', ''] and acct.lower() not in ['nan', 'none', '']:
-                                            self._ppach_bank_map[pol] = f"{aba}/{acct}"
+                                            full_aba = aba_lookup.get(re.sub(r'\D', '', acct))
+                                            use_aba = full_aba if full_aba else aba
+                                            if full_aba and full_aba != aba:
+                                                aba_recovered += 1
+                                            self._ppach_bank_map[pol] = f"{use_aba}/{acct}"
                                             
-                                    self.log(f"Auto-loaded PPACH Banking Cache for quikmstr ({len(self._ppach_bank_map)} records)")
+                                    self.log(f"Auto-loaded PPACH Banking Cache for quikmstr ({len(self._ppach_bank_map)} records; {aba_recovered} full-ABA recoveries)")
                             except Exception as e:
                                 self.log(f"Warning: Could not load PPACH cache - {e}")
+                        # ---------------------------
+
+                        # --- POLICY FEE CACHE (Issue 21C) ---
+                        self._policy_fee_map = {}
+                        try:
+                            fee_df = pd.read_csv(src_path, encoding='latin1', low_memory=False, dtype=str, on_bad_lines='skip').fillna("")
+                            fee_df.columns = [str(c).strip().upper() for c in fee_df.columns]
+                            if 'POLICY_NUMBER' in fee_df.columns and 'POLICY_FEE' in fee_df.columns:
+                                for _, r in fee_df.iterrows():
+                                    pol = self.normalize(r.get('POLICY_NUMBER'))
+                                    fee = str(r.get('POLICY_FEE')).strip()
+                                    if fee.endswith('.0'): fee = fee[:-2]
+                                    if not pol or fee.lower() in ['', 'nan', 'none', 'null']:
+                                        continue
+                                    try:
+                                        if float(fee) == 0.0:
+                                            continue
+                                        fee = f"{float(fee):.2f}"
+                                    except ValueError:
+                                        pass
+                                    self._policy_fee_map[pol] = fee
+                                self.log(f"Auto-loaded Policy Fee Cache for quikmstr ({len(self._policy_fee_map)} records)")
+                        except Exception as e:
+                            self.log(f"Warning: Could not load Policy Fee cache - {e}")
                         # ---------------------------
                 
                 quikmstr_paid_to = {}
@@ -4482,7 +4936,10 @@ class QLAdminEnterpriseIntegrationSuite:
                         source = source[source['BENEFIT_SEQ'].isin(["1", "01"])]
                 elif t_id.lower() == "quikclnt":
                     if 'CANCEL_DATE' in source.columns: source = source[source['CANCEL_DATE'].apply(lambda x: self.normalize(x) in ["", "0"])]
-                    if 'NAME_ID' in source.columns: source = source.drop_duplicates(subset=['NAME_ID', 'ADDRESS_ID'], keep='first')
+                    if 'NAME_ID' in source.columns:
+                        source = source.drop_duplicates(subset=['NAME_ID', 'ADDRESS_ID'], keep='first')
+                        source = self._bridge_rna_quikclnt_columns(source)
+                        self.log("RNA column bridge applied for quikclnt (ADDR/DOB/SEX/TAX LifePRO aliases)")
                     
                     # --- NEW SOURCE DIAGNOSTICS ---
                     self.log(f"DEBUG SOURCE: 'NAME_ID' in columns? {'NAME_ID' in source.columns}")
@@ -4584,6 +5041,13 @@ class QLAdminEnterpriseIntegrationSuite:
                     output = []
                     base_phase_cache = {} if t_id.lower() == "quikridr" else None
                     pua_pending_rows = [] if t_id.lower() == "quikridr" else None
+                    quikridr_valuation_date = datetime.now().date() if t_id.lower() == "quikridr" else None
+                    quikridr_mphdob_fix_count = 0
+                    if quikridr_valuation_date is not None:
+                        self.log(
+                            f"QUIKRIDR MLASTANN: valuation date {quikridr_valuation_date.strftime('%Y%m%d')} "
+                            f"(conversion run date); issue source PPBEN.ISSUE_DATE -> MEFFDATE"
+                        )
                     for i, src_row in source.iterrows():
                         if any("---" in str(v) for v in src_row.values[:3]): continue
                         
@@ -4646,6 +5110,16 @@ class QLAdminEnterpriseIntegrationSuite:
                                         val = translated_par if translated_par else "0"
                                     else:
                                         val = "0"
+    
+                                # --- POLICY FEE -> MANNLFEE (Issue 21C, base-coverage row only) ---
+                                if t_id.lower() == "quikridr" and t_f == "MANNLFEE":
+                                    seq_key = self.normalize(src_row.get("BENEFIT_SEQ", ""))
+                                    if seq_key in ["1", "01"]:
+                                        pol_key = self.normalize(src_row.get("POLICY_NUMBER", ""))
+                                        pulled_fee = getattr(self, '_policy_fee_map', {}).get(pol_key)
+                                        if pulled_fee:
+                                            val = pulled_fee
+                                # -----------------------------------------------------------------
     
                                 # --- MSTATUS COMPOSITE KEY INTERCEPTOR ---
                                 if t_f == 'MSTATUS' and t_id.lower() == "quikmstr":
@@ -4732,10 +5206,19 @@ class QLAdminEnterpriseIntegrationSuite:
                                     if val.isdigit() and len(val) == 1:
                                         val = val.zfill(2)
                                 
-                                # --- ENTERPRISE DATE SANITIZER ---
+                                # --- ENTERPRISE DATE SANITIZER (v57.26: handle LifePRO 18000101 sentinel) ---
                                 if t_f in ['MDOB']:
-                                    _d = re.sub(r'[^0-9]', '', str(val))
-                                    val = _d if len(_d) == 8 and _d >= "19000101" else ""
+                                    _d = re.sub(r'[^0-9]', '', str(val).strip())
+                                    # Accept dates >= 19000101; treat 18000101 (LifePRO "unknown" sentinel) as blank
+                                    if len(_d) == 8:
+                                        if _d == "18000101":
+                                            val = ""  # LifePRO sentinel for unknown DOB → blank
+                                        elif _d >= "19000101":
+                                            val = _d
+                                        else:
+                                            val = ""
+                                    else:
+                                        val = ""
                                 # ---------------------------------
 
                                 # --- QUIKRIDR HIGH-DATE CEILING (v57.14) ---
@@ -4868,6 +5351,13 @@ class QLAdminEnterpriseIntegrationSuite:
                         tp = self.normalize(row_data.get('MPOLICY', ''))
                         tphase = self.normalize(row_data.get('MPHASE', ''))
                         if not tphase: tphase = "1"
+
+                        # --- v57.28: PRIMARY_PERSON type flags must not become MPRIMID ---
+                        if t_id.lower() == "quikmstr" and "MPRIMID" in row_data:
+                            _prim = self.normalize(row_data.get("MPRIMID", ""))
+                            if len(_prim) == 1 and _prim.isalpha():
+                                row_data["MPRIMID"] = ""
+                        # ---------------------------------------------------------------
     
                         if t_id.lower() == "quikmstr" and tp in rel_map:
                             if "1" in rel_map[tp]:
@@ -5044,6 +5534,10 @@ class QLAdminEnterpriseIntegrationSuite:
                                     self.root.update_idletasks()
                                 continue
 
+                        if t_id.lower() == "quikridr":
+                            if self._resolve_quikridr_mphdob(row_data, src_row, rel_name_cache):
+                                quikridr_mphdob_fix_count += 1
+                            self._apply_quikridr_mlastann(row_data, src_row, quikridr_valuation_date)
                         output.append([row_data[h] for h in schema])
                         if i % 1000 == 0: self.progress["value"] = (i/len(source))*100; self.root.update_idletasks()
 
@@ -5052,8 +5546,20 @@ class QLAdminEnterpriseIntegrationSuite:
                             self._apply_pua_rider_inheritance(
                                 pua_row, pua_pol, pua_plan_code, base_phase_cache, cw_map,
                             )
+                            if self._resolve_quikridr_mphdob(pua_row, {}, rel_name_cache):
+                                quikridr_mphdob_fix_count += 1
+                            self._apply_quikridr_mlastann(pua_row, {}, quikridr_valuation_date)
                             output.append([pua_row[h] for h in schema])
-                    
+                    if t_id.lower() == "quikridr" and quikridr_mphdob_fix_count:
+                        self.log(f"QUIKRIDR MPHDOB: corrected {quikridr_mphdob_fix_count} invalid DOB row(s)")
+                    if t_id.lower() == "quikbenf" and output:
+                        output, benf_stats = self._apply_quikbenf_dedupe_and_equal_split(output, schema)
+                        self.log(
+                            f"QUIKBENF Issue 21I: deduped {benf_stats['dedupe_removed']} row(s), "
+                            f"recalculated MSPLIT for {benf_stats['groups_recalculated']} "
+                            f"(MPOLICY, MTYPE) group(s)"
+                        )
+
                 out_dir = self.path_vars["Out"][0].get()
                 if t_id.lower() == "quikridr" and self._closed_mplan_authority_enabled() and mplan_trace_rows:
                     trace_df = pd.DataFrame(mplan_trace_rows)
@@ -5096,7 +5602,14 @@ class QLAdminEnterpriseIntegrationSuite:
                 if is_batch and t_id.lower() == "quikclid":
                     fresh_rel = os.path.normpath(os.path.join(out_dir, "quikclid.csv"))
                     if os.path.isfile(fresh_rel):
-                        rel_map = self._load_rel_map(fresh_rel, trans_map, log_label="batch relational map")
+                        clnt_path = os.path.normpath(os.path.join(out_dir, "quikclnt.csv"))
+                        name_lookup = self._build_client_name_lookup(
+                            rel_name_cache=rel_name_cache if rel_name_cache else None,
+                            quikclnt_path=clnt_path if os.path.isfile(clnt_path) else None,
+                        )
+                        rel_map = self._load_rel_map(
+                            fresh_rel, trans_map, log_label="batch relational map", name_lookup=name_lookup,
+                        )
                         self.path_vars["Rel"][0].set(fresh_rel)
 
             current_stage = "Running claims / payment outputs"

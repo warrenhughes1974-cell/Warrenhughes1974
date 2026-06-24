@@ -6,7 +6,7 @@ Structure-preserving deterministic PII masking for legacy LifePRO → QLAdmin co
 
 ## Purpose
 
-`sanitize_test_data.py` de-identifies **PCI/PII fields only** while preserving:
+`QLA_Data_Sanitizer/sanitize_test_data.py` de-identifies **PCI/PII fields only** while preserving:
 
 - legacy export formatting (delimiters, quoting, line endings, field width)
 - join keys (`POLICY_NUMBER`, `NAME_ID`, phase/relationship fields)
@@ -46,7 +46,7 @@ Structure-preserving deterministic PII masking for legacy LifePRO → QLAdmin co
 3. `sanitize_patterns` (with optional `exclude`)
 4. `defaults.unlisted` → **PRESERVE**
 
-Configuration: `sanitization_config/field_masking_rules.json` (version 2)
+Configuration: `QLA_Data_Sanitizer/config/field_masking_rules.json` (version 2)
 
 ---
 
@@ -79,15 +79,19 @@ PII replacements use a shared `PiiRegistry` so the same name/SSN maps consistent
 
 ## Usage
 
+Run from `QLA_Data_Sanitizer/` (see [QLA_Data_Sanitizer/README.md](../QLA_Data_Sanitizer/README.md)):
+
 ```powershell
+cd QLA_Data_Sanitizer
+
 # Single file
-python sanitize_test_data.py --input PPBEN.csv --output sanitized/PPBEN.csv
+python sanitize_test_data.py --input PPBEN.csv --output Output/PPBEN.csv
 
 # Batch directory
-python sanitize_test_data.py --input-dir C:\data\source --output-dir C:\data\sanitized
+python sanitize_test_data.py --input-dir C:\data\source --output-dir .\Output
 
 # Verbose
-python sanitize_test_data.py --input-dir .\source --output-dir .\sanitized -v
+python sanitize_test_data.py --input-dir .\Input --output-dir .\Output -v
 ```
 
 Audit log written to: `<output-dir>/Sanitization_Audit_Log.txt`
@@ -97,7 +101,7 @@ Audit log written to: `<output-dir>/Sanitization_Audit_Log.txt`
 ## Pipeline
 
 ```
-Legacy extracts → sanitize_test_data.py → app.py → validate_output.py
+Legacy extracts → QLA_Data_Sanitizer → app.py → validate_output.py
 ```
 
 ---

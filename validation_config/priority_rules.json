@@ -1,0 +1,128 @@
+{
+  "version": "1.0",
+  "description": "Machine-readable rules for priority_validation_checks.txt (25 go-live checks)",
+  "governance_columns": [
+    "governance_status",
+    "business_review_required",
+    "rollback_snapshot_id",
+    "reconstructed_claim_id",
+    "prototype_claimnum",
+    "derivation_candidate_id",
+    "blocker_category",
+    "rulebook_lineage",
+    "uat_segment",
+    "replay_source"
+  ],
+  "loan_transaction_codes": ["412", "413", "411", "0411", "0412", "0413", "0451"],
+  "required_output_files": [
+    {"id": "GOV-005", "file": "quikplan.csv", "severity": "ERROR"}
+  ],
+  "required_source_files": [
+    {"id": "GOV-003", "file": "quikmstr.csv", "severity": "ERROR"},
+    {"id": "GOV-003", "file": "PPBEN.csv", "severity": "WARN"},
+    {"id": "GOV-003", "file": "PACTG_Accounting_Extract20260427.csv", "severity": "WARN"}
+  ],
+  "crosswalk_paths": [
+    "QLA_Migration/Mapping/Master_Crosswalk.csv",
+    "Master_Crosswalk.csv"
+  ],
+  "date_order_checks": [
+    {
+      "id": "POL-008",
+      "table": "quikmstr",
+      "left_field": "MPAIDTO",
+      "right_field": "MISSDT",
+      "rule": "left_before_right_invalid",
+      "severity": "ERROR",
+      "message": "MPAIDTO before MISSDT"
+    },
+    {
+      "id": "DT-003R",
+      "table": "quikridr",
+      "left_field": "MPHDOB",
+      "right_field": "MEFFDATE",
+      "rule": "left_after_right_invalid",
+      "severity": "WARN",
+      "message": "Insured DOB after rider effective date (review)"
+    }
+  ],
+  "dob_vs_issue": {
+    "id": "DT-003",
+    "child": "quikridr",
+    "parent": "quikmstr",
+    "key": "MPOLICY",
+    "dob_field": "MPHDOB",
+    "issue_field": "MISSDT",
+    "severity": "ERROR",
+    "message": "Insured DOB after policy issue date (MISSDT)",
+    "max_samples": 50
+  },
+  "pactg_claim_domain": {
+    "id": "CLM-006",
+    "pactg_files": [
+      "PACTG_Accounting_Extract20260427.csv",
+      "PACTG.csv"
+    ],
+    "code_fields": ["CREDIT_CODE", "DEBIT_CODE", "TRANSACTION_CODE", "TX_CODE"],
+    "policy_fields": ["POLICY_NUMBER", "MPOLICY"],
+    "claim_domain_codes": [
+      "38", "90", "94", "519", "530", "560", "561", "567", "570", "630", "1020", "1900"
+    ],
+    "borrowed_money_codes": [
+      "411", "412", "413", "414", "415", "416", "417", "451"
+    ],
+    "severity": "ERROR",
+    "max_samples": 40
+  },
+  "cross_table_referential": [
+    {"id": "REF-001", "child": "quikridr", "parent": "quikmstr", "key": "MPOLICY", "severity": "ERROR"},
+    {"id": "REF-002", "child": "quikprmh", "parent": "quikmstr", "key": "MPOLICY", "severity": "ERROR"},
+    {"id": "REF-003", "child": "quikclms", "parent": "quikmstr", "key": "MPOLICY", "severity": "ERROR"},
+    {"id": "CLM-001", "child": "quikclms", "parent": "quikmstr", "key": "MPOLICY", "severity": "ERROR"}
+  ],
+  "plan_referential": {
+    "id": "REF-011",
+    "child": "quikridr",
+    "parent": "quikplan",
+    "child_fields": ["MPLAN", "PLAN"],
+    "parent_field": "PLAN",
+    "severity": "ERROR",
+    "skip_blank": true
+  },
+  "rider_phase_checks": [
+    {"id": "RDR-002", "type": "missing_base_phase", "table": "quikridr", "phase_field": "MPHASE", "base_phase": "1", "severity": "ERROR"},
+    {"id": "RDR-003", "type": "supplemental_without_base", "table": "quikridr", "phase_field": "MPHASE", "base_phase": "1", "severity": "ERROR"}
+  ],
+  "table_value_checks": [
+    {
+      "id": "PRM-009",
+      "table": "quikprmh",
+      "field": "MSOURCE",
+      "match_any_normalized": ["412", "413", "411", "0411", "0412", "0413", "0451"],
+      "severity": "ERROR",
+      "message": "Loan/borrowed-money code pattern in quikprmh MSOURCE"
+    }
+  ],
+  "reconciliation": [
+    {
+      "id": "RCN-001",
+      "type": "policy_count",
+      "source_file": "quikmstr.csv",
+      "source_field": "POLICY_NUMBER",
+      "output_table": "quikmstr",
+      "output_field": "MPOLICY",
+      "severity": "WARN",
+      "tolerance_pct": 0
+    },
+    {
+      "id": "RCN-004",
+      "type": "loan_candidate_count",
+      "staging_file": "plan_analysis/phase_l1_quikloan/quikloan_emit_candidates.csv",
+      "ploan_summary": "plan_analysis/phase_l1_quikloan/ploan_profile_summary.txt",
+      "severity": "WARN"
+    }
+  ],
+  "schema_manifest_required_tables": [
+    "quikplan", "quikmstr", "quikridr", "quikprmh", "quikactg", "quikclms", "quikclmp", "quikloan"
+  ]
+}

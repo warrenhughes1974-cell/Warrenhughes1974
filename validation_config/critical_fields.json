@@ -30,7 +30,23 @@
     {"field": "MPOLICY", "severity": "ERROR"}
   ],
   "quikprmh": [
+    {"field": "MPOLICY", "severity": "ERROR"},
+    {"field": "DATEPAID", "severity": "ERROR"}
+  ],
+  "quikclms": [
+    {"field": "MPOLICY", "severity": "ERROR"},
+    {"field": "CLAIMNUM", "severity": "ERROR"}
+  ],
+  "quikclmp": [
     {"field": "MPOLICY", "severity": "ERROR"}
+  ],
+  "quikloan": [
+    {"field": "MPOLICY", "severity": "ERROR"},
+    {"field": "MLOANBAL", "severity": "ERROR"},
+    {"field": "MLOANDATE", "severity": "ERROR"}
+  ],
+  "quikactg": [
+    {"field": "MPLAN", "severity": "ERROR"}
   ],
   "quikplan": [
     {"field": "PLAN", "severity": "ERROR"}

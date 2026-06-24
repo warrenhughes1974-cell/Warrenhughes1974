@@ -14,7 +14,9 @@
   "registered_tables": ["quikclms", "quikclmp"],
   "uat_candidate_sources": {
     "quikclms": "claims_analysis/phase17_uat_governance_reporting/uat_candidate_quikclms.csv",
-    "quikclmp": "claims_analysis/phase17_uat_governance_reporting/uat_candidate_quikclmp.csv"
+    "quikclmp": "claims_analysis/phase17_uat_governance_reporting/uat_candidate_quikclmp.csv",
+    "quikclms_post_rebalance": "claims_analysis/phase24_client_balancing_rerun/uat_candidate_quikclms_post_rebalance.csv",
+    "quikclmp_post_rebalance": "claims_analysis/phase24_client_balancing_rerun/uat_candidate_quikclmp_post_rebalance.csv"
   },
   "orchestration_runners": {
     "phase17_uat_governance": "claims_analysis/phase17_uat_governance_reporting/phase17_uat_governance_reporting_runner.py",

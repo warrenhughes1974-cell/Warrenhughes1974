@@ -27,7 +27,7 @@ app = QLAdminEnterpriseIntegrationSuite(root)
 
 paths = {
     "Rule": os.path.join(MIG, "Configs", "Sync_Rulebook_quikplan.csv"),
-    "Src": os.path.join(MIG, "Source", "quikplan.csv"),
+    "Src": os.path.join(MIG, "Source", "PPOLC_PolicyMaster_Extract_20260530.csv"),
     "Trans": os.path.join(MIG, "Mapping", "Master_Value_Translation.csv"),
     "CW": os.path.join(MIG, "Mapping", "Master_Crosswalk.csv"),
     "Rel": os.path.join(MIG, "Output", "quikclid.csv"),

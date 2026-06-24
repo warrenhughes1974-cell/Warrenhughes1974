@@ -1,0 +1,66 @@
+{
+  "version": "1.0",
+  "description": "Phase 23 client issue log decision application rules (Items 14-19, client-authorized 2026-06-11).",
+  "decision_date": "2026-06-11",
+  "source_document": "docs/claims_conversion_reference/client_issue_log_decisions_2026-06-11.md",
+  "production_dbf_flag": "N",
+  "item14_surrender_validation": {
+    "decision": "Approved chains are the only valid true-surrender patterns; loan-code-only items are excluded as loan accounting.",
+    "approved_payout_evidence_codes": ["1020", "0560", "0094", "1900", "0567"],
+    "loan_only_codes": ["0411", "0412"],
+    "loan_only_disposition": "EXCLUDE_LOAN_ACCOUNTING",
+    "pattern_match_disposition": "CLIENT_PATTERN_CLEARED",
+    "insufficient_evidence_disposition": "REMAINS_BUSINESS_REVIEW",
+    "triage_mode": "BEST_EFFORT_PER_CLIENT"
+  },
+  "item15_orphan_payments": {
+    "decision": "All deferred orphan payments convert standalone.",
+    "scope": "ALL_DEFERRED_PAYMENTS",
+    "treatment": "STANDALONE_PAYMENT_WITH_MINIMAL_HEADER",
+    "standalone_claimstat": "3",
+    "standalone_mclaimstatus": "SETTLED",
+    "rationale": "Payouts already completed historically in LifePRO; OPEN status would create false pending work in QLAdmin."
+  },
+  "item16_unbalanced_claims": {
+    "decision": "Dividend-on-deposit excluded from DB balancing on all claims; two claims approved for UAT; one converts header-only.",
+    "excluded_balancing_gl_codes": ["2023", "603703R"],
+    "exclusion_scope": "ALL_CLAIMS",
+    "client_approved_uat_claims": [
+      "RC-9010150740-1-DEATH_CLAIM-C0-20230509",
+      "RC-9010331157-1-DEATH_CLAIM-C0-20190315"
+    ],
+    "header_only_claims": [
+      {
+        "reconstructed_claim_id": "RC-9010335038-1-DEATH_CLAIM-C0-20180422",
+        "policy_number": "9010335038",
+        "claim_status": "TERMINATED_DEATH_CLAIM",
+        "claimstat": "3",
+        "status_date": "20180422",
+        "amount": "0.00",
+        "financial_history": "NONE",
+        "note": "No accounting available in LifePRO; convert header only per client decision."
+      }
+    ]
+  },
+  "item18_combined_claim_amounts": {
+    "decision": "Death settlement claim amount = DB + loan payout + loan interest combined.",
+    "combine_layers": ["payout", "offset", "interest"],
+    "applies_to_claim_families": ["DEATH_CLAIM"]
+  },
+  "item19_payee_overrides": [
+    {
+      "reconstructed_claim_id": "RC-9010807842-1-DEATH_CLAIM-C0-20220303",
+      "prototype_claimnum": "CLM0001738",
+      "policy_number": "010807842C",
+      "mamount": "125000.00",
+      "old_payee": "PATRICIA MAYHEW",
+      "new_payee": "KENNETH WAYNE MATTHEW",
+      "reason": "Client confirmed payout was made to Kenneth Wayne Matthew; extract showed insured name."
+    }
+  ],
+  "general": {
+    "data_basis": "Current extract approved by client; no May 31 re-validation required for sign-off.",
+    "rebalance_note": "Global 2023/603703R exclusion requires balancing engine re-run; deferred unbalanced claims marked REBALANCE_PENDING until executed."
+  },
+  "rulebook_lineage": "phase17_uat_governance|phase23_client_decision_application"
+}

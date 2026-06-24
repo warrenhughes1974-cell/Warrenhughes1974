@@ -1,0 +1,492 @@
+# QLA Priority Validation Checks (Go-Live Set)
+# Version: 1.0 | Date: 2026-06-01
+# Purpose: Top 25 conversion validations to run as part of migration QA.
+# Usage: Review after batch conversion; wire into validate_output.py / run checklist.
+# Severity key: Critical = stop/go-live blocker | High = hold for BA | Medium = report
+#
+# AUTOMATED RUN (default includes schema, critical, dates, duplicates, priority):
+#   python validate_output.py QLA_Migration/Output
+#   python validate_output.py QLA_Migration/Output -o QLA_Migration/Output/validation_report.txt --csv-report QLA_Migration/Output/validation_findings.csv
+#
+# Priority-only (crosswalk, referential, governance — still needs Output CSVs for FK checks):
+#   python validate_output.py QLA_Migration/Output --priority-only
+#
+# With source reconciliation (RCN-001, GOV-003):
+#   python validate_output.py QLA_Migration/Output --source-dir QLA_Migration/Source
+#
+# Config: validation_config/priority_rules.json
+# Coverage map:
+#   POL-001, POL-002, DUP-002/003/008, REQ-002/003, FMT-007/008, PRM-010, LOAN-002/005
+#     -> schema, critical, dates, duplicates categories (always when --rules default)
+#   POL-008, CW-001/002, REF-*, RDR-*, PRM-009, CLM-006, CLM-011, DT-003, GOV-003/005/012, RCN-*
+#     -> priority category (tagged with [VALIDATION_ID] in report)
+#   DT-003  = quikridr.MPHDOB vs quikmstr.MISSDT (issue date)
+#   DT-003R = quikridr.MPHDOB vs MEFFDATE (WARN only)
+#   CLM-006 = PACTG borrowed-money-only policies present in quikclms (needs --source-dir or --pactg)
+
+================================================================================
+POL-001
+================================================================================
+Domain:              Policy Master
+Validation Check:    Duplicate MPOLICY in quikmstr
+Description:         Each QLAdmin policy master row must have a unique MPOLICY.
+Source:              quikmstr.csv (QLA_Migration/Source)
+Output:              quikmstr.csv (QLA_Migration/Output)
+Key Fields:          MPOLICY
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               Aligns with validation_config/key_definitions.json policy key.
+
+================================================================================
+POL-002
+================================================================================
+Domain:              Policy Master
+Validation Check:    Missing MPOLICY
+Description:         Policy number must be populated on every master row.
+Source:              quikmstr.csv
+Output:              quikmstr.csv
+Key Fields:          MPOLICY
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               Existing critical_fields.json check.
+
+================================================================================
+POL-008
+================================================================================
+Domain:              Policy Master
+Validation Check:    MPAIDTO before MISSDT
+Description:         Paid-to date cannot precede issue date on policy master.
+Source:              quikmstr.csv
+Output:              quikmstr.csv
+Key Fields:          MISSDT, MPAIDTO
+Severity:            High
+Type:                Error
+Disposition:         Hold
+BA Question Needed:  No
+Notes:               Core billing/policy date integrity.
+
+================================================================================
+CW-001
+================================================================================
+Domain:              Crosswalk / Mapping
+Validation Check:    One source policy maps to multiple MPOLICY
+Description:         Each LifePRO policy number must map to at most one QLAdmin MPOLICY.
+Source:              Master_Crosswalk.csv (QLA_Migration/Mapping)
+Output:              All tables using MPOLICY
+Key Fields:          Source key, MPOLICY
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  Yes
+Notes:               Prevents silent policy splits or overwrites.
+
+================================================================================
+CW-002
+================================================================================
+Domain:              Crosswalk / Mapping
+Validation Check:    Multiple source policies map to same MPOLICY
+Description:         Target MPOLICY collision — two or more source keys resolve to one output policy.
+Source:              Master_Crosswalk.csv
+Output:              All tables using MPOLICY
+Key Fields:          Source key, MPOLICY
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  Yes
+Notes:               High-risk data merge; requires BA resolution before emit.
+
+================================================================================
+REF-001
+================================================================================
+Domain:              Referential Integrity
+Validation Check:    quikridr without quikmstr
+Description:         Every rider row MPOLICY must exist on policy master.
+Source:              PPBEN.csv, quikmstr.csv
+Output:              quikridr.csv, quikmstr.csv
+Key Fields:          MPOLICY
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               Foundational FK for coverage conversion.
+
+================================================================================
+REF-002
+================================================================================
+Domain:              Referential Integrity
+Validation Check:    quikprmh without quikmstr
+Description:         Premium history rows must reference an existing policy master.
+Source:              PACTG_Accounting_Extract20260427.csv, quikmstr.csv
+Output:              quikprmh.csv, quikmstr.csv
+Key Fields:          MPOLICY
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               Orphan payments break billing reconciliation.
+
+================================================================================
+REF-003
+================================================================================
+Domain:              Referential Integrity
+Validation Check:    quikclms without quikmstr
+Description:         Claim header MPOLICY must exist on policy master.
+Source:              PACTG, quikmstr.csv
+Output:              quikclms.csv, quikmstr.csv
+Key Fields:          MPOLICY
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               Aligns with claims MPOLICY validation when enabled in app.
+
+================================================================================
+REF-011
+================================================================================
+Domain:              Referential Integrity
+Validation Check:    MPLAN not in quikplan
+Description:         Rider plan code must exist in product catalog (exclude EXPECTED_NON_PRODUCT_ROW).
+Source:              PPBEN.csv, quikplan_source.csv / quikplan.csv
+Output:              quikridr.csv, quikplan.csv
+Key Fields:          MPLAN, PLAN
+Severity:            High
+Type:                Error
+Disposition:         Hold
+BA Question Needed:  Yes
+Notes:               Blank MPLAN on BENEFIT_SEQ 99 / BENEFIT_TYPE UV is governed separately.
+
+================================================================================
+REQ-002
+================================================================================
+Domain:              Required Field
+Validation Check:    quikridr MRIDRID blank
+Description:         No new blank rider IDs — MRIDRID required on convertible coverage rows.
+Source:              PPBEN.csv
+Output:              quikridr.csv
+Key Fields:          MRIDRID
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               AGENTS.md explicit production rule.
+
+================================================================================
+REQ-003
+================================================================================
+Domain:              Required Field
+Validation Check:    quikridr MPHASE blank or zero
+Description:         Coverage phase required; MPHASE 1 = base, MPHASE > 1 = riders.
+Source:              PPBEN.csv
+Output:              quikridr.csv
+Key Fields:          MPHASE
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               critical_fields.json blank_if includes 0.
+
+================================================================================
+RDR-002
+================================================================================
+Domain:              Rider / Coverage
+Validation Check:    MPHASE=1 base missing for policy
+Description:         Every policy with riders must have a base coverage row (MPHASE=1).
+Source:              PPBEN.csv
+Output:              quikridr.csv
+Key Fields:          MPOLICY, MPHASE
+Severity:            High
+Type:                Error
+Disposition:         Hold
+BA Question Needed:  No
+Notes:               AGENTS.md: MPHASE 1 = base coverage.
+
+================================================================================
+RDR-003
+================================================================================
+Domain:              Rider / Coverage
+Validation Check:    Supplemental without base
+Description:         MPHASE > 1 rows exist but no MPHASE = 1 for same MPOLICY.
+Source:              PPBEN.csv
+Output:              quikridr.csv
+Key Fields:          MPOLICY, MPHASE
+Severity:            High
+Type:                Error
+Disposition:         Hold
+BA Question Needed:  No
+Notes:               Structural integrity for rider hierarchy.
+
+================================================================================
+DUP-002
+================================================================================
+Domain:              Duplicate / Uniqueness
+Validation Check:    Duplicate quikridr policy+phase
+Description:         Same MPOLICY + MPHASE must not appear more than once.
+Source:              PPBEN.csv
+Output:              quikridr.csv
+Key Fields:          MPOLICY, MPHASE, MRIDRID
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               key_definitions.json policy_phase key.
+
+================================================================================
+DUP-003
+================================================================================
+Domain:              Duplicate / Uniqueness
+Validation Check:    Duplicate MRIDRID
+Description:         Rider identifier must be unique within conversion scope.
+Source:              PPBEN.csv
+Output:              quikridr.csv
+Key Fields:          MRIDRID, MPOLICY, MPHASE
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               Duplicate or blank MRIDRID breaks QLAdmin rider linkage.
+
+================================================================================
+DUP-008
+================================================================================
+Domain:              Duplicate / Uniqueness
+Validation Check:    Duplicate CLAIMNUM in quikclms
+Description:         Claim header key must be unique per claim population rules.
+Source:              PACTG, claims staging
+Output:              quikclms.csv
+Key Fields:          MPOLICY, CLAIMNUM
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               validate_claims_emit_enhancements checks CLAIMNUM.
+
+================================================================================
+PRM-009
+================================================================================
+Domain:              Premium / Billing
+Validation Check:    PACTG loan codes in quikprmh
+Description:         Borrowed-money transaction codes (e.g. 412, 413) must not appear in premium history.
+Source:              PACTG_Accounting_Extract20260427.csv
+Output:              quikprmh.csv
+Key Fields:          TRANSACTION_CODE
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               app.py excluded_codes includes 412, 413; claim_domain 0411-0417.
+
+================================================================================
+PRM-010
+================================================================================
+Domain:              Premium / Billing
+Validation Check:    Blank DATEPAID in quikprmh
+Description:         Payment date required on every premium history row emitted.
+Source:              PACTG_Accounting_Extract20260427.csv
+Output:              quikprmh.csv
+Key Fields:          DATEPAID
+Severity:            High
+Type:                Error
+Disposition:         Hold
+BA Question Needed:  No
+Notes:               app.py batch logs blank DATEPAID counts.
+
+================================================================================
+CLM-001
+================================================================================
+Domain:              Claims
+Validation Check:    Claim without policy master
+Description:         quikclms MPOLICY must resolve to quikmstr.
+Source:              PACTG, quikmstr.csv
+Output:              quikclms.csv, quikmstr.csv
+Key Fields:          MPOLICY
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               Same as REF-003; run at claims + master reconciliation.
+
+================================================================================
+CLM-006
+================================================================================
+Domain:              Claims
+Validation Check:    Non-claim accounting in claim emit
+Description:         Loan/borrowed-money codes (0411-0417, 0451) must not emit as claim rows.
+Source:              PACTG_Accounting_Extract20260427.csv
+Output:              quikclms.csv, claims hold workbench
+Key Fields:          TRANSACTION_CODE
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               claims_analysis/config/claim_domain_eligibility_rules.json.
+
+================================================================================
+CLM-011
+================================================================================
+Domain:              Claims
+Validation Check:    Governance metadata leaked to output
+Description:         Internal hold/governance columns must not appear in production quikclms/quikclmp CSV.
+Source:              claims staging
+Output:              quikclms.csv, quikclmp.csv
+Key Fields:          governance_status, hold_reason (if present)
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               validate_claims_emit_enhancements in qla_core.
+
+================================================================================
+DT-003
+================================================================================
+Domain:              Date
+Validation Check:    Insured DOB after issue date
+Description:         Insured date of birth cannot be after policy issue date.
+Source:              PPBEN.csv, RelationshipNameAddress_Extract.csv, quikmstr.csv
+Output:              quikridr.csv, quikclnt.csv
+Key Fields:          MPHDOB/MDOB, MISSDT, MEFFDATE
+Severity:            Critical
+Type:                Error
+Disposition:         Hold
+BA Question Needed:  No
+Notes:               Common data-quality failure in legacy extracts.
+
+================================================================================
+FMT-007
+================================================================================
+Domain:              Field Format / DBF
+Validation Check:    Output column order vs schema
+Description:         Output CSV columns must match app.py TABLE_SCHEMAS / schema_constants order.
+Source:              app.py TABLE_SCHEMAS, validation_config/schema_manifest.json
+Output:              All quik*.csv in Output
+Key Fields:          All columns
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               validate_output.py schema category (strict_order).
+
+================================================================================
+FMT-008
+================================================================================
+Domain:              Field Format / DBF
+Validation Check:    Extra or missing output columns
+Description:         Schema drift between converter and QLAdmin load format.
+Source:              app.py TABLE_SCHEMAS, validation_config/schema_manifest.json
+Output:              All quik*.csv
+Key Fields:          All columns
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               Extend schema_manifest for quikactg, quikclms, quikclmp, quikloan.
+
+================================================================================
+RCN-001
+================================================================================
+Domain:              Row Count / Reconciliation
+Validation Check:    Source policy count vs quikmstr
+Description:         Distinct source policies should reconcile to quikmstr MPOLICY count (minus documented drops).
+Source:              quikmstr.csv
+Output:              quikmstr.csv
+Key Fields:          POLICY_NUMBER, MPOLICY
+Severity:            High
+Type:                Warning
+Disposition:         Report Only
+BA Question Needed:  Yes
+Notes:               Requires dropped-policy reason log for explainable variance.
+
+================================================================================
+RCN-004
+================================================================================
+Domain:              Row Count / Reconciliation
+Validation Check:    PLOAN active count vs quikloan candidates
+Description:         Latest non-zero PLOAN balances should reconcile to quikloan emit candidates when loan path enabled.
+Source:              PLOAN.csv
+Output:              plan_analysis/phase_l1_quikloan/quikloan_emit_candidates.csv
+Key Fields:          POLICY_NUMBER, LOAN_BALANCE, MPOLICY
+Severity:            High
+Type:                Warning
+Disposition:         Report Only
+BA Question Needed:  Yes
+Notes:               Phase L1 staging; production quikloan gated by env flags.
+
+================================================================================
+LOAN-002
+================================================================================
+Domain:              Loan
+Validation Check:    Duplicate MPOLICY in QuikLoan
+Description:         At most one QuikLoan row per MPOLICY when loan table is emitted.
+Source:              PLOAN.csv
+Output:              quikloan.csv (if applicable), quikloan_emit_candidates.csv
+Key Fields:          MPOLICY
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               Phase L1 PLOAN-primary design: one row per policy.
+
+================================================================================
+LOAN-005
+================================================================================
+Domain:              Loan
+Validation Check:    Missing MLOANDATE on loan candidate
+Description:         ACCRUAL_DATE must map to valid MLOANDATE for emit candidates.
+Source:              PLOAN.csv
+Output:              quikloan staging / quikloan.csv
+Key Fields:          ACCRUAL_DATE, MLOANDATE
+Severity:            High
+Type:                Error
+Disposition:         Hold
+BA Question Needed:  No
+Notes:               plan_governance/config/quikloan_derivation_rules.json hold rule.
+
+================================================================================
+GOV-003
+================================================================================
+Domain:              Conversion Governance
+Validation Check:    Source file missing for table
+Description:         Expected LifePRO extract absent — table must skip or fail loudly.
+Source:              QLA_Migration/Source (expected_src per app.py)
+Output:              n/a
+Key Fields:          File name (PLOAN.csv, PPBEN.csv, PACTG, etc.)
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               app.py logs skip when src_path missing.
+
+================================================================================
+GOV-005
+================================================================================
+Domain:              Conversion Governance
+Validation Check:    quikplan missing before batch
+Description:         Full batch requires quikplan.csv in Output from Step 1 product setup.
+Source:              quikplan_source.csv
+Output:              quikplan.csv (QLA_Migration/Output)
+Key Fields:          PLAN
+Severity:            Critical
+Type:                Error
+Disposition:         Block
+BA Question Needed:  No
+Notes:               QLA_Migration/RUN_GUIDE.md Step 1 gate.
+
+================================================================================
+GOV-012
+================================================================================
+Domain:              Conversion Governance
+Validation Check:    Validation config out of sync with app schema
+Description:         validation_config/schema_manifest.json must include all production output tables.
+Source:              validation_config/, app.py TABLE_SCHEMAS
+Output:              validate_output.py results
+Key Fields:          Table columns
+Severity:            High
+Type:                Error
+Disposition:         Report Only
+BA Question Needed:  No
+Notes:               Today missing quikactg, quikclms, quikclmp, quikloan in manifest.
+
+# END OF PRIORITY SET (25 checks)

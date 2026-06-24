@@ -1,0 +1,23 @@
+=== Phase 25 UAT DBF Generation Summary ===
+
+Generation timestamp: 2026-06-12 (Phase 21B from emitted CSV)
+Rollback lineage: PHASE25-UAT-EMIT-REFRESH
+production_dbf_flag=N
+governance_population=UAT_EMITTED_VALIDATED_ONLY
+deferred_population_included=N
+
+Source CSVs (authoritative):
+  QLA_Migration/Output/quikclms.csv  (2,114 rows)
+  QLA_Migration/Output/quikclmp.csv  (1,709 rows)
+
+Generated DBFs:
+  QLA_Migration/Output/claims_uat_dbf/QUIKCLMS_PHASE19_UAT.DBF  (2,114 rows)
+  QLA_Migration/Output/claims_uat_dbf/QUIKCLMP_PHASE19_UAT.DBF  (1,709 rows)
+
+Row alignment: PASS (CSV and DBF counts match for both tables)
+
+Artifacts:
+  claims_uat_dbf_alignment_manifest.csv
+  claims_uat_dbf_alignment_summary.txt
+
+NOT production authorized. UAT rehearsal only.

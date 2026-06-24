@@ -1,0 +1,10 @@
+{
+  "replace_overrides": {
+    "*MFNAME*": "TEST",
+    "*MLNAME*": "CLIENT",
+    "*MADDR1*": "123 MAIN ST",
+    "*MCITY*": "ANYTOWN",
+    "*MTAXID*": "000000000",
+    "*MEMAIL*": "test@example.com"
+  }
+}

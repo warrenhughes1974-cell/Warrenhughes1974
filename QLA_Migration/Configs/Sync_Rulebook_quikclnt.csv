@@ -1,5 +1,5 @@
 Source_Field,Target_Field,Default_Value,Transformation_Note
-CLIENT_ID,MCLIENTID,,
+NAME_ID,MCLIENTID,,LifePRO RNA key (was CLIENT_ID — not present in RelationshipNameAddress extract)
 ,MTYPE,I,
 TAX_ID,MTAXID,,
 ,MTAXIDTYPE,55,
