@@ -1,0 +1,15 @@
+{
+  "crosswalk_rows": 141,
+  "catalog_rows": 141,
+  "catalog_migration_rows": 141,
+  "catalog_files_identical": true,
+  "quikplan_rows": 141,
+  "quikplan_unique_plan": 141,
+  "quikridr_unique_mplan": 139,
+  "exact_matches": 141,
+  "mismatches": 0,
+  "crosswalk_divergent_catalog_rows": 33,
+  "missing_from_catalog": 0,
+  "extra_in_converter": 0,
+  "xlsx_source": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\plan_analysis\\source_data\\crosswalk\\Policy Form Crosswalk 5.22.26.xlsx"
+}

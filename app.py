@@ -1,9 +1,10 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.34
-# Date:        2026-06-27
-# Change Note: v57.34 — Release integration: Issue 21M-FU QUIKMEMO one row per MEMOKEY (production grain).
+# Version:     v57.35
+# Date:        2026-06-24
+# Change Note: v57.35 — Issue 28: product catalog crosswalk_ql_plan_code runtime authority; DISCHO25 catalog row; P3E MPLAN default ON.
+#              v57.34 — Release integration: Issue 21M-FU QUIKMEMO one row per MEMOKEY (production grain).
 #              v57.33 — Issue 21M: quikmemo DBF+DBT packaged in Output/quikmemo_uat_dbf/ (hygiene skip).
 #              v57.32 — Issue 21M: QUIKMEMO from PNOTE + PENSE dual-source merge (CSV + DBF/FPT).
 #              v57.31 — Issue 26: quikridr.MPREM maps ANN_PREM_PER_UNIT with MODE_PREMIUM fallback.
@@ -224,7 +225,7 @@ RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runne
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.34")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.35")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -270,7 +271,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.34", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.35", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -4234,7 +4235,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log("Initializing Migration Engine v57.34 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.35 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -5667,6 +5668,13 @@ class QLAdminEnterpriseIntegrationSuite:
                     self.log(f"P3E governance outputs: {p3e_dir}")
                 pd.DataFrame(output, columns=schema).to_csv(os.path.normpath(os.path.join(out_dir, f"{t_id}.csv")), index=False)
                 self.log(f"Success: {t_id}.csv - {len(output)} records.")
+
+                if is_batch and t_id.lower() == "quikplan" and self._closed_mplan_authority_enabled():
+                    mplan_resolver, quikplan_plan_set, _ = self._init_mplan_authority(out_dir, cw_path)
+                    self.log(
+                        f"P3E MPLAN AUTHORITY: refreshed resolver after quikplan emit "
+                        f"(quikplan PLAN universe={len(quikplan_plan_set)})"
+                    )
                 
                 audit_path = os.path.normpath(os.path.join(out_dir, "Migration_Audit_Log.txt"))
                 is_new_log = not os.path.exists(audit_path)

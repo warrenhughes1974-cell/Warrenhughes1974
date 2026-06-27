@@ -407,7 +407,8 @@ def load_quikplan_plan_set(quikplan_path: str) -> set[str]:
 
 
 def closed_mplan_authority_enabled() -> bool:
-    return os.environ.get("QLA_CLOSED_MPLAN_AUTHORITY", "0").strip().lower() in ("1", "true", "yes")
+    """P3E closed MPLAN authority — enabled by default (Issue #28 Phase 2); opt out with QLA_CLOSED_MPLAN_AUTHORITY=0."""
+    return os.environ.get("QLA_CLOSED_MPLAN_AUTHORITY", "1").strip().lower() not in ("0", "false", "no")
 
 
 def allow_legacy_mplan_fallback() -> bool:
@@ -415,7 +416,10 @@ def allow_legacy_mplan_fallback() -> bool:
 
 
 def load_product_catalog_crosswalk(path: str | None = None) -> dict[str, str]:
-    """Load dedicated product catalog PLAN map: lifepro_coverage_id -> ql_plan_code."""
+    """Load product catalog PLAN map: lifepro_coverage_id -> authoritative PLAN code.
+
+    Issue #28: prefer crosswalk_ql_plan_code when non-blank; fall back to ql_plan_code (compat).
+    """
     catalog_path = path or DEFAULT_PRODUCT_CATALOG
     if not catalog_path or not os.path.isfile(catalog_path):
         return {}
@@ -424,16 +428,19 @@ def load_product_catalog_crosswalk(path: str | None = None) -> dict[str, str]:
     df.columns = [strip_val(c) for c in df.columns]
 
     id_col = "lifepro_coverage_id" if "lifepro_coverage_id" in df.columns else df.columns[0]
-    plan_col = "ql_plan_code" if "ql_plan_code" in df.columns else (
+    auth_col = "crosswalk_ql_plan_code" if "crosswalk_ql_plan_code" in df.columns else ""
+    compat_col = "ql_plan_code" if "ql_plan_code" in df.columns else (
         "New_Value" if "New_Value" in df.columns else df.columns[1] if len(df.columns) > 1 else ""
     )
-    if not plan_col:
+    if not compat_col and not auth_col:
         return {}
 
     result: dict[str, str] = {}
     for _, row in df.iterrows():
         cid = normalize(row.get(id_col, ""))
-        plan = normalize(row.get(plan_col, ""))
+        plan = normalize(row.get(auth_col, "")) if auth_col else ""
+        if not plan:
+            plan = normalize(row.get(compat_col, ""))
         if cid and plan:
             result[cid] = plan
     return result

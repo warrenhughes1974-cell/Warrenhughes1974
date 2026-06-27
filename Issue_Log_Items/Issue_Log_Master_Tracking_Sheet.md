@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-06-27 · **Engine:** `app.py` **v57.34**
+**Last updated:** 2026-06-27 · **Engine:** `app.py` **v57.35** (Issue #28 closed) / cumulative **v57.34+**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -25,11 +25,12 @@
 
 ## Summary roll-up
 
-| Area | Released in v57.34 | Awaiting client UAT / answers | Closed |
+| Area | Released in v57.34–35 | Awaiting client UAT / answers | Closed |
 |---|---:|---:|---:|
 | **Policy (Issue #21)** | 7 (#21B, 21C, 21H ABA, 21M, 21M-FU, + cumulative #25/#26) | 8 + 21H target-field + 21K | 1 (21L) |
+| **Cross-cutting (#25/#26/#28)** | 3 (#25, #26, **#28**) | — | **1 (#28)** |
 | **Claims (Items 14–19)** | 5 (14, 15, 16, 18, 19) | 147 claims in review | — |
-| **Production cutover** | Engine v57.34 ready | Authorization (`production_dbf_flag=N`) | — |
+| **Production cutover** | Engine v57.35 (#28) ready | Authorization (`production_dbf_flag=N`) | — |
 
 ---
 
@@ -56,12 +57,15 @@
 
 ---
 
-## B. Cross-cutting issues (released in v57.34)
+## B. Cross-cutting issues
 
 | ID | Item | Status | Release |
 |---|---|---|---|
 | **#25** | MPOLICY 10-char left-pad | **RELEASED ✓** | v57.30 / v57.34 |
 | **#26** | quikridr.MPREM mapping | **RELEASED ✓** | v57.31 / v57.34 |
+| **#28** | Product catalog PLAN mapping (crosswalk authority) | **CLOSED ✓** | **v57.35** |
+
+**#28 detail:** `Issue_Log_Items/Issue_28/` · Client UAT PASS 2026-06-27 · 33 PLAN corrections + DISCHO25
 
 ---
 
@@ -109,8 +113,11 @@ These are **not in the UAT emit** until the client decides.
 
 | Document | Path |
 |----------|------|
-| Release Notes | `Release_Notes/v57.34_Release_Notes.md` |
-| Release Manifest | `Release_Manifest_v57.34.md` |
+| Release Notes (latest) | `Release_Notes/v57.35_Release_Notes.md` |
+| Release Manifest (latest) | `Release_Manifest_v57.35.md` |
+| Release Notes (prior) | `Release_Notes/v57.34_Release_Notes.md` |
+| Release Manifest (prior) | `Release_Manifest_v57.34.md` |
+| Issue #28 closure | `Issue_Log_Items/Issue_28/Issue_28_Closure_Report.md` |
 
 ---
 
@@ -123,4 +130,4 @@ These are **not in the UAT emit** until the client decides.
 
 ---
 
-*Single master log. Policy detail: `Issue_21/Issue_21_Tracking_Sheet.md`. Release: v57.34 (2026-06-27).*
+*v57.35 release — Issue #28 CLOSED (2026-06-27). Prior: v57.34. Policy detail: `Issue_21/Issue_21_Tracking_Sheet.md`. Issue #28: `Issue_Log_Items/Issue_28/`.*
