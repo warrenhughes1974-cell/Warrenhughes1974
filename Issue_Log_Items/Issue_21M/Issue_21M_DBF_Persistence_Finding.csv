@@ -1,0 +1,7 @@
+finding,location,impact
+quikmemo.dbf relocated,"plan_analysis/phase_r5_rate_loader/emitted_dbf/quikmemo.dbf (614957 bytes)",DBF separated from memo sidecar
+quikmemo.dbt relocated,QLA_Migration/Reports/quikmemo.dbt (14990916 bytes),Memo blob separated from DBF
+dbf_integrity,python dbf.Table open test,BadDataError: memo fields exist without memo file
+root_cause,_run_output_hygiene -> relocate_non_csv,*.dbf routed to rate sandbox; *.dbt routed to Reports
+batch_log,13:23:26 DBF written; 13:24:31 hygiene moved 14 files,Expected behavior — not generator failure
+uat_load_ready,No,DBF+DBT must be co-located for QLAdmin memo table load

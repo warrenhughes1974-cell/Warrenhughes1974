@@ -1,0 +1,11 @@
+table,row_count,baseline,status,notes
+quikmemo.csv,4380,29279 (v57.33 pre-FU),EXPECTED_CHANGE,21M-FU merge grain
+quikmstr.csv,5083,5083,OK,Issue #25 baseline
+quikridr.csv,7002,7002,OK,Issue #26 baseline
+quikprmh.csv,205577,205577,OK,
+quikplan.csv,141,141,OK,
+quikclid.csv,46753,46753,OK,
+quikclnt.csv,13846,13846,OK,
+quikactg.csv,87,87,OK,per Issue_21M regression roll-up
+quikclms.csv,2114,n/a,OK,claims UAT batch — unchanged vs same-run claims path
+quikclmp.csv,1709,n/a,OK,claims UAT batch — unchanged vs same-run claims path

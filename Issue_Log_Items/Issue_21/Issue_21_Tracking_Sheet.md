@@ -1,7 +1,7 @@
 # Issue #21 — Tracking Sheet
 
 **Source policies:** 010391876C · 010391895C · 010448806C · 010713704C · 010718309C · 010765930C · 010818663C
-**Prepared:** 2026-06-19 · **Last updated:** 2026-06-21 (full batch validated; descriptions + gating questions added)
+**Prepared:** 2026-06-19 · **Last updated:** 2026-06-27 (v57.34 release integration)
 **References:** `Issue_21_Final_Analysis.md` (technical) · `Issue_21_Remediation_Plan.md` (planning)
 
 **Status legend:** `IMPLEMENTED` = change applied + validated in full batch · `CLOSED` = not a defect / out of scope · `AWAITING CLIENT` = blocked on a clarification answer · `IN SCOPE` = confirmed scope, new build
@@ -22,7 +22,7 @@
 | 21J | Modal Premium Factors | Modal premium amounts (monthly, quarterly, draft) do not match LifePRO — QLAdmin appears to use generic factors instead of product-specific ones. **Example:** Policy 010713704C — QLAdmin Annl **$1,095.44** / Mthly **$91.29** / Draft **$43.91**; monthly looks like Annl÷12 rather than the product's actual modal factor. | 2 | Med | AWAITING CLIENT | Client (with Conversion) |
 | 21K | PUA Amount Precision | Paid-Up Addition (PUA) face amount loses cents when loaded into QLAdmin. **Example:** Policy 010448806C — LifePRO Accumulated PUA Face = **$5,752.96**; QLAdmin shows **$5,752.00**. Conversion output already carries full unit precision (`MUNIT` = 5.75296); the loss appears to occur in QLAdmin/DBF field storage (~3 decimal places). | 1 | Low-Med | AWAITING CLIENT (New Era) | Conversion + Client (New Era) |
 | 21L | Last Change Date | Client reported Last Change Date in QLAdmin did not match LifePRO. **Example:** LifePRO 010448806C Last Change Date = **07/07/2010**; QLAdmin showed the issue date instead. **Closed:** client confirmed QLAdmin sets this date on load — not pulled from LifePRO. | — | Low | **CLOSED** | Client |
-| 21M | Policy Notes / ENS Messages | Policy notes and ENS (Electronic Notification System) messages from LifePRO are not converted to QLAdmin. **Example:** client expects policy-level notes/messages to appear in QLAdmin for reference; no QUIKMEMO rulebook or mapping exists yet. | 4 | Low | IN SCOPE (new build) | Conversion + Client |
+| 21M | Policy Notes / ENS Messages | Policy notes and ENS messages from LifePRO are not converted to QLAdmin. **Released v57.34:** greenfield QUIKMEMO pipeline; 4,380 rows; client UAT pending on 010335038C. | 4 | Low | **RELEASED ✓** (UAT pending) | Conversion + Client |
 
 ---
 
@@ -44,26 +44,29 @@ Clear questions for each open item. Implemented/closed items show verification s
 | **21J** | AWAITING CLIENT | **Please provide the approved modal premium factors by product/plan** (or confirm QLAdmin should use plan-specific factors from QuikPlan rather than Annl÷12). Which modal breakdown is authoritative for policy 010713704C — LifePRO draft amount ($43.91) or the QLAdmin-calculated monthly ($91.29)? |
 | **21K** | AWAITING CLIENT (New Era) | **Does QUIKRIDR.MUNIT support 5 decimal places on DBF load, or is it truncated to 3?** If truncated, how should PUA face amounts with cents (e.g., $5,752.96) be carried — via a different field, rounding rule, or QLAdmin configuration change? |
 | **21L** | CLOSED | **No action required.** QLAdmin sets Last Change Date on load; LifePRO last-change is not converted. |
-| **21M** | IN SCOPE | **Should both policy notes and ENS messages be converted?** If yes, please confirm the LifePRO source(s) and whether the target table is QUIKMEMO keyed by policy number. Are there retention/format rules for note text? |
+| **21M** | RELEASED ✓ (v57.34) | **Client UAT pending.** Deploy `quikmemo_uat_dbf/quikmemo.dbf` + `.dbt` together. Verify Memo tab on **010335038C** (merged PNOTE segments). See `Issue_Log_Items/Issue_21M/Issue_21M_Release_Status_v57.34.md`. |
 
 ---
 
-### Status roll-up (2026-06-21)
+### Status roll-up (2026-06-27 — v57.34)
 
 | Status | Count | Items |
 |---|:---:|---|
-| IMPLEMENTED (full-batch validated) | 3 | 21B, 21C, 21H (ABA) |
+| RELEASED (full-batch validated) | 4 | 21B, 21C, 21H (ABA), 21M |
 | CLOSED (not a defect) | 1 | 21L |
-| IN SCOPE (new build) | 1 | 21M |
 | AWAITING CLIENT | 8 | 21A, 21D, 21E, 21F, 21G, 21I, 21J, 21K (New Era), + 21H target-field |
 
-### Changes applied
+### Changes applied (v57.34 release)
 
 | Item | File(s) changed | Version |
 |---|---|---|
-| 21B Bill Day | `QLA_Migration/Configs/Sync_Rulebook_quikmstr.csv` | rulebook only |
+| 21B Bill Day | `QLA_Migration/Configs/Sync_Rulebook_quikmstr.csv` | v57.22 |
 | 21C Policy Fees | `app.py` (root + `QLA_Migration/app.py`) | v57.22 |
-| 21H Banking ABA | `app.py` (root + `QLA_Migration/app.py`) + `QLA_Migration/Source/aba_routing_lookup.csv` | v57.22 |
+| 21H Banking ABA | `app.py` + `aba_routing_lookup.csv` | v57.22 |
+| 21M QUIKMEMO | `qla_core/quikmemo_converter.py`, `quikmemo_dbf_generator.py` | v57.32–34 |
+| 21M-FU merge | `qla_core/quikmemo_converter.py` | **v57.34** |
+| #25 MPOLICY | `qla_core/normalize_utils.py` | v57.30 |
+| #26 MPREM | rulebook + `app.py` | v57.31 |
 
 ### Full batch run (2026-06-21)
 
@@ -71,9 +74,10 @@ Clear questions for each open item. Implemented/closed items show verification s
 - **Log:** `QLA_Migration/Output/_full_batch_test_log.txt`
 - **21B/21C/21H confirmed** in `QLA_Migration/Output/quikmstr.csv` and `quikridr.csv`
 
-### Ready for QLAdmin UAT load testing
+### Ready for QLAdmin UAT load testing (v57.34)
 - **21B** — Bill Day on sample policies
 - **21C** — Policy Fee on base-coverage rider row
 - **21H** — 9-digit ABA on banked policies (target-field placement still pending client answer)
+- **21M / 21M-FU** — QUIKMEMO deploy from `Output/quikmemo_uat_dbf/`; verify Memo tab on **010335038C**
 
-*Tracking artifact. Last full batch: 2026-06-21.*
+*Tracking artifact. Last release: v57.34 (2026-06-27).*

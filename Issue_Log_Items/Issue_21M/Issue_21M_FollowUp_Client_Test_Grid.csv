@@ -1,0 +1,11 @@
+probe_id,probe_name,policy_or_subject,expected_dbf_rows,expected_content_snippet,test_step_summary,tester_name,test_date,memo_tab_entry_count,print_memo_block_count,quikmemo_dbf_row_count,ui_matches_dbf,visible_text_snippet,probe_result_pass_fail,decision_code,notes,screenshot_or_file_ref
+1,Which memo displays,010335038C,2,Seq2: LETTER & CHECK MAILED; Seq1: PB = PATSY MILLER,Open Memo tab; count entries; record visible body text,,,,,,,,,,,
+2,Mixed sources different dates,010713704C,2,PNOTE: SWTA MAILED ANNUAL STMT; ENS: Rebill Has Been Processed,Open Memo tab; confirm PNOTE and ENS visible; note order,,,,,,,,,,,
+3a,Native memo add - setup,TEST_POLICY_TBD,0,No existing QUIKMEMO rows,Record test policy MEMOKEY; baseline QUIKMEMO row count,,,,,,,,,,,
+3b,Native memo add - memo A,TEST_POLICY_TBD,,UAT-21MFU-PROBE-A,Sys-Op add memo A; save; confirm visible,,,,,,,,,,,
+3c,Native memo add - memo B,TEST_POLICY_TBD,,UAT-21MFU-PROBE-B,Sys-Op add memo B; save; confirm UI entry count,,,,,,,,,,,
+3d,Native memo add - DBF inspect,TEST_POLICY_TBD,1_or_2,TBD after add,Close QLAdmin; inspect QUIKMEMO for test MEMOKEY: row count and MEMOTEXT layout,,,,,,,,,,,
+4,Print Memo history,010335038C,2,Both Seq1 and Seq2 body text,Run Print Memo; count blocks; check for both distinctive strings,,,,,,,,,,,
+5,Index rebuild retest,010335038C,2,Unchanged DBF content,Rebuild QuikMemo.ntx; verify DBF still 2 rows; repeat Probe 1,,,,,,,,,,,
+6,Native reference policy,NATIVE_POLICY_TBD,TBD,TBD,Client policy with known multiple native memos; compare UI count vs DBF rows vs MEMOTEXT format,,,,,,,,,,,
+SUMMARY,Decision and next stage,ALL,,,Select decision code D1-D7 from checklist matrix; recommend Risk Agent or More UAT,,,,,,,,,,,

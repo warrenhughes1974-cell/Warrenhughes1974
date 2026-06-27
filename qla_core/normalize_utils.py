@@ -16,6 +16,18 @@ def normalize(val) -> str:
     return s
 
 
+def format_qladmin_mpolicy(val) -> str:
+    """Fixed-width QLAdmin MPOLICY: left-pad with spaces to exactly 10 characters."""
+    if pd.isna(val) or str(val).strip().lower() in ["nan", "none", ""]:
+        return ""
+    core = normalize(val)
+    if not core:
+        return ""
+    if len(core) >= 10:
+        return core
+    return core.rjust(10)
+
+
 def extract_day(date_str) -> str:
     d = re.sub(r"[^0-9/]", "", str(date_str))
     if len(d) == 8:

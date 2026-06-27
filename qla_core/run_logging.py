@@ -162,6 +162,12 @@ class RunErrorLog:
 # artifacts and routed to the Error_Logs run folder; everything else non-CSV
 # goes to Reports. *.dbf go to the rate sandbox DBF folder.
 _ERROR_NAME_HINTS = ("error", "blocker", "exception", "failed", "validation_issues", "rejected")
+_UAT_DBF_DIR_SUFFIX = "_uat_dbf"
+
+
+def _is_uat_dbf_dir(dir_path: str) -> bool:
+    """UAT DBF folders (e.g. quikmemo_uat_dbf, claims_uat_dbf) keep DBF+sidecar together."""
+    return os.path.basename(os.path.normpath(dir_path)).lower().endswith(_UAT_DBF_DIR_SUFFIX)
 
 
 def scan_non_csv(output_dir: str) -> list[str]:
@@ -170,6 +176,8 @@ def scan_non_csv(output_dir: str) -> list[str]:
     if not output_dir or not os.path.isdir(output_dir):
         return found
     for root, _dirs, files in os.walk(output_dir):
+        if _is_uat_dbf_dir(root):
+            continue
         for name in files:
             if not name.lower().endswith(".csv"):
                 found.append(os.path.join(root, name))

@@ -39,6 +39,10 @@
     "columns": ["MAGENT", "MAGTNAME", "MAGTADDR1", "MAGTADDR2", "MAGTCITY", "MAGTST", "MAGTZIP", "MAGTZIP2", "MAGTSSN", "MAGTFEIN", "MCOMP", "MAGENCY", "MAGCYNAME", "MDATE", "MAGTACCT", "MAGTPHONE", "MAGTFAX", "MAGTCELL", "MAGTOFCE", "MAGTEMAIL", "MEMOTEXT", "MSUPPRESS", "MCOMMGRP", "MOTHNAME", "MPREMACCT", "MSTATUS", "MAGTNPN", "MTAXIDTYPE"],
     "strict_order": true
   },
+  "quikmemo": {
+    "columns": ["MEMOKEY", "MEMOTEXT"],
+    "strict_order": true
+  },
   "quikactg": {
     "columns": ["MCOMP", "MPLAN", "MPREM1ST", "MPREMREN", "MDIVCASH", "MDIVPREM", "MDIVACCM", "MDIVPUA", "MDIVPUT", "MDVDPINT", "MLOAN", "MLOANINT", "MSCHG", "MDEATH", "MCLAIM", "MCOM1ST", "MCOMREN", "MCOMMSGL"],
     "strict_order": true

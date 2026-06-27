@@ -1,0 +1,11 @@
+metric,source_analysis,converter_stats
+pnote_source_rows,6033,6033
+pense_source_rows,23276,23276
+skipped_blank_pnote,30,30
+skipped_blank_pense,0,0
+skipped_non_p_ens,0,0
+skipped_orphan,0,0
+skipped_exact_dup,0,0
+emitted_pnote,6003,6003
+emitted_pense,23276,23276
+emitted_total,29279,29279

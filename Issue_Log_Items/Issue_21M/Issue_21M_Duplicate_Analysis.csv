@@ -1,0 +1,4 @@
+check,pnote,pense_policy_p,notes
+exact_dup_groups,0,0,pol+date+time+seq+text
+text_hash_dup_rows,8,18126,pol+text; PENSE high count reflects recurring ENS system messages not row-level clones
+blank_text_rows,30,0,skip on emit

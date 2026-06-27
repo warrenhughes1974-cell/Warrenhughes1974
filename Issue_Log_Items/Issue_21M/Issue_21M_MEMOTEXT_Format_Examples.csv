@@ -1,0 +1,32 @@
+source,policy,row,memotext
+CONVERTED,010335038C,1,"[PNOTE]
+Date: 2018-05-18
+Time: 08:45:28
+User: -
+Seq: 2
+BenSeq: 00
+5/18/18 - LETTER & CHECK MAILED TO PB."
+CONVERTED,010335038C,2,"[PNOTE]
+Date: 2018-05-18
+Time: 08:45:28
+User: -
+Seq: 1
+BenSeq: 00
+PB = PATSY MILLER
+5/1/18 - PROOF OF DEATH TO PB."
+CONVERTED,010713704C,1,"[PNOTE]
+Date: 2025-06-10
+Time: 16:21:57
+User: -
+Seq: 1
+4-22-25 SWTA MAILED ANNUAL STMT"
+CONVERTED,010713704C,2,"[ENS]
+Date: 2004-02-04
+Time: -
+Event: 0008
+User: TMMA
+Seq: 83
+Co: 03 Pol: 9010713704   Benefit Seq:
+A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal"
+PRODUCTION,W00000001S (sample key),1,[UNREADABLE - QUIKMEMO_ex.DBT not supplied] Memo block pointer 228433; production stores 1 row per MEMOKEY
+PRODUCTION,STRUCTURAL,0,Production QUIKMEMO_ex.DBF: 19777 rows / 19777 unique MEMOKEY. Zero duplicate keys. NTX index on MEMOKEY. Requires DBT sidecar for MEMOTEXT body.

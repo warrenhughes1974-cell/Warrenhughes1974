@@ -1,0 +1,10 @@
+metric,pnote,pense_policy_p,combined_quikmemo
+total_source_rows,6033.0,23276.0,
+blank_text_rows,30.0,0.0,
+populated_rows,6003.0,23276.0,
+rows_after_crosswalk,6003.0,23276.0,29279
+unique_lifepro_policies,3301.0,3404.0,
+unique_qla_policies,3301.0,3404.0,4380
+avg_records_per_policy,1.82,6.84,6.68
+max_records_per_policy,16.0,206.0,207
+orphan_policies_no_crosswalk,0.0,0.0,

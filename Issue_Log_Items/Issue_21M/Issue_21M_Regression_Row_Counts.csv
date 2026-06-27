@@ -1,0 +1,13 @@
+table,before_rows,after_rows,delta,byte_identical,notes
+quikmstr,5083,5083,0,True,regression baseline
+quikridr,7002,7002,0,True,regression baseline
+quikprmh,205577,205577,0,True,regression baseline
+quikplan,141,141,0,True,regression baseline
+quikclid,46753,46753,0,True,regression baseline
+quikclnt,13846,13846,0,True,regression baseline
+quikactg,n/a,87,n/a,n/a,unchanged vs same batch run
+quikagts,n/a,4843,n/a,n/a,unchanged vs same batch run
+quikbenf,n/a,5870,n/a,n/a,unchanged vs same batch run
+quikdvdp,n/a,5083,n/a,n/a,unchanged vs same batch run
+quikdvpr,n/a,31,n/a,n/a,unchanged vs same batch run
+quikmemo,0,29279,29279,n/a,greenfield — new table

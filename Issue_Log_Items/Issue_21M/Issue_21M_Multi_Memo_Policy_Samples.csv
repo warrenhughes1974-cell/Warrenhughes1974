@@ -1,0 +1,21 @@
+QLA,row_in_policy,total_rows,source_type,seq,memo_date,MEMOTEXT_len,text_preview
+010335038C,1,2,PNOTE,2,2018-05-18,104,[PNOTE] | Date: 2018-05-18 | Time: 08:45:28 | User: - | Seq: 2 | BenSeq: 00 | 5/18/18 - LETTER & CHECK MAILED TO PB.
+010335038C,2,2,PNOTE,1,2018-05-18,114,[PNOTE] | Date: 2018-05-18 | Time: 08:45:28 | User: - | Seq: 1 | BenSeq: 00 | PB = PATSY MILLER | 5/1/18 - PROOF OF DEATH TO PB.
+010713704C,1,2,PNOTE,1,2025-06-10,86,[PNOTE] | Date: 2025-06-10 | Time: 16:21:57 | User: - | Seq: 1 | 4-22-25 SWTA MAILED ANNUAL STMT
+010713704C,2,2,PENSE,83,2004-02-04,176,[ENS] | Date: 2004-02-04 | Time: - | Event: 0008 | User: TMMA | Seq: 83 | Co: 03 Pol: 9010713704   Benefit Seq: | A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal
+010818663C,1,3,PNOTE,1,2024-11-13,87,[PNOTE] | Date: 2024-11-13 | Time: 09:03:04 | User: - | Seq: 1 | 11-13 24 SWTA MAILED ANNUAL STMT
+010818663C,2,3,PNOTE,2,2011-08-23,178,[PNOTE] | Date: 2011-08-23 | Time: 15:43:11 | User: - | Seq: 2 | BenSeq: 00 | 09/21/2011 - LETTER TO PB & LETTER TO FUN HOME W/ CHECK $1000.00 ($1000.00 | PROCEEDS UNDER THE FAMILY TERM RIDER)
+010818663C,3,3,PNOTE,1,2011-08-23,246,[PNOTE] | Date: 2011-08-23 | Time: 15:43:11 | User: - | Seq: 1 | BenSeq: 00 | 08/23/2011 - TIMOTHY AUSTIN PROCTOR DIED 08/22/2011.  HE WAS BORN | 07/17/1991 AFTER THE EFF DATE OF POLICY AND IS COVERED
+010765930C,1,2,PNOTE,1,2024-09-25,86,[PNOTE] | Date: 2024-09-25 | Time: 16:00:21 | User: - | Seq: 1 | 9-25-24 SWTA MAILED ANNUAL STMT
+010765930C,2,2,PENSE,1,2018-09-24,126,[ENS] | Date: 2018-09-24 | Time: - | Event: 0020 | User: C03A | Seq: 1 | Co: 03 Pol: 9010765930   Benefit Seq: 02 | Waiver of Premium Expire
+010391876C,1,2,PENSE,3206,2009-09-01,257,[ENS] | Date: 2009-09-01 | Time: - | Event: 0027 | User: C03A | Seq: 3206 | Co: 03  Pol:9010391876    Conversion Date:  09/01/2009 | An Automated ETI / RPU Has Occurred And All Riders Have Been Termin
+010391876C,2,2,PENSE,45,2009-08-11,176,[ENS] | Date: 2009-08-11 | Time: - | Event: 0008 | User: MENA | Seq: 45 | Co: 03 Pol: 9010391876   Benefit Seq: | A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal
+010448806C,1,1,PENSE,157,2005-06-23,177,[ENS] | Date: 2005-06-23 | Time: - | Event: 0008 | User: JIAA | Seq: 157 | Co: 03 Pol: 9010448806   Benefit Seq: | A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal
+010718309C,1,1,PNOTE,1,2025-06-11,86,[PNOTE] | Date: 2025-06-11 | Time: 07:58:47 | User: - | Seq: 1 | 5-26-25 SWTA MAILED ANNUAL STMT
+010391895C,1,7,PENSE,36,2012-06-19,176,[ENS] | Date: 2012-06-19 | Time: - | Event: 0008 | User: MENA | Seq: 36 | Co: 03 Pol: 9010391895   Benefit Seq: | A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal
+010391895C,2,7,PENSE,19,2011-06-16,176,[ENS] | Date: 2011-06-16 | Time: - | Event: 0008 | User: MENA | Seq: 19 | Co: 03 Pol: 9010391895   Benefit Seq: | A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal
+010391895C,3,7,PENSE,16,2010-06-21,176,[ENS] | Date: 2010-06-21 | Time: - | Event: 0008 | User: MENA | Seq: 16 | Co: 03 Pol: 9010391895   Benefit Seq: | A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal
+010391895C,4,7,PENSE,27,2009-07-08,176,[ENS] | Date: 2009-07-08 | Time: - | Event: 0008 | User: MENA | Seq: 27 | Co: 03 Pol: 9010391895   Benefit Seq: | A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal
+010391895C,5,7,PENSE,29,2008-06-19,176,[ENS] | Date: 2008-06-19 | Time: - | Event: 0008 | User: MENA | Seq: 29 | Co: 03 Pol: 9010391895   Benefit Seq: | A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal
+010391895C,6,7,PENSE,65,2007-06-18,176,[ENS] | Date: 2007-06-18 | Time: - | Event: 0008 | User: MENA | Seq: 65 | Co: 03 Pol: 9010391895   Benefit Seq: | A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal
+010391895C,7,7,PENSE,68,2006-06-20,176,[ENS] | Date: 2006-06-20 | Time: - | Event: 0008 | User: MENA | Seq: 68 | Co: 03 Pol: 9010391895   Benefit Seq: | A Rebill Has Been Processed Due To Mode/Premium/Form Change Or Prem Reversal

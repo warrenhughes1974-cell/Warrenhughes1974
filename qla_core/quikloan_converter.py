@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 
 from qla_core.schema_constants import QUIKLOAN_SCHEMA
+from qla_core.normalize_utils import format_qladmin_mpolicy
 
 _DEFAULT_RULES_PATH = os.path.normpath(
     os.path.join(os.path.dirname(__file__), "..", "plan_governance", "config", "quikloan_derivation_rules.json")
@@ -212,7 +213,7 @@ def _map_policy_number(policy: str, cw_map: dict | None) -> tuple[str, str]:
     key = src.upper()
     mapped = cw_map.get(key) or cw_map.get(src)
     if mapped:
-        return mapped, "CROSSWALK_APPLIED"
+        return format_qladmin_mpolicy(mapped), "CROSSWALK_APPLIED"
     return src, "CROSSWALK_MISS"
 
 

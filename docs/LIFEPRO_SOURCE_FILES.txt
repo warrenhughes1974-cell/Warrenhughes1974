@@ -36,6 +36,9 @@ PACTG      PACTG_Accounting_Extract*.csv                                quikprmh
 PLOAN      PLOAN_LoanInformation_Extract*.csv                           quikloan
 PAGNT      PAGNT_AgentMaster_Extract*.csv                               quikagts
            or PROD_PAGNT_AgentMaster_Extract*.csv
+PNOTE      PNOTE_PolicyNotes_Extract*.csv                               quikmemo
+PENSE      PENSE_ENSData_Extract*.csv                                   quikmemo
+           (dual-source merge — both feed one table)
 
 ================================================================================
 REQUIRED — ENRICHMENT (not separate table conversions)

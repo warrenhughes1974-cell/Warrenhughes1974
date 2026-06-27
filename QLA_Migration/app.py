@@ -1,9 +1,14 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.29
-# Date:        2026-06-24
-# Change Note: v57.29 — Issue 21I: quikbenf dedupe by (MPOLICY, MBENFID, MTYPE) and equal MSPLIT
+# Version:     v57.34
+# Date:        2026-06-27
+# Change Note: v57.34 — Release integration: Issue 21M-FU QUIKMEMO one row per MEMOKEY (production grain).
+#              v57.33 — Issue 21M: quikmemo DBF+DBT packaged in Output/quikmemo_uat_dbf/ (hygiene skip).
+#              v57.32 — Issue 21M: QUIKMEMO from PNOTE + PENSE dual-source merge (CSV + DBF/FPT).
+#              v57.31 — Issue 26: quikridr.MPREM maps ANN_PREM_PER_UNIT with MODE_PREMIUM fallback.
+#              v57.30 — QLAdmin MPOLICY fixed-width 10-char emit (leading-space left-pad after crosswalk).
+#              v57.29 — Issue 21I: quikbenf dedupe by (MPOLICY, MBENFID, MTYPE) and equal MSPLIT
 #              within each (MPOLICY, MTYPE) primary/contingent group (100.00 total per group).
 #              v57.28 — block LifePRO PRIMARY_PERSON type flags (e.g. "I") from quikmstr.MPRIMID.
 # =============================================================================
@@ -23,6 +28,7 @@ import re
 import csv
 from datetime import datetime
 
+from qla_core.normalize_utils import format_qladmin_mpolicy
 from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA, QUIKLOAN_SCHEMA
 from qla_core import run_logging as RL
 from qla_core.quikplan_converter import convert_quikplan_to_output, prepare_quikplan_source, apply_rate_variation_flag_enrichment
@@ -40,6 +46,8 @@ from qla_core.variation_classification import (
 )
 from qla_core.quikactg_converter import convert_quikactg_from_pactg
 from qla_core.quikloan_converter import convert_quikloan_from_ploan, load_derivation_rules
+from qla_core.quikmemo_converter import convert_quikmemo_from_pnote_pense
+from qla_core.quikmemo_dbf_generator import write_quikmemo_dbf
 from qla_core.crosswalk_enrichment import resolve_crosswalk_overlay_config
 from qla_core.product_catalog_authority import (
     allow_legacy_mplan_fallback,
@@ -56,7 +64,7 @@ from qla_core.mplan_authority import (
     write_p3e_governance_outputs,
     write_p3f_governance_outputs,
 )
-from qla_core.lifepro_source_resolver import resolve_table_source, expected_legacy_filename
+from qla_core.lifepro_source_resolver import resolve_table_source, expected_legacy_filename, resolve_quikmemo_sources
 from qla_core.claims_emit_enhancements import (
     apply_claims_emit_enhancements,
     build_plan_metadata_lookup,
@@ -216,7 +224,7 @@ RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runne
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.29")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.34")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -241,6 +249,7 @@ class QLAdminEnterpriseIntegrationSuite:
             "quikactg": QUIKACTG_SCHEMA,
             "quikloan": QUIKLOAN_SCHEMA,
             "quikagts": ["MAGENT", "MAGTNAME", "MAGTADDR1", "MAGTADDR2", "MAGTCITY", "MAGTST", "MAGTZIP", "MAGTZIP2", "MAGTSSN", "MAGTFEIN", "MCOMP", "MAGENCY", "MAGCYNAME", "MDATE", "MAGTACCT", "MAGTPHONE", "MAGTFAX", "MAGTCELL", "MAGTOFCE", "MAGTEMAIL", "MEMOTEXT", "MSUPPRESS", "MCOMMGRP", "MOTHNAME", "MPREMACCT", "MSTATUS", "MAGTNPN", "MTAXIDTYPE"],
+            "quikmemo": ["MEMOKEY", "MEMOTEXT"],
             "quikclms": QUIKCLMS_SCHEMA,
             "quikclmp": QUIKCLMP_SCHEMA,
         }
@@ -261,7 +270,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.29", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.34", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -2680,6 +2689,7 @@ class QLAdminEnterpriseIntegrationSuite:
             val = self.normalize(val) if val else ""
             if t_f == "MPOLICY" and val:
                 val = crosswalk.get(val, val)
+                val = self._format_qladmin_mpolicy(val)
             if t_f in money_fields:
                 val = self._format_claims_money(val if val else default_val)
             row_data[actual_h] = val
@@ -3843,6 +3853,9 @@ class QLAdminEnterpriseIntegrationSuite:
         if s.endswith('.0'): s = s[:-2]
         return s
 
+    def _format_qladmin_mpolicy(self, val):
+        return format_qladmin_mpolicy(val)
+
     def extract_day(self, date_str):
         d = re.sub(r'[^0-9/]', '', str(date_str))
         if len(d) == 8: return d[-2:]
@@ -4221,7 +4234,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log("Initializing Migration Engine v57.29 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.34 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -4420,7 +4433,7 @@ class QLAdminEnterpriseIntegrationSuite:
                             mbillfrm = trans_map.get(f"BF_{bf_val}", trans_map.get(bf_val, bf_val))
                             
                             pol = self.normalize(src_row.get("POLICY_NUMBER", ""))
-                            mpolicy = cw_map.get(pol, pol)
+                            mpolicy = self._format_qladmin_mpolicy(cw_map.get(pol, pol))
                             
                             row_data = {
                                 "MPOLICY": mpolicy,
@@ -4577,6 +4590,66 @@ class QLAdminEnterpriseIntegrationSuite:
                         out_path = os.path.normpath(os.path.join(out_dir, "quikloan.csv"))
                         passed_df.to_csv(out_path, index=False)
                         self.log(f"GATED OUTPUT: {out_path} ({len(passed_df)} rows)")
+                    continue
+                if t_id.lower() == "quikmemo":
+                    pnote_path, pnote_label, pense_path, pense_label = resolve_quikmemo_sources(src_base)
+                    if not pnote_path and not pense_path:
+                        self.log(f"Skipping QUIKMEMO -> Missing PNOTE and PENSE sources in {src_base}")
+                        continue
+                    self.log("Working Table: QUIKMEMO (PNOTE + PENSE dual-source merge)")
+                    if pnote_path:
+                        self.log(f"  PNOTE SOURCE: {pnote_path} ({pnote_label})")
+                    else:
+                        self.log("  WARNING: PNOTE source not found")
+                    if pense_path:
+                        self.log(f"  PENSE SOURCE: {pense_path} ({pense_label})")
+                    else:
+                        self.log("  WARNING: PENSE source not found")
+                    output_df, orphan_df, memo_stats = convert_quikmemo_from_pnote_pense(
+                        pnote_path or None,
+                        pense_path or None,
+                        cw_map=cw_map,
+                    )
+                    out_dir = self.path_vars["Out"][0].get()
+                    out_path = os.path.normpath(os.path.join(out_dir, "quikmemo.csv"))
+                    output_df.to_csv(out_path, index=False)
+                    self.log(f"Success: quikmemo.csv - {len(output_df)} memo records.")
+                    self.log(
+                        f"  Stats: PNOTE emit={memo_stats.get('emitted_pnote', 0)} "
+                        f"PENSE emit={memo_stats.get('emitted_pense', 0)} "
+                        f"blank skip={memo_stats.get('skipped_blank_pnote', 0) + memo_stats.get('skipped_blank_pense', 0)} "
+                        f"orphan={memo_stats.get('skipped_orphan', 0)} "
+                        f"exact dup={memo_stats.get('skipped_exact_dup', 0)}"
+                    )
+                    if not orphan_df.empty:
+                        orphan_path = os.path.normpath(os.path.join(out_dir, "quikmemo_orphan_log.csv"))
+                        orphan_df.to_csv(orphan_path, index=False)
+                        self.log(f"  Orphan audit: {orphan_path} ({len(orphan_df)} rows)")
+                    try:
+                        dbf_dir = os.path.normpath(os.path.join(out_dir, "quikmemo_uat_dbf"))
+                        os.makedirs(dbf_dir, exist_ok=True)
+                        dbf_path = os.path.normpath(os.path.join(dbf_dir, "quikmemo.dbf"))
+                        dbf_info = write_quikmemo_dbf(out_path, dbf_path)
+                        self.log(
+                            f"  QUIKMEMO UAT DBF: {dbf_info['dbf_path']} "
+                            f"({dbf_info['dbf_rows']} rows, sidecar={'yes' if dbf_info['fpt_exists'] else 'no'})"
+                        )
+                    except Exception as exc:
+                        self.log(f"  WARNING: QUIKMEMO DBF generation failed: {exc}")
+                    audit_path = os.path.normpath(os.path.join(out_dir, "Migration_Audit_Log.txt"))
+                    is_new_log = not os.path.exists(audit_path)
+                    audit_msg = (
+                        f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TABLE: QUIKMEMO   | "
+                        f"PNOTE IN: {memo_stats.get('pnote_source_rows', 0):<6} | "
+                        f"PENSE IN: {memo_stats.get('pense_source_rows', 0):<6} | "
+                        f"QLA OUTPUT: {len(output_df):<8} | "
+                        f"ORPHAN: {memo_stats.get('skipped_orphan', 0)}\n"
+                    )
+                    with open(audit_path, "a") as f:
+                        if is_new_log:
+                            f.write("=== QLADMIN ENTERPRISE MIGRATION AUDIT LOG ===\n")
+                            f.write("Tracks 1:1 record translation matching to guarantee zero data loss.\n\n")
+                        f.write(audit_msg)
                     continue
                 # --------------------------------------------------------
 
@@ -4835,7 +4908,7 @@ class QLAdminEnterpriseIntegrationSuite:
                                         
                                         # Enterprise-safe policy normalization:
                                         # Convert LifePRO policy IDs into QLAdmin MPOLICY space
-                                        pol = cw_map.get(raw_pol, raw_pol)
+                                        pol = self.normalize(cw_map.get(raw_pol, raw_pol))
                                         
                                         trcd = self.normalize(r.get(trcd_col))
                                         if not trcd:
@@ -5120,6 +5193,16 @@ class QLAdminEnterpriseIntegrationSuite:
                                         if pulled_fee:
                                             val = pulled_fee
                                 # -----------------------------------------------------------------
+
+                                # --- Issue 26: ANN_PREM_PER_UNIT -> MPREM; fallback MODE_PREMIUM when blank/zero ---
+                                if t_id.lower() == "quikridr" and t_f == "MPREM":
+                                    try:
+                                        ann_num = float(str(val).replace(",", "").strip() or 0)
+                                    except (ValueError, TypeError):
+                                        ann_num = 0.0
+                                    if ann_num == 0.0:
+                                        val = self.normalize(src_row.get("MODE_PREMIUM", ""))
+                                # -----------------------------------------------------------------
     
                                 # --- MSTATUS COMPOSITE KEY INTERCEPTOR ---
                                 if t_f == 'MSTATUS' and t_id.lower() == "quikmstr":
@@ -5312,6 +5395,9 @@ class QLAdminEnterpriseIntegrationSuite:
                                         val = mplan_resolution.resolved_mplan
                                     else:
                                         val = cw_map.get(val, val)
+
+                                if t_f == "MPOLICY" and val:
+                                    val = self._format_qladmin_mpolicy(val)
                                 
                                 if t_id.lower() == "quikdvdp":
                                     if actual_h in ["MDEPOSIT", "MINTYTD", "MDEPINT"] and val:

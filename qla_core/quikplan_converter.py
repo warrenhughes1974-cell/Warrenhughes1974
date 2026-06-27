@@ -17,7 +17,7 @@ from qla_core.crosswalk_enrichment import (
     resolve_crosswalk_overlay_config,
 )
 from qla_core.lookup_loader import build_lookup_tables
-from qla_core.normalize_utils import extract_day, normalize, normalize_columns
+from qla_core.normalize_utils import extract_day, format_qladmin_mpolicy, normalize, normalize_columns
 from qla_core.product_catalog_authority import CrosswalkAuthority, load_crosswalk_authority
 from qla_core.quikplan_source_loader import load_quikplan_source_csv
 from qla_core.schema_constants import QUIKPLAN_SCHEMA
@@ -146,6 +146,9 @@ def _map_field_value(
 
     if t_f in PRODUCT_PLAN_FIELDS or t_f in POLICY_CROSSWALK_FIELDS:
         val = _apply_crosswalk_value(t_f, val, cw_map, crosswalk_authority)
+
+    if t_f == "MPOLICY" and val:
+        val = format_qladmin_mpolicy(val)
 
     return actual_h, val
 

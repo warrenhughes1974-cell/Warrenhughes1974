@@ -114,6 +114,36 @@ TABLE_SOURCE_SPECS = {
         "required": True,
         "converts_to": "quikagts",
     },
+    "quikmemo": {
+        "lifepro_table": "PNOTE + PENSE",
+        "lifepro_label": "Policy Notes + ENS Messages",
+        "lifepro_patterns": [r"^PNOTE[_ ]PolicyNotes[_ ]Extract.*\.csv$"],
+        "legacy_names": ["PNOTE.csv"],
+        "required": False,
+        "converts_to": "quikmemo",
+    },
+}
+
+# Dual-source memo inputs (Issue 21M)
+MEMO_SOURCE_SPECS = {
+    "pnote": {
+        "lifepro_table": "PNOTE",
+        "lifepro_label": "Policy Notes",
+        "lifepro_patterns": [
+            r"^PNOTE[_ ]PolicyNotes[_ ]Extract.*\.csv$",
+            r"^PNOTE\.csv$",
+        ],
+        "legacy_names": ["PNOTE.csv"],
+    },
+    "pense": {
+        "lifepro_table": "PENSE",
+        "lifepro_label": "ENS Data",
+        "lifepro_patterns": [
+            r"^PENSE[_ ]ENSData[_ ]Extract.*\.csv$",
+            r"^PENSE\.csv$",
+        ],
+        "legacy_names": ["PENSE.csv"],
+    },
 }
 
 # Enrichment files loaded during quikmstr (not standalone table conversions)
@@ -204,6 +234,28 @@ def resolve_enrichment_source(src_dir: str, enrichment_key: str) -> Tuple[str, s
         if os.path.isfile(candidate):
             return candidate, f"legacy:{legacy}"
     return "", ""
+
+
+def resolve_memo_source(src_dir: str, memo_key: str) -> Tuple[str, str]:
+    """Resolve PNOTE or PENSE source CSV for quikmemo conversion."""
+    spec = MEMO_SOURCE_SPECS.get(str(memo_key or "").strip().lower(), {})
+    if not spec:
+        return "", ""
+    path = find_newest_matching(src_dir, spec.get("lifepro_patterns", []))
+    if path:
+        return path, f"lifepro:{os.path.basename(path)}"
+    for legacy in spec.get("legacy_names", []):
+        candidate = os.path.normpath(os.path.join(src_dir, legacy))
+        if os.path.isfile(candidate):
+            return candidate, f"legacy:{legacy}"
+    return "", ""
+
+
+def resolve_quikmemo_sources(src_dir: str) -> Tuple[str, str, str, str]:
+    """Return (pnote_path, pnote_label, pense_path, pense_label)."""
+    pnote_path, pnote_label = resolve_memo_source(src_dir, "pnote")
+    pense_path, pense_label = resolve_memo_source(src_dir, "pense")
+    return pnote_path, pnote_label, pense_path, pense_label
 
 
 def resolve_table_source(src_dir: str, table_id: str) -> Tuple[str, str]:
