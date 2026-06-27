@@ -1,3 +1,4 @@
+from pathlib import Path
 """Issue 21H — ABA routing-number reconciliation builder.
 
 Joins the policy/account data in PPACH to the authoritative full 9-digit ABA in
@@ -16,10 +17,11 @@ import csv
 import os
 import re
 
-SRC = r"C:\Users\warren\Documents\GitHub\Warrenhughes1974\QLA_Migration\Source"
+REPO = Path(__file__).resolve().parents[2]
+SRC = str(REPO / "QLA_Migration" / "Source")
 PPACH = os.path.join(SRC, "PPACH.csv")
 PPCOM = os.path.join(SRC, "PROD_PPCOM_PACAccountInformation_Extract_20260530.csv")
-OUT_DIR = os.path.dirname(os.path.abspath(__file__))
+OUT_DIR = str(REPO / "Issue_Log_Items" / "Issue_21" / "evidence")
 LOOKUP_OUT = os.path.join(OUT_DIR, "aba_routing_lookup.csv")
 LOOKUP_ENGINE = os.path.join(SRC, "aba_routing_lookup.csv")  # location the converter reads
 RECON_OUT = os.path.join(OUT_DIR, "issue21h_aba_reconciliation.csv")

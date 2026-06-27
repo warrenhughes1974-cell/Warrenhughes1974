@@ -109,7 +109,7 @@ Use these statuses in issue tracking sheets and report headers:
 | Artifact type | Typical path |
 |---------------|--------------|
 | Issue deliverables | `Issue_Log_Items/Issue_<NN>/` or `Issue_<NN><Letter>/` |
-| Research scripts | `QLA_Migration/_research_issue*.py`, `_validate_issue*.py` |
+| Research scripts | `tools/validators/`, `Issue_Log_Items/Issue_*/scripts/`, legacy stubs at `QLA_Migration/_*.py` |
 | Rulebooks | `QLA_Migration/Configs/Sync_Rulebook_*.csv` |
 | Crosswalk | `QLA_Migration/Mapping/Master_Crosswalk.csv` |
 | Source extracts | `QLA_Migration/Source/` |

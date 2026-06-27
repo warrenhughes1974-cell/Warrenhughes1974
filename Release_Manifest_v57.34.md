@@ -62,10 +62,12 @@
 
 | File | Purpose |
 |------|---------|
-| `QLA_Migration/_validate_issue21m_quikmemo.py` | 21M-FU population + integrity |
-| `QLA_Migration/_validate_issue21m_dbf_packaging.py` | DBF/DBT co-location |
-| `QLA_Migration/_validate_issue26_mprem.py` | MPREM mapping |
-| `QLA_Migration/_validate_mpolicy_width.py` | MPOLICY width (#25) |
+| `tools/validators/validate_issue21m_quikmemo.py` | 21M-FU population + integrity |
+| `tools/validators/validate_issue21m_dbf_packaging.py` | DBF/DBT co-location |
+| `tools/validators/validate_issue26_mprem.py` | MPREM mapping |
+| `tools/validators/validate_mpolicy_width.py` | MPOLICY width (#25) |
+
+Legacy stubs remain at `QLA_Migration/_validate_*.py` for backward compatibility.
 
 ### Companion tooling (21K — not engine closure)
 
@@ -75,8 +77,8 @@
 | `qladmin_core/qladmin_dbf_layout.py` | DBF widen/migrate helpers |
 | `qladmin_core/quikridr_dbf_writer.py` | CSV → QUIKRIDR.DBF N(10,5) |
 | `qladmin_core/issue21k_units_migration.py` | CLI migration |
-| `QLA_Migration/_validate_issue21k_munit.py` | Staging validation |
-| `QLA_Migration/_validate_issue21k_fleet.py` | Fleet MUNIT validation |
+| `tools/validators/validate_issue21k_munit.py` | Staging validation |
+| `tools/validators/validate_issue21k_fleet.py` | Fleet MUNIT validation |
 
 ### Issue log artifacts (documentation)
 
@@ -118,7 +120,7 @@ Tables affected by 21K migration (when client executes):
 
 1. **Backup** current QLAdmin data directory and conversion Output folder.
 2. **Deploy** engine v57.34 (`app.py`, `qla_core/*`, rulebooks).
-3. **Run** full batch migration (`run_converter.bat` or `_run_full_batch_test.py`).
+3. **Run** full batch migration (`run_converter.bat` or `tools/batch_tests/run_full_batch_test.py`; legacy stub: `QLA_Migration/_run_full_batch_test.py`).
 4. **Validate** with four regression scripts (all PASS at cut).
 5. **Deploy QUIKMEMO** — copy `quikmemo_uat_dbf/quikmemo.dbf` + `quikmemo.dbt` **together** to QLAdmin data path.
 6. **Do not** copy `Reports/quikmemo.dbt` (orphan stale sidecar).
@@ -144,10 +146,10 @@ Tables affected by 21K migration (when client executes):
 
 | Validator | Result |
 |-----------|--------|
-| `_validate_issue21m_quikmemo.py` | **PASS** |
-| `_validate_issue21m_dbf_packaging.py` | **PASS** |
-| `_validate_issue26_mprem.py` | **PASS** |
-| `_validate_mpolicy_width.py` | **PASS** |
+| `_validate_issue21m_quikmemo.py` | **PASS** (stub → `tools/validators/`) |
+| `_validate_issue21m_dbf_packaging.py` | **PASS** (stub → `tools/validators/`) |
+| `_validate_issue26_mprem.py` | **PASS** (stub → `tools/validators/`) |
+| `_validate_mpolicy_width.py` | **PASS** (stub → `tools/validators/`) |
 
 Row counts unchanged: quikmstr 5,083 · quikridr 7,002 · quikprmh 205,577 · quikplan 141 · quikclid 46,753 · quikclnt 13,846.
 

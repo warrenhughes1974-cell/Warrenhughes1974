@@ -1,0 +1,76 @@
+WARN locked duplicate kept: C:\Users\warren\Documents\GitHub\Warrenhughes1974\Issue_Log_Items\Issue_21\010713704C - LifePRO.docx ([WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_21\\010713704C - LifePRO.docx')
+MOVE: Issue_Log_Items\Issue_21\010713704C - QLAdmin.docx -> Issue_Log_Items\Issue_21\evidence\010713704C - QLAdmin.docx
+MOVE: Issue_Log_Items\Issue_21\010718309C - LifePRO.docx -> Issue_Log_Items\Issue_21\evidence\010718309C - LifePRO.docx
+MOVE: Issue_Log_Items\Issue_21\010765930C - LifePRO.docx -> Issue_Log_Items\Issue_21\evidence\010765930C - LifePRO.docx
+MOVE: Issue_Log_Items\Issue_21\010818663C - LifePRO.docx -> Issue_Log_Items\Issue_21\evidence\010818663C - LifePRO.docx
+COPY (locked src kept): Issue_Log_Items\Issue_21\010818663C - QLAdmin.docx -> Issue_Log_Items\Issue_21\evidence\010818663C - QLAdmin.docx
+MOVE: Issue_Log_Items\Issue_21\Issue_21.xlsx -> Issue_Log_Items\Issue_21\evidence\Issue_21.xlsx
+RMDIR: Issue_21/reconciliation
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image1.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image1.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image10.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image10.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image100.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image100.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image101.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image101.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image11.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image11.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image110.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image110.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image12.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image12.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image13.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image13.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image130.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image130.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image14.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image14.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image15.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image15.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image16.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image16.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image17.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image17.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image18.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image18.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image180.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image180.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image19.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image19.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image2.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image2.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image20.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image20.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image21.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image21.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image210.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image210.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image22.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image22.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image23.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image23.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image24.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image24.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image25.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image25.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image26.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image26.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image27.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image27.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image28.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image28.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image29.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image29.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image3.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image3.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image30.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image30.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image31.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image31.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image32.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image32.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image33.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image33.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image34.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image34.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image35.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image35.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image4.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image4.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image5.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image5.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image50.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image50.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image6.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image6.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image7.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image7.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image8.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image8.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image9.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image9.png
+MOVE: Issue_Log_Items\Issue_21\_tmp_docx_extract\image90.png -> _archive\scratch\Issue_21\_tmp_docx_extract\image90.png
+DELETE: Issue_Log_Items\Issue_21\~$0713704C - LifePRO.docx
+DELETE: Issue_Log_Items\Issue_21\~$0818663C - QLAdmin.docx
+MOVE: QLA_Migration\Issue_Log_Items\Issue_25\MPOLICY_Key_Investigation_Report.md -> Issue_Log_Items\Issue_25\reports\MPOLICY_Key_Investigation_Report.md
+MOVE: 10-pay-prem.csv -> _archive\scratch\root_premium_csv\10-pay-prem.csv
+MOVE: 20-pay-prem.csv -> _archive\scratch\root_premium_csv\20-pay-prem.csv
+MOVE: adb-prem.csv -> _archive\scratch\root_premium_csv\adb-prem.csv
+MOVE: iswl-prem.csv -> _archive\scratch\root_premium_csv\iswl-prem.csv
+MOVE: spul-prem.csv -> _archive\scratch\root_premium_csv\spul-prem.csv
+MOVE: term-15-prem.csv -> _archive\scratch\root_premium_csv\term-15-prem.csv
+MOVE: term-20-prem.csv -> _archive\scratch\root_premium_csv\term-20-prem.csv
+MOVE: term-30-20-guarantee-prem.csv -> _archive\scratch\root_premium_csv\term-30-20-guarantee-prem.csv
+MOVE: term-30-30-guarantee-prem.csv -> _archive\scratch\root_premium_csv\term-30-30-guarantee-prem.csv
+MOVE: ul-prem.csv -> _archive\scratch\root_premium_csv\ul-prem.csv
+MOVE: wp-prem.csv -> _archive\scratch\root_premium_csv\wp-prem.csv
+MOVE: yrt-prem.csv -> _archive\scratch\root_premium_csv\yrt-prem.csv
+COPY (locked src kept): 010391876C - LifePRO.docx -> _archive\scratch\root_docx_duplicates\010391876C - LifePRO.docx
+MOVE: 010391895C - LifePRO.docx -> _archive\scratch\root_docx_duplicates\010391895C - LifePRO.docx
+MOVE: 010448806C - LifePRO.docx -> _archive\scratch\root_docx_duplicates\010448806C - LifePRO.docx
+MOVE: 010713704C - LifePRO.docx -> _archive\scratch\root_docx_duplicates\010713704C - LifePRO.docx
+MOVE: 010713704C - QLAdmin.docx -> _archive\scratch\root_docx_duplicates\010713704C - QLAdmin.docx
+MOVE: 010718309C - LifePRO.docx -> _archive\scratch\root_docx_duplicates\010718309C - LifePRO.docx
+MOVE: 010765930C - LifePRO.docx -> _archive\scratch\root_docx_duplicates\010765930C - LifePRO.docx
+MOVE: 010818663C - LifePRO.docx -> _archive\scratch\root_docx_duplicates\010818663C - LifePRO.docx
+MOVE: 010818663C - QLAdmin.docx -> _archive\scratch\root_docx_duplicates\010818663C - QLAdmin.docx
+DELETE root lock: ~$0391876C - LifePRO.docx

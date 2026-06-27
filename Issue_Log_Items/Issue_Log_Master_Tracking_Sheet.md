@@ -7,7 +7,7 @@
 
 ## How to run (one path for client UAT)
 
-1. Run **`QLA_Migration/run_converter.bat`** (or `_run_full_batch_test.py` headless)
+1. Run **`QLA_Migration/run_converter.bat`** (or `tools/batch_tests/run_full_batch_test.py` headless; legacy stub: `QLA_Migration/_run_full_batch_test.py`)
 2. Set paths to `QLA_Migration` folders (Source, Output, Configs, Mapping)
 3. Click **EXECUTE FULL BATCH MIGRATION**
 
