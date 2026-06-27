@@ -1,0 +1,6 @@
+policy_number,surrender_chain_count,transaction_codes,sample_claim_id,first_activity_date_earliest,first_activity_date_latest,blocker_category,client_review_note
+9010776027,2,0561,RC-9010776027-2-SURRENDER_CLAIM-C0-20181227,20181227,20191227,SURRENDER_OFFSET_BLOCKED,2 surrender chain(s); codes 0561 only — no approved payout evidence (1020/0560/0094/1900/0567)
+9010780411,1,0561,RC-9010780411-2-SURRENDER_CLAIM-C0-20180205,20180205,20180205,SURRENDER_OFFSET_BLOCKED,1 surrender chain(s); codes 0561 only — no approved payout evidence (1020/0560/0094/1900/0567)
+9010780591,1,0561,RC-9010780591-3-SURRENDER_CLAIM-C0-20230209,20230209,20230209,SURRENDER_OFFSET_BLOCKED,1 surrender chain(s); codes 0561 only — no approved payout evidence (1020/0560/0094/1900/0567)
+9011072813,8,0561,RC-9011072813-2-SURRENDER_CLAIM-C0-20180624,20180624,20250624,SURRENDER_OFFSET_BLOCKED,8 surrender chain(s); codes 0561 only — no approved payout evidence (1020/0560/0094/1900/0567)
+9011107796,9,0561,RC-9011107796-3-SURRENDER_CLAIM-C0-20180317,20180317,20260317,SURRENDER_OFFSET_BLOCKED,9 surrender chain(s); codes 0561 only — no approved payout evidence (1020/0560/0094/1900/0567)

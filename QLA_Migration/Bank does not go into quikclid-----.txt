@@ -1,0 +1,4 @@
+Bank does not go into quikclid-----> Skip bank, Anything that has a relationship code of BK in lifepro can be skipped.
+Agents do not go into quikclid-----> quikagts, SA relationship code needs to written into quikagts (skip for quikclid). skip quikclnt also.
+
+

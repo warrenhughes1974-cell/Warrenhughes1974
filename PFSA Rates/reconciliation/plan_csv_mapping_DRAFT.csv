@@ -1,0 +1,33 @@
+ql_plan,status,axis_type,csv_file,notes
+110PYL,INCLUDE,age_in_grid,10-pay-prem.csv,
+120PYL,INCLUDE,age_in_grid,20-pay-prem.csv,
+1206UL,INCLUDE,age_in_grid,ul-prem.csv,
+5210TB,INCLUDE,duration_in_grid,term-15-prem.csv,term 15 year; ages 00-65
+5202TB,INCLUDE,duration_in_grid,term-20-prem.csv,
+5203TB,INCLUDE,duration_in_grid,term-30-30-guarantee-prem.csv,
+5204TB,INCLUDE,duration_in_grid,term-30-20-guarantee-prem.csv,
+9ADB10,INCLUDE,age_in_grid,adb-prem.csv,ignore MX band; MN->M FN->F UWCLASS 00
+9ADB20,INCLUDE,age_in_grid,adb-prem.csv,
+9ADBIS,INCLUDE,age_in_grid,adb-prem.csv,
+9ADBPY,INCLUDE,age_in_grid,adb-prem.csv,
+5201TB,EXCLUDE,,user: ignore (term 15 duplicate of 5210TB scope)
+1WL010,EXCLUDE,,no whole-life source CSV
+1WL020,EXCLUDE,,no whole-life source CSV
+1200WB,EXCLUDE,,no whole-life source CSV
+1200WT,EXCLUDE,,no whole-life source CSV
+1205IS,EXCLUDE,,user: skip
+120ISW,EXCLUDE,,user: skip
+5203TM,EXCLUDE,,TB only not TM
+5204TM,EXCLUDE,,TB only not TM
+5210TM,EXCLUDE,,TB only not TM
+5RT020,EXCLUDE,,not in CSV scope
+5RT030,EXCLUDE,,not in CSV scope
+5RT320,EXCLUDE,,not in CSV scope
+9WVP10,EXCLUDE,,user: ignore 9WVPxx
+9WVP20,EXCLUDE,,user: ignore 9WVPxx
+9WVPIS,EXCLUDE,,user: ignore 9WVPxx
+9WVPRT,EXCLUDE,,user: ignore 9WVPxx
+9WVPUL,EXCLUDE,,user: ignore 9WVPxx
+iswl-prem.csv,EXCLUDE,,user: skip
+spul-prem.csv,EXCLUDE,,user: skip
+yrt-prem.csv,EXCLUDE,,user: skip

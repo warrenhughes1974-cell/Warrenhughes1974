@@ -1,0 +1,20 @@
+=== Phase 24 Client Balancing Re-run Summary ===
+
+Rollback snapshot: PHASE24-CLIENT-BALANCING-RERUN-20260612T125815Z
+Decision source: docs/claims_conversion_reference/client_issue_log_decisions_2026-06-11.md
+Rules file: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\config\claim_family_balancing_rules_client.json
+
+Rebalance queue (Phase 23 pending): 281
+Post-rebalance status counts: {'BALANCED': 137, 'UNBALANCED': 126, 'MINOR_VARIANCE': 18}
+Exclusion source counts: {'LIFECYCLE_0038_FALLBACK': 271, 'PACTG_GL_2023_603703R': 10}
+
+BEFORE (Phase 23 refreshed UAT):
+  UAT candidate claims:    5810
+
+AFTER (client rebalance promotions):
+  Newly promoted claims:   155
+  Remaining deferred:      126
+  UAT candidate claims:    5965 (+155)
+
+production_dbf_flag=N — UAT staging artifacts only. No production DBFs.
+Phase 4-17 engines NOT modified. app.py NOT modified.

@@ -1,0 +1,259 @@
+
+
+
+POL-001 — Duplicate MPOLICY in quikmstr Output: quikmstr.csv | Severity: Critical | Block
+
+POL-002 — Missing MPOLICY Output: quikmstr.csv | Severity: Critical | Block
+
+POL-008 — MPAIDTO before MISSDT (paid-to before issue date) Output: quikmstr.csv | Severity: High | Hold
+
+CW-001 — One source policy maps to multiple MPOLICY Source: Master_Crosswalk.csv | Severity: Critical | Block
+
+CW-002 — Multiple source policies map to same MPOLICY Source: Master_Crosswalk.csv | Severity: Critical | Block
+
+REF-001 — quikridr without quikmstr (orphan rider) Output: quikridr.csv | Severity: Critical | Block
+
+REF-002 — quikprmh without quikmstr (orphan premium history) Output: quikprmh.csv | Severity: Critical | Block
+
+REF-003 — quikclms without quikmstr (orphan claim) Output: quikclms.csv | Severity: Critical | Block
+
+REF-011 — MPLAN on rider not found in quikplan Output: quikridr.csv, quikplan.csv | Severity: High | Hold
+
+REQ-002 — quikridr MRIDRID blank Output: quikridr.csv | Severity: Critical | Block
+
+REQ-003 — quikridr MPHASE blank or zero Output: quikridr.csv | Severity: Critical | Block
+
+RDR-002 — MPHASE=1 base coverage missing for policy Output: quikridr.csv | Severity: High | Hold
+
+RDR-003 — Supplemental rider (MPHASE>1) without base (MPHASE=1) Output: quikridr.csv | Severity: High | Hold
+
+DUP-002 — Duplicate quikridr MPOLICY + MPHASE Output: quikridr.csv | Severity: Critical | Block
+
+DUP-003 — Duplicate MRIDRID Output: quikridr.csv | Severity: Critical | Block
+
+DUP-008 — Duplicate CLAIMNUM in quikclms Output: quikclms.csv | Severity: Critical | Block
+
+PRM-009 — Loan/borrowed-money codes in quikprmh (must not appear) Output: quikprmh.csv | Severity: Critical | Block
+
+PRM-010 — Blank DATEPAID in quikprmh Output: quikprmh.csv | Severity: High | Hold
+
+CLM-001 — Claim without policy master (same as REF-003) Output: quikclms.csv | Severity: Critical | Block
+
+CLM-006 — PACTG borrowed-money-only activity on a quikclms policy Source: PACTG + quikclms.csv | Severity: Critical | Block
+
+CLM-011 — Governance metadata columns leaked to quikclms/quikclmp output Output: quikclms.csv, quikclmp.csv | Severity: Critical | Block
+
+DT-003 — Insured DOB after policy issue date (MPHDOB vs quikmstr.MISSDT) Output: quikridr.csv | Severity: Critical | Hold
+
+FMT-007 — Output column order does not match schema Output: all quik*.csv | Severity: Critical | Block
+
+FMT-008 — Extra or missing output columns vs schema Output: all quik*.csv | Severity: Critical | Block
+
+RCN-001 — Source policy count vs quikmstr output count Source/Output: quikmstr.csv | Severity: High | Report only
+
+RCN-004 — PLOAN active loan count vs quikloan staging candidates Source: PLOAN.csv / plan_analysis/phase_l1_quikloan | Severity: High | Report only
+
+LOAN-002 — Duplicate MPOLICY in QuikLoan Output: quikloan.csv (when emitted) | Severity: Critical | Block
+
+LOAN-005 — Missing MLOANDATE on loan candidate Output: quikloan staging | Severity: High | Hold
+
+GOV-003 — Required LifePRO source file missing Source: QLA_Migration/Source | Severity: Critical | Block
+
+GOV-005 — quikplan.csv missing in Output before batch Output: quikplan.csv | Severity: Critical | Block
+
+GOV-012 — validation_config schema_manifest out of sync with app tables Config check | Severity: High | Report only
+
+
+LOOK AT THE VALIDATION IN THE STATE CODE IN THE SYSTEM TO MAKE SURE HAVE KEYS FOR THOSE SPECIFIC STATES.
+
+
+
+Quikcomp- No dups on company code. Agent company code needs to be in this table.  The last character of all policy needs to be in this table.  
+
+Policy number needs to be at last 9 chaacters max of ten.
+
+ACTG and QUIKCHRT- quikactg Key is on the company and account number, no dups. Can be multiple account number.  Company number needs to be in quikcomp.  
+
+quikactg- company code needs to be in quikcomp, key is on company and plan so dups.  The default plan for the MASTER and needs to be all caps.  Validate quikactg in quikchrt by company.  
+
+IF we are doing assignment by plan, the plancode 
+
+quiklist- The key is group number (no dups).  Company code must be in quikcomp.  Validate there there is a MBILLNAME is populated.  
+Default values
+MSORT=N
+MLAPSEL=0
+MLASPEH=0
+MSTATUS=A
+MBILLDAY=0
+MBILLMODE=0
+
+QUIKDATE- PAC BILL, DIRECT BILL, RESINSURANCE BILL, set up to month end of previous month you are in.  (set all dates to this)
+Default 
+ACHFILEID=0
+ACHFILEID=A
+ESCDATE= Blank
+
+QUIKQXS- Mortality table.  
+QUIKPLCV, QUIKPLTV, QUIKPLGP, QUIKPLDB, QUIKPLDV
+Fields
+MORT-this needs to be in quikqxs
+ETIMORT- this needs to ben in quikqxs
+PLAN-needs to be in quikplan
+GENDER- needs to be zero on in quikplgd
+UWCLASS- needs to be 00 or in quikpluw
+BAND- needs to be 00 or in quikplvd
+ISSUEST= needs to be 00 or a validate state abbre
+EFFDATE= validate the date is not prior to 01/01/1900 and or greater than today plus 12 months
+
+QUIKPLAN
+PLAN CODE NEEDS TO HAVE SIX CHARACTERS, NO SPACES OR SPECIAL CHARACTERS.
+NO PLAN CODE ENDS WITH PA, XP, XF, XS (THESE ARE THE CHARACTES WE USE TO BUILD PUA'S)
+PAR NEEDS TO BE 0 OR 1.
+BASIS ANNUITIES ONLY, NEEDS TO BE A VALID ANNUITY BASIS CODE THESE ARE CASE SENSTIVE ALL CAPS-NONQ, QUAL, NQIA, QLIA OR TXBL.  THIS IS FOR AN PLAN CODE THAT BEGINS WITH AN A. EMPTY IF THIS IS NOT A PLAN THAT BEGINS WITH THE LETTER A.
+LOANINTX- NEEDS TO BE A OR R, DEFAULT FOR A
+DEPINT- IF THIS IS A MYGA THE VALUE NEESD TO BE > 0, THIS WOULD NEED TO BE A TRANSFORATION NOTE.
+LOAGE- AGE 1 NEEDS TO BE 0 IN THE TABLE, AND THE LOAGE NEEDS TO BE < THE HIAGE
+RENEW- DEFALUT TO N, UNLESS THE PLAN CODE STARTS TO 5 THE VALUE SHOULD BE N IF IT IS A 5 IT CAN BE A N OR Y
+PAYRS- ANY PLAN CODE, BOTH OF THE PAYS AND PAYAGE CANNOT BE ZERO.  ONE MUST BE GREATER THAN 0.  IF THE PLAN DOES NOT START WITH 5, THEY BOTH CANNOT BE 0.
+PAYAGE-ANY PLAN CODE, BOTH OF THE PAYS AND PAYAGE CANNOT BE ZERO.  ONE MUST BE GREATER THAN 0.  IF THE PLAN DOES NOT START WITH 5, THEY BOTH CANNOT BE 0.
+INSYRS-ANY PLAN CODE, BOTH OF THE PAYS AND PAYAGE CANNOT BE ZERO.  ONE MUST BE GREATER THAN 0.  IF THE PLAN DOES NOT START WITH 5, THEY BOTH CANNOT BE 0.
+INSAGE-ANY PLAN CODE, BOTH OF THE PAYS AND PAYAGE CANNOT BE ZERO.  ONE MUST BE GREATER THAN 0.  IF THE PLAN DOES NOT START WITH 5, THEY BOTH CANNOT BE 0.
+IF WE KNOW THIS IS A SINGLE PREMIUM (TRANSFORMATION NOTE) PAYRS SHOULD BE 1, PAGE SHOULD BE 0, SEMI,QTRL, MTHD, MTHB SHOULD ALL BE ZERO.
+
+PAYAGE AND INSAGE SHOULD NOT BE GREATER THAT 125
+
+INITVAL DEFAULT TO 1000 UNLESS THE PLAN CODE IS GREATER THAN A.
+
+COMMID- VALIDATE THIS EXIST IN QUIKCOM, OKAY ITS EMPTY
+
+MAXUNITS- SHOLD BE > OR = TO THE MINUTIT
+
+ROUNDING FULE DEFALUT TO A
+
+AUTONFO DEFAULT TO 0
+
+DEFICENY= ALWAYS N IF THE FIRST CHARACTER OF THE PLAN CODE IS > OR = TO A OR 9 SHOULD BE FORCED TO N
+
+BACTIVE= FALSE IF ITS CLOSE T IF ITS ELIGIBLE FOR NEW BUSINESS
+
+IF BACTIVE IS F THEN PLANVALOPT NEEDS TO BE FALSE
+
+MLAPSE DEFAULT 0
+
+MNAICLOB- DEFAULT N
+
+IF VARGP IS NOT 4 THEN WE NEED TO VALIDATE THERE IS A PLAN CODE IN QUIKGPS AND QUIKPLGP
+
+IF VARDB IS NOT 4 THEN WE NEED TO VALIDATE THERE IS A PLAN CODE IN QUIKDBS AND QUIKPLDB
+
+IF PLAN CODE START IS <9 THROW A WARNING IF HERE IS NO QUIKPLCV, QUIKPLTV, QUIKCVS, QUIKTVS, QUIKNPS.  THIS NEEDS TO BE IN THE AUDIT LOG.  
+
+FOR ALL DATES IN THE CONVERSION ANY DATE BEFORE 01/01/1900 AND CURRENT DATE PLUS 12 MONTHS NEEDS TO GET OUT PUSHED AT INTO A WARNING
+
+ALL OF THE RATE TABLES AND KEY TABLES MUST HAVE A PLANC ODE IN QUIKPLAN
+
+IF THE PLAN BEGINS WITH AN A IN QUIKPLAN THROW A WARNING IF THE PLAN DOES NOT EXIST IN QUIKAINT, QUIKAING, QUIKAEXP, AND OR QUIKAINF. IF THEY HAVE ONLY ONE VALUE QUIKAING OR QUIKAINF THEN WE USE THE OTHER VALUES.
+
+IF THE PLAN CODE IS A UL (TRANSFORATION NOTE) THERE MUST BE A RECORD IN QUIKUINT. 
+
+ANY TABLE WHERE WE HAVE A COMPANY CODE WE NEED TO VALIDATE THE CODE IS IN QUIKPLAN
+
+IF THE PLANTYPE IS MEDS THEN HCOMMIP AND HRIGPKEY NEED TO BE YES OTHERSIE THEY NEED TO BE F
+
+
+Policy Data Governance
+
+quikmstr- 
+MPLAN- no dups on policy number
+MSTATUS- needs a value, is it one of our code
+MSTATDATE- needs a date
+ISSDATE- 
+MSTATDATE
+MISSDT
+MPAIDTO- GREATER THAN OR EQUAL TO ISSDATE
+MBILLTO- GREATER THAN OR EQUAL TO ISSDATE, AND SHOULD NOT BE <MPAIDTO
+MNFOPT- SHOULD DEFAULT TO ZERO
+MDIVOPT- 
+MBILLFRM- SHOLD BE POPULATED
+MBILLDAY- DEFAULTS TO THE DAY IN ISSDATE
+MBANKNO- IF MBILLFORM IS 2 THERE NEEDS TO BE A VALUE
+MMODE- NEEDS A VALUE
+MISSUEST- NEEDS A VALUE, VALID ISSUE STATE CODE
+MGROUP- IF POPULATED NEEDS TO EXIST IN QUIKLIST
+MPRIMID- IF POPULATED, MUST HAVE A VALUE AND MUST HAVE A VALUE IN QUIKCLNT
+MOWNERID- IF POPULATED, MUST HAVE A VALUE AND MUST HAVE A VALUE IN QUIKCLNT
+MASSIGID- IF POPULATED, MUST HAVE A VALUE AND MUST HAVE A VALUE IN QUIKCLNT
+MPAYERID- IF POPULATED, MUST HAVE A VALUE AND MUST HAVE A VALUE IN QUIKCLNT
+MOWNCID- IF POPULATED, MUST HAVE A VALUE AND MUST HAVE A VALUE IN QUIKCLNT
+MBENPID- MUST BE EMPTY
+MBENCID- MUST BE EMPTY
+
+MAPPDATE MUST BE < OR = TO ISSUE DATE
+MISSCNTRY DEFAULT TO 0000
+MRESSTATE- COME BACK AND LOOK AT THIS ONE (DO WE POPULATE)
+MISSCLASS- DEFAULT TO 00
+
+QUIKCLNT- NO DUPS ON CLIENT ID
+MTYPE- NEEDS A VALUE (I FOR INDIVIDAUL, DEFAUlT)
+MTAXIDTYPE= DEFALUT TO S
+LASTNAME- NEEDS A VALUE
+IF MADDR1, MLNAME, MFNAME, MCITY, MSTATE, MZIP ARE ALL BLANK WE NEED A WARNING
+MDOB- DATE VALIDATION
+MSEX M OR F
+MLANGUAGE DEFAULT TO E
+
+
+QUIKCLID
+MCLIENTID- MUST EXSIT IN QUIKCLNT
+MPOLICY- MUST EXIST IN QUIMSTR
+MPHASE IF NOT ZERO MUST MPOLICY AND MPHASE MUST EXIST IN QUIKRIDR
+MRELATION- IF OWNR, OWNC, PAYR, PRIM , ASGN, BENP, BENC PHASE NEEDS TO BE ZERO. IF THE RELATION CODE IS INSD THEN IT NEEDS TO MATCH THE RESPECTIVE RECORD IN QUIKRIDR (MRIDRID)  ANYTHING NOT INSD SHOULD BE ZERO
+
+
+
+Look at validations for quikridr MPLAN add logic PUA's and rateups.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

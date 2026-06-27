@@ -1,0 +1,18 @@
+=== Phase 25 UAT Emit Refresh Summary ===
+
+Rollback snapshot: PHASE25-UAT-EMIT-REFRESH-20260612T130309Z
+UAT claims source: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase24_client_balancing_rerun\uat_candidate_quikclms_post_rebalance.csv
+UAT payments source: C:\Users\warren\Documents\GitHub\Warrenhughes1974\claims_analysis\phase24_client_balancing_rerun\uat_candidate_quikclmp_post_rebalance.csv
+Output directory: C:\Users\warren\Documents\GitHub\Warrenhughes1974\QLA_Migration\Output
+
+EMIT (Phase 21 headless via app.py):
+  Return code: 0
+  quikclms.csv: 1271 -> 2114 rows
+  quikclmp.csv: 1335 -> 1709 rows
+
+CLIENT OVERLAYS:
+  Item 18 combined amounts: {'applied': 518, 'skipped': 17, 'eligible': 535}
+  Item 19 payee overrides:  {'applied': 1, 'details': [{'policy_number': '010807842C', 'rows_updated': 1, 'old_payee': 'PATRICIA MAYHEW', 'new_payee': 'KENNETH WAYNE MATTHEW', 'prototype_claimnum': 'CLM0001738'}]}
+
+production_dbf_flag=N — UAT staging CSVs only.
+app.py invoked headlessly; no production DBF generation.

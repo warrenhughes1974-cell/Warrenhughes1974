@@ -1,0 +1,24 @@
+=== Phase 23 Client Decision Application Summary ===
+
+Rollback snapshot: PHASE23-CLIENT-DECISION-APPLICATION-20260611T173303Z
+Decision source: docs/claims_conversion_reference/client_issue_log_decisions_2026-06-11.md
+
+BEFORE (Phase 17 baseline):
+  UAT candidate claims:    5122
+  UAT candidate payments:  1335
+  Deferred claims:         344
+  Deferred payments:       374
+  Surrender review queue:  500
+
+AFTER (client decisions applied):
+  UAT candidate claims:    5810 (+688)
+  UAT candidate payments:  1709 (+374)
+  Standalone headers:      206 (Item 15, CLAIMSTAT=3 SETTLED)
+  Surrender promotions:    479 (Item 14 pattern-cleared)
+  Surrender triage:        {'CLIENT_PATTERN_CLEARED': 479, 'REMAINS_BUSINESS_REVIEW': 21}
+  Rebalance pending:       281 (Item 16 global 2023 exclusion awaits engine re-run)
+  Amount adjustments:      535 (Item 18 DB+loan+interest)
+  Payee overrides:         1 (Item 19)
+
+production_dbf_flag=N — UAT staging artifacts only. No production DBFs.
+Phase 4-17 engines NOT modified. app.py NOT modified.

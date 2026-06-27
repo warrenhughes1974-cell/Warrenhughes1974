@@ -1,0 +1,80 @@
+LOYAL AMERICAN -> QLADMIN CONVERTER (Loyal2QL)
+QLAdmin quik* TABLES THE SOURCE DATA EXTRACTS INTO
+==================================================
+
+A. TABLES POPULATED WITH SOURCE DATA (written via Append/FieldPut)
+-----------------------------------------------------------------
+
+Policy / Owner Domain:
+  quikmstr   - Policy master- Done
+  quikridr   - Riders / coverage phases- done
+  quikclnt   - Clients / names & addresses- done
+  quikclid   - Client-to-policy relationship links- done
+  quikpolx   - Policy extension / cross record- not needed
+  quikspec   - Policy spec record- so far not quikspec records
+  quikmemo   - Policy memo / notes- no notes (yet)
+  quiksusp   - Suspense records- Need to look for suspense
+  quikprmh   - Premium payment history- done
+  quikbenh   - Benefit / dividend history- done
+
+Health / Claim Domain:
+  quikhcdp   - Health coverage / dependent data- not needed
+  quikhclm   - Health claim header- not needed
+  quikhcsv   - Health claim service lines- not needed
+  quikprov   - Providers- not needed
+
+Agent / Commission Domain:- waitng for client
+  quikagts   - Agent master- 
+  quikacnt   - Agent account / balances
+  quikagtb   - Agent balances
+  quikaspc   - Agent spec
+  quikagtl   - Agent hierarchy / levels
+  quikagpl   - Agent-plan links
+  quikagtm   - Agent-on-policy / commission
+  quikapol   - Agent-policy
+  quikagth   - Agent commission history
+  quikcgbk   - Chargeback
+  quikcpol   - Commission-on-policy rates
+
+Group / System Control:- not needed
+  quiklist   - List / lookup
+  quikgspc   - Group spec
+  quikcomp   - Company record (Loyal American Life)
+  quikdate   - System control dates
+
+Rate Tables: all done
+  quiknps    - Net premium / scale rates
+  quiktvs    - Term / values rates
+
+Reinsurance:- next up
+  quikrein   - Reinsurance
+  quikrmst   - Reinsurance master
+  quikrcoa   - Reinsurance cession / COA
+
+Total populated tables: 34
+
+
+B. TABLES OPENED AND CLEARED (Zap) BUT NOT LOADED IN THIS PROGRAM
+----------------------------------------------------------------
+  quikloan   - Policy loans (cleared, NOT populated)
+  quikdvdp   - Dividend deposits (cleared; dividends written to quikbenh instead)
+  quikclms   - Claims header (cleared, not loaded)
+  quikclmp   - Claim payments (cleared, not loaded)
+  quikbfcy   - Beneficiaries (cleared, not loaded)
+  quikbene   - Beneficiary/benefit (opened/cleared only)
+
+
+C. LOOKUP-ONLY (READ, NEVER WRITTEN)
+------------------------------------
+  quikplan   - Plan/rate lookups
+  quikfed    - Bank/federal lookup
+
+
+D. NOT TABLES - THESE ARE INDEX ORDERS (.ntx), NOT EXTRACT TARGETS
+-----------------------------------------------------------------
+  quikpol, quikacct, quikstat   - indexes on quikmstr
+  quikrdr                       - index on quikridr
+  quikclad, quikcldb, quikclnm, quikcltx - indexes on quikclnt
+
+1. Source is default to CNV for PMRH
+

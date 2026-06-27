@@ -1,3 +1,69 @@
 severity,category,entity_key,target_field,notes,governance_action
+WARN,ORPHAN_MPLAN,121PUA,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,130JEB,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,1669SR,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (2 rows),WARN
+WARN,ORPHAN_MPLAN,1970JB,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,1970PA,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,1CSIMN,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (3 rows),WARN
+WARN,ORPHAN_MPLAN,1L10OD,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (143 rows),WARN
+WARN,ORPHAN_MPLAN,1L10PR,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,261PUA,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,2961ME,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,5646AT,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,578STR,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (4 rows),WARN
+WARN,ORPHAN_MPLAN,57ATCR,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,5L01MA,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,719CTR,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (2 rows),WARN
+WARN,ORPHAN_MPLAN,7686S3,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (3 rows),WARN
+WARN,ORPHAN_MPLAN,7687J3,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (2 rows),WARN
+WARN,ORPHAN_MPLAN,7690DT,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,910RWP,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,910SWP,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (2 rows),WARN
+WARN,ORPHAN_MPLAN,934JWP,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (2 rows),WARN
+WARN,ORPHAN_MPLAN,934SWP,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (2 rows),WARN
+WARN,ORPHAN_MPLAN,943CWP,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (6 rows),WARN
+WARN,ORPHAN_MPLAN,94PDIS,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,960CWP,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,967ADB,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (8 rows),WARN
+WARN,ORPHAN_MPLAN,9DIS24,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (18 rows),WARN
+WARN,ORPHAN_MPLAN,9DIS29,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (2 rows),WARN
+WARN,ORPHAN_MPLAN,9DS24B,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (2 rows),WARN
+WARN,ORPHAN_MPLAN,9DS24C,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (16 rows),WARN
+WARN,ORPHAN_MPLAN,9GPO79,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
+WARN,ORPHAN_MPLAN,9JPO46,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (10 rows),WARN
+WARN,ORPHAN_MPLAN,9WP646,MPLAN,quikridr.MPLAN not in staged quikplan.PLAN (1 rows),WARN
 WARN,BLANK_MPLAN,,MPLAN,2348 quikridr rows with blank MPLAN,WARN
+ERROR,PLAN_CONTAINS_SPACE,0823 960CH,PLAN,"Closed catalog unauthorized emit (coverage_id=0823 960CH, authoritative=960CWP, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,0824 P DIS,PLAN,"Closed catalog unauthorized emit (coverage_id=0824 P DIS, authoritative=94PDIS, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,10827 MN5K,PLAN,"Closed catalog unauthorized emit (coverage_id=10827 MN5K, authoritative=1CSIMN, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,1578 SPSPU,PLAN,"Closed catalog unauthorized emit (coverage_id=1578 SPSPU, authoritative=578STR, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,1579 GPO,PLAN,"Closed catalog unauthorized emit (coverage_id=1579 GPO, authoritative=9GPO79, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,1596 667,PLAN,"Closed catalog unauthorized emit (coverage_id=1596 667, authoritative=967ADB, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,619 CH PU,PLAN,"Closed catalog unauthorized emit (coverage_id=619 CH PU, authoritative=719CTR, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,621 PUA,PLAN,"Closed catalog unauthorized emit (coverage_id=621 PUA, authoritative=121PUA, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,630 JEB,PLAN,"Closed catalog unauthorized emit (coverage_id=630 JEB, authoritative=130JEB, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,646 ART,PLAN,"Closed catalog unauthorized emit (coverage_id=646 ART, authoritative=5646AT, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,667 ART CR,PLAN,"Closed catalog unauthorized emit (coverage_id=667 ART CR, authoritative=57ATCR, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,669 SR GD,PLAN,"Closed catalog unauthorized emit (coverage_id=669 SR GD, authoritative=1669SR, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,686S 30MRG,PLAN,"Closed catalog unauthorized emit (coverage_id=686S 30MRG, authoritative=7686S3, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,687J 30MRG,PLAN,"Closed catalog unauthorized emit (coverage_id=687J 30MRG, authoritative=7687J3, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,690 DT 65,PLAN,"Closed catalog unauthorized emit (coverage_id=690 DT 65, authoritative=7690DT, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,8034 30MRG,PLAN,"Closed catalog unauthorized emit (coverage_id=8034 30MRG, authoritative=934SWP, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,8034 J30MT,PLAN,"Closed catalog unauthorized emit (coverage_id=8034 J30MT, authoritative=934JWP, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,8043CTR WP,PLAN,"Closed catalog unauthorized emit (coverage_id=8043CTR WP, authoritative=943CWP, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,8046 JPO,PLAN,"Closed catalog unauthorized emit (coverage_id=8046 JPO, authoritative=9JPO46, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,961 ME65,PLAN,"Closed catalog unauthorized emit (coverage_id=961 ME65, authoritative=2961ME, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,961 PUA,PLAN,"Closed catalog unauthorized emit (coverage_id=961 PUA, authoritative=261PUA, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,970 JEB,PLAN,"Closed catalog unauthorized emit (coverage_id=970 JEB, authoritative=1970JB, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,970 PUA,PLAN,"Closed catalog unauthorized emit (coverage_id=970 PUA, authoritative=1970PA, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_NOT_IN_CLOSED_CATALOG,9DIS25,PLAN,"Closed catalog unauthorized emit (coverage_id=DISCHO2475, authoritative=9DIS24, remediation=Use authoritative catalog PLAN 9DIS24 (column crosswalk_ql_plan_code))",BLOCK
+ERROR,PLAN_NOT_IN_CLOSED_CATALOG,DISCHO247B,PLAN,"Closed catalog unauthorized emit (coverage_id=DISCHO247B, authoritative=9DS24B, remediation=Use authoritative catalog PLAN 9DS24B (column crosswalk_ql_plan_code))",BLOCK
+ERROR,PLAN_NOT_IN_CLOSED_CATALOG,9DIS25,PLAN,"Closed catalog unauthorized emit (coverage_id=DISCHO247C, authoritative=9DS24C, remediation=Use authoritative catalog PLAN 9DS24C (column crosswalk_ql_plan_code))",BLOCK
 ERROR,MISSING_CATALOG_MAPPING,9DIS25,PLAN,"Closed catalog unauthorized emit (coverage_id=DISCHO25, authoritative=, remediation=Add Coverage_ID to product_catalog_crosswalk.csv with authoritative PLAN)",BLOCK
+ERROR,PLAN_NOT_IN_CLOSED_CATALOG,DISCHO29,PLAN,"Closed catalog unauthorized emit (coverage_id=DISCHO29, authoritative=9DIS29, remediation=Use authoritative catalog PLAN 9DIS29 (column crosswalk_ql_plan_code))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,L01 10Y MA,PLAN,"Closed catalog unauthorized emit (coverage_id=L01 10Y MA, authoritative=5L01MA, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,L10 PRE97,PLAN,"Closed catalog unauthorized emit (coverage_id=L10 PRE97, authoritative=1L10OD, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,L10 PREUNI,PLAN,"Closed catalog unauthorized emit (coverage_id=L10 PREUNI, authoritative=1L10PR, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,L10 SPSWP,PLAN,"Closed catalog unauthorized emit (coverage_id=L10 SPSWP, authoritative=910SWP, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,L10 WP SRN,PLAN,"Closed catalog unauthorized emit (coverage_id=L10 WP SRN, authoritative=910RWP, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK
+ERROR,PLAN_CONTAINS_SPACE,WP 646,PLAN,"Closed catalog unauthorized emit (coverage_id=WP 646, authoritative=9WP646, remediation=Replace attempted PLAN with authoritative catalog PLAN (no spaces))",BLOCK

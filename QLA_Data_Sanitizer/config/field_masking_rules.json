@@ -1,0 +1,98 @@
+{
+  "version": 2,
+  "salt": "qla-enterprise-test-salt-v2",
+  "defaults": {
+    "unlisted": "PRESERVE"
+  },
+  "skip_files": [
+    "Master_Crosswalk.csv",
+    "Master_Value_Translation.csv"
+  ],
+  "preserve_patterns": [
+    "*POLICY*",
+    "*POLICY_ID*",
+    "*CLAIM_ID*",
+    "*NAME_ID*",
+    "*CLIENT_ID*",
+    "*PHASE*",
+    "*RELATION*",
+    "*SEQ*",
+    "*CODE*",
+    "*PLAN*",
+    "*AGENT*",
+    "*MAGENT*",
+    "*RIDRID*",
+    "*PRIMID*",
+    "*OWNRID*",
+    "*PAYRID*",
+    "*ASGNID*",
+    "*BENPID*",
+    "*BENCID*",
+    "*BENFID*",
+    "*MPOLICY*",
+    "*MRIDRID*",
+    "*MCLIENTID*",
+    "*BENEFIT_SEQ*",
+    "*CREDIT_CODE*",
+    "*DEBIT_CODE*",
+    "*BATCH*",
+    "*RENEWAL*",
+    "*PREMIUM*",
+    "*MODE*",
+    "*STATUS*",
+    "*DATE*",
+    "*DOB*",
+    "*AMOUNT*",
+    "*TRANS*AMOUNT*",
+    "TRANS_AMOUNT",
+    "TRAMT",
+    "*PREM*"
+  ],
+  "preserve_fields": [
+    "TRANS_AMOUNT",
+    "TRAMT"
+  ],
+  "file_patterns": {
+    "*PACTG*": {
+      "preserve_field_patterns": [
+        "*AMOUNT*",
+        "*TRANS*AMOUNT*",
+        "TRANS_AMOUNT",
+        "TRAMT",
+        "COMM_PREMIUM",
+        "MODE_PREMIUM",
+        "FULL_MODE_PREM",
+        "EMPLOYEE_PRE_86_AM",
+        "EMPLOYEE_POST_86_A",
+        "EMPLOYER_PRE_86_AM",
+        "EMPLOYER_POST_86_A"
+      ]
+    }
+  },
+  "sanitize_patterns": [
+    {"match": "*INDIVIDUAL_FIRST*", "type": "FAKE", "kind": "first"},
+    {"match": "*INDIVIDUAL_MIDDLE*", "type": "FAKE", "kind": "first"},
+    {"match": "*INDIVIDUAL_LAST*", "type": "FAKE", "kind": "last"},
+    {"match": "*FIRST*NAME*", "type": "FAKE", "kind": "first"},
+    {"match": "*LAST*NAME*", "type": "FAKE", "kind": "last"},
+    {"match": "*MFNAME*", "type": "FAKE", "kind": "first"},
+    {"match": "*MMNAME*", "type": "FAKE", "kind": "first"},
+    {"match": "*MLNAME*", "type": "FAKE", "kind": "last"},
+    {"match": "*FULL*NAME*", "type": "FAKE", "kind": "last"},
+    {"match": "*NAME_BUSINESS*", "type": "FAKE", "kind": "last"},
+    {"match": "*AGTNAME*", "type": "FAKE", "kind": "last"},
+    {"match": "*ADDR*", "type": "FAKE", "kind": "street", "exclude": ["*ADDRESS_ID*"]},
+    {"match": "*CITY*", "type": "FAKE", "kind": "city", "exclude": ["*CITY_CODE*"]},
+    {"match": "*SSN*", "type": "MASK", "style": "ssn"},
+    {"match": "*SOC*", "type": "MASK", "style": "ssn"},
+    {"match": "*TAXID*", "type": "MASK", "style": "ssn", "exclude": ["*TAXIDTYPE*"]},
+    {"match": "*MTAXID*", "type": "MASK", "style": "ssn"},
+    {"match": "*PHONE*", "type": "MASK", "style": "phone"},
+    {"match": "*EMAIL*", "type": "MASK", "style": "email"},
+    {"match": "*ACCT*", "type": "MASK", "style": "account", "exclude": ["*TRANS*AMOUNT*", "*AMOUNT*", "TRANS_AMOUNT", "TRAMT"]},
+    {"match": "*ACCOUNT*", "type": "MASK", "style": "account", "exclude": ["*TRANS*AMOUNT*", "*AMOUNT*", "TRANS_AMOUNT"]},
+    {"match": "*BANK*", "type": "MASK", "style": "account"},
+    {"match": "*PDFPSSWD*", "type": "MASK", "style": "account"}
+  ],
+  "files": {}
+}

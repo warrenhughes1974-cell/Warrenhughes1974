@@ -1,0 +1,27 @@
+{
+  "audit_timestamp": "2026-06-12T13:03:09Z",
+  "rollback_snapshot_id": "PHASE25-UAT-EMIT-REFRESH-20260612T130309Z",
+  "production_dbf_flag": "N",
+  "uat_clms_source": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\claims_analysis\\phase24_client_balancing_rerun\\uat_candidate_quikclms_post_rebalance.csv",
+  "uat_clmp_source": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\claims_analysis\\phase24_client_balancing_rerun\\uat_candidate_quikclmp_post_rebalance.csv",
+  "output_dir": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
+  "emit_return_code": 0,
+  "combined_amount_overlay": {
+    "applied": 518,
+    "skipped": 17,
+    "eligible": 535
+  },
+  "payee_override_overlay": {
+    "applied": 1,
+    "details": [
+      {
+        "policy_number": "010807842C",
+        "rows_updated": 1,
+        "old_payee": "PATRICIA MAYHEW",
+        "new_payee": "KENNETH WAYNE MATTHEW",
+        "prototype_claimnum": "CLM0001738"
+      }
+    ]
+  },
+  "rulebook_lineage": "phase24_client_balancing_rerun|phase25_uat_emit_refresh"
+}

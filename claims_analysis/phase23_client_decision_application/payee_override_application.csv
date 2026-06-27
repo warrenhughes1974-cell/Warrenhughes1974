@@ -1,0 +1,2 @@
+audit_timestamp,rollback_snapshot_id,production_dbf_flag,reconstructed_claim_id,prototype_claimnum,policy_number,mamount,old_payee,new_payee,override_status,apply_at,reason,rulebook_lineage
+2026-06-11T17:33:03Z,PHASE23-CLIENT-DECISION-APPLICATION-20260611T173303Z,N,RC-9010807842-1-DEATH_CLAIM-C0-20220303,CLM0001738,010807842C,125000.00,PATRICIA MAYHEW,KENNETH WAYNE MATTHEW,CLIENT_AUTHORIZED,UAT_EMIT_MPAYNAME,Client confirmed payout was made to Kenneth Wayne Matthew; extract showed insured name.,phase17_uat_governance|phase23_client_decision_application

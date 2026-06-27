@@ -1,0 +1,68 @@
+{
+  "version": "1.1-client",
+  "description": "Phase 24 client-authorized balancing rules (Item 16: exclude 2023/603703R dividend-on-deposit from DB balancing).",
+  "decision_date": "2026-06-11",
+  "source_document": "docs/claims_conversion_reference/client_issue_log_decisions_2026-06-11.md",
+  "balance_tolerance": 0.01,
+  "minor_variance_tolerance": 100.0,
+  "client_gl_exclusions": {
+    "gl_accounts": ["2023", "603703R"],
+    "scope": "ALL_DEATH_CLAIMS",
+    "pactg_detection": "CREDIT_ACCOUNT/DEBIT_ACCOUNT contains 2023 or 603703R on claim activity window",
+    "lifecycle_fallback": "0038 clearing hub total when no PACTG GL rows detected on claim window"
+  },
+  "families": {
+    "DEATH_CLAIM": {
+      "label": "Death Claim",
+      "balancing_formula": "gross + interest - loan_principal - loan_interest - surrender_charge - withholding = payout_minus_div_on_dep",
+      "gross_component_codes": ["0530", "0519"],
+      "interest_component_codes": ["0630"],
+      "offset_component_codes": ["0411", "0412"],
+      "surrender_charge_codes": ["1020"],
+      "withholding_component_codes": ["0810", "0820"],
+      "payout_component_codes": ["0094", "0567", "1900"],
+      "lifecycle_only_codes": ["0038"],
+      "excluded_from_net_rollup_codes": ["0038", "2023", "603703R"],
+      "dividend_on_deposit_exclusion": {
+        "enabled": true,
+        "subtract_from_payout": true,
+        "gl_accounts": ["2023", "603703R"]
+      },
+      "optional_components": ["0810", "0820", "0411", "0412", "1020", "0630"],
+      "settlement_chain_guidance": "0038 clearing paired to 2023/603703R represents dividend-on-deposit; exclude from DB balancing per client Item 16.",
+      "confidence_notes": "Client-approved claims may proceed to UAT even when residual variance remains after GL exclusion."
+    },
+    "SURRENDER_CLAIM": {
+      "label": "Surrender Claim",
+      "balancing_formula": "total_cash + partial_surrender - surrender_charge - loan_principal - loan_interest = disbursement",
+      "gross_component_codes": ["0560", "0561"],
+      "interest_component_codes": [],
+      "offset_component_codes": ["0411", "0412"],
+      "surrender_charge_codes": ["1020"],
+      "withholding_component_codes": ["0810", "0820"],
+      "payout_component_codes": ["0090", "0567", "1900"],
+      "lifecycle_only_codes": [],
+      "excluded_from_net_rollup_codes": [],
+      "optional_components": ["0810", "0820", "0090", "0567", "1900", "1020"],
+      "offset_only_chain_net_zero": true,
+      "settlement_chain_guidance": "Loan offset-only chains may balance at zero until disbursement codes appear.",
+      "confidence_notes": "Disbursement codes optional for funded-only surrender events."
+    },
+    "DISBURSEMENT_CLAIM": {
+      "label": "Disbursement Claim",
+      "balancing_formula": "payout = net_payment",
+      "gross_component_codes": [],
+      "interest_component_codes": [],
+      "offset_component_codes": [],
+      "surrender_charge_codes": [],
+      "withholding_component_codes": ["0810", "0820"],
+      "payout_component_codes": ["0090", "0567", "1900"],
+      "lifecycle_only_codes": [],
+      "excluded_from_net_rollup_codes": [],
+      "optional_components": ["0810", "0820"],
+      "payment_event_only": true,
+      "settlement_chain_guidance": "Treat as payment/disbursement event chain; do not require gross benefit reconstruction.",
+      "confidence_notes": "Net payment equals payout total by profile design."
+    }
+  }
+}

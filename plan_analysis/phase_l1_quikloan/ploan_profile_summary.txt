@@ -1,0 +1,41 @@
+PLOAN Profile Summary (Phase L1 QuikLoan staging)
+Generated: 2026-06-01 18:28:23
+
+total_raw_rows: 93502
+valid_data_rows: 93501
+excluded_placeholder_separator_rows: 1
+unique_policy_count: 912
+latest_non_zero_balance_count: 389
+latest_zero_balance_count: 523
+total_latest_LOAN_BALANCE_active_candidates: 1573133.02
+rows_per_policy_min: 2
+rows_per_policy_median: 45.0
+rows_per_policy_max: 868
+ACCRUAL_DATE_range: 2003-09-23 to 2218-01-11
+
+INTEREST_RATE distribution (latest row per policy):
+          .0740: 714
+          .0500: 198
+
+INTEREST_TYPE distribution (latest row per policy):
+  F            : 912
+
+INT_METHOD distribution (latest row per policy):
+  D         : 912
+
+STATUS_CODE distribution (latest row per policy):
+  H          : 574
+  A          : 241
+  R          : 97
+
+TYPE_CODE distribution (latest row per policy):
+  R        : 449
+           : 348
+  A        : 115
+missing_ACCRUAL_DATE_latest: 1
+missing_LAST_REPAY_DATE_latest: 120
+missing_CAPITALIZED_DATE_latest: 585
+missing_INTEREST_RATE_latest: 0
+
+Derivation rules: PLOAN-primary QuikLoan staging derivation (Phase L1). BA review required for unresolved fields.
+PACTG: reconciliation-only; not used for QuikLoan balances in Phase L1.
