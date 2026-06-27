@@ -1,6 +1,6 @@
 # Executive Summary — Phase P3F quikactg MPLAN Authority Alignment
 
-Generated: 2026-05-26 13:36:02
+Generated: 2026-06-27 16:06:26
 
 ## Result
 
@@ -11,7 +11,7 @@ Generated: 2026-05-26 13:36:02
 
 ## PACTG ingestion
 
-- PACTG rows read: **399059**
+- PACTG rows read: **402079**
 - Distinct valid PLAN_CODE values: **87**
 
 ## Metrics

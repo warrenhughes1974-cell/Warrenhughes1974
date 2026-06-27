@@ -1,23 +1,23 @@
 # Executive Summary — Phase P3E quikridr MPLAN Authority Alignment
 
-Generated: 2026-05-31 14:45:44
+Generated: 2026-06-27 15:58:26
 
 ## Result
 
 - Closed MPLAN authority: **ENABLED**
 - Legacy fallback: **DISABLED**
-- Emitted rows: **11698**
-- Validation passed: **True**
+- Emitted rows: **7002**
+- Validation passed: **False**
 
 ## Metrics
 
 | Metric | Count |
 |--------|-------|
-| Trace rows | 11698 |
+| Trace rows | 7002 |
 | Governance errors (non-blank) | 0 |
-| Blank MPLAN rows | 2348 |
+| Blank MPLAN rows | 0 |
 | Unresolved blank (UNRESOLVED_PRODUCT) | 0 |
-| Expected non-product blank (BENEFIT_SEQ 99 / UV) | 2348 |
+| Expected non-product blank (BENEFIT_SEQ 99 / UV) | 0 |
 | Legacy passthrough inventory | 0 |
 
 ## Rollback
