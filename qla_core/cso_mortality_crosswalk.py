@@ -51,9 +51,27 @@ DEFAULT_CROSSWALK_RELPATH = os.path.join(
     "plan_analysis", "source_data", "rates", "CSO_Mortiality_Crosswalk.csv",
 )
 
+# Issue #21D Track A — ISWL MPLAN allowlist (client-validated; not blanket CSO apply).
+ISWL_MPLAN_ALLOWLIST = frozenset({
+    "1658C1", "1658CS", "1659C2", "1659CR", "1659CS", "1659SR", "1669SR", "1679CS",
+})
+
+# Authoritative ISWL Dividend Accum Int Rate per CSO crosswalk nfo_interest_source.
+ISWL_MDEPINT_PERCENT = "4.50"
+
 
 def default_crosswalk_path(repo_root: str) -> str:
     return os.path.normpath(os.path.join(repo_root, DEFAULT_CROSSWALK_RELPATH))
+
+
+def is_iswl_mplan(mplan) -> bool:
+    """True when MPLAN is in the Issue #21D ISWL allowlist."""
+    return _clean(mplan) in ISWL_MPLAN_ALLOWLIST
+
+
+def iswl_mdepint_percent() -> str:
+    """QLAdmin quikdvdp.MDEPINT value for ISWL policies (4.50%)."""
+    return ISWL_MDEPINT_PERCENT
 
 
 def _clean(v) -> str:

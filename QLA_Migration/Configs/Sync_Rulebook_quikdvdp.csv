@@ -3,5 +3,5 @@ POLICY_NUMBER,MPOLICY,,,
 ACCUM_DIVIDENDS,MDEPOSIT,0,Pulled from Benefit Extract,PPBENTYP,POLICY_NUMBER
 DV_ACCRU_INT,MINTYTD,0,Pulled from Non-Forfeiture Events,PEVNTNONFC,POLICY_NUMBER
 DV_INT_PD_TO_DATE,MINTDATE,,Pulled from Non-Forfeiture Events,PEVNTNONFC,POLICY_NUMBER
-,MDEPINT,4.00,Hardcoded Product Rate (Change Default_Value to your actual rate),,
+,MDEPINT,4.00,Fallback non-ISWL rate; ISWL override at emit (Issue #21D allowlist -> 4.50),,
 DV_INT_PD_TO_DATE,MINTDATE,POLC.PAID_TO_DATE,"If Source is 0/Blank, use Policy Paid-To-Date. Convert YYYYMMDD to Date format."

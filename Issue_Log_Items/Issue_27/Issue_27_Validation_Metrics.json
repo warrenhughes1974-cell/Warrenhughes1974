@@ -1,0 +1,129 @@
+{
+  "engine_version": "v57.39",
+  "population": {
+    "sl_policies_expected": 67,
+    "sl_policies_in_audit": 67,
+    "missing_quikmstr": [],
+    "sl_phases_in_quikridr": 0,
+    "all_policies_converted": true
+  },
+  "duplicate_face": {
+    "pairs_before_planning": 46,
+    "pairs_after": 0,
+    "trace_010448806C": [
+      {
+        "MPHASE": "1",
+        "MPLAN": "170858",
+        "FACE": 5778.0,
+        "MPREM": "18.96000"
+      },
+      {
+        "MPHASE": "2",
+        "MPLAN": "1708PA",
+        "FACE": 5752.96,
+        "MPREM": ".00"
+      }
+    ]
+  },
+  "premium": {
+    "premium_bearing_count": 28,
+    "match_count": 28,
+    "mismatch_count": 0
+  },
+  "financial": {
+    "quikmstr_rows": 5083,
+    "quikridr_rows": 6934,
+    "quikplan_rows": 141,
+    "sl_policy_quikridr_rows": 101,
+    "sl_policy_face_total": 1111810.75
+  },
+  "audit": {
+    "rows": 68,
+    "unique_policies": 67,
+    "sl_table_code_populated": 66,
+    "suppression_reason_ok": 68,
+    "duplicate_audit_rows": 0
+  },
+  "random_sample": [
+    {
+      "QLA": "010397318C",
+      "quikridr_rows": 2,
+      "audit_rows": 1,
+      "duplicate_face": false,
+      "mmodeprem": "31.80",
+      "has_base_phase": true
+    },
+    {
+      "QLA": "010449050C",
+      "quikridr_rows": 2,
+      "audit_rows": 1,
+      "duplicate_face": false,
+      "mmodeprem": "10.00",
+      "has_base_phase": true
+    },
+    {
+      "QLA": "010464265C",
+      "quikridr_rows": 2,
+      "audit_rows": 1,
+      "duplicate_face": false,
+      "mmodeprem": "5.00",
+      "has_base_phase": true
+    },
+    {
+      "QLA": "010495122C",
+      "quikridr_rows": 2,
+      "audit_rows": 1,
+      "duplicate_face": false,
+      "mmodeprem": "31.80",
+      "has_base_phase": true
+    },
+    {
+      "QLA": "010771662C",
+      "quikridr_rows": 1,
+      "audit_rows": 1,
+      "duplicate_face": false,
+      "mmodeprem": "67.89",
+      "has_base_phase": true
+    },
+    {
+      "QLA": "010773109C",
+      "quikridr_rows": 2,
+      "audit_rows": 1,
+      "duplicate_face": false,
+      "mmodeprem": "46.80",
+      "has_base_phase": true
+    },
+    {
+      "QLA": "010782078C",
+      "quikridr_rows": 1,
+      "audit_rows": 1,
+      "duplicate_face": false,
+      "mmodeprem": "37.99",
+      "has_base_phase": true
+    },
+    {
+      "QLA": "011110271C",
+      "quikridr_rows": 1,
+      "audit_rows": 1,
+      "duplicate_face": false,
+      "mmodeprem": "57.22",
+      "has_base_phase": true
+    },
+    {
+      "QLA": "011201237C",
+      "quikridr_rows": 1,
+      "audit_rows": 1,
+      "duplicate_face": false,
+      "mmodeprem": "83.17",
+      "has_base_phase": true
+    },
+    {
+      "QLA": "011201621C",
+      "quikridr_rows": 1,
+      "audit_rows": 1,
+      "duplicate_face": false,
+      "mmodeprem": "684.59",
+      "has_base_phase": true
+    }
+  ]
+}

@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-SCRIPT_VERSION = "1.1"
+SCRIPT_VERSION = "1.2"
 PPOLC_GLOB = "PPOLC_PolicyMaster_Extract_*.csv"
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -123,6 +123,14 @@ def validate(output_dir: Path, source_dir: Path) -> int:
         errors.append(f"{len(single_alpha)} quikmstr row(s) have single-letter MPRIMID (type-flag leak)")
 
     clnt_ids = set(clnt["MCLIENTID"].astype(str).str.strip())
+    # Issue #21D B1: any non-blank quikmstr client ID must exist in quikclnt.
+    for col in ("MPRIMID", "MOWNRID", "MPAYRID", "MASGNID", "MBENPID", "MBENCID"):
+        if col not in mstr.columns:
+            continue
+        for cid in mstr[col].astype(str).str.strip().unique():
+            if cid and cid not in clnt_ids and len(cid) > 1:
+                errors.append(f"Fleet referential: {col}={cid} not in quikclnt")
+
     for policy, expect in GOLDEN_POLICIES.items():
         pol_rows = mstr[mstr["MPOLICY"].astype(str).str.strip() == policy]
         if pol_rows.empty:

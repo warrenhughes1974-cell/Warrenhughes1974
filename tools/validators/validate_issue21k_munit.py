@@ -86,8 +86,8 @@ def validate_dbf_reload() -> tuple[bool, list[str]]:
     table = dbf.Table(str(DBF_PATH))
     table.open()
     try:
-        if len(table) < 7000:
-            errors.append(f"Expected ~7002 DBF rows, got {len(table)}")
+        if len(table) < 6900:
+            errors.append(f"Expected ~6934 DBF rows, got {len(table)}")
     finally:
         table.close()
 

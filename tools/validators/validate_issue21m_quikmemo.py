@@ -20,8 +20,8 @@ from pathlib import Path
 import dbf
 import pandas as pd
 
-SCRIPT_VERSION = "2.0"
-ENGINE_VERSION = "v57.34"
+SCRIPT_VERSION = "2.1"
+ENGINE_VERSION = "v57.39"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 UAT_DBF_DIR = DEFAULT_OUTPUT / "quikmemo_uat_dbf"
@@ -65,7 +65,7 @@ ROW_COUNT_TABLES = [
 
 REGRESSION_BASELINE = {
     "quikmstr.csv": 5083,
-    "quikridr.csv": 7002,
+    "quikridr.csv": 6934,  # v57.39 Issue #27: −68 SL rows (was 7002)
     "quikprmh.csv": 205577,
     "quikplan.csv": 141,
     "quikclid.csv": 46753,
@@ -335,7 +335,7 @@ def validate(output_dir: Path, before_dir: Path | None) -> int:
             print(f"  MPREM populated: {mprem_pop}")
             if len(ridr) == REGRESSION_BASELINE["quikridr.csv"]:
                 issue26_pass = True
-                print("  Issue #26: PASS (quikridr unchanged, MPREM present)")
+                print("  Issue #26: PASS (quikridr row count matches baseline, MPREM present)")
             else:
                 errors.append("quikridr row count changed — Issue #26 regression")
         else:

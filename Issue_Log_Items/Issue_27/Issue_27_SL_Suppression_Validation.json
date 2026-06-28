@@ -1,0 +1,14 @@
+{
+  "sl_policies": 67,
+  "sl_rows": 68,
+  "policies_with_sl_dup_face_before": 46,
+  "quikridr_dup_face_after_sl_removal": 0,
+  "sl_unique_face_rows_not_dup_base": 8,
+  "sl_phases_current_quikridr": 68,
+  "quikridr_rows_removed_on_suppression": 68,
+  "premium_population_ppoc_vs_mmodeprem_match": 28,
+  "premium_population_mismatch": 0,
+  "sl_policies_missing_quikmstr": 0,
+  "quikridr_mspcode_blank_sl_policy_rows": "169/169",
+  "sl_table_code_in_conversion": false
+}

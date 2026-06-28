@@ -1,9 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.35
-# Date:        2026-06-24
-# Change Note: v57.35 — Issue 28: product catalog crosswalk_ql_plan_code runtime authority; DISCHO25 catalog row; P3E MPLAN default ON.
+# Version:     v57.39
+# Date:        2026-06-28
+# Change Note: v57.39 — Issue 27: suppress PPBEN BENEFIT_TYPE SL from quikridr emit (Substandard Life is not coverage); SL suppression audit CSV.
+#              v57.38 — Rollback Issue 21J: remove QUIKMEMO [CONVERSION] modal factor memo (restores v57.36 quikmemo behavior).
+#              v57.37 — Issue 21J: QUIKMEMO [CONVERSION] modal premium factor governance memo per policy (documentation only) [ROLLED BACK in v57.38].
+#              v57.36 — Issue 21D Track A: ISWL-scoped quikdvdp.MDEPINT=4.50 via MPLAN allowlist; Track B1: quikclnt emit for RNA CANCEL_DATE/ADDRESS_ID NULL literals.
+#              v57.35 — Issue 28: product catalog crosswalk_ql_plan_code runtime authority; DISCHO25 catalog row; P3E MPLAN default ON.
 #              v57.34 — Release integration: Issue 21M-FU QUIKMEMO one row per MEMOKEY (production grain).
 #              v57.33 — Issue 21M: quikmemo DBF+DBT packaged in Output/quikmemo_uat_dbf/ (hygiene skip).
 #              v57.32 — Issue 21M: QUIKMEMO from PNOTE + PENSE dual-source merge (CSV + DBF/FPT).
@@ -36,6 +40,8 @@ from qla_core.quikplan_converter import convert_quikplan_to_output, prepare_quik
 from qla_core.cso_mortality_crosswalk import (
     apply_quikplan_cv_assumptions,
     default_crosswalk_path,
+    is_iswl_mplan,
+    iswl_mdepint_percent,
     load_cso_mortality_crosswalk,
 )
 from qla_core.quikplan_source_loader import load_quikplan_source_csv
@@ -66,6 +72,13 @@ from qla_core.mplan_authority import (
     write_p3f_governance_outputs,
 )
 from qla_core.lifepro_source_resolver import resolve_table_source, expected_legacy_filename, resolve_quikmemo_sources
+from qla_core.sl_benefit_governance import (
+    SL_BENEFIT_TYPE,
+    build_sl_suppression_audit_rows,
+    load_sl_table_code_cache,
+    resolve_ppbentyp_path,
+    write_sl_suppression_audit,
+)
 from qla_core.claims_emit_enhancements import (
     apply_claims_emit_enhancements,
     build_plan_metadata_lookup,
@@ -225,7 +238,7 @@ RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runne
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.35")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.39")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -271,7 +284,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.35", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.39", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -652,6 +665,32 @@ class QLAdminEnterpriseIntegrationSuite:
     def _is_preconverted_qla_client_source(self, source_df):
         cols = {str(c).strip().upper() for c in source_df.columns}
         return "MCLIENTID" in cols and "NAME_ID" not in cols and "CLIENT_ID" not in cols
+
+    def _is_active_rna_cancel_date(self, val):
+        """LifePRO RNA CANCEL_DATE: blank/0/NULL literal means active (Issue #21D B1)."""
+        n = self.normalize(val)
+        return n in ("", "0", "NULL")
+
+    def _dedupe_quikclnt_rna_source(self, source_df):
+        """One quikclnt row per NAME_ID; prefer rows with individual name fields."""
+        if "NAME_ID" not in source_df.columns:
+            return source_df
+        name_cols = (
+            "INDIVIDUAL_LAST", "INDIVIDUAL_FIRST", "KEY_NAME",
+            "LAST_NAME", "FIRST_NAME", "CLIENT_ID",
+        )
+
+        def _name_score(row):
+            return sum(
+                1 for c in name_cols
+                if c in row.index and str(row.get(c, "")).strip()
+            )
+
+        df = source_df.copy()
+        df["_name_score"] = df.apply(_name_score, axis=1)
+        df = df.sort_values("_name_score", ascending=False)
+        df = df.drop_duplicates(subset=["NAME_ID"], keep="first")
+        return df.drop(columns=["_name_score"])
 
     def _bridge_rna_quikclnt_columns(self, source_df):
         bridges = {
@@ -4235,7 +4274,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log("Initializing Migration Engine v57.35 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.39 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -4887,7 +4926,25 @@ class QLAdminEnterpriseIntegrationSuite:
 
                     # --- QUIKDVDP TRANSACTION CACHE ---
                     quikdvdp_tx_cache = {}
+                    quikridr_mplan_cache = {}
                     if t_id.lower() == "quikdvdp":
+                        try:
+                            qr_path = os.path.normpath(os.path.join(self.path_vars["Out"][0].get(), "quikridr.csv"))
+                            if os.path.exists(qr_path):
+                                qr_df = pd.read_csv(qr_path, encoding='latin1', low_memory=False, dtype=str).fillna("")
+                                qr_df.columns = [str(c).strip().upper() for c in qr_df.columns]
+                                if 'MPOLICY' in qr_df.columns and 'MPLAN' in qr_df.columns:
+                                    for _, qrow in qr_df.iterrows():
+                                        pol = self.normalize(qrow.get('MPOLICY', ''))
+                                        phase = self.normalize(qrow.get('MPHASE', '')) or "1"
+                                        if phase == "1" and pol and pol not in quikridr_mplan_cache:
+                                            quikridr_mplan_cache[pol] = self.normalize(qrow.get('MPLAN', ''))
+                                    self.log(
+                                        f"Auto-loaded quikridr MPLAN cache for quikdvdp MDEPINT "
+                                        f"({len(quikridr_mplan_cache)} policies)"
+                                    )
+                        except Exception as e:
+                            self.log(f"Warning: Failed to load quikridr MPLAN cache for quikdvdp - {e}")
                         try:
                             pactg_path = os.path.normpath(os.path.join(src_base, "PACTG_Accounting_Extract20260427.csv"))
                             if os.path.exists(pactg_path):
@@ -4994,9 +5051,27 @@ class QLAdminEnterpriseIntegrationSuite:
                         _qr_bt = source['BENEFIT_TYPE'].astype(str).str.strip().str.upper()
                         _qr_uv_removed = int((_qr_bt == 'UV').sum())
                         _qr_fv_removed = int((_qr_bt == 'FV').sum())
-                        source = source[~_qr_bt.isin(['UV', 'FV'])]
+                        _qr_sl_removed = 0
+                        if (_qr_bt == SL_BENEFIT_TYPE).any():
+                            _ppb_sl_path = resolve_ppbentyp_path(os.path.dirname(src_path))
+                            _sl_table_cache = load_sl_table_code_cache(
+                                _ppb_sl_path, normalize_fn=self.normalize
+                            )
+                            _sl_audit_rows = build_sl_suppression_audit_rows(
+                                source.loc[_qr_bt == SL_BENEFIT_TYPE],
+                                sl_table_cache=_sl_table_cache,
+                                cw_map=cw_map,
+                                normalize_fn=self.normalize,
+                            )
+                            _sl_audit_path = write_sl_suppression_audit(_sl_audit_rows)
+                            _qr_sl_removed = len(_sl_audit_rows)
+                            self.log(
+                                f"Issue #27 SL SUPPRESSION: Audited {_qr_sl_removed} rows → {_sl_audit_path}"
+                            )
+                        source = source[~_qr_bt.isin(['UV', 'FV', SL_BENEFIT_TYPE])]
                         self.log(
-                            f"QUIKRIDR BENEFIT TYPE FILTER: Removed {_qr_uv_removed + _qr_fv_removed} UV/FV rows from PPBEN source."
+                            f"QUIKRIDR BENEFIT TYPE FILTER: Removed "
+                            f"{_qr_uv_removed + _qr_fv_removed + _qr_sl_removed} UV/FV/SL rows from PPBEN source."
                         )
                         self.log(f"Remaining PPBEN rows for QUIKRIDR: {len(source)}")
                     if 'BENEFIT_SEQ' in source.columns:
@@ -5009,10 +5084,11 @@ class QLAdminEnterpriseIntegrationSuite:
                         source['BENEFIT_SEQ'] = source['BENEFIT_SEQ'].astype(str).str.strip().str.replace(".0", "", regex=False)
                         source = source[source['BENEFIT_SEQ'].isin(["1", "01"])]
                 elif t_id.lower() == "quikclnt":
-                    if 'CANCEL_DATE' in source.columns: source = source[source['CANCEL_DATE'].apply(lambda x: self.normalize(x) in ["", "0"])]
+                    if 'CANCEL_DATE' in source.columns:
+                        source = source[source['CANCEL_DATE'].apply(self._is_active_rna_cancel_date)]
                     if 'NAME_ID' in source.columns:
-                        source = source.drop_duplicates(subset=['NAME_ID', 'ADDRESS_ID'], keep='first')
                         source = self._bridge_rna_quikclnt_columns(source)
+                        source = self._dedupe_quikclnt_rna_source(source)
                         self.log("RNA column bridge applied for quikclnt (ADDR/DOB/SEX/TAX LifePRO aliases)")
                     
                     # --- NEW SOURCE DIAGNOSTICS ---
@@ -5539,6 +5615,10 @@ class QLAdminEnterpriseIntegrationSuite:
                                 row_data['MDEPOSIT'] = "0.00"
                                 row_data['MINTYTD'] = "0.00"
                                 row_data['MINTDATE'] = ""
+                            # Issue #21D Track A: ISWL-scoped MDEPINT from MPLAN allowlist (not fleet-wide).
+                            _mplan = quikridr_mplan_cache.get(tp, "")
+                            if is_iswl_mplan(_mplan):
+                                row_data['MDEPINT'] = iswl_mdepint_percent()
                         # ---------------------------
     
                         # --- QUIKAGTS ENRICHMENT ---

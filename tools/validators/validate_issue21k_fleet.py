@@ -91,8 +91,8 @@ def main() -> int:
     evidence["checks"]["dbf_row_count"] = len(dbf_rows)
     if len(csv_rows) != len(dbf_rows):
         evidence["failures"].append(f"Row count CSV {len(csv_rows)} != DBF {len(dbf_rows)}")
-    if len(dbf_rows) != 7002:
-        evidence["failures"].append(f"Expected 7002 DBF rows, got {len(dbf_rows)}")
+    if len(dbf_rows) != 6934:
+        evidence["failures"].append(f"Expected 6934 DBF rows, got {len(dbf_rows)}")
 
     csv_keys = [(r["MPOLICY"].strip(), r["MPHASE"].strip()) for r in csv_rows]
     dbf_keys = [(r["MPOLICY"], r["MPHASE"]) for r in dbf_rows]

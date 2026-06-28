@@ -1,0 +1,12 @@
+{
+  "total_sl_rows_ppbent": 68,
+  "policies_with_sl": 67,
+  "sl_rows_with_amount_insured_gt0": 55,
+  "sl_rows_dup_base_face": 47,
+  "policies_dup_base_face": 46,
+  "sl_rows_with_premium_gt0": 28,
+  "sl_rows_zero_premium": 40,
+  "sl_same_plan_as_base": 65,
+  "sl_emitted_quikridr_rows": 68,
+  "sl_with_table_code_populated": 66
+}
