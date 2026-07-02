@@ -30,10 +30,12 @@ from tools.validators.iswl_common import (
     ISWL_COI_MPLANS,
     ISWL_COVERAGE_IDS,
     ISWL_GCOI_MPLANS,
+    RATE_OUTPUT_DIR,
     ensure_phase4_out,
     ensure_pipeline_out,
     load_config,
     resolve_path,
+    validate_coi_gcoi_output_filenames,
 )
 
 SCRIPT_VERSION = "1.0"
@@ -206,6 +208,7 @@ def main() -> int:
         and src_stats["value_info_rows"] == EXPECTED_U5_ROWS
         and factor_check["qx1_qx9_blank"]
     )
+    v_gcoi_05 = not any(k in res.key_rows for k in ("QuikPlCoi", "QuikPlGcoi"))
     output_ok = EXPECTED_OUTPUT_MIN <= len(factor_rows) <= EXPECTED_OUTPUT_MAX
 
     snapshot = {
@@ -249,6 +252,11 @@ def main() -> int:
         regression_ok = False
         regression_notes.append(f"unexpected QuikGcoi plans: {non_iswl_gcoi}")
 
+    filename_ok = True
+    filename_notes: list[str] = []
+    if RATE_OUTPUT_DIR.is_dir() and any(RATE_OUTPUT_DIR.glob("*.csv")):
+        filename_ok, filename_notes = validate_coi_gcoi_output_filenames()
+
     summary = {
         "script_version": SCRIPT_VERSION,
         "blocker_count": res.blocker_count,
@@ -257,6 +265,7 @@ def main() -> int:
         "v_gcoi_02_single_parent": v_gcoi_02,
         "v_gcoi_03_schema_psegt": v_gcoi_03,
         "v_gcoi_04_value_info_qx_blank": v_gcoi_04,
+        "v_gcoi_05_no_invalid_key_tables": v_gcoi_05,
         "v_gcoi_seq100_caps": age_cap_u5,
         "v_gcoi_cap_collisions": cap_collision_u5,
         "paagerat_gcoi_in_scope": gcoi_in_scope,
@@ -267,6 +276,8 @@ def main() -> int:
         "output_in_expected_range": output_ok,
         "regression_ok": regression_ok,
         "regression_notes": regression_notes,
+        "output_filename_ok": filename_ok,
+        "output_filename_notes": filename_notes,
         "phase3_quikcoi_rows": len(coi_factor_rows),
     }
     (out_dir / "iswl_quikgcoi_reconcile_summary.json").write_text(
@@ -291,7 +302,12 @@ def main() -> int:
     print(f"V-GCOI-04 VALUE_INFO + QX1–QX9 blank: {'PASS' if v_gcoi_04 else 'FAIL'}")
     print(f"SEQ=100 caps: {age_cap_u5} age_caps, {cap_collision_u5} cap_collisions")
     print(f"Phase 3 QuikCoi rows (regression): {len(coi_factor_rows)}")
+    print(f"V-GCOI-05 no QuikPlCoi/QuikPlGcoi key emit: {'PASS' if v_gcoi_05 else 'FAIL'}")
     print(f"Non-ISWL + Phase 1–3 regression: {'PASS' if regression_ok else 'FAIL'}")
+    if RATE_OUTPUT_DIR.is_dir() and any(RATE_OUTPUT_DIR.glob("*.csv")):
+        print(f"Output filename package: {'PASS' if filename_ok else 'FAIL'}")
+        for note in filename_notes:
+            print(f"  {note}")
     print("=" * 72)
 
     errors = []
@@ -309,8 +325,12 @@ def main() -> int:
         errors.append("V-GCOI-03")
     if not v_gcoi_04:
         errors.append("V-GCOI-04")
+    if not v_gcoi_05:
+        errors.append("V-GCOI-05")
     if not regression_ok:
         errors.append("regression")
+    if not filename_ok:
+        errors.append("output_filenames")
 
     if errors:
         print("FAIL —", "; ".join(errors))

@@ -27,8 +27,10 @@ FAMILY = {"QuikGps": "GROSS_PREMIUM", "QuikCvs": "CASH_VALUE", "QuikDbs": "DEATH
 PREFIX = {"QuikGps": "GP", "QuikCvs": "CV", "QuikDbs": "DB",
           "QuikDvs": "DV", "QuikNps": "NP", "QuikTvs": "TV", "QuikCoi": "QX", "QuikGcoi": "QX"}
 KEY_TABLE = {"QuikGps": "QuikPlGp", "QuikCvs": "QuikPlCv", "QuikDbs": "QuikPlDb",
-             "QuikDvs": "QuikPlDv", "QuikNps": "QuikPlTv", "QuikTvs": "QuikPlTv",
-             "QuikCoi": "QuikPlCoi", "QuikGcoi": "QuikPlGcoi"}
+             "QuikDvs": "QuikPlDv", "QuikNps": "QuikPlTv", "QuikTvs": "QuikPlTv"}
+# QuikCoi / QuikGcoi are standalone QLAdmin factor tables (Help §7.73 / §7.93).
+# They do NOT have QuikPlxx rate-key companion tables — do not emit QuikPlCoi / QuikPlGcoi.
+COI_FACTOR_TABLES = frozenset({"QuikCoi", "QuikGcoi"})
 EXCLUDED_TYPE_CODES = frozenset({"NN", "PN", "TP", "TX", "UF", "NF", "SL"})
 
 # ---- segmentation crosswalks (business-confirmed) ----

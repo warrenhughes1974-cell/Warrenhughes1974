@@ -9,7 +9,7 @@
 
 | File | PR | Purpose |
 |------|-----|---------|
-| `rate_dbf_schema.py` | 3–4 | QuikCoi, QuikGcoi, QuikPlCoi, QuikPlGcoi schema; QX CHAR(10) |
+| `rate_dbf_schema.py` | 3–4 | QuikCoi, QuikGcoi factor schema; QX CHAR(10); no QuikPlCoi/QuikPlGcoi key mapping |
 | `rate_factor_loader.py` | 1–4 | ISWL helpers; `quikcvs_keys_by_plan`, `quikcoi_keys_by_plan`, `quikgcoi_keys_by_plan` |
 | `rate_pipeline.py` | 2–4 | BP/U6/U5 streams; paagerat status tracking |
 | `rate_validation.py` | 2–4 | TYPE_FAMILY; ISWL_BP/COI/GCOI MPLAN sets |
@@ -39,8 +39,8 @@
 | `iswl_quikcvs_reconcile.py` | 1 | V-CVS-02–04, V-X-01, V-X-03 |
 | `iswl_quikcvs_parity.py` | 1 | V-CVS-05 PDAGE parity |
 | `iswl_quikgps_reconcile.py` | 2 | V-GPS-01–04 |
-| `iswl_quikcoi_reconcile.py` | 3 | V-COI-01–07 |
-| `iswl_quikgcoi_reconcile.py` | 4 | V-GCOI-01–04 |
+| `iswl_quikcoi_reconcile.py` | 3 | V-COI-01–08; output filename package check |
+| `iswl_quikgcoi_reconcile.py` | 4 | V-GCOI-01–05; output filename package check |
 
 ---
 
@@ -142,17 +142,17 @@
 | `QuikCoi.csv` | 792 |
 | `QuikGcoi.csv` | 198 |
 
-### Companion tables (same emit)
+### Companion tables (same emit — CV/GPS/DB families only)
 
 | File | Rows |
 |------|-----:|
 | `QuikPlCv.csv` | 70 |
 | `QuikPlGp.csv` | 205 |
-| `QuikPlCoi.csv` | 8 |
-| `QuikPlGcoi.csv` | 2 |
 | `QuikPlNb.csv`, `QuikPlSt.csv`, `QuikPlUw.csv`, `QuikPlBd.csv`, `QuikPlGd.csv` | member/dimension |
 | `QuikDbs.csv`, `QuikDvs.csv`, `QuikNps.csv`, `QuikTvs.csv` | non-ISWL fleet tables |
 | `rate_csv_manifest.csv` | emit manifest |
+
+**Removed from package (2026-07-02):** `QuikPlCoi.csv`, `QuikPlGcoi.csv` — quarantined under `output/quarantine_invalid_artifacts/`.
 
 ---
 

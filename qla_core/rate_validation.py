@@ -102,6 +102,8 @@ def validate(grids, factor_rows_by_table, fmt_issues, key_rows_by_table,
     # ---- key-table gates ----
     factor_keys_by_keytable = collections.defaultdict(set)
     for table, grid in grids.items():
+        if table not in S.KEY_TABLE:
+            continue
         kt = S.KEY_TABLE[table]
         for (plan, age, cntl, g, u, b, c, st, eff) in grid.keys():
             factor_keys_by_keytable[kt].add((plan, g, u, b, c, st, eff))

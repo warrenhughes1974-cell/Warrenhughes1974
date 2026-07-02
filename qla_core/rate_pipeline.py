@@ -177,6 +177,8 @@ def run(config_path, repo_root):
         res.fmt_issues.extend(fi)
 
     for table, grid in res.grids.items():
+        if table not in S.KEY_TABLE:
+            continue
         kt, rows, dep = K.build_key_rows(table, grid, assumptions)
         res.key_rows.setdefault(kt, [])
         existing = {tuple(r[f] for f in KEY_FIELDS) for r in res.key_rows[kt]}

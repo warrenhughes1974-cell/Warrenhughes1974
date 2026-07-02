@@ -61,7 +61,21 @@ Required files — **all present:**
 | QuikCoi.csv | `QLA_Migration/Output/rates/QuikCoi.csv` |
 | QuikGcoi.csv | `QLA_Migration/Output/rates/QuikGcoi.csv` |
 
-Additional companion CSVs in same folder (key/member tables): `QuikPlCv.csv`, `QuikPlGp.csv`, `QuikPlCoi.csv`, `QuikPlGcoi.csv`, etc. — see `rate_csv_manifest.csv`.
+Additional companion CSVs in same folder (key/member tables for CV/GPS/DB families only): `QuikPlCv.csv`, `QuikPlGp.csv`, etc. — see `rate_csv_manifest.csv`.
+
+**Not valid deliverables:** `QuikPlCoi.csv`, `QuikPlGcoi.csv` — quarantined 2026-07-02 (see `output/quarantine_invalid_artifacts/`). COI/GCOI use factor tables `QuikCoi.csv` / `QuikGcoi.csv` only per QLAdmin Help §7.73 / §7.93.
+
+---
+
+## C1. Output Naming Correction (2026-07-02)
+
+| Item | Detail |
+|------|--------|
+| **Defect** | Pipeline emitted invalid key-table files `QuikPlCoi.csv`, `QuikPlGcoi.csv` |
+| **Cause** | `KEY_TABLE` in `rate_dbf_schema.py` mapped QuikCoi/QuikGcoi to QuikPl* companions (CV/GPS pattern incorrectly generalized) |
+| **Fix** | Removed COI/GCOI from `KEY_TABLE`; skip key-row emit for those factor tables |
+| **Validation** | V-COI-08 / V-GCOI-05 + `validate_coi_gcoi_output_filenames()` |
+| **Row counts** | Unchanged — QuikCoi 792, QuikGcoi 198 |
 
 ---
 

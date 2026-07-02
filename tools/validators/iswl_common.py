@@ -112,3 +112,29 @@ def ensure_issue33_baselines_out() -> Path:
 def ensure_issue32_baselines_out() -> Path:
     (ISSUE32_OUTPUT / "baselines").mkdir(parents=True, exist_ok=True)
     return ISSUE32_OUTPUT / "baselines"
+
+
+RATE_OUTPUT_DIR = PROJECT_ROOT / "QLA_Migration" / "Output" / "rates"
+FORBIDDEN_COI_GCOI_KEY_FILES = ("QuikPlCoi.csv", "QuikPlGcoi.csv")
+REQUIRED_COI_GCOI_FACTOR_FILES = ("QuikCoi.csv", "QuikGcoi.csv")
+
+
+def validate_coi_gcoi_output_filenames() -> tuple[bool, list[str]]:
+    """Assert deliverable COI/GCOI factor filenames; forbid invalid QuikPl* companions."""
+    notes: list[str] = []
+    ok = True
+    for name in REQUIRED_COI_GCOI_FACTOR_FILES:
+        if not (RATE_OUTPUT_DIR / name).is_file():
+            ok = False
+            notes.append(f"missing required output: {name}")
+    for name in FORBIDDEN_COI_GCOI_KEY_FILES:
+        if (RATE_OUTPUT_DIR / name).is_file():
+            ok = False
+            notes.append(f"forbidden artifact present: {name}")
+    manifest = RATE_OUTPUT_DIR / "rate_csv_manifest.csv"
+    if manifest.is_file():
+        text = manifest.read_text(encoding="utf-8")
+        if "QuikPlCoi" in text or "QuikPlGcoi" in text:
+            ok = False
+            notes.append("rate_csv_manifest references QuikPlCoi or QuikPlGcoi")
+    return ok, notes

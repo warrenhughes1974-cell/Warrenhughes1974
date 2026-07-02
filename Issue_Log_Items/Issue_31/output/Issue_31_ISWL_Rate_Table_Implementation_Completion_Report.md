@@ -118,6 +118,10 @@ Required factor CSVs confirmed present. Emit used current pipeline implementatio
 
 Detail: `Issue_Log_Items/Issue_31/output/Issue_31_ISWL_Rate_Table_CSV_Emit_Report.md`
 
+### Output naming correction (2026-07-02)
+
+Invalid artifacts `QuikPlCoi.csv` / `QuikPlGcoi.csv` removed from the load package. Correct COI/GCOI deliverables remain `QuikCoi.csv` (792 rows) and `QuikGcoi.csv` (198 rows). Factor values unchanged; only key-table naming/emit path corrected.
+
 ---
 
 ## Final Row Counts

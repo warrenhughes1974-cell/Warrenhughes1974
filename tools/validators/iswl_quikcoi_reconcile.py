@@ -28,10 +28,12 @@ from tools.validators.iswl_common import (
     COI_BASELINE_PATH,
     ISWL_COI_MPLANS,
     ISWL_COVERAGE_IDS,
+    RATE_OUTPUT_DIR,
     ensure_phase3_out,
     ensure_pipeline_out,
     load_config,
     resolve_path,
+    validate_coi_gcoi_output_filenames,
 )
 
 SCRIPT_VERSION = "1.0"
@@ -205,6 +207,7 @@ def main() -> int:
     v_coi_05 = factor_check["value_info_populated"] and src_stats["value_info_rows"] == EXPECTED_U6_ROWS
     v_coi_06 = factor_check["qx1_qx9_blank"]
     v_coi_07 = True  # audited via age_cap / cap_collisions counts in summary
+    v_coi_08 = not any(k in res.key_rows for k in ("QuikPlCoi", "QuikPlGcoi"))
     output_ok = EXPECTED_OUTPUT_MIN <= len(factor_rows) <= EXPECTED_OUTPUT_MAX
 
     snapshot = {
@@ -234,6 +237,11 @@ def main() -> int:
         regression_ok = False
         regression_notes.append(f"unexpected QuikCoi plans: {non_iswl_coi}")
 
+    filename_ok = True
+    filename_notes: list[str] = []
+    if RATE_OUTPUT_DIR.is_dir() and any(RATE_OUTPUT_DIR.glob("*.csv")):
+        filename_ok, filename_notes = validate_coi_gcoi_output_filenames()
+
     summary = {
         "script_version": SCRIPT_VERSION,
         "blocker_count": res.blocker_count,
@@ -246,6 +254,7 @@ def main() -> int:
         "v_coi_06_qx1_blank": v_coi_06,
         "v_coi_07_seq100_caps": age_cap_u6,
         "v_coi_07_cap_collisions": cap_collision_u6,
+        "v_coi_08_no_invalid_key_tables": v_coi_08,
         "paagerat_coi_in_scope": coi_in_scope,
         "quikcoi_factor_rows": len(factor_rows),
         "iswl_coi_keys_by_mplan": coi_keys,
@@ -254,6 +263,8 @@ def main() -> int:
         "output_in_expected_range": output_ok,
         "regression_ok": regression_ok,
         "regression_notes": regression_notes,
+        "output_filename_ok": filename_ok,
+        "output_filename_notes": filename_notes,
     }
     (out_dir / "iswl_quikcoi_reconcile_summary.json").write_text(
         json.dumps(summary, indent=2), encoding="utf-8")
@@ -279,7 +290,12 @@ def main() -> int:
     print(f"V-COI-05 VALUE_INFO: {'PASS' if v_coi_05 else 'FAIL'}")
     print(f"V-COI-06 QX1–QX9 blank: {'PASS' if v_coi_06 else 'FAIL'}")
     print(f"V-COI-07 SEQ=100 caps: {age_cap_u6} age_caps, {cap_collision_u6} cap_collisions")
+    print(f"V-COI-08 no QuikPlCoi/QuikPlGcoi key emit: {'PASS' if v_coi_08 else 'FAIL'}")
     print(f"Non-ISWL regression: {'PASS' if regression_ok else 'FAIL'}")
+    if RATE_OUTPUT_DIR.is_dir() and any(RATE_OUTPUT_DIR.glob("*.csv")):
+        print(f"Output filename package: {'PASS' if filename_ok else 'FAIL'}")
+        for note in filename_notes:
+            print(f"  {note}")
     print("=" * 72)
 
     errors = []
@@ -299,8 +315,12 @@ def main() -> int:
         errors.append("V-COI-05")
     if not v_coi_06:
         errors.append("V-COI-06")
+    if not v_coi_08:
+        errors.append("V-COI-08")
     if not regression_ok:
         errors.append("regression")
+    if not filename_ok:
+        errors.append("output_filenames")
 
     if errors:
         print("FAIL —", "; ".join(errors))
