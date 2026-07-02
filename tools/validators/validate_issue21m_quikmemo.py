@@ -69,7 +69,7 @@ REGRESSION_BASELINE = {
     "quikprmh.csv": 205577,
     "quikplan.csv": 141,
     "quikclid.csv": 46753,
-    "quikclnt.csv": 13846,
+    "quikclnt.csv": 13514,  # v57.36 Issue #21D B1: RNA dedupe (-344 dup rows, +12 B1 recovery; was 13846)
 }
 
 
