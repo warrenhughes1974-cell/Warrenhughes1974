@@ -1,9 +1,10 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.41
+# Version:     v57.42
 # Date:        2026-07-02
-# Change Note: v57.41 — Full UAT batch integration: ISWL rate tables (Issues #31–33 QuikUint/QuikIssc via R5),
+# Change Note: v57.42 — Enterprise UI polish: status strip, summary cards, collapsible diagnostics (no logic changes).
+#              v57.41 — Full UAT batch integration: ISWL rate tables (Issues #31–33 QuikUint/QuikIssc via R5),
 #              QuikLoan batch emit (#32), QuikIsrr partial-surrender package (#34 PR-7 append to quikclms/clmp).
 #              UAT launcher enables all phases via run_converter.bat env flags.
 #              v57.40 — Issue #32: QuikLoan v1.2 mapping (PLOAN→QuikLoan; MLOANACCR=0; AS_PERCENT; MLOANINTX plan lookup + default A).
@@ -244,11 +245,17 @@ QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "qui
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.41")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.42")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
         self.bg_card = "#FFFFFF"
+        self.ui_strip_bg = "#E2E8F0"
+        self.ui_strip_border = "#CBD5E1"
+        self.ui_status_ok = "#059669"
+        self.ui_status_warn = "#D97706"
+        self.ui_status_err = "#DC2626"
+        self.ui_status_muted = "#64748B"
         self.accent = "#0F172A"
         self.btn_action = "#2563EB"
         self.btn_batch = "#059669"
@@ -285,17 +292,20 @@ class QLAdminEnterpriseIntegrationSuite:
         self._last_product_setup_result = None
         self._last_output_validation_result = None
         self._last_final_validation_result = None
+        self._ui_last_run_at = None
+        self._ui_last_validation_at = None
+        self._ui_run_state = "Ready"
         self.setup_ui()
 
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.41", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.42", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
-        
-        card = tk.LabelFrame(self.root, text=" System Configuration & Path Mapping ", bg=self.bg_card, fg=self.accent, padx=20, pady=15, font=("Segoe UI", 10, "bold"))
+
+        card = tk.LabelFrame(self.root, text=" System Configuration ", bg=self.bg_card, fg=self.accent, padx=20, pady=15, font=("Segoe UI", 10, "bold"))
         card.pack(padx=30, fill="x", pady=5)
 
         base_dir = self._repo_root()
@@ -349,21 +359,28 @@ class QLAdminEnterpriseIntegrationSuite:
             "Out": [tk.StringVar(value=default_out), "folder", "Output Directory:"]
         }
 
+        self.path_display_vars = {}
+        self._path_entries = {}
         for i, (key, settings) in enumerate(self.path_vars.items()):
             var, mode, label_text = settings
+            disp = tk.StringVar(value=self._ui_short_path(var.get()))
+            self.path_display_vars[key] = disp
             tk.Label(card, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(row=i, column=0, sticky="w", pady=4)
-            tk.Entry(card, textvariable=var, width=95, bg="#F8FAFC", fg=self.accent, borderwidth=1).grid(row=i, column=1, padx=15)
+            entry = tk.Entry(card, textvariable=disp, width=72, bg="#F8FAFC", fg=self.accent, borderwidth=1, relief="solid")
+            entry.grid(row=i, column=1, padx=15, sticky="ew")
+            self._path_entries[key] = entry
+            self._ui_attach_tooltip(entry, lambda k=key: self.path_vars[k][0].get())
             tk.Button(card, text="Browse", width=10, command=lambda v=var, m=mode, k=key: self.browse(v, m, k)).grid(row=i, column=2)
+        card.grid_columnconfigure(1, weight=1)
 
         controls = tk.Frame(self.root, bg=self.bg_main)
         controls.pack(pady=10, fill="x", padx=30)
+        tk.Label(controls, text="Conversion Target:", bg=self.bg_main, fg=self.text_color, font=("Segoe UI", 9, "bold")).pack(side="left", padx=(0, 6))
         self.table_var = tk.StringVar()
         self.table_dropdown = ttk.Combobox(controls, textvariable=self.table_var, values=[k for k in self.TABLE_SCHEMAS.keys() if k.startswith("quik")], width=45, state="readonly")
-        self.table_dropdown.pack(side="left", padx=10)
-        
+        self.table_dropdown.pack(side="left", padx=6)
         self.table_dropdown.bind("<<ComboboxSelected>>", self.on_table_select)
-        
-        tk.Button(controls, text="FULL PROJECT BACKUP", bg=self.btn_backup, fg="white", width=40, command=self.create_snapshot).pack(side="right", padx=10)
+        tk.Button(controls, text="FULL PROJECT BACKUP", bg=self.btn_backup, fg="white", width=24, command=self.create_snapshot).pack(side="right", padx=10)
 
         self.lbl_timer = tk.Label(self.root, text="Elapsed: 00:00:00", bg=self.bg_main, fg=self.accent, font=("Consolas", 10, "bold"))
         self.lbl_timer.pack()
@@ -379,28 +396,255 @@ class QLAdminEnterpriseIntegrationSuite:
         self._progress_plan = None
         self._run_start_time = None
 
-        run_controls = tk.LabelFrame(self.root, text=" Run Controls ", bg=self.bg_main, fg=self.accent, font=("Segoe UI", 10, "bold"), padx=10, pady=8)
-        run_controls.pack(padx=30, fill="x", pady=(0, 4))
+        run_controls = tk.LabelFrame(self.root, text=" Run Controls ", bg=self.bg_main, fg=self.accent, font=("Segoe UI", 10, "bold"), padx=12, pady=10)
+        run_controls.pack(padx=30, fill="x", pady=(0, 6))
         btn_frame = tk.Frame(run_controls, bg=self.bg_main)
-        btn_frame.pack()
-        tk.Button(btn_frame, text="RUN SINGLE TABLE CONVERSION", bg=self.btn_action, fg="white", width=33, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(False)).pack(side="left", padx=10)
-        tk.Button(btn_frame, text="EXECUTE FULL BATCH MIGRATION", bg=self.btn_batch, fg="white", width=33, height=2, font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(True)).pack(side="left", padx=10)
-        tk.Button(btn_frame, text="GENERATE RATE TABLES", bg="#0D9488", fg="white", width=28, height=2, font=("Segoe UI", 9, "bold"), command=self.start_rate_loader_thread).pack(side="left", padx=10)
-        tk.Button(btn_frame, text="RUN FINAL OUTPUT VALIDATION", bg="#7C2D12", fg="white", width=30, height=2, font=("Segoe UI", 9, "bold"), command=self.start_final_validation_thread).pack(side="left", padx=10)
+        btn_frame.pack(fill="x")
+        btn_specs = [
+            ("RUN SINGLE TABLE CONVERSION", self.btn_action, lambda: self.start_thread(False)),
+            ("EXECUTE FULL BATCH MIGRATION", self.btn_batch, lambda: self.start_thread(True)),
+            ("GENERATE RATE TABLES", "#0D9488", self.start_rate_loader_thread),
+            ("RUN FINAL OUTPUT VALIDATION", "#7C2D12", self.start_final_validation_thread),
+        ]
+        for idx, (label, color, cmd) in enumerate(btn_specs):
+            tk.Button(
+                btn_frame, text=label, bg=color, fg="white", width=30, height=2,
+                font=("Segoe UI", 9, "bold"), command=cmd,
+            ).grid(row=0, column=idx, padx=8, pady=4, sticky="ew")
+            btn_frame.grid_columnconfigure(idx, weight=1)
 
         self._setup_product_setup_panel()
         self._setup_rate_loader_panel()
-        self._setup_governance_summary_panel()
+        self._setup_diagnostics_panel()
 
-        self.console = scrolledtext.ScrolledText(self.root, height=16, bg="#F8FAFC", fg="#1E293B", font=("Consolas", 9))
-        self.console.pack(padx=30, pady=10, fill="both", expand=True)
+        log_frame = tk.LabelFrame(self.root, text=" Activity Log ", bg=self.bg_main, fg=self.accent, font=("Segoe UI", 10, "bold"), padx=8, pady=6)
+        log_frame.pack(padx=30, pady=(6, 10), fill="both", expand=True)
+        self.console = scrolledtext.ScrolledText(log_frame, height=14, bg="#F8FAFC", fg="#1E293B", font=("Consolas", 9))
+        self.console.pack(fill="both", expand=True)
         self._refresh_governance_visibility()
         self._refresh_product_setup_visibility()
         self._refresh_rate_loader_visibility()
+        self._ui_update_status_strip()
 
     def log(self, msg):
         self.console.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] {msg}\n")
         self.console.see(tk.END)
+
+    def _ui_short_path(self, path, max_len=58):
+        if not path:
+            return ""
+        norm = os.path.normpath(str(path))
+        if len(norm) <= max_len:
+            return norm
+        tail = os.path.basename(norm)
+        if len(tail) + 6 <= max_len:
+            return f"...{os.sep}{tail}" if len(norm) > len(tail) else tail
+        return f"...{norm[-(max_len - 3):]}"
+
+    def _ui_attach_tooltip(self, widget, text_getter):
+        tip = {"win": None}
+
+        def show(_event=None):
+            text = text_getter() if callable(text_getter) else str(text_getter or "")
+            if not text:
+                return
+            if tip["win"]:
+                tip["win"].destroy()
+            tip["win"] = tw = tk.Toplevel(widget)
+            tw.wm_overrideredirect(True)
+            tw.wm_geometry(f"+{widget.winfo_rootx() + 12}+{widget.winfo_rooty() + widget.winfo_height() + 4}")
+            tk.Label(
+                tw, text=text, bg="#1E293B", fg="#F8FAFC",
+                font=("Segoe UI", 8), padx=8, pady=4, justify="left",
+            ).pack()
+
+        def hide(_event=None):
+            if tip["win"]:
+                tip["win"].destroy()
+                tip["win"] = None
+
+        widget.bind("<Enter>", show)
+        widget.bind("<Leave>", hide)
+
+    def _ui_sync_path_display(self, key=None):
+        if not hasattr(self, "path_display_vars"):
+            return
+        keys = [key] if key else list(self.path_display_vars.keys())
+        for k in keys:
+            full = self.path_vars[k][0].get() if k in self.path_vars else ""
+            self.path_display_vars[k].set(self._ui_short_path(full))
+
+    def _ui_production_output_label(self, summary=None):
+        prod_flag = self.CLAIMS_ORCHESTRATION.get("production_dbf_flag", "N")
+        if prod_flag == "Y":
+            return "Enabled"
+        if summary and summary.get("run_mode") == "PRODUCTION":
+            auth = self.CLAIMS_ORCHESTRATION.get("production_authorization_flag", "N")
+            if auth == "Y":
+                return "Authorized (Not Executed)"
+        return "Disabled"
+
+    def _ui_readiness_label(self, summary):
+        status = (summary or {}).get("threshold_status", "Awaiting Data")
+        mapping = {
+            "NOT READY": "Pending Review",
+            "NOT YET GENERATED": "Awaiting Data",
+            "UAT REVIEW IN PROGRESS": "In Progress",
+        }
+        return mapping.get(status, status)
+
+    def _ui_has_active_blocker(self, summary):
+        if not summary:
+            return False
+        if summary.get("threshold_status") == "NOT READY":
+            return True
+        if summary.get("top_blocker"):
+            return True
+        return False
+
+    def _ui_project_label(self):
+        cfg = self.CLAIMS_ORCHESTRATION
+        go_live = cfg.get("go_live_target", "2026-09-01")
+        return f"LifePRO → QLAdmin  |  ISWL UAT  |  Go-Live {go_live}"
+
+    def _ui_source_package_status(self):
+        src = ""
+        if hasattr(self, "path_vars"):
+            src = self.path_vars.get("Src", [None])[0].get().strip()
+        if not src:
+            src_dir = self._migration_source_dir()
+            if os.path.isdir(src_dir):
+                csv_count = sum(1 for f in os.listdir(src_dir) if f.lower().endswith(".csv"))
+                return f"Source folder ready ({csv_count} CSV files)" if csv_count else "Source folder empty"
+            return "Source not configured"
+        if os.path.isfile(src):
+            return f"Ready — {os.path.basename(src)}"
+        return "Source file missing"
+
+    def _ui_output_readiness_label(self):
+        out_dir = self._migration_output_dir()
+        if hasattr(self, "path_vars"):
+            custom = self.path_vars.get("Out", [None])[0].get().strip()
+            if custom:
+                out_dir = custom
+        if not out_dir or not os.path.isdir(out_dir):
+            return "Output folder not found"
+        table_csvs = [
+            f for f in os.listdir(out_dir)
+            if f.lower().endswith(".csv") and f.lower().startswith("quik")
+        ]
+        rates_dir = os.path.join(out_dir, "rates")
+        rate_count = 0
+        if os.path.isdir(rates_dir):
+            rate_count = sum(1 for f in os.listdir(rates_dir) if f.lower().endswith(".csv"))
+        if not table_csvs:
+            return "Awaiting conversion run"
+        label = f"{len(table_csvs)} table CSV(s) ready"
+        if rate_count:
+            label += f" + {rate_count} rate table(s)"
+        return label
+
+    def _ui_validation_status_label(self):
+        final = getattr(self, "_last_final_validation_result", None) or {}
+        if final.get("status"):
+            return str(final.get("status"))
+        batch_val = getattr(self, "_last_output_validation_result", None) or {}
+        if batch_val.get("status"):
+            status = batch_val.get("status")
+            if status == "PASS":
+                return "Batch validation PASS"
+            if status == "FAIL":
+                return f"Batch validation FAIL ({batch_val.get('errors', 0)} errors)"
+            return str(status)
+        return "Not yet validated"
+
+    def _ui_format_timestamp(self, ts):
+        return ts if ts else "—"
+
+    def _ui_run_state_color(self):
+        state = getattr(self, "_ui_run_state", "Ready")
+        if state == "Success":
+            return self.ui_status_ok
+        if state == "Failed":
+            return self.ui_status_err
+        if state == "Running":
+            return self.ui_status_warn
+        return self.accent
+
+    def _ui_record_run_timestamp(self, state):
+        self._ui_last_run_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self._ui_run_state = state
+        self._ui_update_status_strip()
+
+    def _ui_record_validation_timestamp(self):
+        self._ui_last_validation_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self._ui_update_status_strip()
+
+    def _ui_open_output_folder(self):
+        out_dir = self.path_vars["Out"][0].get().strip() if hasattr(self, "path_vars") else ""
+        if not out_dir or not os.path.isdir(out_dir):
+            out_dir = self._migration_output_dir()
+        if not os.path.isdir(out_dir):
+            messagebox.showwarning("Open Output", f"Output folder not found:\n{out_dir}")
+            return
+        try:
+            os.startfile(out_dir)  # noqa: S606 — Windows operator folder open
+        except OSError as exc:
+            messagebox.showerror("Open Output", f"Could not open folder:\n{out_dir}\n\n{exc}")
+
+    def _ui_open_reports_folder(self):
+        reports = self._reports_dir()
+        os.makedirs(reports, exist_ok=True)
+        try:
+            os.startfile(reports)  # noqa: S606
+        except OSError as exc:
+            messagebox.showerror("Open Reports", f"Could not open folder:\n{reports}\n\n{exc}")
+
+    def _ui_update_status_strip(self, summary=None):
+        if summary is None:
+            summary = self._build_governance_summary()
+        env = summary.get("run_mode", self.RUN_MODE)
+        prod_out = self._ui_production_output_label(summary)
+        readiness = self._ui_readiness_label(summary)
+        go_live = summary.get("go_live_target", self.CLAIMS_ORCHESTRATION.get("go_live_target", ""))
+        if hasattr(self, "env_status_var"):
+            self.env_status_var.set(f"Environment: {env}")
+        if hasattr(self, "prod_output_status_var"):
+            self.prod_output_status_var.set(f"Production Output: {prod_out}")
+        if hasattr(self, "readiness_status_var"):
+            self.readiness_status_var.set(f"Readiness Review: {readiness}")
+        if hasattr(self, "golive_status_var"):
+            self.golive_status_var.set(f"Go-Live Target: {go_live}")
+        if hasattr(self, "dash_project_var"):
+            self.dash_project_var.set(self._ui_project_label())
+        if hasattr(self, "dash_source_var"):
+            self.dash_source_var.set(self._ui_source_package_status())
+        if hasattr(self, "dash_output_var"):
+            self.dash_output_var.set(self._ui_output_readiness_label())
+        if hasattr(self, "dash_validation_var"):
+            self.dash_validation_var.set(self._ui_validation_status_label())
+        if hasattr(self, "dash_last_run_var"):
+            self.dash_last_run_var.set(self._ui_format_timestamp(self._ui_last_run_at))
+        if hasattr(self, "dash_last_validation_var"):
+            self.dash_last_validation_var.set(self._ui_format_timestamp(self._ui_last_validation_at))
+        if hasattr(self, "dash_run_state_var"):
+            self.dash_run_state_var.set(getattr(self, "_ui_run_state", "Ready"))
+        if hasattr(self, "dash_run_state_badge"):
+            self.dash_run_state_badge.config(fg=self._ui_run_state_color())
+        if self._ui_has_active_blocker(summary):
+            if hasattr(self, "gov_alert_badge"):
+                self.gov_alert_badge.config(
+                    text="Review item pending — open Advanced / Diagnostics",
+                    fg=self.ui_status_warn,
+                )
+        elif hasattr(self, "gov_alert_badge"):
+            self.gov_alert_badge.config(text="", fg=self.ui_status_muted)
+
+    def _ui_toggle_diagnostics(self):
+        if self.diagnostics_visible.get():
+            self.diagnostics_body.pack(fill="x", pady=(4, 0))
+        else:
+            self.diagnostics_body.pack_forget()
 
     PATH_EXCLUDED_DIR_MARKERS = (
         "expectred_outputs", "expected_outputs", "copy", "old", "backup", "archive",
@@ -1797,33 +2041,139 @@ class QLAdminEnterpriseIntegrationSuite:
         return dbf_result
 
     def _setup_uat_status_banner(self):
-        self.gov_banner_frame = tk.Frame(self.root, bg="#FEF3C7", padx=12, pady=8)
-        self.gov_banner_frame.pack(fill="x", padx=30, pady=(0, 8))
-        self.gov_banner_label = tk.Label(
-            self.gov_banner_frame,
-            text="",
-            bg="#FEF3C7",
-            fg="#92400E",
-            font=("Segoe UI", 10, "bold"),
-            justify="left",
-            anchor="w",
+        self.gov_banner_frame = tk.LabelFrame(
+            self.root, text=" Operator Dashboard ", bg=self.bg_card, fg=self.accent,
+            padx=16, pady=12, font=("Segoe UI", 10, "bold"),
         )
-        self.gov_banner_label.pack(fill="x")
+        self.gov_banner_frame.pack(fill="x", padx=30, pady=(0, 8))
 
-    def _setup_governance_summary_panel(self):
+        title_row = tk.Frame(self.gov_banner_frame, bg=self.bg_card)
+        title_row.pack(fill="x")
+        tk.Label(
+            title_row, text="QLAdmin Enterprise Data Integration Suite",
+            bg=self.bg_card, fg=self.accent, font=("Segoe UI", 11, "bold"), anchor="w",
+        ).pack(side="left")
+        tk.Label(
+            title_row, text="v57.42", bg=self.bg_card, fg=self.ui_status_muted,
+            font=("Segoe UI", 10), anchor="e",
+        ).pack(side="right")
+
+        self.dash_project_var = tk.StringVar(value=self._ui_project_label())
+        tk.Label(
+            self.gov_banner_frame, textvariable=self.dash_project_var, bg=self.bg_card,
+            fg=self.text_color, font=("Segoe UI", 9), anchor="w",
+        ).pack(fill="x", pady=(2, 8))
+
+        kpi = tk.Frame(self.gov_banner_frame, bg="#F8FAFC", padx=12, pady=10,
+                       highlightbackground=self.ui_strip_border, highlightthickness=1)
+        kpi.pack(fill="x")
+        self.dash_source_var = tk.StringVar(value="Source: —")
+        self.dash_output_var = tk.StringVar(value="Output: —")
+        self.dash_validation_var = tk.StringVar(value="Validation: —")
+        self.dash_run_state_var = tk.StringVar(value="Ready")
+        kpi_fields = [
+            ("Source Package", self.dash_source_var),
+            ("Output Readiness", self.dash_output_var),
+            ("Validation Status", self.dash_validation_var),
+            ("Run State", self.dash_run_state_var),
+        ]
+        for idx, (label_text, var) in enumerate(kpi_fields):
+            row, col = divmod(idx, 2)
+            tk.Label(kpi, text=f"{label_text}:", bg="#F8FAFC", fg=self.ui_status_muted,
+                     font=("Segoe UI", 9)).grid(row=row, column=col * 2, sticky="w", padx=(0, 6), pady=2)
+            value_lbl = tk.Label(kpi, textvariable=var, bg="#F8FAFC", fg=self.accent,
+                                 font=("Segoe UI", 9, "bold"), anchor="w")
+            value_lbl.grid(row=row, column=col * 2 + 1, sticky="w", padx=(0, 24), pady=2)
+            if label_text == "Run State":
+                self.dash_run_state_badge = value_lbl
+
+        meta = tk.Frame(self.gov_banner_frame, bg=self.bg_card)
+        meta.pack(fill="x", pady=(8, 0))
+        self.dash_last_run_var = tk.StringVar(value="—")
+        self.dash_last_validation_var = tk.StringVar(value="—")
+        self.env_status_var = tk.StringVar(value=f"Environment: {self.RUN_MODE}")
+        self.prod_output_status_var = tk.StringVar(value="Production Output: Disabled")
+        self.readiness_status_var = tk.StringVar(value="Readiness Review: Awaiting Data")
+        self.golive_status_var = tk.StringVar(value="Go-Live Target: —")
+        for idx, var in enumerate((
+            self.dash_last_run_var, self.dash_last_validation_var,
+            self.env_status_var, self.readiness_status_var,
+        )):
+            prefix = ("Last Run:", "Last Validation:", "", "")[idx]
+            if prefix:
+                tk.Label(meta, text=prefix, bg=self.bg_card, fg=self.ui_status_muted,
+                         font=("Segoe UI", 8)).grid(row=0, column=idx * 2, sticky="w", padx=(0, 4))
+                tk.Label(meta, textvariable=var, bg=self.bg_card, fg=self.accent,
+                         font=("Segoe UI", 8, "bold")).grid(row=0, column=idx * 2 + 1, sticky="w", padx=(0, 16))
+            else:
+                tk.Label(meta, textvariable=var, bg=self.bg_card, fg=self.text_color,
+                         font=("Segoe UI", 8)).grid(row=0, column=idx * 2, sticky="w", padx=(0, 16))
+
+        actions = tk.Frame(self.gov_banner_frame, bg=self.bg_card)
+        actions.pack(fill="x", pady=(10, 0))
+        tk.Button(
+            actions, text="RUN FULL BATCH", bg=self.btn_batch, fg="white", width=18, height=1,
+            font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(True),
+        ).pack(side="left", padx=(0, 8))
+        tk.Button(
+            actions, text="VALIDATE OUTPUT", bg="#7C2D12", fg="white", width=18, height=1,
+            font=("Segoe UI", 9, "bold"), command=self.start_final_validation_thread,
+        ).pack(side="left", padx=(0, 8))
+        tk.Button(
+            actions, text="OPEN OUTPUT", bg=self.btn_action, fg="white", width=16, height=1,
+            font=("Segoe UI", 9, "bold"), command=self._ui_open_output_folder,
+        ).pack(side="left", padx=(0, 8))
+        tk.Button(
+            actions, text="OPEN REPORTS", bg="#475569", fg="white", width=16, height=1,
+            font=("Segoe UI", 9, "bold"), command=self._ui_open_reports_folder,
+        ).pack(side="left", padx=(0, 8))
+
+        self.gov_alert_badge = tk.Label(
+            self.gov_banner_frame, text="", bg=self.bg_card,
+            fg=self.ui_status_muted, font=("Segoe UI", 8), anchor="w",
+        )
+        self.gov_alert_badge.pack(fill="x", pady=(8, 0))
+
+    def _setup_diagnostics_panel(self):
         panel = tk.LabelFrame(
             self.root,
-            text=" Claims UAT Readiness & Handoff (read-only) ",
+            text=" Advanced / Diagnostics ",
             bg=self.bg_card,
             fg=self.accent,
             padx=16,
-            pady=10,
+            pady=8,
             font=("Segoe UI", 10, "bold"),
         )
         panel.pack(padx=30, fill="x", pady=(0, 6))
 
+        header = tk.Frame(panel, bg=self.bg_card)
+        header.pack(fill="x")
+        self.diagnostics_visible = tk.BooleanVar(value=False)
+        tk.Checkbutton(
+            header, text="Show Advanced / Diagnostics", variable=self.diagnostics_visible,
+            bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9),
+            command=self._ui_toggle_diagnostics,
+        ).pack(side="left")
+        tk.Button(
+            header, text="Refresh All Status", width=18,
+            command=self._refresh_all_status_panels,
+        ).pack(side="right", padx=(0, 4))
+
+        self.diagnostics_body = tk.Frame(panel, bg=self.bg_card)
+        self.diag_notebook = ttk.Notebook(self.diagnostics_body)
+        self.diag_notebook.pack(fill="x", pady=(6, 0))
+
+        claims_tab = tk.Frame(self.diag_notebook, bg=self.bg_card)
+        product_tab = tk.Frame(self.diag_notebook, bg=self.bg_card)
+        rate_tab = tk.Frame(self.diag_notebook, bg=self.bg_card)
+        system_tab = tk.Frame(self.diag_notebook, bg=self.bg_card)
+        self.diag_notebook.add(claims_tab, text="Claims UAT")
+        self.diag_notebook.add(product_tab, text="Product Setup")
+        self.diag_notebook.add(rate_tab, text="Rate Tables")
+        self.diag_notebook.add(system_tab, text="System Flags")
+
         self.gov_metric_vars = {}
-        metrics = [
+        claims_metrics = [
             ("uat_claims", "UAT Candidate Claims:"),
             ("uat_payments", "UAT Candidate Payments:"),
             ("deferred_claims", "Deferred Claims:"),
@@ -1843,41 +2193,103 @@ class QLAdminEnterpriseIntegrationSuite:
             ("payments_held_missing_policy", "Payments Held For Missing Policy:"),
             ("cross_table_validation_report", "Cross-Table Validation Report Path:"),
         ]
-        grid = tk.Frame(panel, bg=self.bg_card)
-        grid.pack(fill="x")
-        for idx, (key, label_text) in enumerate(metrics):
+        claims_grid = tk.Frame(claims_tab, bg=self.bg_card)
+        claims_grid.pack(fill="x", padx=4, pady=4)
+        for idx, (key, label_text) in enumerate(claims_metrics):
             row, col = divmod(idx, 2)
-            tk.Label(grid, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(
+            tk.Label(claims_grid, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(
                 row=row, column=col * 2, sticky="w", padx=(0, 6), pady=2,
             )
             var = tk.StringVar(value="NOT YET GENERATED")
             self.gov_metric_vars[key] = var
-            tk.Label(grid, textvariable=var, bg=self.bg_card, fg=self.accent, font=("Consolas", 9)).grid(
-                row=row, column=col * 2 + 1, sticky="w", padx=(0, 24), pady=2,
+            tk.Label(claims_grid, textvariable=var, bg=self.bg_card, fg=self.accent, font=("Consolas", 8)).grid(
+                row=row, column=col * 2 + 1, sticky="w", padx=(0, 20), pady=2,
             )
-
-        actions = tk.Frame(panel, bg=self.bg_card)
-        actions.pack(fill="x", pady=(8, 0))
+        claims_actions = tk.Frame(claims_tab, bg=self.bg_card)
+        claims_actions.pack(fill="x", pady=(6, 4))
+        tk.Button(claims_actions, text="View Exclusion Log", width=18, command=lambda: self._view_governance_log("business_exclusion_log.csv")).pack(side="left", padx=4)
+        tk.Button(claims_actions, text="View Issue Examples", width=18, command=lambda: self._view_governance_log("representative_issue_examples.csv")).pack(side="left", padx=4)
+        tk.Button(claims_actions, text="View Exception Catalog", width=20, command=lambda: self._view_governance_log("governance_exception_catalog.csv")).pack(side="left", padx=4)
         tk.Button(
-            actions, text="Refresh Validation Summary", width=26,
-            command=self._refresh_governance_visibility,
-        ).pack(side="left", padx=(0, 8))
-        tk.Button(
-            actions, text="View Exclusion Log", width=20,
-            command=lambda: self._view_governance_log("business_exclusion_log.csv"),
-        ).pack(side="left", padx=4)
-        tk.Button(
-            actions, text="View Issue Examples", width=20,
-            command=lambda: self._view_governance_log("representative_issue_examples.csv"),
-        ).pack(side="left", padx=4)
-        tk.Button(
-            actions, text="View Exception Catalog", width=22,
-            command=lambda: self._view_governance_log("governance_exception_catalog.csv"),
-        ).pack(side="left", padx=4)
-        tk.Button(
-            actions, text="CREATE UAT BUSINESS PACKAGE", width=28, bg=self.btn_batch, fg="white",
+            claims_actions, text="CREATE UAT BUSINESS PACKAGE", width=28, bg=self.btn_batch, fg="white",
             command=self._on_create_uat_business_package,
         ).pack(side="right", padx=4)
+
+        self.product_metric_vars = {}
+        product_metrics = [
+            ("product_status", "Last Run Status:"),
+            ("product_rows", "Staged Rows:"),
+            ("product_validation", "Parallel Validation (P2A):"),
+            ("product_warnings", "Validation Warnings:"),
+            ("product_errors", "Validation Errors:"),
+            ("product_staged_path", "Staged Output:"),
+            ("product_emitted_path", "Emitted Output:"),
+            ("product_isolation", "Batch Isolation:"),
+        ]
+        product_grid = tk.Frame(product_tab, bg=self.bg_card)
+        product_grid.pack(fill="x", padx=4, pady=4)
+        for idx, (key, label_text) in enumerate(product_metrics):
+            row, col = divmod(idx, 2)
+            tk.Label(product_grid, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(
+                row=row, column=col * 2, sticky="w", padx=(0, 6), pady=2,
+            )
+            var = tk.StringVar(value="NOT YET RUN")
+            self.product_metric_vars[key] = var
+            tk.Label(product_grid, textvariable=var, bg=self.bg_card, fg=self.accent, font=("Consolas", 8)).grid(
+                row=row, column=col * 2 + 1, sticky="w", padx=(0, 20), pady=2,
+            )
+
+        self.rate_metric_vars = {}
+        rate_metrics = [
+            ("rate_status", "Last Run Status:"),
+            ("rate_blockers", "Validation Blockers:"),
+            ("rate_tables", "Tables Written:"),
+            ("rate_csv_rows", "CSV Rows Written:"),
+            ("rate_csv_dir", "CSV Output Folder:"),
+            ("rate_dbf_dir", "Sandbox DBF Folder:"),
+        ]
+        rate_grid = tk.Frame(rate_tab, bg=self.bg_card)
+        rate_grid.pack(fill="x", padx=4, pady=4)
+        for idx, (key, label_text) in enumerate(rate_metrics):
+            row, col = divmod(idx, 2)
+            tk.Label(rate_grid, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(
+                row=row, column=col * 2, sticky="w", padx=(0, 6), pady=2,
+            )
+            var = tk.StringVar(value="NOT YET RUN")
+            self.rate_metric_vars[key] = var
+            tk.Label(rate_grid, textvariable=var, bg=self.bg_card, fg=self.accent, font=("Consolas", 8)).grid(
+                row=row, column=col * 2 + 1, sticky="w", padx=(0, 20), pady=2,
+            )
+
+        self.system_diag_vars = {}
+        system_metrics = [
+            ("diag_run_mode", "RUN_MODE:"),
+            ("diag_production_dbf", "production_dbf_flag:"),
+            ("diag_production_status", "Internal Production Status:"),
+            ("diag_threshold_status", "Review Threshold Status:"),
+            ("diag_production_auth", "production_authorization_flag:"),
+        ]
+        system_grid = tk.Frame(system_tab, bg=self.bg_card)
+        system_grid.pack(fill="x", padx=4, pady=4)
+        for idx, (key, label_text) in enumerate(system_metrics):
+            tk.Label(system_grid, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(
+                row=idx, column=0, sticky="w", padx=(0, 6), pady=2,
+            )
+            var = tk.StringVar(value="—")
+            self.system_diag_vars[key] = var
+            tk.Label(system_grid, textvariable=var, bg=self.bg_card, fg=self.accent, font=("Consolas", 8)).grid(
+                row=idx, column=1, sticky="w", pady=2,
+            )
+
+    def _refresh_all_status_panels(self):
+        self._refresh_governance_visibility()
+        self._refresh_product_setup_visibility()
+        self._refresh_rate_loader_visibility()
+        self._ui_update_status_strip()
+
+    def _setup_governance_summary_panel(self):
+        """Legacy hook — governance metrics now live in Diagnostics tab."""
+        pass
 
     def _product_setup_runner_path(self):
         return os.path.normpath(os.path.join(
@@ -1962,7 +2374,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def _setup_product_setup_panel(self):
         panel = tk.LabelFrame(
             self.root,
-            text=" Product Setup Conversion (Phase P2C — isolated subprocess) ",
+            text=" Product Setup ",
             bg=self.bg_card,
             fg=self.accent,
             padx=16,
@@ -1971,33 +2383,28 @@ class QLAdminEnterpriseIntegrationSuite:
         )
         panel.pack(padx=30, fill="x", pady=(0, 6))
 
-        defaults = self._product_setup_default_paths()
-        self.product_metric_vars = {}
-        metrics = [
-            ("product_status", "Last Run Status:"),
-            ("product_rows", "Staged Rows:"),
-            ("product_validation", "Parallel Validation (P2A):"),
-            ("product_warnings", "Validation Warnings:"),
-            ("product_errors", "Validation Errors:"),
-            ("product_staged_path", "Staged Output:"),
-            ("product_emitted_path", "Emitted Output:"),
-            ("product_isolation", "Batch Isolation:"),
+        summary = tk.Frame(panel, bg="#F8FAFC", padx=12, pady=10, highlightbackground="#E2E8F0", highlightthickness=1)
+        summary.pack(fill="x")
+        self.product_summary_vars = {}
+        summary_fields = [
+            ("summary_status", "Status"),
+            ("summary_rows", "Rows Staged"),
+            ("summary_validation", "Validation"),
+            ("summary_output", "Output"),
         ]
-        grid = tk.Frame(panel, bg=self.bg_card)
-        grid.pack(fill="x")
-        for idx, (key, label_text) in enumerate(metrics):
-            row, col = divmod(idx, 2)
-            tk.Label(grid, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(
-                row=row, column=col * 2, sticky="w", padx=(0, 6), pady=2,
+        for idx, (key, label_text) in enumerate(summary_fields):
+            tk.Label(summary, text=f"{label_text}:", bg="#F8FAFC", fg=self.ui_status_muted, font=("Segoe UI", 9)).grid(
+                row=0, column=idx * 2, sticky="w", padx=(0, 4),
             )
-            var = tk.StringVar(value="NOT YET RUN")
-            self.product_metric_vars[key] = var
-            tk.Label(grid, textvariable=var, bg=self.bg_card, fg=self.accent, font=("Consolas", 9)).grid(
-                row=row, column=col * 2 + 1, sticky="w", padx=(0, 24), pady=2,
-            )
+            var = tk.StringVar(value="Not Yet Run")
+            self.product_summary_vars[key] = var
+            value_lbl = tk.Label(summary, textvariable=var, bg="#F8FAFC", fg=self.accent, font=("Segoe UI", 9, "bold"))
+            value_lbl.grid(row=0, column=idx * 2 + 1, sticky="w", padx=(0, 18))
+            if key == "summary_validation":
+                self.product_validation_badge = value_lbl
 
         opts = tk.Frame(panel, bg=self.bg_card)
-        opts.pack(fill="x", pady=(6, 0))
+        opts.pack(fill="x", pady=(8, 0))
         self.product_emit_var = tk.BooleanVar(value=False)
         self.product_overlay_var = tk.BooleanVar(value=False)
         self.product_isolated_var = tk.BooleanVar(
@@ -2015,13 +2422,13 @@ class QLAdminEnterpriseIntegrationSuite:
         self.product_legacy_fallback_var = tk.BooleanVar(
             value=os.environ.get("QLA_ALLOW_LEGACY_PRODUCT_FALLBACK", "0").strip().lower() in ("1", "true", "yes"),
         )
-        tk.Checkbutton(opts, text="Emit to Output (quikplan.csv)", variable=self.product_emit_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
-        tk.Checkbutton(opts, text="UAT Product Authority Cutover (Policy Form Crosswalk)", variable=self.product_overlay_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
-        tk.Checkbutton(opts, text="Strict Product Authority (P3B)", variable=self.product_strict_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
-        tk.Checkbutton(opts, text="Closed Product Catalog (P3C)", variable=self.product_closed_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
-        tk.Checkbutton(opts, text="Isolate from batch (QLA_PRODUCT_SETUP_ISOLATED)", variable=self.product_isolated_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
-        tk.Checkbutton(opts, text="Block emit on ERROR (QLA_PRODUCT_GOVERNANCE_BLOCK)", variable=self.product_block_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
-        tk.Checkbutton(opts, text="Allow Legacy Fallback (rollback only)", variable=self.product_legacy_fallback_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+        tk.Checkbutton(opts, text="Emit quikplan.csv to Output", variable=self.product_emit_var, bg=self.bg_card).pack(side="left", padx=(0, 10))
+        tk.Checkbutton(opts, text="Product Authority Cutover", variable=self.product_overlay_var, bg=self.bg_card).pack(side="left", padx=(0, 10))
+        tk.Checkbutton(opts, text="Strict Authority (P3B)", variable=self.product_strict_var, bg=self.bg_card).pack(side="left", padx=(0, 10))
+        tk.Checkbutton(opts, text="Closed Catalog (P3C)", variable=self.product_closed_var, bg=self.bg_card).pack(side="left", padx=(0, 10))
+        tk.Checkbutton(opts, text="Isolate from batch", variable=self.product_isolated_var, bg=self.bg_card).pack(side="left", padx=(0, 10))
+        tk.Checkbutton(opts, text="Block emit on ERROR", variable=self.product_block_var, bg=self.bg_card).pack(side="left", padx=(0, 10))
+        tk.Checkbutton(opts, text="Legacy fallback (rollback)", variable=self.product_legacy_fallback_var, bg=self.bg_card).pack(side="left", padx=(0, 10))
 
         actions = tk.Frame(panel, bg=self.bg_card)
         actions.pack(fill="x", pady=(8, 0))
@@ -2029,15 +2436,6 @@ class QLAdminEnterpriseIntegrationSuite:
             actions, text="RUN PRODUCT SETUP CONVERSION", width=32, bg="#7C3AED", fg="white",
             command=self.start_product_setup_thread,
         ).pack(side="left", padx=(0, 8))
-        tk.Button(
-            actions, text="Refresh Product Status", width=22,
-            command=self._refresh_product_setup_visibility,
-        ).pack(side="left", padx=4)
-        tk.Label(
-            actions,
-            text=f"Source: {defaults['source']}",
-            bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 8),
-        ).pack(side="right", padx=4)
 
     def _load_product_validation_status(self):
         summary_path = os.path.normpath(os.path.join(
@@ -2065,9 +2463,7 @@ class QLAdminEnterpriseIntegrationSuite:
         return "Validation summary unreadable"
 
     def _refresh_product_setup_visibility(self):
-        if not hasattr(self, "product_metric_vars"):
-            return
-        display = {key: "NOT YET RUN" for key in self.product_metric_vars}
+        display = {key: "NOT YET RUN" for key in getattr(self, "product_metric_vars", {})}
         display["product_validation"] = self._load_product_validation_status()
         display["product_isolation"] = "ENABLED" if self._product_setup_isolated() else "DISABLED (default)"
 
@@ -2092,9 +2488,44 @@ class QLAdminEnterpriseIntegrationSuite:
         display["product_emitted_path"] = out_path if os.path.isfile(out_path) else "NOT EMITTED"
         if hasattr(self, "_last_product_setup_result") and self._last_product_setup_result:
             display["product_status"] = self._last_product_setup_result.get("status", "NOT YET RUN")
+
         for key, val in display.items():
-            if key in self.product_metric_vars:
+            if key in getattr(self, "product_metric_vars", {}):
                 self.product_metric_vars[key].set(val)
+
+        if hasattr(self, "product_summary_vars"):
+            status = display.get("product_status", "Not Yet Run")
+            if status == "NOT YET RUN":
+                status = "Not Yet Run"
+            rows = display.get("product_rows", "—")
+            err_count = display.get("product_errors", "0")
+            warn_count = display.get("product_warnings", "0")
+            try:
+                err_n = int(err_count)
+                warn_n = int(warn_count)
+                if err_n > 0 or warn_n > 0:
+                    validation = f"{err_n} Error(s) / {warn_n} Warning(s)"
+                elif display.get("product_validation", "NOT YET RUN") != "NOT YET RUN":
+                    validation = "Passed"
+                else:
+                    validation = "Not Yet Run"
+            except ValueError:
+                validation = display.get("product_validation", "Not Yet Run")
+            emitted = display.get("product_emitted_path", "NOT EMITTED")
+            output = "quikplan.csv" if emitted != "NOT EMITTED" else "Not emitted"
+            self.product_summary_vars["summary_status"].set(status)
+            self.product_summary_vars["summary_rows"].set(rows if rows != "NOT YET RUN" else "—")
+            self.product_summary_vars["summary_validation"].set(validation)
+            self.product_summary_vars["summary_output"].set(output)
+            if hasattr(self, "product_validation_badge"):
+                if "Error" in validation:
+                    self.product_validation_badge.config(fg=self.ui_status_err)
+                elif "Warning" in validation:
+                    self.product_validation_badge.config(fg=self.ui_status_warn)
+                elif validation == "Passed":
+                    self.product_validation_badge.config(fg=self.ui_status_ok)
+                else:
+                    self.product_validation_badge.config(fg=self.accent)
 
     def _parse_product_setup_stdout(self, stdout_text):
         parsed = {"status": "UNKNOWN", "warnings": "0", "errors": "0", "staged_path": "", "emitted_path": ""}
@@ -2241,7 +2672,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def _setup_rate_loader_panel(self):
         panel = tk.LabelFrame(
             self.root,
-            text=" Rate Table Generation (Phase R5 — factors, keys, member tables) ",
+            text=" Rate Table Generation ",
             bg=self.bg_card,
             fg=self.accent,
             padx=16,
@@ -2250,38 +2681,25 @@ class QLAdminEnterpriseIntegrationSuite:
         )
         panel.pack(padx=30, fill="x", pady=(0, 6))
 
-        self.rate_metric_vars = {}
-        metrics = [
-            ("rate_status", "Last Run Status:"),
-            ("rate_blockers", "Validation Blockers:"),
-            ("rate_tables", "Tables Written:"),
-            ("rate_csv_rows", "CSV Rows Written:"),
-            ("rate_csv_dir", "CSV Output Folder:"),
-            ("rate_dbf_dir", "Sandbox DBF Folder:"),
-        ]
-        grid = tk.Frame(panel, bg=self.bg_card)
-        grid.pack(fill="x")
-        for idx, (key, label_text) in enumerate(metrics):
-            row, col = divmod(idx, 2)
-            tk.Label(grid, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(
-                row=row, column=col * 2, sticky="w", padx=(0, 6), pady=2,
-            )
-            var = tk.StringVar(value="NOT YET RUN")
-            self.rate_metric_vars[key] = var
-            tk.Label(grid, textvariable=var, bg=self.bg_card, fg=self.accent, font=("Consolas", 9)).grid(
-                row=row, column=col * 2 + 1, sticky="w", padx=(0, 24), pady=2,
-            )
+        summary = tk.Frame(panel, bg="#F8FAFC", padx=12, pady=10, highlightbackground="#E2E8F0", highlightthickness=1)
+        summary.pack(fill="x")
+        self.rate_summary_status = tk.StringVar(value="Not Yet Run")
+        self.rate_summary_detail = tk.StringVar(value="Tables: —  |  Blockers: —  |  CSV Rows: —")
+        tk.Label(summary, text="Status:", bg="#F8FAFC", fg=self.ui_status_muted, font=("Segoe UI", 9)).grid(row=0, column=0, sticky="w")
+        self.rate_status_badge = tk.Label(summary, textvariable=self.rate_summary_status, bg="#F8FAFC", fg=self.accent, font=("Segoe UI", 9, "bold"))
+        self.rate_status_badge.grid(row=0, column=1, sticky="w", padx=(4, 24))
+        tk.Label(summary, textvariable=self.rate_summary_detail, bg="#F8FAFC", fg=self.text_color, font=("Segoe UI", 9)).grid(row=0, column=2, sticky="w")
 
         opts = tk.Frame(panel, bg=self.bg_card)
-        opts.pack(fill="x", pady=(6, 0))
+        opts.pack(fill="x", pady=(8, 0))
         self.rate_emit_csv_var = tk.BooleanVar(value=True)
         self.rate_emit_dbf_var = tk.BooleanVar(value=False)
         self.rate_include_batch_var = tk.BooleanVar(
             value=os.environ.get("QLA_BATCH_INCLUDE_RATE_TABLES", "0").strip().lower() in ("1", "true", "yes"),
         )
-        tk.Checkbutton(opts, text="Emit append-ready CSV tables (Output/rates/)", variable=self.rate_emit_csv_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
-        tk.Checkbutton(opts, text="Emit sandbox DBF tables (phase_r5 emitted_dbf/)", variable=self.rate_emit_dbf_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
-        tk.Checkbutton(opts, text="Include in full batch migration", variable=self.rate_include_batch_var, bg=self.bg_card).pack(side="left", padx=(0, 12))
+        tk.Checkbutton(opts, text="Emit CSV tables (Output/rates/)", variable=self.rate_emit_csv_var, bg=self.bg_card).pack(side="left", padx=(0, 10))
+        tk.Checkbutton(opts, text="Emit sandbox DBF tables", variable=self.rate_emit_dbf_var, bg=self.bg_card).pack(side="left", padx=(0, 10))
+        tk.Checkbutton(opts, text="Include in full batch migration", variable=self.rate_include_batch_var, bg=self.bg_card).pack(side="left", padx=(0, 10))
 
         actions = tk.Frame(panel, bg=self.bg_card)
         actions.pack(fill="x", pady=(8, 0))
@@ -2289,15 +2707,6 @@ class QLAdminEnterpriseIntegrationSuite:
             actions, text="GENERATE RATE TABLES", width=28, bg="#0D9488", fg="white",
             command=self.start_rate_loader_thread,
         ).pack(side="left", padx=(0, 8))
-        tk.Button(
-            actions, text="Refresh Rate Status", width=20,
-            command=self._refresh_rate_loader_visibility,
-        ).pack(side="left", padx=4)
-        tk.Label(
-            actions,
-            text=f"Config: {self._rate_loader_config_path()}",
-            bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 8),
-        ).pack(side="right", padx=4)
 
     def _parse_rate_loader_stdout(self, stdout_text):
         parsed = {
@@ -2377,9 +2786,7 @@ class QLAdminEnterpriseIntegrationSuite:
             return {"status": "FAILED", "error": str(exc)}
 
     def _refresh_rate_loader_visibility(self):
-        if not hasattr(self, "rate_metric_vars"):
-            return
-        display = {key: "NOT YET RUN" for key in self.rate_metric_vars}
+        display = {key: "NOT YET RUN" for key in getattr(self, "rate_metric_vars", {})}
         last = getattr(self, "_last_rate_loader_result", None) or {}
         if last:
             display["rate_status"] = last.get("status", "NOT YET RUN")
@@ -2393,8 +2800,27 @@ class QLAdminEnterpriseIntegrationSuite:
             if os.path.isfile(manifest):
                 display["rate_status"] = "PRIOR RUN (see manifest)"
                 display["rate_csv_dir"] = self._rate_loader_csv_dir()
-        for key, var in self.rate_metric_vars.items():
+        for key, var in getattr(self, "rate_metric_vars", {}).items():
             var.set(display.get(key, "NOT YET RUN"))
+
+        if hasattr(self, "rate_summary_status"):
+            status = display.get("rate_status", "Not Yet Run")
+            if status == "NOT YET RUN":
+                status = "Not Yet Run"
+            blockers = display.get("rate_blockers", "—") or "0"
+            tables = display.get("rate_tables", "—") or "0"
+            csv_rows = display.get("rate_csv_rows", "—") or "0"
+            self.rate_summary_status.set(status)
+            self.rate_summary_detail.set(f"Tables: {tables}  |  Blockers: {blockers}  |  CSV Rows: {csv_rows}")
+            if hasattr(self, "rate_status_badge"):
+                if str(status).upper() in ("FAILED", "TIMEOUT", "BLOCKED"):
+                    self.rate_status_badge.config(fg=self.ui_status_err)
+                elif str(blockers) not in ("", "0", "—", "NOT YET RUN"):
+                    self.rate_status_badge.config(fg=self.ui_status_warn)
+                elif str(status).upper() == "SUCCESS":
+                    self.rate_status_badge.config(fg=self.ui_status_ok)
+                else:
+                    self.rate_status_badge.config(fg=self.accent)
 
     def start_rate_loader_thread(self):
         if self.is_running:
@@ -2462,6 +2888,9 @@ class QLAdminEnterpriseIntegrationSuite:
 
     def _refresh_governance_visibility(self):
         summary = self._build_governance_summary()
+        if not hasattr(self, "gov_metric_vars"):
+            self._ui_update_status_strip(summary)
+            return
         dbf_panel = self._load_uat_dbf_panel_status()
         if not summary["files_present"]:
             display = {key: "NOT YET GENERATED" for key in self.gov_metric_vars}
@@ -2501,14 +2930,14 @@ class QLAdminEnterpriseIntegrationSuite:
         for key, var in self.gov_metric_vars.items():
             var.set(display.get(key, "NOT YET GENERATED"))
 
-        banner = (
-            f"RUN MODE: {summary['run_mode']}  |  "
-            f"PRODUCTION STATUS: {summary['production_status']}  |  "
-            f"Review Thresholds: {summary['threshold_status']}  |  "
-            f"Go-Live Target: {summary['go_live_target']}  |  "
-            f"production_dbf_flag={self.CLAIMS_ORCHESTRATION['production_dbf_flag']}"
-        )
-        self.gov_banner_label.config(text=banner)
+        self._ui_update_status_strip(summary)
+        if hasattr(self, "system_diag_vars"):
+            cfg = self.CLAIMS_ORCHESTRATION
+            self.system_diag_vars["diag_run_mode"].set(cfg.get("run_mode", ""))
+            self.system_diag_vars["diag_production_dbf"].set(cfg.get("production_dbf_flag", "N"))
+            self.system_diag_vars["diag_production_status"].set(summary.get("production_status", ""))
+            self.system_diag_vars["diag_threshold_status"].set(summary.get("threshold_status", ""))
+            self.system_diag_vars["diag_production_auth"].set(cfg.get("production_authorization_flag", "N"))
 
     def _log_governance_console_summary(self):
         summary = self._build_governance_summary()
@@ -3887,6 +4316,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.path_vars["CW"][0].set("")
             self.path_vars["Rel"][0].set("")
             self.path_vars["Out"][0].set(out_dir)
+            self._ui_sync_path_display()
             self.log(f"System UI: Claims UAT orchestration paths for {table.upper()} (RUN_MODE={cfg['run_mode']})")
             self.log(f"  Staging: {staging_dir} | Main output emit: {out_dir}")
             return
@@ -3928,6 +4358,7 @@ class QLAdminEnterpriseIntegrationSuite:
         self.path_vars["CW"][0].set(cw_path)
         self.path_vars["Rel"][0].set(rel_path)
         self.path_vars["Out"][0].set(out_dir)
+        self._ui_sync_path_display()
 
         self.log(f"System UI: Auto-populated paths for {table.upper()} (QLA_Migration preferred)")
         self.log(f"  Source dir: {src_dir}")
@@ -3936,12 +4367,15 @@ class QLAdminEnterpriseIntegrationSuite:
 
     def browse(self, var, mode, key):
         path = filedialog.askdirectory() if mode == "folder" else filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
-        if path: 
+        if path:
             var.set(path)
+            self._ui_sync_path_display(key)
             if key == "Src":
                 filename = os.path.basename(path).lower()
                 for k in self.TABLE_SCHEMAS.keys():
-                    if k in filename: self.table_var.set(k); break
+                    if k in filename:
+                        self.table_var.set(k)
+                        break
             self.refresh_table_list(path)
 
     def refresh_table_list(self, path):
@@ -4114,6 +4548,8 @@ class QLAdminEnterpriseIntegrationSuite:
         self._progress_plan = RL.stage_plan(run_type)
         self._progress_run_type = run_type
         self._run_start_time = time.time()
+        self._ui_run_state = "Running"
+        self._ui_update_status_strip()
         self.update_progress(0, "Stage 0 — Ready")
         if hasattr(self, "lbl_stage_detail"):
             self.lbl_stage_detail.config(text="")
@@ -4139,6 +4575,7 @@ class QLAdminEnterpriseIntegrationSuite:
         self.update_progress(100, msg, state="success")
         if hasattr(self, "lbl_stage_detail"):
             self.lbl_stage_detail.config(text="")
+        self._ui_record_run_timestamp("Success")
 
     def fail_run_progress(self, stage_name, error_message, error_log_folder=None):
         msg = f"Failed at {stage_name}. See logs."
@@ -4148,6 +4585,7 @@ class QLAdminEnterpriseIntegrationSuite:
         if hasattr(self, "lbl_stage_detail"):
             self.lbl_stage_detail.config(text=str(error_message)[:160])
         self.log(f"!!! {msg}")
+        self._ui_record_run_timestamp("Failed")
 
     def _run_post_conversion_validation(self, error_log=None):
         """Run validate_output.py priority + standard checks after full batch (v57.10)."""
@@ -4311,6 +4749,8 @@ class QLAdminEnterpriseIntegrationSuite:
                 messagebox.showwarning("Final Output Validation", f"Status: WARNING\nSee {reports.get('reports_dir', 'validation_reports')}")
             else:
                 messagebox.showinfo("Final Output Validation", f"Status: PASS\nReports: {reports.get('reports_dir', '')}")
+            self._ui_record_validation_timestamp()
+            self._ui_update_status_strip()
         except Exception as exc:
             self.log(f"FINAL OUTPUT VALIDATION ERROR: {exc}")
             messagebox.showerror("Final Output Validation", str(exc))
@@ -4344,7 +4784,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log("Initializing Migration Engine v57.41 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.42 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -5900,6 +6340,8 @@ class QLAdminEnterpriseIntegrationSuite:
                 self.update_run_progress(8, detail="validate_output — 25 priority checks")
                 self._last_output_validation_result = self._run_post_conversion_validation(run_error_log)
                 vr = self._last_output_validation_result or {}
+                if vr.get("status"):
+                    self._ui_record_validation_timestamp()
                 if vr.get("status") == "PASS":
                     val_note = "\n\nOutput validation: PASS (see QLA_Migration/Reports/validation/)"
                 elif vr.get("status") == "FAIL":
