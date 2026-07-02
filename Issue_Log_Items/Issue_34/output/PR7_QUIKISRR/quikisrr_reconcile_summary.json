@@ -1,0 +1,110 @@
+{
+  "validator": "iswl_quikisrr_reconcile.py",
+  "version": "1.0",
+  "checks": {
+    "V-ISRR-01": {
+      "pass": true,
+      "detail": "3623 rows / 636 policies / $1,217,593.55"
+    },
+    "V-ISRR-02": {
+      "pass": true,
+      "detail": "61 reversal rows excluded"
+    },
+    "V-ISRR-03": {
+      "pass": true,
+      "detail": "3 hold rows for 9010780411"
+    },
+    "V-ISRR-04": {
+      "pass": true,
+      "detail": "mplans=['1659C2', '1659CR', '1659CS', '1659SR', '1669SR']"
+    },
+    "V-ISRR-05": {
+      "pass": true,
+      "detail": "561-only filter at source load"
+    },
+    "V-ISRR-06": {
+      "pass": true,
+      "detail": "clms=3616 emit=3616"
+    },
+    "V-ISRR-07": {
+      "pass": true,
+      "detail": "clmp=3616 emit=3616"
+    },
+    "V-ISRR-08": {
+      "pass": true,
+      "detail": "benh=3616 emit=3616"
+    },
+    "V-ISRR-09": {
+      "pass": true,
+      "detail": "isrr=3616 emit=3616"
+    },
+    "V-ISRR-10": {
+      "pass": true,
+      "detail": "counts clms/clmp/benh/isrr = 3616/3616/3616/3616"
+    },
+    "V-ISRR-11": {
+      "pass": true,
+      "detail": "MSEQ 1..n per policy"
+    },
+    "V-ISRR-12": {
+      "pass": true,
+      "detail": "clms MSEQ matches clmp MSEQ"
+    },
+    "V-ISRR-13": {
+      "pass": true,
+      "detail": "ORIGSTTUS=22"
+    },
+    "V-ISRR-14": {
+      "pass": true,
+      "detail": "CLAIMSTAT=99 CAUSE=SRR"
+    },
+    "V-ISRR-15": {
+      "pass": true,
+      "detail": "all amount fields equal per event"
+    },
+    "V-ISRR-16": {
+      "pass": true,
+      "detail": "MISWL omitted from QuikIsrr.csv"
+    },
+    "V-ISRR-17": {
+      "pass": true,
+      "detail": "exceptions=['010826551C'] rows=7"
+    },
+    "V-ISRR-18": {
+      "pass": true,
+      "detail": "010826551C routed to payee exception (7 rows)"
+    },
+    "V-ISRR-19": {
+      "pass": true,
+      "detail": "clms=True clmp=True"
+    },
+    "V-ISRR-20": {
+      "pass": true,
+      "detail": "quikbenh.csv append/merge new file \u2014 client must merge not replace"
+    },
+    "V-ISRR-21": {
+      "pass": true,
+      "detail": "no QuikAudt output created"
+    },
+    "V-ISRR-22": {
+      "pass": true,
+      "detail": "uint=True issc=True cvs=True"
+    }
+  },
+  "all_pass": true,
+  "candidate_population": {
+    "rows": 3623,
+    "policies": 636,
+    "amount": 1217593.55
+  },
+  "emitted_population": {
+    "rows": 3616,
+    "policies": 635,
+    "payee_exceptions": 7
+  },
+  "regression_notes": {
+    "quikuint": "4 tiers\n  1669SR: 4 tiers\n  1679CS: 4 tiers\nV-UINT-01 schema: PASS\nV-UINT-02 CENII/A1: PASS (6 source tiers)\nV-UINT-03 union_merge: PASS\nV-UINT-04 row count 32: PASS\nV-UINT-05 MPLANs 8/8: PASS\nV-UINT-",
+    "quikissc": "01 schema: PASS\nV-ISSC-02 PSEGT->SL: PASS (8/8 coverages, 14 durations)\nV-ISSC-03 MPLANs 8/8: PASS\nV-ISSC-04 row count 8: PASS\nV-ISSC-05 UWCLASS=SM: PASS\nV-ISSC-06 AGE=0: PASS\nV-ISSC-07 SCHG01-14: PAS",
+    "quikcvs": "e CV rows \u2014 missing coverages: none\nV-CVS-04 CSO crosswalk: PASS\nV-X-03 QuikPlNb EFFDATE blockers: 0 (expect 0)\nV-X-01 Regression: PASS\n\nPipeline artifacts: C:\\Users\\warren\\Documents\\GitHub\\Warrenhugh"
+  }
+}

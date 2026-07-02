@@ -1,0 +1,47 @@
+{
+  "reconcile_date": "2026-07-02",
+  "eligible_561_rows": 3623,
+  "eligible_policies": 636,
+  "eligible_total_amount": 1217593.55,
+  "companion_sources": {
+    "quikclms": {
+      "path": "QLA_Migration/Output/quikclms.csv",
+      "rows": 2114
+    },
+    "quikclmp": {
+      "path": "QLA_Migration/Output/quikclmp.csv",
+      "rows": 1709
+    },
+    "quikbenf": {
+      "path": "QLA_Migration/Output/quikbenf.csv",
+      "rows": 5870
+    },
+    "quikbene_quikbenh": "NOT FOUND anywhere in repo"
+  },
+  "quikclms_family_composition": {
+    "DEATH_CLAIM": 1290,
+    "SURRENDER_CLAIM": 504,
+    "DISBURSEMENT_CLAIM": 320
+  },
+  "quikclms_partial_surrender_family_rows": 0,
+  "match_classification": {
+    "NO_MATCH": 2457,
+    "POLICY_ONLY": 1097,
+    "WEAK_PARTIAL": 69
+  },
+  "rows_policy_in_quikclms": 1166,
+  "rows_policy_in_quikclmp": 683,
+  "rows_policy_in_quikbenf": 1941,
+  "policies_with_no_companion_rows": 330,
+  "clms_families_on_matched_rows": {
+    "DEATH_CLAIM": 586,
+    "DISBURSEMENT_CLAIM": 323,
+    "SURRENDER_CLAIM": 136,
+    "DEATH_CLAIM|DISBURSEMENT_CLAIM": 100,
+    "DISBURSEMENT_CLAIM|SURRENDER_CLAIM": 19,
+    "DEATH_CLAIM|SURRENDER_CLAIM": 2
+  },
+  "date_tolerance_days": 45,
+  "claim_sequence_note": "quikclms MSEQ = 0 on all 2,114 rows; quikclmp MSEQ = payment sequence 1-9 per claim, not per partial withdrawal",
+  "benefit_code_8_note": "quikbenf schema is beneficiary splits (MPOLICY/MBENFID/MTYPE/MRELATION/MSPLIT) - no benefit code field; QuikBene/QuikBenh not present in repo"
+}

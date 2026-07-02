@@ -1,0 +1,44 @@
+{
+  "profile_date": "2026-07-01T13:17:18Z",
+  "pactg_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\PACTG_Accounting_Extract20260530.csv",
+  "pactg_available": true,
+  "fleet_561_rows": 3688,
+  "fleet_561_unique_policies": 640,
+  "fleet_561_total_amount": 1254888.33,
+  "iswl_561_rows": 3687,
+  "iswl_561_unique_policies": 639,
+  "iswl_561_total_amount": 1241238.33,
+  "iswl_rows_by_mplan": {
+    "1659C2": 2575,
+    "1659CR": 1081,
+    "1659CS": 8,
+    "1659SR": 16,
+    "1669SR": 7
+  },
+  "missing_effective_date": 0,
+  "missing_or_zero_amount": 0,
+  "negative_amount": 0,
+  "iswl_missing_effective_date": 0,
+  "iswl_missing_or_zero_amount": 0,
+  "iswl_negative_amount": 0,
+  "iswl_terminated_policy_rows": 3676,
+  "iswl_related_560_activity_rows": 0,
+  "iswl_related_0090_activity_rows": 0,
+  "iswl_related_1020_activity_rows": 0,
+  "iswl_deferred_hold_rows": 3686,
+  "iswl_deferred_hold_policies": 639,
+  "deferred_policy_allowlist": [
+    "9010776027",
+    "9010780411",
+    "9010780591",
+    "9011072813",
+    "9011107796"
+  ],
+  "recommended_status": "Research/profile complete \u2014 blocked pending SME approval",
+  "sme_blockers": [
+    "Q1-Q10 unanswered in Issue_34_QuikIsrr_SME_Questions.md",
+    "MISWL derivation rule",
+    "561 without payout-pair inclusion policy",
+    "Output path confirmation"
+  ]
+}

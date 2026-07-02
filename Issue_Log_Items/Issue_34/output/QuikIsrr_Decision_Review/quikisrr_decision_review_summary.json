@@ -1,0 +1,104 @@
+{
+  "iswl_561_rows": 3686,
+  "iswl_561_policies": 639,
+  "iswl_561_total_amount": 1240921.23,
+  "fleet_debit_code_counts_watchlist": {
+    "1020": 110,
+    "13": 5029,
+    "560": 1100,
+    "561": 3688,
+    "562": 125,
+    "563": 0,
+    "564": 275,
+    "565": 18,
+    "90": 20,
+    "92": 16
+  },
+  "iswl_debit_code_counts_watchlist": {
+    "1020": 110,
+    "13": 4402,
+    "560": 653,
+    "561": 3686,
+    "562": 0,
+    "563": 0,
+    "564": 148,
+    "565": 2,
+    "90": 7,
+    "92": 6
+  },
+  "reversal_indicators": {
+    "rows_with_any_reversal_marker": 61,
+    "reversal_code_distribution": {
+      "": 3625,
+      "Y": 61
+    }
+  },
+  "credit_code_distribution_on_561": {
+    "13": 3676,
+    "12": 9,
+    "126": 1
+  },
+  "data_quality": {
+    "zero_amount": 0,
+    "negative_amount": 0,
+    "missing_amount": 0,
+    "missing_effective_date": 0
+  },
+  "same_policy_date": {
+    "groups_with_multiple_561_same_date": 21,
+    "rows_in_those_groups": 54,
+    "exact_duplicate_signature_groups": 0,
+    "same_date_same_amount_groups": 21,
+    "distinct_same_date_groups": 21
+  },
+  "full_surrender_proximity": {
+    "iswl_561_policies_with_any_560": 61,
+    "iswl_561_rows_after_first_560_date": 0,
+    "iswl_561_rows_same_day_as_560": 0
+  },
+  "recurring_annual_pattern": {
+    "policies_with_same_mmdd_same_amount_3plus_years": 508,
+    "rows_in_recurring_patterns": 3477
+  },
+  "term_reason_distribution": {
+    "P": 3676,
+    "": 10
+  },
+  "description_distribution_top20": {
+    "": 3686
+  },
+  "per_policy_561_count_histogram": {
+    "1": 70,
+    "2": 60,
+    "3": 52,
+    "4": 39,
+    "5": 43,
+    "6": 44,
+    "7": 43,
+    "8": 189,
+    "9": 98,
+    "10": 1
+  },
+  "governance_policies": {
+    "9010776027": {
+      "rows": 2,
+      "reversal_marked": 0
+    },
+    "9010780411": {
+      "rows": 10,
+      "reversal_marked": 8
+    },
+    "9010780591": {
+      "rows": 8,
+      "reversal_marked": 3
+    },
+    "9011072813": {
+      "rows": 8,
+      "reversal_marked": 0
+    },
+    "9011107796": {
+      "rows": 9,
+      "reversal_marked": 0
+    }
+  }
+}
