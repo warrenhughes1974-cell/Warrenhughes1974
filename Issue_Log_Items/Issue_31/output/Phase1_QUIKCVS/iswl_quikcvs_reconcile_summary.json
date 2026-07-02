@@ -1,0 +1,31 @@
+{
+  "script_version": "1.0",
+  "blocker_count": 0,
+  "emit_ready": true,
+  "v03_collisions": 0,
+  "iswl_quikcvs_keys_by_plan": {
+    "1658C1": 1947,
+    "1658CS": 979,
+    "1659C2": 1045,
+    "1659CR": 1045,
+    "1659CS": 997,
+    "1659SR": 1047,
+    "1669SR": 264,
+    "1679CS": 465
+  },
+  "rate_table_cv_rows_by_coverage": {
+    "659 SR GD": 9700,
+    "669 SR GD": 2340,
+    "659 CEN SR": 9678,
+    "659 CEN II": 9678,
+    "658 CEN SD": 9113,
+    "659 CEN SD": 9288,
+    "679 CEN SD": 4350,
+    "658 CEN I": 18124
+  },
+  "cso_crosswalk_ok": true,
+  "cso_failures": [],
+  "effdate_blockers": 0,
+  "regression_ok": true,
+  "regression_notes": []
+}

@@ -1,0 +1,19 @@
+{
+  "mloanidt_all913": {
+    "ACCRUAL_DATE_N": 913
+  },
+  "mloanidt_blank_all913": 0,
+  "mloanidt_active": {
+    "ACCRUAL_DATE_N": 354
+  },
+  "mloanidt_blank_active": 0,
+  "accrual_eq_int_start_all913": 912,
+  "accrual_eq_last_repay_active": 130,
+  "approved_precedence": [
+    "ACCRUAL_DATE",
+    "LAST_REPAY_DATE",
+    "CAPITALIZED_DATE"
+  ],
+  "blocked_mloanidt_under_approved_rule": 0,
+  "note": "9011190668 may still fail Phase L1 accrual parse despite norm date logic"
+}

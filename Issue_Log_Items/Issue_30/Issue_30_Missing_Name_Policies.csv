@@ -1,0 +1,19 @@
+Policy,QL_Plan,Owner,Insured,Root_Cause,All_Causes,Origin,MPRIMID,MOWNRID,Insured_Status,Owner_Status,HAS_IN_QUikCLID,HAS_PO_QUikCLID,HAS_IN_RNA,HAS_PO_RNA,Owner_Blank,Insured_Blank,Both_Blank
+010422977C,1960PO,(blank),(blank),Missing Insured relationship,Missing Insured relationship; Missing Owner relationship,Missing source data,(blank),(blank),missing_id,missing_id,N,N,N,N,Y,Y,Y
+010713704C,1659C2,(blank),(blank),Missing Insured relationship,Missing Insured relationship; Missing Owner relationship,Missing source data,(blank),(blank),missing_id,missing_id,N,N,N,N,Y,Y,Y
+010713705C,1659C2,(blank),(blank),Missing Insured relationship,Missing Insured relationship; Missing Owner relationship,Missing source data,(blank),(blank),missing_id,missing_id,N,N,N,N,Y,Y,Y
+010826551C,1659CR,(blank),(blank),Missing Insured relationship,Missing Insured relationship; Missing Owner relationship,Missing source data,(blank),(blank),missing_id,missing_id,N,N,N,N,Y,Y,Y
+010948278C,5667AT,(blank),(blank),Missing Insured relationship,Missing Insured relationship; Missing Owner relationship,Missing source data,(blank),(blank),missing_id,missing_id,N,N,N,N,Y,Y,Y
+011188773C,1L10SO,(blank),"KANEFF, CLEO",Missing Owner relationship,Missing Owner relationship,Missing source data,233303,(blank),ok,missing_id,Y,N,N,N,Y,N,N
+014112C,1SALML,(blank),(blank),Missing Insured relationship,Missing Insured relationship; Missing Owner relationship,Missing source data,(blank),(blank),missing_id,missing_id,N,N,N,N,Y,Y,Y
+018900C,1SALML,(blank),(blank),Missing Insured relationship,Missing Insured relationship; Missing Owner relationship,Missing source data,(blank),(blank),missing_id,missing_id,N,N,N,N,Y,Y,Y
+010150910C,221END,(blank),(blank),Missing Insured relationship,Missing Insured relationship; Missing Owner relationship,Missing source data,(blank),(blank),missing_id,missing_id,N,N,N,N,Y,Y,Y
+010397945C,170858,(blank),"SOUCHEK, MARIAN",Missing Owner relationship,Missing Owner relationship,Missing source data,587950,(blank),ok,missing_id,Y,N,N,N,Y,N,N
+010774773C,1659C2,"SECURITY NATIONAL BA, TRUSTEE",(blank),Missing Insured relationship,Missing Insured relationship,Missing source data,(blank),599377,missing_id,ok,N,Y,N,N,N,Y,N
+010790779C,5667AT,(blank),"AASGAARD, JANICE",Missing Owner relationship,Missing Owner relationship,Missing source data,591129,(blank),ok,missing_id,Y,N,N,N,Y,N,N
+010816156C,1659CR,TUCKER FUNERAL HOME INC,(blank),Missing Insured relationship,Missing Insured relationship,Missing source data,(blank),705235,missing_id,ok,N,Y,N,N,N,Y,N
+010834096C,1659CR,(blank),"REIGH, DEVONA",Missing Owner relationship,Missing Owner relationship,Missing source data,602820,(blank),ok,missing_id,Y,N,N,N,Y,N,N
+010877890C,1659SR,"THOMPSON, CHRISTOPHER",(blank),Missing Insured relationship,Missing Insured relationship,Missing source data,(blank),709597,missing_id,ok,N,Y,N,N,N,Y,N
+011062307C,5L0110,(blank),"GREER, JANIE",Missing Owner relationship,Missing Owner relationship,Missing source data,592120,(blank),ok,missing_id,Y,N,N,N,Y,N,N
+011064567C,1659CR,(blank),"ANDERSON, MARY",Missing Owner relationship,Missing Owner relationship,Missing source data,606968,(blank),ok,missing_id,Y,N,N,N,Y,N,N
+01ML8151C,1SALML,(blank),(blank),Missing Insured relationship,Missing Insured relationship; Missing Owner relationship,Missing source data,(blank),(blank),missing_id,missing_id,N,N,N,N,Y,Y,Y

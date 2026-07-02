@@ -1,41 +1,41 @@
-PLOAN Profile Summary (Phase L1 QuikLoan staging)
-Generated: 2026-06-01 18:28:23
+PLOAN Profile Summary (Issue #32 QuikLoan v1.2)
+Generated: 2026-06-29 16:23:11
 
-total_raw_rows: 93502
-valid_data_rows: 93501
+total_raw_rows: 93858
+valid_data_rows: 93857
 excluded_placeholder_separator_rows: 1
-unique_policy_count: 912
-latest_non_zero_balance_count: 389
-latest_zero_balance_count: 523
-total_latest_LOAN_BALANCE_active_candidates: 1573133.02
+unique_policy_count: 913
+latest_non_zero_balance_count: 385
+latest_zero_balance_count: 528
+total_latest_LOAN_BALANCE_active_candidates: 1554200.67
 rows_per_policy_min: 2
 rows_per_policy_median: 45.0
-rows_per_policy_max: 868
+rows_per_policy_max: 871
 ACCRUAL_DATE_range: 2003-09-23 to 2218-01-11
 
 INTEREST_RATE distribution (latest row per policy):
-          .0740: 714
+          .0740: 715
           .0500: 198
 
 INTEREST_TYPE distribution (latest row per policy):
-  F            : 912
+  F            : 913
 
 INT_METHOD distribution (latest row per policy):
-  D         : 912
+  D         : 913
 
 STATUS_CODE distribution (latest row per policy):
-  H          : 574
-  A          : 241
+  H          : 576
+  A          : 240
   R          : 97
 
 TYPE_CODE distribution (latest row per policy):
-  R        : 449
-           : 348
+  R        : 447
+           : 351
   A        : 115
 missing_ACCRUAL_DATE_latest: 1
-missing_LAST_REPAY_DATE_latest: 120
-missing_CAPITALIZED_DATE_latest: 585
+missing_LAST_REPAY_DATE_latest: 118
+missing_CAPITALIZED_DATE_latest: 586
 missing_INTEREST_RATE_latest: 0
 
-Derivation rules: PLOAN-primary QuikLoan staging derivation (Phase L1). BA review required for unresolved fields.
+Derivation rules: PLOAN-primary QuikLoan derivation (Issue #32 v1.2). QLAdmin calculates loan interest; MLOANACCR=0 at conversion.
 PACTG: reconciliation-only; not used for QuikLoan balances in Phase L1.

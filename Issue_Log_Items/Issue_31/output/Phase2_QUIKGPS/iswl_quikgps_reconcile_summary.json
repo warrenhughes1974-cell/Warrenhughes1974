@@ -1,0 +1,38 @@
+{
+  "script_version": "1.0",
+  "blocker_count": 0,
+  "emit_ready": true,
+  "v03_collisions": 0,
+  "v_gps_01_segment_resolution": true,
+  "v_gps_02_bp_scope": true,
+  "v_gps_03_hub_routing": true,
+  "v_gps_04_positive_values": true,
+  "paagerat_bp_in_scope": 1164,
+  "paagerat_bp_status": {
+    "EXCLUDED": 23260,
+    "IN_SCOPE": 1164
+  },
+  "paagerat_pr_status": {
+    "IN_SCOPE": 12392,
+    "EXCLUDED": 9911,
+    "BAD_VALUE": 2121
+  },
+  "iswl_quikgps_keys_by_mplan": {
+    "1658CS": 294,
+    "1659CS": 152,
+    "1669SR": 172,
+    "1679CS": 330
+  },
+  "source_stats": {
+    "bp_raw": 1336,
+    "bp_iswl_in_scope": 1164,
+    "bp_unresolved": 0,
+    "bp_positive_values": 1164,
+    "hub_659_cen_ii_to_1679cs": 330,
+    "non_iswl_bp": 172
+  },
+  "vargp3_plan_count": 77,
+  "bp_plan_count": 4,
+  "regression_ok": true,
+  "regression_notes": []
+}

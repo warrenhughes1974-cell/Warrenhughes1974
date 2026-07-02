@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "schema_columns": true,
+    "schema_match": true,
+    "emit_rows": true,
+    "csv_matches_converter": true,
+    "field_mapping_failures": 0,
+    "field_mapping_pass": true,
+    "orphan_mpolicy": 0,
+    "blocked_count": 1,
+    "blocked_policy": [
+      "9011190668"
+    ],
+    "zero_balance_held": 528,
+    "audit_reconcile": true
+  },
+  "stats": {
+    "candidate_rows": 913,
+    "emit_passed": 384,
+    "emit_exceptions": 529,
+    "zero_balance_held": 528,
+    "raw_rows": 93858,
+    "valid_rows": 93857,
+    "excluded_rows": 1,
+    "latest_policies": 913,
+    "mapped_rows": 913,
+    "mloanintx_fallback_count": 913,
+    "quikmstr_orphan_rows": 0,
+    "duplicate_mpolicy_in_emit": 0
+  },
+  "failures_sample": []
+}

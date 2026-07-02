@@ -1,0 +1,21 @@
+{
+  "blocker_count": 0,
+  "quikissc_rows": 8,
+  "rows_by_plan": {
+    "1658C1": 1,
+    "1658CS": 1,
+    "1659C2": 1,
+    "1659CR": 1,
+    "1659CS": 1,
+    "1659SR": 1,
+    "1669SR": 1,
+    "1679CS": 1
+  },
+  "quikuint_rows_unchanged": 32,
+  "factor_rows_unchanged": {
+    "QuikCvs": 25717,
+    "QuikGps": 12567,
+    "QuikCoi": 792,
+    "QuikGcoi": 198
+  }
+}

@@ -31,6 +31,10 @@ BUSINESS RULES:
 - preserve existing crosswalk behavior unless explicitly requested
 - preserve rulebook-driven mapping architecture
 
+OUTPUT FOLDER:
+- `QLA_Migration/Output/` — QLAdmin table CSVs only (`quik*.csv` + optional `rates/`)
+- audits, logs, validation, DBF staging → `Reports/`, `Logs/`, `Validation/`, `Staging/` (see `.cursor/rules/qla-output-folder.mdc`)
+
 TESTING REQUIREMENTS:
 - validate output schema integrity
 - preserve field ordering/types/lengths

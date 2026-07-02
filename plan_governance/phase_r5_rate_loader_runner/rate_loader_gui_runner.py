@@ -61,6 +61,14 @@ def _write_dbf_tables(res, emit_dir, manifest):
         path = os.path.join(emit_dir, f"{member_table}.dbf")
         n = W.write_member_table(path, member_table, rows, overwrite=True)
         manifest.append({"kind": "member", "table": member_table, "format": "dbf", "path": path, "rows": n})
+    if res.quikuint_rows:
+        path = os.path.join(emit_dir, "QuikUint.dbf")
+        n = W.write_quikuint_table(path, res.quikuint_rows, overwrite=True)
+        manifest.append({"kind": "interest", "table": "QuikUint", "format": "dbf", "path": path, "rows": n})
+    if res.quikissc_rows:
+        path = os.path.join(emit_dir, "QuikIssc.dbf")
+        n = W.write_quikissc_table(path, res.quikissc_rows, overwrite=True)
+        manifest.append({"kind": "surrender", "table": "QuikIssc", "format": "dbf", "path": path, "rows": n})
 
 
 def _write_csv_tables(res, csv_dir, manifest):
@@ -76,6 +84,14 @@ def _write_csv_tables(res, csv_dir, manifest):
         path = os.path.join(csv_dir, f"{member_table}.csv")
         n = W.write_member_table_csv(path, member_table, rows, overwrite=True)
         manifest.append({"kind": "member", "table": member_table, "format": "csv", "path": path, "rows": n})
+    if res.quikuint_rows:
+        path = os.path.join(csv_dir, "QuikUint.csv")
+        n = W.write_quikuint_csv(path, res.quikuint_rows, overwrite=True)
+        manifest.append({"kind": "interest", "table": "QuikUint", "format": "csv", "path": path, "rows": n})
+    if res.quikissc_rows:
+        path = os.path.join(csv_dir, "QuikIssc.csv")
+        n = W.write_quikissc_csv(path, res.quikissc_rows, overwrite=True)
+        manifest.append({"kind": "surrender", "table": "QuikIssc", "format": "csv", "path": path, "rows": n})
 
 
 def main() -> int:

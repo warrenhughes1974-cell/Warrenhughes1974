@@ -1,0 +1,13 @@
+{
+  "blocker_count": 0,
+  "quikcoi_factor_rows": 792,
+  "quikcoi_keys_by_plan": {
+    "1658CS": 396,
+    "1679CS": 396
+  },
+  "iswl_coi_keys_by_plan": {
+    "1658CS": 396,
+    "1679CS": 396
+  },
+  "paagerat_coi_in_scope": 800
+}

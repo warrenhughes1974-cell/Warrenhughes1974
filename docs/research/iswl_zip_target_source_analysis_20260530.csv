@@ -1,0 +1,8 @@
+target,candidate_file,in_zip,evidence,note
+QUIKCVS,PDAGE_AgeDuration_Rates_Extract_20260530.csv,Yes,"{""NP"": 12357, ""RV"": 12352, ""CV"": 12084, ""TP"": 2128, ""TX"": 2128, ""SL"": 12, ""UF"": 12, ""DB"": 10}",Rate_Table_Extract NOT in ZIP; repo uses 20260427 extract
+QUIKCOI,PAAGERAT_AttainedAge_Rates_Extract_20260530.csv TYPE NC,Yes,"{""BP"": 1164, ""U6"": 800, ""NC"": 690, ""NF"": 432, ""U5"": 200, ""RD"": 1}",Compare to repo PAAGERAT 20260428
+QUIKGCOI,PAAGERAT TYPE U6,Yes,"{""BP"": 1164, ""U6"": 800, ""NC"": 690, ""NF"": 432, ""U5"": 200, ""RD"": 1}",
+QUIKGPS,PAAGERAT PR/BP; PDAGE PR,Yes,"{""BP"": 1164, ""U6"": 800, ""NC"": 690, ""NF"": 432, ""U5"": 200, ""RD"": 1}",PR ISWL rows TBD from analysis
+QUIKUINT,PPBEN; PRBENINT; PPRBNUL,Yes,"{"".00"": 2391, ""4.50"": 2159}","{"".00000"": 4550}"
+QUIKISSC,PDDIC dictionary; PDAGE TP/TX,Search,"{""pdage_global"": {""TP"": 3352, ""TX"": 2128}, ""pdage_iswl"": {""TP"": 2128, ""TX"": 2128}}",INFERENCE ONLY for TP/TX
+Expenses,PDDIC; PCOMP; PBILL,Search,"{""PDDIC_DataDictionary_Extract_20260530.csv"": 0, ""PDDICFLD_DataDictionaryField_Extract_20260530.csv"": 0, ""PDDICKYS_DataDictionaryKeys_Extract_20260530.csv"": 0}",

@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-06-27 15:58:26",
+  "generated_at": "2026-06-29 16:13:44",
   "closed_mplan_authority": "ENABLED",
   "legacy_fallback_mode": "DISABLED",
-  "emitted_rows": 7002,
-  "trace_rows": 7002,
+  "emitted_rows": 6934,
+  "trace_rows": 6934,
   "orphan_mplan_count": 0,
   "blank_mplan_count": 0,
   "unresolved_blank_count": 0,

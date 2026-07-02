@@ -22,11 +22,13 @@ stores the textual decimal, so capacity is "any decimal string that fits 7 chars
 TYPE_TO_TABLE = {"CV": "QuikCvs", "DB": "QuikDbs", "NP": "QuikNps",
                  "DV": "QuikDvs", "RV": "QuikTvs", "PR": "QuikGps"}
 FAMILY = {"QuikGps": "GROSS_PREMIUM", "QuikCvs": "CASH_VALUE", "QuikDbs": "DEATH_BENEFIT",
-          "QuikDvs": "DIVIDEND", "QuikNps": "NET_PREMIUM", "QuikTvs": "TERMINAL_RESERVE"}
+          "QuikDvs": "DIVIDEND", "QuikNps": "NET_PREMIUM", "QuikTvs": "TERMINAL_RESERVE",
+          "QuikCoi": "CURRENT_COI", "QuikGcoi": "GUARANTEED_COI"}
 PREFIX = {"QuikGps": "GP", "QuikCvs": "CV", "QuikDbs": "DB",
-          "QuikDvs": "DV", "QuikNps": "NP", "QuikTvs": "TV"}
+          "QuikDvs": "DV", "QuikNps": "NP", "QuikTvs": "TV", "QuikCoi": "QX", "QuikGcoi": "QX"}
 KEY_TABLE = {"QuikGps": "QuikPlGp", "QuikCvs": "QuikPlCv", "QuikDbs": "QuikPlDb",
-             "QuikDvs": "QuikPlDv", "QuikNps": "QuikPlTv", "QuikTvs": "QuikPlTv"}
+             "QuikDvs": "QuikPlDv", "QuikNps": "QuikPlTv", "QuikTvs": "QuikPlTv",
+             "QuikCoi": "QuikPlCoi", "QuikGcoi": "QuikPlGcoi"}
 EXCLUDED_TYPE_CODES = frozenset({"NN", "PN", "TP", "TX", "UF", "NF", "SL"})
 
 # ---- segmentation crosswalks (business-confirmed) ----
@@ -35,17 +37,25 @@ BAND_MAP = {"1": "01", "2": "02", "3": "03"}
 UWCLASS_MAP = {"0": "00", "N": "NS", "S": "SM", "P": "PR", "B": "ST"}
 
 FACTOR_FIELD_LEN = 7
+COI_FACTOR_FIELD_LEN = 10  # QuikCoi/QuikGcoi QX0–QX9 per QLAdmin Help §7.73 / §7.93
+FACTOR_FIELD_LEN_BY_TABLE = {"QuikCoi": COI_FACTOR_FIELD_LEN, "QuikGcoi": COI_FACTOR_FIELD_LEN}
 N_DURATION_COLS = 10
 DEFAULT_DECIMALS = 2  # LifePRO source precision / QLAdmin convention
 MAX_AGE = 99          # QLAdmin AGE field is C2; ages above this are capped (business rule)
 STANDARD_EFFDATE = "19000101"  # authoritative single rate generation (no effective-date variants)
 
 
+def factor_field_len(table):
+    """CHAR width for factor columns (GP/CV/QX/etc.) on a given table."""
+    return FACTOR_FIELD_LEN_BY_TABLE.get(table, FACTOR_FIELD_LEN)
+
+
 def factor_table_fields(table):
     """Confirmed ordered (name, type, length, decimals) for a factor table."""
     pfx = PREFIX[table]
+    flen = factor_field_len(table)
     fields = [("PLAN", "C", 6, 0), ("AGE", "C", 2, 0), ("CNTL", "C", 2, 0)]
-    fields += [(f"{pfx}{i}", "C", FACTOR_FIELD_LEN, 0) for i in range(N_DURATION_COLS)]
+    fields += [(f"{pfx}{i}", "C", flen, 0) for i in range(N_DURATION_COLS)]
     fields += [("GENDER", "C", 1, 0), ("UWCLASS", "C", 2, 0), ("BAND", "C", 2, 0),
                ("ISSCNTRY", "C", 4, 0), ("ISSUEST", "C", 2, 0), ("EFFDATE", "D", 8, 0)]
     return fields
@@ -78,6 +88,12 @@ _MEMBER_TABLE_FIELDS = {
                  ("MLOANINTX", "C", 1, 0)],
     "QuikPlNb": [("PLAN", "C", 6, 0), ("ISSCNTRY", "C", 4, 0), ("ISSUEST", "C", 2, 0),
                  ("EFFDATE", "D", 8, 0), ("TERMDATE", "D", 8, 0)],
+    "QuikUint": [("MPLAN", "C", 6, 0), ("MEFFDATE", "D", 8, 0),
+                 ("MGTDRATE", "N", 8, 4), ("MCURRATE", "N", 8, 4)],
+    "QuikIssc": [("PLAN", "C", 6, 0), ("AGE", "N", 3, 0), ("GENDER", "C", 1, 0),
+                 ("UWCLASS", "C", 2, 0), ("BAND", "C", 2, 0), ("ISSCNTRY", "C", 4, 0),
+                 ("ISSUEST", "C", 2, 0)]
+                 + [(f"SCHG{i:02d}", "N", 8, 4) for i in range(1, 21)],
 }
 MEMBER_TABLES = list(_MEMBER_TABLE_FIELDS.keys())
 
@@ -92,6 +108,16 @@ DEFAULT_STATE_TXT = "ALL (OTHER)"
 
 def member_table_fields(name):
     return list(_MEMBER_TABLE_FIELDS[name])
+
+
+def quikuint_fields():
+    """QuikUint UL interest rates — QLAdmin Help §7.223."""
+    return list(_MEMBER_TABLE_FIELDS["QuikUint"])
+
+
+def quikissc_fields():
+    """QuikIssc surrender charge schedules — QLAdmin Help §7.144."""
+    return list(_MEMBER_TABLE_FIELDS["QuikIssc"])
 
 
 def assumption_field_names(key_table):

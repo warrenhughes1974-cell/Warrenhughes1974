@@ -1,0 +1,494 @@
+{
+  "profile": {
+    "psegt": {
+      "rows": 696,
+      "unique_segment_ids": 221,
+      "unique_segt_types": 64,
+      "target_counts": {
+        "U5": 3,
+        "U6": 4,
+        "BP": 8,
+        "CV": 40,
+        "A1": 2,
+        "G1": 2,
+        "LN": 7,
+        "SR": 2,
+        "SL": 2,
+        "UF": 1,
+        "U1": 0,
+        "U2": 0,
+        "U3": 0,
+        "G2": 0,
+        "G3": 0,
+        "GF": 0
+      },
+      "top_types": {
+        "PR": 103,
+        "NP": 82,
+        "RV": 81,
+        "CV": 40,
+        "CC": 34,
+        "CM": 33,
+        "NL": 24,
+        "NT": 24,
+        "DB": 23,
+        "ET": 20,
+        "PU": 20,
+        "NN": 20,
+        "PN": 19,
+        "DV": 16,
+        "RD": 12,
+        "NF": 11,
+        "TP": 11,
+        "TX": 11,
+        "DN": 10,
+        "BP": 8,
+        "LN": 7,
+        "IB": 6,
+        "NO": 5,
+        "NC": 5,
+        "UG": 5,
+        "UH": 5,
+        "U6": 4,
+        "C2": 4,
+        "NB": 4,
+        "F0": 3
+      }
+    },
+    "pdint": {
+      "rows": 10,
+      "idents": [
+        "CENII",
+        "DAR01",
+        "DIV01",
+        "IBA01",
+        "L1001",
+        "SAL01",
+        "SPWL",
+        "SPWL+"
+      ],
+      "type_codes": [
+        "A1",
+        "C1",
+        "C3"
+      ]
+    },
+    "pdinttbl": {
+      "rows": 37,
+      "idents": [
+        "CENII",
+        "DAR01",
+        "DIV01",
+        "IBA01",
+        "L1001",
+        "SAL01",
+        "SPWL",
+        "SPWL+"
+      ],
+      "type_codes": [
+        "A1",
+        "C1",
+        "C3"
+      ],
+      "cenii_a1_rates": [
+        {
+          "START_DATE": "   19800101",
+          "END_DATE": "   19981231",
+          "DECLARED_RATE": 7.0
+        },
+        {
+          "START_DATE": "   19990101",
+          "END_DATE": "   20011231",
+          "DECLARED_RATE": 5.0
+        },
+        {
+          "START_DATE": "   20020101",
+          "END_DATE": "   20991231",
+          "DECLARED_RATE": 4.5
+        },
+        {
+          "START_DATE": "   19800101",
+          "END_DATE": "   19881231",
+          "DECLARED_RATE": 11.0
+        },
+        {
+          "START_DATE": "   19890101",
+          "END_DATE": "   20011231",
+          "DECLARED_RATE": 9.0
+        },
+        {
+          "START_DATE": "   20020101",
+          "END_DATE": "   20991231",
+          "DECLARED_RATE": 4.5
+        }
+      ]
+    }
+  },
+  "hierarchy": {
+    "pcovrsgt_y_rows": 191,
+    "trace_rows": 191,
+    "psegt_join_rate": 0.9685863874345549,
+    "missing_psegt_refs": 6,
+    "matrix": {
+      "658 CEN I": {
+        "U5": false,
+        "U6": false,
+        "BP": false,
+        "CV": false,
+        "A1": false,
+        "G1": false,
+        "LN": false,
+        "SR": false,
+        "SL": false,
+        "UF": false,
+        "U1": false,
+        "U2": false,
+        "U3": false,
+        "G2": false,
+        "G3": false,
+        "GF": false,
+        "_linked_types": [
+          "CM",
+          "DO",
+          "IB",
+          "L2",
+          "TX",
+          "UH",
+          "UL",
+          "UM",
+          "WD"
+        ]
+      },
+      "658 CEN SD": {
+        "U5": false,
+        "U6": false,
+        "BP": false,
+        "CV": false,
+        "A1": false,
+        "G1": false,
+        "LN": false,
+        "SR": false,
+        "SL": false,
+        "UF": false,
+        "U1": false,
+        "U2": false,
+        "U3": false,
+        "G2": false,
+        "G3": false,
+        "GF": false,
+        "_linked_types": [
+          "CM",
+          "DO",
+          "IB",
+          "L2",
+          "RV",
+          "TX",
+          "UH",
+          "UL",
+          "UM",
+          "WD"
+        ]
+      },
+      "659 CEN II": {
+        "U5": false,
+        "U6": false,
+        "BP": false,
+        "CV": false,
+        "A1": false,
+        "G1": false,
+        "LN": false,
+        "SR": false,
+        "SL": false,
+        "UF": false,
+        "U1": false,
+        "U2": false,
+        "U3": false,
+        "G2": false,
+        "G3": false,
+        "GF": false,
+        "_linked_types": [
+          "CM",
+          "DO",
+          "IB",
+          "L2",
+          "TX",
+          "UL",
+          "UM",
+          "WD"
+        ]
+      },
+      "659 CEN SR": {
+        "U5": false,
+        "U6": false,
+        "BP": false,
+        "CV": false,
+        "A1": false,
+        "G1": false,
+        "LN": false,
+        "SR": false,
+        "SL": false,
+        "UF": false,
+        "U1": false,
+        "U2": false,
+        "U3": false,
+        "G2": false,
+        "G3": false,
+        "GF": false,
+        "_linked_types": [
+          "CM",
+          "DO",
+          "IB",
+          "L2",
+          "RV",
+          "TX",
+          "UL",
+          "UM",
+          "WD"
+        ]
+      },
+      "659 CEN SD": {
+        "U5": false,
+        "U6": false,
+        "BP": false,
+        "CV": false,
+        "A1": false,
+        "G1": false,
+        "LN": false,
+        "SR": false,
+        "SL": false,
+        "UF": false,
+        "U1": false,
+        "U2": false,
+        "U3": false,
+        "G2": false,
+        "G3": false,
+        "GF": false,
+        "_linked_types": [
+          "CM",
+          "DO",
+          "IB",
+          "L2",
+          "RV",
+          "TX",
+          "UL",
+          "UM",
+          "WD"
+        ]
+      },
+      "659 SR GD": {
+        "U5": false,
+        "U6": false,
+        "BP": false,
+        "CV": false,
+        "A1": false,
+        "G1": false,
+        "LN": false,
+        "SR": false,
+        "SL": false,
+        "UF": false,
+        "U1": false,
+        "U2": false,
+        "U3": false,
+        "G2": false,
+        "G3": false,
+        "GF": false,
+        "_linked_types": [
+          "CM",
+          "DO",
+          "IB",
+          "L2",
+          "RV",
+          "TX",
+          "UL",
+          "UM",
+          "WD"
+        ]
+      },
+      "669 SR GD": {
+        "U5": false,
+        "U6": false,
+        "BP": false,
+        "CV": true,
+        "A1": false,
+        "G1": false,
+        "LN": false,
+        "SR": false,
+        "SL": false,
+        "UF": false,
+        "U1": false,
+        "U2": false,
+        "U3": false,
+        "G2": false,
+        "G3": false,
+        "GF": false,
+        "_linked_types": [
+          "CM",
+          "CV",
+          "DO",
+          "IB",
+          "L2",
+          "RV",
+          "TX",
+          "UL",
+          "UM",
+          "WD"
+        ]
+      },
+      "679 CEN SD": {
+        "U5": false,
+        "U6": false,
+        "BP": false,
+        "CV": false,
+        "A1": false,
+        "G1": false,
+        "LN": false,
+        "SR": false,
+        "SL": false,
+        "UF": false,
+        "U1": false,
+        "U2": false,
+        "U3": false,
+        "G2": false,
+        "G3": false,
+        "GF": false,
+        "_linked_types": [
+          "CM",
+          "DO",
+          "IB",
+          "L2",
+          "TX",
+          "UH",
+          "UL",
+          "WD"
+        ]
+      }
+    },
+    "target_via_pcovrsgt_psegt": {
+      "U5": 0,
+      "U6": 0,
+      "BP": 0,
+      "CV": 1,
+      "A1": 0,
+      "G1": 0,
+      "LN": 0,
+      "SR": 0,
+      "SL": 0,
+      "UF": 0,
+      "U1": 0,
+      "U2": 0,
+      "U3": 0,
+      "G2": 0,
+      "G3": 0,
+      "GF": 0
+    },
+    "target_via_paagerat": {
+      "U5": 1,
+      "U6": 2,
+      "BP": 6,
+      "CV": 0,
+      "A1": 0,
+      "G1": 0,
+      "LN": 0,
+      "SR": 0,
+      "SL": 0,
+      "UF": 0,
+      "U1": 0,
+      "U2": 0,
+      "U3": 0,
+      "G2": 0,
+      "G3": 0,
+      "GF": 0
+    },
+    "target_via_rate_table": {
+      "U5": 0,
+      "U6": 0,
+      "BP": 0,
+      "CV": 8,
+      "A1": 0,
+      "G1": 0,
+      "LN": 0,
+      "SR": 0,
+      "SL": 1,
+      "UF": 1,
+      "U1": 0,
+      "U2": 0,
+      "U3": 0,
+      "G2": 0,
+      "G3": 0,
+      "GF": 0
+    },
+    "paagerat_types_by_cov": {
+      "658 CEN I": [
+        "BP",
+        "NC",
+        "NF",
+        "RD",
+        "U6"
+      ],
+      "658 CEN SD": [
+        "BP"
+      ],
+      "659 CEN II": [
+        "BP",
+        "NC",
+        "NF",
+        "U5",
+        "U6"
+      ],
+      "659 CEN SD": [
+        "BP"
+      ],
+      "659 CEN SR": [
+        "BP"
+      ],
+      "679 CEN SD": [
+        "BP",
+        "NC"
+      ]
+    },
+    "rate_table_types_by_cov": {
+      "658 CEN I": [
+        "CV",
+        "NP",
+        "RV"
+      ],
+      "658 CEN SD": [
+        "CV",
+        "NP",
+        "RV"
+      ],
+      "659 CEN II": [
+        "CV",
+        "NP",
+        "RV",
+        "SL",
+        "TP",
+        "TX",
+        "UF"
+      ],
+      "659 CEN SD": [
+        "CV",
+        "NP",
+        "RV"
+      ],
+      "659 CEN SR": [
+        "CV",
+        "NP",
+        "RV"
+      ],
+      "659 SR GD": [
+        "CV",
+        "DB",
+        "NP",
+        "RV"
+      ],
+      "669 SR GD": [
+        "CV"
+      ],
+      "679 CEN SD": [
+        "CV"
+      ]
+    },
+    "iswl_pcovr_rows": 8
+  }
+}

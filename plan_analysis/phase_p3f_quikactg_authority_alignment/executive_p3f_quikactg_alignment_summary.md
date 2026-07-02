@@ -1,6 +1,6 @@
 # Executive Summary — Phase P3F quikactg MPLAN Authority Alignment
 
-Generated: 2026-06-27 16:06:26
+Generated: 2026-06-29 16:22:05
 
 ## Result
 

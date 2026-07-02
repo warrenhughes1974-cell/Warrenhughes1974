@@ -1,0 +1,61 @@
+{
+  "PSEGT": {
+    "path": "PSEGT_Segment_Extract_20260629.csv",
+    "rows": 697,
+    "cols": [
+      "SEGMENT_ID",
+      "SEGT_TYPE",
+      "SEGT_DATA",
+      "MOD_CODER",
+      "MOD_DATE",
+      "MOD_TIME",
+      "SEGT_UPD_COUNT",
+      "SEGT_KEY0",
+      "ROW_COLUMN"
+    ],
+    "col_count": 9
+  },
+  "PDINT": {
+    "path": "PDINT_DeclaredInterestRates_Extract_20260629.csv",
+    "rows": 11,
+    "cols": [
+      "IDENT",
+      "TYPE_CODE",
+      "DINT_RULE",
+      "EFF_DATE",
+      "SEQ",
+      "LOW_DATE",
+      "HIGH_DATE",
+      "LOW_PROCESS_DUR",
+      "HIGH_PROCESS_DUR",
+      "INVESTMENT_CODE",
+      "RATE_DUR_PERIOD_CD",
+      "MULTIPLIER",
+      "MOD_CODER",
+      "MOD_DATE",
+      "MOD_TIME",
+      "DINT_UPD_COUNT",
+      "DINT_KEY0",
+      "ROW_COLUMN"
+    ],
+    "col_count": 18
+  },
+  "PDINTTBL": {
+    "path": "PDINTTBL_DeclaredInterestRates_Extract_20260629.csv",
+    "rows": 38,
+    "cols": [
+      "IDENT",
+      "TYPE_CODE",
+      "DINT_RULE",
+      "EFF_DATE",
+      "SEQ",
+      "IDX",
+      "START_DATE",
+      "END_DATE",
+      "DECLARED_RATE",
+      "RATE_GUAR_DUR",
+      "DINT_KEY0"
+    ],
+    "col_count": 11
+  }
+}

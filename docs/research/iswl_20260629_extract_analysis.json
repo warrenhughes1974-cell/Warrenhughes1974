@@ -1,0 +1,178 @@
+{
+  "psegt": {
+    "rows": 696,
+    "target_counts": {
+      "U5": 3,
+      "U6": 4,
+      "BP": 8,
+      "CV": 40,
+      "A1": 2,
+      "G1": 2,
+      "LN": 7,
+      "SR": 2,
+      "SL": 2,
+      "UF": 1,
+      "U1": 0,
+      "U2": 0,
+      "U3": 0,
+      "G2": 0,
+      "G3": 0,
+      "GF": 0
+    },
+    "all_type_count": 64,
+    "samples": {
+      "U5": [
+        {
+          "SEGMENT_ID": "659 CEN II",
+          "SEGT_TYPE": "U5"
+        },
+        {
+          "SEGMENT_ID": "668 SPWL",
+          "SEGT_TYPE": "U5"
+        },
+        {
+          "SEGMENT_ID": "678 CEN SD",
+          "SEGT_TYPE": "U5"
+        }
+      ],
+      "U6": [
+        {
+          "SEGMENT_ID": "658 CEN I",
+          "SEGT_TYPE": "U6"
+        },
+        {
+          "SEGMENT_ID": "659 CEN II",
+          "SEGT_TYPE": "U6"
+        },
+        {
+          "SEGMENT_ID": "678 CEN SD",
+          "SEGT_TYPE": "U6"
+        }
+      ],
+      "BP": [
+        {
+          "SEGMENT_ID": "658 CEN I",
+          "SEGT_TYPE": "BP"
+        },
+        {
+          "SEGMENT_ID": "658 CEN SD",
+          "SEGT_TYPE": "BP"
+        },
+        {
+          "SEGMENT_ID": "659 CEN II",
+          "SEGT_TYPE": "BP"
+        }
+      ],
+      "CV": [
+        {
+          "SEGMENT_ID": "10827 CSI3",
+          "SEGT_TYPE": "CV"
+        },
+        {
+          "SEGMENT_ID": "10827 CSI5",
+          "SEGT_TYPE": "CV"
+        },
+        {
+          "SEGMENT_ID": "10827 CSI7",
+          "SEGT_TYPE": "CV"
+        }
+      ],
+      "A1": [
+        {
+          "SEGMENT_ID": "659 CEN II",
+          "SEGT_TYPE": "A1"
+        },
+        {
+          "SEGMENT_ID": "668 SPWL",
+          "SEGT_TYPE": "A1"
+        }
+      ],
+      "G1": [
+        {
+          "SEGMENT_ID": "659 CEN II",
+          "SEGT_TYPE": "G1"
+        },
+        {
+          "SEGMENT_ID": "668 SPWL",
+          "SEGT_TYPE": "G1"
+        }
+      ],
+      "LN": [
+        {
+          "SEGMENT_ID": "5 ADV",
+          "SEGT_TYPE": "LN"
+        },
+        {
+          "SEGMENT_ID": "659 CEN II",
+          "SEGT_TYPE": "LN"
+        },
+        {
+          "SEGMENT_ID": "74 ADV",
+          "SEGT_TYPE": "LN"
+        }
+      ],
+      "SR": [
+        {
+          "SEGMENT_ID": "659 CEN II",
+          "SEGT_TYPE": "SR"
+        },
+        {
+          "SEGMENT_ID": "668 SPWL",
+          "SEGT_TYPE": "SR"
+        }
+      ],
+      "SL": [
+        {
+          "SEGMENT_ID": "659 CEN II",
+          "SEGT_TYPE": "SL"
+        },
+        {
+          "SEGMENT_ID": "668 SPWL",
+          "SEGT_TYPE": "SL"
+        }
+      ],
+      "UF": [
+        {
+          "SEGMENT_ID": "659 CEN II",
+          "SEGT_TYPE": "UF"
+        }
+      ]
+    }
+  },
+  "pdint": {
+    "rows": 10,
+    "idents": [
+      "CENII",
+      "DAR01",
+      "DIV01",
+      "IBA01",
+      "L1001",
+      "SAL01",
+      "SPWL",
+      "SPWL+"
+    ],
+    "type_codes": [
+      "A1",
+      "C1",
+      "C3"
+    ]
+  },
+  "pdinttbl": {
+    "rows": 37,
+    "idents": [
+      "CENII",
+      "DAR01",
+      "DIV01",
+      "IBA01",
+      "L1001",
+      "SAL01",
+      "SPWL",
+      "SPWL+"
+    ],
+    "type_codes": [
+      "A1",
+      "C1",
+      "C3"
+    ]
+  }
+}

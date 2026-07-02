@@ -1,0 +1,39 @@
+{
+  "script_version": "1.0",
+  "blocker_count": 0,
+  "emit_ready": true,
+  "v_gcoi_01_u5_u6_separation": true,
+  "v_gcoi_02_single_parent": true,
+  "v_gcoi_03_schema_psegt": true,
+  "v_gcoi_04_value_info_qx_blank": true,
+  "v_gcoi_seq100_caps": 2,
+  "v_gcoi_cap_collisions": 2,
+  "paagerat_gcoi_in_scope": 200,
+  "quikgcoi_factor_rows": 198,
+  "iswl_gcoi_keys_by_mplan": {
+    "1679CS": 198
+  },
+  "source_stats": {
+    "u5_in_scope": 200,
+    "u5_unresolved": 0,
+    "u5_segments": {
+      "659 CEN II": 200
+    },
+    "nc_rows": 690,
+    "u6_rows": 800,
+    "value_info_rows": 200,
+    "plans": {
+      "1679CS": 200
+    }
+  },
+  "factor_check": {
+    "qx1_qx9_blank": true,
+    "value_info_populated": true,
+    "cntl_00": true,
+    "factor_row_count": 198
+  },
+  "output_in_expected_range": true,
+  "regression_ok": true,
+  "regression_notes": [],
+  "phase3_quikcoi_rows": 792
+}

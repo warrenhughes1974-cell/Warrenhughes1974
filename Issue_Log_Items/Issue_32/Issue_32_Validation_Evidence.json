@@ -1,0 +1,109 @@
+{
+  "issue": "32",
+  "version": "v1.2",
+  "emit_passed": 384,
+  "emit_exceptions": 529,
+  "stats": {
+    "candidate_rows": 913,
+    "emit_passed": 384,
+    "emit_exceptions": 529,
+    "zero_balance_held": 528,
+    "raw_rows": 93858,
+    "valid_rows": 93857,
+    "excluded_rows": 1,
+    "latest_policies": 913,
+    "mapped_rows": 913,
+    "mloanintx_fallback_count": 913,
+    "quikmstr_orphan_rows": 0,
+    "duplicate_mpolicy_in_emit": 0
+  },
+  "checks": [
+    {
+      "check": "trace_9010331768_MLOANPRIN",
+      "status": "PASS",
+      "detail": "expected=3707.11 got=3707.11"
+    },
+    {
+      "check": "trace_9010331768_MLOANBAL",
+      "status": "PASS",
+      "detail": "expected=3707.11 got=3707.11"
+    },
+    {
+      "check": "trace_9010331768_MLOANINT",
+      "status": "PASS",
+      "detail": "expected=5.00 got=5.00"
+    },
+    {
+      "check": "trace_9010331768_MLOANINTX",
+      "status": "PASS",
+      "detail": "expected=A got=A"
+    },
+    {
+      "check": "trace_9010331768_MLOANIDT",
+      "status": "PASS",
+      "detail": "expected=20250725 got=20250725"
+    },
+    {
+      "check": "trace_9010331768_MLOANDATE",
+      "status": "PASS",
+      "detail": "expected=20250725 got=20250725"
+    },
+    {
+      "check": "trace_9010331768_MLOANACCR",
+      "status": "PASS",
+      "detail": "expected=0.00 got=0.00"
+    },
+    {
+      "check": "trace_9010331768_MLOANBILL",
+      "status": "PASS",
+      "detail": "expected=0.00 got=0.00"
+    },
+    {
+      "check": "emit_row_count",
+      "status": "PASS",
+      "detail": "rows=384"
+    },
+    {
+      "check": "no_duplicate_mpolicy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "mloanaccr_all_zero",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "mloanbill_all_zero",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "mloanint_rates",
+      "status": "PASS",
+      "detail": "rates=['5.00', '7.40']"
+    },
+    {
+      "check": "mloanintx_ar",
+      "status": "PASS",
+      "detail": "values=['A']"
+    },
+    {
+      "check": "mloandate_populated",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "mloanidt_populated",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "zero_balance_excluded",
+      "status": "PASS",
+      "detail": "held=528"
+    }
+  ],
+  "overall": "PASS",
+  "failed_count": 0
+}

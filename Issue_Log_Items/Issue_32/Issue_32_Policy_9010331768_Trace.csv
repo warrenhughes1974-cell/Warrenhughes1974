@@ -1,0 +1,11 @@
+LIFEPRO_SCREEN_LABEL,LIFEPRO_SCREEN_VALUE,PLOAN_FIELD,PLOAN_VALUE,PROPOSED_QUIKLOAN_FIELD,PROPOSED_OUTPUT_VALUE,MATCH,NOTES
+Principal,3707.11,LOAN_BALANCE,3707.11,MLOANPRIN,3707.11,YES,Screen Principal equals latest PLOAN LOAN_BALANCE; not ORIG_LOAN_AMOUNT (3522.25)
+Interest,18.19,ACCRUED_INT_AMT,0.0,MLOANACCR,TBD_CALCULATED,NO,ACCRUED_INT_AMT=0; UI interest is calculated (~36 days advance at 5% on principal). Not stored in PLOAN.
+Balance,3688.92,LOAN_BALANCE - UI_Interest,3688.92,MLOANBAL,3688.92,PARTIAL,3688.92 = LOAN_BALANCE (3707.11) - 18.19; not raw LOAN_BALANCE field alone
+Interest Rate,5.00000%,INTEREST_RATE,0.05,MLOANINT,5.0,YES,PLOAN stores decimal; screen shows percent. Recommend MLOANINT=5.00 (AS_PERCENT).
+Interest Type,Fixed,INTEREST_TYPE,F,(no QuikLoan field),N/A,N/A,Fixed rate type; maps to display label not MLOANINTX
+Interest Method,Advance,INT_METHOD,D,MLOANINTX,A,NO,INT_METHOD=D fleet-wide; does NOT encode Advance. Advance likely from plan/product config.
+Last Accrued Date,07/25/2025,ACCRUAL_DATE,20250725,MLOANDATE / MLOANIDT candidate,20250725,YES,Matches ACCRUAL_DATE; also equals LAST_REPAY_DATE and INT_START_DATE on latest row
+Loan Interest Delay Days,00,INT_DELAY_DAYS,0,(no QuikLoan field),N/A,YES,No QuikLoan target; documented for completeness
+Bankers Year,No,BANKERS_YEAR_IND,N,(no QuikLoan field),N/A,YES,No QuikLoan target
+Billing loan payment,(not shown),(none),,MLOANBILL,0.0,N/A,No screenshot evidence; default 0.00

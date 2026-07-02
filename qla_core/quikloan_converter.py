@@ -1,10 +1,11 @@
 """
-PLOAN-primary QuikLoan staging converter (Phase L1).
+PLOAN-primary QuikLoan converter (Issue #32 v1.2).
 
 Authoritative source: PLOAN.csv (LifePRO loan snapshot/history).
 PACTG is not used to derive balances; reconciliation is separate.
+QLAdmin calculates loan interest — MLOANACCR=0.00 at conversion.
 
-Production emit is gated by config / QLA_ENABLE_QUIKLOAN_EMIT — default is staging + QA only.
+Production emit is gated by QLA_ENABLE_QUIKLOAN_EMIT / QLA_QUIKLOAN_WRITE_OUTPUT.
 """
 
 from __future__ import annotations
@@ -104,6 +105,115 @@ def _parse_balance(val: Any) -> float | None:
         return float(s.replace(",", ""))
     except ValueError:
         return None
+
+
+def normalize_quikplan_loanintx(raw: Any) -> str:
+    """Return A or R when QuikPlan LOANINTX is valid; else empty string."""
+    s = _s(raw).upper()
+    if not s:
+        return ""
+    if s in ("A", "ADV", "ADVANCE"):
+        return "A"
+    if s in ("R", "ARR", "ARREARS"):
+        return "R"
+    if len(s) == 1 and s in ("A", "R"):
+        return s
+    return ""
+
+
+def load_quikplan_loanintx_map(path: str) -> dict[str, str]:
+    """Build PLAN -> raw LOANINTX from QuikPlan CSV."""
+    if not path or not os.path.isfile(path):
+        return {}
+    df = pd.read_csv(path, dtype=str, low_memory=False)
+    df.columns = [str(c).strip().upper() for c in df.columns]
+    if "PLAN" not in df.columns or "LOANINTX" not in df.columns:
+        return {}
+    out: dict[str, str] = {}
+    for _, row in df.iterrows():
+        plan = _s(row.get("PLAN", ""))
+        if plan:
+            out[plan.upper()] = _s(row.get("LOANINTX", ""))
+    return out
+
+
+def load_ploan_plan_to_quikplan_map(crosswalk_path: str | None = None) -> dict[str, str]:
+    """
+    Map LifePRO PLOAN PLAN_CODE -> QuikPlan PLAN from Master_Crosswalk or plan inventory.
+    """
+    candidates: list[str] = []
+    if crosswalk_path and os.path.isfile(crosswalk_path):
+        candidates.append(crosswalk_path)
+    repo_root = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
+    for rel in (
+        os.path.join("QLA_Migration", "Mapping", "Master_Crosswalk.csv"),
+        os.path.join("Master_Crosswalk.csv"),
+    ):
+        p = os.path.normpath(os.path.join(repo_root, rel))
+        if os.path.isfile(p) and p not in candidates:
+            candidates.append(p)
+
+    out: dict[str, str] = {}
+    for path in candidates:
+        try:
+            df = pd.read_csv(path, dtype=str, header=None, names=["SRC", "TGT"], low_memory=False)
+        except Exception:
+            continue
+        for _, row in df.iterrows():
+            src = _s(row.get("SRC", ""))
+            tgt = _s(row.get("TGT", ""))
+            if src and tgt and not src.isdigit() and len(src) > 2:
+                out[src.upper()] = tgt
+    inv_path = os.path.normpath(
+        os.path.join(repo_root, "Issue_Log_Items", "Issue_28", "Issue_28_Crosswalk_Inventory.csv")
+    )
+    if os.path.isfile(inv_path):
+        inv = pd.read_csv(inv_path, dtype=str, low_memory=False)
+        inv.columns = [str(c).strip().lower() for c in inv.columns]
+        lp_col = "lifepro_coverage_id" if "lifepro_coverage_id" in inv.columns else inv.columns[0]
+        ql_col = "ql_plan_code" if "ql_plan_code" in inv.columns else inv.columns[1]
+        for _, row in inv.iterrows():
+            src = _s(row.get(lp_col, ""))
+            tgt = _s(row.get(ql_col, ""))
+            if src and tgt:
+                out[src.upper()] = tgt
+    return out
+
+
+def load_quikmstr_mpolicy_set(path: str) -> set[str]:
+    if not path or not os.path.isfile(path):
+        return set()
+    df = pd.read_csv(path, dtype=str, low_memory=False)
+    df.columns = [str(c).strip().upper() for c in df.columns]
+    if "MPOLICY" not in df.columns:
+        return set()
+    return {format_qladmin_mpolicy(_s(v)) for v in df["MPOLICY"] if _s(v)}
+
+
+def resolve_mloanintx(
+    plan_code: str,
+    *,
+    plan_to_quikplan: dict[str, str] | None,
+    loanintx_by_plan: dict[str, str] | None,
+    rules: dict,
+) -> tuple[str, str, str]:
+    """
+    Return (MLOANINTX, source_tag, raw_quikplan_value).
+    source_tag: quikplan | default
+    """
+    default = _s(rules.get("mloanintx_default", "A")) or "A"
+    if rules.get("mloanintx_source") != "QUIKPLAN_LOANINTX":
+        return default, "default", ""
+
+    plan_to_quikplan = plan_to_quikplan or {}
+    loanintx_by_plan = loanintx_by_plan or {}
+    lp_plan = _s(plan_code).upper()
+    ql_plan = plan_to_quikplan.get(lp_plan, "")
+    raw = loanintx_by_plan.get(ql_plan.upper(), "") if ql_plan else ""
+    norm = normalize_quikplan_loanintx(raw)
+    if norm:
+        return norm, "quikplan", raw
+    return default, "default", raw
 
 
 def normalize_loan_interest_rate(raw: Any, scale: str) -> tuple[str, str]:
@@ -221,6 +331,9 @@ def map_ploan_to_quikloan(
     latest_df: pd.DataFrame,
     cw_map: dict | None = None,
     rules: dict | None = None,
+    *,
+    plan_to_quikplan: dict[str, str] | None = None,
+    loanintx_by_plan: dict[str, str] | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Map latest PLOAN rows to QuikLoan candidate schema.
@@ -228,10 +341,10 @@ def map_ploan_to_quikloan(
     """
     rules = rules or load_derivation_rules()
     scale = rules.get("mloanint_scale", "UNRESOLVED_REVIEW")
-    mloanintx_default = rules.get("mloanintx_default", "")
     mloanbill_default = rules.get("mloanbill_default", "0.00")
     prin_src = rules.get("mloanprin_source", "LOAN_BALANCE")
     bal_src = rules.get("mloanbal_source", "LOAN_BALANCE")
+    accr_src = rules.get("mloanaccr_source", "ACCRUED_INT_AMT")
 
     rows: list[dict] = []
     trace_rows: list[dict] = []
@@ -250,7 +363,14 @@ def map_ploan_to_quikloan(
         prin_str = f"{float(prin_num):.2f}" if prin_num is not None else bal_str
 
         mloanint, int_scale_note = normalize_loan_interest_rate(row.get("INTEREST_RATE", ""), scale)
-        mloanintx = mloanintx_default if rules.get("mloanintx_source") == "UNRESOLVED" else _s(row.get("INTEREST_TYPE", ""))
+
+        plan_code = _s(row.get("PLAN_CODE", ""))
+        mloanintx, intx_src, intx_raw = resolve_mloanintx(
+            plan_code,
+            plan_to_quikplan=plan_to_quikplan,
+            loanintx_by_plan=loanintx_by_plan,
+            rules=rules,
+        )
 
         mloandate = ""
         acc_ts = row.get("_ACCRUAL_DATE_TS")
@@ -261,9 +381,12 @@ def map_ploan_to_quikloan(
 
         mloanidt, idt_src = _resolve_mloanidt(row, rules)
 
-        accr_raw = row.get(rules.get("mloanaccr_source", "ACCRUED_INT_AMT"), "0")
-        accr_num = _parse_balance(accr_raw)
-        mloanaccr = f"{float(accr_num):.2f}" if accr_num is not None else "0.00"
+        if accr_src == "ZERO_AT_CONVERSION":
+            mloanaccr = "0.00"
+        else:
+            accr_raw = row.get(accr_src, "0")
+            accr_num = _parse_balance(accr_raw)
+            mloanaccr = f"{float(accr_num):.2f}" if accr_num is not None else "0.00"
 
         candidate = {
             "MPOLICY": mpolicy,
@@ -282,9 +405,13 @@ def map_ploan_to_quikloan(
             "SOURCE_POLICY": pol_src,
             "MPOLICY": mpolicy,
             "CROSSWALK_STATUS": cw_status,
+            "PLAN_CODE": plan_code,
+            "QLA_PLAN": (plan_to_quikplan or {}).get(plan_code.strip().upper(), ""),
             "LOAN_BALANCE": bal_str,
             "MLOANPRIN_SOURCE": prin_src,
             "MLOANINT_SCALE_NOTE": int_scale_note,
+            "MLOANINTX_SOURCE": intx_src,
+            "MLOANINTX_RAW_QUIKPLAN": intx_raw,
             "MLOANIDT_SOURCE": idt_src,
             "INTEREST_TYPE": _s(row.get("INTEREST_TYPE", "")),
             "INT_METHOD": _s(row.get("INT_METHOD", "")),
@@ -365,7 +492,7 @@ def _build_ploan_profile_summary(
     rules: dict,
 ) -> str:
     lines = [
-        "PLOAN Profile Summary (Phase L1 QuikLoan staging)",
+        "PLOAN Profile Summary (Issue #32 QuikLoan v1.2)",
         f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
         "",
         f"total_raw_rows: {raw_count}",
@@ -507,10 +634,29 @@ def write_quikloan_phase_reports(
     miss_rate.to_csv(p, index=False)
     paths["missing_interest_rate"] = p
 
-    intx = latest_df[["POLICY_NUMBER", "INTEREST_TYPE", "INT_METHOD"]].copy()
-    intx["NOTE"] = "INTEREST_TYPE=F is fixed-rate in LifePRO; do not map to QLAdmin MLOANINTX A/R without BA confirmation."
+    if len(trace_df) and "MLOANINTX_SOURCE" in trace_df.columns:
+        intx = trace_df[trace_df["MLOANINTX_SOURCE"] == "default"].copy()
+        if len(intx):
+            intx["NOTE"] = "QuikPlan LOANINTX missing or invalid; applied mloanintx_default."
+    else:
+        intx = pd.DataFrame()
+    p = os.path.join(output_dir, "mloanintx_fallback_audit.csv")
+    cols = ["SOURCE_POLICY", "MPOLICY", "PLAN_CODE", "QLA_PLAN", "MLOANINTX", "MLOANINTX_SOURCE", "MLOANINTX_RAW_QUIKPLAN", "NOTE"]
+    intx_out = intx[[c for c in cols if c in intx.columns]] if len(intx) else pd.DataFrame(columns=cols)
+    intx_out.to_csv(p, index=False)
+    paths["mloanintx_fallback_audit"] = p
+
+    if stats.get("quikmstr_orphan_rows") is not None:
+        orphan_df = stats.get("quikmstr_orphan_df")
+        p = os.path.join(output_dir, "quikmstr_orphan_audit.csv")
+        (orphan_df if orphan_df is not None and len(orphan_df) else pd.DataFrame()).to_csv(p, index=False)
+        paths["quikmstr_orphan_audit"] = p
+
+    intx_legacy = latest_df[["POLICY_NUMBER", "INTEREST_TYPE", "INT_METHOD"]].copy() if len(latest_df) else pd.DataFrame()
+    if len(intx_legacy):
+        intx_legacy["NOTE"] = "PLOAN INTEREST_TYPE/INT_METHOD not used for MLOANINTX per Issue #32 v1.2."
     p = os.path.join(output_dir, "unresolved_mloanintx.csv")
-    intx.to_csv(p, index=False)
+    intx_legacy.to_csv(p, index=False)
     paths["unresolved_mloanintx"] = p
 
     bill = trace_df[["SOURCE_POLICY", "MPOLICY", "MLOANBILL"]].copy() if len(trace_df) else pd.DataFrame()
@@ -532,7 +678,7 @@ def write_quikloan_phase_reports(
                 "as_decimal_candidate": f"{dec:.4f}" if pd.notna(dec) and dec < 1 else str(dec),
                 "as_percent_candidate": f"{dec * 100:.2f}" if pd.notna(dec) and dec < 1 else str(dec),
                 "policy_count": len(grp),
-                "recommendation": "pending BA — mloanint_scale=UNRESOLVED_REVIEW",
+                "recommendation": f"Issue #32 v1.2 — mloanint_scale={rules.get('mloanint_scale', '')}",
             })
     p = os.path.join(output_dir, "interest_rate_format_review.csv")
     pd.DataFrame(rate_review).to_csv(p, index=False)
@@ -554,7 +700,7 @@ def write_quikloan_phase_reports(
             "LOAN_BALANCE": bal,
             "MLOANPRIN_STAGING": f"{bal:.2f}" if bal is not None else "",
             "MLOANBAL_STAGING": f"{bal:.2f}" if bal is not None else "",
-            "BA_REVIEW_FLAG": flag or "MLOANPRIN=LOAN_BALANCE per staging config; confirm principal definition",
+            "BA_REVIEW_FLAG": flag or "MLOANPRIN=LOAN_BALANCE per Issue #32 v1.2",
         })
     p = os.path.join(output_dir, "mloanprin_vs_balance_exceptions.csv")
     pd.DataFrame(prin_exc).to_csv(p, index=False)
@@ -578,18 +724,24 @@ def convert_quikloan_from_ploan(
     rules: dict | None = None,
     output_dir: str | None = None,
     crosswalk_path: str | None = None,
+    quikplan_path: str | None = None,
+    quikmstr_path: str | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, dict]:
     """
-    Full PLOAN → QuikLoan staging pipeline.
+    Full PLOAN → QuikLoan pipeline (Issue #32 v1.2).
 
     Returns (passed_candidates_df, trace_df, exceptions_df, stats).
-    When output_dir is set, writes Phase L1 QA reports.
+    When output_dir is set, writes QA/audit reports.
     """
     rules = rules or load_derivation_rules()
     if cw_map is None and crosswalk_path and os.path.isfile(crosswalk_path):
         from qla_core.quikplan_converter import load_crosswalk_map
 
         cw_map = load_crosswalk_map(crosswalk_path)
+
+    plan_to_quikplan = load_ploan_plan_to_quikplan_map(crosswalk_path)
+    loanintx_by_plan = load_quikplan_loanintx_map(quikplan_path) if quikplan_path else {}
+    quikmstr_policies = load_quikmstr_mpolicy_set(quikmstr_path) if quikmstr_path else set()
 
     raw_df = load_ploan_extract(ploan_path)
     valid_df, excluded_df = sanitize_ploan_rows(raw_df)
@@ -599,8 +751,24 @@ def convert_quikloan_from_ploan(
             valid_df[f"_{col}_TS"] = valid_df[col].map(parse_ploan_date)
 
     latest_df = select_latest_ploan_row_per_policy(valid_df, rules)
-    quikloan_df, trace_df = map_ploan_to_quikloan(latest_df, cw_map, rules)
+    quikloan_df, trace_df = map_ploan_to_quikloan(
+        latest_df,
+        cw_map,
+        rules,
+        plan_to_quikplan=plan_to_quikplan,
+        loanintx_by_plan=loanintx_by_plan,
+    )
     passed_df, exceptions_df, stats = validate_quikloan_emit(quikloan_df, latest_df, rules)
+
+    orphan_rows: list[dict] = []
+    if quikmstr_policies and len(passed_df):
+        for _, row in passed_df.iterrows():
+            mp = _s(row.get("MPOLICY", ""))
+            if mp and mp not in quikmstr_policies:
+                orphan_rows.append({"MPOLICY": mp, "REASON": "NOT_IN_QUIKMSTR"})
+    orphan_df = pd.DataFrame(orphan_rows) if orphan_rows else pd.DataFrame(columns=["MPOLICY", "REASON"])
+
+    intx_fallback = int((trace_df["MLOANINTX_SOURCE"] == "default").sum()) if "MLOANINTX_SOURCE" in trace_df.columns else 0
 
     stats.update({
         "raw_rows": len(raw_df),
@@ -608,6 +776,10 @@ def convert_quikloan_from_ploan(
         "excluded_rows": len(excluded_df),
         "latest_policies": len(latest_df),
         "mapped_rows": len(quikloan_df),
+        "mloanintx_fallback_count": intx_fallback,
+        "quikmstr_orphan_rows": len(orphan_rows),
+        "quikmstr_orphan_df": orphan_df,
+        "duplicate_mpolicy_in_emit": int(passed_df["MPOLICY"].duplicated().sum()) if len(passed_df) else 0,
     })
 
     if output_dir:

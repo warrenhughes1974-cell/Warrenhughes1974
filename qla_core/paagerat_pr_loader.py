@@ -7,6 +7,7 @@ Business rules:
   * Only TYPE_CODE = 'PR' rows are in scope for policy gross premium rates.
   * QuikPlan.VARGP = 3 (attained age): SEQ -> QuikGps.AGE, rate in CNTL=00 / GP0.
   * Do NOT unfold into issue-age x duration grids.
+  * ISWL MPLANs with PAAGERAT BP authority suppress PR emit (Phase 2 — Issue #31).
 """
 import csv
 import os
@@ -17,39 +18,32 @@ from qla_core.rate_factor_loader import LoaderConfig, _to_float, load_plan_cross
 
 VARGP_ATTAINED_AGE = "3"
 
-
-def load_paagerat_vargp3_plan_set(paagerat_csv, pcovrsgt_csv, pcovr_csv, crosswalk_xlsx):
-    """Return authoritative PLAN codes with resolved PAAGERAT PR attained-age rates."""
-    cov2plan, _ = load_plan_crosswalk(crosswalk_xlsx)
-    resolver = SR.SegmentResolver.from_files(pcovrsgt_csv, pcovr_csv, cov2plan)
-    config = LoaderConfig()
-    plans = set()
-    for t in transform_paagerat_pr(paagerat_csv, resolver, config):
-        if t.get("status") == "IN_SCOPE":
-            plans.add(t["plan"])
-    return frozenset(plans)
+# Phase 2 — ISWL billable premium MPLANs (PAAGERAT BP); PR suppressed on these plans.
+ISWL_BP_MPLAN_ALLOWLIST = frozenset({"1658CS", "1659CS", "1669SR", "1679CS"})
 
 
-def load_paagerat_vargp3_plan_set_from_config(repo_root, cfg):
-    """Resolve VARGP=3 plan set from rate-loader config dict (optional paths)."""
-    pa = cfg.get("paagerat_pr_extract")
-    if not pa:
+def _iswl_bp_suppress_plans(cfg: dict) -> frozenset:
+    """Plans where PR is suppressed because BP is billable-premium authority."""
+    if not cfg.get("iswl_phase2", {}).get("quikgps_enabled", False):
         return frozenset()
-    pa_path = pa if os.path.isabs(pa) else os.path.join(repo_root, pa)
-    psgt = cfg.get("pcovrsgt_csv", "")
-    pcovr = cfg.get("pcovr_csv", "")
-    xwalk = cfg.get("plan_form_crosswalk", "")
-    psgt_path = psgt if os.path.isabs(psgt) else os.path.join(repo_root, psgt)
-    pcovr_path = pcovr if os.path.isabs(pcovr) else os.path.join(repo_root, pcovr)
-    xwalk_path = xwalk if os.path.isabs(xwalk) else os.path.join(repo_root, xwalk)
-    if not all(os.path.isfile(p) for p in (pa_path, psgt_path, pcovr_path, xwalk_path)):
-        return frozenset()
-    return load_paagerat_vargp3_plan_set(pa_path, psgt_path, pcovr_path, xwalk_path)
+    phase2 = cfg.get("iswl_phase2", {})
+    allow = phase2.get("bp_mplan_allowlist")
+    if allow:
+        return frozenset(str(p).strip() for p in allow)
+    return ISWL_BP_MPLAN_ALLOWLIST
 
 
-def transform_paagerat_pr(paagerat_csv, resolver: SR.SegmentResolver, config: LoaderConfig):
+def transform_paagerat_attained_age(
+    paagerat_csv,
+    resolver: SR.SegmentResolver,
+    config: LoaderConfig,
+    *,
+    type_code: str,
+    plan_allowlist: frozenset | None = None,
+    plan_exclude: frozenset | None = None,
+):
     """
-    Stream PAAGERAT rows filtered to TYPE_CODE='PR', segment-resolved to PLAN.
+    Stream PAAGERAT rows for a single TYPE_CODE, segment-resolved to PLAN.
 
     Yields dicts with status:
       IN_SCOPE | EXCLUDED | SEGMENT_UNRESOLVED | PLAN_INVALID | BAD_VALUE
@@ -66,9 +60,9 @@ def transform_paagerat_pr(paagerat_csv, resolver: SR.SegmentResolver, config: Lo
             if seg and set(seg) == {"-"}:
                 continue
 
-            if typ != "PR":
+            if typ != type_code:
                 yield {"status": "EXCLUDED", "type_code": typ, "coverage_id": seg,
-                       "lineno": lineno, "note": "non-PR PAAGERAT row"}
+                       "lineno": lineno, "note": f"non-{type_code} PAAGERAT row"}
                 continue
 
             rec_seq = row[col["RECORD_SEQ"]].strip() if "RECORD_SEQ" in col else "1"
@@ -88,6 +82,18 @@ def transform_paagerat_pr(paagerat_csv, resolver: SR.SegmentResolver, config: Lo
                 yield {"status": "PLAN_INVALID", "type_code": typ, "coverage_id": seg,
                        "plan": plan, "parent_coverage_id": resolved.parent_coverage_id,
                        "lineno": lineno}
+                continue
+
+            if plan_allowlist is not None and plan not in plan_allowlist:
+                yield {"status": "EXCLUDED", "type_code": typ, "coverage_id": seg,
+                       "plan": plan, "lineno": lineno,
+                       "note": f"plan {plan} outside allowlist"}
+                continue
+
+            if plan_exclude and plan in plan_exclude:
+                yield {"status": "EXCLUDED", "type_code": typ, "coverage_id": seg,
+                       "plan": plan, "lineno": lineno,
+                       "note": f"PR suppressed — BP authority for ISWL MPLAN {plan}"}
                 continue
 
             sex = row[col["SEX"]].strip()
@@ -163,3 +169,55 @@ def transform_paagerat_pr(paagerat_csv, resolver: SR.SegmentResolver, config: Lo
                 "original_age": original_age,
                 "age_capped": age_capped,
             }
+
+
+def load_paagerat_vargp3_plan_set(paagerat_csv, pcovrsgt_csv, pcovr_csv, crosswalk_xlsx):
+    """Return authoritative PLAN codes with resolved PAAGERAT PR attained-age rates."""
+    cov2plan, _ = load_plan_crosswalk(crosswalk_xlsx)
+    resolver = SR.SegmentResolver.from_files(pcovrsgt_csv, pcovr_csv, cov2plan)
+    config = LoaderConfig()
+    plans = set()
+    for t in transform_paagerat_pr(paagerat_csv, resolver, config):
+        if t.get("status") == "IN_SCOPE":
+            plans.add(t["plan"])
+    return frozenset(plans)
+
+
+def load_paagerat_vargp3_plan_set_from_config(repo_root, cfg):
+    """Resolve VARGP=3 plan set: PR plans + ISWL BP plans when Phase 2 enabled."""
+    pa = cfg.get("paagerat_pr_extract")
+    if not pa:
+        return frozenset()
+    pa_path = pa if os.path.isabs(pa) else os.path.join(repo_root, pa)
+    psgt = cfg.get("pcovrsgt_csv", "")
+    pcovr = cfg.get("pcovr_csv", "")
+    xwalk = cfg.get("plan_form_crosswalk", "")
+    psgt_path = psgt if os.path.isabs(psgt) else os.path.join(repo_root, psgt)
+    pcovr_path = pcovr if os.path.isabs(pcovr) else os.path.join(repo_root, pcovr)
+    xwalk_path = xwalk if os.path.isabs(xwalk) else os.path.join(repo_root, xwalk)
+    if not all(os.path.isfile(p) for p in (pa_path, psgt_path, pcovr_path, xwalk_path)):
+        return frozenset()
+    pr_plans = load_paagerat_vargp3_plan_set(pa_path, psgt_path, pcovr_path, xwalk_path)
+    if cfg.get("iswl_phase2", {}).get("quikgps_enabled", False):
+        from qla_core import paagerat_bp_loader as BP
+        bp_plans = BP.load_paagerat_bp_plan_set_from_config(repo_root, cfg)
+        pr_plans = pr_plans | bp_plans
+    if cfg.get("iswl_phase3", {}).get("quikcoi_enabled", False):
+        from qla_core import paagerat_ul_coi_loader as COI
+        coi_plans = COI.load_paagerat_coi_plan_set_from_config(repo_root, cfg)
+        pr_plans = pr_plans | coi_plans
+    if cfg.get("iswl_phase4", {}).get("quikgcoi_enabled", False):
+        from qla_core import paagerat_ul_coi_loader as COI
+        gcoi_plans = COI.load_paagerat_gcoi_plan_set_from_config(repo_root, cfg)
+        pr_plans = pr_plans | gcoi_plans
+    return pr_plans
+
+
+def transform_paagerat_pr(paagerat_csv, resolver: SR.SegmentResolver, config: LoaderConfig,
+                          plan_exclude: frozenset | None = None):
+    """Stream PAAGERAT rows filtered to TYPE_CODE='PR', segment-resolved to PLAN."""
+    return transform_paagerat_attained_age(
+        paagerat_csv, resolver, config,
+        type_code="PR",
+        plan_exclude=plan_exclude,
+    )

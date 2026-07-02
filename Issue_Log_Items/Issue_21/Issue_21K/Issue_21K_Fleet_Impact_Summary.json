@@ -1,0 +1,19 @@
+{
+  "engine_version": "v57.39",
+  "quikridr_rows": 6934,
+  "submill_munit_rows": 1065,
+  "unique_policies_submill": 950,
+  "pua_plan_rows": 495,
+  "unique_policies_pua": 493,
+  "rows_losing_cents_if_3dp_truncate": 1063,
+  "rows_losing_cents_if_3dp_round": 1063,
+  "rows_losing_cents_if_whole_dollar_face_round": 1064,
+  "trace_010448806C": {
+    "csv_MUNIT": 5.75296,
+    "MVPU": 1000.0,
+    "face": 5752.96,
+    "display_if_3dp_truncate": 5752.0,
+    "display_if_3dp_round": 5753.0,
+    "display_if_whole_dollar_round": 5753.0
+  }
+}

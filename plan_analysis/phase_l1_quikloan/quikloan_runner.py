@@ -1,5 +1,5 @@
 """
-Headless Phase L1 runner: PLOAN-primary QuikLoan staging and QA reports.
+Headless QuikLoan runner (Issue #32 v1.2): PLOAN → QuikLoan QA reports.
 
 Usage (from repo root):
   python plan_analysis/phase_l1_quikloan/quikloan_runner.py
@@ -7,6 +7,8 @@ Usage (from repo root):
 Optional environment:
   QLA_PLOAN_PATH          — override PLOAN.csv path
   QLA_CROSSWALK_PATH      — Master_Crosswalk for MPOLICY mapping
+  QLA_QUIKPLAN_PATH       — QuikPlan CSV for MLOANINTX lookup
+  QLA_QUIKMSTR_PATH       — quikmstr CSV for orphan audit
   QLA_QUIKLOAN_WRITE_OUTPUT=1 — write gated candidate CSV to QLA_Migration/Output/quikloan.csv
 """
 
@@ -32,6 +34,7 @@ def _default_ploan_path() -> str:
         return env
     candidates = [
         os.path.join(_REPO_ROOT, "QLA_Migration", "Source", "PLOAN.csv"),
+        os.path.join(_REPO_ROOT, "QLA_Migration", "Source", "PLOAN_LoanInformation_Extract_20260530.csv"),
         os.path.join(_REPO_ROOT, "QLA_Migration", "Source", "PLOAN_LoanInformation_Extract_20260427.csv"),
     ]
     for p in candidates:
@@ -53,10 +56,34 @@ def _default_crosswalk_path() -> str:
     return ""
 
 
+def _default_quikplan_path() -> str:
+    env = os.environ.get("QLA_QUIKPLAN_PATH", "").strip()
+    if env and os.path.isfile(env):
+        return env
+    for p in (
+        os.path.join(_REPO_ROOT, "QLA_Migration", "Output", "quikplan.csv"),
+        os.path.join(_REPO_ROOT, "plan_governance", "staged", "uat", "quikplan_staged.csv"),
+    ):
+        if os.path.isfile(p):
+            return p
+    return ""
+
+
+def _default_quikmstr_path() -> str:
+    env = os.environ.get("QLA_QUIKMSTR_PATH", "").strip()
+    if env and os.path.isfile(env):
+        return env
+    p = os.path.join(_REPO_ROOT, "QLA_Migration", "Output", "quikmstr.csv")
+    return p if os.path.isfile(p) else ""
+
+
 def main() -> int:
     phase_dir = os.path.dirname(os.path.abspath(__file__))
     ploan_path = _default_ploan_path()
     cw_path = _default_crosswalk_path()
+    qp_path = _default_quikplan_path()
+    qm_path = _default_quikmstr_path()
+
     rules_path = default_derivation_rules_path()
     rules = load_derivation_rules(rules_path)
 
@@ -72,14 +99,21 @@ def main() -> int:
     else:
         print("Crosswalk: (none) — SOURCE_POLICY preserved in trace")
 
+    if qp_path:
+        print(f"QuikPlan: {qp_path}")
+    if qm_path:
+        print(f"quikmstr: {qm_path}")
+
     passed_df, trace_df, exceptions_df, stats = convert_quikloan_from_ploan(
         ploan_path,
         rules=rules,
         output_dir=phase_dir,
         crosswalk_path=cw_path or None,
+        quikplan_path=qp_path or None,
+        quikmstr_path=qm_path or None,
     )
 
-    print("\n--- Phase L1 summary ---")
+    print("\n--- Issue #32 QuikLoan summary ---")
     for k in (
         "raw_rows",
         "valid_rows",
@@ -88,6 +122,9 @@ def main() -> int:
         "emit_passed",
         "emit_exceptions",
         "zero_balance_held",
+        "mloanintx_fallback_count",
+        "quikmstr_orphan_rows",
+        "duplicate_mpolicy_in_emit",
     ):
         if k in stats:
             print(f"  {k}: {stats[k]}")

@@ -1,0 +1,77 @@
+{
+  "script_version": "1.0",
+  "blocker_count": 0,
+  "emit_ready": true,
+  "v_uint_01_schema": true,
+  "v_uint_02_cenii_a1": true,
+  "v_uint_03_union_merge": true,
+  "v_uint_04_row_count_32": true,
+  "v_uint_05_mplans_8_8": true,
+  "v_uint_06_mirror": true,
+  "v_uint_07_percent_literal": true,
+  "v_uint_08_no_loan": true,
+  "v_uint_09_unique_index": true,
+  "v_uint_10_phase1_4_regression": true,
+  "psegt_a1_gate": {
+    "pass": true,
+    "count": 8
+  },
+  "psegt_g1_gate": {
+    "pass": true,
+    "count": 8
+  },
+  "psegt_ln_gate": {
+    "pass": true,
+    "count": 8
+  },
+  "union_merge_tiers": [
+    {
+      "start": "19800101",
+      "rate": "11.0000",
+      "rule": "3"
+    },
+    {
+      "start": "19890101",
+      "rate": "9.0000",
+      "rule": "3"
+    },
+    {
+      "start": "19990101",
+      "rate": "5.0000",
+      "rule": "0"
+    },
+    {
+      "start": "20020101",
+      "rate": "4.5000",
+      "rule": "3"
+    }
+  ],
+  "analysis": {
+    "row_count": 32,
+    "distinct_mplans": 8,
+    "rows_by_mplan": {
+      "1658C1": 4,
+      "1658CS": 4,
+      "1659C2": 4,
+      "1659CR": 4,
+      "1659CS": 4,
+      "1659SR": 4,
+      "1669SR": 4,
+      "1679CS": 4
+    },
+    "duplicate_index_keys": 0,
+    "mgt_mcur_mirror": true,
+    "percent_literal": true,
+    "schedule_ok": true,
+    "loan_columns_absent": true
+  },
+  "regression_ok": true,
+  "regression_notes": [],
+  "phase1_4_notes": [
+    "Phase1: PASS",
+    "Phase2: PASS",
+    "Phase3: PASS",
+    "Phase4: PASS"
+  ],
+  "quikuint_csv": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikUint.csv"
+}

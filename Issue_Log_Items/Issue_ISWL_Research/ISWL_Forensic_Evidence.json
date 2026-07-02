@@ -1,0 +1,1143 @@
+{
+  "generated_at": "2026-06-28",
+  "repo_root": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974",
+  "source_presence": {
+    "QLA_Migration/Source": {
+      "exists": true,
+      "is_dir": true
+    },
+    "plan_analysis/source_data/reference_dbf": {
+      "exists": true,
+      "is_dir": true
+    }
+  },
+  "rate_table": {
+    "path": "plan_analysis\\source_data\\rates\\Rate_Table_Extract_20260427.csv",
+    "file_rows_including_header": 1128986,
+    "data_rows_total": 1128985,
+    "iswl_data_rows": 251950,
+    "columns": [
+      "COVERAGE_ID",
+      "TYPE_CODE",
+      "AGE",
+      "SEX",
+      "BAND",
+      "UNDERWRITING_CLASS",
+      "DURATION",
+      "VALUE"
+    ],
+    "iswl_pr_rows": 0,
+    "global_sc_like_type_counts": {},
+    "iswl_type_counts": {
+      "659 CEN II|NP": 19780,
+      "659 CEN II|RV": 19780,
+      "659 CEN II|TP": 19780,
+      "659 CEN II|TX": 19780,
+      "658 CEN I|NP": 19000,
+      "658 CEN I|RV": 19000,
+      "658 CEN I|CV": 18124,
+      "659 CEN SR|NP": 9890,
+      "659 CEN SR|RV": 9890,
+      "659 SR GD|CV": 9700,
+      "659 CEN II|CV": 9678,
+      "659 CEN SR|CV": 9678,
+      "658 CEN SD|NP": 9496,
+      "658 CEN SD|RV": 9496,
+      "659 CEN SD|NP": 9496,
+      "659 CEN SD|RV": 9496,
+      "659 CEN SD|CV": 9288,
+      "658 CEN SD|CV": 9113,
+      "679 CEN SD|CV": 4350,
+      "659 SR GD|NP": 2340,
+      "659 SR GD|RV": 2340,
+      "669 SR GD|CV": 2340,
+      "659 SR GD|DB": 100,
+      "659 CEN II|SL": 14,
+      "659 CEN II|UF": 1
+    },
+    "iswl_cv_row_total": 72271,
+    "samples": {
+      "658 CEN I|CV": [
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "1",
+          "VALUE": ".0000000"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "2",
+          "VALUE": "1.0000000"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "3",
+          "VALUE": "3.0000000"
+        }
+      ],
+      "658 CEN I|NP": [
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "1",
+          "VALUE": "2.0000000"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "2",
+          "VALUE": "3.0000000"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "3",
+          "VALUE": "5.0000000"
+        }
+      ],
+      "658 CEN SD|CV": [
+        {
+          "COVERAGE_ID": "658 CEN SD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": ".0000000"
+        },
+        {
+          "COVERAGE_ID": "658 CEN SD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "1.0000000"
+        },
+        {
+          "COVERAGE_ID": "658 CEN SD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "3.0000000"
+        }
+      ],
+      "658 CEN SD|NP": [
+        {
+          "COVERAGE_ID": "658 CEN SD",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": "2.0000000"
+        },
+        {
+          "COVERAGE_ID": "658 CEN SD",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "3.0000000"
+        },
+        {
+          "COVERAGE_ID": "658 CEN SD",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "5.0000000"
+        }
+      ],
+      "659 CEN II|CV": [
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": ".0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "1.0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "3.0000000"
+        }
+      ],
+      "659 CEN II|NP": [
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "1",
+          "VALUE": "2.0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "2",
+          "VALUE": "3.0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "3",
+          "VALUE": "5.0000000"
+        }
+      ],
+      "659 CEN II|TP": [
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "TP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "1",
+          "VALUE": "2.3791500"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "TP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "2",
+          "VALUE": "2.3791500"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "TP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "3",
+          "VALUE": "2.3791500"
+        }
+      ],
+      "659 CEN II|TX": [
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "TX",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "1",
+          "VALUE": ".6100000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "TX",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "2",
+          "VALUE": "2.2800000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "TX",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "P",
+          "DURATION": "3",
+          "VALUE": "4.0700000"
+        }
+      ],
+      "659 CEN SD|CV": [
+        {
+          "COVERAGE_ID": "659 CEN SD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": ".0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "1.0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "3.0000000"
+        }
+      ],
+      "659 CEN SD|NP": [
+        {
+          "COVERAGE_ID": "659 CEN SD",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": "2.0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SD",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "3.0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SD",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "5.0000000"
+        }
+      ],
+      "659 CEN SR|CV": [
+        {
+          "COVERAGE_ID": "659 CEN SR",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": ".0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SR",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "1.0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SR",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "3.0000000"
+        }
+      ],
+      "659 CEN SR|NP": [
+        {
+          "COVERAGE_ID": "659 CEN SR",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": "2.0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SR",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "3.0000000"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SR",
+          "TYPE_CODE": "NP",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "5.0000000"
+        }
+      ],
+      "659 SR GD|CV": [
+        {
+          "COVERAGE_ID": "659 SR GD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": ".0000000"
+        },
+        {
+          "COVERAGE_ID": "659 SR GD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "1.0000000"
+        },
+        {
+          "COVERAGE_ID": "659 SR GD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "3.0000000"
+        }
+      ],
+      "659 SR GD|NP": [
+        {
+          "COVERAGE_ID": "659 SR GD",
+          "TYPE_CODE": "NP",
+          "AGE": "50",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": "18.4300000"
+        },
+        {
+          "COVERAGE_ID": "659 SR GD",
+          "TYPE_CODE": "NP",
+          "AGE": "50",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "36.1400000"
+        },
+        {
+          "COVERAGE_ID": "659 SR GD",
+          "TYPE_CODE": "NP",
+          "AGE": "50",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "52.5700000"
+        }
+      ],
+      "669 SR GD|CV": [
+        {
+          "COVERAGE_ID": "669 SR GD",
+          "TYPE_CODE": "CV",
+          "AGE": "50",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": ".0000000"
+        },
+        {
+          "COVERAGE_ID": "669 SR GD",
+          "TYPE_CODE": "CV",
+          "AGE": "50",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "5.0000000"
+        },
+        {
+          "COVERAGE_ID": "669 SR GD",
+          "TYPE_CODE": "CV",
+          "AGE": "50",
+          "SEX": "F",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "21.0000000"
+        }
+      ],
+      "679 CEN SD|CV": [
+        {
+          "COVERAGE_ID": "679 CEN SD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "M",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "1",
+          "VALUE": ".0000000"
+        },
+        {
+          "COVERAGE_ID": "679 CEN SD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "M",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "2",
+          "VALUE": "1.0000000"
+        },
+        {
+          "COVERAGE_ID": "679 CEN SD",
+          "TYPE_CODE": "CV",
+          "AGE": "0",
+          "SEX": "M",
+          "BAND": "1",
+          "UNDERWRITING_CLASS": "S",
+          "DURATION": "3",
+          "VALUE": "4.0000000"
+        }
+      ]
+    }
+  },
+  "paagerat": {
+    "path": "plan_analysis\\source_data\\rates\\PAAGERAT_AttainedAge_Rates_Extract_20260428.csv",
+    "file_rows_including_header": 24426,
+    "data_rows_total": 24425,
+    "iswl_data_rows": 3287,
+    "columns": [
+      "COVERAGE_ID",
+      "TYPE_CODE",
+      "SEX",
+      "BAND",
+      "UWCLS",
+      "RECORD_SEQ",
+      "SEQ",
+      "VALUE_INFO",
+      "VALUE_FLOAT",
+      "AAGE_KEY0"
+    ],
+    "iswl_pr_rows": 0,
+    "global_sc_like_type_counts": {},
+    "iswl_type_counts": {
+      "658 CEN I|U6": 400,
+      "659 CEN II|U6": 400,
+      "659 CEN II|BP": 330,
+      "659 CEN II|NC": 330,
+      "658 CEN I|NC": 294,
+      "658 CEN I|BP": 294,
+      "658 CEN I|NF": 260,
+      "659 CEN II|U5": 200,
+      "659 CEN II|NF": 172,
+      "659 CEN SR|BP": 172,
+      "659 CEN SD|BP": 152,
+      "658 CEN SD|BP": 150,
+      "679 CEN SD|BP": 66,
+      "679 CEN SD|NC": 66,
+      "658 CEN I|RD": 1
+    },
+    "samples": {
+      "658 CEN I|NC": [
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "NC",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "11",
+          "VALUE_INFO": "1.4640000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "NC",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "12",
+          "VALUE_INFO": "1.4720000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "NC",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "13",
+          "VALUE_INFO": "1.4800000",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "679 CEN SD|BP": [
+        {
+          "COVERAGE_ID": "679 CEN SD",
+          "TYPE_CODE": "BP",
+          "SEX": "M",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "1",
+          "VALUE_INFO": "3.8400000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "679 CEN SD",
+          "TYPE_CODE": "BP",
+          "SEX": "M",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "2",
+          "VALUE_INFO": "3.9300000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "679 CEN SD",
+          "TYPE_CODE": "BP",
+          "SEX": "M",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "3",
+          "VALUE_INFO": "4.0300000",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "679 CEN SD|NC": [
+        {
+          "COVERAGE_ID": "679 CEN SD",
+          "TYPE_CODE": "NC",
+          "SEX": "M",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "1",
+          "VALUE_INFO": "3.0700000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "679 CEN SD",
+          "TYPE_CODE": "NC",
+          "SEX": "M",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "2",
+          "VALUE_INFO": "3.1400000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "679 CEN SD",
+          "TYPE_CODE": "NC",
+          "SEX": "M",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "3",
+          "VALUE_INFO": "3.2200000",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "658 CEN I|NF": [
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "NF",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "2",
+          "VALUE_INFO": "2.1820100",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "NF",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "3",
+          "VALUE_INFO": "2.1759400",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "NF",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "4",
+          "VALUE_INFO": "2.1817700",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "658 CEN I|BP": [
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "2",
+          "VALUE_INFO": "1.7400000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "3",
+          "VALUE_INFO": "1.7500000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "4",
+          "VALUE_INFO": "1.7600000",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "658 CEN I|RD": [],
+      "658 CEN I|U6": [
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "U6",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "1",
+          "VALUE_INFO": ".1504100",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "U6",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "2",
+          "VALUE_INFO": ".0672800",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "658 CEN I",
+          "TYPE_CODE": "U6",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "3",
+          "VALUE_INFO": ".0639600",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "658 CEN SD|BP": [
+        {
+          "COVERAGE_ID": "658 CEN SD",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "2",
+          "VALUE_INFO": "1.7400000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "658 CEN SD",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "3",
+          "VALUE_INFO": "1.7500000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "658 CEN SD",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "4",
+          "VALUE_INFO": "1.7600000",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "659 CEN II|BP": [
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "1",
+          "VALUE_INFO": "3.5100000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "2",
+          "VALUE_INFO": "3.5400000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "3",
+          "VALUE_INFO": "3.5800000",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "659 CEN II|NC": [
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "NC",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "1",
+          "VALUE_INFO": "2.8080000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "NC",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "2",
+          "VALUE_INFO": "2.8320000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "NC",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "3",
+          "VALUE_INFO": "2.8640000",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "659 CEN II|NF": [
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "NF",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "1",
+          "VALUE_INFO": "3.0642300",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "NF",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "2",
+          "VALUE_INFO": "3.0984000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "NF",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "3",
+          "VALUE_INFO": "3.1850800",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "659 CEN II|U5": [],
+      "659 CEN II|U6": [
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "U6",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "1",
+          "VALUE_INFO": ".1504100",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "U6",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "2",
+          "VALUE_INFO": ".0672800",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN II",
+          "TYPE_CODE": "U6",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "P",
+          "SEQ": "3",
+          "VALUE_INFO": ".0639600",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "659 CEN SD|BP": [
+        {
+          "COVERAGE_ID": "659 CEN SD",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "1",
+          "VALUE_INFO": "3.5100000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SD",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "2",
+          "VALUE_INFO": "3.5400000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SD",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "3",
+          "VALUE_INFO": "3.5800000",
+          "VALUE_FLOAT": "0.0"
+        }
+      ],
+      "659 CEN SR|BP": [
+        {
+          "COVERAGE_ID": "659 CEN SR",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "1",
+          "VALUE_INFO": "3.5100000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SR",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "2",
+          "VALUE_INFO": "3.5400000",
+          "VALUE_FLOAT": "0.0"
+        },
+        {
+          "COVERAGE_ID": "659 CEN SR",
+          "TYPE_CODE": "BP",
+          "SEX": "F",
+          "BAND": "1",
+          "UWCLS": "S",
+          "SEQ": "3",
+          "VALUE_INFO": "3.5800000",
+          "VALUE_FLOAT": "0.0"
+        }
+      ]
+    }
+  },
+  "cso_crosswalk": {
+    "path": "plan_analysis\\source_data\\rates\\CSO_Mortiality_Crosswalk.csv",
+    "iswl_rows": [
+      {
+        "lifepro_coverage_id": "658 CEN I",
+        "qla_plan_code": "1658C1",
+        "qla_plan_description": "Interest-Sensitive Whole Life",
+        "nfo_interest_source": "4.50%",
+        "nfo_interest_code": "A"
+      },
+      {
+        "lifepro_coverage_id": "658 CEN SD",
+        "qla_plan_code": "1658CS",
+        "qla_plan_description": "Interest-Sensitive Whole Life",
+        "nfo_interest_source": "4.50%",
+        "nfo_interest_code": "A"
+      },
+      {
+        "lifepro_coverage_id": "659 CEN II",
+        "qla_plan_code": "1659C2",
+        "qla_plan_description": "Interest-Sensitive Whole Life",
+        "nfo_interest_source": "4.50%",
+        "nfo_interest_code": "A"
+      },
+      {
+        "lifepro_coverage_id": "659 CEN SR",
+        "qla_plan_code": "1659CR",
+        "qla_plan_description": "Interest-Sensitive Whole Life",
+        "nfo_interest_source": "4.50%",
+        "nfo_interest_code": "A"
+      },
+      {
+        "lifepro_coverage_id": "659 CEN SD",
+        "qla_plan_code": "1659CS",
+        "qla_plan_description": "Interest-Sensitive Whole Life",
+        "nfo_interest_source": "4.50%",
+        "nfo_interest_code": "A"
+      },
+      {
+        "lifepro_coverage_id": "659 SR GD",
+        "qla_plan_code": "1659SR",
+        "qla_plan_description": "Interest-Sensitive Whole Life",
+        "nfo_interest_source": "4.50%",
+        "nfo_interest_code": "A"
+      },
+      {
+        "lifepro_coverage_id": "679 CEN SD",
+        "qla_plan_code": "1679CS",
+        "qla_plan_description": "Interest-Sensitive Whole Life",
+        "nfo_interest_source": "4.50%",
+        "nfo_interest_code": "A"
+      },
+      {
+        "lifepro_coverage_id": "669 SR GD",
+        "qla_plan_code": "1669SR",
+        "qla_plan_description": "Interest-Sensitive Whole Life",
+        "nfo_interest_source": "4.50%",
+        "nfo_interest_code": "A"
+      }
+    ]
+  },
+  "iswl_prem": {
+    "path": "PFSA Rates\\iswl-prem.csv",
+    "data_rows": 1951,
+    "age_columns": 101,
+    "header_first_last_age": [
+      "-2",
+      "99"
+    ],
+    "segment_row_counts": {
+      "MSP B2": 121,
+      "MRN B1": 122,
+      "FRT B1": 122,
+      "FJV B2": 122,
+      "MRN B2": 122,
+      "MJV B2": 122,
+      "FSP B2": 122,
+      "FRN B1": 122,
+      "MPN B2": 122,
+      "MRT B1": 122,
+      "FRN B2": 122,
+      "FJV B1": 122,
+      "MRT B2": 122,
+      "MJV B1": 122,
+      "FRT B2": 122,
+      "FPN B2": 122
+    },
+    "sample_row_1": "MSP B2 -2,-2,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99",
+    "sample_row_2": "MSP B2 1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5.18,5.33,5.49,5.66,5.83,6.01,6.2,6.39,6.6,6.82,7.05,7.29,7.54,7.81,8.08,8.37,8.68,8.99,9.32,9.66,10.01,10.38,10.76,11.17,11.59,12.04,12.5,12.99,13.91,14"
+  },
+  "pfsa_exclude": {
+    "path": "PFSA Rates\\reconciliation\\plan_csv_mapping_DRAFT.csv",
+    "iswl_related_rows": [
+      {
+        "ql_plan": "iswl-prem.csv",
+        "status": "EXCLUDE",
+        "axis_type": "",
+        "csv_file": "user: skip",
+        "notes": null
+      }
+    ]
+  },
+  "negative_search_type_codes": {
+    "rate_table": {
+      "global_term_counts": {},
+      "iswl_term_counts": {}
+    },
+    "paagerat": {
+      "global_term_counts": {},
+      "iswl_term_counts": {}
+    }
+  }
+}

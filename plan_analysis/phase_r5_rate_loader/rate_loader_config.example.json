@@ -5,6 +5,59 @@
   "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
   "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
   "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",
+  "cso_mortality_crosswalk": "plan_analysis/source_data/rates/CSO_Mortiality_Crosswalk.csv",
+  "psegt_csv": "QLA_Migration/Source/PSEGT_Segment_Extract_20260629.csv",
+  "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260530.csv",
+  "iswl_phase1": {
+    "_note": "Validation-only; does not filter global rate emit.",
+    "quikcvs_vargp": "2"
+  },
+  "iswl_phase2": {
+    "_note": "ISWL QUIKGPS — PAAGERAT TYPE=BP, VARGP=3 attained-age scalar.",
+    "quikgps_enabled": true,
+    "bp_type_code": "BP",
+    "bp_mplan_allowlist": ["1658CS", "1659CS", "1669SR", "1679CS"]
+  },
+  "iswl_phase3": {
+    "_note": "ISWL QUIKCOI — PAAGERAT TYPE=U6, VARGP=3 attained-age scalar.",
+    "quikcoi_enabled": true,
+    "coi_type_code": "U6",
+    "coi_mplan_allowlist": ["1658CS", "1679CS"]
+  },
+  "iswl_phase4": {
+    "_note": "ISWL QUIKGCOI — PAAGERAT TYPE=U5, VARGP=3 attained-age scalar.",
+    "quikgcoi_enabled": true,
+    "gcoi_type_code": "U5",
+    "gcoi_mplan_allowlist": ["1679CS"]
+  },
+  "pdint_extract": "QLA_Migration/Source/PDINT_DeclaredInterestRates_Extract_20260629.csv",
+  "pdinttbl_extract": "QLA_Migration/Source/PDINTTBL_DeclaredInterestRates_Extract_20260629.csv",
+  "iswl_phase5": {
+    "_note": "ISWL QUIKUINT — PDINT CENII/A1 union_merge historical tiers → QuikUint.",
+    "quikuint_enabled": true,
+    "pdint_ident": "CENII",
+    "type_code": "A1",
+    "dint_rules": ["0", "3"],
+    "emit_mode": "union_merge",
+    "dint_rule_tiebreak": "3",
+    "g1_mode": "mirror_a1",
+    "mplan_allowlist": ["1658C1", "1658CS", "1659C2", "1659CR", "1659CS", "1659SR", "1669SR", "1679CS"]
+  },
+  "iswl_phase6": {
+    "_note": "ISWL QUIKISSC — Rate_Table TYPE=SL hub schedule → QuikIssc (8 rows).",
+    "quikissc_enabled": true,
+    "hub_segment_id": "659 CEN II",
+    "rate_source": "rate_table_sl",
+    "rate_coverage_id": "659 CEN II",
+    "rate_type_code": "SL",
+    "emit_mode": "duration_pivot",
+    "replicate_hub_to_all_mplans": true,
+    "mplan_allowlist": ["1658C1", "1658CS", "1659C2", "1659CR", "1659CS", "1659SR", "1669SR", "1679CS"],
+    "iss_cntry_default": "0000",
+    "iss_state_default": "00",
+    "schg_max_duration": 20,
+    "schg_populated_duration": 14
+  },
   "_paagerat_note": "PAAGERAT PR: VARGP=3 attained-age grid. SEQ->QuikGps.AGE, CNTL=00/GP0. Join: PAAGERAT -> PCOVRSGT -> PCOVR -> crosswalk PLAN.",
   "segmentation_defaults": {
     "effdate": "19000101",

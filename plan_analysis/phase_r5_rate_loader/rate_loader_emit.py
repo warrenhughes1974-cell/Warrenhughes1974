@@ -23,7 +23,9 @@ from qla_core import rate_dbf_writer as W
 
 HERE = os.path.dirname(__file__)
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-CONFIG = os.path.join(HERE, "rate_loader_config.example.json")
+CONFIG = os.path.join(HERE, "rate_loader_config.json")
+if not os.path.isfile(CONFIG):
+    CONFIG = os.path.join(HERE, "rate_loader_config.example.json")
 EMIT_DIR = os.path.join(HERE, "emitted_dbf")  # isolated, rollback-safe
 MIGRATION_CSV_DIR = os.path.join(ROOT, "QLA_Migration", "Output", "rates")
 
@@ -44,6 +46,16 @@ def _write_dbf_manifest(res, manifest):
         n = W.write_member_table(path, member_table, rows, overwrite=True)
         manifest.append({"kind": "member", "table": member_table, "format": "dbf",
                          "path": os.path.relpath(path, ROOT), "rows": n})
+    if res.quikuint_rows:
+        path = os.path.join(EMIT_DIR, "QuikUint.dbf")
+        n = W.write_quikuint_table(path, res.quikuint_rows, overwrite=True)
+        manifest.append({"kind": "interest", "table": "QuikUint", "format": "dbf",
+                         "path": os.path.relpath(path, ROOT), "rows": n})
+    if res.quikissc_rows:
+        path = os.path.join(EMIT_DIR, "QuikIssc.dbf")
+        n = W.write_quikissc_table(path, res.quikissc_rows, overwrite=True)
+        manifest.append({"kind": "surrender", "table": "QuikIssc", "format": "dbf",
+                         "path": os.path.relpath(path, ROOT), "rows": n})
 
 
 def _write_csv_manifest(res, csv_dir, manifest):
@@ -61,6 +73,16 @@ def _write_csv_manifest(res, csv_dir, manifest):
         path = os.path.join(csv_dir, f"{member_table}.csv")
         n = W.write_member_table_csv(path, member_table, rows, overwrite=True)
         manifest.append({"kind": "member", "table": member_table, "format": "csv",
+                         "path": os.path.relpath(path, ROOT), "rows": n})
+    if res.quikuint_rows:
+        path = os.path.join(csv_dir, "QuikUint.csv")
+        n = W.write_quikuint_csv(path, res.quikuint_rows, overwrite=True)
+        manifest.append({"kind": "interest", "table": "QuikUint", "format": "csv",
+                         "path": os.path.relpath(path, ROOT), "rows": n})
+    if res.quikissc_rows:
+        path = os.path.join(csv_dir, "QuikIssc.csv")
+        n = W.write_quikissc_csv(path, res.quikissc_rows, overwrite=True)
+        manifest.append({"kind": "surrender", "table": "QuikIssc", "format": "csv",
                          "path": os.path.relpath(path, ROOT), "rows": n})
 
 

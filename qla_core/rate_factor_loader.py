@@ -233,7 +233,8 @@ def grid_to_factor_rows(table, grid, config):
             field = f"{pfx}{i}"
             if i in cells:
                 value, raw_value, lineno = cells[i][0], cells[i][1], cells[i][2]
-                text, fits, reduced = S.format_factor(value, source_decimals=config.source_decimals)
+                text, fits, reduced = S.format_factor(
+                    value, max_len=S.factor_field_len(table), source_decimals=config.source_decimals)
                 row[field] = text
                 if not fits:
                     fmt_issues.append({"table": table, "key": key, "field": field,
@@ -246,3 +247,46 @@ def grid_to_factor_rows(table, grid, config):
                 row[field] = ""  # unpopulated duration cell
         rows.append(row)
     return rows, fmt_issues
+
+
+# ---- ISWL Phase 1 (Issue #31) — QUIKCVS validation helpers (no emit filter) ----
+ISWL_COVERAGE_IDS = frozenset({
+    "658 CEN I", "658 CEN SD", "659 CEN II", "659 CEN SR", "659 CEN SD",
+    "659 SR GD", "669 SR GD", "679 CEN SD",
+})
+
+
+def quikcvs_keys_by_plan(grid):
+    """Return {PLAN: count} of distinct QuikCvs grid keys. grid from build_factor_grid."""
+    counts = {}
+    for key in grid:
+        plan = key[0]
+        counts[plan] = counts.get(plan, 0) + 1
+    return counts
+
+
+def quikgps_keys_by_plan(grid):
+    """Return {PLAN: count} of distinct QuikGps grid keys."""
+    counts = {}
+    for key in grid:
+        plan = key[0]
+        counts[plan] = counts.get(plan, 0) + 1
+    return counts
+
+
+def quikcoi_keys_by_plan(grid):
+    """Return {PLAN: count} of distinct QuikCoi grid keys."""
+    counts = {}
+    for key in grid:
+        plan = key[0]
+        counts[plan] = counts.get(plan, 0) + 1
+    return counts
+
+
+def quikgcoi_keys_by_plan(grid):
+    """Return {PLAN: count} of distinct QuikGcoi grid keys."""
+    counts = {}
+    for key in grid:
+        plan = key[0]
+        counts[plan] = counts.get(plan, 0) + 1
+    return counts

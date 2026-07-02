@@ -1,0 +1,152 @@
+{
+  "checks": {
+    "schema_registry": [
+      {
+        "table": "QUIKPOLX",
+        "expected_munit": "MUNIT N(11,5)"
+      },
+      {
+        "table": "QUIKRIDR",
+        "expected_munit": "MUNIT N(10,5)"
+      },
+      {
+        "table": "QUIKRVAL",
+        "expected_munit": "MUNIT N(10,5)"
+      },
+      {
+        "table": "QUIKVALF",
+        "expected_munit": "MUNIT N(10,5)"
+      },
+      {
+        "table": "QUIKVERR",
+        "expected_munit": "MUNIT N(7,5)"
+      },
+      {
+        "table": "QUIKTVAL",
+        "expected_munit": "MUNIT N(10,5)"
+      }
+    ],
+    "quikridr_structure": [
+      "MPOLICY C(10)",
+      "MPHASE N(2,0)",
+      "MPHSTAT C(2)",
+      "MLASTANN N(3,0)",
+      "MANNSTAT C(1)",
+      "MPHDOB D",
+      "MSEX C(1)",
+      "MPLAN C(6)",
+      "MPAR C(1)",
+      "MEFFDATE D",
+      "MEXPRY D",
+      "MPAYUP D",
+      "MAGE N(3,0)",
+      "MUNIT N(10,5)",
+      "MVPU N(8,2)",
+      "MPREM N(10,2)",
+      "MANNLFEE N(8,4)",
+      "MSEMIFEE N(8,4)",
+      "MQTRLFEE N(8,4)",
+      "MMTHDFEE N(8,4)",
+      "MMTHBFEE N(8,4)",
+      "MRRULE C(1)",
+      "MCOMMID C(4)",
+      "MCV0 N(10,5)",
+      "MCV1 N(10,5)",
+      "MCV2 N(10,5)",
+      "MSAVEAGE N(3,0)",
+      "MSAVEUNIT N(10,3)",
+      "MSAVEVPU N(7,2)",
+      "MSAVEPREM N(10,2)",
+      "MRIDRID C(12)",
+      "MSSN C(11)",
+      "MUWCLASS C(2)",
+      "MBAND C(2)",
+      "MSAVESTAT C(2)",
+      "MCOMMPREM N(10,2)",
+      "MSPCODE C(4)",
+      "MLOCKTYP C(1)",
+      "MLOCKDT D",
+      "MUNLCKDT D"
+    ],
+    "field_order_match": true,
+    "csv_row_count": 6934,
+    "dbf_row_count": 6934,
+    "csv_duplicate_keys": 0,
+    "dbf_duplicate_keys": 0,
+    "munit_mismatch_rows": 0,
+    "mvpu_mismatch_rows": 0,
+    "submill_csv_rows": 1065,
+    "submill_preserved_rows": 1065,
+    "fractional_cent_total": 1067,
+    "fractional_cent_face_ok": 1067,
+    "trunc_loss_avoided_rows": 1064,
+    "trace_policies": [
+      {
+        "policy": "010448806C",
+        "phase": "2",
+        "plan": "1708PA",
+        "row": {
+          "MPOLICY": "010448806C",
+          "MPHASE": "2",
+          "MPLAN": "1708PA",
+          "MUNIT": 5.75296,
+          "MVPU": 1000.0,
+          "face": 5752.96
+        },
+        "pass": true
+      },
+      {
+        "policy": "010615191C",
+        "phase": "2",
+        "plan": "1708PA",
+        "row": {
+          "MPOLICY": "010615191C",
+          "MPHASE": "2",
+          "MPLAN": "1708PA",
+          "MUNIT": 3.74599,
+          "MVPU": 1000.0,
+          "face": 3745.99
+        },
+        "pass": true
+      },
+      {
+        "policy": "010367438C",
+        "phase": "2",
+        "plan": "1708PA",
+        "row": {
+          "MPOLICY": "010367438C",
+          "MPHASE": "2",
+          "MPLAN": "1708PA",
+          "MUNIT": 2.46499,
+          "MVPU": 1000.0,
+          "face": 2464.99
+        },
+        "pass": true
+      },
+      {
+        "policy": "010510671C",
+        "phase": "1",
+        "plan": "2665ST",
+        "row": {
+          "MPOLICY": "010510671C",
+          "MPHASE": "1",
+          "MPLAN": "2665ST",
+          "MUNIT": 1.15296,
+          "MVPU": 5234.0,
+          "face": 6034.59
+        },
+        "pass": true
+      }
+    ],
+    "primary_010448806C": {
+      "MPOLICY": "010448806C",
+      "MPHASE": "2",
+      "MPLAN": "1708PA",
+      "MUNIT": 5.75296,
+      "MVPU": 1000.0,
+      "face": 5752.96
+    }
+  },
+  "failures": [],
+  "pass": true
+}

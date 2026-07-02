@@ -1,0 +1,211 @@
+{
+  "generated": "2026-06-28T19:50:09.368870",
+  "zip_path": "C:\\Users\\warren\\Downloads\\LifePRO_Extracts_20260530 (1).zip",
+  "zip_members": {
+    "PPRDF": "PPRDF_ProductInformation_Extract_20260530.csv",
+    "PAAGERAT": "PAAGERAT_AttainedAge_Rates_Extract_20260530.csv",
+    "PDAGE": "PDAGE_AgeDuration_Rates_Extract_20260530.csv",
+    "PCOMP": "PCOMP_ComponentSetup_Extract_20260530.csv",
+    "PCOVR": "PCOVR_Coverage_Extract_20260530.csv",
+    "PCOVRSGT": "PCOVRSGT_CoverageSegment_Extract_20260530.csv",
+    "PSEGT": null,
+    "PDINT": null
+  },
+  "pprdf_iswl_rows": 0,
+  "pcovrsgt_iswl": {
+    "679 CEN SD": 56,
+    "658 CEN SD": 56,
+    "669 SR GD": 56,
+    "659 SR GD": 56,
+    "658 CEN I": 56,
+    "659 CEN II": 56,
+    "659 CEN SR": 56,
+    "659 CEN SD": 56
+  },
+  "area_summary": {
+    "QUIKUINT": {
+      "coverages_with_any_rate_data": 0,
+      "coverages_fully_8": false,
+      "primary_codes_with_data": []
+    },
+    "Expenses": {
+      "coverages_with_any_rate_data": 1,
+      "coverages_fully_8": false,
+      "primary_codes_with_data": [
+        "UF"
+      ]
+    },
+    "QUIKCOI": {
+      "coverages_with_any_rate_data": 2,
+      "coverages_fully_8": false,
+      "primary_codes_with_data": [
+        "U6",
+        "NC"
+      ]
+    },
+    "QUIKGCOI": {
+      "coverages_with_any_rate_data": 1,
+      "coverages_fully_8": false,
+      "primary_codes_with_data": [
+        "U5"
+      ]
+    },
+    "QUIKISSC": {
+      "coverages_with_any_rate_data": 1,
+      "coverages_fully_8": false,
+      "primary_codes_with_data": [
+        "SL",
+        "TP",
+        "TX"
+      ]
+    },
+    "QUIKGPS": {
+      "coverages_with_any_rate_data": 4,
+      "coverages_fully_8": false,
+      "primary_codes_with_data": [
+        "BP",
+        "PR"
+      ]
+    },
+    "QUIKCVS": {
+      "coverages_with_any_rate_data": 8,
+      "coverages_fully_8": true,
+      "primary_codes_with_data": [
+        "CV"
+      ]
+    }
+  },
+  "hex_hits_sample": {
+    "669 SR GD": {
+      "SR": [
+        "PCOVR.ROW_COLUMN",
+        "PCOVR.COVR_KEY0"
+      ]
+    },
+    "659 SR GD": {
+      "SR": [
+        "PCOVR.ROW_COLUMN",
+        "PCOVR.COVR_KEY0",
+        "PCOMP.comp#1.659 SR GD"
+      ]
+    },
+    "659 CEN SR": {
+      "SR": [
+        "PCOVR.COVR_KEY0",
+        "PCOMP.comp#1.659 CEN SR"
+      ]
+    }
+  },
+  "paagerat_segment_resolution": {
+    "NC": {
+      "658 CEN SD": {
+        "rows": 294,
+        "sample_segt_ids": [
+          "658 CEN I"
+        ]
+      },
+      "679 CEN SD": {
+        "rows": 396,
+        "sample_segt_ids": [
+          "659 CEN II",
+          "679 CEN SD"
+        ]
+      }
+    },
+    "PR": {
+      "658 CEN SD": {
+        "rows": 164,
+        "sample_segt_ids": [
+          "1576 658"
+        ]
+      },
+      "669 SR GD": {
+        "rows": 164,
+        "sample_segt_ids": [
+          "1576 659"
+        ]
+      }
+    },
+    "BP": {
+      "679 CEN SD": {
+        "rows": 396,
+        "sample_segt_ids": [
+          "659 CEN II",
+          "679 CEN SD"
+        ]
+      },
+      "658 CEN SD": {
+        "rows": 444,
+        "sample_segt_ids": [
+          "658 CEN I",
+          "658 CEN SD"
+        ]
+      },
+      "659 CEN SD": {
+        "rows": 152,
+        "sample_segt_ids": [
+          "659 CEN SD"
+        ]
+      },
+      "669 SR GD": {
+        "rows": 172,
+        "sample_segt_ids": [
+          "659 CEN SR"
+        ]
+      }
+    },
+    "NF": {
+      "658 CEN SD": {
+        "rows": 260,
+        "sample_segt_ids": [
+          "658 CEN I"
+        ]
+      },
+      "679 CEN SD": {
+        "rows": 172,
+        "sample_segt_ids": [
+          "659 CEN II"
+        ]
+      }
+    },
+    "RD": {
+      "658 CEN SD": {
+        "rows": 1,
+        "sample_segt_ids": [
+          "658 CEN I"
+        ]
+      }
+    },
+    "U6": {
+      "658 CEN SD": {
+        "rows": 400,
+        "sample_segt_ids": [
+          "658 CEN I"
+        ]
+      },
+      "679 CEN SD": {
+        "rows": 400,
+        "sample_segt_ids": [
+          "659 CEN II"
+        ]
+      }
+    },
+    "U5": {
+      "679 CEN SD": {
+        "rows": 200,
+        "sample_segt_ids": [
+          "659 CEN II"
+        ]
+      }
+    }
+  },
+  "pcomp_product_keys": [
+    "658 CEN I",
+    "658 CEN SD",
+    "659 CEN II",
+    "659 CEN SD",
+    "659 CEN SR",
+    "659 SR GD",
+    "679 CEN SD"
+  ]
+}

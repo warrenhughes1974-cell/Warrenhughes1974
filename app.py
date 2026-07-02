@@ -1,9 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.39
-# Date:        2026-06-28
-# Change Note: v57.39 — Issue 27: suppress PPBEN BENEFIT_TYPE SL from quikridr emit (Substandard Life is not coverage); SL suppression audit CSV.
+# Version:     v57.41
+# Date:        2026-07-02
+# Change Note: v57.41 — Full UAT batch integration: ISWL rate tables (Issues #31–33 QuikUint/QuikIssc via R5),
+#              QuikLoan batch emit (#32), QuikIsrr partial-surrender package (#34 PR-7 append to quikclms/clmp).
+#              UAT launcher enables all phases via run_converter.bat env flags.
+#              v57.40 — Issue #32: QuikLoan v1.2 mapping (PLOAN→QuikLoan; MLOANACCR=0; AS_PERCENT; MLOANINTX plan lookup + default A).
+#              v57.39 — Issue 27: suppress PPBEN BENEFIT_TYPE SL from quikridr emit (Substandard Life is not coverage); SL suppression audit CSV.
 #              v57.38 — Rollback Issue 21J: remove QUIKMEMO [CONVERSION] modal factor memo (restores v57.36 quikmemo behavior).
 #              v57.37 — Issue 21J: QUIKMEMO [CONVERSION] modal premium factor governance memo per policy (documentation only) [ROLLED BACK in v57.38].
 #              v57.36 — Issue 21D Track A: ISWL-scoped quikdvdp.MDEPINT=4.50 via MPLAN allowlist; Track B1: quikclnt emit for RNA CANCEL_DATE/ADDRESS_ID NULL literals.
@@ -233,12 +237,14 @@ PRODUCT_SETUP_VALIDATION_SUMMARY = "validation_summary.md"
 PRODUCT_SETUP_DIAGNOSTICS_MANIFEST = os.path.join("plan_governance", "manifests", "product_governance_diagnostics.csv")
 RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
+QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
+QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
 
 
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.39")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.41")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -284,7 +290,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.39", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.41", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -991,6 +997,10 @@ class QLAdminEnterpriseIntegrationSuite:
 
     def _batch_include_claims_uat_enabled(self):
         flag = os.environ.get("QLA_BATCH_INCLUDE_CLAIMS_UAT", "").strip().lower() in ("1", "true", "yes")
+        return flag and self.CLAIMS_ORCHESTRATION["run_mode"] == "UAT"
+
+    def _batch_include_quikisrr_enabled(self):
+        flag = os.environ.get("QLA_ENABLE_QUIKISRR_EMIT", "").strip().lower() in ("1", "true", "yes")
         return flag and self.CLAIMS_ORCHESTRATION["run_mode"] == "UAT"
 
     def _claims_uat_dbf_generation_enabled(self):
@@ -3798,6 +3808,66 @@ class QLAdminEnterpriseIntegrationSuite:
             self.log(f"  UAT DBF folder: {dbf_result.get('dbf_dir', '')} (status={dbf_result.get('status')})")
         self.log("=" * 60)
 
+    def _quikisrr_emit_script_path(self):
+        return os.path.normpath(os.path.join(self._repo_root(), QUIKISRR_EMIT_RUNNER))
+
+    def _invoke_quikisrr_emit(self):
+        script = self._quikisrr_emit_script_path()
+        if not os.path.isfile(script):
+            self.log(f"QUIKISRR ERROR: emit script not found: {script}")
+            return {"status": "FAILED", "error": "script not found"}
+        cmd = [sys.executable, script]
+        self.log("QUIKISRR EMIT (Issue #34 PR-7): launching isolated subprocess...")
+        self.log(f"  Script: {script}")
+        try:
+            proc = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=QUIKISRR_EMIT_RUNNER_TIMEOUT,
+                cwd=self._repo_root(),
+            )
+            stdout_text = proc.stdout or ""
+            stderr_text = proc.stderr or ""
+            self._log_subprocess_stream("quikisrr-stdout", stdout_text)
+            self._log_subprocess_stream("quikisrr-stderr", stderr_text)
+            summary = {}
+            start = stdout_text.find("{")
+            end = stdout_text.rfind("}")
+            if start >= 0 and end > start:
+                try:
+                    summary = json.loads(stdout_text[start:end + 1])
+                except json.JSONDecodeError:
+                    pass
+            status = "SUCCESS" if proc.returncode == 0 else "FAILED"
+            return {"status": status, "return_code": proc.returncode, "summary": summary}
+        except subprocess.TimeoutExpired:
+            self.log("QUIKISRR ERROR: subprocess timeout")
+            return {"status": "TIMEOUT"}
+        except Exception as exc:
+            self.log(f"QUIKISRR ERROR: {exc}")
+            return {"status": "FAILED", "error": str(exc)}
+
+    def _execute_batch_quikisrr_finale(self, batch_claims_result=None):
+        if not self._batch_include_quikisrr_enabled():
+            self.log("BATCH QUIKISRR (Issue #34): not enabled (set QLA_ENABLE_QUIKISRR_EMIT=1 in UAT mode).")
+            return None
+        if not batch_claims_result or not batch_claims_result.get("emit_result"):
+            self.log("BATCH QUIKISRR (Issue #34): skipped — UAT claims emit did not complete.")
+            return None
+        self.log("=" * 60)
+        self.log("BATCH QUIKISRR FINALE (Issue #34 PR-7 — after UAT claims emit)")
+        result = self._invoke_quikisrr_emit()
+        self._last_quikisrr_result = result
+        summary = result.get("summary") or {}
+        emitted = summary.get("emitted") or {}
+        self.log(
+            f"QUIKISRR (batch finale): status={result.get('status', '?')} "
+            f"events={emitted.get('rows', '?')} policies={emitted.get('policies', '?')}"
+        )
+        for name, info in (summary.get("outputs") or {}).items():
+            if isinstance(info, dict):
+                self.log(f"  {name}: {info.get('rows', '?')} rows (appended={info.get('appended', '')})")
+        self.log("=" * 60)
+        return result
+
     def on_table_select(self, event=None):
         table = self.table_var.get()
         if not table: return
@@ -4274,19 +4344,25 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log("Initializing Migration Engine v57.39 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.41 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
             if self.debug_rel_fallback:
                 self.log("DEBUG REL: Relationship fallback logging enabled (QLA_DEBUG_REL_FALLBACK)")
             batch_claims_flag = self._batch_include_claims_uat_enabled()
+            quikisrr_flag = self._batch_include_quikisrr_enabled()
+            quikloan_flag = os.environ.get("QLA_ENABLE_QUIKLOAN_EMIT", "").strip() == "1"
+            rate_batch_flag = os.environ.get("QLA_BATCH_INCLUDE_RATE_TABLES", "").strip().lower() in ("1", "true", "yes")
             uat_dbf_flag = self._claims_uat_dbf_generation_enabled()
             mpolicy_flag = self._claims_mpolicy_validation_enabled()
             self.log(
                 f"RUN_MODE={self.RUN_MODE} | claims_orchestration=Phase18A–20 | "
                 f"production_dbf_flag={self.CLAIMS_ORCHESTRATION['production_dbf_flag']} | "
                 f"batch_include_claims_uat={'Y' if batch_claims_flag else 'N'} | "
+                f"quikisrr_emit={'Y' if quikisrr_flag else 'N'} | "
+                f"quikloan_emit={'Y' if quikloan_flag else 'N'} | "
+                f"rate_tables_batch={'Y' if rate_batch_flag else 'N'} | "
                 f"generate_uat_claims_dbf={'Y' if uat_dbf_flag else 'N'} | "
                 f"validate_claims_mpolicy={'Y' if mpolicy_flag else 'N'}"
             )
@@ -4603,30 +4679,40 @@ class QLAdminEnterpriseIntegrationSuite:
                 if t_id.lower() == "quikloan":
                     if os.environ.get("QLA_ENABLE_QUIKLOAN_EMIT", "").strip() != "1":
                         self.log(
-                            "Skipping QUIKLOAN — set QLA_ENABLE_QUIKLOAN_EMIT=1 for Phase L1 staging "
+                            "Skipping QUIKLOAN — set QLA_ENABLE_QUIKLOAN_EMIT=1 for Issue #32 QuikLoan "
                             "(or run plan_analysis/phase_l1_quikloan/quikloan_runner.py)."
                         )
                         continue
                     if not os.path.exists(src_path):
                         self.log(f"Skipping {t_id.upper()} -> Missing Source Data: {src_path}")
                         continue
-                    self.log(f"Working Table: {t_id.upper()} (PLOAN-primary Phase L1 staging)")
+                    self.log(f"Working Table: {t_id.upper()} (PLOAN → QuikLoan Issue #32 v1.2)")
                     phase_l1_dir = os.path.normpath(
                         os.path.join(self._app_base_dir(), "plan_analysis", "phase_l1_quikloan")
                     )
+                    out_dir = self.path_vars["Out"][0].get()
+                    qp_path = os.path.normpath(os.path.join(out_dir, "quikplan.csv"))
+                    if not os.path.isfile(qp_path):
+                        qp_path = ""
+                    qm_path = os.path.normpath(os.path.join(out_dir, "quikmstr.csv"))
+                    if not os.path.isfile(qm_path):
+                        qm_path = ""
                     rules = load_derivation_rules()
                     passed_df, trace_df, exceptions_df, ql_stats = convert_quikloan_from_ploan(
                         src_path,
                         cw_map=cw_map,
                         rules=rules,
                         output_dir=phase_l1_dir,
+                        quikplan_path=qp_path or None,
+                        quikmstr_path=qm_path or None,
                     )
                     self.log(
-                        f"QUIKLOAN Phase L1: {ql_stats.get('emit_passed', 0)} emit candidates, "
-                        f"{ql_stats.get('emit_exceptions', 0)} exceptions; reports -> {phase_l1_dir}"
+                        f"QUIKLOAN Issue #32: {ql_stats.get('emit_passed', 0)} emit rows, "
+                        f"{ql_stats.get('emit_exceptions', 0)} exceptions; "
+                        f"MLOANINTX fallback={ql_stats.get('mloanintx_fallback_count', 0)}; "
+                        f"reports -> {phase_l1_dir}"
                     )
                     if os.environ.get("QLA_QUIKLOAN_WRITE_OUTPUT", "").strip() == "1":
-                        out_dir = self.path_vars["Out"][0].get()
                         out_path = os.path.normpath(os.path.join(out_dir, "quikloan.csv"))
                         passed_df.to_csv(out_path, index=False)
                         self.log(f"GATED OUTPUT: {out_path} ({len(passed_df)} rows)")
@@ -5788,8 +5874,10 @@ class QLAdminEnterpriseIntegrationSuite:
 
             current_stage = "Running claims / payment outputs"
             batch_claims_result = None
+            batch_quikisrr_result = None
             if is_batch:
                 batch_claims_result = self._execute_batch_claims_uat_finale()
+                batch_quikisrr_result = self._execute_batch_quikisrr_finale(batch_claims_result)
 
             if is_batch and hasattr(self, "rate_include_batch_var") and self.rate_include_batch_var.get():
                 if self.rate_emit_csv_var.get() or self.rate_emit_dbf_var.get():
@@ -5830,12 +5918,24 @@ class QLAdminEnterpriseIntegrationSuite:
                     dbf_note = f"\nUAT prototype DBFs generated in:\n{dbf_info.get('dbf_dir', '')}"
                 elif self._claims_uat_dbf_generation_enabled():
                     dbf_note = "\nUAT DBF generation attempted — see console for status."
+                isrr_note = ""
+                if batch_quikisrr_result and batch_quikisrr_result.get("status") == "SUCCESS":
+                    isrr_summary = batch_quikisrr_result.get("summary") or {}
+                    isrr_emitted = isrr_summary.get("emitted") or {}
+                    isrr_note = (
+                        f"\n\nQuikIsrr partial-surrender package appended "
+                        f"({isrr_emitted.get('rows', '?')} events)."
+                    )
+                rate_note = ""
+                br = getattr(self, "_last_rate_loader_result", None) or {}
+                if br.get("status") == "SUCCESS":
+                    rate_note = f"\n\nRate tables: {br.get('tables', '?')} tables written to Output/rates/."
                 messagebox.showinfo(
                     "Complete",
                     "Batch conversion finished.\n\n"
                     "UAT claims (quikclms/quikclmp) emitted to main output.\n"
                     f"Review holds: {emit_info.get('hold_count', 0)} records in claims_review_hold_manifest.csv"
-                    f"{dbf_note}{val_note}",
+                    f"{isrr_note}{dbf_note}{rate_note}{val_note}",
                 )
             else:
                 done_msg = "Conversion Finished."

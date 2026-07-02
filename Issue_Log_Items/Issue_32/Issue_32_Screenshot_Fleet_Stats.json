@@ -1,0 +1,11 @@
+{
+  "active_count": 354,
+  "missing_accrual_date": 0,
+  "missing_last_repay": 109,
+  "missing_int_start": 0,
+  "rate_050_count": 58,
+  "rate_074_count": 296,
+  "active_accrual_date_ok": 354,
+  "active_last_repay_ok": 245,
+  "active_missing_repay": 109
+}

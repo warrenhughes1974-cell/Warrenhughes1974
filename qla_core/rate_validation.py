@@ -17,8 +17,16 @@ from qla_core import rate_dbf_schema as S
 GENDER_DOMAIN = {"F", "M", "J", "0"}
 UWCLASS_DOMAIN = {"00", "NS", "SM", "PR", "ST"}
 BAND_DOMAIN = {"00", "01", "02", "03"}
-TYPE_FAMILY = {"PR": "GROSS_PREMIUM", "CV": "CASH_VALUE", "DB": "DEATH_BENEFIT",
+TYPE_FAMILY = {"PR": "GROSS_PREMIUM", "BP": "GROSS_PREMIUM", "U6": "CURRENT_COI", "U5": "GUARANTEED_COI",
+               "CV": "CASH_VALUE", "DB": "DEATH_BENEFIT",
                "DV": "DIVIDEND", "NP": "NET_PREMIUM", "RV": "TERMINAL_RESERVE"}
+
+# ISWL Phase 2 — billable premium MPLANs (PAAGERAT BP authority)
+ISWL_BP_MPLANS = frozenset({"1658CS", "1659CS", "1669SR", "1679CS"})
+# ISWL Phase 3 — current COI MPLANs (PAAGERAT U6)
+ISWL_COI_MPLANS = frozenset({"1658CS", "1679CS"})
+# ISWL Phase 4 — guaranteed COI MPLANs (PAAGERAT U5)
+ISWL_GCOI_MPLANS = frozenset({"1679CS"})
 
 
 def _issue(issues, vid, severity, table, detail, **kw):

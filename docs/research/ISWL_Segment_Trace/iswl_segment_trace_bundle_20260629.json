@@ -1,0 +1,866 @@
+{
+  "generated": "2026-06-30T07:17:11.371054",
+  "issue": 31,
+  "validation": {
+    "PSEGT": {
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\PSEGT_Segment_Extract_20260629.csv",
+      "size_bytes": 446720,
+      "row_count": 696,
+      "columns": [
+        "SEGMENT_ID",
+        "SEGT_TYPE",
+        "SEGT_DATA",
+        "MOD_CODER",
+        "MOD_DATE",
+        "MOD_TIME",
+        "SEGT_UPD_COUNT",
+        "SEGT_KEY0",
+        "ROW_COLUMN"
+      ],
+      "type_code_counts": {
+        "PR": 103,
+        "NP": 82,
+        "RV": 81,
+        "CV": 40,
+        "CC": 34,
+        "CM": 33,
+        "NL": 24,
+        "NT": 24,
+        "DB": 23,
+        "ET": 20,
+        "PU": 20,
+        "NN": 20,
+        "PN": 19,
+        "DV": 16,
+        "RD": 12,
+        "NF": 11,
+        "TP": 11,
+        "TX": 11,
+        "DN": 10,
+        "BP": 8,
+        "LN": 7,
+        "IB": 6,
+        "NO": 5,
+        "NC": 5,
+        "UG": 5,
+        "UH": 5,
+        "U6": 4,
+        "C2": 4,
+        "NB": 4,
+        "F0": 3
+      },
+      "distinct_idents": 0,
+      "distinct_segment_ids": 221,
+      "null_key_fields": {}
+    },
+    "PDINT": {
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\PDINT_DeclaredInterestRates_Extract_20260629.csv",
+      "size_bytes": 15240,
+      "row_count": 10,
+      "columns": [
+        "IDENT",
+        "TYPE_CODE",
+        "DINT_RULE",
+        "EFF_DATE",
+        "SEQ",
+        "LOW_DATE",
+        "HIGH_DATE",
+        "LOW_PROCESS_DUR",
+        "HIGH_PROCESS_DUR",
+        "INVESTMENT_CODE",
+        "RATE_DUR_PERIOD_CD",
+        "MULTIPLIER",
+        "MOD_CODER",
+        "MOD_DATE",
+        "MOD_TIME",
+        "DINT_UPD_COUNT",
+        "DINT_KEY0",
+        "ROW_COLUMN"
+      ],
+      "type_code_counts": {
+        "A1": 5,
+        "C1": 4,
+        "C3": 1
+      },
+      "distinct_idents": 8,
+      "distinct_segment_ids": 0,
+      "null_key_fields": {}
+    },
+    "PDINTTBL": {
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\PDINTTBL_DeclaredInterestRates_Extract_20260629.csv",
+      "size_bytes": 6084,
+      "row_count": 37,
+      "columns": [
+        "IDENT",
+        "TYPE_CODE",
+        "DINT_RULE",
+        "EFF_DATE",
+        "SEQ",
+        "IDX",
+        "START_DATE",
+        "END_DATE",
+        "DECLARED_RATE",
+        "RATE_GUAR_DUR",
+        "DINT_KEY0"
+      ],
+      "type_code_counts": {
+        "A1": 24,
+        "C3": 7,
+        "C1": 6
+      },
+      "distinct_idents": 8,
+      "distinct_segment_ids": 0,
+      "null_key_fields": {}
+    }
+  },
+  "psetg_type_counts_top": {
+    "PR": 103,
+    "NP": 82,
+    "RV": 81,
+    "CV": 40,
+    "CC": 34,
+    "CM": 33,
+    "NL": 24,
+    "NT": 24,
+    "DB": 23,
+    "ET": 20,
+    "PU": 20,
+    "NN": 20,
+    "PN": 19,
+    "DV": 16,
+    "RD": 12,
+    "NF": 11,
+    "TP": 11,
+    "TX": 11,
+    "DN": 10,
+    "BP": 8,
+    "LN": 7,
+    "IB": 6,
+    "NO": 5,
+    "NC": 5,
+    "UG": 5,
+    "UH": 5,
+    "U6": 4,
+    "C2": 4,
+    "NB": 4,
+    "F0": 3,
+    "FR": 3,
+    "U5": 3,
+    "C1": 3,
+    "UM": 2,
+    "A1": 2,
+    "G1": 2,
+    "SL": 2,
+    "SR": 2,
+    "DO": 2,
+    "RN": 1
+  },
+  "iswl_target_code_map": {
+    "U5": {
+      "psetg_mapped_iswl_coverages": 8,
+      "sample_slots": [
+        {
+          "seq": "3",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "4",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "9",
+          "segt_id": "678 CEN SD"
+        },
+        {
+          "seq": "10",
+          "segt_id": "678 CEN SD"
+        },
+        {
+          "seq": "19",
+          "segt_id": "659 CEN II"
+        }
+      ],
+      "total_rate_rows_all_sources": 200,
+      "authoritative": "Yes"
+    },
+    "U6": {
+      "psetg_mapped_iswl_coverages": 8,
+      "sample_slots": [
+        {
+          "seq": "3",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "4",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "9",
+          "segt_id": "678 CEN SD"
+        },
+        {
+          "seq": "10",
+          "segt_id": "678 CEN SD"
+        },
+        {
+          "seq": "19",
+          "segt_id": "659 CEN II"
+        }
+      ],
+      "total_rate_rows_all_sources": 800,
+      "authoritative": "Yes"
+    },
+    "BP": {
+      "psetg_mapped_iswl_coverages": 8,
+      "sample_slots": [
+        {
+          "seq": "1",
+          "segt_id": "679 CEN SD"
+        },
+        {
+          "seq": "2",
+          "segt_id": "679 CEN SD"
+        },
+        {
+          "seq": "3",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "4",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "9",
+          "segt_id": "678 CEN SD"
+        }
+      ],
+      "total_rate_rows_all_sources": 1164,
+      "authoritative": "Yes"
+    },
+    "CV": {
+      "psetg_mapped_iswl_coverages": 8,
+      "sample_slots": [
+        {
+          "seq": "1",
+          "segt_id": "679 CEN SD"
+        },
+        {
+          "seq": "2",
+          "segt_id": "679 CEN SD"
+        },
+        {
+          "seq": "3",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "4",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "9",
+          "segt_id": "678 CEN SD"
+        }
+      ],
+      "total_rate_rows_all_sources": 84355,
+      "authoritative": "Yes"
+    },
+    "A1": {
+      "psetg_mapped_iswl_coverages": 8,
+      "sample_slots": [
+        {
+          "seq": "3",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "4",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "19",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "20",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "22",
+          "segt_id": "659 CEN II"
+        }
+      ],
+      "total_rate_rows_all_sources": 0,
+      "authoritative": "Yes"
+    },
+    "G1": {
+      "psetg_mapped_iswl_coverages": 8,
+      "sample_slots": [
+        {
+          "seq": "3",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "4",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "19",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "20",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "22",
+          "segt_id": "659 CEN II"
+        }
+      ],
+      "total_rate_rows_all_sources": 0,
+      "authoritative": "Yes"
+    },
+    "LN": {
+      "psetg_mapped_iswl_coverages": 8,
+      "sample_slots": [
+        {
+          "seq": "3",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "4",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "19",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "20",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "22",
+          "segt_id": "659 CEN II"
+        }
+      ],
+      "total_rate_rows_all_sources": 0,
+      "authoritative": "Yes"
+    },
+    "SR": {
+      "psetg_mapped_iswl_coverages": 8,
+      "sample_slots": [
+        {
+          "seq": "3",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "4",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "19",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "20",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "22",
+          "segt_id": "659 CEN II"
+        }
+      ],
+      "total_rate_rows_all_sources": 0,
+      "authoritative": "Yes"
+    },
+    "SL": {
+      "psetg_mapped_iswl_coverages": 8,
+      "sample_slots": [
+        {
+          "seq": "3",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "4",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "19",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "20",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "22",
+          "segt_id": "659 CEN II"
+        }
+      ],
+      "total_rate_rows_all_sources": 26,
+      "authoritative": "Yes"
+    },
+    "UF": {
+      "psetg_mapped_iswl_coverages": 8,
+      "sample_slots": [
+        {
+          "seq": "3",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "4",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "19",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "20",
+          "segt_id": "659 CEN II"
+        },
+        {
+          "seq": "22",
+          "segt_id": "659 CEN II"
+        }
+      ],
+      "total_rate_rows_all_sources": 13,
+      "authoritative": "Yes"
+    },
+    "U1": {
+      "psetg_mapped_iswl_coverages": 0,
+      "sample_slots": [],
+      "total_rate_rows_all_sources": 0,
+      "authoritative": "No"
+    },
+    "U2": {
+      "psetg_mapped_iswl_coverages": 0,
+      "sample_slots": [],
+      "total_rate_rows_all_sources": 0,
+      "authoritative": "No"
+    },
+    "U3": {
+      "psetg_mapped_iswl_coverages": 0,
+      "sample_slots": [],
+      "total_rate_rows_all_sources": 0,
+      "authoritative": "No"
+    },
+    "G2": {
+      "psetg_mapped_iswl_coverages": 0,
+      "sample_slots": [],
+      "total_rate_rows_all_sources": 0,
+      "authoritative": "No"
+    },
+    "G3": {
+      "psetg_mapped_iswl_coverages": 0,
+      "sample_slots": [],
+      "total_rate_rows_all_sources": 0,
+      "authoritative": "No"
+    },
+    "GF": {
+      "psetg_mapped_iswl_coverages": 0,
+      "sample_slots": [],
+      "total_rate_rows_all_sources": 0,
+      "authoritative": "No"
+    }
+  },
+  "qla_area_evaluation": {
+    "QUIKUINT": {
+      "status": "Partially resolved",
+      "coverages_with_psetg_mapping": 8,
+      "coverages_with_rate_rows": 0,
+      "gaps": [
+        "Confirm PDINT IDENT (CENII, IBA01) maps to all 8 MPLANs; G1/LN PDINT rows sparse"
+      ],
+      "codes_in_psetg": [
+        "A1",
+        "G1",
+        "LN"
+      ]
+    },
+    "QUIKCOI": {
+      "status": "Partially resolved",
+      "coverages_with_psetg_mapping": 8,
+      "coverages_with_rate_rows": 2,
+      "gaps": [
+        "U6 on SEGT_ID 658 CEN I / 659 CEN II; PAAGERAT resolves to SD parent coverages",
+        "PAAGERAT U6 rows: 2/8 parent coverages"
+      ],
+      "codes_in_psetg": [
+        "U6"
+      ]
+    },
+    "QUIKGCOI": {
+      "status": "Partially resolved",
+      "coverages_with_psetg_mapping": 8,
+      "coverages_with_rate_rows": 1,
+      "gaps": [
+        "U5 primarily on 659 CEN II segment; PAAGERAT on 679 CEN SD only"
+      ],
+      "codes_in_psetg": [
+        "U5"
+      ]
+    },
+    "QUIKGPS": {
+      "status": "Partially resolved",
+      "coverages_with_psetg_mapping": 8,
+      "coverages_with_rate_rows": 4,
+      "gaps": [
+        "BP on 658 CEN I, 658 CEN SD, 659 CEN II, 659 CEN SR segments",
+        "PAAGERAT BP rows: 4/8 parent coverages"
+      ],
+      "codes_in_psetg": [
+        "BP"
+      ]
+    },
+    "QUIKISSC": {
+      "status": "Partially resolved",
+      "coverages_with_psetg_mapping": 8,
+      "coverages_with_rate_rows": 1,
+      "gaps": [
+        "SR/SL on 659 CEN II segment \u2014 surrender rate table pointer (not TP/TX) still needs decode"
+      ],
+      "codes_in_psetg": [
+        "SR",
+        "SL"
+      ]
+    },
+    "QUIKCVS": {
+      "status": "Fully resolved",
+      "coverages_with_psetg_mapping": 8,
+      "coverages_with_rate_rows": 8,
+      "gaps": [
+        "PDAGE vs Rate_Table parity still open"
+      ],
+      "codes_in_psetg": [
+        "CV"
+      ]
+    },
+    "Expenses": {
+      "status": "Partially resolved",
+      "coverages_with_psetg_mapping": 8,
+      "coverages_with_rate_rows": 1,
+      "gaps": [
+        "No PSEGT mapping for U1 on any ISWL coverage",
+        "No PSEGT mapping for U2 on any ISWL coverage",
+        "No PSEGT mapping for U3 on any ISWL coverage",
+        "No PSEGT mapping for G2 on any ISWL coverage",
+        "No PSEGT mapping for G3 on any ISWL coverage",
+        "No PSEGT mapping for GF on any ISWL coverage",
+        "PSEGT maps ['UF'] via 659 CEN II slot; U1/U2/U3/G2/G3/GF absent from PSEGT"
+      ],
+      "codes_in_psetg": [
+        "UF"
+      ]
+    }
+  },
+  "interest_info_summary": {
+    "pdint_rows": 10,
+    "pdinttbl_rows": 37,
+    "distinct_idents": [
+      "CENII",
+      "DAR01",
+      "DIV01",
+      "IBA01",
+      "L1001",
+      "SAL01",
+      "SPWL",
+      "SPWL+"
+    ],
+    "ident_links": [
+      {
+        "ident": "CENII",
+        "inferred_segt_id": "659 CEN II",
+        "psetg_types": [
+          "A1",
+          "BP",
+          "CV",
+          "F0",
+          "FC",
+          "FR",
+          "G1",
+          "L=",
+          "LC",
+          "LN",
+          "LP",
+          "NC",
+          "NF",
+          "NP",
+          "RT",
+          "RV",
+          "RX",
+          "SC",
+          "SL",
+          "SR",
+          "TP",
+          "TX",
+          "U5",
+          "U6",
+          "UF",
+          "UG",
+          "UH",
+          "UI",
+          "VN",
+          "WC",
+          "WD"
+        ],
+        "has_a1": true,
+        "has_g1": false
+      },
+      {
+        "ident": "DAR01",
+        "inferred_segt_id": "",
+        "psetg_types": [],
+        "has_a1": true,
+        "has_g1": false
+      },
+      {
+        "ident": "DIV01",
+        "inferred_segt_id": "",
+        "psetg_types": [],
+        "has_a1": false,
+        "has_g1": false
+      },
+      {
+        "ident": "IBA01",
+        "inferred_segt_id": "IBA01 45",
+        "psetg_types": [
+          "C1",
+          "IB"
+        ],
+        "has_a1": false,
+        "has_g1": false
+      },
+      {
+        "ident": "L1001",
+        "inferred_segt_id": "",
+        "psetg_types": [],
+        "has_a1": false,
+        "has_g1": false
+      },
+      {
+        "ident": "SAL01",
+        "inferred_segt_id": "",
+        "psetg_types": [],
+        "has_a1": false,
+        "has_g1": false
+      },
+      {
+        "ident": "SPWL",
+        "inferred_segt_id": "",
+        "psetg_types": [],
+        "has_a1": true,
+        "has_g1": false
+      },
+      {
+        "ident": "SPWL+",
+        "inferred_segt_id": "",
+        "psetg_types": [],
+        "has_a1": true,
+        "has_g1": false
+      }
+    ],
+    "interest_slot_traces": [
+      {
+        "mplan": "1658C1",
+        "parent_coverage": "658 CEN I",
+        "seq": "3",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658C1",
+        "parent_coverage": "658 CEN I",
+        "seq": "4",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658C1",
+        "parent_coverage": "658 CEN I",
+        "seq": "9",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658C1",
+        "parent_coverage": "658 CEN I",
+        "seq": "19",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658C1",
+        "parent_coverage": "658 CEN I",
+        "seq": "20",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658C1",
+        "parent_coverage": "658 CEN I",
+        "seq": "22",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658C1",
+        "parent_coverage": "658 CEN I",
+        "seq": "30",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658C1",
+        "parent_coverage": "658 CEN I",
+        "seq": "35",
+        "segt_id": "L14",
+        "psetg_types": "C2|CV|ET|IB|LN|NB|NF|NO|NP|PR|PU|RD|RV|TP|TX",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658C1",
+        "parent_coverage": "658 CEN I",
+        "seq": "38",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658CS",
+        "parent_coverage": "658 CEN SD",
+        "seq": "3",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658CS",
+        "parent_coverage": "658 CEN SD",
+        "seq": "4",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658CS",
+        "parent_coverage": "658 CEN SD",
+        "seq": "9",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658CS",
+        "parent_coverage": "658 CEN SD",
+        "seq": "19",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658CS",
+        "parent_coverage": "658 CEN SD",
+        "seq": "20",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658CS",
+        "parent_coverage": "658 CEN SD",
+        "seq": "22",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658CS",
+        "parent_coverage": "658 CEN SD",
+        "seq": "30",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658CS",
+        "parent_coverage": "658 CEN SD",
+        "seq": "35",
+        "segt_id": "L14",
+        "psetg_types": "C2|CV|ET|IB|LN|NB|NF|NO|NP|PR|PU|RD|RV|TP|TX",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1658CS",
+        "parent_coverage": "658 CEN SD",
+        "seq": "38",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1659C2",
+        "parent_coverage": "659 CEN II",
+        "seq": "1",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      },
+      {
+        "mplan": "1659C2",
+        "parent_coverage": "659 CEN II",
+        "seq": "2",
+        "segt_id": "659 CEN II",
+        "psetg_types": "A1|BP|CV|F0|FC|FR|G1|L=|LC|LN|LP|NC|NF|NP|RT|RV|RX|SC|SL|SR|TP|TX|U5|U6|UF|UG|UH|UI|VN|WC|WD",
+        "psetg_found": "Y"
+      }
+    ],
+    "pdint_types": {
+      "A1": 5,
+      "C3": 1,
+      "C1": 4
+    },
+    "pdinttbl_types": {
+      "A1": 24,
+      "C3": 7,
+      "C1": 6
+    },
+    "cenii_a1_current_rate": [
+      {
+        "IDENT": "CENII",
+        "TYPE_CODE": "A1",
+        "DINT_RULE": "0",
+        "EFF_DATE": "20030813",
+        "SEQ": "1",
+        "IDX": "3",
+        "START_DATE": "20020101",
+        "END_DATE": "20991231",
+        "DECLARED_RATE": "4.50000",
+        "RATE_GUAR_DUR": "0",
+        "DINT_KEY0": "0x43454E494941313030323030333038313330303130303033"
+      },
+      {
+        "IDENT": "CENII",
+        "TYPE_CODE": "A1",
+        "DINT_RULE": "3",
+        "EFF_DATE": "19800101",
+        "SEQ": "1",
+        "IDX": "3",
+        "START_DATE": "20020101",
+        "END_DATE": "20991231",
+        "DECLARED_RATE": "4.50000",
+        "RATE_GUAR_DUR": "0",
+        "DINT_KEY0": "0x43454E494941313033313938303031303130303130303033"
+      }
+    ]
+  },
+  "iswl_traces_count": 191,
+  "iswl_traces_with_psetg": 185,
+  "psetg_note": "PSEGT uses multiple rows per SEGMENT_ID (one per SEGT_TYPE capability)."
+}

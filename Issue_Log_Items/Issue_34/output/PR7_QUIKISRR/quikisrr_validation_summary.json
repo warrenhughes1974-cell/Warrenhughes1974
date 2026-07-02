@@ -1,6 +1,6 @@
 {
-  "emit_date": "2026-07-02T15:28:28Z",
-  "dry_run": false,
+  "emit_date": "2026-07-02T17:38:36Z",
+  "dry_run": true,
   "candidate_population": {
     "rows": 3623,
     "policies": 636,
@@ -20,31 +20,10 @@
     "reversal_excluded_rows": 61
   },
   "existing_preserved": {
-    "quikclms_before_rows": 2114,
-    "quikclmp_before_rows": 1709,
-    "quikclms_before_hash": "e95bcbfc705a0cb1db63840e854d122897fae09a9f423468687a1d6653406778",
-    "quikclmp_before_hash": "a70f99ce96c45b4ea75c37b94d205df34aa1b65c581f652fece1afd3ac5c3eeb",
-    "quikclms_after_prefix_hash": "e95bcbfc705a0cb1db63840e854d122897fae09a9f423468687a1d6653406778",
-    "quikclmp_after_prefix_hash": "a70f99ce96c45b4ea75c37b94d205df34aa1b65c581f652fece1afd3ac5c3eeb",
-    "quikclms_prefix_unchanged": true,
-    "quikclmp_prefix_unchanged": true
+    "quikclms_before_rows": 5730,
+    "quikclmp_before_rows": 5325,
+    "quikclms_before_hash": "715f505491e595de7d13c048d13ee0c1b69e5435ece542f9d8f995e71d00a5ab",
+    "quikclmp_before_hash": "d2663ce396661d96e21d5cf94598c7d9bfc3551759ca121287179aa19bce949b"
   },
-  "outputs": {
-    "quikclms.csv": {
-      "rows": 5730,
-      "appended": 3616
-    },
-    "quikclmp.csv": {
-      "rows": 5325,
-      "appended": 3616
-    },
-    "quikbenh.csv": {
-      "rows": 3616,
-      "mode": "append_merge_new_file"
-    },
-    "QuikIsrr.csv": {
-      "rows": 3616,
-      "miswl": "omitted"
-    }
-  }
+  "outputs": {}
 }

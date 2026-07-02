@@ -1,0 +1,64 @@
+{
+  "total_rows": 93858,
+  "valid_rows": 93857,
+  "unique_policies": 913,
+  "rows_loan_balance_gt0": 93036,
+  "rows_accrued_int_gt0": 0,
+  "rows_orig_loan_gt0": 93190,
+  "rows_spec_cls_bal_gt0": 0,
+  "blank_policy_rows": 1,
+  "latest_policies": 913,
+  "latest_balance_gt0": 385,
+  "latest_accrued_gt0": 0,
+  "latest_orig_gt0": 910,
+  "total_latest_balance": 1554200.6700000002,
+  "total_active_balance": 1554200.67,
+  "total_latest_accrued": 0.0,
+  "policies_multi_row": 913,
+  "max_rows_per_policy": 871,
+  "median_rows_per_policy": 45.0,
+  "all_rows_STATUS_CODE": {
+    "H": 91766,
+    "R": 1818,
+    "A": 273
+  },
+  "all_rows_TYPE_CODE": {
+    "R": 70580,
+    "A": 22395,
+    "": 882
+  },
+  "all_rows_INTEREST_TYPE": {
+    "F": 93857
+  },
+  "all_rows_INT_METHOD": {
+    "D": 93857
+  },
+  "latest_STATUS_CODE": {
+    "H": 576,
+    "A": 240,
+    "R": 97
+  },
+  "latest_TYPE_CODE": {
+    "R": 447,
+    "": 351,
+    "A": 115
+  },
+  "latest_INTEREST_TYPE": {
+    "F": 913
+  },
+  "latest_INT_METHOD": {
+    "D": 913
+  },
+  "latest_in_quikmstr": 913,
+  "latest_not_in_quikmstr": 0,
+  "not_in_quikmstr_policies": [],
+  "active_in_quikmstr": 385,
+  "active_not_in_quikmstr": 0,
+  "emit_rows": 384,
+  "emit_total_mloanbal": 1553578.89,
+  "emit_total_mloanaccr": 0.0,
+  "emit_mloandate_blank": 0,
+  "emit_mloanidt_blank": 12,
+  "emit_mloanint_blank": 0,
+  "duplicate_mpolicy": 0
+}

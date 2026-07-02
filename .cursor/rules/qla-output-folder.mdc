@@ -1,0 +1,35 @@
+---
+description: QLA_Migration/Output must contain only QLAdmin table CSVs (DBF-bound quik* files)
+alwaysApply: true
+---
+
+# QLA Output Folder Policy
+
+`QLA_Migration/Output/` is the **QLAdmin load package** — table CSVs only.
+
+## Keep in Output (root)
+
+Only `quik*.csv` files that convert to QLAdmin DBF tables, for example:
+
+- quikplan, quikmstr, quikridr, quikclnt, quikclid, quikbenf, quikprmh, quikdvdp, quikdvpr
+- quikmemo, quikactg, quikagts, quikclmp, quikclms, quikloan (when emit enabled)
+- Rate tables under `Output/rates/` when rate generation runs
+
+## Do NOT leave in Output
+
+| Type | Relocate to |
+|------|-------------|
+| Validation / audit CSVs | `QLA_Migration/Reports/` |
+| Batch / migration logs (`.txt`) | `QLA_Migration/Logs/` |
+| Output validation detail CSVs | `QLA_Migration/Validation/` |
+| UAT DBF prototypes, claims staging, issue21k DBF | `QLA_Migration/Staging/` |
+| Old snapshots / rollback copies | `QLA_Migration/Archive/` |
+| Issue-specific QA (e.g. QuikLoan audits) | `plan_analysis/` or `Issue_Log_Items/` |
+
+## After each release or validation run
+
+1. Confirm Output root contains **only** table CSVs (+ optional `rates/` subfolder).
+2. Move or delete artifacts before handoff to client/DBF conversion.
+3. Do not commit audit manifests, hold lists, or batch logs in Output.
+
+Reference: `QLA_Migration/RUN_GUIDE.md` — "Output should contain CSV files only" (table CSVs specifically for load).

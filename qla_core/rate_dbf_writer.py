@@ -135,6 +135,22 @@ def write_member_table_csv(path, member_table, rows, overwrite=False):
     return write_table_csv(path, S.member_table_fields(member_table), rows, overwrite)
 
 
+def write_quikuint_table(path, rows, overwrite=False):
+    return _emit(path, S.quikuint_fields(), rows, overwrite)
+
+
+def write_quikuint_csv(path, rows, overwrite=False):
+    return write_table_csv(path, S.quikuint_fields(), rows, overwrite)
+
+
+def write_quikissc_table(path, rows, overwrite=False):
+    return _emit(path, S.quikissc_fields(), rows, overwrite)
+
+
+def write_quikissc_csv(path, rows, overwrite=False):
+    return write_table_csv(path, S.quikissc_fields(), rows, overwrite)
+
+
 def emit_all_rate_tables_csv(
     factor_rows,
     key_rows,

@@ -1,0 +1,40 @@
+{
+  "script_version": "1.0",
+  "blocker_count": 0,
+  "emit_ready": true,
+  "v_coi_01_psegt_u6": true,
+  "v_coi_02_nc_excluded": true,
+  "v_coi_03_resolution_paths": true,
+  "v_coi_04_schema": true,
+  "v_coi_05_value_info": true,
+  "v_coi_06_qx1_blank": true,
+  "v_coi_07_seq100_caps": 8,
+  "v_coi_07_cap_collisions": 8,
+  "paagerat_coi_in_scope": 800,
+  "quikcoi_factor_rows": 792,
+  "iswl_coi_keys_by_mplan": {
+    "1658CS": 396,
+    "1679CS": 396
+  },
+  "source_stats": {
+    "u6_in_scope": 800,
+    "u6_unresolved": 0,
+    "u6_segments": {
+      "658 CEN I": 400,
+      "659 CEN II": 400
+    },
+    "nc_rows": 690,
+    "u5_rows": 417,
+    "value_info_rows": 800,
+    "hub_659_cen_ii_to_1679cs": 400
+  },
+  "factor_check": {
+    "qx1_qx9_blank": true,
+    "value_info_populated": true,
+    "cntl_00": true,
+    "factor_row_count": 792
+  },
+  "output_in_expected_range": true,
+  "regression_ok": true,
+  "regression_notes": []
+}

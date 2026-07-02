@@ -1,0 +1,68 @@
+{
+  "script_version": "1.0",
+  "blocker_count": 0,
+  "emit_ready": true,
+  "v_iss_c_01_schema": true,
+  "v_iss_c_02_psegt_sl": true,
+  "v_iss_c_03_mplans_8_8": true,
+  "v_iss_c_04_row_count_8": true,
+  "v_iss_c_05_uwclass_sm": true,
+  "v_iss_c_06_age_zero": true,
+  "v_iss_c_07_schg01_14": true,
+  "v_iss_c_08_schg15_20_blank": true,
+  "v_iss_c_09_percent_literal": true,
+  "v_iss_c_10_unique_index": true,
+  "v_iss_c_11_phase1_5_regression": true,
+  "v_iss_c_12_quikissc_csv": true,
+  "psegt_sl_gate": {
+    "pass": true,
+    "count": 8
+  },
+  "hub_sl_durations": 14,
+  "hub_schedule": {
+    "1": "100.0000",
+    "2": "100.0000",
+    "3": "70.0000",
+    "4": "60.0000",
+    "5": "50.0000",
+    "6": "40.0000",
+    "7": "30.0000",
+    "8": "20.0000",
+    "9": "15.0000",
+    "10": "10.0000",
+    "11": "8.0000",
+    "12": "6.0000",
+    "13": "4.0000",
+    "14": "2.0000"
+  },
+  "analysis": {
+    "row_count": 8,
+    "distinct_plans": 8,
+    "rows_by_plan": {
+      "1658C1": 1,
+      "1658CS": 1,
+      "1659C2": 1,
+      "1659CR": 1,
+      "1659CS": 1,
+      "1659SR": 1,
+      "1669SR": 1,
+      "1679CS": 1
+    },
+    "duplicate_index_keys": 0,
+    "uwclass_sm": true,
+    "age_zero": true,
+    "schg01_14_ok": true,
+    "schg15_20_blank": true,
+    "percent_literal": true
+  },
+  "regression_ok": true,
+  "regression_notes": [],
+  "phase1_5_notes": [
+    "Phase1: PASS",
+    "Phase2: PASS",
+    "Phase3: PASS",
+    "Phase4: PASS",
+    "Phase5: PASS"
+  ],
+  "quikissc_csv": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikIssc.csv"
+}

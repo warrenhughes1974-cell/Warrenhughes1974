@@ -1,0 +1,914 @@
+SOURCE_POLICY,MPOLICY,PLAN_CODE,QLA_PLAN,MLOANINTX,MLOANINTX_SOURCE,MLOANINTX_RAW_QUIKPLAN,NOTE
+9010300689,010300689C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010310404,010310404C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010331768,010331768C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010346921,010346921C,980 END65,280END,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010363098,010363098C,960 LP85-M,196085,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010367438,010367438C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010374099,010374099C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010376522,010376522C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010376529,010376529C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010377918,010377918C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010378485,010378485C,960 LP65,196065,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010380049,010380049C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010380627,010380627C,960 LP65,196065,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010381745,010381745C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010382426,010382426C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010382520,010382520C,960 LP65,196065,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010382931,010382931C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010385636,010385636C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010391004,010391004C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010391228,010391228C,970 JEB,1970JB,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010391359,010391359C,980 END65,280END,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010391422,010391422C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010391876,010391876C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010391878,010391878C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010391895,010391895C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010392138,010392138C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010392763,010392763C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010393181,010393181C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010395098,010395098C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010395382,010395382C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010395761,010395761C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010395879,010395879C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010396186,010396186C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010396425,010396425C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010397118,010397118C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010397318,010397318C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010397583,010397583C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010397945,010397945C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010400462,010400462C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010401565,010401565C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010402014,010402014C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010402105,010402105C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010403109,010403109C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010403789,010403789C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010404600,010404600C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010404602,010404602C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010404857,010404857C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010405440,010405440C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010407925,010407925C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010410566,010410566C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010413628,010413628C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010417200,010417200C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010420983,010420983C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010422033,010422033C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010422417,010422417C,960 LP65,196065,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010422722,010422722C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010425720,010425720C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010425941,010425941C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010425942,010425942C,960 LP65,196065,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010425944,010425944C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010426657,010426657C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010426747,010426747C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010427456,010427456C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010428771,010428771C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010429710,010429710C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010429711,010429711C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010431738,010431738C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010434092,010434092C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010434421,010434421C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010435244,010435244C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010435671,010435671C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010435672,010435672C,960 LP65,196065,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010435673,010435673C,960 LP65,196065,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010436599,010436599C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010436782,010436782C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010437232,010437232C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010438325,010438325C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010438556,010438556C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010438821,010438821C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010438938,010438938C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010438942,010438942C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010439128,010439128C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010439156,010439156C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010439277,010439277C,960 LP65,196065,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010439435,010439435C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010439999,010439999C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010440000,010440000C,960 LP65,196065,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010442332,010442332C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010442552,010442552C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010442906,010442906C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010443109,010443109C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010443287,010443287C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010444283,010444283C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010445275,010445275C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010446852,010446852C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010448025,010448025C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010448375,010448375C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010449155,010449155C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010449417,010449417C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010449498,010449498C,960 LP65,196065,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010451453,010451453C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010452169,010452169C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010452304,010452304C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010452305,010452305C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010454002,010454002C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010455341,010455341C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010456114,010456114C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010456751,010456751C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010458520,010458520C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010458525,010458525C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010458526,010458526C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010458663,010458663C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010459723,010459723C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010460886,010460886C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010461210,010461210C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010462630,010462630C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010462631,010462631C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010462839,010462839C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010463190,010463190C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010463420,010463420C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010463537,010463537C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010464869,010464869C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010464870,010464870C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010465331,010465331C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010466392,010466392C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010466470,010466470C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010466471,010466471C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010466472,010466472C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010467061,010467061C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010467154,010467154C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010467173,010467173C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010467771,010467771C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010469081,010469081C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010469728,010469728C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010469896,010469896C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010471046,010471046C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010471534,010471534C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010472182,010472182C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010472183,010472183C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010473137,010473137C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010474519,010474519C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010474522,010474522C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010476803,010476803C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010477512,010477512C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010477513,010477513C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010477989,010477989C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010478213,010478213C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010478214,010478214C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010478285,010478285C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010486919,010486919C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010486961,010486961C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010486964,010486964C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010487396,010487396C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010487886,010487886C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010488273,010488273C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010488274,010488274C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010491000,010491000C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010495113,010495113C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010496486,010496486C,666 WL,1666WL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010497768,010497768C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010499674,010499674C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010500769,010500769C,630 JEB,130JEB,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010501142,010501142C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010501836,010501836C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010502995,010502995C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010502996,010502996C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010510553,010510553C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010510671,010510671C,665 STME95,2665ST,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010510979,010510979C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010511203,010511203C,665 STME95,2665ST,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010513711,010513711C,666 WL,1666WL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010518048,010518048C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010518049,010518049C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010518545,010518545C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010520217,010520217C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010520451,010520451C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010521651,010521651C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010523058,010523058C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010525250,010525250C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010526524,010526524C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010529613,010529613C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010529993,010529993C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010532612,010532612C,960 PO,1960PO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010544182,010544182C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010545623,010545623C,670 GL85-8,170858,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010546964,010546964C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010547021,010547021C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010547488,010547488C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010549966,010549966C,665 STME95,2665ST,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010550088,010550088C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010550564,010550564C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010564241,010564241C,666 WL,1666WL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010565013,010565013C,670 GL85-M,17085M,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010567983,010567983C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010583923,010583923C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010586005,010586005C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010639996,010639996C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010653596,010653596C,960 OL,1960OL,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010718278,010718278C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010719815,010719815C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010722516,010722516C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010722734,010722734C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010726104,010726104C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010728696,010728696C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010730647,010730647C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010730780,010730780C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010731970,010731970C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010733472,010733472C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010733665,010733665C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010735585,010735585C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010736035,010736035C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010736283,010736283C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010736935,010736935C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010738161,010738161C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010738539,010738539C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010741234,010741234C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010741334,010741334C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010741943,010741943C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010743395,010743395C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010743832,010743832C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010745749,010745749C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010745811,010745811C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010746846,010746846C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010747243,010747243C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010747320,010747320C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010747636,010747636C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010748070,010748070C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010748073,010748073C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010748300,010748300C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010748334,010748334C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010748335,010748335C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010749053,010749053C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010749401,010749401C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010749906,010749906C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010749942,010749942C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010750265,010750265C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010750755,010750755C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010750812,010750812C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010750813,010750813C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010752513,010752513C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010752702,010752702C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010753409,010753409C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010754480,010754480C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010755885,010755885C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010756091,010756091C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010756212,010756212C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010756540,010756540C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010756833,010756833C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010756909,010756909C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010759530,010759530C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010759555,010759555C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010759932,010759932C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010760306,010760306C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010760840,010760840C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010760865,010760865C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010760873,010760873C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010760874,010760874C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010761639,010761639C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010761870,010761870C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010761965,010761965C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010761966,010761966C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010762047,010762047C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010762068,010762068C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010762331,010762331C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010763006,010763006C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010763063,010763063C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010763378,010763378C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010764348,010764348C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010764379,010764379C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010766057,010766057C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010766284,010766284C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010766847,010766847C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010766920,010766920C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010766921,010766921C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010767772,010767772C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010767776,010767776C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010769191,010769191C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010769345,010769345C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010769711,010769711C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010769714,010769714C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010770571,010770571C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010770572,010770572C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010770719,010770719C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010770721,010770721C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010770816,010770816C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010771111,010771111C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010771354,010771354C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010772840,010772840C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010772903,010772903C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010772919,010772919C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010773575,010773575C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010773681,010773681C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010773682,010773682C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010774107,010774107C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010774109,010774109C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010774490,010774490C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010774868,010774868C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010775239,010775239C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010775583,010775583C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010775940,010775940C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010776157,010776157C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010776502,010776502C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010776651,010776651C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010776653,010776653C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010776811,010776811C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010776918,010776918C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010778474,010778474C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010778653,010778653C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010778697,010778697C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010779556,010779556C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010779563,010779563C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010780510,010780510C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010780668,010780668C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010781368,010781368C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010782818,010782818C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010783066,010783066C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010783269,010783269C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010783296,010783296C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010783715,010783715C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010784248,010784248C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010784249,010784249C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010784592,010784592C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010784731,010784731C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010784732,010784732C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010784742,010784742C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010785049,010785049C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010785099,010785099C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010785163,010785163C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010786152,010786152C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010786321,010786321C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010786800,010786800C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010787668,010787668C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010787669,010787669C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010787730,010787730C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010787952,010787952C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010788878,010788878C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010789348,010789348C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010789531,010789531C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010789532,010789532C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010789546,010789546C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010789547,010789547C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010790531,010790531C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010790532,010790532C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010790754,010790754C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010790782,010790782C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010791498,010791498C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010792541,010792541C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010792705,010792705C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010792706,010792706C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010793451,010793451C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010793737,010793737C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010793738,010793738C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010794112,010794112C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010794265,010794265C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010794520,010794520C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010795047,010795047C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010795699,010795699C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010795840,010795840C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010796459,010796459C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010796464,010796464C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010796912,010796912C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010797196,010797196C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010797197,010797197C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010798018,010798018C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010800286,010800286C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010802647,010802647C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010803025,010803025C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010803026,010803026C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010803417,010803417C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010804608,010804608C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010804711,010804711C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010806596,010806596C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010806606,010806606C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010806653,010806653C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010807566,010807566C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010808106,010808106C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010808548,010808548C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010808831,010808831C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010808895,010808895C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010808901,010808901C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010809317,010809317C,659 CEN SD,1659CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010809320,010809320C,659 CEN SD,1659CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010809333,010809333C,658 CEN SD,1658CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010809353,010809353C,659 CEN SD,1659CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010809581,010809581C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010809966,010809966C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010810194,010810194C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010810271,010810271C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010810504,010810504C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010810539,010810539C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010810691,010810691C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010810912,010810912C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010811204,010811204C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010811250,010811250C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010811319,010811319C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010812930,010812930C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010813163,010813163C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010813414,010813414C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010813426,010813426C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010813427,010813427C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010814167,010814167C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010814172,010814172C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010814390,010814390C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010814559,010814559C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010814968,010814968C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010815236,010815236C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010815416,010815416C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010815417,010815417C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010815523,010815523C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010815524,010815524C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010816331,010816331C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010816898,010816898C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010816928,010816928C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010817366,010817366C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010817367,010817367C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010817415,010817415C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010817483,010817483C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010817639,010817639C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010817835,010817835C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010817836,010817836C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010818008,010818008C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010818051,010818051C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010819271,010819271C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010819400,010819400C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010819774,010819774C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010819960,010819960C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010819961,010819961C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010821381,010821381C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010822238,010822238C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010822851,010822851C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010823187,010823187C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010824611,010824611C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010825195,010825195C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010825694,010825694C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010825720,010825720C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010825968,010825968C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010825969,010825969C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010826097,010826097C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010826130,010826130C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010826133,010826133C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010827081,010827081C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010827434,010827434C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010827507,010827507C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010827528,010827528C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010827575,010827575C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010827674,010827674C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010827699,010827699C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010828368,010828368C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010828370,010828370C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010831150,010831150C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010831478,010831478C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010832626,010832626C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010832740,010832740C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010833382,010833382C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010833467,010833467C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010834414,010834414C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010834430,010834430C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010834489,010834489C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010834689,010834689C,659 CEN SD,1659CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010834690,010834690C,659 CEN SD,1659CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010835334,010835334C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010836265,010836265C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010838863,010838863C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010839290,010839290C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010839783,010839783C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010839784,010839784C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010840848,010840848C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010841782,010841782C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010841783,010841783C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010842016,010842016C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010842017,010842017C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010842026,010842026C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010842291,010842291C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010842857,010842857C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010842863,010842863C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010842962,010842962C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010844069,010844069C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010844322,010844322C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010844496,010844496C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010845307,010845307C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010845706,010845706C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010845880,010845880C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010846851,010846851C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010847191,010847191C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010847570,010847570C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010847571,010847571C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010848255,010848255C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010848256,010848256C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010848292,010848292C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010851112,010851112C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010851148,010851148C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010851847,010851847C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010852709,010852709C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010852748,010852748C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010853070,010853070C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010853285,010853285C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010854307,010854307C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010855657,010855657C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010855945,010855945C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010856188,010856188C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010856189,010856189C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010856925,010856925C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010858099,010858099C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010858124,010858124C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010858434,010858434C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010858435,010858435C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010858613,010858613C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010860471,010860471C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010860472,010860472C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010862097,010862097C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010863788,010863788C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010864397,010864397C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010866396,010866396C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010867974,010867974C,659 SR GD,1659SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010868131,010868131C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010870474,010870474C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010872105,010872105C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010872324,010872324C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010872329,010872329C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010872404,010872404C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010872406,010872406C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010872522,010872522C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010873155,010873155C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010873283,010873283C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010874688,010874688C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010875065,010875065C,668 SPWL,1668SP,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010877009,010877009C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010878099,010878099C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010879786,010879786C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010880257,010880257C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010880362,010880362C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010881272,010881272C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010881301,010881301C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010882408,010882408C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010883172,010883172C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010883244,010883244C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010883533,010883533C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010886528,010886528C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010887927,010887927C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010887929,010887929C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010891075,010891075C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010892327,010892327C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010892695,010892695C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010894743,010894743C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010895934,010895934C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010895935,010895935C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010895936,010895936C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010897521,010897521C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010897662,010897662C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010897663,010897663C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010897664,010897664C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010899709,010899709C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010899715,010899715C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010899716,010899716C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010899717,010899717C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010899718,010899718C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010899761,010899761C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010900512,010900512C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010901657,010901657C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010901775,010901775C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010901832,010901832C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010904808,010904808C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010904809,010904809C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010904810,010904810C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010905200,010905200C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010908068,010908068C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010908669,010908669C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010909669,010909669C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010913059,010913059C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010913799,010913799C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010917231,010917231C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010917599,010917599C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010917600,010917600C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010920186,010920186C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010924513,010924513C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010924660,010924660C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010927421,010927421C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010927552,010927552C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010928491,010928491C,658 CEN SD,1658CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010928495,010928495C,658 CEN SD,1658CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010928497,010928497C,658 CEN SD,1658CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010928498,010928498C,658 CEN SD,1658CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010928507,010928507C,658 CEN SD,1658CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010928775,010928775C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010933488,010933488C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010937087,010937087C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010937735,010937735C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010938121,010938121C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010938321,010938321C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010942246,010942246C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010946647,010946647C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010949672,010949672C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010951159,010951159C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010953834,010953834C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010956144,010956144C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010956145,010956145C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010958268,010958268C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010968283,010968283C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010969329,010969329C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010979005,010979005C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010980833,010980833C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010985597,010985597C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010987089,010987089C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010987095,010987095C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010987413,010987413C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010988150,010988150C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010991108,010991108C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010994236,010994236C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010994968,010994968C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010995983,010995983C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9010995984,010995984C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011000000,011000000C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011001627,011001627C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011003108,011003108C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011004587,011004587C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011005435,011005435C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011006697,011006697C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011008708,011008708C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011010387,011010387C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011014578,011014578C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011014579,011014579C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011014580,011014580C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011023549,011023549C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011025612,011025612C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011029547,011029547C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011033576,011033576C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011038794,011038794C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011040294,011040294C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011041220,011041220C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011042400,011042400C,679 CEN SD,1679CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011042625,011042625C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011045768,011045768C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011045769,011045769C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011047682,011047682C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011047683,011047683C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011047684,011047684C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011050803,011050803C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011050804,011050804C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011051851,011051851C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011052581,011052581C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011053428,011053428C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011057904,011057904C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011059175,011059175C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011059421,011059421C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011060710,011060710C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011061607,011061607C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011061723,011061723C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011066023,011066023C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011068750,011068750C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011068751,011068751C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011071480,011071480C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011074703,011074703C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011075595,011075595C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011075596,011075596C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011075754,011075754C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011075863,011075863C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011077285,011077285C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011078050,011078050C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011078051,011078051C,658 CEN SD,1658CS,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011078262,011078262C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011078891,011078891C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011081463,011081463C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011081464,011081464C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011081465,011081465C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011081966,011081966C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011081967,011081967C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011082681,011082681C,659 CEN SR,1659CR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011087127,011087127C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011087128,011087128C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011087230,011087230C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011089397,011089397C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011092549,011092549C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011095330,011095330C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011095851,011095851C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011096068,011096068C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011100907,011100907C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011101578,011101578C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011101607,011101607C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011102270,011102270C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011102551,011102551C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011102787,011102787C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011104064,011104064C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011105008,011105008C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011105232,011105232C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011105385,011105385C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011105386,011105386C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011105523,011105523C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011105839,011105839C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011106598,011106598C,658 CEN I,1658C1,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011107137,011107137C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011109446,011109446C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011109994,011109994C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011113250,011113250C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011114096,011114096C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011114950,011114950C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011118229,011118229C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011118555,011118555C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011118615,011118615C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011120297,011120297C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011122230,011122230C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011122680,011122680C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011129276,011129276C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011129883,011129883C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011130547,011130547C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011132516,011132516C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011135494,011135494C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011136476,011136476C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011139474,011139474C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011139778,011139778C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011140185,011140185C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011140516,011140516C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011140652,011140652C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011141382,011141382C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011145429,011145429C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011148847,011148847C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011151209,011151209C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011151285,011151285C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011151436,011151436C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011152459,011152459C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011152870,011152870C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011154752,011154752C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011154852,011154852C,659 CEN II,1659C2,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011158068,011158068C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011158069,011158069C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011158071,011158071C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011158320,011158320C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011158530,011158530C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011158531,011158531C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011160478,011160478C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011160479,011160479C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011160480,011160480C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011162203,011162203C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011163086,011163086C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011175485,011175485C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011176782,011176782C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011177896,011177896C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011177899,011177899C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011178455,011178455C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011179153,011179153C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011179371,011179371C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011181080,011181080C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011181544,011181544C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011183653,011183653C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011183936,011183936C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011184753,011184753C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011185002,011185002C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011185059,011185059C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011185375,011185375C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011185943,011185943C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011185944,011185944C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011187300,011187300C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011188288,011188288C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011189530,011189530C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011189851,011189851C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011190146,011190146C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011190388,011190388C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011190668,011190668C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011191513,011191513C,L10 SR OLD,1L10SO,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011191779,011191779C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011191892,011191892C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011192121,011192121C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011193165,011193165C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011193218,011193218C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011193674,011193674C,L10 LP95SR,1L10SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011193692,011193692C,L10 LP95SR,1L10SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011194381,011194381C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011194729,011194729C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011194768,011194768C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011195139,011195139C,L10 LP95SR,1L10SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011195201,011195201C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011195601,011195601C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011195602,011195602C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011196134,011196134C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011196169,011196169C,L10 LP95SR,1L10SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011196170,011196170C,L10 LP95SR,1L10SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011196444,011196444C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011196445,011196445C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011196852,011196852C,L10 LP95SR,1L10SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011197220,011197220C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011197244,011197244C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011197712,011197712C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011197713,011197713C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011197714,011197714C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011197715,011197715C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011197716,011197716C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198043,011198043C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198246,011198246C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198305,011198305C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198306,011198306C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198765,011198765C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198799,011198799C,L10 LP95SR,1L10SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198845,011198845C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198871,011198871C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198926,011198926C,L10 LP95SR,1L10SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198951,011198951C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011198997,011198997C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011199549,011199549C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011199612,011199612C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011200008,011200008C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011200012,011200012C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011200196,011200196C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011200570,011200570C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011200673,011200673C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011200872,011200872C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011202381,011202381C,L10 LP95SR,1L10SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011203371,011203371C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011203455,011203455C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011203456,011203456C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011203458,011203458C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011203598,011203598C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011204257,011204257C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011205919,011205919C,L10 LP95SR,1L10SR,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011206410,011206410C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011206644,011206644C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011207112,011207112C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011207113,011207113C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011207114,011207114C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011207115,011207115C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011207116,011207116C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011207117,011207117C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011207222,011207222C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011207733,011207733C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011208332,011208332C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011208787,011208787C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011209064,011209064C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011209262,011209262C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011209469,011209469C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011209496,011209496C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011209916,011209916C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011210060,011210060C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011210149,011210149C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011210611,011210611C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011210768,011210768C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011210769,011210769C,L10 PRE97,1L10OD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011211133,011211133C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011211134,011211134C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011211323,011211323C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011211326,011211326C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011212339,011212339C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011212602,011212602C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011213043,011213043C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011214223,011214223C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011214731,011214731C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011215024,011215024C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011215080,011215080C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011215081,011215081C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011215550,011215550C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011216127,011216127C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011216498,011216498C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011219517,011219517C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011220928,011220928C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011221209,011221209C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011221211,011221211C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011221537,011221537C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011224556,011224556C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011225015,011225015C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011225793,011225793C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011226273,011226273C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011226579,011226579C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011227429,011227429C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011227604,011227604C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011229737,011229737C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011229738,011229738C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011230767,011230767C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011232775,011232775C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011232776,011232776C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011235627,011235627C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011240164,011240164C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011243732,011243732C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011244378,011244378C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011246246,011246246C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011249830,011249830C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011249831,011249831C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011250566,011250566C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011250919,011250919C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011251166,011251166C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011251167,011251167C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011251369,011251369C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011253007,011253007C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011255665,011255665C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011257022,011257022C,L15,1L15GD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011257037,011257037C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011257043,011257043C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011257863,011257863C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011261640,011261640C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011262630,011262630C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011262631,011262631C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011262825,011262825C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011263126,011263126C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011263483,011263483C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011263484,011263484C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011263511,011263511C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011264015,011264015C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011264194,011264194C,L15,1L15GD,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011267253,011267253C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011268761,011268761C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011269166,011269166C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011269263,011269263C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011269382,011269382C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011271252,011271252C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011271994,011271994C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011272310,011272310C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011273881,011273881C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011273882,011273882C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011273928,011273928C,L14,1L14SC,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011274753,011274753C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011274754,011274754C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011274755,011274755C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011275503,011275503C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9011283014,011283014C,L10 LP95,1L1095,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9015000171,015000171C,10827 CSI5,17CSI5,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9015000181,015000181C,10827 CSI5,17CSI5,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
+9015000466,015000466C,10827 CSI7,17CSI7,A,default,22,QuikPlan LOANINTX missing or invalid; applied mloanintx_default.
