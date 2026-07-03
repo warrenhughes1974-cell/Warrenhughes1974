@@ -85,6 +85,18 @@
 
 ---
 
+## Production Readiness + Git Release (G7)
+
+| Check | Status |
+|-------|--------|
+| Validators PASS (G5 + G6) | |
+| `app.py` version bumped (if batch/rate path changed) | |
+| Issue-scoped git commit | hash: |
+| **`git push` to remote** | branch: |
+| Network batch note (`Output/` gitignored) | GENERATE RATE TABLES / full batch after pull |
+
+---
+
 ## Client UAT
 
 | Item | Status |
@@ -126,3 +138,4 @@
 - [x] Validation PASS
 - [x] Regression PASS
 - [x] Closure
+- [x] Git commit + push (G7 release gate)

@@ -39,10 +39,24 @@ Use `AI_Agents/Templates/Issue_Resolution_Template.md`.
 
 Save as: `Issue_Log_Items/Issue_<ID>/Issue_<ID>_Resolution_Summary.md`
 
-Also update (recommendation only — user may apply):
+Also update (required at G7):
 
 - `Issue_Log_Items/Issue_Log_Master_Tracking_Sheet.md` → status **Closed**
 - Sub-tracking sheet row if applicable
+- **`app.py` / `QLA_Migration/app.py` version bump** when batch or rate pipeline changed (sync both files)
+- **Git:** stage issue-scoped files only → commit → **`git push -u origin HEAD`** (user-approved branch)
+- Resolution summary records **commit hash** and **remote branch** for network rollout
+
+### G7 git release workflow (automatic)
+
+When Validation + Regression both PASS and the user approves closure:
+
+1. Confirm production-ready checklist (validators PASS; `app.py` version if applicable).
+2. Stage **issue-scoped files only** — do not commit unrelated workspace changes.
+3. Commit with message: `Close Issue #NN: [title] (vXX.XX)`.
+4. **`git push -u origin HEAD`** — required so network batch machines receive the fix.
+5. Record commit hash + branch in `Issue_<ID>_Resolution_Summary.md`.
+6. Note: `QLA_Migration/Output/` is gitignored — document **GENERATE RATE TABLES** / batch re-run on network after pull.
 
 ### Resolution summary must include
 
@@ -74,7 +88,9 @@ Do not close if:
 - [ ] All artifact paths linked
 - [ ] Status set to **Closed** in tracking
 - [ ] No open blockers without owner
-- [ ] **Production ready:** `app.py` version bumped when batch/rate path changed; post-fix `QuikCvs`/rate emit verified; client can run full batch on network without manual patches
+- [ ] **Production ready:** `app.py` version bumped when batch/rate path changed; validators PASS; network batch instructions documented (`Output/` gitignored → re-run emit on pull)
+- [ ] **Git release:** issue-scoped **commit** created; **`git push`** to remote completed (or user explicitly waives push with reason)
+- [ ] Commit hash + branch recorded in resolution summary
 - [ ] Framework cycle complete
 
 ---
@@ -89,9 +105,11 @@ Read AI_Agents/Closure_Agent.md and Templates/Issue_Resolution_Template.md.
 Validation and Regression both PASS.
 
 Produce Issue_<ID>_Resolution_Summary.md suitable for issue log and client readout.
-Recommend tracking sheet status Closed.
+Update tracking sheet to Closed.
+If Development touched code: bump app.py version, commit issue-scoped files, git push to remote.
+Record commit hash in resolution summary.
 
-Do not modify conversion code.
+Do not modify conversion code beyond version header if already committed in G4.
 ```
 
 ---

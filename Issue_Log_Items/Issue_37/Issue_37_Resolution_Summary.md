@@ -21,8 +21,9 @@ Before closing, confirm the following for network batch runs:
 | G5 validation PASS (8/8 proof ages) | **Done** |
 | G6 regression PASS (#25 / #26 preserved) | **Done** |
 | Issue #31 QuikCvs baseline rebaselined | **Done** |
+| Git commit + push to remote | **Done** — `2614c87` on `issue-34-pr7-quikisrr` |
 
-**Network batch:** Pull this commit, run the suite at **v57.43**. Use **GENERATE RATE TABLES** (or full UAT batch with rate phase enabled) to refresh `Output/rates/QuikCvs.csv` before QLAdmin load.
+**Network batch:** Pull **`2614c87`** on branch **`issue-34-pr7-quikisrr`**, run the suite at **v57.43**. Use **GENERATE RATE TABLES** (or full UAT batch with rate phase enabled) to refresh `Output/rates/QuikCvs.csv` before QLAdmin load.
 
 ---
 

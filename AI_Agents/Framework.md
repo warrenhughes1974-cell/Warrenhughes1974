@@ -38,7 +38,8 @@ flowchart TD
     J --> K{Pass?}
     K -->|Fail| G
     K -->|Pass| L[Closure Agent]
-    L --> M[Closed + Issue Log Summary]
+    L --> N[Git commit + push]
+    N --> M[Closed + Issue Log Summary]
 ```
 
 ### Linear stage order
@@ -67,7 +68,7 @@ flowchart TD
 | **G4 — Development complete** | Development | Surgical diff, version bump if `app.py`, validation script added |
 | **G5 — Validation pass** | Validation | Trace policies, field alignment, row counts per test plan |
 | **G6 — Regression pass** | Regression | Unrelated tables/fields unchanged; no schema drift |
-| **G7 — Closure** | Closure | Resolution summary published; **`app.py` version bumped** if engine/rate path touched; **production-ready batch verified** (Output/rates emit + validators) |
+| **G7 — Closure** | Closure | Resolution summary published; **`app.py` version bumped** if engine/rate path touched; **git commit + push to remote** (issue-scoped); **production-ready** batch verified (validators + network pull instructions) |
 
 **Development cannot begin until G1 + G2 + G3 are satisfied.**
 
@@ -88,7 +89,7 @@ Use these statuses in issue tracking sheets and report headers:
 | **In Development** | Code/rulebook changes in progress | Complete dev + self-check |
 | **Ready for Validation** | Dev complete; awaiting proof | Run Validation Agent |
 | **Ready for Client UAT** | Validation + regression pass | Client QLAdmin review |
-| **Closed** | Resolution summary published | Archive artifacts |
+| **Closed** | Resolution summary published; fix **committed and pushed** | Archive artifacts; network batch at new `app.py` version |
 
 ---
 
@@ -100,7 +101,8 @@ Use these statuses in issue tracking sheets and report headers:
 4. All code changes must be **surgical and issue-specific** — no wholesale rewrites.
 5. Every development change must include **validation and regression evidence**.
 6. Every issue must end with an **issue-log-ready resolution summary** (Closure Agent).
-7. **Preserve prior fixes:** Issue #25 MPOLICY padding (`format_qladmin_mpolicy`) and Issue #26 MPREM mapping (`ANN_PREM_PER_UNIT` + fallback) must not regress.
+7. **G7 release gate:** When Development touched conversion or rate code, Closure must **commit issue-scoped changes and `git push` to remote** so network batch machines can pull the fix. Bump **`app.py` version** when the batch path changes.
+8. **Preserve prior fixes:** Issue #25 MPOLICY padding (`format_qladmin_mpolicy`) and Issue #26 MPREM mapping (`ANN_PREM_PER_UNIT` + fallback) must not regress.
 
 ---
 
