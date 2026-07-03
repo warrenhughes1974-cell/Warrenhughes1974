@@ -67,7 +67,7 @@ flowchart TD
 | **G4 — Development complete** | Development | Surgical diff, version bump if `app.py`, validation script added |
 | **G5 — Validation pass** | Validation | Trace policies, field alignment, row counts per test plan |
 | **G6 — Regression pass** | Regression | Unrelated tables/fields unchanged; no schema drift |
-| **G7 — Closure** | Closure | Issue-log-ready resolution summary published |
+| **G7 — Closure** | Closure | Resolution summary published; **`app.py` version bumped** if engine/rate path touched; **production-ready batch verified** (Output/rates emit + validators) |
 
 **Development cannot begin until G1 + G2 + G3 are satisfied.**
 

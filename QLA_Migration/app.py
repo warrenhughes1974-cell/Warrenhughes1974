@@ -1,9 +1,11 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.42
-# Date:        2026-07-02
-# Change Note: v57.42 — Enterprise UI polish: status strip, summary cards, collapsible diagnostics (no logic changes).
+# Version:     v57.43
+# Date:        2026-07-03
+# Change Note: v57.43 — Issue #37: fleet QuikCvs CV duration grid (LifePRO placement; maturity 100−age)
+#              via R5 rate pipeline / qla_core (values unchanged; GENERATE RATE TABLES emits corrected QuikCvs).
+#              v57.43 — Enterprise UI polish: status strip, summary cards, collapsible diagnostics (no logic changes).
 #              v57.41 — Full UAT batch integration: ISWL rate tables (Issues #31–33 QuikUint/QuikIssc via R5),
 #              QuikLoan batch emit (#32), QuikIsrr partial-surrender package (#34 PR-7 append to quikclms/clmp).
 #              UAT launcher enables all phases via run_converter.bat env flags.
@@ -245,7 +247,7 @@ QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "qui
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.42")
+        self.root.title("QLAdmin Enterprise Data Integration Suite v57.43")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -300,7 +302,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.42", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.43", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -2054,7 +2056,7 @@ class QLAdminEnterpriseIntegrationSuite:
             bg=self.bg_card, fg=self.accent, font=("Segoe UI", 11, "bold"), anchor="w",
         ).pack(side="left")
         tk.Label(
-            title_row, text="v57.42", bg=self.bg_card, fg=self.ui_status_muted,
+            title_row, text="v57.43", bg=self.bg_card, fg=self.ui_status_muted,
             font=("Segoe UI", 10), anchor="e",
         ).pack(side="right")
 
@@ -4784,7 +4786,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log("Initializing Migration Engine v57.42 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.43 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False

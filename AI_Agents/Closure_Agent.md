@@ -74,6 +74,7 @@ Do not close if:
 - [ ] All artifact paths linked
 - [ ] Status set to **Closed** in tracking
 - [ ] No open blockers without owner
+- [ ] **Production ready:** `app.py` version bumped when batch/rate path changed; post-fix `QuikCvs`/rate emit verified; client can run full batch on network without manual patches
 - [ ] Framework cycle complete
 
 ---

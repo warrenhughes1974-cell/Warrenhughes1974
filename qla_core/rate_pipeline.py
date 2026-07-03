@@ -107,6 +107,7 @@ def run(config_path, repo_root):
     res = PipelineResult()
     cov2plan, res.plan2desc = L.load_plan_crosswalk(xlsx)
     res.authoritative_plans = set(cov2plan.values())
+    cv_fnz = L.load_cv_slice_fnz(src)
     res.paagerat_vargp3_plans = PA.load_paagerat_vargp3_plan_set_from_config(repo_root, cfg)
     res.paagerat_bp_plans = BP.load_paagerat_bp_plan_set_from_config(repo_root, cfg)
     res.paagerat_bp_enabled = bool(cfg.get("iswl_phase2", {}).get("quikgps_enabled", False))
@@ -133,7 +134,7 @@ def run(config_path, repo_root):
             res.age_cap[(t["plan"], t["type_code"], t["original_age"], t["age"])] += 1
 
     def stream():
-        for t in L.transform_source(src, cov2plan, config):
+        for t in L.transform_source(src, cov2plan, config, cv_fnz=cv_fnz):
             _track(t)
             yield t
 

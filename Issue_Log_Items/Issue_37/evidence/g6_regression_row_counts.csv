@@ -1,0 +1,15 @@
+table,before_rows,after_rows,delta,expected_change,result
+QuikCvs,19453,26031,6578,yes,PASS
+QuikNps,26650,26650,0,no,PASS
+QuikGps,12567,12567,0,no,PASS
+QuikTvs,26097,26097,0,no,PASS
+QuikDbs,1380,1380,0,no,PASS
+QuikDvs,3978,3978,0,no,PASS
+QuikCoi,792,792,0,no,PASS
+QuikGcoi,198,198,0,no,PASS
+quikplan,141,141,0,no,PASS
+quikridr,6934,6934,0,no,PASS
+quikmstr,5083,5083,0,no,PASS
+quikprmh,205577,205577,0,no,PASS
+quikclid,46753,46753,0,no,PASS
+quikclnt,13514,13514,0,no,PASS

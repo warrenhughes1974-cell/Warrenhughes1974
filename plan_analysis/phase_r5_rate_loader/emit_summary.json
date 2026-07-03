@@ -2,8 +2,8 @@
   "phase": "R5 GUARDED EMIT",
   "source": "plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv",
   "row_status": {
-    "IN_SCOPE": 788956,
-    "EXCLUDED": 435603,
+    "IN_SCOPE": 785080,
+    "EXCLUDED": 439479,
     "BAD_VALUE": 2121
   },
   "excluded_type_codes": {
@@ -12,8 +12,8 @@
       "distinct_coverage_ids": 7
     },
     "CV": {
-      "rows": 5740,
-      "distinct_coverage_ids": 11
+      "rows": 9616,
+      "distinct_coverage_ids": 36
     },
     "DB": {
       "rows": 2512,
@@ -85,45 +85,45 @@
     }
   },
   "factor_rows_by_family": {
+    "CASH_VALUE": {
+      "factor_rows": 26031,
+      "distinct_keys": 26031,
+      "distinct_plans": 36
+    },
     "NET_PREMIUM": {
       "factor_rows": 26650,
       "distinct_keys": 26650,
       "distinct_plans": 47
-    },
-    "DEATH_BENEFIT": {
-      "factor_rows": 1380,
-      "distinct_keys": 1380,
-      "distinct_plans": 10
-    },
-    "CURRENT_COI": {
-      "factor_rows": 792,
-      "distinct_keys": 792,
-      "distinct_plans": 2
-    },
-    "GUARANTEED_COI": {
-      "factor_rows": 198,
-      "distinct_keys": 198,
-      "distinct_plans": 1
-    },
-    "CASH_VALUE": {
-      "factor_rows": 25717,
-      "distinct_keys": 25717,
-      "distinct_plans": 36
-    },
-    "TERMINAL_RESERVE": {
-      "factor_rows": 26097,
-      "distinct_keys": 26097,
-      "distinct_plans": 49
     },
     "GROSS_PREMIUM": {
       "factor_rows": 12567,
       "distinct_keys": 12567,
       "distinct_plans": 88
     },
+    "TERMINAL_RESERVE": {
+      "factor_rows": 26097,
+      "distinct_keys": 26097,
+      "distinct_plans": 49
+    },
     "DIVIDEND": {
       "factor_rows": 3978,
       "distinct_keys": 3978,
       "distinct_plans": 15
+    },
+    "GUARANTEED_COI": {
+      "factor_rows": 198,
+      "distinct_keys": 198,
+      "distinct_plans": 1
+    },
+    "CURRENT_COI": {
+      "factor_rows": 792,
+      "distinct_keys": 792,
+      "distinct_plans": 2
+    },
+    "DEATH_BENEFIT": {
+      "factor_rows": 1380,
+      "distinct_keys": 1380,
+      "distinct_plans": 10
     }
   },
   "key_tables": {
@@ -131,16 +131,16 @@
     "QuikPlDb": 12,
     "QuikPlTv": 112,
     "QuikPlDv": 20,
-    "QuikPlGp": 205,
-    "QuikPlCoi": 8,
-    "QuikPlGcoi": 2
+    "QuikPlGp": 205
   },
   "member_tables": {
     "QuikPlGd": 178,
     "QuikPlUw": 145,
     "QuikPlBd": 130,
     "QuikPlSt": 111,
-    "QuikPlNb": 111
+    "QuikPlNb": 111,
+    "QuikUint": 0,
+    "QuikIssc": 0
   },
   "member_placeholders_deferred": {
     "BDLOWVAL": 130,
@@ -150,19 +150,19 @@
   "age_capping": {
     "groups": 312,
     "rows_capped": 469,
-    "cap_induced_collisions_resolved": 469,
+    "cap_induced_collisions_resolved": 466,
     "rule": "AGE>99 -> 99 (QLAdmin AGE is C2); audited, non-blocking. Capped cells colliding with genuine AGE 99 data yield to the genuine value (retained), capped value dropped + audited."
   },
   "validation": {
-    "total_issues": 711,
+    "total_issues": 710,
     "by_severity": {
-      "WARNING": 711
+      "WARNING": 710
     },
     "by_id": {
       "V10": 260,
       "V15": 116,
       "AGE_CAPPED_TO_99": 312,
-      "AGE_CAP_COLLISION_RESOLVED": 23
+      "AGE_CAP_COLLISION_RESOLVED": 22
     },
     "blocker_count": 0
   },
@@ -218,6 +218,26 @@
       "1679CS"
     ]
   },
+  "quikuint": {
+    "enabled": true,
+    "row_count": 32,
+    "status": {
+      "UNION_MERGE": 4,
+      "ROWS_EMITTED": 32,
+      "MPLANS": 8
+    },
+    "distinct_mplans": 8
+  },
+  "quikissc": {
+    "enabled": true,
+    "row_count": 8,
+    "status": {
+      "HUB_DURATIONS": 14,
+      "ROWS_EMITTED": 8,
+      "MPLANS": 8
+    },
+    "distinct_plans": 8
+  },
   "gate": {
     "rule": "BLOCKER_COUNT == 0",
     "blocker_count": 0,
@@ -227,8 +247,8 @@
   "emitted_csv": true,
   "emit_dir": null,
   "csv_dir": "QLA_Migration\\Output\\rates",
-  "tables_written": 20,
-  "csv_tables_written": 20,
-  "total_rows_written": 98483,
+  "tables_written": 22,
+  "csv_tables_written": 22,
+  "total_rows_written": 98827,
   "note": "CSV outputs use confirmed DBF field order for QLAdmin append. EFFDATE/ISSCNTRY/ISSUEST + actuarial assumptions remain configurable placeholders; isolated rollback-safe output, source DBFs untouched."
 }

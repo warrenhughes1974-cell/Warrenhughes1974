@@ -67,7 +67,78 @@ def _to_float(s):
         return None
 
 
-def transform_source(source_csv, cov2plan, config):
+# ---- Issue #37 — CV / QuikCvs LifePRO duration grid (G3 approved) ----
+CV_MATURITY_AGE = 100
+
+
+def cv_lifepro_first_duration(sex, age_int):
+    """LifePRO 1-based duration column of the first rate row (proof matrix on 960 PO)."""
+    if sex == "M":
+        if age_int == 0:
+            return 7
+        if 18 <= age_int <= 22:
+            return 4
+        if age_int >= 24:
+            return 3
+        return 4
+    if age_int == 0:
+        return 7
+    if age_int <= 22:
+        return 4
+    return 3
+
+
+def cv_lifepro_last_duration(age_int):
+    """LifePRO 1-based last duration column; G3 maturity age 100."""
+    return CV_MATURITY_AGE - age_int
+
+
+def load_cv_slice_fnz(source_csv):
+    """
+    Pre-scan CV rows for the first non-zero source DURATION per (COVERAGE_ID, SEX, AGE).
+    Required because CV placement is slice-relative, not row-local.
+    """
+    fnz = {}
+    with open(source_csv, encoding="utf-8-sig", errors="replace", newline="") as f:
+        rd = csv.reader(f)
+        next(rd, None)
+        for r in rd:
+            if len(r) < 8:
+                continue
+            cov = r[0].strip()
+            if cov and set(cov) == {"-"}:
+                continue
+            typ = r[1].strip()
+            if typ != "CV":
+                continue
+            try:
+                age_int = int(r[2].strip())
+                dur = int(r[6].strip())
+            except ValueError:
+                continue
+            val = _to_float(r[7])
+            if val is None or val == 0.0:
+                continue
+            sex = r[3].strip()
+            key = (cov, sex, age_int)
+            fnz[key] = min(fnz.get(key, dur), dur)
+    return fnz
+
+
+def cv_remap_ql_duration(source_d, sex, age_int, fnz):
+    """
+    Map LifePRO extract duration -> QLAdmin 0-based duration for CV grids.
+    Returns int ql_duration, or None when the row is truncated past maturity.
+    """
+    lp_d = source_d + cv_lifepro_first_duration(sex, age_int) - fnz
+    if lp_d > cv_lifepro_last_duration(age_int):
+        return None
+    if lp_d < 1:
+        return None
+    return lp_d - 1
+
+
+def transform_source(source_csv, cov2plan, config, cv_fnz=None):
     """
     Stream the LifePRO rate extract and classify/transform each row.
 
@@ -114,12 +185,8 @@ def transform_source(source_csv, cov2plan, config):
                        "plan": plan, "raw_value": val, "lineno": lineno}
                 continue
             try:
-                ql_dur = S.source_duration_to_ql(dur)
+                source_d = int(dur)
             except ValueError:
-                yield {"status": "BAD_VALUE", "type_code": typ, "coverage_id": cov,
-                       "plan": plan, "raw_duration": dur, "lineno": lineno}
-                continue
-            if ql_dur < 0:
                 yield {"status": "BAD_VALUE", "type_code": typ, "coverage_id": cov,
                        "plan": plan, "raw_duration": dur, "lineno": lineno}
                 continue
@@ -127,7 +194,6 @@ def transform_source(source_csv, cov2plan, config):
             gender = S.map_sex(sex)
             uwclass = S.map_uwclass(uw)
             band2 = S.map_band(band)
-            cntl, col = S.duration_to_cntl_col(ql_dur)
 
             # Controlled AGE capping (business rule): QLAdmin AGE is C2 (0-99). Source ages
             # above 99 are capped to 99 with preserved lineage. Magnitude of the cap is audited;
@@ -139,6 +205,31 @@ def transform_source(source_csv, cov2plan, config):
                 emitted_age_int = str(S.MAX_AGE).zfill(2)
                 age_capped = True
             age2 = emitted_age_int
+
+            if table == "QuikCvs" and cv_fnz is not None and age.isdigit():
+                fnz_key = (cov, sex, int(original_age if original_age.isdigit() else age))
+                fnz = cv_fnz.get(fnz_key)
+                if fnz is not None:
+                    ql_dur = cv_remap_ql_duration(source_d, sex, fnz_key[2], fnz)
+                    if ql_dur is None:
+                        yield {"status": "EXCLUDED", "type_code": typ, "coverage_id": cov,
+                               "lineno": lineno, "note": "CV_TRUNCATED_PAST_MATURITY"}
+                        continue
+                else:
+                    ql_dur = S.source_duration_to_ql(dur)
+            else:
+                try:
+                    ql_dur = S.source_duration_to_ql(dur)
+                except ValueError:
+                    yield {"status": "BAD_VALUE", "type_code": typ, "coverage_id": cov,
+                           "plan": plan, "raw_duration": dur, "lineno": lineno}
+                    continue
+            if ql_dur < 0:
+                yield {"status": "BAD_VALUE", "type_code": typ, "coverage_id": cov,
+                       "plan": plan, "raw_duration": dur, "lineno": lineno}
+                continue
+
+            cntl, col = S.duration_to_cntl_col(ql_dur)
 
             yield {
                 "status": "IN_SCOPE",

@@ -64,8 +64,11 @@
 | **#25** | MPOLICY 10-char left-pad | **RELEASED ✓** | v57.30 / v57.34 |
 | **#26** | quikridr.MPREM mapping | **RELEASED ✓** | v57.31 / v57.34 |
 | **#28** | Product catalog PLAN mapping (crosswalk authority) | **CLOSED ✓** | **v57.35** |
+| **#37** | Age/Duration rate placement — fleet-wide | **CLOSED ✓** · **v57.43** · QuikCvs grid fix | **v57.43** |
 
 **#28 detail:** `Issue_Log_Items/Issue_28/` · Client UAT PASS 2026-06-27 · 33 PLAN corrections + DISCHO25
+
+**#37 detail:** `Issue_Log_Items/Issue_37/` · CV duration placement · G5/G6 PASS · rollback: revert QuikCvs + loader
 
 ---
 
