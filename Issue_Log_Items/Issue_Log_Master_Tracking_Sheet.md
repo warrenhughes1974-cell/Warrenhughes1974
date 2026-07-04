@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-06-27 · **Engine:** `app.py` **v57.35** (Issue #28 closed) / cumulative **v57.34+**
+**Last updated:** 2026-07-04 · **Engine:** `app.py` **v57.44** (Issue #38 closed) / cumulative **v57.34+**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -65,10 +65,13 @@
 | **#26** | quikridr.MPREM mapping | **RELEASED ✓** | v57.31 / v57.34 |
 | **#28** | Product catalog PLAN mapping (crosswalk authority) | **CLOSED ✓** | **v57.35** |
 | **#37** | Age/Duration rate placement — fleet-wide | **CLOSED ✓** · **v57.43** · QuikCvs grid fix | **v57.43** |
+| **#38** | Dividend Accumulations (`quikdvdp.MDEPOSIT`) | **CLOSED ✓** · **v57.44** · 59 policies | **v57.44** |
 
 **#28 detail:** `Issue_Log_Items/Issue_28/` · Client UAT PASS 2026-06-27 · 33 PLAN corrections + DISCHO25
 
 **#37 detail:** `Issue_Log_Items/Issue_37/` · CV duration placement · G5/G6 PASS · rollback: revert QuikCvs + loader
+
+**#38 detail:** `Issue_Log_Items/Issue_38/` · PPBENTYP balance authority · PACTG 641 MINTYTD/MINTDATE · G5/G6 PASS · client UAT pending on 010378830C / 010380808C
 
 ---
 

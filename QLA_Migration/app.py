@@ -1,9 +1,11 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.43
+# Version:     v57.44
 # Date:        2026-07-03
-# Change Note: v57.43 — Issue #37: fleet QuikCvs CV duration grid (LifePRO placement; maturity 100−age)
+# Change Note: v57.44 — Issue #38: quikdvdp MDEPOSIT from PPBENTYP ACCUM_DIVIDENDS (stop zero-on-miss);
+#              PACTG 641-only cache for MINTYTD/MINTDATE; dynamic PACTG source via resolve_table_source.
+#              v57.43 — Issue #37: fleet QuikCvs CV duration grid (LifePRO placement; maturity 100−age)
 #              via R5 rate pipeline / qla_core (values unchanged; GENERATE RATE TABLES emits corrected QuikCvs).
 #              v57.43 — Enterprise UI polish: status strip, summary cards, collapsible diagnostics (no logic changes).
 #              v57.41 — Full UAT batch integration: ISWL rate tables (Issues #31–33 QuikUint/QuikIssc via R5),
@@ -5474,9 +5476,12 @@ class QLAdminEnterpriseIntegrationSuite:
                         except Exception as e:
                             self.log(f"Warning: Failed to load quikridr MPLAN cache for quikdvdp - {e}")
                         try:
-                            pactg_path = os.path.normpath(os.path.join(src_base, "PACTG_Accounting_Extract20260427.csv"))
-                            if os.path.exists(pactg_path):
-                                self.log("Building quikdvdp Transaction Cache (0514/0641)...")
+                            pactg_path = self._resolve_table_source_path("quikprmh", src_base)
+                            if pactg_path and os.path.exists(pactg_path):
+                                self.log(
+                                    f"Building quikdvdp dividend-interest cache (PACTG 641) from "
+                                    f"{os.path.basename(pactg_path)}..."
+                                )
                                 tx_df = pd.read_csv(pactg_path, encoding='latin1', low_memory=False, dtype=str, on_bad_lines='skip').fillna("")
                                 tx_df.columns = [str(col).replace('\ufeff', '').strip().upper() for col in tx_df.columns]
                                 
@@ -5500,37 +5505,36 @@ class QLAdminEnterpriseIntegrationSuite:
                                         if not trcd:
                                             cc = self.normalize(r.get('CREDIT_CODE', ''))
                                             dc = self.normalize(r.get('DEBIT_CODE', ''))
-                                            if cc in ['0514', '514', '0641', '641']: trcd = cc
-                                            elif dc in ['0514', '514', '0641', '641']: trcd = dc
+                                            if cc in ['0641', '641']: trcd = cc
+                                            elif dc in ['0641', '641']: trcd = dc
                                         
-                                        if trcd in ['0514', '514', '0641', '641']:
-                                            amt_str = str(r.get(amt_col, '0')).replace(',', '').strip()
-                                            try: amt = float(amt_str) if amt_str else 0.0
-                                            except: amt = 0.0
-                                            
-                                            date_val = str(r.get(dt_col, '')).strip()
-                                            
-                                            if pol not in quikdvdp_tx_cache:
-                                                quikdvdp_tx_cache[pol] = {'MDEPOSIT': 0.0, 'MINTYTD': 0.0, 'MINTDATE': ""}
-                                            
-                                            if trcd in ['0514', '514']:
-                                                quikdvdp_tx_cache[pol]['MDEPOSIT'] += amt
-                                            elif trcd in ['0641', '641']:
-                                                if current_year in date_val:
-                                                    quikdvdp_tx_cache[pol]['MINTYTD'] += amt
-                                                
-                                                curr_max = quikdvdp_tx_cache[pol]['MINTDATE']
-                                                if not curr_max:
+                                        if trcd not in ['0641', '641']:
+                                            continue
+
+                                        amt_str = str(r.get(amt_col, '0')).replace(',', '').strip()
+                                        try: amt = float(amt_str) if amt_str else 0.0
+                                        except: amt = 0.0
+                                        
+                                        date_val = str(r.get(dt_col, '')).strip()
+                                        
+                                        if pol not in quikdvdp_tx_cache:
+                                            quikdvdp_tx_cache[pol] = {'MINTYTD': 0.0, 'MINTDATE': ""}
+                                        
+                                        if current_year in date_val:
+                                            quikdvdp_tx_cache[pol]['MINTYTD'] += amt
+                                        
+                                        curr_max = quikdvdp_tx_cache[pol]['MINTDATE']
+                                        if not curr_max:
+                                            quikdvdp_tx_cache[pol]['MINTDATE'] = date_val
+                                        else:
+                                            try:
+                                                if pd.to_datetime(date_val) > pd.to_datetime(curr_max):
                                                     quikdvdp_tx_cache[pol]['MINTDATE'] = date_val
-                                                else:
-                                                    try:
-                                                        if pd.to_datetime(date_val) > pd.to_datetime(curr_max):
-                                                            quikdvdp_tx_cache[pol]['MINTDATE'] = date_val
-                                                    except:
-                                                        if date_val > curr_max:
-                                                            quikdvdp_tx_cache[pol]['MINTDATE'] = date_val
+                                            except:
+                                                if date_val > curr_max:
+                                                    quikdvdp_tx_cache[pol]['MINTDATE'] = date_val
                                                             
-                                self.log(f"Auto-loaded quikdvdp Transaction Cache ({len(quikdvdp_tx_cache)} policies)")
+                                self.log(f"Auto-loaded quikdvdp PACTG 641 cache ({len(quikdvdp_tx_cache)} policies)")
                         except Exception as e:
                             self.log(f"Warning: Failed to build quikdvdp transaction cache - {e}")
                     # ----------------------------------
@@ -6127,22 +6131,16 @@ class QLAdminEnterpriseIntegrationSuite:
                                 row_data['MPHSTAT'] = qm_status
                         # --------------------------------------------
     
-                        # --- QUIKDVDP ENRICHMENT ---
+                        # --- QUIKDVDP ENRICHMENT (Issue #38) ---
+                        # MDEPOSIT: preserve rulebook PPBENTYP ACCUM_DIVIDENDS — never zero on cache miss.
+                        # MINTYTD/MINTDATE: optional PACTG 641 enrichment when cache hit.
                         if t_id.lower() == "quikdvdp":
                             if tp in quikdvdp_tx_cache:
                                 tx_data = quikdvdp_tx_cache[tp]
-                                row_data['MDEPOSIT'] = f"{tx_data['MDEPOSIT']:.2f}"
                                 row_data['MINTYTD'] = f"{tx_data['MINTYTD']:.2f}"
-                                
                                 mdt = tx_data['MINTDATE']
                                 if mdt:
                                     row_data['MINTDATE'] = re.sub(r'[^0-9]', '', str(mdt))
-                                else:
-                                    row_data['MINTDATE'] = ""
-                            else:
-                                row_data['MDEPOSIT'] = "0.00"
-                                row_data['MINTYTD'] = "0.00"
-                                row_data['MINTDATE'] = ""
                             # Issue #21D Track A: ISWL-scoped MDEPINT from MPLAN allowlist (not fleet-wide).
                             _mplan = quikridr_mplan_cache.get(tp, "")
                             if is_iswl_mplan(_mplan):
