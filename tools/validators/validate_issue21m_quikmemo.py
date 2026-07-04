@@ -20,8 +20,8 @@ from pathlib import Path
 import dbf
 import pandas as pd
 
-SCRIPT_VERSION = "2.1"
-ENGINE_VERSION = "v57.39"
+SCRIPT_VERSION = "2.2"
+ENGINE_VERSION = "v57.46"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 UAT_DBF_DIR = DEFAULT_OUTPUT / "quikmemo_uat_dbf"
@@ -32,13 +32,15 @@ PNOTE_FILE = "PNOTE_PolicyNotes_Extract_20260530.csv"
 PENSE_FILE = "PENSE_ENSData_Extract_20260530.csv"
 
 MEMO_SEGMENT_SEPARATOR = "\n---\n"
+CONVERSION_MEMO_TAG = "[CONVERSION]"
 
-# Issue 21M-FU expected counts (post-merge grain)
+# Issue 21M-FU + 21J: one row per quikmstr policy; [CONVERSION] prepended when 21J active
 EXPECTED = {
-    "emitted_rows": 4380,
-    "segment_rows": 29279,
+    "emitted_rows": 5083,
+    "segment_rows": 34362,  # 29279 PNOTE/PENSE + 5083 [CONVERSION]
     "segment_pnote": 6003,
     "segment_pense": 23276,
+    "segment_conversion": 5083,
     "skipped_blank_pnote": 30,
     "duplicate_memokey_groups": 0,
     "max_rows_per_memokey": 1,
@@ -86,20 +88,23 @@ def _read_source(path: Path) -> pd.DataFrame:
     return df
 
 
-def _count_segments(memotext: str) -> tuple[int, int, int]:
-    """Return (total_segments, pnote_segments, pense_segments)."""
+def _count_segments(memotext: str) -> tuple[int, int, int, int]:
+    """Return (total_segments, pnote_segments, pense_segments, conversion_segments)."""
     if not memotext:
-        return 0, 0, 0
+        return 0, 0, 0, 0
     parts = memotext.split(MEMO_SEGMENT_SEPARATOR)
     pnote = sum(1 for p in parts if p.startswith("[PNOTE]"))
     pense = sum(1 for p in parts if p.startswith("[ENS]"))
-    return len(parts), pnote, pense
+    conv = sum(1 for p in parts if p.startswith(CONVERSION_MEMO_TAG))
+    return len(parts), pnote, pense, conv
 
 
 def _segment_dates(memotext: str) -> list[str]:
     parts = memotext.split(MEMO_SEGMENT_SEPARATOR) if memotext else []
     dates = []
     for part in parts:
+        if part.startswith(CONVERSION_MEMO_TAG):
+            continue
         m = re.search(r"Date:\s*(\S+)", part)
         dates.append(m.group(1) if m else "")
     return dates
@@ -165,15 +170,23 @@ def validate(output_dir: Path, before_dir: Path | None) -> int:
     total_segments = int(seg_totals.apply(lambda x: x[0]).sum())
     total_pnote_seg = int(seg_totals.apply(lambda x: x[1]).sum())
     total_pense_seg = int(seg_totals.apply(lambda x: x[2]).sum())
+    total_conv_seg = int(seg_totals.apply(lambda x: x[3]).sum())
     print(f"  merged segments total: {total_segments} (expected {EXPECTED['segment_rows']})")
     print(f"  [PNOTE] segments: {total_pnote_seg} (expected {EXPECTED['segment_pnote']})")
     print(f"  [ENS] segments: {total_pense_seg} (expected {EXPECTED['segment_pense']})")
+    print(f"  [CONVERSION] segments: {total_conv_seg} (expected {EXPECTED['segment_conversion']})")
     if total_segments != EXPECTED["segment_rows"]:
         errors.append(f"Segment count {total_segments} != {EXPECTED['segment_rows']}")
     if total_pnote_seg != EXPECTED["segment_pnote"]:
         errors.append(f"PNOTE segments {total_pnote_seg} != {EXPECTED['segment_pnote']}")
     if total_pense_seg != EXPECTED["segment_pense"]:
         errors.append(f"PENSE segments {total_pense_seg} != {EXPECTED['segment_pense']}")
+    if total_conv_seg != EXPECTED["segment_conversion"]:
+        errors.append(f"[CONVERSION] segments {total_conv_seg} != {EXPECTED['segment_conversion']}")
+    conv_prefix = int(memo["MEMOTEXT"].astype(str).str.startswith(CONVERSION_MEMO_TAG).sum())
+    print(f"  rows with [CONVERSION] prefix: {conv_prefix} (expected {EXPECTED['emitted_rows']})")
+    if conv_prefix != EXPECTED["emitted_rows"]:
+        errors.append(f"[CONVERSION] prefix count {conv_prefix} != {EXPECTED['emitted_rows']}")
 
     # --- MEMOKEY formatting (Issue #25) ---
     print("\n--- MEMOKEY (Issue #25) ---")
@@ -209,7 +222,7 @@ def validate(output_dir: Path, before_dir: Path | None) -> int:
             continue
         row = subset.iloc[0]
         text = row["MEMOTEXT"]
-        segs, pn, pe = _count_segments(text)
+        segs, pn, pe, conv = _count_segments(text)
         sep_count = text.count(MEMO_SEGMENT_SEPARATOR.strip()) if MEMO_SEGMENT_SEPARATOR.strip() else 0
         expected_seps = max(0, segs - 1)
         dates = _segment_dates(text)

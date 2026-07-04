@@ -47,7 +47,7 @@
 | 21G | Total Premium / Cost Basis | AWAITING CLIENT | — | Target screen/field for totals |
 | 21H | Banking (ABA + target field) | **ABA RELEASED ✓** / target AWAITING | v57.22 / v57.34 | Verify 9-digit ABA; confirm Bill Acct vs Credit Card ID |
 | 21I | Beneficiary Information | AWAITING CLIENT | — | Mandatory beneficiary attributes |
-| 21J | Modal Premium Factors | AWAITING CLIENT | — | Product-specific modal factors |
+| 21J | Modal Premium Factors | **CLOSED ✓** | **v57.46** | UAT — Coverage Detail modal grid on sample policies |
 | 21K | PUA Amount Precision | AWAITING CLIENT (New Era) | Companion tooling only | Six-table MUNIT migration + UI UAT on 010448806C |
 | 21L | Last Change Date | **CLOSED** | — | QLAdmin sets date on load |
 | 21M | Policy Notes / ENS | **RELEASED ✓** | v57.32–34 | UAT — Memo tab on 010335038C |

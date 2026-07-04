@@ -1,9 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.44
-# Date:        2026-07-03
-# Change Note: v57.44 — Issue #38: quikdvdp MDEPOSIT from PPBENTYP ACCUM_DIVIDENDS (stop zero-on-miss);
+# Version:     v57.46
+# Date:        2026-07-04
+# Change Note: v57.46 — Issue #21J fix: PAC billing detected as translated MBILLFRM=2 (BF_PAC) for GL85 overrides.
+#              v57.45 — Issue #21J: per-plan modal premium factors from client mapping; PAC GL85
+#              quikmstr.MSEMI/MQTRL overrides; fleet-wide QUIKMEMO [CONVERSION] governance memos.
+#              v57.44 — Issue #38: quikdvdp MDEPOSIT from PPBENTYP ACCUM_DIVIDENDS (stop zero-on-miss);
 #              PACTG 641-only cache for MINTYTD/MINTDATE; dynamic PACTG source via resolve_table_source.
 #              v57.43 — Issue #37: fleet QuikCvs CV duration grid (LifePRO placement; maturity 100−age)
 #              via R5 rate pipeline / qla_core (values unchanged; GENERATE RATE TABLES emits corrected QuikCvs).
@@ -64,6 +67,11 @@ from qla_core.quikactg_converter import convert_quikactg_from_pactg
 from qla_core.quikloan_converter import convert_quikloan_from_ploan, load_derivation_rules
 from qla_core.quikmemo_converter import convert_quikmemo_from_pnote_pense
 from qla_core.quikmemo_dbf_generator import write_quikmemo_dbf
+from qla_core.modal_premium_factors import (
+    apply_modal_factors_to_quikplan as apply_issue21j_modal_factors,
+    apply_pac_gl85_modal_overrides,
+    append_issue21j_conversion_memos,
+)
 from qla_core.crosswalk_enrichment import resolve_crosswalk_overlay_config
 from qla_core.product_catalog_authority import (
     allow_legacy_mplan_fallback,
@@ -5181,6 +5189,22 @@ class QLAdminEnterpriseIntegrationSuite:
                         cw_map=cw_map,
                     )
                     out_dir = self.path_vars["Out"][0].get()
+                    quikridr_path = os.path.normpath(os.path.join(out_dir, "quikridr.csv"))
+                    quikmstr_path = os.path.normpath(os.path.join(out_dir, "quikmstr.csv"))
+                    quikplan_path = os.path.normpath(os.path.join(out_dir, "quikplan.csv"))
+                    output_df, conv_stats = append_issue21j_conversion_memos(
+                        output_df,
+                        conversion_version="v57.46",
+                        quikmstr_path=quikmstr_path,
+                        quikridr_path=quikridr_path,
+                        quikplan_path=quikplan_path,
+                    )
+                    self.log(
+                        f"Issue 21J: conversion memos added={conv_stats.get('conversion_memos_added', 0)} "
+                        f"merged={conv_stats.get('conversion_memos_merged', 0)} "
+                        f"new={conv_stats.get('conversion_memos_new_row', 0)} "
+                        f"fleet={conv_stats.get('converted_policies', 0)}"
+                    )
                     out_path = os.path.normpath(os.path.join(out_dir, "quikmemo.csv"))
                     output_df.to_csv(out_path, index=False)
                     self.log(f"Success: quikmemo.csv - {len(output_df)} memo records.")
@@ -5717,6 +5741,13 @@ class QLAdminEnterpriseIntegrationSuite:
                         self.log(f"CSO crosswalk QA: {cso_qa_path}")
                     else:
                         self.log(f"CSO crosswalk not found at {cso_path}; quikplan CV assumptions left as-is.")
+
+                    qdf, modal_stats = apply_issue21j_modal_factors(qdf, repo_root=self._app_base_dir())
+                    self.log(
+                        f"Issue 21J: modal premium factors applied to quikplan "
+                        f"(updated={modal_stats.get('plans_updated', 0)}, "
+                        f"mapping={modal_stats.get('plans_in_mapping', 0)})"
+                    )
 
                     output = qdf[schema].values.tolist()
                 else:
@@ -6272,8 +6303,27 @@ class QLAdminEnterpriseIntegrationSuite:
                     )
                     self.log(f"P3E MPLAN AUTHORITY: validation={'PASSED' if passed else 'FAILED'} stats={val_stats}")
                     self.log(f"P3E governance outputs: {p3e_dir}")
-                pd.DataFrame(output, columns=schema).to_csv(os.path.normpath(os.path.join(out_dir, f"{t_id}.csv")), index=False)
+                aligned_out_df = pd.DataFrame(output, columns=schema)
+                out_csv = os.path.normpath(os.path.join(out_dir, f"{t_id}.csv"))
+                aligned_out_df.to_csv(out_csv, index=False)
                 self.log(f"Success: {t_id}.csv - {len(output)} records.")
+
+                if t_id.lower() == "quikridr":
+                    mstr_path = os.path.normpath(os.path.join(out_dir, "quikmstr.csv"))
+                    if os.path.isfile(mstr_path):
+                        mstr_df = pd.read_csv(
+                            mstr_path, dtype=str, encoding="latin1", low_memory=False,
+                        ).fillna("")
+                        mstr_df.columns = [str(c).strip().upper() for c in mstr_df.columns]
+                        mstr_df, pac_stats = apply_pac_gl85_modal_overrides(
+                            mstr_df, quikridr_df=aligned_out_df,
+                        )
+                        mstr_df.to_csv(mstr_path, index=False)
+                        self.log(
+                            f"Issue 21J: PAC GL85 modal overrides on quikmstr "
+                            f"(quarterly={pac_stats.get('qtr_overrides', 0)}, "
+                            f"semiannual={pac_stats.get('semi_overrides', 0)})"
+                        )
 
                 if is_batch and t_id.lower() == "quikplan" and self._closed_mplan_authority_enabled():
                     mplan_resolver, quikplan_plan_set, _ = self._init_mplan_authority(out_dir, cw_path)

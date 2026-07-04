@@ -18,8 +18,8 @@ import dbf
 import pandas as pd
 
 SCRIPT_VERSION = "1.1"
-ENGINE_VERSION = "v57.34"
-EXPECTED_CSV_ROWS = 4380
+ENGINE_VERSION = "v57.46"
+EXPECTED_CSV_ROWS = 5083
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
@@ -81,8 +81,12 @@ def main() -> int:
         print(f"  Open OK: rows={dbf_rows}, MEMOKEY={memokey!r}, MEMOTEXT={memotext!r}...")
         if dbf_rows != info["dbf_rows"]:
             errors.append(f"DBF row count {dbf_rows} != expected {info['dbf_rows']}")
-        if not memotext.startswith("[PNOTE]") and not memotext.startswith("[ENS]"):
-            errors.append("Sample MEMOTEXT missing [PNOTE]/[ENS] prefix")
+        if not (
+            memotext.startswith("[CONVERSION]")
+            or memotext.startswith("[PNOTE]")
+            or memotext.startswith("[ENS]")
+        ):
+            errors.append("Sample MEMOTEXT missing [CONVERSION]/[PNOTE]/[ENS] prefix")
     except Exception as exc:
         errors.append(f"DBF open failed: {exc}")
 

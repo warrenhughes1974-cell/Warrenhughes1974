@@ -17,6 +17,7 @@ from qla_core.crosswalk_enrichment import (
     resolve_crosswalk_overlay_config,
 )
 from qla_core.lookup_loader import build_lookup_tables
+from qla_core.modal_premium_factors import apply_modal_factors_to_quikplan as apply_issue21j_modal_factors
 from qla_core.normalize_utils import extract_day, format_qladmin_mpolicy, normalize, normalize_columns
 from qla_core.product_catalog_authority import CrosswalkAuthority, load_crosswalk_authority
 from qla_core.quikplan_source_loader import load_quikplan_source_csv
@@ -319,6 +320,12 @@ def run_quikplan_conversion(
     )
     df = apply_rate_variation_flag_enrichment(df)
     df = apply_cso_cv_assumptions(df)
+    repo_root = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
+    df, modal_stats = apply_issue21j_modal_factors(df, repo_root=repo_root)
+    try:
+        df.attrs["issue21j_modal_stats"] = modal_stats
+    except Exception:
+        pass
     return df
 
 
