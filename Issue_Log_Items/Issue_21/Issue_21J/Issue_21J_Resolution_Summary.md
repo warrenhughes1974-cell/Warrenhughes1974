@@ -17,7 +17,7 @@
 | G6 regression PASS | **Done** — `Issue_21J_Regression_Report.md` |
 | `app.py` / `QLA_Migration/app.py` **v57.46** | **Done** |
 | Issue-scoped git commit | **Done** — `5cacd68` |
-| Git push to remote | **Pending** |
+| Git push to remote | **Done** — `origin/issue-34-pr7-quikisrr` @ `612b6e5` |
 | Network batch after pull | Re-run full batch at v57.46 (`Output/` gitignored) |
 
 ---
