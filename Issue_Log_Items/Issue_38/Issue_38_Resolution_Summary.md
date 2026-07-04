@@ -16,7 +16,8 @@
 | G5 validation PASS | **Done** |
 | G6 regression PASS | **Done** |
 | `app.py` / `QLA_Migration/app.py` **v57.44** | **Done** |
-| Issue-scoped git commit | **Pending push step** |
+| Issue-scoped git commit | **Done** — `aef7d41` |
+| Git push to remote | **Done** |
 | Network batch after pull | Re-run full batch at v57.44 (`Output/` gitignored) |
 
 ---
@@ -108,7 +109,7 @@ The rulebook correctly mapped **`PPBENTYP.ACCUM_DIVIDENDS` → `quikdvdp.MDEPOSI
 
 | Item | Value |
 |------|-------|
-| Commit | *(recorded at G7 push)* |
+| Commit | **`aef7d41`** — Close Issue #38: Dividend Accumulations quikdvdp MDEPOSIT fix (v57.44) |
 | Branch | `issue-34-pr7-quikisrr` |
 
 **Network batch:** Pull latest branch, confirm **v57.44** in `app.py`, run **`QLA_Migration/run_converter.bat`** or `tools/batch_tests/run_full_batch_test.py`. `Output/` is gitignored — regenerate `quikdvdp.csv` on the network machine after pull.
@@ -157,4 +158,4 @@ The rulebook correctly mapped **`PPBENTYP.ACCUM_DIVIDENDS` → `quikdvdp.MDEPOSI
 - [x] Validation PASS
 - [x] Regression PASS
 - [x] Closure
-- [ ] Git commit + push (G7 — in progress)
+- [x] Git commit + push (G7)
