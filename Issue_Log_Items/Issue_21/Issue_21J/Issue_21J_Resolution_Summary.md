@@ -16,7 +16,7 @@
 | G5 validation PASS | **Done** — `Issue_21J_Validation_Report.md` |
 | G6 regression PASS | **Done** — `Issue_21J_Regression_Report.md` |
 | `app.py` / `QLA_Migration/app.py` **v57.46** | **Done** |
-| Issue-scoped git commit | **Pending** — see below |
+| Issue-scoped git commit | **Done** — `5cacd68` |
 | Git push to remote | **Pending** |
 | Network batch after pull | Re-run full batch at v57.46 (`Output/` gitignored) |
 
@@ -109,8 +109,8 @@ The converter applied rulebook defaults to all `quikplan` rows and did not overl
 
 | Field | Value |
 |-------|-------|
-| Branch | *(filled after push)* |
-| Commit | *(filled after push)* |
+| Branch | `issue-34-pr7-quikisrr` |
+| Commit | `5cacd68` |
 | Message | `Close Issue #21J: Modal premium factors (v57.46)` |
 
 ---
