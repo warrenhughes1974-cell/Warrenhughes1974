@@ -18,8 +18,8 @@
 | G5 validation PASS | **Done** |
 | G6 regression PASS | **Done** |
 | `app.py` / `QLA_Migration/app.py` **v57.48** | **Done** |
-| Issue-scoped git commit | Pending below |
-| Git push to remote | Pending below |
+| Issue-scoped git commit | **Done** — `df9de72` |
+| Git push to remote | **Done** |
 | Network batch after pull | Re-run full batch at v57.48 (`Output/` gitignored) |
 
 ---
@@ -111,7 +111,7 @@ The MSTATUS composite interceptor prioritized **`PAID_UP_TYPE`** (PU, LE, ET, et
 
 | Item | Value |
 |------|-------|
-| Commit | *(recorded after push)* |
+| Commit | **`df9de72`** — Close Issue #13: quikmstr MSTATUS termination precedence (v57.48) |
 | Branch | `issue-34-pr7-quikisrr` |
 
 **Network batch:** Pull latest branch, confirm **v57.48** in `app.py`, run **`QLA_Migration/run_converter.bat`** or `tools/batch_tests/run_full_batch_test.py`. Regenerate `quikmstr.csv` on network machine (`Output/` gitignored).
@@ -142,4 +142,4 @@ The MSTATUS composite interceptor prioritized **`PAID_UP_TYPE`** (PU, LE, ET, et
 - [x] Validation PASS
 - [x] Regression PASS
 - [x] Closure
-- [ ] Git commit + push (G7 — in progress)
+- [x] Git commit + push (G7 — `df9de72`)
