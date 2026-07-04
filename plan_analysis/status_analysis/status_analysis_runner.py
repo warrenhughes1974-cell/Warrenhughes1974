@@ -219,13 +219,15 @@ def parse_memotext(memo: str) -> tuple[str, str, str]:
 
 
 def derive_mstatus_from_source_fields(contract_code: str, contract_reason: str, paid_up_type: str) -> str:
-    """Mirror app.py MSTATUS composite + ST_ translation (for diff only)."""
+    """Mirror app.py MSTATUS composite + ST_ translation (Issue #13: T wins)."""
+    cc = _s(contract_code).strip().upper()
+    cr = _s(contract_reason).strip().upper()
     put = _s(paid_up_type).strip().upper()
-    if put in {"PU", "RU", "ET", "LE", "LP", "SP"}:
+    if cc == "T":
+        key = f"ST_{cc}_{cr}" if cr else f"ST_{cc}_"
+    elif put in {"PU", "RU", "ET", "LE", "LP", "SP"}:
         key = f"ST_PUT_{put}"
     else:
-        cc = _s(contract_code).strip().upper()
-        cr = _s(contract_reason).strip().upper()
         key = f"ST_{cc}_{cr}" if cr else f"ST_{cc}_"
     return ST_TRANSLATION.get(key, "")
 

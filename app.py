@@ -1,9 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.46
+# Version:     v57.48
 # Date:        2026-07-04
-# Change Note: v57.46 — Issue #21J fix: PAC billing detected as translated MBILLFRM=2 (BF_PAC) for GL85 overrides.
+# Change Note: v57.48 — Issue #13: quikmstr.MSTATUS termination precedence when CONTRACT_CODE=T
+#              (CONTRACT_REASON wins; PAID_UP_TYPE ignored for terminated contracts).
+#              v57.47 — Issue #21A: PPBENTYP BF_NON_FORFEITURE cache for TYPE_CODE=BF;
+#              NF_1/NF_2→APL, NF_9→0 safety (codes 3–6 translation unchanged).
+#              v57.46 — Issue #21J fix: PAC billing detected as translated MBILLFRM=2 (BF_PAC) for GL85 overrides.
 #              v57.45 — Issue #21J: per-plan modal premium factors from client mapping; PAC GL85
 #              quikmstr.MSEMI/MQTRL overrides; fleet-wide QUIKMEMO [CONVERSION] governance memos.
 #              v57.44 — Issue #38: quikdvdp MDEPOSIT from PPBENTYP ACCUM_DIVIDENDS (stop zero-on-miss);
@@ -5343,14 +5347,35 @@ class QLAdminEnterpriseIntegrationSuite:
                                             edf = edf[edf[seq_col].isin(["1", "01"])]
                                             
                                     edf['__norm_jk'] = edf[jk].apply(self.normalize)
-                                    edf[ext_key] = edf[ext_key].astype(str).str.strip()
-                                    edf_valid = edf[~edf[ext_key].isin(["", "nan", "none", "null"])]
+                                    if ext_key == 'NON_FORFEITURE':
+                                        # Issue 21A: ISWL/BF rows store NFO on BF_NON_FORFEITURE, not NON_FORFEITURE.
+                                        def _ppbentyp_nfo_val(row):
+                                            tc = str(row.get('TYPE_CODE', '')).strip()
+                                            bnf = str(row.get('BF_NON_FORFEITURE', '')).strip().replace('.0', '')
+                                            nf = str(row.get('NON_FORFEITURE', '')).strip().replace('.0', '')
+                                            def _usable(v):
+                                                if not v or v.lower() in ('nan', 'none', 'null'):
+                                                    return False
+                                                return bool(v.replace('-', '').strip())
+                                            if tc == 'BF' and _usable(bnf):
+                                                return bnf
+                                            if _usable(nf):
+                                                return nf
+                                            return ''
+                                        edf['__resolved_val'] = edf.apply(_ppbentyp_nfo_val, axis=1)
+                                        val_col = '__resolved_val'
+                                    else:
+                                        edf[ext_key] = edf[ext_key].astype(str).str.strip()
+                                        val_col = ext_key
+                                    edf_valid = edf[~edf[val_col].isin(["", "nan", "none", "null"])]
                                     edf_valid = edf_valid.drop_duplicates(subset=['__norm_jk'], keep='first')
                                     
-                                    lifepro_extra[ext_key] = edf_valid.set_index('__norm_jk')[ext_key].to_dict()
+                                    lifepro_extra[ext_key] = edf_valid.set_index('__norm_jk')[val_col].to_dict()
                                     
                                     sample_keys = list(lifepro_extra[ext_key].keys())[:5]
                                     self.log(f"Auto-loaded Base {ext_key} from {os.path.basename(epath)}")
+                                    if ext_key == 'NON_FORFEITURE':
+                                        self.log(f"  -> Issue 21A: BF_NON_FORFEITURE priority for TYPE_CODE=BF")
                                     self.log(f"  -> Cache Size: {len(lifepro_extra[ext_key])} | Key Sample: {sample_keys}")
                             except Exception as e:
                                 self.log(f"Warning: Could not auto-load {os.path.basename(epath)} - {e}")
@@ -5844,15 +5869,18 @@ class QLAdminEnterpriseIntegrationSuite:
                                         val = self.normalize(src_row.get("MODE_PREMIUM", ""))
                                 # -----------------------------------------------------------------
     
-                                # --- MSTATUS COMPOSITE KEY INTERCEPTOR ---
+                                # --- MSTATUS COMPOSITE KEY INTERCEPTOR (Issue #13: T wins) ---
                                 if t_f == 'MSTATUS' and t_id.lower() == "quikmstr":
-                                    put = self.normalize(src_row.get('PAID_UP_TYPE', ''))
-                                    if put in ['PU', 'RU', 'ET', 'LE', 'LP', 'SP']:
-                                        val = f"PUT_{put}"
-                                    else:
-                                        c_code = self.normalize(src_row.get('CONTRACT_CODE', val))
-                                        c_reason = self.normalize(src_row.get('CONTRACT_REASON', ''))
+                                    c_code = self.normalize(src_row.get('CONTRACT_CODE', val))
+                                    c_reason = self.normalize(src_row.get('CONTRACT_REASON', ''))
+                                    if c_code == 'T':
                                         val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
+                                    else:
+                                        put = self.normalize(src_row.get('PAID_UP_TYPE', ''))
+                                        if put in ['PU', 'RU', 'ET', 'LE', 'LP', 'SP']:
+                                            val = f"PUT_{put}"
+                                        else:
+                                            val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
                                 # -----------------------------------------
     
                                 if t_f in ['MNFOPT', 'MDIVOPT'] and val in ["", "0", "0.0"] and t_id.lower() == "quikmstr":

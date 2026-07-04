@@ -1,0 +1,33 @@
+Issue #13 Option A simulation — 5084 PPOLC policies
+Would change MSTATUS: 607
+Unchanged: 4477
+T + non-blank PAID_UP_TYPE: 611
+Proposed unmapped (missing ST_* key): 2
+
+Top transitions (current -> proposed):
+  41 -> 53: 174
+  44 -> 57: 86
+  45 -> 53: 78
+  44 -> 54: 69
+  44 -> 55: 63
+  44 -> 53: 40
+  45 -> 55: 31
+  41 -> 55: 29
+  54 -> 53: 14
+  41 -> 57: 11
+  41 -> 56: 4
+  54 -> 55: 3
+  41 -> 54: 2
+  45 -> 57: 1
+  44 -> 90: 1
+
+Unmapped proposed keys:
+  ST_-------------_---------------: 1
+  ST_S_PC: 1
+
+Sample policies:
+  9011101663 / 011101663C: 41(Paid Up) -> 56(Expired) [T/EX PUT=PU]
+  9010516211 / 010516211C: 44(Extended Term) -> 54(Lapsed) [T/LP PUT=LE]
+  9010397318 / 010397318C: 45(Reduced Paid Up) -> 53(Terminated/Death) [T/DC PUT=RU]
+  9010464590 / 010464590C: 45(Reduced Paid Up) -> 53(Terminated/Death) [T/DC PUT=RU]
+  9010784054 / 010784054C: 56(Expired) -> 56(Expired) [T/EX PUT=]

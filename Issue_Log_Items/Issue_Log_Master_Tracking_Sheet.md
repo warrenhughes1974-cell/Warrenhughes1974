@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-04 · **Engine:** `app.py` **v57.44** (Issue #38 closed) / cumulative **v57.34+**
+**Last updated:** 2026-07-04 · **Engine:** `app.py` **v57.48** (Issue #13 closed) / cumulative **v57.34+**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -27,8 +27,8 @@
 
 | Area | Released in v57.34–35 | Awaiting client UAT / answers | Closed |
 |---|---:|---:|---:|
-| **Policy (Issue #21)** | 7 (#21B, 21C, 21H ABA, 21M, 21M-FU, + cumulative #25/#26) | 8 + 21H target-field + 21K | 1 (21L) |
-| **Cross-cutting (#25/#26/#28)** | 3 (#25, #26, **#28**) | — | **1 (#28)** |
+| **Policy (Issue #21)** | 7 (#21B, 21C, 21H ABA, 21M, 21M-FU, + cumulative #25/#26) | 7 + 21H target-field + 21K | **3 (21A, 21J, 21L)** |
+| **Cross-cutting (#25/#26/#28)** | 3 (#25, #26, **#28**) | — | **2 (#28, #13)** |
 | **Claims (Items 14–19)** | 5 (14, 15, 16, 18, 19) | 147 claims in review | — |
 | **Production cutover** | Engine v57.35 (#28) ready | Authorization (`production_dbf_flag=N`) | — |
 
@@ -36,9 +36,9 @@
 
 ## A. Policy conversion — Issue #21
 
-| ID | Item | Status | Release | Client action (if open) |
+| ID | Item | Status | Release | Resolution |
 |---|---|---|---|---|
-| 21A | NFO / Dividend Options | AWAITING CLIENT | — | Mapping for ETI, APL ETI, Dividend Option |
+| 21A | NFO / Dividend Options | **CLOSED ✓** | **v57.47** | PPBENTYP cache reads BF_NON_FORFEITURE for ISWL/BF; NFO codes 1/2 → APL (MNFOPT=1) per SME (v57.47). |
 | 21B | Bill Day | **RELEASED ✓** | v57.22 / v57.34 | UAT — verify Bill Day on sample policies |
 | 21C | Policy Fees | **RELEASED ✓** | v57.22 / v57.34 | UAT — verify fee on base rider row |
 | 21D | Interest Crediting Rate | AWAITING CLIENT | — | Authoritative rate: 4.00% or 4.50%? |
@@ -59,13 +59,16 @@
 
 ## B. Cross-cutting issues
 
-| ID | Item | Status | Release |
-|---|---|---|---|
-| **#25** | MPOLICY 10-char left-pad | **RELEASED ✓** | v57.30 / v57.34 |
-| **#26** | quikridr.MPREM mapping | **RELEASED ✓** | v57.31 / v57.34 |
-| **#28** | Product catalog PLAN mapping (crosswalk authority) | **CLOSED ✓** | **v57.35** |
-| **#37** | Age/Duration rate placement — fleet-wide | **CLOSED ✓** · **v57.43** · QuikCvs grid fix | **v57.43** |
-| **#38** | Dividend Accumulations (`quikdvdp.MDEPOSIT`) | **CLOSED ✓** · **v57.44** · 59 policies | **v57.44** |
+| ID | Item | Status | Release | Resolution |
+|---|---|---|---|---|
+| **#13** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.48** | When CONTRACT_CODE=T, MSTATUS follows CONTRACT_REASON not PAID_UP_TYPE; 607 policies (v57.48). |
+| **#25** | MPOLICY 10-char left-pad | **RELEASED ✓** | v57.30 / v57.34 | |
+| **#26** | quikridr.MPREM mapping | **RELEASED ✓** | v57.31 / v57.34 | |
+| **#28** | Product catalog PLAN mapping (crosswalk authority) | **CLOSED ✓** | **v57.35** | |
+| **#37** | Age/Duration rate placement — fleet-wide | **CLOSED ✓** · **v57.43** · QuikCvs grid fix | **v57.43** | |
+| **#38** | Dividend Accumulations (`quikdvdp.MDEPOSIT`) | **CLOSED ✓** · **v57.44** · 59 policies | **v57.44** | |
+
+**#13 detail:** `Issue_Log_Items/Issue_13/` · Option A termination precedence · G5/G6 PASS · samples 010516211C→54, 011101663C→56
 
 **#28 detail:** `Issue_Log_Items/Issue_28/` · Client UAT PASS 2026-06-27 · 33 PLAN corrections + DISCHO25
 
@@ -130,7 +133,7 @@ These are **not in the UAT emit** until the client decides.
 ## G. Outstanding before production sign-off
 
 - Client UAT on **21M-FU** memo display (`010335038C`)
-- Client answers on Issue #21 open items (21A, 21D–21G, 21I, 21J, 21K, 21H target-field)
+- Client answers on Issue #21 open items (21D–21G, 21I, 21K, 21H target-field)
 - Client decisions on **147** deferred claims (Phase 26)
 - Enterprise sign-off to set `production_dbf_flag=Y`
 

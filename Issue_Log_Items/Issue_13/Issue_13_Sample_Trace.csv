@@ -1,0 +1,3 @@
+legacy_policy,qla_policy,contract_code,contract_reason,paid_up_type,ppben_status,ppben_reason,converter_key,converter_mstatus,termination_first_key,termination_first_mstatus,emitted_mstatus,issue13_pattern
+9011101663,011101663C,T,EX,PU,T,EX,ST_PUT_PU,41,ST_T_EX,56,41,Y
+9010516211,010516211C,T,LP,LE,T,LP,ST_PUT_LE,44,ST_T_LP,54,44,Y
