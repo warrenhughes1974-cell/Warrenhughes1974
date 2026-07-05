@@ -1,9 +1,10 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.51
+# Version:     v57.52
 # Date:        2026-07-05
-# Change Note: v57.51 — Issue #30: RNA relationship MPOLICY fallback from IDENTIFYING_ALPHA; exact quikclid dedupe.
+# Change Note: v57.52 — UI version display synced to engine; UAT launcher enables reinsurance Phase 1 emit.
+#              v57.51 — Issue #30: RNA relationship MPOLICY fallback from IDENTIFYING_ALPHA; exact quikclid dedupe.
 #              v57.50 — Phase 1 Reinsurance: canonical PREINTRT selection; report path via repo root; startup log aligned.
 #              v57.49 — Phase 1 Reinsurance: QuikRein/QuikRmst from stored PROD_PTRTY/PREIN/PREINTRT
 #              (gated QLA_ENABLE_REINSURANCE_EMIT; placeholder reinsurer crosswalk).
@@ -261,12 +262,13 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
+APP_VERSION = "v57.52"
 
 
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title("QLAdmin Enterprise Data Integration Suite v57.43")
+        self.root.title(f"QLAdmin Enterprise Data Integration Suite {APP_VERSION}")
         self.root.geometry("1100x1180")
         
         self.bg_main = "#F1F5F9"
@@ -323,7 +325,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.bg_main)
         header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text="ENTERPRISE DATA INTEGRATION SUITE v57.43", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
+        tk.Label(header, text=f"ENTERPRISE DATA INTEGRATION SUITE {APP_VERSION}", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
         tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
 
         self._setup_uat_status_banner()
@@ -2103,7 +2105,7 @@ class QLAdminEnterpriseIntegrationSuite:
             bg=self.bg_card, fg=self.accent, font=("Segoe UI", 11, "bold"), anchor="w",
         ).pack(side="left")
         tk.Label(
-            title_row, text="v57.43", bg=self.bg_card, fg=self.ui_status_muted,
+            title_row, text=APP_VERSION, bg=self.bg_card, fg=self.ui_status_muted,
             font=("Segoe UI", 10), anchor="e",
         ).pack(side="right")
 
@@ -4849,7 +4851,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log("Initializing Migration Engine v57.50 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log(f"Initializing Migration Engine {APP_VERSION} (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False

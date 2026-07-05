@@ -12,19 +12,18 @@ set QLA_ENABLE_QUIKLOAN_EMIT=1
 set QLA_QUIKLOAN_WRITE_OUTPUT=1
 set QLA_BATCH_INCLUDE_RATE_TABLES=1
 set QLA_ENABLE_QUIKISRR_EMIT=1
-REM Reinsurance Phase 1 (off by default — set both to 1 to emit quikrein.csv + quikrmst.csv):
-REM set QLA_ENABLE_REINSURANCE_EMIT=1
-REM set QLA_REINSURANCE_WRITE_OUTPUT=1
+set QLA_ENABLE_REINSURANCE_EMIT=1
+set QLA_REINSURANCE_WRITE_OUTPUT=1
 
 echo ============================================================
 echo QLA Enterprise Data Integration Engine - UAT Batch Mode
 echo ============================================================
 echo Repo root : %REPO_ROOT%
 echo RUN_MODE  : %QLA_RUN_MODE%
-echo Engine    : v57.41 full UAT batch (claims + QuikLoan + rates + QuikIsrr)
+echo Engine    : v57.52 full UAT batch (claims + QuikLoan + rates + QuikIsrr + Reinsurance)
 echo.
 echo In the UI, set paths to QLA_Migration:
-echo   Source    : QLA_Migration\Source\quikplan.csv
+echo   Source    : QLA_Migration\Source\  (any CSV; engine resolves dated extracts)
 echo   Crosswalk : QLA_Migration\Mapping\Master_Crosswalk.csv
 echo   Translate : QLA_Migration\Mapping\Master_Value_Translation.csv
 echo   Relational: QLA_Migration\Output\quikclid.csv
