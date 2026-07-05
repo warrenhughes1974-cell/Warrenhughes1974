@@ -40,6 +40,15 @@ PNOTE      PNOTE_PolicyNotes_Extract*.csv                               quikmemo
 PENSE      PENSE_ENSData_Extract*.csv                                   quikmemo
            (dual-source merge — both feed one table)
 
+OPTIONAL — REINSURANCE Phase 1 (gated: QLA_ENABLE_REINSURANCE_EMIT=1)
+PROD_PTRTY PROD_PTRTY_TreatySetup_Extract*.csv                          quikrein
+PREIN      PREIN_ReinsuranceDetail_Extract*.csv                         quikrmst (parent)
+PREINTRT   PREINTRT_ReinsuranceDetailTreaty_Extract*.csv                quikrmst (driver)
+           Requires converted quikmstr.csv + quikridr.csv in Output/
+           QA reports -> plan_analysis/phase_r9_quikrein_rmst/
+           Output write gated: QLA_REINSURANCE_WRITE_OUTPUT=1
+           Reinsurer crosswalk: plan_governance/config/reinsurer_crosswalk.csv
+
 ================================================================================
 REQUIRED — ENRICHMENT (not separate table conversions)
 ================================================================================
@@ -109,8 +118,11 @@ EXAMPLE — May 2026 LifePRO zip contents mapping
   PLOAN_LoanInformation_Extract_20260530.csv
   PAGNT_AgentMaster_Extract_20260530.csv
   PPACH_PACHistory_Extract_20260530.csv
+  PROD_PTRTY_TreatySetup_Extract_20260530.csv
+  PREIN_ReinsuranceDetail_Extract_20260530.csv
+  PREINTRT_ReinsuranceDetailTreaty_Extract_20260530.csv
   aba_routing_lookup.csv
 
 ================================================================================
-Last updated: 2026-06-21 (engine v57.24)
+Last updated: 2026-07-05 (engine v57.50 — Phase 1 reinsurance sources)
 ================================================================================

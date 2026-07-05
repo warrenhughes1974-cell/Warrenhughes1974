@@ -12,6 +12,9 @@ set QLA_ENABLE_QUIKLOAN_EMIT=1
 set QLA_QUIKLOAN_WRITE_OUTPUT=1
 set QLA_BATCH_INCLUDE_RATE_TABLES=1
 set QLA_ENABLE_QUIKISRR_EMIT=1
+REM Reinsurance Phase 1 (off by default — set both to 1 to emit quikrein.csv + quikrmst.csv):
+REM set QLA_ENABLE_REINSURANCE_EMIT=1
+REM set QLA_REINSURANCE_WRITE_OUTPUT=1
 
 echo ============================================================
 echo QLA Enterprise Data Integration Engine - UAT Batch Mode

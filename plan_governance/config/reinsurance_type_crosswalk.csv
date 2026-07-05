@@ -1,0 +1,4 @@
+REINSURANCE_CODE,MTYPE,NOTES
+C,CO,Coinsurance — LifePRO REINSURANCE_CODE C
+Y,YRT,Yearly renewable term — LifePRO REINSURANCE_CODE Y
+I,COI,Coinsurance on insurance — rare QLAdmin value

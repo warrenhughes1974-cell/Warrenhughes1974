@@ -122,6 +122,22 @@ TABLE_SOURCE_SPECS = {
         "required": False,
         "converts_to": "quikmemo",
     },
+    "quikrein": {
+        "lifepro_table": "PROD_PTRTY",
+        "lifepro_label": "Treaty Setup",
+        "lifepro_patterns": [r"^PROD[_ ]PTRTY[_ ]TreatySetup[_ ]Extract.*\.csv$"],
+        "legacy_names": ["PROD_PTRTY.csv"],
+        "required": False,
+        "converts_to": "quikrein",
+    },
+    "quikrmst": {
+        "lifepro_table": "PREINTRT + PREIN",
+        "lifepro_label": "Reinsurance Detail Treaty + Detail",
+        "lifepro_patterns": [r"^PREINTRT[_ ]ReinsuranceDetailTreaty[_ ]Extract.*\.csv$"],
+        "legacy_names": ["PREINTRT.csv"],
+        "required": False,
+        "converts_to": "quikrmst",
+    },
 }
 
 # Dual-source memo inputs (Issue 21M)
@@ -256,6 +272,44 @@ def resolve_quikmemo_sources(src_dir: str) -> Tuple[str, str, str, str]:
     pnote_path, pnote_label = resolve_memo_source(src_dir, "pnote")
     pense_path, pense_label = resolve_memo_source(src_dir, "pense")
     return pnote_path, pnote_label, pense_path, pense_label
+
+
+REINSURANCE_SOURCE_SPECS = {
+    "ptrty": {
+        "lifepro_patterns": [r"^PROD[_ ]PTRTY[_ ]TreatySetup[_ ]Extract.*\.csv$"],
+        "legacy_names": ["PROD_PTRTY.csv"],
+    },
+    "prein": {
+        "lifepro_patterns": [r"^PREIN[_ ]ReinsuranceDetail[_ ]Extract.*\.csv$"],
+        "legacy_names": ["PREIN.csv"],
+    },
+    "preintrt": {
+        "lifepro_patterns": [r"^PREINTRT[_ ]ReinsuranceDetailTreaty[_ ]Extract.*\.csv$"],
+        "legacy_names": ["PREINTRT.csv"],
+    },
+}
+
+
+def resolve_reinsurance_source(src_dir: str, source_key: str) -> Tuple[str, str]:
+    spec = REINSURANCE_SOURCE_SPECS.get(str(source_key or "").strip().lower(), {})
+    if not spec:
+        return "", ""
+    path = find_newest_matching(src_dir, spec.get("lifepro_patterns", []))
+    if path:
+        return path, f"lifepro:{os.path.basename(path)}"
+    for legacy in spec.get("legacy_names", []):
+        candidate = os.path.normpath(os.path.join(src_dir, legacy))
+        if os.path.isfile(candidate):
+            return candidate, f"legacy:{legacy}"
+    return "", ""
+
+
+def resolve_reinsurance_sources(src_dir: str) -> Tuple[str, str, str, str, str, str]:
+    """Return (ptrty_path, ptrty_label, prein_path, prein_label, preintrt_path, preintrt_label)."""
+    ptrty_path, ptrty_label = resolve_reinsurance_source(src_dir, "ptrty")
+    prein_path, prein_label = resolve_reinsurance_source(src_dir, "prein")
+    preintrt_path, preintrt_label = resolve_reinsurance_source(src_dir, "preintrt")
+    return ptrty_path, ptrty_label, prein_path, prein_label, preintrt_path, preintrt_label
 
 
 def resolve_table_source(src_dir: str, table_id: str) -> Tuple[str, str]:

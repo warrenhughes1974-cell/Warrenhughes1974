@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "description": "Phase 1 QuikRein/QuikRmst from stored LifePRO PREIN/PREINTRT/PROD_PTRTY values. No recalculation.",
+  "default_mcomp": "C",
+  "reinsurer_crosswalk": "reinsurer_crosswalk.csv",
+  "reinsurance_type_crosswalk": "reinsurance_type_crosswalk.csv",
+  "amount_tolerance": 0.01,
+  "hold_missing_reinco": true,
+  "hold_missing_phase": true,
+  "hold_missing_policy": true,
+  "hold_missing_treaty_setup": true,
+  "hold_duplicate_rmst_key": false,
+  "preintrt_canonical_selection": "latest_effective_date",
+  "write_output_csv": false,
+  "output_quikrein": "quikrein.csv",
+  "output_quikrmst": "quikrmst.csv"
+}

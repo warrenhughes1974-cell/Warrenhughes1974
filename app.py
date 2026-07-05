@@ -1,9 +1,10 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.48
-# Date:        2026-07-04
-# Change Note: v57.48 — Issue #13: quikmstr.MSTATUS termination precedence when CONTRACT_CODE=T
+# Version:     v57.50
+# Date:        2026-07-05
+# Change Note: v57.50 — Phase 1 Reinsurance: gated QuikRein/QuikRmst batch hook (root app parity with QLA_Migration).
+#              v57.48 — Issue #13: quikmstr.MSTATUS termination precedence when CONTRACT_CODE=T
 #              (CONTRACT_REASON wins; PAID_UP_TYPE ignored for terminated contracts).
 #              v57.47 — Issue #21A: PPBENTYP BF_NON_FORFEITURE cache for TYPE_CODE=BF;
 #              NF_1/NF_2→APL, NF_9→0 safety (codes 3–6 translation unchanged).
@@ -50,7 +51,7 @@ import csv
 from datetime import datetime
 
 from qla_core.normalize_utils import format_qladmin_mpolicy
-from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA, QUIKLOAN_SCHEMA
+from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA, QUIKLOAN_SCHEMA, QUIKREIN_SCHEMA, QUIKRMST_SCHEMA
 from qla_core import run_logging as RL
 from qla_core.quikplan_converter import convert_quikplan_to_output, prepare_quikplan_source, apply_rate_variation_flag_enrichment
 from qla_core.cso_mortality_crosswalk import (
@@ -69,6 +70,7 @@ from qla_core.variation_classification import (
 )
 from qla_core.quikactg_converter import convert_quikactg_from_pactg
 from qla_core.quikloan_converter import convert_quikloan_from_ploan, load_derivation_rules
+from qla_core.reinsurance_converter import convert_reinsurance_phase1, load_derivation_rules as load_reinsurance_derivation_rules
 from qla_core.quikmemo_converter import convert_quikmemo_from_pnote_pense
 from qla_core.quikmemo_dbf_generator import write_quikmemo_dbf
 from qla_core.modal_premium_factors import (
@@ -92,7 +94,7 @@ from qla_core.mplan_authority import (
     write_p3e_governance_outputs,
     write_p3f_governance_outputs,
 )
-from qla_core.lifepro_source_resolver import resolve_table_source, expected_legacy_filename, resolve_quikmemo_sources
+from qla_core.lifepro_source_resolver import resolve_table_source, expected_legacy_filename, resolve_quikmemo_sources, resolve_reinsurance_sources
 from qla_core.sl_benefit_governance import (
     SL_BENEFIT_TYPE,
     build_sl_suppression_audit_rows,
@@ -291,6 +293,8 @@ class QLAdminEnterpriseIntegrationSuite:
             "quikprmh": ["MPOLICY", "DATEPAID", "RENEWAL", "PREMIUM", "MLIFE", "MTERM", "MSUPP", "MANN", "MHEALTH", "XS", "MPAIDTO", "POSTDATE", "MPOSTDATE", "MSOURCE", "MBATCH", "USER_ID", "MBILLFRM", "MMODEPD"],
             "quikactg": QUIKACTG_SCHEMA,
             "quikloan": QUIKLOAN_SCHEMA,
+            "quikrein": QUIKREIN_SCHEMA,
+            "quikrmst": QUIKRMST_SCHEMA,
             "quikagts": ["MAGENT", "MAGTNAME", "MAGTADDR1", "MAGTADDR2", "MAGTCITY", "MAGTST", "MAGTZIP", "MAGTZIP2", "MAGTSSN", "MAGTFEIN", "MCOMP", "MAGENCY", "MAGCYNAME", "MDATE", "MAGTACCT", "MAGTPHONE", "MAGTFAX", "MAGTCELL", "MAGTOFCE", "MAGTEMAIL", "MEMOTEXT", "MSUPPRESS", "MCOMMGRP", "MOTHNAME", "MPREMACCT", "MSTATUS", "MAGTNPN", "MTAXIDTYPE"],
             "quikmemo": ["MEMOKEY", "MEMOTEXT"],
             "quikclms": QUIKCLMS_SCHEMA,
@@ -4800,7 +4804,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log("Initializing Migration Engine v57.43 (LifePRO → QLAdmin Conversion Platform)...")
+            self.log("Initializing Migration Engine v57.50 (LifePRO → QLAdmin Conversion Platform)...")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -4809,6 +4813,7 @@ class QLAdminEnterpriseIntegrationSuite:
             batch_claims_flag = self._batch_include_claims_uat_enabled()
             quikisrr_flag = self._batch_include_quikisrr_enabled()
             quikloan_flag = os.environ.get("QLA_ENABLE_QUIKLOAN_EMIT", "").strip() == "1"
+            reinsurance_flag = os.environ.get("QLA_ENABLE_REINSURANCE_EMIT", "").strip() == "1"
             rate_batch_flag = os.environ.get("QLA_BATCH_INCLUDE_RATE_TABLES", "").strip().lower() in ("1", "true", "yes")
             uat_dbf_flag = self._claims_uat_dbf_generation_enabled()
             mpolicy_flag = self._claims_mpolicy_validation_enabled()
@@ -4818,6 +4823,7 @@ class QLAdminEnterpriseIntegrationSuite:
                 f"batch_include_claims_uat={'Y' if batch_claims_flag else 'N'} | "
                 f"quikisrr_emit={'Y' if quikisrr_flag else 'N'} | "
                 f"quikloan_emit={'Y' if quikloan_flag else 'N'} | "
+                f"reinsurance_emit={'Y' if reinsurance_flag else 'N'} | "
                 f"rate_tables_batch={'Y' if rate_batch_flag else 'N'} | "
                 f"generate_uat_claims_dbf={'Y' if uat_dbf_flag else 'N'} | "
                 f"validate_claims_mpolicy={'Y' if mpolicy_flag else 'N'}"
@@ -4924,6 +4930,8 @@ class QLAdminEnterpriseIntegrationSuite:
                 if self._product_setup_isolated():
                     self.log("  PRODUCT SETUP ISOLATED: quikplan will be SKIPPED in batch (QLA_PRODUCT_SETUP_ISOLATED=1)")
                 self.log("=" * 60)
+
+            self._reinsurance_batch_done = False
 
             for t_id in tables:
                 if not t_id: 
@@ -5172,6 +5180,80 @@ class QLAdminEnterpriseIntegrationSuite:
                         out_path = os.path.normpath(os.path.join(out_dir, "quikloan.csv"))
                         passed_df.to_csv(out_path, index=False)
                         self.log(f"GATED OUTPUT: {out_path} ({len(passed_df)} rows)")
+                    continue
+                if t_id.lower() in ("quikrein", "quikrmst"):
+                    if getattr(self, "_reinsurance_batch_done", False):
+                        continue
+                    if os.environ.get("QLA_ENABLE_REINSURANCE_EMIT", "").strip() != "1":
+                        self.log(
+                            "Skipping REINSURANCE — set QLA_ENABLE_REINSURANCE_EMIT=1 "
+                            "(or run plan_analysis/phase_r9_quikrein_rmst/reinsurance_runner.py)."
+                        )
+                        continue
+                    ptrty_path, ptrty_label, prein_path, prein_label, preintrt_path, preintrt_label = resolve_reinsurance_sources(src_base)
+                    missing = []
+                    if not ptrty_path:
+                        missing.append("PROD_PTRTY")
+                    if not prein_path:
+                        missing.append("PREIN")
+                    if not preintrt_path:
+                        missing.append("PREINTRT")
+                    if missing:
+                        self.log(f"Skipping REINSURANCE -> Missing sources: {', '.join(missing)} in {src_base}")
+                        continue
+                    self.log("Working Table: REINSURANCE Phase 1 (QuikRein + QuikRmst)")
+                    self.log(f"  PROD_PTRTY: {ptrty_path} ({ptrty_label})")
+                    self.log(f"  PREIN: {prein_path} ({prein_label})")
+                    self.log(f"  PREINTRT: {preintrt_path} ({preintrt_label})")
+                    phase_r9_dir = os.path.normpath(
+                        os.path.join(self._repo_root(), "plan_analysis", "phase_r9_quikrein_rmst")
+                    )
+                    out_dir = self.path_vars["Out"][0].get()
+                    qm_path = os.path.normpath(os.path.join(out_dir, "quikmstr.csv"))
+                    if not os.path.isfile(qm_path):
+                        qm_path = ""
+                    qr_path = os.path.normpath(os.path.join(out_dir, "quikridr.csv"))
+                    if not os.path.isfile(qr_path):
+                        qr_path = ""
+                    rules = load_reinsurance_derivation_rules()
+                    rein_df, rmst_df, trace_df, rein_exc, rmst_exc, r_stats = convert_reinsurance_phase1(
+                        ptrty_path,
+                        prein_path,
+                        preintrt_path,
+                        cw_map=cw_map,
+                        rules=rules,
+                        output_dir=phase_r9_dir,
+                        quikmstr_path=qm_path or None,
+                        quikridr_path=qr_path or None,
+                    )
+                    self._reinsurance_batch_done = True
+                    self.log(
+                        f"REINSURANCE Phase 1: quikrein={r_stats.get('quikrein_emitted', 0)} rows, "
+                        f"quikrmst={r_stats.get('quikrmst_emitted', 0)} rows; "
+                        f"exceptions rein={r_stats.get('quikrein_exceptions', 0)} "
+                        f"rmst={r_stats.get('quikrmst_exceptions', 0)}; "
+                        f"ceded_recon={'PASS' if r_stats.get('ceded_reconciliation_ok') else 'FAIL'}; "
+                        f"reports -> {phase_r9_dir}"
+                    )
+                    if os.environ.get("QLA_REINSURANCE_WRITE_OUTPUT", "").strip() == "1":
+                        rein_out = os.path.normpath(os.path.join(out_dir, "quikrein.csv"))
+                        rmst_out = os.path.normpath(os.path.join(out_dir, "quikrmst.csv"))
+                        rein_df.to_csv(rein_out, index=False)
+                        rmst_df.to_csv(rmst_out, index=False)
+                        self.log(f"GATED OUTPUT: {rein_out} ({len(rein_df)} rows), {rmst_out} ({len(rmst_df)} rows)")
+                    audit_path = os.path.normpath(os.path.join(out_dir, "Migration_Audit_Log.txt"))
+                    is_new_log = not os.path.exists(audit_path)
+                    audit_msg = (
+                        f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TABLE: REINSURANCE | "
+                        f"QUIKREIN: {len(rein_df):<6} | QUIKRMST: {len(rmst_df):<6} | "
+                        f"PREINTRT IN: {r_stats.get('preintrt_rows', 0):<6} | "
+                        f"EXCEPTIONS: {r_stats.get('quikrmst_exceptions', 0)}\n"
+                    )
+                    with open(audit_path, "a") as f:
+                        if is_new_log:
+                            f.write("=== QLADMIN ENTERPRISE MIGRATION AUDIT LOG ===\n")
+                            f.write("Tracks 1:1 record translation matching to guarantee zero data loss.\n\n")
+                        f.write(audit_msg)
                     continue
                 if t_id.lower() == "quikmemo":
                     pnote_path, pnote_label, pense_path, pense_label = resolve_quikmemo_sources(src_base)

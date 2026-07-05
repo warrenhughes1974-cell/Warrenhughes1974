@@ -282,6 +282,70 @@ DONE
 
 ---
 
+## Reinsurance Phase 1 (QuikRein + QuikRmst) — optional
+
+**Purpose:** Convert stored LifePRO treaty setup and policy reinsurance master rows only. No billing, history, valuation, or PRADJ in Phase 1.
+
+**Included outputs (when write flag is set):**
+
+- `QLA_Migration\Output\quikrein.csv`
+- `QLA_Migration\Output\quikrmst.csv`
+
+**Not in Phase 1 scope:** `QuikRcoa`, `QuikRbll`, `QuikRblh`, `QuikRpln`, `QuikRval`, `QuikReft`, and PRADJ-based billing/history.
+
+**LifePRO sources** (drop into `QLA_Migration\Source\`):
+
+- `PROD_PTRTY_TreatySetup_Extract*.csv`
+- `PREIN_ReinsuranceDetail_Extract*.csv`
+- `PREINTRT_ReinsuranceDetailTreaty_Extract*.csv`
+
+**Prerequisites:** Converted `quikmstr.csv` and `quikridr.csv` must already exist in Output (run Step 2 batch first).
+
+**Reinsurer crosswalk:** `plan_governance\config\reinsurer_crosswalk.csv` — Phase 1 uses **approved placeholders** (`Manual Placeholder` / `User Provided`), not LifePRO source-proven legal reinsurer names. Audit trace flags every row.
+
+### QA only (no Output write)
+
+Reports go to `plan_analysis\phase_r9_quikrein_rmst\` (never leave audit CSVs in Output).
+
+```powershell
+cd C:\Users\warren\Documents\GitHub\Warrenhughes1974
+python plan_analysis/phase_r9_quikrein_rmst/reinsurance_runner.py
+python tools/validators/validate_reinsurance_phase1.py
+```
+
+### QA + write Output CSVs
+
+```powershell
+cd C:\Users\warren\Documents\GitHub\Warrenhughes1974
+$env:QLA_REINSURANCE_WRITE_OUTPUT = "1"
+python plan_analysis/phase_r9_quikrein_rmst/reinsurance_runner.py
+```
+
+### Full batch (root `app.py` or `QLA_Migration\app.py`)
+
+Reinsurance is **off by default**. Enable only when extracts and converted policy/rider files are ready:
+
+| Environment variable | Value | Effect |
+|---------------------|-------|--------|
+| `QLA_ENABLE_REINSURANCE_EMIT=1` | `1` | Run Phase 1 converter during batch (QuikRein + QuikRmst) |
+| `QLA_REINSURANCE_WRITE_OUTPUT=1` | `1` | Also write `quikrein.csv` and `quikrmst.csv` to Output |
+
+Example (PowerShell, before launching the app or `run_converter.bat`):
+
+```powershell
+$env:QLA_ENABLE_REINSURANCE_EMIT = "1"
+$env:QLA_REINSURANCE_WRITE_OUTPUT = "1"
+python app.py
+```
+
+**Stored-value rule:** Retained, ceded, and treaty allocation amounts come from LifePRO as stored — nothing is recalculated.
+
+**Row counts (May 2026 extract):** 3,545 raw `PREINTRT` rows collapse to **733** canonical `QuikRmst` rows (2,812 historical rows superseded and audited). Ceded reconciliation: **$4,101,000.00** source = emit.
+
+Implementation notes: `Issue_Log_Items\Issue_Reinsurance_Phase1\Issue_Reinsurance_Phase1_Implementation_Notes.md`
+
+---
+
 ## Optional: environment flags (advanced)
 
 Most operators don’t need these. They’re for claims UAT and special modes:
@@ -289,9 +353,11 @@ Most operators don’t need these. They’re for claims UAT and special modes:
 - `QLA_BATCH_INCLUDE_CLAIMS_UAT=1` — include claims in batch (UAT mode)
 - `QLA_BATCH_INCLUDE_RATE_TABLES=1` — same as “Include in full batch migration” checkbox
 - `QLA_PRODUCT_SETUP_ISOLATED=1` — same as “Isolate from batch” checkbox
+- `QLA_ENABLE_REINSURANCE_EMIT=1` — run Phase 1 QuikRein/QuikRmst in batch (off by default)
+- `QLA_REINSURANCE_WRITE_OUTPUT=1` — write `quikrein.csv` + `quikrmst.csv` to Output (requires emit flag)
 
 The checkboxes in the UI are usually enough.
 
 ---
 
-*Document version: v57.8 — LifePRO → QLAdmin Enterprise Data Integration Suite*
+*Document version: v57.50 — LifePRO → QLAdmin Enterprise Data Integration Suite*
