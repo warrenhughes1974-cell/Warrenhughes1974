@@ -19,14 +19,14 @@ from pathlib import Path
 
 import pandas as pd
 
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "1.1"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 DEFAULT_SOURCE = PROJECT_ROOT / "QLA_Migration" / "Source"
 DEFAULT_CROSSWALK = PROJECT_ROOT / "QLA_Migration" / "Mapping" / "Master_Crosswalk.csv"
 DEFAULT_POPULATION = PROJECT_ROOT / "Issue_Log_Items" / "Issue_30" / "Issue_30_Missing_Name_Policies.csv"
 
-RNA_FILE = "RelationshipNameAddress_Extract_20260530.csv"
+RNA_GLOB = "RelationshipNameAddress_Extract*.csv"
 ROLE_TO_MSTR = {
     "IN": "MPRIMID",
     "INSD": "MPRIMID",
@@ -54,6 +54,37 @@ def _read_csv(path: Path) -> pd.DataFrame:
     df = pd.read_csv(path, dtype=str, encoding="latin1", on_bad_lines="skip").fillna("")
     df.columns = [str(c).strip().upper() for c in df.columns]
     return df
+
+
+def _resolve_rna_path(source_dir: Path) -> Path:
+    matches = [
+        path for path in source_dir.glob(RNA_GLOB)
+        if not any(marker in path.name.lower() for marker in ("copy", "old", "backup", "archive"))
+    ]
+    if not matches:
+        raise FileNotFoundError(f"Missing RNA source matching {RNA_GLOB} in {source_dir}")
+    return max(matches, key=lambda path: path.stat().st_mtime)
+
+
+def _iter_rna_rows(path: Path):
+    with path.open("r", newline="", encoding="latin1", errors="replace") as handle:
+        reader = csv.reader(handle)
+        header = next(reader)
+        columns = []
+        seen: dict[str, int] = {}
+        for col in header:
+            base = str(col).replace("\ufeff", "").strip().upper() or "UNNAMED"
+            count = seen.get(base, 0) + 1
+            seen[base] = count
+            columns.append(base if count == 1 else f"{base}_{count}")
+
+        width = len(columns)
+        for row in reader:
+            if len(row) > width:
+                row = row[:width]
+            elif len(row) < width:
+                row = row + [""] * (width - len(row))
+            yield dict(zip(columns, row))
 
 
 def _load_crosswalk(path: Path) -> tuple[dict[str, str], dict[str, str]]:
@@ -86,9 +117,7 @@ def _load_issue_population(path: Path) -> list[str]:
 
 
 def _load_expected_roles(source_dir: Path, policies: list[str], new_to_old: dict[str, str], old_to_new: dict[str, str]):
-    rna_path = source_dir / RNA_FILE
-    if not rna_path.is_file():
-        raise FileNotFoundError(f"Missing RNA source: {rna_path}")
+    rna_path = _resolve_rna_path(source_dir)
 
     key_to_policy: dict[str, str] = {}
     for policy in policies:
@@ -97,30 +126,25 @@ def _load_expected_roles(source_dir: Path, policies: list[str], new_to_old: dict
             key_to_policy[key] = policy
 
     expected: dict[str, list[dict[str, str]]] = defaultdict(list)
-    with rna_path.open("r", newline="", encoding="utf-8-sig", errors="replace") as handle:
-        reader = csv.DictReader(handle)
-        if reader.fieldnames:
-            reader.fieldnames = [str(h).strip().upper() for h in reader.fieldnames]
-        for row in reader:
-            row = {str(k).strip().upper(): v for k, v in row.items()}
-            policy_key = _norm(row.get("POLICY_NUMBER"))
-            alpha_key = _norm(row.get("IDENTIFYING_ALPHA"))
-            policy = key_to_policy.get(policy_key) or key_to_policy.get(alpha_key)
-            if not policy:
-                continue
-            role = _norm(row.get("RELATE_CODE"))
-            name_id = _norm(row.get("NAME_ID"))
-            if role not in ROLE_TO_MSTR or not name_id:
-                continue
-            expected[policy].append({
-                "policy": policy,
-                "old_policy": new_to_old.get(policy, ""),
-                "role": role,
-                "name_id": name_id,
-                "phase": _norm(row.get("BENEFIT_SEQ_NUMBER")) or "1",
-                "first": str(row.get("INDIVIDUAL_FIRST", "")).strip(),
-                "last": str(row.get("INDIVIDUAL_LAST", "")).strip(),
-            })
+    for row in _iter_rna_rows(rna_path):
+        policy_key = _norm(row.get("POLICY_NUMBER"))
+        alpha_key = _norm(row.get("IDENTIFYING_ALPHA"))
+        policy = key_to_policy.get(policy_key) or key_to_policy.get(alpha_key)
+        if not policy:
+            continue
+        role = _norm(row.get("RELATE_CODE"))
+        name_id = _norm(row.get("NAME_ID"))
+        if role not in ROLE_TO_MSTR or not name_id:
+            continue
+        expected[policy].append({
+            "policy": policy,
+            "old_policy": new_to_old.get(policy, ""),
+            "role": role,
+            "name_id": name_id,
+            "phase": _norm(row.get("BENEFIT_SEQ_NUMBER")) or "1",
+            "first": str(row.get("INDIVIDUAL_FIRST", "")).strip(),
+            "last": str(row.get("INDIVIDUAL_LAST", "")).strip(),
+        })
 
     # Match converter behavior: exact source duplicates should validate once.
     deduped: dict[str, list[dict[str, str]]] = defaultdict(list)

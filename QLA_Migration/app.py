@@ -1,9 +1,10 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.52
+# Version:     v57.53
 # Date:        2026-07-05
-# Change Note: v57.52 — UI version display synced to engine; UAT launcher enables reinsurance Phase 1 emit.
+# Change Note: v57.53 — RNA reader preserves over-wide LifePRO rows so IN/PO/PA relationships are not skipped.
+#              v57.52 — UI version display synced to engine; UAT launcher enables reinsurance Phase 1 emit.
 #              v57.51 — Issue #30: RNA relationship MPOLICY fallback from IDENTIFYING_ALPHA; exact quikclid dedupe.
 #              v57.50 — Phase 1 Reinsurance: canonical PREINTRT selection; report path via repo root; startup log aligned.
 #              v57.49 — Phase 1 Reinsurance: QuikRein/QuikRmst from stored PROD_PTRTY/PREIN/PREINTRT
@@ -262,7 +263,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.52"
+APP_VERSION = "v57.53"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -962,6 +963,42 @@ class QLAdminEnterpriseIntegrationSuite:
             seen.add(key)
             deduped.append(row)
         return deduped, {"dedupe_removed": removed}
+
+    def _read_lifepro_rna_csv(self, path):
+        """Read LifePRO RNA extracts without dropping over-wide relationship rows."""
+        with open(path, newline="", encoding="latin1") as f:
+            reader = csv.reader(f)
+            raw_header = next(reader)
+            header = []
+            seen = {}
+            for col in raw_header:
+                base = str(col).replace("\ufeff", "").strip().upper()
+                if not base:
+                    base = "UNNAMED"
+                count = seen.get(base, 0) + 1
+                seen[base] = count
+                header.append(base if count == 1 else f"{base}_{count}")
+
+            width = len(header)
+            rows = []
+            overwide = 0
+            short = 0
+            for row in reader:
+                if len(row) > width:
+                    overwide += 1
+                    row = row[:width]
+                elif len(row) < width:
+                    short += 1
+                    row = row + [""] * (width - len(row))
+                rows.append(row)
+
+        df = pd.DataFrame(rows, columns=header).fillna("")
+        if overwide or short:
+            self.log(
+                f"RNA CSV reader: preserved {len(rows)} row(s); "
+                f"truncated {overwide} over-wide row(s), padded {short} short row(s)"
+            )
+        return df
 
     def _is_preconverted_qla_client_source(self, source_df):
         cols = {str(c).strip().upper() for c in source_df.columns}
@@ -5394,6 +5431,11 @@ class QLAdminEnterpriseIntegrationSuite:
                 if t_id.lower() == "quikplan":
                     source, _ = load_quikplan_source_csv(src_path, collect_trace=False)
                     source.columns = [str(col).replace('\ufeff', '').strip().upper() for col in source.columns]
+                elif (
+                    t_id.lower() in ("quikclnt", "quikclid", "quikbenf")
+                    and "relationshipnameaddress" in os.path.basename(src_path).lower()
+                ):
+                    source = self._read_lifepro_rna_csv(src_path)
                 else:
                     source = pd.read_csv(src_path, encoding='latin1', low_memory=False, dtype=str, on_bad_lines='skip').fillna("")
                     source.columns = [str(col).replace('\ufeff', '').strip().upper() for col in source.columns]
