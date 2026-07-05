@@ -1,9 +1,10 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.50
+# Version:     v57.51
 # Date:        2026-07-05
-# Change Note: v57.50 — Phase 1 Reinsurance: gated QuikRein/QuikRmst batch hook (root app parity with QLA_Migration).
+# Change Note: v57.51 — Issue #30: RNA relationship MPOLICY fallback from IDENTIFYING_ALPHA; exact quikclid dedupe.
+#              v57.50 — Phase 1 Reinsurance: gated QuikRein/QuikRmst batch hook (root app parity with QLA_Migration).
 #              v57.48 — Issue #13: quikmstr.MSTATUS termination precedence when CONTRACT_CODE=T
 #              (CONTRACT_REASON wins; PAID_UP_TYPE ignored for terminated contracts).
 #              v57.47 — Issue #21A: PPBENTYP BF_NON_FORFEITURE cache for TYPE_CODE=BF;
@@ -775,6 +776,13 @@ class QLAdminEnterpriseIntegrationSuite:
             self.log(f"  Source resolved ({label})")
         return path
 
+    def _resolve_rna_source_path(self, src_dir):
+        """Resolve the active RelationshipNameAddress source, including dated extracts."""
+        path, label = resolve_table_source(src_dir, "quikclnt")
+        if path and label:
+            self.log(f"  RNA source resolved ({label})")
+        return path
+
     def _build_client_name_lookup(self, rel_name_cache=None, quikclnt_path=None):
         """Build NAME_ID -> name hints for rel_map duplicate-role resolution."""
         lookup = {}
@@ -931,6 +939,25 @@ class QLAdminEnterpriseIntegrationSuite:
             "dedupe_removed": dedupe_removed,
             "groups_recalculated": groups_recalculated,
         }
+
+    def _apply_quikclid_exact_dedupe(self, output, schema):
+        """Remove exact duplicate client-policy relationship rows."""
+        col_index = {h: i for i, h in enumerate(schema)}
+        required = ("MCLIENTID", "MPOLICY", "MPHASE", "MRELATION")
+        if any(col_index.get(h) is None for h in required):
+            return output, {"dedupe_removed": 0}
+
+        seen = set()
+        deduped = []
+        removed = 0
+        for row in output:
+            key = tuple(self.normalize(row[col_index[h]]) for h in required)
+            if key in seen:
+                removed += 1
+                continue
+            seen.add(key)
+            deduped.append(row)
+        return deduped, {"dedupe_removed": removed}
 
     def _is_preconverted_qla_client_source(self, source_df):
         cols = {str(c).strip().upper() for c in source_df.columns}
@@ -4420,6 +4447,22 @@ class QLAdminEnterpriseIntegrationSuite:
     def _format_qladmin_mpolicy(self, val):
         return format_qladmin_mpolicy(val)
 
+    def _derive_rna_policy_from_identifying_alpha(self, src_row, cw_map):
+        """Derive LifePRO policy from RNA IDENTIFYING_ALPHA when POLICY_NUMBER is blank."""
+        raw = self.normalize(src_row.get("IDENTIFYING_ALPHA", ""))
+        if not raw:
+            return ""
+
+        candidates = []
+        if raw.startswith("03") and len(raw) > 2:
+            candidates.append(raw[2:])
+        candidates.append(raw)
+
+        for candidate in candidates:
+            if candidate in cw_map:
+                return candidate
+        return ""
+
     def extract_day(self, date_str):
         d = re.sub(r'[^0-9/]', '', str(date_str))
         if len(d) == 8: return d[-2:]
@@ -4872,7 +4915,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self._diag_name_count = 0
             try:
                 src_input_dir = os.path.dirname(self.path_vars["Src"][0].get()) if self.path_vars["Src"][0].get() else ""
-                rel_ext_path = os.path.join(src_input_dir, 'RelationshipNameAddress_Extract.csv') if src_input_dir else 'RelationshipNameAddress_Extract.csv'
+                rel_ext_path = self._resolve_rna_source_path(src_input_dir) if src_input_dir else "RelationshipNameAddress_Extract.csv"
                 
                 self.log(f"DEBUG: Attempting to load RelationshipNameAddress from: {rel_ext_path}")
                 
@@ -5352,7 +5395,7 @@ class QLAdminEnterpriseIntegrationSuite:
                     source.columns = [str(col).replace('\ufeff', '').strip().upper() for col in source.columns]
 
                 if is_batch and t_id.lower() == "quikclnt" and self._is_preconverted_qla_client_source(source):
-                    rna_path = os.path.normpath(os.path.join(src_base, "RelationshipNameAddress_Extract.csv"))
+                    rna_path = self._resolve_rna_source_path(src_base)
                     if os.path.isfile(rna_path):
                         self.log("WARNING: Source\\quikclnt.csv is pre-converted QLA output — not raw LifePRO.")
                         self.log(f"  Switching quikclnt input to: {rna_path}")
@@ -6128,6 +6171,9 @@ class QLAdminEnterpriseIntegrationSuite:
                                     val = "0"
                                 # -------------------------------------------------
                                 
+                                if t_id.lower() == "quikclid" and t_f == "MPOLICY" and not self.normalize(val):
+                                    val = self._derive_rna_policy_from_identifying_alpha(src_row, cw_map)
+
                                 if t_f in ["MPOLICY", "MCLIENTID", "MPRIMID", "MOWNRID", "MPAYRID", "MASGNID", "MBENPID", "MBENCID", "MCID", "MOWNCID", "MRIDRID", "MPLAN", "PLAN"]:
                                     if (
                                         t_id.lower() == "quikridr"
@@ -6392,6 +6438,11 @@ class QLAdminEnterpriseIntegrationSuite:
                             f"QUIKBENF Issue 21I: deduped {benf_stats['dedupe_removed']} row(s), "
                             f"recalculated MSPLIT for {benf_stats['groups_recalculated']} "
                             f"(MPOLICY, MTYPE) group(s)"
+                        )
+                    if t_id.lower() == "quikclid" and output:
+                        output, clid_stats = self._apply_quikclid_exact_dedupe(output, schema)
+                        self.log(
+                            f"QUIKCLID Issue 30: deduped {clid_stats['dedupe_removed']} exact relationship row(s)"
                         )
 
                 out_dir = self.path_vars["Out"][0].get()
