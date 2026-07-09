@@ -13,6 +13,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from qla_core.cso_mortality_crosswalk import ISWL_MPLAN_ALLOWLIST
+from qla_core.lifepro_source_resolver import resolve_table_source
 
 HOLD_POLICIES = frozenset({"9010780411"})
 ORIGSTATUS_FIXED = "22"
@@ -412,6 +413,31 @@ def build_rows_for_event(ev: PartialSurrenderEvent, payee: PayeeInfo) -> tuple[d
     return clms, clmp, benh, isrr
 
 
+def resolve_pactg_accounting_extract(repo_root: Path) -> Path:
+    """
+    Resolve any dated PACTG_Accounting_Extract*.csv under QLA_Migration/Source.
+
+    Prefers the newest LifePRO extract match (e.g. ...20260630.csv) via
+    lifepro_source_resolver; does not hardcode a single extract date.
+    """
+    root = Path(repo_root)
+    src_dir = root / "QLA_Migration" / "Source"
+    path, _label = resolve_table_source(str(src_dir), "quikprmh")
+    if path:
+        return Path(path)
+    # Fallback: any PACTG*Accounting*Extract*.csv by mtime
+    matches = sorted(
+        src_dir.glob("PACTG*Accounting*Extract*.csv"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    if matches:
+        return matches[0]
+    raise FileNotFoundError(
+        f"No PACTG_Accounting_Extract*.csv found under {src_dir}"
+    )
+
+
 def build_emit(
     repo_root: Path,
     *,
@@ -421,7 +447,7 @@ def build_emit(
     existing_clms_path: Path | None = None,
 ) -> EmitResult:
     root = Path(repo_root)
-    pactg = pactg_path or root / "QLA_Migration" / "Source" / "PACTG_Accounting_Extract20260530.csv"
+    pactg = Path(pactg_path) if pactg_path else resolve_pactg_accounting_extract(root)
     clid = clid_path or root / "QLA_Migration" / "Output" / "quikclid.csv"
     clnt = clnt_path or root / "QLA_Migration" / "Output" / "quikclnt.csv"
     clms_existing = existing_clms_path or root / "QLA_Migration" / "Output" / "quikclms.csv"

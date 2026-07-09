@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.63
+# Version:     v57.64
 # Date:        2026-07-09
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v57.63 — Issue #21 open decisions locked: 21E UL FV_BALANCE2→MCV0 on phase-1;
+# Change Note: v57.64 — Resolve PACTG_Accounting_Extract*.csv by pattern/date (QuikIsrr + claims);
+#              stop hardcoding 20260427/20260530 extract filenames.
+#              v57.63 — Issue #21 open decisions locked: 21E UL FV_BALANCE2→MCV0 on phase-1;
 #              21G staged premium/basis report; 21D/21F/21I documented (no further code).
 #              v57.62 — Issue #36: copy quikplan SEMI/QTRL/MTHD/MTHB → quikmstr MSEMI/MQTRL/MMTHD/MMTHB
 #              (Names-tab Modal Premiums); PAC GL85 Q/S overrides still applied after plan copy.
@@ -297,7 +299,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.63"
+APP_VERSION = "v57.64"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -1120,14 +1122,20 @@ class QLAdminEnterpriseIntegrationSuite:
         env_path = os.environ.get("QLA_CLAIMS_PACTG_PATH", "").strip()
         if env_path and os.path.isfile(env_path):
             return os.path.normpath(env_path)
-        candidates = [
-            os.path.join(self._migration_source_dir(), "PACTG_Accounting_Extract20260427.csv"),
-            os.path.join(self._app_base_dir(), "docs", "claims_conversion_reference", "PACTG_Accounting_Extract20260427.csv"),
-        ]
-        for path in candidates:
-            if os.path.isfile(path):
-                return os.path.normpath(path)
-        return os.path.normpath(candidates[-1])
+        # Prefer any dated PACTG_Accounting_Extract*.csv in Source (newest wins).
+        src_dir = self._migration_source_dir()
+        path, _label = resolve_table_source(src_dir, "quikprmh")
+        if path and os.path.isfile(path):
+            return os.path.normpath(path)
+        docs_fallback = os.path.join(
+            self._app_base_dir(),
+            "docs",
+            "claims_conversion_reference",
+            "PACTG_Accounting_Extract20260427.csv",
+        )
+        if os.path.isfile(docs_fallback):
+            return os.path.normpath(docs_fallback)
+        return os.path.normpath(os.path.join(src_dir, "PACTG_Accounting_Extract.csv"))
 
     def _claims_lineage_refresh_enabled(self):
         flag = os.environ.get("QLA_REFRESH_CLAIMS_LINEAGE", "").strip().lower() in ("1", "true", "yes")
