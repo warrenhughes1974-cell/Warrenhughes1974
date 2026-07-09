@@ -21,7 +21,7 @@ ANN_PREM_PER_UNIT,MPREM,,Issue 26: annual premium per unit; engine fallback to M
 ,MMTHBFEE,,
 ,MRRULE,,
 ,MCOMMID,,
-,MCV0,,
+,MCV0,,Issue 21E: UL only — engine loads PPBEN.FV_BALANCE2 on phase-1; traditional left blank (QuikCvs compute)
 ,MCV1,,
 ,MCV2,,
 ,MSAVEAGE,,

@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.62
+# Version:     v57.63
 # Date:        2026-07-09
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.62 — Issue #36: copy quikplan SEMI/QTRL/MTHD/MTHB → quikmstr MSEMI/MQTRL/MMTHD/MMTHB
+# Change Note: v57.63 — Issue #21 open decisions locked: 21E UL FV_BALANCE2→MCV0 on phase-1;
+#              21G staged premium/basis report; 21D/21F/21I documented (no further code).
+#              v57.62 — Issue #36: copy quikplan SEMI/QTRL/MTHD/MTHB → quikmstr MSEMI/MQTRL/MMTHD/MMTHB
 #              (Names-tab Modal Premiums); PAC GL85 Q/S overrides still applied after plan copy.
 #              v57.61 — Issue #45: bank-draft (MBILLFRM=2) missing PPACH account → blank MBANKNO +
 #              Reports/bank_draft_account_exceptions.csv; #21H ABA path unchanged for valid accounts.
@@ -105,6 +107,14 @@ from qla_core.modal_premium_factors import (
     apply_plan_modal_factors_to_quikmstr,
     apply_pac_gl85_modal_overrides,
     append_issue21j_conversion_memos,
+)
+from qla_core.issue21_open_item_decisions import (
+    apply_ul_fund_balance_to_quikridr_row,
+    build_premium_basis_totals,
+    build_ul_fund_balance_cache,
+    resolve_ppben_path,
+    resolve_ppbentyp_extract_path,
+    write_premium_basis_report,
 )
 from qla_core.crosswalk_enrichment import resolve_crosswalk_overlay_config
 from qla_core.product_catalog_authority import (
@@ -286,7 +296,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.62"
+APP_VERSION = "v57.63"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -5893,6 +5903,22 @@ class QLAdminEnterpriseIntegrationSuite:
                     if self._closed_mplan_authority_enabled() and mplan_resolver is None:
                         out_dir_preview = self.path_vars["Out"][0].get()
                         mplan_resolver, quikplan_plan_set, _ = self._init_mplan_authority(out_dir_preview, cw_path)
+                    # Issue #21E: build UL fund-balance cache BEFORE FV rows are filtered out.
+                    ul_fund_balance_cache = {}
+                    ul_fund_mcv0_count = 0
+                    try:
+                        _ppben_for_fv = resolve_ppben_path(os.path.dirname(src_path)) or src_path
+                        ul_fund_balance_cache = build_ul_fund_balance_cache(
+                            _ppben_for_fv, normalize_fn=self.normalize
+                        )
+                        if ul_fund_balance_cache:
+                            self.log(
+                                f"Issue #21E: UL fund-balance cache loaded "
+                                f"({len(ul_fund_balance_cache)} policies from FV_BALANCE2)"
+                            )
+                    except Exception as e:
+                        self.log(f"Warning: Issue #21E UL fund-balance cache failed - {e}")
+                        ul_fund_balance_cache = {}
                     if 'BENEFIT_TYPE' in source.columns:
                         _qr_bt = source['BENEFIT_TYPE'].astype(str).str.strip().str.upper()
                         _qr_uv_removed = int((_qr_bt == 'UV').sum())
@@ -6051,6 +6077,10 @@ class QLAdminEnterpriseIntegrationSuite:
                 else:
                     output = []
                     bank_draft_exceptions = [] if t_id.lower() == "quikmstr" else None
+                    # Safe defaults when table is not quikridr (Issue #21E vars set in quikridr branch).
+                    if t_id.lower() != "quikridr":
+                        ul_fund_balance_cache = {}
+                        ul_fund_mcv0_count = 0
                     base_phase_cache = {} if t_id.lower() == "quikridr" else None
                     pua_pending_rows = [] if t_id.lower() == "quikridr" else None
                     quikridr_valuation_date = datetime.now().date() if t_id.lower() == "quikridr" else None
@@ -6471,6 +6501,16 @@ class QLAdminEnterpriseIntegrationSuite:
                             if qm_status and qm_status not in ["", "11", "22", "ACTIVE"]:
                                 row_data['MPHSTAT'] = qm_status
                         # --------------------------------------------
+
+                        # --- Issue #21E: UL fund balance -> MCV0 (phase-1 only) ---
+                        # Cache is keyed by LifePRO POLICY_NUMBER (not crosswalked MPOLICY).
+                        if t_id.lower() == "quikridr" and ul_fund_balance_cache:
+                            _lp_pol = self.normalize(src_row.get("POLICY_NUMBER", ""))
+                            if apply_ul_fund_balance_to_quikridr_row(
+                                row_data, _lp_pol, tphase, ul_fund_balance_cache
+                            ):
+                                ul_fund_mcv0_count += 1
+                        # --------------------------------------------------------
     
                         # --- QUIKDVDP ENRICHMENT (Issue #38) ---
                         # MDEPOSIT: preserve rulebook PPBENTYP ACCUM_DIVIDENDS — never zero on cache miss.
@@ -6589,6 +6629,11 @@ class QLAdminEnterpriseIntegrationSuite:
                             output.append([pua_row[h] for h in schema])
                     if t_id.lower() == "quikridr" and quikridr_mphdob_fix_count:
                         self.log(f"QUIKRIDR MPHDOB: corrected {quikridr_mphdob_fix_count} invalid DOB row(s)")
+                    if t_id.lower() == "quikridr" and ul_fund_mcv0_count:
+                        self.log(
+                            f"Issue #21E: populated MCV0 from FV_BALANCE2 on "
+                            f"{ul_fund_mcv0_count} phase-1 UL/fund-value row(s)"
+                        )
                     if t_id.lower() == "quikbenf" and output:
                         output, benf_stats = self._apply_quikbenf_dedupe_and_equal_split(output, schema)
                         self.log(
@@ -6694,6 +6739,31 @@ class QLAdminEnterpriseIntegrationSuite:
                             fresh_rel, trans_map, log_label="batch relational map", name_lookup=name_lookup,
                         )
                         self.path_vars["Rel"][0].set(fresh_rel)
+
+            # --- Issue #21G: stage premium/basis totals (informational until QLAdmin target named) ---
+            if is_batch:
+                try:
+                    src_dir = self._resolve_source_dir() if hasattr(self, "_resolve_source_dir") else self._migration_root()
+                    # Prefer QLA_Migration/Source
+                    src_dir = os.path.normpath(os.path.join(self._app_base_dir(), "QLA_Migration", "Source"))
+                    _ppben = resolve_ppben_path(src_dir)
+                    _ppbentyp = resolve_ppbentyp_extract_path(src_dir)
+                    if _ppben or _ppbentyp:
+                        _21g_rows = build_premium_basis_totals(
+                            _ppbentyp, _ppben, normalize_fn=self.normalize, crosswalk=cw_map
+                        )
+                        _reports_dir = os.path.normpath(
+                            os.path.join(self._app_base_dir(), "QLA_Migration", "Reports")
+                        )
+                        _21g_path, _21g_n = write_premium_basis_report(_21g_rows, _reports_dir)
+                        self.log(
+                            f"Issue #21G: staged premium/basis totals ({_21g_n} policies) → {_21g_path}"
+                        )
+                    else:
+                        self.log("Issue #21G: skipped — PPBEN/PPBENTYP extracts not found for staging report")
+                except Exception as e:
+                    self.log(f"Warning: Issue #21G premium/basis staging failed - {e}")
+            # ---------------------------------------------------------------------------------------
 
             current_stage = "Running claims / payment outputs"
             batch_claims_result = None

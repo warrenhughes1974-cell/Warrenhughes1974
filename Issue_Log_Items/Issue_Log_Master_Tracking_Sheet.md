@@ -41,12 +41,12 @@
 | 21A | NFO / Dividend Options | **CLOSED ✓** | **v57.47** | PPBENTYP cache reads BF_NON_FORFEITURE for ISWL/BF; NFO codes 1/2 → APL (MNFOPT=1) per SME (v57.47). |
 | 21B | Bill Day | **RELEASED ✓** | v57.22 / v57.34 | UAT — verify Bill Day on sample policies |
 | 21C | Policy Fees | **RELEASED ✓** | v57.22 / v57.34 | UAT — verify fee on base rider row |
-| 21D | Interest Crediting Rate | AWAITING CLIENT | — | Authoritative rate: 4.00% or 4.50%? |
-| 21E | Cash Value | AWAITING CLIENT | — | Load LifePRO value or QLAdmin calculate? |
-| 21F | Premium History | AWAITING CLIENT | — | How far back must history go? |
-| 21G | Total Premium / Cost Basis | AWAITING CLIENT | — | Target screen/field for totals |
+| 21D | Interest Crediting Rate | **DECIDED ✓** | v57.36 | ISWL 4.50% / non-ISWL 4.00% |
+| 21E | Cash Value | **DECIDED ✓** | v57.63 | Traditional=compute QuikCvs; UL=load FV_BALANCE2→MCV0 |
+| 21F | Premium History | **DECIDED ✓** | — | Accept ~2017 source floor |
+| 21G | Total Premium / Cost Basis | **DECIDED ✓** | v57.63 | Source locked; staged to Reports/ |
 | 21H | Banking (ABA + target field) | **ABA RELEASED ✓** / target AWAITING | v57.22 / v57.34 | Verify 9-digit ABA; confirm Bill Acct vs Credit Card ID |
-| 21I | Beneficiary Information | AWAITING CLIENT | — | Mandatory beneficiary attributes |
+| 21I | Beneficiary Information | **DECIDED ✓** | v57.29/63 | Type/split OK; MRELATION=1000 intentional |
 | 21J | Modal Premium Factors | **CLOSED ✓** | **v57.46** | UAT — Coverage Detail modal grid on sample policies |
 | 21K | PUA Amount Precision | AWAITING CLIENT (New Era) | Companion tooling only | Six-table MUNIT migration + UI UAT on 010448806C |
 | 21L | Last Change Date | **CLOSED** | — | QLAdmin sets date on load |
@@ -149,7 +149,7 @@ These are **not in the UAT emit** until the client decides.
 ## G. Outstanding before production sign-off
 
 - Client UAT on **21M-FU** memo display (`010335038C`)
-- Client answers on Issue #21 open items (21D–21G, 21I, 21K, 21H target-field)
+- Issue #21 open items 21D/E/F/G/I **DECIDED** (v57.63) — see `Issue_21/Issue_21_Open_Items_Official_Decisions.md`; remaining client items: 21K, 21H target-field
 - Client decisions on **147** deferred claims (Phase 26)
 - Enterprise sign-off to set `production_dbf_flag=Y`
 
