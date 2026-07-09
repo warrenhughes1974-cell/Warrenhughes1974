@@ -6,8 +6,8 @@
 **Engine version:** **v57.62**  
 **Closed date:** 2026-07-09  
 **Owner:** Conversion  
-**Git commit:** _(filled after push)_  
-**Remote branch:** _(filled after push)_
+**Git commit:** `243860154086ff46a88bfef3f6d10cead09a3dc7`  
+**Remote branch:** `origin/issue-34-pr7-quikisrr`
 
 ---
 
@@ -118,5 +118,5 @@ Post-`quikridr` emit enrichment (v57.62):
 - [x] Resolution summary published
 - [x] Tracking sheets → **Closed** + Resolution
 - [x] Validators PASS; version bumped
-- [ ] Git commit + push _(in progress)_
-- [ ] Commit hash recorded _(after push)_
+- [x] Git commit + push completed
+- [x] Commit hash recorded: `243860154086ff46a88bfef3f6d10cead09a3dc7` on `origin/issue-34-pr7-quikisrr`
