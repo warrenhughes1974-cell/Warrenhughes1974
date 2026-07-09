@@ -1,0 +1,8 @@
+metric,value
+ppolc_rows,5084
+quikmstr_rows,5083
+policy_bill_day_zero,2967
+policy_bill_day_nonzero,2116
+mbillday_equals_policy_bill_day,5083
+zero_with_paid_to_day_fallback,2967
+paid_to_day_equals_billed_to_day_when_zero,2961

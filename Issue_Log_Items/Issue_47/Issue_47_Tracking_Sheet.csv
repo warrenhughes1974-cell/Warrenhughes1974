@@ -1,0 +1,2 @@
+ID,Status,Short Name,Description,Date Raised,Priority (Go-No Go),Issue Owner,Assigned,Date Resolved,Notes
+47,Closed,Bill Day zero fallback from Paid-To,"Resolution: When Bill Day is zero, quikmstr.MBILLDAY now uses the day from Paid-To date while non-zero Issue #21B bill days stay unchanged (v57.65).",2026-07-09,Go,Warren,Warren,2026-07-09,G0-G7 complete. Re-emit quikmstr on network after pull.

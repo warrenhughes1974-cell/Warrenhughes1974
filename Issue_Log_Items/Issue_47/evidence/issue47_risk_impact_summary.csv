@@ -1,0 +1,8 @@
+metric,value
+matched_rows,5083
+mbillday_changed,2967
+mbillday_unchanged,2116
+nonzero_regressed,0
+zero_fallback_failures,0
+paid_ne_billed_zeros,6
+changed_equals_issue_day,2946

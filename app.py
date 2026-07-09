@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.64
+# Version:     v57.65
 # Date:        2026-07-09
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.64 — Resolve PACTG_Accounting_Extract*.csv by pattern/date (QuikIsrr + claims);
+# Change Note: v57.65 — Issue #47: when quikmstr.MBILLDAY is 0/blank, fallback to day of
+#              PAID_TO_DATE (preserve non-zero POLICY_BILL_DAY / Issue #21B).
+#              v57.64 — Resolve PACTG_Accounting_Extract*.csv by pattern/date (QuikIsrr + claims);
 #              stop hardcoding 20260427/20260530 extract filenames.
 #              v57.63 — Issue #21 open decisions locked: 21E UL FV_BALANCE2→MCV0 on phase-1;
 #              21G staged premium/basis report; 21D/21F/21I documented (no further code).
@@ -298,7 +300,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.64"
+APP_VERSION = "v57.65"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -6194,6 +6196,25 @@ class QLAdminEnterpriseIntegrationSuite:
                                         else:
                                             val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
                                 # -----------------------------------------
+
+                                # --- Issue #47: MBILLDAY zero → day of PAID_TO_DATE (preserve #21B non-zero) ---
+                                if t_id.lower() == "quikmstr" and t_f == "MBILLDAY":
+                                    bill_day = self.normalize(val)
+                                    if bill_day.endswith(".0"):
+                                        bill_day = bill_day[:-2]
+                                    if bill_day in ["", "0", "0.0", "00"]:
+                                        paid_raw = src_row.get("PAID_TO_DATE", "")
+                                        if not paid_raw:
+                                            paid_raw = row_data.get("MPAIDTO", "")
+                                        day_val = self.normalize(self.extract_day(paid_raw))
+                                        if day_val.endswith(".0"):
+                                            day_val = day_val[:-2]
+                                        if day_val and day_val not in ["0", "00"]:
+                                            try:
+                                                val = str(int(day_val))
+                                            except (ValueError, TypeError):
+                                                val = day_val
+                                # -----------------------------------------------------------------
     
                                 if t_f in ['MNFOPT', 'MDIVOPT'] and val in ["", "0", "0.0"] and t_id.lower() == "quikmstr":
                                     pol_id = self.normalize(row_data.get('MPOLICY', ''))

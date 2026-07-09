@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-09 · **Engine:** `app.py` **v57.62** / cumulative **v57.34+**
+**Last updated:** 2026-07-09 · **Engine:** `app.py` **v57.65** / cumulative **v57.34+**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -73,6 +73,7 @@
 | **#43** | ISWL expense charge source discovery | **INVESTIGATION COMPLETE / AWAITING CLIENT** | — | PCOVR.POLICY_FEE=25.00 on all 8 ISWL coverages; not proven equivalent to monthly expense per policy; no source for % premium or per-$1K charges |
 | **#44** | QuikLoan stale PLOAN latest-row (`LAST_CHG_TIME` sort) | **CLOSED ✓** · **v57.60** · Phase A only | **v57.60** | Resolution: QuikLoan sorts PLOAN LAST_CHG_TIME as HHMMSS so same-day zero clears win; Phase B withdrawn |
 | **#36** | Modal factors on `quikmstr` (Names-tab Modal Premiums) | **CLOSED ✓** · **v57.62** | **v57.62** | Resolution: quikmstr now receives plan-level modal factors (MSEMI/MQTRL/MMTHD/MMTHB) from quikplan, with PAC GL85 quarterly=25 and semiannual=50 overrides, so Names-tab Modal Premiums work (v57.62). |
+| **#47** | Bill Day zero → Paid-To day | **CLOSED ✓** · **v57.65** | **v57.65** | Resolution: When Bill Day is zero, quikmstr.MBILLDAY now uses the day from Paid-To date while non-zero Issue #21B bill days stay unchanged (v57.65). |
 
 **#13 detail:** `Issue_Log_Items/Issue_13/` · Option A termination precedence · G5/G6 PASS · samples 010516211C→54, 011101663C→56
 
@@ -91,6 +92,8 @@
 **#43 detail:** `Issue_Log_Items/Issue_43/` · Client question on Policy fee vs monthly expense per policy for 8 ISWL products · `PCOVR.POLICY_FEE=25.00` confirmed · UF segment zero-valued only · **No Go** for expense mapping until client confirms equivalence and missing-charge defaults
 
 **#44 detail:** `Issue_Log_Items/Issue_44/` · **CLOSED** · **v57.60** Phase A · Resolution: QuikLoan sorts PLOAN LAST_CHG_TIME as HHMMSS so same-day zero clears win; Phase B withdrawn
+
+**#47 detail:** `Issue_Log_Items/Issue_47/` · **CLOSED** · **v57.65** · Resolution: When Bill Day is zero, quikmstr.MBILLDAY now uses the day from Paid-To date while non-zero Issue #21B bill days stay unchanged (v57.65).
 
 ---
 
