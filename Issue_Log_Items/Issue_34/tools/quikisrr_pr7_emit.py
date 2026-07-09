@@ -37,7 +37,8 @@ from qla_core.quikisrr_loader import (
 
 OUT_DIR = PROJECT_ROOT / "QLA_Migration" / "Output"
 ARTIFACT_DIR = PROJECT_ROOT / "Issue_Log_Items" / "Issue_34" / "output" / "PR7_QUIKISRR"
-EXPECTED = {"rows": 3623, "policies": 636, "amount": 1217593.55}
+# Baselines from current Source PACTG_Accounting_Extract*.csv (20260630 refresh).
+EXPECTED = {"rows": 3657, "policies": 637, "amount": 1232602.53}
 
 
 def _row_hash(rows: list[dict], fields: list[str]) -> str:
