@@ -1,0 +1,99 @@
+{
+  "validation": "PASS",
+  "manifest_plans": 10,
+  "inheritance_status": {
+    "IN_SCOPE": 101793,
+    "EXCLUDED": 1954
+  },
+  "inherited_collisions": 0,
+  "pipeline_blockers": 1,
+  "quikcvs_distinct_keys": 38047,
+  "quikcvs_factor_rows": 38047,
+  "plan_stats": {
+    "1L10SO": {
+      "issuing_coverage": "L10 SR OLD",
+      "rate_owner_coverage": "L10 PRE97",
+      "rate_owner_plan": "1L10OD",
+      "quikcvs_keys": 3285,
+      "source_rows_checked": 29018,
+      "source_mismatches": 0
+    },
+    "17085M": {
+      "issuing_coverage": "670 GL85-M",
+      "rate_owner_coverage": "670 GL85-8",
+      "rate_owner_plan": "170858",
+      "quikcvs_keys": 1002,
+      "source_rows_checked": 9028,
+      "source_mismatches": 0
+    },
+    "1668SP": {
+      "issuing_coverage": "668 SPWL",
+      "rate_owner_coverage": "659 CEN II",
+      "rate_owner_plan": "1659C2",
+      "quikcvs_keys": 1081,
+      "source_rows_checked": 9625,
+      "source_mismatches": 0
+    },
+    "1L10SR": {
+      "issuing_coverage": "L10 LP95SR",
+      "rate_owner_coverage": "L10 LP95",
+      "rate_owner_plan": "1L1095",
+      "quikcvs_keys": 3246,
+      "source_rows_checked": 28479,
+      "source_mismatches": 0
+    },
+    "1SALMI": {
+      "issuing_coverage": "SAL MULTPL",
+      "rate_owner_coverage": "SAL OL",
+      "rate_owner_plan": "1SALOL",
+      "quikcvs_keys": 516,
+      "source_rows_checked": 4572,
+      "source_mismatches": 0
+    },
+    "1SALML": {
+      "issuing_coverage": "SAL ML",
+      "rate_owner_coverage": "SAL OL",
+      "rate_owner_plan": "1SALOL",
+      "quikcvs_keys": 516,
+      "source_rows_checked": 4572,
+      "source_mismatches": 0
+    },
+    "1666AI": {
+      "issuing_coverage": "897 666",
+      "rate_owner_coverage": "666 WL",
+      "rate_owner_plan": "1666WL",
+      "quikcvs_keys": 541,
+      "source_rows_checked": 4805,
+      "source_mismatches": 0
+    },
+    "280PUA": {
+      "issuing_coverage": "980 PUA",
+      "rate_owner_coverage": "980 END65",
+      "rate_owner_plan": "280END",
+      "quikcvs_keys": 496,
+      "source_rows_checked": 4143,
+      "source_mismatches": 0
+    },
+    "265PUA": {
+      "issuing_coverage": "665 PUA",
+      "rate_owner_coverage": "665 STME95",
+      "rate_owner_plan": "2665ST",
+      "quikcvs_keys": 383,
+      "source_rows_checked": 3479,
+      "source_mismatches": 0
+    },
+    "261PUA": {
+      "issuing_coverage": "961 PUA",
+      "rate_owner_coverage": "961 ME65",
+      "rate_owner_plan": "2961ME",
+      "quikcvs_keys": 486,
+      "source_rows_checked": 4069,
+      "source_mismatches": 0
+    }
+  },
+  "anchor_points_pass": 30,
+  "anchor_points_total": 30,
+  "gl85_comparisons_pass": 100,
+  "gl85_comparisons_total": 100,
+  "failures": []
+}

@@ -1,0 +1,28 @@
+source_file,type_code,meaning,qladmin_table,status,source_rows
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,BP,Billable premium,QuikGps,Present in source but not emitted,1336
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,CV,Cash values,,Present in source but not yet mapped,1435
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,DB,Death benefits,,Present in source but not yet mapped,628
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,NC,,,Present in source but not yet mapped,690
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,NF,Nonforfeiture factors,QuikNff,Loaded directly from PAAGERAT segment resolution,508
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,NP,Net valuation premiums,,Present in source but not yet mapped,950
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,PR,Gross premiums,QuikGps,Loaded directly from PAAGERAT segment resolution,14958
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,PU,,,Present in source but not yet mapped,1755
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,RD,,,Present in source but not yet mapped,10
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,RV,Reserve factors,,Present in source but not yet mapped,820
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,U5,Guaranteed COI,QuikGcoi,Loaded directly from PAAGERAT segment resolution,200
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,U5,Guaranteed COI,QuikGcoi,Present in source but not emitted,217
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,U6,Current COI,QuikCoi,Loaded directly from PAAGERAT segment resolution,800
+plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,YP,,,Present in source but not yet mapped,117
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,CV,Cash values,QuikCvs,Loaded directly,237300
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,DB,Death benefits,QuikDbs,Loaded directly,12885
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,DV,Dividends,QuikDvs,Loaded directly,37030
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,NF,Nonforfeiture factors,QuikNff,Loaded directly,82445
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,NN,Non-deduction reserve factors,,Separated - no confirmed QLAdmin load target,118642
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,NP,Net valuation premiums,QuikNps,Loaded directly,244789
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,PN,Non-deduction valuation premiums,,Separated - no confirmed QLAdmin load target,110852
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,PR,Gross premiums,QuikGps,Loaded directly,10134
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,RV,Reserve factors,QuikTvs,Loaded directly,232262
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,SL,Surrender charge schedule candidate,,Present in source but not yet mapped,24
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,TP,Tax valuation premium,,Present in source but not yet mapped,22840
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,TX,Tax reserve factor,,Present in source but not yet mapped,19780
+plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,UF,Per-policy monthly expense,,Present in source but not yet mapped,1

@@ -1,7 +1,7 @@
 # Issue #21 — Tracking Sheet
 
 **Source policies:** 010391876C · 010391895C · 010448806C · 010713704C · 010718309C · 010765930C · 010818663C
-**Prepared:** 2026-06-19 · **Last updated:** 2026-06-27 (v57.34 release integration)
+**Prepared:** 2026-06-19 · **Last updated:** 2026-07-04 (21A intake + SME partial guidance)
 **References:** `Issue_21_Final_Analysis.md` (technical) · `Issue_21_Remediation_Plan.md` (planning)
 
 **Status legend:** `IMPLEMENTED` = change applied + validated in full batch · `CLOSED` = not a defect / out of scope · `AWAITING CLIENT` = blocked on a clarification answer · `IN SCOPE` = confirmed scope, new build
@@ -10,7 +10,7 @@
 
 | ID | Item | Description (with example) | Phase | Risk | Status | Owner |
 |---|---|---|:---:|:---:|---|---|
-| 21A | NFO / Dividend Options | Non-Forfeiture Option (NFO) and Dividend Option from LifePRO are not appearing correctly in QLAdmin — both show **0** instead of the real election. **Example:** LifePRO policy 010391895C shows NFO = **ETI** and Dividend Option = **4 (Purchase of PUA)**; QLAdmin shows **NFO 0** and **DIV 0**. Combined values like **APL ETI** also need a business rule. | 2 | Med | AWAITING CLIENT | Conversion + Client |
+| 21A | NFO / Dividend Options | NFO from LifePRO showed 0 in QLAdmin. Example: BF policies 010765930C / 010718309C / 010818663C had LifePRO code 1 (APL/ETI) but QLAdmin MNFOPT=0. | 2 | Med | **CLOSED ✓** | Conversion + Client |
 | 21B | Bill Day | The day-of-month used for billing/draft was taken from the **issue date** instead of the policy's specified bill day. **Example:** Policy 010713704C — LifePRO Specified Bill Day = **15**, but QLAdmin showed Bill Day = **19** (the day from issue date 04/19/1984). **Fix applied:** map `POLICY_BILL_DAY → MBILLDAY`. Full-batch: 713704C→15, 765930C→28, 718309C→22, 818663C→12. | 1 | Low | **IMPLEMENTED ✓** | Conversion |
 | 21C | Policy Fees | Annual policy fee from LifePRO was missing in QLAdmin (showed **$0**). **Example:** Policy 010391876C — LifePRO Policy Fee = **$10.44**; QLAdmin showed **Pol Fee 0.0000**. Policy 010713704C — LifePRO fee **$25.00**. **Fix applied:** populate `MANNLFEE` on the base-coverage rider row from policy-master `POLICY_FEE`. Full-batch: 4,459 base rows fee'd; 391876C→10.44, 713704C→25.00. | 2 | Med | **IMPLEMENTED ✓** | Conversion |
 | 21D | Interest Crediting Rate | QLAdmin shows a different interest crediting rate than the client expects. **Example:** QLAdmin policy 010713704C shows Dividend Accum Int Rate = **4.00%**; client expects **4.50%**. (The 4.50% rate was not visible on a LifePRO screenshot — needs business confirmation of the authoritative rate.) | 2 | High | AWAITING CLIENT | Client (with Conversion) |
@@ -26,13 +26,18 @@
 
 ---
 
-### Gating questions & next actions
+| ID | Status | Resolution |
+|---|---|---|
+| **21A** | **CLOSED ✓** | **Resolution:** PPBENTYP cache reads BF_NON_FORFEITURE for ISWL/BF; NFO codes 1/2 → APL (MNFOPT=1) per SME (v57.47). |
+| **21B** | IMPLEMENTED ✓ | **Resolution:** Map `POLICY_BILL_DAY → MBILLDAY` (v57.22). |
+| **21C** | IMPLEMENTED ✓ | **Resolution:** Populate `MANNLFEE` on base rider from `POLICY_FEE` (v57.22). |
+| **21J** | **CLOSED ✓** | **Resolution:** Per-plan modal factors from client mapping + PAC GL85 overrides + fleet memos (v57.46). |
+| **21L** | CLOSED | **Resolution:** Not converted — QLAdmin sets Last Change Date on load. |
 
-Clear questions for each open item. Implemented/closed items show verification steps instead.
+### Gating questions & next actions (open items)
 
 | ID | Status | Question / next action |
 |---|---|---|
-| **21A** | AWAITING CLIENT | **What should QLAdmin display when LifePRO shows a combined NFO value such as "APL ETI"?** Should it map to a single QLAdmin code, split across fields, or use a specific translation table entry? Please provide the approved mapping for ETI, RPU, APL ETI, and Dividend Option values. |
 | **21B** | IMPLEMENTED ✓ | **No client question — ready for UAT.** Please verify Bill Day on sample policies in QLAdmin (e.g., 010713704C should show **15**, not 19). |
 | **21C** | IMPLEMENTED ✓ | **No client question — ready for UAT.** Please verify Policy Fee on the base-coverage rider screen (e.g., 010391876C = **$10.44**, 010713704C = **$25.00**). |
 | **21D** | AWAITING CLIENT | **What is the authoritative interest crediting rate for converted policies — 4.00% or 4.50%?** Should QLAdmin display the guaranteed rate, the current credited rate, or both? If 4.50%, where in LifePRO is that rate stored for policy 010713704C? |
@@ -41,9 +46,7 @@ Clear questions for each open item. Implemented/closed items show verification s
 | **21G** | AWAITING CLIENT | **Where should Total Premium Paid and Cost/Tax Basis appear in QLAdmin?** Please identify the target screen and field name(s), or confirm if these are informational-only and not required at conversion. |
 | **21H** | IMPLEMENTED (ABA) ✓ / AWAITING CLIENT | **ABA (done):** verify 9-digit routing on banked policies (e.g., 010713704C = **104000016/47374579**). **Still need answer:** **Should checking/savings draft accounts appear in the Bill Acct / bank-account field instead of "Credit Card ID"?** What is the rule for classifying account type (Checking Actual Draft vs credit card)? How should bank name (e.g., First National Bank of Omaha) be mapped? Review **342 ambiguous accounts** in `reconciliation/issue21h_ambiguous_accounts.csv`. |
 | **21I** | AWAITING CLIENT | **Which beneficiary attributes are mandatory at conversion — name, type, relationship, split %, and primary/contingent designation?** For policy 010818663C, should "Unknown 100%" ever appear, or must every beneficiary have a valid type before load? |
-| **21J** | **CLOSED ✓** | **Released v57.46** — client factor mapping applied; UAT Coverage Detail on 010713704C / GL85 PAC samples |
 | **21K** | AWAITING CLIENT (New Era) | **Does QUIKRIDR.MUNIT support 5 decimal places on DBF load, or is it truncated to 3?** If truncated, how should PUA face amounts with cents (e.g., $5,752.96) be carried — via a different field, rounding rule, or QLAdmin configuration change? |
-| **21L** | CLOSED | **No action required.** QLAdmin sets Last Change Date on load; LifePRO last-change is not converted. |
 | **21M** | RELEASED ✓ (v57.34) | **Client UAT pending.** Deploy `quikmemo_uat_dbf/quikmemo.dbf` + `.dbt` together. Verify Memo tab on **010335038C** (merged PNOTE segments). See `Issue_Log_Items/Issue_21M/Issue_21M_Release_Status_v57.34.md`. |
 
 ---
@@ -53,8 +56,8 @@ Clear questions for each open item. Implemented/closed items show verification s
 | Status | Count | Items |
 |---|:---:|---|
 | RELEASED (full-batch validated) | 4 | 21B, 21C, 21H (ABA), 21M |
-| CLOSED (not a defect) | 1 | 21L |
-| AWAITING CLIENT | 8 | 21A, 21D, 21E, 21F, 21G, 21I, 21J, 21K (New Era), + 21H target-field |
+| CLOSED | 3 | 21A, 21J, 21L |
+| AWAITING CLIENT | 7 | 21D, 21E, 21F, 21G, 21I, 21K (New Era), + 21H target-field |
 
 ### Changes applied (v57.34 release)
 

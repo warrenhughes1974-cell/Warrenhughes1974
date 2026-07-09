@@ -1,0 +1,3 @@
+area,lifepro_id,type_code,expected_plan,plain_english_reason
+L01,L01 10Y,NP,5L0110,"Client screenshot shows L01 10Y NP under L01 10Y LT, but the delivered Rate_Table extract has no L01 10Y NP rows."
+L10,L10 LP9595,NP/RV,,"LifePRO setup references L10 LP9595 under L10 LP95, but neither delivered rate extract contains L10 LP9595 rows."

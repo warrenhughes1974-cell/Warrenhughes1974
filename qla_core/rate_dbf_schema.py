@@ -20,18 +20,21 @@ stores the textual decimal, so capacity is "any decimal string that fits 7 chars
 
 # ---- family routing (business-confirmed) ----
 TYPE_TO_TABLE = {"CV": "QuikCvs", "DB": "QuikDbs", "NP": "QuikNps",
-                 "DV": "QuikDvs", "RV": "QuikTvs", "PR": "QuikGps"}
+                 "DV": "QuikDvs", "RV": "QuikTvs", "PR": "QuikGps",
+                 "NF": "QuikNff"}
 FAMILY = {"QuikGps": "GROSS_PREMIUM", "QuikCvs": "CASH_VALUE", "QuikDbs": "DEATH_BENEFIT",
           "QuikDvs": "DIVIDEND", "QuikNps": "NET_PREMIUM", "QuikTvs": "TERMINAL_RESERVE",
+          "QuikNff": "NONFORFEITURE_FACTOR",
           "QuikCoi": "CURRENT_COI", "QuikGcoi": "GUARANTEED_COI"}
 PREFIX = {"QuikGps": "GP", "QuikCvs": "CV", "QuikDbs": "DB",
-          "QuikDvs": "DV", "QuikNps": "NP", "QuikTvs": "TV", "QuikCoi": "QX", "QuikGcoi": "QX"}
+          "QuikDvs": "DV", "QuikNps": "NP", "QuikTvs": "TV",
+          "QuikNff": "NFF", "QuikCoi": "QX", "QuikGcoi": "QX"}
 KEY_TABLE = {"QuikGps": "QuikPlGp", "QuikCvs": "QuikPlCv", "QuikDbs": "QuikPlDb",
              "QuikDvs": "QuikPlDv", "QuikNps": "QuikPlTv", "QuikTvs": "QuikPlTv"}
 # QuikCoi / QuikGcoi are standalone QLAdmin factor tables (Help §7.73 / §7.93).
 # They do NOT have QuikPlxx rate-key companion tables — do not emit QuikPlCoi / QuikPlGcoi.
 COI_FACTOR_TABLES = frozenset({"QuikCoi", "QuikGcoi"})
-EXCLUDED_TYPE_CODES = frozenset({"NN", "PN", "TP", "TX", "UF", "NF", "SL"})
+EXCLUDED_TYPE_CODES = frozenset({"NN", "PN", "TP", "TX", "UF", "SL"})
 
 # ---- segmentation crosswalks (business-confirmed) ----
 SEX_MAP = {"F": "F", "M": "M", "J": "J"}
@@ -40,7 +43,12 @@ UWCLASS_MAP = {"0": "00", "N": "NS", "S": "SM", "P": "PR", "B": "ST"}
 
 FACTOR_FIELD_LEN = 7
 COI_FACTOR_FIELD_LEN = 10  # QuikCoi/QuikGcoi QX0–QX9 per QLAdmin Help §7.73 / §7.93
-FACTOR_FIELD_LEN_BY_TABLE = {"QuikCoi": COI_FACTOR_FIELD_LEN, "QuikGcoi": COI_FACTOR_FIELD_LEN}
+NFF_FACTOR_FIELD_LEN = 10  # QuikNff NFF0-NFF9 per QLAdmin Help §7.158
+FACTOR_FIELD_LEN_BY_TABLE = {
+    "QuikCoi": COI_FACTOR_FIELD_LEN,
+    "QuikGcoi": COI_FACTOR_FIELD_LEN,
+    "QuikNff": NFF_FACTOR_FIELD_LEN,
+}
 N_DURATION_COLS = 10
 DEFAULT_DECIMALS = 2  # LifePRO source precision / QLAdmin convention
 MAX_AGE = 99          # QLAdmin AGE field is C2; ages above this are capped (business rule)

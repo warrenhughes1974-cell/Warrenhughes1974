@@ -9,6 +9,14 @@
 
 ---
 
+## Resolution (issue log — paste-ready)
+
+**Resolution:** [One brief sentence — what the fix was. Plain language. Include version when code changed.]
+
+> Copy the line above into tracking sheets and client readouts. Long-form detail follows.
+
+---
+
 ## Problem Statement
 
 [What the client reported — 1 short paragraph]
@@ -124,7 +132,9 @@
 
 ## Issue Log Entry (paste-ready)
 
-> **Issue #[ID] — [Title] — CLOSED ([date]).** [One sentence problem]. **Fix:** [one sentence fix, version]. **Evidence:** Validation and regression PASS; trace policies [list] confirmed. **Preserved:** MPOLICY padding (#25), MPREM mapping (#26), [other]. **Follow-ups:** [none or list].
+> **Issue #[ID] — [Title] — CLOSED ([date]).**  
+> **Resolution:** [One brief sentence — what the fix was.]  
+> **Evidence:** Validation and regression PASS; trace policies [list] confirmed. **Preserved:** MPOLICY padding (#25), MPREM mapping (#26), [other]. **Follow-ups:** [none or list].
 
 ---
 
@@ -137,5 +147,5 @@
 - [x] Development
 - [x] Validation PASS
 - [x] Regression PASS
-- [x] Closure
+- [x] Closure — **`Resolution:`** one-line + long-form summary
 - [x] Git commit + push (G7 release gate)

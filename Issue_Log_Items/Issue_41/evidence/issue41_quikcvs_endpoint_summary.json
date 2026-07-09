@@ -1,0 +1,9 @@
+{
+  "pipeline_blockers": 1,
+  "quikcvs_keys": 38047,
+  "examples": 5,
+  "passes": 5,
+  "failures": [],
+  "evidence_csv": "Issue_Log_Items\\Issue_41\\evidence\\issue41_quikcvs_endpoint_examples.csv",
+  "emitted_quikcvs_present": true
+}

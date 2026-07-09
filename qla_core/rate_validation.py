@@ -19,7 +19,8 @@ UWCLASS_DOMAIN = {"00", "NS", "SM", "PR", "ST"}
 BAND_DOMAIN = {"00", "01", "02", "03"}
 TYPE_FAMILY = {"PR": "GROSS_PREMIUM", "BP": "GROSS_PREMIUM", "U6": "CURRENT_COI", "U5": "GUARANTEED_COI",
                "CV": "CASH_VALUE", "DB": "DEATH_BENEFIT",
-               "DV": "DIVIDEND", "NP": "NET_PREMIUM", "RV": "TERMINAL_RESERVE"}
+               "DV": "DIVIDEND", "NP": "NET_PREMIUM", "RV": "TERMINAL_RESERVE",
+               "NF": "NONFORFEITURE_FACTOR"}
 
 # ISWL Phase 2 — billable premium MPLANs (PAAGERAT BP authority)
 ISWL_BP_MPLANS = frozenset({"1658CS", "1659CS", "1669SR", "1679CS"})

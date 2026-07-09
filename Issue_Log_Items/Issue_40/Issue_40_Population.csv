@@ -1,0 +1,13 @@
+metric,value,source,notes
+issued_policies_quikridr_mplan_17085M,212,plan_analysis/phase_p1b_product_lineage/plan_dependency_map.csv,MPLAN=17085M referenced by quikridr rows
+lifepro_coverage,670 GL85-M,plan_governance/product_catalog_crosswalk.csv,
+qla_plan,17085M,plan_governance/product_catalog_crosswalk.csv,
+sister_plan_with_cv,170858,rate_factor_capacity_analysis.csv,670 GL85-8 — 9121 CV source rows
+sister_plan_quikcvs_keys,986,Issue_Log_Items/Issue_31/output/baselines/iswl_quikcvs_regression_baseline.json,
+target_plan_quikcvs_keys,0,Issue_Log_Items/Issue_31/output/baselines/iswl_quikcvs_regression_baseline.json,17085M absent
+pcovrsgt_inherit_slots_to_670_GL85-8,"2,3,12,13,22,29,32,33",plan_analysis/source_data/coverage/PCOVRSGT.csv,670 GL85-M active slots
+rate_table_cv_rows_670_GL85-M,0,plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,
+rate_table_cv_rows_670_GL85-8,9121,plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,
+trace_policy_1,010367438C,Issue_Log_Items/Issue_21/reports/Issue_21K_MUNIT_Precision_Trace.csv,MPREM trace
+trace_policy_2,010615191C,Issue_Log_Items/Issue_21/reports/Issue_21K_MUNIT_Precision_Trace.csv,MUNIT precision
+trace_policy_3,010464869C,Issue_Log_Items/Issue_21/Issue_21D/Issue_21D_Blank_Name_Population.csv,blank name population

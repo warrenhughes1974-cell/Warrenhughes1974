@@ -67,7 +67,7 @@ def _to_float(s):
         return None
 
 
-# ---- Issue #37 — CV / QuikCvs LifePRO duration grid (G3 approved) ----
+# ---- Issue #37/#41 — CV / QuikCvs LifePRO duration grid ----
 CV_MATURITY_AGE = 100
 
 
@@ -89,7 +89,7 @@ def cv_lifepro_first_duration(sex, age_int):
 
 
 def cv_lifepro_last_duration(age_int):
-    """LifePRO 1-based last duration column; G3 maturity age 100."""
+    """Last QLAdmin duration index needed to carry the CV grid through attained age 100."""
     return CV_MATURITY_AGE - age_int
 
 
@@ -127,7 +127,13 @@ def load_cv_slice_fnz(source_csv):
 
 def cv_remap_ql_duration(source_d, sex, age_int, fnz):
     """
-    Map LifePRO extract duration -> QLAdmin 0-based duration for CV grids.
+    Map LifePRO extract duration -> QLAdmin duration index for CV grids.
+
+    Issue #41: QLAdmin factor columns are indexed as CNTL*10 + column, and client
+    UAT confirmed CV grids must retain the age-100 endpoint. Returning the LifePRO
+    policy duration index here keeps the terminal 1000 value at attained age 100
+    instead of one duration early.
+
     Returns int ql_duration, or None when the row is truncated past maturity.
     """
     lp_d = source_d + cv_lifepro_first_duration(sex, age_int) - fnz
@@ -135,7 +141,7 @@ def cv_remap_ql_duration(source_d, sex, age_int, fnz):
         return None
     if lp_d < 1:
         return None
-    return lp_d - 1
+    return lp_d
 
 
 def transform_source(source_csv, cov2plan, config, cv_fnz=None):

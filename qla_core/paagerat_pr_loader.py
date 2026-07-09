@@ -5,7 +5,7 @@ Business rules:
   * PAAGERAT.COVERAGE_ID is a segment ID (PCOVRSGT.SEGT_ID), not a policy form.
   * Resolve: PAAGERAT -> PCOVRSGT -> PCOVR -> Policy Form Crosswalk -> PLAN.
   * Only TYPE_CODE = 'PR' rows are in scope for policy gross premium rates.
-  * QuikPlan.VARGP = 3 (attained age): SEQ -> QuikGps.AGE, rate in CNTL=00 / GP0.
+  * QuikPlan.VARGP = 3 (attained age): SEQ -> factor AGE, rate in CNTL=00 / column 0.
   * Do NOT unfold into issue-age x duration grids.
   * ISWL MPLANs with PAAGERAT BP authority suppress PR emit (Phase 2 — Issue #31).
 """
@@ -39,6 +39,7 @@ def transform_paagerat_attained_age(
     config: LoaderConfig,
     *,
     type_code: str,
+    target_table: str | None = None,
     plan_allowlist: frozenset | None = None,
     plan_exclude: frozenset | None = None,
 ):
@@ -48,6 +49,10 @@ def transform_paagerat_attained_age(
     Yields dicts with status:
       IN_SCOPE | EXCLUDED | SEGMENT_UNRESOLVED | PLAN_INVALID | BAD_VALUE
     """
+    table = target_table or S.TYPE_TO_TABLE.get(type_code)
+    if table is None:
+        return
+
     with open(paagerat_csv, encoding="utf-8-sig", errors="replace", newline="") as f:
         rd = csv.reader(f)
         hdr = [c.strip() for c in next(rd)]
@@ -122,7 +127,7 @@ def transform_paagerat_attained_age(
                        "plan": plan, "note": "segmentation crosswalk", "lineno": lineno}
                 continue
 
-            # Attained age (VARGP=3): SEQ -> QuikGps.AGE; cap at QLAdmin C2 width
+            # Attained age (VARGP=3): SEQ -> factor AGE; cap at QLAdmin C2 width
             original_age = seq
             age_capped = False
             if seq.isdigit():
@@ -136,7 +141,7 @@ def transform_paagerat_attained_age(
                        "plan": plan, "raw_age": seq, "lineno": lineno}
                 continue
 
-            # VARGP=3 attained-age grid: single factor at CNTL=00 / GP0
+            # VARGP=3 attained-age grid: single factor at CNTL=00 / factor column 0.
             cntl, col_idx = S.duration_to_cntl_col(0)
             segment_tier = 0 if seg == resolved.parent_coverage_id else 1
 
@@ -149,7 +154,7 @@ def transform_paagerat_attained_age(
                 "resolution_path": resolved.resolution_path,
                 "pcovr_description": resolved.pcovr_description,
                 "type_code": typ,
-                "table": "QuikGps",
+                "table": table,
                 "plan": plan,
                 "age": age2,
                 "cntl": cntl,
@@ -220,4 +225,13 @@ def transform_paagerat_pr(paagerat_csv, resolver: SR.SegmentResolver, config: Lo
         paagerat_csv, resolver, config,
         type_code="PR",
         plan_exclude=plan_exclude,
+    )
+
+
+def transform_paagerat_nf(paagerat_csv, resolver: SR.SegmentResolver, config: LoaderConfig):
+    """Stream PAAGERAT rows filtered to TYPE_CODE='NF', segment-resolved to QuikNff."""
+    return transform_paagerat_attained_age(
+        paagerat_csv, resolver, config,
+        type_code="NF",
+        target_table="QuikNff",
     )

@@ -1,0 +1,11 @@
+ql_plan,lifepro_coverage,issued_policies,direct_source_cv_rows,current_quikcvs_rows,rate_owner_coverage,rate_owner_plan,rate_owner_source_cv_rows,rate_owner_quikcvs_rows,gap_type,validation_required,actuarial_gate
+1L10SO,L10 SR OLD,449,0,0,L10 PRE97; L10 LP95,1L10OD; 1L1095,58862,3285,MISSING_INHERITED_CV,100pct source-to-QLA after emit under issuing plan,YES
+17085M,670 GL85-M,212,0,0,670 GL85-8,170858,9121,1002,MISSING_INHERITED_CV,100pct source-to-QLA after emit under issuing plan,YES
+1668SP,668 SPWL,160,0,0,659 CEN II,1659C2,9678,1081,MISSING_INHERITED_CV,100pct source-to-QLA after emit under issuing plan,REVIEW
+1L10SR,L10 LP95SR,159,0,0,L10 LP95; L10 PRE97,1L1095; 1L10OD,58862,3246,MISSING_INHERITED_CV,100pct source-to-QLA after emit under issuing plan,YES
+1SALMI,SAL MULTPL,153,0,0,SAL OL,1SALOL,4750,516,MISSING_INHERITED_CV,100pct source-to-QLA after emit under issuing plan,REVIEW
+1SALML,SAL ML,152,0,0,SAL OL,1SALOL,4750,516,MISSING_INHERITED_CV,100pct source-to-QLA after emit under issuing plan,REVIEW
+1666AI,897 666,8,0,0,666 WL,1666WL,4895,541,MISSING_INHERITED_CV,100pct source-to-QLA after emit under issuing plan,REVIEW
+280PUA,980 PUA,3,0,0,980 END65,280END,4143,496,MISSING_INHERITED_CV,100pct source-to-QLA after emit under issuing plan,REVIEW
+265PUA,665 PUA,1,0,0,665 STME95,2665ST,3479,383,MISSING_INHERITED_CV,100pct source-to-QLA after emit under issuing plan,REVIEW
+261PUA,961 PUA,0,0,0,961 ME65,2961ME,4069,486,MISSING_INHERITED_CV,100pct source-to-QLA after emit under issuing plan,REVIEW

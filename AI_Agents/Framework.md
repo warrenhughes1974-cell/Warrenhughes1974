@@ -68,7 +68,7 @@ flowchart TD
 | **G4 — Development complete** | Development | Surgical diff, version bump if `app.py`, validation script added |
 | **G5 — Validation pass** | Validation | Trace policies, field alignment, row counts per test plan |
 | **G6 — Regression pass** | Regression | Unrelated tables/fields unchanged; no schema drift |
-| **G7 — Closure** | Closure | Resolution summary published; **`app.py` version bumped** if engine/rate path touched; **git commit + push to remote** (issue-scoped); **production-ready** batch verified (validators + network pull instructions) |
+| **G7 — Closure** | Closure | **`Resolution:`** one-line fix summary published; resolution summary + tracking sheets updated; **`app.py` version bumped** if engine/rate path touched; **git commit + push to remote** (issue-scoped); **production-ready** batch verified (validators + network pull instructions) |
 
 **Development cannot begin until G1 + G2 + G3 are satisfied.**
 
@@ -101,7 +101,8 @@ Use these statuses in issue tracking sheets and report headers:
 4. All code changes must be **surgical and issue-specific** — no wholesale rewrites.
 5. Every development change must include **validation and regression evidence**.
 6. Every issue must end with an **issue-log-ready resolution summary** (Closure Agent).
-7. **G7 release gate:** When Development touched conversion or rate code, Closure must **commit issue-scoped changes and `git push` to remote** so network batch machines can pull the fix. Bump **`app.py` version** when the batch path changes.
+7. **G7 brief resolution (required):** Closure must publish a single paste-ready line — **`Resolution:`** followed by one brief sentence stating what the fix was (version optional). This line goes in the resolution summary header, tracking sheets, and client readout — not only the long-form report.
+8. **G7 release gate:** When Development touched conversion or rate code, Closure must **commit issue-scoped changes and `git push` to remote** so network batch machines can pull the fix. Bump **`app.py` version** when the batch path changes.
 8. **Preserve prior fixes:** Issue #25 MPOLICY padding (`format_qladmin_mpolicy`) and Issue #26 MPREM mapping (`ANN_PREM_PER_UNIT` + fallback) must not regress.
 
 ---

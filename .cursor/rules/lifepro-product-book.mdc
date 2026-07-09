@@ -1,0 +1,31 @@
+---
+description: LifePRO Product Book manual location and expense-segment index
+alwaysApply: true
+---
+
+# LifePRO Product Book (canonical manual)
+
+**Location:** `docs/Product (1).pdf`
+
+**Title:** LifePRO User Guide and Field Description Manual — **Product Book** (Version 14, 1714 pages)
+
+Use this file for LifePRO product setup, segment definitions (TYPE_CODE / Product Usage), and hierarchy trace guidance (`PPRDF → PCOMP → PCOVR → PCOVRSGT → PSEGT → rates`).
+
+Prior research referenced this as `Product.pdf`; that alias means **`docs/Product (1).pdf`** in this repo.
+
+## Expense charge segments (Product Book TOC)
+
+| Segment | Section | Topic |
+|---------|---------|--------|
+| U1 | 6.266 (12-981) | Premium Collection Expenses/Fees |
+| U2 | 6.267 (12-983) | Premium Collection Expenses |
+| U3 | 6.268 (12-988) | Per Thousand Expense Load |
+| UF | 6.280 (12-1014) | Per Policy Monthly Expense |
+| UT | 6.288 (12-1041) | Per Fund Expense |
+
+Expenses may also nest under billable/UL premium segments (BP, BI, UG, UH, UX, UY, UZ). See `docs/research/ISWL_Product_Book_Manual_Findings_Addendum.md`.
+
+## Related manuals (same repo)
+
+- QLAdmin Help: `docs/claims_conversion_reference/QLAdmin_Help.pdf` (QuikIsxp §7.147, QuikAexp §7.11)
+- LifePRO Accounting Transactions: `docs/claims_conversion_reference/LifePRO Accounting Transaction Information (4).pdf`

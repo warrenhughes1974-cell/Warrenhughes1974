@@ -1,0 +1,300 @@
+{
+  "generated_at": "2026-07-06T20:06:36",
+  "required_plans": [
+    "1666AI",
+    "1668SP",
+    "17085M",
+    "1L10SO",
+    "1L10SR",
+    "1SALMI",
+    "1SALML",
+    "261PUA",
+    "265PUA",
+    "280PUA"
+  ],
+  "pipeline_inherited_rows": {
+    "IN_SCOPE": 101793,
+    "EXCLUDED": 1954
+  },
+  "emit_manifest": [
+    {
+      "kind": "factor",
+      "table": "QuikCvs",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikCvs.csv",
+      "rows": 38047
+    },
+    {
+      "kind": "factor",
+      "table": "QuikDbs",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikDbs.csv",
+      "rows": 1380
+    },
+    {
+      "kind": "factor",
+      "table": "QuikNps",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikNps.csv",
+      "rows": 26650
+    },
+    {
+      "kind": "factor",
+      "table": "QuikTvs",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikTvs.csv",
+      "rows": 26097
+    },
+    {
+      "kind": "factor",
+      "table": "QuikDvs",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikDvs.csv",
+      "rows": 3978
+    },
+    {
+      "kind": "factor",
+      "table": "QuikGps",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikGps.csv",
+      "rows": 12567
+    },
+    {
+      "kind": "factor",
+      "table": "QuikCoi",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikCoi.csv",
+      "rows": 792
+    },
+    {
+      "kind": "factor",
+      "table": "QuikGcoi",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikGcoi.csv",
+      "rows": 198
+    },
+    {
+      "kind": "key",
+      "table": "QuikPlCv",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikPlCv.csv",
+      "rows": 94
+    },
+    {
+      "kind": "key",
+      "table": "QuikPlDb",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikPlDb.csv",
+      "rows": 12
+    },
+    {
+      "kind": "key",
+      "table": "QuikPlTv",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikPlTv.csv",
+      "rows": 112
+    },
+    {
+      "kind": "key",
+      "table": "QuikPlDv",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikPlDv.csv",
+      "rows": 20
+    },
+    {
+      "kind": "key",
+      "table": "QuikPlGp",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikPlGp.csv",
+      "rows": 205
+    },
+    {
+      "kind": "member",
+      "table": "QuikPlGd",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikPlGd.csv",
+      "rows": 184
+    },
+    {
+      "kind": "member",
+      "table": "QuikPlUw",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikPlUw.csv",
+      "rows": 151
+    },
+    {
+      "kind": "member",
+      "table": "QuikPlBd",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikPlBd.csv",
+      "rows": 134
+    },
+    {
+      "kind": "member",
+      "table": "QuikPlSt",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikPlSt.csv",
+      "rows": 115
+    },
+    {
+      "kind": "member",
+      "table": "QuikPlNb",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikPlNb.csv",
+      "rows": 115
+    },
+    {
+      "kind": "member",
+      "table": "QuikUint",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikUint.csv",
+      "rows": 0
+    },
+    {
+      "kind": "member",
+      "table": "QuikIssc",
+      "path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikIssc.csv",
+      "rows": 0
+    }
+  ],
+  "file_checks": [
+    {
+      "file": "QuikPlCv (full)",
+      "path": "QLA_Migration\\Output\\rates\\QuikPlCv.csv",
+      "total_rows": 94,
+      "plans_found": [
+        "1666AI",
+        "1668SP",
+        "17085M",
+        "1L10SO",
+        "1L10SR",
+        "1SALMI",
+        "1SALML",
+        "261PUA",
+        "265PUA",
+        "280PUA"
+      ],
+      "missing_plans": [],
+      "pass": true
+    },
+    {
+      "file": "QuikPlCv (issue40 only)",
+      "path": "Issue_Log_Items\\Issue_40\\uat_load_package\\QuikPlCv_issue40_ONLY.csv",
+      "total_rows": 24,
+      "plans_found": [
+        "1666AI",
+        "1668SP",
+        "17085M",
+        "1L10SO",
+        "1L10SR",
+        "1SALMI",
+        "1SALML",
+        "261PUA",
+        "265PUA",
+        "280PUA"
+      ],
+      "missing_plans": [],
+      "pass": true
+    },
+    {
+      "file": "QuikCvs (issue40 only)",
+      "path": "Issue_Log_Items\\Issue_40\\uat_load_package\\QuikCvs_issue40_plans_only.csv",
+      "total_rows": 11552,
+      "plans_found": [
+        "1666AI",
+        "1668SP",
+        "17085M",
+        "1L10SO",
+        "1L10SR",
+        "1SALMI",
+        "1SALML",
+        "261PUA",
+        "265PUA",
+        "280PUA"
+      ],
+      "missing_plans": [],
+      "pass": true
+    },
+    {
+      "file": "QuikPlGd (issue40 only)",
+      "path": "Issue_Log_Items\\Issue_40\\uat_load_package\\QuikPlGd_issue40_ONLY.csv",
+      "total_rows": 16,
+      "plans_found": [
+        "1666AI",
+        "1668SP",
+        "17085M",
+        "1L10SO",
+        "1L10SR",
+        "1SALMI",
+        "1SALML",
+        "261PUA",
+        "265PUA",
+        "280PUA"
+      ],
+      "missing_plans": [],
+      "pass": true
+    },
+    {
+      "file": "QuikPlBd (issue40 only)",
+      "path": "Issue_Log_Items\\Issue_40\\uat_load_package\\QuikPlBd_issue40_ONLY.csv",
+      "total_rows": 12,
+      "plans_found": [
+        "1666AI",
+        "1668SP",
+        "17085M",
+        "1L10SO",
+        "1L10SR",
+        "1SALMI",
+        "1SALML",
+        "261PUA",
+        "265PUA",
+        "280PUA"
+      ],
+      "missing_plans": [],
+      "pass": true
+    },
+    {
+      "file": "QuikPlUw (issue40 only)",
+      "path": "Issue_Log_Items\\Issue_40\\uat_load_package\\QuikPlUw_issue40_ONLY.csv",
+      "total_rows": 14,
+      "plans_found": [
+        "1666AI",
+        "1668SP",
+        "17085M",
+        "1L10SO",
+        "1L10SR",
+        "1SALMI",
+        "1SALML",
+        "261PUA",
+        "265PUA",
+        "280PUA"
+      ],
+      "missing_plans": [],
+      "pass": true
+    },
+    {
+      "file": "QuikPlSt (issue40 only)",
+      "path": "Issue_Log_Items\\Issue_40\\uat_load_package\\QuikPlSt_issue40_ONLY.csv",
+      "total_rows": 10,
+      "plans_found": [
+        "1666AI",
+        "1668SP",
+        "17085M",
+        "1L10SO",
+        "1L10SR",
+        "1SALMI",
+        "1SALML",
+        "261PUA",
+        "265PUA",
+        "280PUA"
+      ],
+      "missing_plans": [],
+      "pass": true
+    },
+    {
+      "file": "QuikPlNb (issue40 only)",
+      "path": "Issue_Log_Items\\Issue_40\\uat_load_package\\QuikPlNb_issue40_ONLY.csv",
+      "total_rows": 10,
+      "plans_found": [
+        "1666AI",
+        "1668SP",
+        "17085M",
+        "1L10SO",
+        "1L10SR",
+        "1SALMI",
+        "1SALML",
+        "261PUA",
+        "265PUA",
+        "280PUA"
+      ],
+      "missing_plans": [],
+      "pass": true
+    }
+  ],
+  "17085M_quikplcv_lines": [
+    "17085M,F,00,01,0000,00,19000101,P1,R1,,0",
+    "17085M,M,00,01,0000,00,19000101,O1,Q1,,0"
+  ],
+  "all_pass": true
+}

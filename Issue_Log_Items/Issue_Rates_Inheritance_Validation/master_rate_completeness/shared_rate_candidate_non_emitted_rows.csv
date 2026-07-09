@@ -1,0 +1,15 @@
+source,plan,type_code,status,note,raw_band,mapped_band,rows
+SHARED_PAAGERAT,1658C1,PR,BAD_VALUE,segmentation crosswalk,1,01,186
+SHARED_PAAGERAT,1658CS,PR,BAD_VALUE,segmentation crosswalk,1,01,186
+SHARED_PAAGERAT,1659C2,PR,BAD_VALUE,segmentation crosswalk,1,01,186
+SHARED_PAAGERAT,1659CR,PR,BAD_VALUE,segmentation crosswalk,1,01,186
+SHARED_PAAGERAT,1659CS,PR,BAD_VALUE,segmentation crosswalk,1,01,186
+SHARED_PAAGERAT,1659SR,PR,BAD_VALUE,segmentation crosswalk,1,01,186
+SHARED_PAAGERAT,1669SR,PR,BAD_VALUE,segmentation crosswalk,1,01,186
+SHARED_PAAGERAT,1679CS,PR,BAD_VALUE,segmentation crosswalk,1,01,186
+SHARED_PAAGERAT,1L1095,PR,BAD_VALUE,segmentation crosswalk,4,04,298
+SHARED_PAAGERAT,1L1095,PR,BAD_VALUE,segmentation crosswalk,5,05,298
+SHARED_PAAGERAT,1L10OD,PR,BAD_VALUE,segmentation crosswalk,4,04,298
+SHARED_PAAGERAT,1L10OD,PR,BAD_VALUE,segmentation crosswalk,5,05,298
+SHARED_PAAGERAT,1L10SR,PR,BAD_VALUE,segmentation crosswalk,4,04,596
+SHARED_PAAGERAT,1L10SR,PR,BAD_VALUE,segmentation crosswalk,5,05,596

@@ -1,0 +1,155 @@
+source_family,issuing_coverage,issuing_plan,pcovrsgt_seq,source_segment,type_code,meaning,qladmin_table,source_segment_rows,current_issuing_plan_keys,status
+PAAGERAT,658 CEN I,1658C1,3,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN I,1658C1,4,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN I,1658C1,9,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN I,1658C1,19,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN I,1658C1,20,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN I,1658C1,22,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN I,1658C1,30,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN I,1658C1,38,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN I,1658C1,26,1576 658,PR,Gross premiums,QuikGps,164,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN I,1658C1,35,L14,PR,Gross premiums,QuikGps,268,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN SD,1658CS,26,1576 658,PR,Gross premiums,QuikGps,164,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,658 CEN SD,1658CS,35,L14,PR,Gross premiums,QuikGps,268,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN II,1659C2,26,1576 659,PR,Gross premiums,QuikGps,164,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN II,1659C2,35,L14,PR,Gross premiums,QuikGps,268,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,1,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,2,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,3,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,4,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,9,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,10,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,19,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,20,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,22,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,30,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,33,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,38,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,39,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,40,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,41,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,26,1576 659,PR,Gross premiums,QuikGps,164,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SR,1659CR,35,L14,PR,Gross premiums,QuikGps,268,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,1,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,2,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,3,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,4,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,9,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,10,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,19,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,20,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,22,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,30,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,33,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,38,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,39,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,40,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,41,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,26,1576 659,PR,Gross premiums,QuikGps,164,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 CEN SD,1659CS,35,L14,PR,Gross premiums,QuikGps,268,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,1,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,2,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,3,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,4,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,9,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,10,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,19,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,20,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,22,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,30,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,33,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,38,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,39,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,40,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,26,1576 659,PR,Gross premiums,QuikGps,164,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,659 SR GD,1659SR,35,L14,PR,Gross premiums,QuikGps,268,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,668 SPWL,1668SP,4,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,668 SPWL,1668SP,20,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,668 SPWL,1668SP,22,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,668 SPWL,1668SP,30,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,668 SPWL,1668SP,46,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,1,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,2,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,3,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,4,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,9,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,10,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,19,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,20,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,22,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,30,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,33,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,38,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,39,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,40,659 CEN II,NF,Nonforfeiture factors,QuikNff,172,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,26,1576 659,PR,Gross premiums,QuikGps,164,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,669 SR GD,1669SR,35,L14,PR,Gross premiums,QuikGps,268,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,679 CEN SD,1679CS,35,L14,PR,Gross premiums,QuikGps,268,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95,1L1095,6,L10 PRE97,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95,1L1095,10,L10 PRE97,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95,1L1095,22,L10 PRE97,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95,1L1095,28,L10 PRE97,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 PRE97,1L10OD,12,L10 LP95,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 PRE97,1L10OD,13,L10 LP95,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 PRE97,1L10OD,27,L10 LP95,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 PRE97,1L10OD,32,L10 LP95,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 PRE97,1L10OD,33,L10 LP95,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95SR,1L10SR,2,L10 LP95,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95SR,1L10SR,14,L10 LP95,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95SR,1L10SR,15,L10 LP95,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95SR,1L10SR,27,L10 LP95,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95SR,1L10SR,29,L10 LP95,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95SR,1L10SR,6,L10 PRE97,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95SR,1L10SR,10,L10 PRE97,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95SR,1L10SR,22,L10 PRE97,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,L10 LP95SR,1L10SR,28,L10 PRE97,PR,Gross premiums,QuikGps,1832,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,SAL MULTPL,1SALMI,12,SAL OL,NF,Nonforfeiture factors,QuikNff,76,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,SAL MULTPL,1SALMI,13,SAL OL,NF,Nonforfeiture factors,QuikNff,76,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,SAL MULTPL,1SALMI,22,SAL OL,NF,Nonforfeiture factors,QuikNff,76,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,SAL ML,1SALML,22,SAL OL,NF,Nonforfeiture factors,QuikNff,76,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,SAL ML,1SALML,22,SAL OL,PR,Gross premiums,QuikGps,135,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,619 CH PU,719CTR,7,619 DT CH,PR,Gross premiums,QuikGps,23,0,Candidate for PAAGERAT shared segment loader
+PAAGERAT,0822 960,960ADB,1,0822 960PO,PR,Gross premiums,QuikGps,52,0,Candidate for PAAGERAT shared segment loader
+Rate_Table,658 CEN I,1658C1,35,L14,NF,Nonforfeiture factors,QuikNff,2870,0,Candidate for inherited/shared loader
+Rate_Table,659 CEN II,1659C2,35,L14,NF,Nonforfeiture factors,QuikNff,2870,0,Candidate for inherited/shared loader
+Rate_Table,659 CEN SR,1659CR,35,L14,NF,Nonforfeiture factors,QuikNff,2870,0,Candidate for inherited/shared loader
+Rate_Table,659 CEN SD,1659CS,35,L14,NF,Nonforfeiture factors,QuikNff,2870,0,Candidate for inherited/shared loader
+Rate_Table,659 SR GD,1659SR,35,L14,NF,Nonforfeiture factors,QuikNff,2870,0,Candidate for inherited/shared loader
+Rate_Table,669 SR GD,1669SR,35,L14,NF,Nonforfeiture factors,QuikNff,2870,0,Candidate for inherited/shared loader
+Rate_Table,670 GL8588,170588,2,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,670 GL8588,170588,3,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,670 GL8588,170588,22,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,670 GL85-M,17085M,2,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,670 GL85-M,17085M,3,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,670 GL85-M,17085M,12,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,670 GL85-M,17085M,13,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,670 GL85-M,17085M,22,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,670 GL85-M,17085M,29,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,670 GL85-M,17085M,32,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,670 GL85-M,17085M,33,670 GL85-8,NF,Nonforfeiture factors,QuikNff,7171,0,Candidate for inherited/shared loader
+Rate_Table,L10 SR OLD,1L10SO,27,L10 LP95,NF,Nonforfeiture factors,QuikNff,27090,0,Candidate for inherited/shared loader
+Rate_Table,L10 SR OLD,1L10SO,2,L10 PRE97,NF,Nonforfeiture factors,QuikNff,27219,0,Candidate for inherited/shared loader
+Rate_Table,L10 SR OLD,1L10SO,6,L10 PRE97,NF,Nonforfeiture factors,QuikNff,27219,0,Candidate for inherited/shared loader
+Rate_Table,L10 SR OLD,1L10SO,10,L10 PRE97,NF,Nonforfeiture factors,QuikNff,27219,0,Candidate for inherited/shared loader
+Rate_Table,L10 SR OLD,1L10SO,22,L10 PRE97,NF,Nonforfeiture factors,QuikNff,27219,0,Candidate for inherited/shared loader
+Rate_Table,L10 SR OLD,1L10SO,28,L10 PRE97,NF,Nonforfeiture factors,QuikNff,27219,0,Candidate for inherited/shared loader
+Rate_Table,L10 LP95SR,1L10SR,2,L10 LP95,NF,Nonforfeiture factors,QuikNff,27090,0,Candidate for inherited/shared loader
+Rate_Table,L10 LP95SR,1L10SR,14,L10 LP95,NF,Nonforfeiture factors,QuikNff,27090,0,Candidate for inherited/shared loader
+Rate_Table,L10 LP95SR,1L10SR,15,L10 LP95,NF,Nonforfeiture factors,QuikNff,27090,0,Candidate for inherited/shared loader
+Rate_Table,L10 LP95SR,1L10SR,27,L10 LP95,NF,Nonforfeiture factors,QuikNff,27090,0,Candidate for inherited/shared loader
+Rate_Table,L10 LP95SR,1L10SR,29,L10 LP95,NF,Nonforfeiture factors,QuikNff,27090,0,Candidate for inherited/shared loader
+Rate_Table,L10 LP95SR,1L10SR,6,L10 PRE97,NF,Nonforfeiture factors,QuikNff,27219,0,Candidate for inherited/shared loader
+Rate_Table,L10 LP95SR,1L10SR,10,L10 PRE97,NF,Nonforfeiture factors,QuikNff,27219,0,Candidate for inherited/shared loader
+Rate_Table,L10 LP95SR,1L10SR,22,L10 PRE97,NF,Nonforfeiture factors,QuikNff,27219,0,Candidate for inherited/shared loader
+Rate_Table,L10 LP95SR,1L10SR,28,L10 PRE97,NF,Nonforfeiture factors,QuikNff,27219,0,Candidate for inherited/shared loader
+Rate_Table,961 PUA,261PUA,10,961 ME65,DV,Dividends,QuikDvs,3144,0,Candidate for inherited/shared loader
+Rate_Table,961 PUA,261PUA,10,961 ME65,NP,Net valuation premiums,QuikNps,4200,0,Candidate for inherited/shared loader
+Rate_Table,961 PUA,261PUA,10,961 ME65,RV,Reserve factors,QuikTvs,4200,0,Candidate for inherited/shared loader
+Rate_Table,665 PUA,265PUA,10,665 STME95,DB,Death benefits,QuikDbs,5100,0,Candidate for inherited/shared loader
+Rate_Table,665 PUA,265PUA,10,665 STME95,DV,Dividends,QuikDvs,1800,0,Candidate for inherited/shared loader
+Rate_Table,665 PUA,265PUA,10,665 STME95,NP,Net valuation premiums,QuikNps,7140,0,Candidate for inherited/shared loader
+Rate_Table,665 PUA,265PUA,10,665 STME95,PR,Gross premiums,QuikGps,117,0,Candidate for inherited/shared loader
+Rate_Table,665 PUA,265PUA,10,665 STME95,RV,Reserve factors,QuikTvs,7140,0,Candidate for inherited/shared loader
+Rate_Table,980 PUA,280PUA,10,980 END65,DV,Dividends,QuikDvs,3716,0,Candidate for inherited/shared loader
+Rate_Table,980 PUA,280PUA,10,980 END65,NP,Net valuation premiums,QuikNps,4200,0,Candidate for inherited/shared loader
+Rate_Table,980 PUA,280PUA,10,980 END65,RV,Reserve factors,QuikTvs,4200,0,Candidate for inherited/shared loader

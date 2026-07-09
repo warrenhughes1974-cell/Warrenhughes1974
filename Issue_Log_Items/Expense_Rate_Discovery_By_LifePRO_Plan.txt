@@ -1,0 +1,497 @@
+Expense Rate Discovery By QLA Product
+
+Source basis:
+- Evidence is limited to the previously found zip/source scan results.
+- QLA product code is used where product_catalog_crosswalk.csv provides a mapping from the LifePRO source code.
+- Rows without a QLA product mapping remain grouped as unmapped policy-level, treaty-level, deal-level, or transaction-level evidence.
+- No business rules or calculations are inferred.
+
+QLA Product: 5646AT
+QLA Product Description: Annual Renewable Term
+LifePRO Source Code: 646 ART
+Expense Type: Policy fee
+Rate/Value: 10.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1658C1
+QLA Product Description: CENSI-LIFE I: WL, CV, Loan Options, GDB
+LifePRO Source Code: 658 CEN I
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1658CS
+QLA Product Description: CENSI-LIFE I: WL, Fixed Premium
+LifePRO Source Code: 658 CEN SD
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1659C2
+QLA Product Description: CENSI-LIFE II: WL, Fixed Prem Op, Van
+LifePRO Source Code: 659 CEN II
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1659C2
+QLA Product Description: CENSI-LIFE II: WL, Fixed Prem Op, Van
+LifePRO Source Code: 659 CEN II
+Expense Type: UF expense segment
+Rate/Value: .0000000
+Basis: Age/duration rate row; durations 1-12
+Source: PDAGE_AgeDuration_Rates_Extract_20260530.csv
+
+QLA Product: 1659C2
+QLA Product Description: CENSI-LIFE II: WL, Fixed Prem Op, Van
+LifePRO Source Code: 659 CEN II
+Expense Type: Deposit loads
+Rate/Value: 1562.68, 1103.19, 733.23
+Basis: Policy benefit/fund value applied load
+Source: PPBEN_PolicyBenefit_Extract_20260530.csv
+
+QLA Product: 1659C2
+QLA Product Description: CENSI-LIFE II: WL, Fixed Prem Op, Van
+LifePRO Source Code: 659 CEN II
+Expense Type: Withdrawal load
+Rate/Value: -2557.64, -1000.41, -1277.62
+Basis: Policy benefit/fund value applied load
+Source: PPBEN_PolicyBenefit_Extract_20260530.csv
+
+QLA Product: 1659C2
+QLA Product Description: CENSI-LIFE II: WL, Fixed Prem Op, Van
+LifePRO Source Code: 659 CEN II
+Expense Type: Fund deposit loads
+Rate/Value: 1562.68, 1103.19, 733.23
+Basis: Fund history applied load
+Source: PFNDR_FundHistory_Extract_20260530.csv
+
+QLA Product: 1659C2
+QLA Product Description: CENSI-LIFE II: WL, Fixed Prem Op, Van
+LifePRO Source Code: 659 CEN II
+Expense Type: Deposit load detail
+Rate/Value: 3.98
+Basis: Fund history detail transaction load
+Source: PFNDRDET_FundHistoryDET_Extract_20260530.csv
+
+QLA Product: 1659C2
+QLA Product Description: CENSI-LIFE II: WL, Fixed Prem Op, Van
+LifePRO Source Code: 659 CEN II
+Expense Type: Withdrawal load detail
+Rate/Value: -2557.64, -1000.41
+Basis: Fund history detail transaction load
+Source: PFNDRDET_FundHistoryDET_Extract_20260530.csv
+
+QLA Product: 1659CS
+QLA Product Description: CENSI-LIFE II: Fixed Prem Op, Van, GDB
+LifePRO Source Code: 659 CEN SD
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1659CS
+QLA Product Description: CENSI-LIFE II: Fixed Prem Op, Van, GDB
+LifePRO Source Code: 659 CEN SD
+Expense Type: BP premium-related rate row
+Rate/Value: BP rows present
+Basis: Attained-age rate row; not explicit expense
+Source: PAAGE_AttainedAge_Rates_Extract_20260530.csv
+
+QLA Product: 1659CR
+QLA Product Description: CENSI-LIFE II: WL, Fixed Prem Op, Van
+LifePRO Source Code: 659 CEN SR
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1659SR
+QLA Product Description: CENSI-LIFE II: Van Prem, Loan Op, GDB
+LifePRO Source Code: 659 SR GD
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 5667AT
+QLA Product Description: Annual Renewable Term
+LifePRO Source Code: 667 ART
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 57ATCR
+QLA Product Description: ART Preferred Credit Life
+LifePRO Source Code: 667 ART CR
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1668SP
+QLA Product Description: Single Premium Whole Life
+LifePRO Source Code: 668 SPWL
+Expense Type: BP premium-related rate row
+Rate/Value: BP rows present
+Basis: Attained-age rate row; not explicit expense
+Source: PAAGE_AttainedAge_Rates_Extract_20260530.csv
+
+QLA Product: 1669SR
+QLA Product Description: Interest-Sensitive Whole Life
+LifePRO Source Code: 669 SR GD
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 170858
+QLA Product Description: Life Policy - Paid Up M Age 85 F Age 88
+LifePRO Source Code: 670 GL85-8
+Expense Type: Policy fee
+Rate/Value: 10.44
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 170588
+QLA Product Description: Life Policy - Paid Up M Age 85 F Age 88
+LifePRO Source Code: 670 GL8588
+Expense Type: Policy fee
+Rate/Value: 10.44
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 17085M
+QLA Product Description: Life Policy - Paid Up M Age 85 F Age 88
+LifePRO Source Code: 670 GL85-M
+Expense Type: Policy fee
+Rate/Value: 10.44
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1679CS
+QLA Product Description: Choice Plus: Van Prem, Empl Spon, Loans
+LifePRO Source Code: 679 CEN SD
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1679CS
+QLA Product Description: Choice Plus: Van Prem, Empl Spon, Loans
+LifePRO Source Code: 679 CEN SD
+Expense Type: BP premium-related rate row
+Rate/Value: 3.8400000, 3.9300000, 4.0300000
+Basis: Attained-age rate row; not explicit expense
+Source: PAAGERAT_AttainedAge_Rates_Extract_20260530.csv
+
+QLA Product: 7686S3
+QLA Product Description: Decreasing Term Life
+LifePRO Source Code: 686S 30MRG
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 7687J3
+QLA Product Description: Joint Decreasing Term Life
+LifePRO Source Code: 687J 30MRG
+Expense Type: Policy fee
+Rate/Value: 25.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 196065
+QLA Product Description: Life Paid Up at Age 65
+LifePRO Source Code: 960 LP65
+Expense Type: Policy fee
+Rate/Value: 10.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 196085
+QLA Product Description: Life Policy - Paid Up M Age 85 F Age 88
+LifePRO Source Code: 960 LP85-M
+Expense Type: Policy fee
+Rate/Value: 10.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1960OL
+QLA Product Description: Ordinary Whole Life
+LifePRO Source Code: 960 OL
+Expense Type: Policy fee
+Rate/Value: 10.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1960PO
+QLA Product Description: Preferred Ordinary Whole Life
+LifePRO Source Code: 960 PO
+Expense Type: Policy fee
+Rate/Value: 10.00
+Basis: Coverage/product and policy master examples
+Source: PCOVR_Coverage_Extract_20260530.csv; PPOLC_PolicyMaster_Extract_20260530.csv
+
+QLA Product: 1POPUA
+QLA Product Description: PUAs for 960 PO
+LifePRO Source Code: 960 PO PUA
+Expense Type: Policy fee
+Rate/Value: 10.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 2961ME
+QLA Product Description: Modified Endowment at 65
+LifePRO Source Code: 961 ME65
+Expense Type: Policy fee
+Rate/Value: 10.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 280END
+QLA Product Description: Endowment at Age 65
+LifePRO Source Code: 980 END65
+Expense Type: Policy fee / benefit fee
+Rate/Value: 10.00
+Basis: Policy/product and benefit rows
+Source: PPOLC_PolicyMaster_Extract_20260530.csv; PPBEN_PolicyBenefit_Extract_20260530.csv
+
+QLA Product: 280END
+QLA Product Description: Endowment at Age 65
+LifePRO Source Code: 980 END65
+Expense Type: Policy fee
+Rate/Value: 10.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 5L0110
+QLA Product Description: Ten Year Level Term to Age 95
+LifePRO Source Code: L01 10Y LT
+Expense Type: Policy fee
+Rate/Value: 50.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 5L01MA
+QLA Product Description: Ten Year Level Term to Age 95
+LifePRO Source Code: L01 10Y MA
+Expense Type: Policy fee
+Rate/Value: 50.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1L1095
+QLA Product Description: Whole Life payable to age 95 - Jr
+LifePRO Source Code: L10 LP95
+Expense Type: Policy fee
+Rate/Value: 35.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1L10SR
+QLA Product Description: Whole Life payable to age 95 - Sr
+LifePRO Source Code: L10 LP95SR
+Expense Type: Policy fee
+Rate/Value: 35.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1L10OD
+QLA Product Description: L10 PRE97 vs L10 OLD
+LifePRO Source Code: L10 PRE97
+Expense Type: Policy fee
+Rate/Value: 35.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1L10PR
+QLA Product Description: L10 PREUNI
+LifePRO Source Code: L10 PREUNI
+Expense Type: Policy fee
+Rate/Value: 35.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1L10SO
+QLA Product Description: Whole Life payable to age 95 - Sr
+LifePRO Source Code: L10 SR OLD
+Expense Type: Policy fee
+Rate/Value: 35.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 1L14SC
+QLA Product Description: SecureChoice Life: Graded DB WL
+LifePRO Source Code: L14
+Expense Type: Policy fee
+Rate/Value: 36.00
+Basis: Reinsurance detail policy fee
+Source: PREIN_ReinsuranceDetail_Extract_20260530.csv
+
+QLA Product: 1L14SC
+QLA Product Description: SecureChoice Life: Graded DB WL
+LifePRO Source Code: L14
+Expense Type: Expense allowance
+Rate/Value: 1.58
+Basis: Reinsurance adjustment / treaty allowance
+Source: PRADJ_ReinsuranceAdjustments_Extract_20260530.csv; PREINTRT_ReinsuranceDetailTreaty_Extract_20260530.csv
+
+QLA Product: 1L14SC
+QLA Product Description: SecureChoice Life: Graded DB WL
+LifePRO Source Code: L14
+Expense Type: Expense allowance lookup
+Rate/Value: L14REEXP
+Basis: Treaty setup expense allowance ID
+Source: PROD_PTRTY_TreatySetup_Extract_20260530.csv
+
+QLA Product: UNMAPPED_TREATY_CODE
+LifePRO Source Code: L14CSI
+Expense Type: Expense allowance
+Rate/Value: 1.58
+Basis: Reinsurance treaty allowance
+Source: PREINTRT_ReinsuranceDetailTreaty_Extract_20260530.csv
+
+QLA Product: UNMAPPED_TREATY_CODE
+LifePRO Source Code: L14CSI
+Expense Type: Expense allowance lookup
+Rate/Value: L14REEXP
+Basis: Treaty setup expense allowance ID
+Source: PROD_PTRTY_TreatySetup_Extract_20260530.csv
+
+QLA Product: UNMAPPED_TREATY_CODE
+LifePRO Source Code: L14CSO
+Expense Type: Expense allowance
+Rate/Value: 1.58
+Basis: Reinsurance treaty allowance
+Source: PREINTRT_ReinsuranceDetailTreaty_Extract_20260530.csv
+
+QLA Product: UNMAPPED_TREATY_CODE
+LifePRO Source Code: L14CSO
+Expense Type: Expense allowance lookup
+Rate/Value: L14REEXP
+Basis: Treaty setup expense allowance ID
+Source: PROD_PTRTY_TreatySetup_Extract_20260530.csv
+
+QLA Product: 1L14SC
+QLA Product Description: SecureChoice Life: Graded DB WL
+LifePRO Source Code: L14
+Expense Type: Policy fee
+Rate/Value: 36.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 10L171
+QLA Product Description: Single Premium WL - L17
+LifePRO Source Code: L17 1
+Expense Type: Policy fee
+Rate/Value: 50.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 117JPO
+QLA Product Description: Juvenile Purchase Option - L17
+LifePRO Source Code: L17 1 JPO
+Expense Type: Policy fee
+Rate/Value: 50.00
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 10L172
+QLA Product Description: Single Premium WL - L17
+LifePRO Source Code: L17 2+
+Expense Type: Policy fee
+Rate/Value: 47.50
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 17MJPO
+QLA Product Description: Multi Juvenile Purchase Option - L17
+LifePRO Source Code: L17 2+ JPO
+Expense Type: Policy fee
+Rate/Value: 47.50
+Basis: Coverage/product
+Source: PCOVR_Coverage_Extract_20260530.csv
+
+QLA Product: 221END
+QLA Product Description: Endowment at Age 85
+LifePRO Source Code: 621 END85
+Expense Type: Policy fee context absent in sample; premium commitment present
+Rate/Value: 5389762.88
+Basis: Policy master / history field named PREMIUM_COMMITMENT
+Source: PPOLC_PolicyMaster_Extract_20260530.csv; PPHSTCON_PolicyBenefitHistoryCON_Extract_20260530.csv
+
+QLA Product: UNMAPPED_POLICY_LEVEL
+LifePRO Source Code: Policy-level, product not shown in sample
+Expense Type: Policy fee
+Rate/Value: 10.00, 10.44, 19.85, 20.00, 25.00, 35.00, 36.00, 50.00
+Basis: Policy master distribution
+Source: PPOLC_PolicyMaster_Extract_20260530.csv
+
+QLA Product: UNMAPPED_POLICY_LEVEL
+LifePRO Source Code: Policy-level, product not shown in sample
+Expense Type: Benefit fee
+Rate/Value: 10.00, 10.44, 25.00, 35.00, 36.00, 50.00
+Basis: Policy benefit distribution
+Source: PPBEN_PolicyBenefit_Extract_20260530.csv
+
+QLA Product: UNMAPPED_POLICY_LEVEL
+LifePRO Source Code: Policy-level, product not shown in sample
+Expense Type: Current surrender load
+Rate/Value: -27708.02, -5985.50, -2557.64
+Basis: Benefit type load field
+Source: PPBENTYP_BenefitType_Extract_20260530.csv
+
+QLA Product: UNMAPPED_POLICY_LEVEL
+LifePRO Source Code: Policy-level, product not shown in sample
+Expense Type: Benefit history fee
+Rate/Value: 10.00
+Basis: Benefit history type rows
+Source: PPHSTTYP_PolicyBenefitHistoryTYP_Extract_20260530.csv
+
+QLA Product: UNMAPPED_POLICY_LEVEL
+LifePRO Source Code: Policy-level, product not shown in sample
+Expense Type: Benefit history current surrender load
+Rate/Value: -71.51, -2796.47, -72.82
+Basis: Benefit history type load rows
+Source: PPHSTTYP_PolicyBenefitHistoryTYP_Extract_20260530.csv
+
+QLA Product: UNMAPPED_POLICY_LEVEL
+LifePRO Source Code: Policy-level, product not shown in sample
+Expense Type: Policy fee history
+Rate/Value: 10.00
+Basis: Policy benefit history control rows
+Source: PPHSTCON_PolicyBenefitHistoryCON_Extract_20260530.csv
+
+QLA Product: UNMAPPED_POLICY_LEVEL
+LifePRO Source Code: Policy-level, product not shown in sample
+Expense Type: Fund value deposit loads
+Rate/Value: 799.77
+Basis: Policy benefit history fund value loads
+Source: PPHST_PolicyBenefitHistory_Extract_20260530.csv
+
+QLA Product: UNMAPPED_POLICY_LEVEL
+LifePRO Source Code: Policy-level, product not shown in sample
+Expense Type: Gross expense
+Rate/Value: 24.96
+Basis: PV_ORIG_GROSS_EXP, PV_CURR_GROSS_EXP; effective-date rows
+Source: PRBENSTO_BenefitRatesSTO_Extract_20260530.csv
+
+QLA Product: UNMAPPED_DEAL_CODE
+LifePRO Source Code: Deal 0101
+Expense Type: Fee schedule/rate fields present
+Rate/Value: No non-zero fee-rate values found
+Basis: Agent deal setup; START_DATE=19320101, STOP_DATE=99999999
+Source: PROD_PDEAL_AgentDealSetup_Extract_20260530.csv
+
+QLA Product: UNMAPPED_DEAL_CODE
+LifePRO Source Code: Deal 0401
+Expense Type: Fee schedule/rate fields present
+Rate/Value: No non-zero fee-rate values found
+Basis: Agent deal setup; START_DATE=19320101, STOP_DATE=99999999
+Source: PROD_PDEAL_AgentDealSetup_Extract_20260530.csv

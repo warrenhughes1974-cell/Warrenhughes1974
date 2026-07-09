@@ -17,6 +17,9 @@ from qla_core import rate_key_setup as K
 from qla_core import rate_member_setup as MB
 from qla_core import rate_validation as V
 from qla_core import rate_segment_resolution as SR
+from qla_core import cv_inheritance_loader as CIL
+from qla_core import rate_inheritance_loader as RIL
+from qla_core import shared_rate_candidate_loader as SCL
 from qla_core import paagerat_pr_loader as PA
 from qla_core import paagerat_bp_loader as BP
 from qla_core import paagerat_ul_coi_loader as COI
@@ -46,6 +49,7 @@ class PipelineResult:
         self.plan2desc = {}
         self.paagerat_vargp3_plans = frozenset()
         self.paagerat_status = collections.Counter()
+        self.paagerat_nf_status = collections.Counter()
         self.paagerat_bp_status = collections.Counter()
         self.paagerat_bp_plans = frozenset()
         self.paagerat_bp_enabled = False
@@ -64,6 +68,12 @@ class PipelineResult:
         self.quikissc_rows = []
         self.quikissc_status = collections.Counter()
         self.quikissc_enabled = False
+        self.cv_inheritance_manifest = []
+        self.cv_inheritance_status = collections.Counter()
+        self.non_cv_inheritance_manifest = []
+        self.non_cv_inheritance_status = collections.Counter()
+        self.shared_rate_manifest = []
+        self.shared_rate_status = collections.Counter()
 
     @property
     def blocker_count(self):
@@ -133,19 +143,91 @@ def run(config_path, repo_root):
         elif t["status"] == "IN_SCOPE" and t.get("age_capped"):
             res.age_cap[(t["plan"], t["type_code"], t["original_age"], t["age"])] += 1
 
+    psgt_path = _resolve_path(repo_root, cfg.get("pcovrsgt_csv", ""))
+    inh_cfg = cfg.get("issue40_cv_inheritance") or {}
+    if inh_cfg.get("enabled", True):
+        audit_csv = _resolve_path(
+            repo_root,
+            inh_cfg.get(
+                "fleet_audit_csv",
+                os.path.join("Issue_Log_Items", "Issue_40", "Issue_40_Fleet_CV_Inheritance_Audit.csv"),
+            ),
+        )
+        if os.path.isfile(audit_csv) and os.path.isfile(psgt_path):
+            res.cv_inheritance_manifest = CIL.build_inheritance_manifest(audit_csv, psgt_path, src)
+
+    ncv_cfg = cfg.get("non_cv_rate_inheritance") or {}
+    if ncv_cfg.get("enabled", False):
+        manifest_csv = _resolve_path(
+            repo_root,
+            ncv_cfg.get(
+                "manifest_csv",
+                os.path.join(
+                    "Issue_Log_Items",
+                    "Issue_Rates_Inheritance_Validation",
+                    "non_cv_inheritance_analysis",
+                    "approved_first_pass_scope.csv",
+                ),
+            ),
+        )
+        if os.path.isfile(manifest_csv):
+            approved_types = ncv_cfg.get("approved_types") or list(RIL.APPROVED_TYPES)
+            res.non_cv_inheritance_manifest = RIL.build_inheritance_manifest(
+                manifest_csv, source_csv=src, cov2plan=cov2plan, approved_types=approved_types
+            )
+
+    shared_cfg = cfg.get("shared_rate_candidates") or {}
+    if shared_cfg.get("enabled", False):
+        candidate_csv = _resolve_path(
+            repo_root,
+            shared_cfg.get(
+                "candidate_csv",
+                os.path.join(
+                    "Issue_Log_Items",
+                    "Issue_Rates_Inheritance_Validation",
+                    "master_rate_completeness",
+                    "inherited_shared_rate_candidates.csv",
+                ),
+            ),
+        )
+        if os.path.isfile(candidate_csv):
+            res.shared_rate_manifest = SCL.build_shared_manifest(candidate_csv)
+
     def stream():
         for t in L.transform_source(src, cov2plan, config, cv_fnz=cv_fnz):
             _track(t)
             yield t
 
+        for t in CIL.transform_inherited_cv(src, res.cv_inheritance_manifest, config, cv_fnz=cv_fnz):
+            st = t["status"]
+            res.cv_inheritance_status[st] += 1
+            _track(t)
+            yield t
+
+        for t in RIL.transform_inherited_rates(src, res.non_cv_inheritance_manifest, config):
+            st = t["status"]
+            res.non_cv_inheritance_status[st] += 1
+            _track(t)
+            yield t
+
+        for t in SCL.transform_rate_table_shared(src, res.shared_rate_manifest, config):
+            st = t["status"]
+            res.shared_rate_status[st] += 1
+            _track(t)
+            yield t
+
         pa_path = _resolve_path(repo_root, cfg.get("paagerat_pr_extract", ""))
-        psgt_path = _resolve_path(repo_root, cfg.get("pcovrsgt_csv", ""))
         pcovr_path = _resolve_path(repo_root, cfg.get("pcovr_csv", ""))
         if pa_path and os.path.isfile(pa_path) and os.path.isfile(psgt_path) and os.path.isfile(pcovr_path):
             resolver = SR.SegmentResolver.from_files(psgt_path, pcovr_path, cov2plan)
             for t in PA.transform_paagerat_pr(pa_path, resolver, config, plan_exclude=pr_suppress):
                 st = t["status"]
                 res.paagerat_status[st] += 1
+                _track(t)
+                yield t
+            for t in PA.transform_paagerat_nf(pa_path, resolver, config):
+                st = t["status"]
+                res.paagerat_nf_status[st] += 1
                 _track(t)
                 yield t
             if cfg.get("iswl_phase2", {}).get("quikgps_enabled", False):
@@ -169,6 +251,11 @@ def run(config_path, repo_root):
                     res.paagerat_gcoi_status[st] += 1
                     _track(t)
                     yield t
+            for t in SCL.transform_paagerat_shared(pa_path, res.shared_rate_manifest, config):
+                st = t["status"]
+                res.shared_rate_status[st] += 1
+                _track(t)
+                yield t
 
     res.grids, res.collisions, res.cap_collisions = L.build_factor_grid(stream(), config)
 
@@ -270,6 +357,10 @@ def build_summary(res, phase, source, extra=None):
             "row_status": dict(res.paagerat_status),
             "grid_mode": "VARGP=3 attained-age (SEQ->AGE, CNTL=00/GP0)",
         },
+        "paagerat_nf": {
+            "row_status": dict(res.paagerat_nf_status),
+            "grid_mode": "VARGP=3 attained-age (SEQ->AGE, CNTL=00/NFF0)",
+        },
         "paagerat_bp": {
             "enabled": res.paagerat_bp_enabled,
             "bp_plan_count": len(res.paagerat_bp_plans),
@@ -299,6 +390,23 @@ def build_summary(res, phase, source, extra=None):
             "row_count": len(res.quikissc_rows),
             "status": dict(res.quikissc_status),
             "distinct_plans": len({r["PLAN"] for r in res.quikissc_rows}),
+        },
+        "issue40_cv_inheritance": {
+            "manifest_entries": len(res.cv_inheritance_manifest),
+            "row_status": dict(res.cv_inheritance_status),
+            "issuing_plans": sorted({e["issuing_plan"] for e in res.cv_inheritance_manifest}),
+        },
+        "non_cv_rate_inheritance": {
+            "manifest_entries": len(res.non_cv_inheritance_manifest),
+            "row_status": dict(res.non_cv_inheritance_status),
+            "issuing_plans": sorted({e["issuing_plan"] for e in res.non_cv_inheritance_manifest}),
+            "rate_types": sorted({e["rate_type"] for e in res.non_cv_inheritance_manifest}),
+        },
+        "shared_rate_candidates": {
+            "manifest_entries": len(res.shared_rate_manifest),
+            "row_status": dict(res.shared_rate_status),
+            "issuing_plans": sorted({e["issuing_plan"] for e in res.shared_rate_manifest}),
+            "rate_types": sorted({e["rate_type"] for e in res.shared_rate_manifest}),
         },
     }
     if extra:

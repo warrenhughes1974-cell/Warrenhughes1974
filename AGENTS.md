@@ -21,6 +21,7 @@ WHEN MAKING CHANGES:
 - preserve existing business logic
 - avoid modifying unrelated functions
 - explain regression risks
+- **bump `APP_VERSION` in BOTH `app.py` (repo root) AND `QLA_Migration/app.py`** — `run_converter.bat` launches root `app.py`
 
 BUSINESS RULES:
 - MPHASE 1 = base coverage

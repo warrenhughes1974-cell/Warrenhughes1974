@@ -1,0 +1,46 @@
+Plan,Parent/Inherited Source Plan,Rate Segment/Type,Gender,Band,Underwriting Class,Age,Duration,Source Table/File,Source Value,Converted Table/File,Converted Value,Match Status,Notes
+265PUA,2665ST,CV,,,,,,PCOVRSGT active slots: 665 STME95,,QuikCvs.csv,383,RESOLVED_BY_ISSUE40_CV_MANIFEST,Issuing coverage 665 PUA has no direct CV rows; active segment owner(s) have Rate_Table rows.
+265PUA,2665ST,DB,,,,,,PCOVRSGT active slots: 665 STME95,,QuikDbs.csv,0,GAP_NOT_EMITTED,Issuing coverage 665 PUA has no direct DB rows; active segment owner(s) have Rate_Table rows.
+265PUA,2665ST,NP,,,,,,PCOVRSGT active slots: 665 STME95,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage 665 PUA has no direct NP rows; active segment owner(s) have Rate_Table rows.
+265PUA,2665ST,DV,,,,,,PCOVRSGT active slots: 665 STME95,,QuikDvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 665 PUA has no direct DV rows; active segment owner(s) have Rate_Table rows.
+265PUA,2665ST,RV,,,,,,PCOVRSGT active slots: 665 STME95,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 665 PUA has no direct RV rows; active segment owner(s) have Rate_Table rows.
+265PUA,2665ST,PR,,,,,,PCOVRSGT active slots: 665 STME95,,QuikGps.csv,0,GAP_NOT_EMITTED,Issuing coverage 665 PUA has no direct PR rows; active segment owner(s) have Rate_Table rows.
+1668SP,1659C2,CV,,,,,,PCOVRSGT active slots: 659 CEN II,,QuikCvs.csv,1081,RESOLVED_BY_ISSUE40_CV_MANIFEST,Issuing coverage 668 SPWL has no direct CV rows; active segment owner(s) have Rate_Table rows.
+1668SP,1659C2,NP,,,,,,PCOVRSGT active slots: 659 CEN II,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage 668 SPWL has no direct NP rows; active segment owner(s) have Rate_Table rows.
+1668SP,1659C2,RV,,,,,,PCOVRSGT active slots: 659 CEN II,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 668 SPWL has no direct RV rows; active segment owner(s) have Rate_Table rows.
+1669SR,1659SR,DB,,,,,,PCOVRSGT active slots: 659 SR GD,,QuikDbs.csv,0,GAP_NOT_EMITTED,Issuing coverage 669 SR GD has no direct DB rows; active segment owner(s) have Rate_Table rows.
+1669SR,1659C2; 1659CR; 1659SR; 1L14SC,NP,,,,,,PCOVRSGT active slots: 659 CEN II; 659 CEN SR; 659 SR GD; L14,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage 669 SR GD has no direct NP rows; active segment owner(s) have Rate_Table rows.
+1669SR,1659C2; 1659CR; 1659SR; 1L14SC,RV,,,,,,PCOVRSGT active slots: 659 CEN II; 659 CEN SR; 659 SR GD; L14,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 669 SR GD has no direct RV rows; active segment owner(s) have Rate_Table rows.
+17085M,170858,CV,,,,,,PCOVRSGT active slots: 670 GL85-8,,QuikCvs.csv,1002,RESOLVED_BY_ISSUE40_CV_MANIFEST,Issuing coverage 670 GL85-M has no direct CV rows; active segment owner(s) have Rate_Table rows.
+17085M,170858,NP,,,,,,PCOVRSGT active slots: 670 GL85-8,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage 670 GL85-M has no direct NP rows; active segment owner(s) have Rate_Table rows.
+17085M,170858,DV,,,,,,PCOVRSGT active slots: 670 GL85-8,,QuikDvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 670 GL85-M has no direct DV rows; active segment owner(s) have Rate_Table rows.
+17085M,170858,RV,,,,,,PCOVRSGT active slots: 670 GL85-8,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 670 GL85-M has no direct RV rows; active segment owner(s) have Rate_Table rows.
+170588,170858,NP,,,,,,PCOVRSGT active slots: 670 GL85-8,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage 670 GL8588 has no direct NP rows; active segment owner(s) have Rate_Table rows.
+170588,170858,DV,,,,,,PCOVRSGT active slots: 670 GL85-8,,QuikDvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 670 GL8588 has no direct DV rows; active segment owner(s) have Rate_Table rows.
+170588,170858,RV,,,,,,PCOVRSGT active slots: 670 GL85-8,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 670 GL8588 has no direct RV rows; active segment owner(s) have Rate_Table rows.
+1679CS,1659C2; 1L14SC,NP,,,,,,PCOVRSGT active slots: 659 CEN II; L14,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage 679 CEN SD has no direct NP rows; active segment owner(s) have Rate_Table rows.
+1679CS,1659C2; 1L14SC,RV,,,,,,PCOVRSGT active slots: 659 CEN II; L14,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 679 CEN SD has no direct RV rows; active segment owner(s) have Rate_Table rows.
+7687J3,7686S3,DB,,,,,,PCOVRSGT active slots: 686S 30MRG,,QuikDbs.csv,0,GAP_NOT_EMITTED,Issuing coverage 687J 30MRG has no direct DB rows; active segment owner(s) have Rate_Table rows.
+1666AI,1666WL,CV,,,,,,PCOVRSGT active slots: 666 WL,,QuikCvs.csv,541,RESOLVED_BY_ISSUE40_CV_MANIFEST,Issuing coverage 897 666 has no direct CV rows; active segment owner(s) have Rate_Table rows.
+1666AI,1666WL,NP,,,,,,PCOVRSGT active slots: 666 WL,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage 897 666 has no direct NP rows; active segment owner(s) have Rate_Table rows.
+1666AI,1666WL,RV,,,,,,PCOVRSGT active slots: 666 WL,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 897 666 has no direct RV rows; active segment owner(s) have Rate_Table rows.
+261PUA,2961ME,CV,,,,,,PCOVRSGT active slots: 961 ME65,,QuikCvs.csv,486,RESOLVED_BY_ISSUE40_CV_MANIFEST,Issuing coverage 961 PUA has no direct CV rows; active segment owner(s) have Rate_Table rows.
+261PUA,2961ME,NP,,,,,,PCOVRSGT active slots: 961 ME65,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage 961 PUA has no direct NP rows; active segment owner(s) have Rate_Table rows.
+261PUA,2961ME,DV,,,,,,PCOVRSGT active slots: 961 ME65,,QuikDvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 961 PUA has no direct DV rows; active segment owner(s) have Rate_Table rows.
+261PUA,2961ME,RV,,,,,,PCOVRSGT active slots: 961 ME65,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 961 PUA has no direct RV rows; active segment owner(s) have Rate_Table rows.
+280PUA,280END,CV,,,,,,PCOVRSGT active slots: 980 END65,,QuikCvs.csv,496,RESOLVED_BY_ISSUE40_CV_MANIFEST,Issuing coverage 980 PUA has no direct CV rows; active segment owner(s) have Rate_Table rows.
+280PUA,280END,NP,,,,,,PCOVRSGT active slots: 980 END65,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage 980 PUA has no direct NP rows; active segment owner(s) have Rate_Table rows.
+280PUA,280END,DV,,,,,,PCOVRSGT active slots: 980 END65,,QuikDvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 980 PUA has no direct DV rows; active segment owner(s) have Rate_Table rows.
+280PUA,280END,RV,,,,,,PCOVRSGT active slots: 980 END65,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage 980 PUA has no direct RV rows; active segment owner(s) have Rate_Table rows.
+1L10SR,1L1095; 1L10OD,CV,,,,,,PCOVRSGT active slots: L10 LP95; L10 PRE97,,QuikCvs.csv,3246,RESOLVED_BY_ISSUE40_CV_MANIFEST,Issuing coverage L10 LP95SR has no direct CV rows; active segment owner(s) have Rate_Table rows.
+1L10OD,1L1095,NP,,,,,,PCOVRSGT active slots: L10 LP95,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage L10 PRE97 has no direct NP rows; active segment owner(s) have Rate_Table rows.
+1L10OD,1L1095,RV,,,,,,PCOVRSGT active slots: L10 LP95,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage L10 PRE97 has no direct RV rows; active segment owner(s) have Rate_Table rows.
+1L10PR,1L1095,NP,,,,,,PCOVRSGT active slots: L10 LP95,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage L10 PREUNI has no direct NP rows; active segment owner(s) have Rate_Table rows.
+1L10PR,1L1095,RV,,,,,,PCOVRSGT active slots: L10 LP95,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage L10 PREUNI has no direct RV rows; active segment owner(s) have Rate_Table rows.
+1L10SO,1L1095; 1L10OD,CV,,,,,,PCOVRSGT active slots: L10 LP95; L10 PRE97,,QuikCvs.csv,3285,RESOLVED_BY_ISSUE40_CV_MANIFEST,Issuing coverage L10 SR OLD has no direct CV rows; active segment owner(s) have Rate_Table rows.
+1L10SO,1L1095; 1L10SR,NP,,,,,,PCOVRSGT active slots: L10 LP95; L10 LP95SR,,QuikNps.csv,0,GAP_NOT_EMITTED,Issuing coverage L10 SR OLD has no direct NP rows; active segment owner(s) have Rate_Table rows.
+1L10SO,1L1095; 1L10SR,RV,,,,,,PCOVRSGT active slots: L10 LP95; L10 LP95SR,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage L10 SR OLD has no direct RV rows; active segment owner(s) have Rate_Table rows.
+1SALML,1SALOL,CV,,,,,,PCOVRSGT active slots: SAL OL,,QuikCvs.csv,516,RESOLVED_BY_ISSUE40_CV_MANIFEST,Issuing coverage SAL ML has no direct CV rows; active segment owner(s) have Rate_Table rows.
+1SALML,1SALOL,RV,,,,,,PCOVRSGT active slots: SAL OL,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage SAL ML has no direct RV rows; active segment owner(s) have Rate_Table rows.
+1SALMI,1SALOL,CV,,,,,,PCOVRSGT active slots: SAL OL,,QuikCvs.csv,516,RESOLVED_BY_ISSUE40_CV_MANIFEST,Issuing coverage SAL MULTPL has no direct CV rows; active segment owner(s) have Rate_Table rows.
+1SALMI,1SALOL,RV,,,,,,PCOVRSGT active slots: SAL OL,,QuikTvs.csv,0,GAP_NOT_EMITTED,Issuing coverage SAL MULTPL has no direct RV rows; active segment owner(s) have Rate_Table rows.

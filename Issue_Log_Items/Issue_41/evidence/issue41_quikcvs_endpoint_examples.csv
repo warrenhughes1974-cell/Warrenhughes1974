@@ -1,0 +1,6 @@
+case,plan,coverage_id,sex,issue_age,uwclass,band,source_duration,source_value,first_nonzero_source_duration,qla_duration_index,qla_cntl,qla_column,qla_value,emitted_csv_value,emitted_csv_result,attained_age_at_qla_duration,expected_value,result,note
+client_anchor,1960PO,960 PO,M,26,00,01,56,784.65,2,57,05,CV7,784.65,784.65,PASS,83,784.65,PASS,Client-reported off-by-one value.
+age100_endpoint,1960PO,960 PO,M,26,00,01,73,1000.0,2,74,07,CV4,1000.0,1000.00,PASS,100,1000.0,PASS,Terminal value must land at attained age 100.
+proof_matrix,1960PO,960 PO,M,22,00,01,76,1000.0,2,78,07,CV8,1000.0,1000.00,PASS,100,1000.0,PASS,Issue #37 proof plan with Issue #41 endpoint.
+fleet_endpoint,1960OL,960 OL,M,22,00,01,76,963.83,2,78,07,CV8,963.83,963.83,PASS,100,963.83,PASS,Additional 960-family CV plan; validates source value at age-100 endpoint.
+fleet_endpoint,1991PL,991 PWL,M,22,00,01,76,982.0,2,78,07,CV8,982.0,982.00,PASS,100,982.0,PASS,Non-960 whole-life CV plan; validates source value at age-100 endpoint.

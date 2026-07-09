@@ -79,15 +79,20 @@ You can run Step 3 manually, or have Step 2 do it automatically (see checkbox be
 
 **Purpose:** Build the product/plan file (`quikplan.csv`) that everything else depends on.
 
-**Where:** Scroll to **Product Setup Conversion (Phase P2C)**
+**Where (always visible — no scroll required):**
+
+- **Operator Dashboard** → purple **RUN PRODUCT SETUP**, or
+- **Run Controls** → purple **RUN PRODUCT SETUP CONVERSION**
+
+Options (Emit / Isolate / Block, etc.) remain in the **Product Setup** panel below Run Controls if you need to change them.
 
 **Before you click:**
 
-1. Check **Emit to Output (quikplan.csv)** — required if you want the file written to Output (off by default).
+1. **Emit quikplan.csv to Output** defaults **on** (v57.56+) — leave checked so Output is written.
 2. Leave **Isolate from batch** checked — batch will use this file instead of rebuilding quikplan.
 3. Leave **Block emit on ERROR** checked for production-quality runs (stops bad data from being written).
 
-**Click:** **RUN PRODUCT SETUP CONVERSION** (purple button in that section)
+**Click:** **RUN PRODUCT SETUP** (dashboard) or **RUN PRODUCT SETUP CONVERSION** (Run Controls)
 
 **Watch:**
 

@@ -1,0 +1,398 @@
+{
+  "validation": "PASS",
+  "manifest_entries": 24,
+  "approved_yes_rows": 24,
+  "inheritance_status": {
+    "IN_SCOPE": 375840
+  },
+  "inherited_collisions": 0,
+  "pipeline_blockers": 1,
+  "direct_transform_in_scope": 856845,
+  "pipeline_in_scope_total": 1482143,
+  "plan_stats": {
+    "1666AI/NP": {
+      "issuing_plan": "1666AI",
+      "rate_type": "NP",
+      "target_table": "QuikNps",
+      "source_segments": [
+        "666 WL"
+      ],
+      "source_plan": "1666WL",
+      "grid_keys": 1064,
+      "source_rows_checked": 9890,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1666AI/RV": {
+      "issuing_plan": "1666AI",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "666 WL"
+      ],
+      "source_plan": "1666WL",
+      "grid_keys": 1064,
+      "source_rows_checked": 9890,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1668SP/NP": {
+      "issuing_plan": "1668SP",
+      "rate_type": "NP",
+      "target_table": "QuikNps",
+      "source_segments": [
+        "659 CEN II"
+      ],
+      "source_plan": "1659C2",
+      "grid_keys": 2128,
+      "source_rows_checked": 19780,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1668SP/RV": {
+      "issuing_plan": "1668SP",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "659 CEN II"
+      ],
+      "source_plan": "1659C2",
+      "grid_keys": 2128,
+      "source_rows_checked": 19780,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1669SR/DB": {
+      "issuing_plan": "1669SR",
+      "rate_type": "DB",
+      "target_table": "QuikDbs",
+      "source_segments": [
+        "659 SR GD"
+      ],
+      "source_plan": "1659SR",
+      "grid_keys": 10,
+      "source_rows_checked": 100,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1669SR/NP": {
+      "issuing_plan": "1669SR",
+      "rate_type": "NP",
+      "target_table": "QuikNps",
+      "source_segments": [
+        "659 CEN II",
+        "659 CEN SR",
+        "659 SR GD",
+        "L14"
+      ],
+      "source_plan": "1659C2",
+      "grid_keys": 2456,
+      "source_rows_checked": 22666,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1669SR/RV": {
+      "issuing_plan": "1669SR",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "659 CEN II",
+        "659 CEN SR",
+        "659 SR GD",
+        "L14"
+      ],
+      "source_plan": "1659C2",
+      "grid_keys": 2456,
+      "source_rows_checked": 22654,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1679CS/NP": {
+      "issuing_plan": "1679CS",
+      "rate_type": "NP",
+      "target_table": "QuikNps",
+      "source_segments": [
+        "659 CEN II",
+        "L14"
+      ],
+      "source_plan": "1659C2",
+      "grid_keys": 2456,
+      "source_rows_checked": 22666,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1679CS/RV": {
+      "issuing_plan": "1679CS",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "659 CEN II",
+        "L14"
+      ],
+      "source_plan": "1659C2",
+      "grid_keys": 2456,
+      "source_rows_checked": 22654,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "170588/DV": {
+      "issuing_plan": "170588",
+      "rate_type": "DV",
+      "target_table": "QuikDvs",
+      "source_segments": [
+        "670 GL85-8"
+      ],
+      "source_plan": "170858",
+      "grid_keys": 770,
+      "source_rows_checked": 7126,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "170588/NP": {
+      "issuing_plan": "170588",
+      "rate_type": "NP",
+      "target_table": "QuikNps",
+      "source_segments": [
+        "670 GL85-8"
+      ],
+      "source_plan": "170858",
+      "grid_keys": 770,
+      "source_rows_checked": 6988,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "170588/RV": {
+      "issuing_plan": "170588",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "670 GL85-8"
+      ],
+      "source_plan": "170858",
+      "grid_keys": 986,
+      "source_rows_checked": 9230,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "17085M/DV": {
+      "issuing_plan": "17085M",
+      "rate_type": "DV",
+      "target_table": "QuikDvs",
+      "source_segments": [
+        "670 GL85-8"
+      ],
+      "source_plan": "170858",
+      "grid_keys": 770,
+      "source_rows_checked": 7126,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "17085M/NP": {
+      "issuing_plan": "17085M",
+      "rate_type": "NP",
+      "target_table": "QuikNps",
+      "source_segments": [
+        "670 GL85-8"
+      ],
+      "source_plan": "170858",
+      "grid_keys": 770,
+      "source_rows_checked": 6988,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "17085M/RV": {
+      "issuing_plan": "17085M",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "670 GL85-8"
+      ],
+      "source_plan": "170858",
+      "grid_keys": 986,
+      "source_rows_checked": 9230,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1L10OD/NP": {
+      "issuing_plan": "1L10OD",
+      "rate_type": "NP",
+      "target_table": "QuikNps",
+      "source_segments": [
+        "L10 LP95"
+      ],
+      "source_plan": "1L1095",
+      "grid_keys": 3000,
+      "source_rows_checked": 27606,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1L10OD/RV": {
+      "issuing_plan": "1L10OD",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "L10 LP95"
+      ],
+      "source_plan": "1L1095",
+      "grid_keys": 3096,
+      "source_rows_checked": 28908,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1L10PR/NP": {
+      "issuing_plan": "1L10PR",
+      "rate_type": "NP",
+      "target_table": "QuikNps",
+      "source_segments": [
+        "L10 LP95"
+      ],
+      "source_plan": "1L1095",
+      "grid_keys": 3000,
+      "source_rows_checked": 27606,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1L10PR/RV": {
+      "issuing_plan": "1L10PR",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "L10 LP95"
+      ],
+      "source_plan": "1L1095",
+      "grid_keys": 3096,
+      "source_rows_checked": 28908,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1L10SO/NP": {
+      "issuing_plan": "1L10SO",
+      "rate_type": "NP",
+      "target_table": "QuikNps",
+      "source_segments": [
+        "L10 LP95",
+        "L10 LP95SR"
+      ],
+      "source_plan": "1L1095",
+      "grid_keys": 3000,
+      "source_rows_checked": 27606,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1L10SO/RV": {
+      "issuing_plan": "1L10SO",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "L10 LP95",
+        "L10 LP95SR"
+      ],
+      "source_plan": "1L1095",
+      "grid_keys": 3096,
+      "source_rows_checked": 28908,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1SALMI/RV": {
+      "issuing_plan": "1SALMI",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "SAL OL"
+      ],
+      "source_plan": "1SALOL",
+      "grid_keys": 508,
+      "source_rows_checked": 4750,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "1SALML/RV": {
+      "issuing_plan": "1SALML",
+      "rate_type": "RV",
+      "target_table": "QuikTvs",
+      "source_segments": [
+        "SAL OL"
+      ],
+      "source_plan": "1SALOL",
+      "grid_keys": 508,
+      "source_rows_checked": 4750,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    },
+    "7687J3/DB": {
+      "issuing_plan": "7687J3",
+      "rate_type": "DB",
+      "target_table": "QuikDbs",
+      "source_segments": [
+        "686S 30MRG"
+      ],
+      "source_plan": "7686S3",
+      "grid_keys": 3,
+      "source_rows_checked": 30,
+      "source_mismatches": 0,
+      "in_scope_emitted": 375840
+    }
+  },
+  "anchor_points_pass": 72,
+  "anchor_points_total": 72,
+  "pua_excluded_checks": 11,
+  "pua_rows_outside_first_pass_scope": {
+    "261PUA/DV": {
+      "target_table": "QuikDvs",
+      "grid_keys": 339,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    },
+    "261PUA/NP": {
+      "target_table": "QuikNps",
+      "grid_keys": 472,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    },
+    "261PUA/RV": {
+      "target_table": "QuikTvs",
+      "grid_keys": 472,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    },
+    "265PUA/DB": {
+      "target_table": "QuikDbs",
+      "grid_keys": 510,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    },
+    "265PUA/DV": {
+      "target_table": "QuikDvs",
+      "grid_keys": 187,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    },
+    "265PUA/NP": {
+      "target_table": "QuikNps",
+      "grid_keys": 760,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    },
+    "265PUA/PR": {
+      "target_table": "QuikGps",
+      "grid_keys": 12,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    },
+    "265PUA/RV": {
+      "target_table": "QuikTvs",
+      "grid_keys": 760,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    },
+    "280PUA/DV": {
+      "target_table": "QuikDvs",
+      "grid_keys": 408,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    },
+    "280PUA/NP": {
+      "target_table": "QuikNps",
+      "grid_keys": 472,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    },
+    "280PUA/RV": {
+      "target_table": "QuikTvs",
+      "grid_keys": 472,
+      "note": "Loaded outside first-pass validator by the rate-completeness shared candidate loader."
+    }
+  },
+  "inherited_pr_rows": 0,
+  "failures": []
+}

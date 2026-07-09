@@ -1,0 +1,24 @@
+Issue #40 UAT load package — generated 2026-07-06T20:06:36
+
+USE THESE FILES (issue40_ONLY = only the 10 inherited plans):
+
+  Issue_Log_Items/Issue_40/uat_load_package/
+
+Load order for QLAdmin:
+  1. QuikPlGd_issue40_ONLY.csv
+  2. QuikPlBd_issue40_ONLY.csv
+  3. QuikPlUw_issue40_ONLY.csv
+  4. QuikPlSt_issue40_ONLY.csv
+  5. QuikPlNb_issue40_ONLY.csv
+  6. QuikPlCv_issue40_ONLY.csv   <-- 17085M is row 3-4 in this file
+  7. QuikCvs_issue40_plans_only.csv
+
+Full fleet tables also at:
+  QLA_Migration/Output/rates/
+
+IMPORTANT: Open CSVs in Notepad, not Excel.
+Excel strips letters from plan codes (17085M becomes 17085).
+
+17085M QuikPlCv rows:
+  17085M,F,00,01,0000,00,19000101,P1,R1,,0
+  17085M,M,00,01,0000,00,19000101,O1,Q1,,0

@@ -1,0 +1,144 @@
+{
+  "generated_at": "2026-07-07T09:28:38",
+  "stats": {
+    "direct_IN_SCOPE": 770524,
+    "direct_cells_checked": 770524,
+    "direct_cells_matched": 770524,
+    "direct_EXCLUDED": 358460,
+    "inherited_cv_IN_SCOPE": 101793,
+    "inherited_cv_cells_checked": 101793,
+    "inherited_cv_cells_matched": 101793,
+    "inherited_cv_EXCLUDED": 1954,
+    "paagerat_IN_SCOPE": 14556,
+    "paagerat_cells_checked": 14556,
+    "paagerat_cells_matched": 14255,
+    "paagerat_EXCLUDED": 81019,
+    "paagerat_cells_mismatched": 301,
+    "paagerat_BAD_VALUE": 2121,
+    "candidate_RESOLVED_BY_ISSUE40_CV_MANIFEST": 10,
+    "candidate_GAP_NOT_EMITTED": 35
+  },
+  "pipeline_blockers": 1,
+  "pipeline_blocker_ids": [
+    "V-UINT-PDINT"
+  ],
+  "factor_rows_by_table": {
+    "QuikCvs": 38047,
+    "QuikDbs": 1380,
+    "QuikNps": 26650,
+    "QuikTvs": 26097,
+    "QuikDvs": 3978,
+    "QuikGps": 12567,
+    "QuikCoi": 792,
+    "QuikGcoi": 198
+  },
+  "key_rows_by_table": {
+    "QuikPlCv": 94,
+    "QuikPlDb": 12,
+    "QuikPlTv": 112,
+    "QuikPlDv": 20,
+    "QuikPlGp": 205
+  },
+  "member_rows_by_table": {
+    "QuikPlGd": 184,
+    "QuikPlUw": 151,
+    "QuikPlBd": 134,
+    "QuikPlSt": 115,
+    "QuikPlNb": 115,
+    "QuikUint": 0,
+    "QuikIssc": 0
+  },
+  "cv_inheritance_manifest": [
+    {
+      "issuing_coverage": "L10 SR OLD",
+      "issuing_plan": "1L10SO",
+      "rate_owner_coverage": "L10 PRE97",
+      "candidate_owners": [
+        "L10 PRE97",
+        "L10 LP95"
+      ]
+    },
+    {
+      "issuing_coverage": "670 GL85-M",
+      "issuing_plan": "17085M",
+      "rate_owner_coverage": "670 GL85-8",
+      "candidate_owners": [
+        "670 GL85-8"
+      ]
+    },
+    {
+      "issuing_coverage": "668 SPWL",
+      "issuing_plan": "1668SP",
+      "rate_owner_coverage": "659 CEN II",
+      "candidate_owners": [
+        "659 CEN II"
+      ]
+    },
+    {
+      "issuing_coverage": "L10 LP95SR",
+      "issuing_plan": "1L10SR",
+      "rate_owner_coverage": "L10 LP95",
+      "candidate_owners": [
+        "L10 LP95",
+        "L10 PRE97"
+      ]
+    },
+    {
+      "issuing_coverage": "SAL MULTPL",
+      "issuing_plan": "1SALMI",
+      "rate_owner_coverage": "SAL OL",
+      "candidate_owners": [
+        "SAL OL"
+      ]
+    },
+    {
+      "issuing_coverage": "SAL ML",
+      "issuing_plan": "1SALML",
+      "rate_owner_coverage": "SAL OL",
+      "candidate_owners": [
+        "SAL OL"
+      ]
+    },
+    {
+      "issuing_coverage": "897 666",
+      "issuing_plan": "1666AI",
+      "rate_owner_coverage": "666 WL",
+      "candidate_owners": [
+        "666 WL"
+      ]
+    },
+    {
+      "issuing_coverage": "980 PUA",
+      "issuing_plan": "280PUA",
+      "rate_owner_coverage": "980 END65",
+      "candidate_owners": [
+        "980 END65"
+      ]
+    },
+    {
+      "issuing_coverage": "665 PUA",
+      "issuing_plan": "265PUA",
+      "rate_owner_coverage": "665 STME95",
+      "candidate_owners": [
+        "665 STME95"
+      ]
+    },
+    {
+      "issuing_coverage": "961 PUA",
+      "issuing_plan": "261PUA",
+      "rate_owner_coverage": "961 ME65",
+      "candidate_owners": [
+        "961 ME65"
+      ]
+    }
+  ],
+  "candidate_count": 45,
+  "candidate_status_counts": {
+    "RESOLVED_BY_ISSUE40_CV_MANIFEST": 10,
+    "GAP_NOT_EMITTED": 35
+  },
+  "screenshot_anchor_count": 8,
+  "screenshot_anchor_matches": 8,
+  "screenshot_anchor_mismatches": 0,
+  "trace_matrix_rows": 102129
+}

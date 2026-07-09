@@ -1,0 +1,12 @@
+bucket,priority,ql_plan,lifepro_coverage,issued_rows,direct_cv_rows,current_quikcvs_keys,rate_owner_coverage,rate_owner_plan,rate_owner_cv_rows,rate_owner_quikcvs_keys,notes
+MISSING_INHERITED_CV,High,1L10SO,L10 SR OLD,449,0,0,"L10 PRE97; L10 LP95","1L10OD; 1L1095","29263; 29599","3231; 3192","Senior Life old plan inherits multiple CV-bearing rate-owner segments; requires actuarial rule before emit."
+MISSING_INHERITED_CV,High,17085M,670 GL85-M,212,0,0,670 GL85-8,170858,9121,986,"Issue 40 original case; GL85-M inherits eight CV-bearing 670 GL85-8 segment slots."
+MISSING_INHERITED_CV,High,1668SP,668 SPWL,160,0,0,659 CEN II,1659C2,9678,1063,"Single Premium Whole Life inherits CV-bearing 659 CEN II segment slots."
+MISSING_INHERITED_CV,High,1L10SR,L10 LP95SR,159,0,0,"L10 LP95; L10 PRE97","1L1095; 1L10OD","29599; 29263","3192; 3231","Senior Life post-1997 plan inherits multiple CV-bearing L10 segments; requires selection rule."
+MISSING_INHERITED_CV,High,1SALMI,SAL MULTPL,153,0,0,SAL OL,1SALOL,4750,508,"Multiple Insureds SAL Modified Life inherits SAL OL CV-bearing slots."
+MISSING_INHERITED_CV,High,1SALML,SAL ML,152,0,0,SAL OL,1SALOL,4750,508,"Modified Life inherits SAL OL CV-bearing slot."
+MISSING_INHERITED_CV,Medium,1666AI,897 666,8,0,0,666 WL,1666WL,4895,532,"Additional Insureds 666 WL inherits 666 WL CV-bearing slots."
+MISSING_INHERITED_CV,Medium,280PUA,980 PUA,3,0,0,980 END65,280END,4143,486,"PUA rider inherits parent endowment CV table; confirm rider CV target behavior."
+MISSING_INHERITED_CV,Medium,265PUA,665 PUA,1,0,0,665 STME95,2665ST,3479,377,"PUA rider inherits parent modified endowment CV table; confirm rider CV target behavior."
+MISSING_INHERITED_CV,Low,261PUA,961 PUA,0,0,0,961 ME65,2961ME,4069,474,"No current issued dependency count; include for loader completeness only."
+CV_SEMANTIC_NO_RATE_SOURCE,Research,196085,960 LP85-M,4,0,0,,,,,"Has LIFEWCV semantic segment but active segments do not point to a CV-bearing Rate_Table coverage in the current scan; requires deeper segment/source trace."

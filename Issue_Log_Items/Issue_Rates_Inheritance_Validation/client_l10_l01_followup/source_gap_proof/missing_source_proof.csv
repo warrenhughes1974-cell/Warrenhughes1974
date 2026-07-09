@@ -1,0 +1,10 @@
+item,source,source_file,lifepro_id,type_code_checked,exact_coverage_rows_any_type,exact_coverage_rows_for_type,substring_rows_containing_lifepro_id,raw_byte_occurrences_of_id,type_counts_for_exact_coverage,conclusion,why_it_matters
+L01 screenshot NP,Rate_Table,plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,L01 10Y,NP,0,0,13001,13001,,MISSING,Screenshot shows L01 10Y NP under L01 10Y LT; converter needs Rate_Table rows to load QuikNps.
+L01 screenshot NP,PAAGERAT,plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,L01 10Y,NP,0,0,924,924,,MISSING,Screenshot shows L01 10Y NP under L01 10Y LT; converter needs Rate_Table rows to load QuikNps.
+L01 screenshot NP,PCOVR,plan_analysis/source_data/coverage/PCOVR.csv,L01 10Y,(coverage setup),0,0,0,2,,MISSING,Shows whether the ID exists as a delivered LifePRO coverage row.
+L01 LT direct NP,Rate_Table,plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,L01 10Y LT,NP,0,0,0,0,,MISSING,"If the NP rows were delivered directly under L01 10Y LT, they could load to 5L0110."
+L01 LT direct NP,PAAGERAT,plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,L01 10Y LT,NP,924,0,924,924,PR:924,MISSING,"If the NP rows were delivered directly under L01 10Y LT, they could load to 5L0110."
+L01 LT direct NP,PCOVR,plan_analysis/source_data/coverage/PCOVR.csv,L01 10Y LT,(coverage setup),1,1,1,1,,FOUND,Shows whether the ID exists as a delivered LifePRO coverage row.
+L10 LP9595 any rate rows,Rate_Table,plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv,L10 LP9595,(any),0,0,0,0,,MISSING,Eric referenced L10 LP9595 as limited to NP/RV; converter needs rows for that ID to load it.
+L10 LP9595 any rate rows,PAAGERAT,plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv,L10 LP9595,(any),0,0,0,0,,MISSING,Eric referenced L10 LP9595 as limited to NP/RV; converter needs rows for that ID to load it.
+L10 LP9595 any rate rows,PCOVR,plan_analysis/source_data/coverage/PCOVR.csv,L10 LP9595,(coverage setup),0,0,0,0,,MISSING,Shows whether the ID exists as a delivered LifePRO coverage row.
