@@ -111,8 +111,8 @@ Phase A only: normalize and sort `LAST_CHG_TIME` as a time string. Zero latest b
 
 | Field | Value |
 |-------|-------|
-| Branch | *(filled after push)* |
-| Commit | *(filled after push)* |
+| Branch | `issue-34-pr7-quikisrr` |
+| Commit | `beadddf731d79e2796140d1ed7aa38e19ed015e7` |
 | Remote | origin |
 
 ---
