@@ -1,0 +1,2 @@
+Issue_ID,Item,Description,Priority,Severity,Status,Owner,Assigned,Business_Status,Notes
+36,Modal Premium factors (policy-level quikmstr),"Populate quikmstr MSEMI/MQTRL/MMTHD/MMTHB so Names-tab Modal Premiums work; related to 21J",1,High,Closed,Conversion,Warren,Closed v57.62,"Resolution: quikmstr now receives plan-level modal factors (MSEMI/MQTRL/MMTHD/MMTHB) from quikplan, with PAC GL85 quarterly=25 and semiannual=50 overrides, so Names-tab Modal Premiums work (v57.62)."

@@ -1,10 +1,14 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.60
+# Version:     v57.62
 # Date:        2026-07-09
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.60 — Issue #44 Phase B withdrawn: QuikLoan no longer suppresses ETI/RPU by MSTATUS;
+# Change Note: v57.62 — Issue #36: copy quikplan SEMI/QTRL/MTHD/MTHB → quikmstr MSEMI/MQTRL/MMTHD/MMTHB
+#              (Names-tab Modal Premiums); PAC GL85 Q/S overrides still applied after plan copy.
+#              v57.61 — Issue #45: bank-draft (MBILLFRM=2) missing PPACH account → blank MBANKNO +
+#              Reports/bank_draft_account_exceptions.csv; #21H ABA path unchanged for valid accounts.
+#              v57.60 — Issue #44 Phase B withdrawn: QuikLoan no longer suppresses ETI/RPU by MSTATUS;
 #              Phase A LAST_CHG_TIME HHMMSS sort retained (clears stale same-day PLOAN balances).
 #              v57.59 — Issue #44: QuikLoan latest-row LAST_CHG_TIME HHMMSS sort (Phase A) + suppress
 #              emit when MSTATUS is ETI/RPU 44/45 (Phase B); clears stale loan balances on ETI.
@@ -98,6 +102,7 @@ from qla_core.quikmemo_converter import convert_quikmemo_from_pnote_pense
 from qla_core.quikmemo_dbf_generator import write_quikmemo_dbf
 from qla_core.modal_premium_factors import (
     apply_modal_factors_to_quikplan as apply_issue21j_modal_factors,
+    apply_plan_modal_factors_to_quikmstr,
     apply_pac_gl85_modal_overrides,
     append_issue21j_conversion_memos,
 )
@@ -281,7 +286,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.60"
+APP_VERSION = "v57.62"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -4676,6 +4681,60 @@ class QLAdminEnterpriseIntegrationSuite:
     def _reports_dir(self):
         return os.path.normpath(os.path.join(self._migration_root(), "Reports"))
 
+    def _apply_issue45_bank_draft_gate(self, row_data, src_row, exceptions):
+        """Issue #45: MBILLFRM=2 without valid PPACH account → blank MBANKNO + exception row.
+
+        Does not change MBILLFRM. Does not alter #21H banking for policies with a non-blank account.
+        """
+        if exceptions is None:
+            return
+        mbillfrm = str(row_data.get("MBILLFRM", "")).strip()
+        if mbillfrm != "2":
+            return
+        raw_pol = self.normalize(src_row.get("POLICY_NUMBER", src_row.get("MPOLICY", "")))
+        meta = getattr(self, "_ppach_acct_meta", {}).get(raw_pol, {}) or {}
+        acct = str(meta.get("account", "")).strip()
+        aba = str(meta.get("aba", "")).strip()
+        has_valid_account = bool(acct) and acct.lower() not in ("nan", "none", "")
+        if has_valid_account:
+            return
+        row_data["MBANKNO"] = ""
+        exceptions.append({
+            "MPOLICY": str(row_data.get("MPOLICY", "")).strip(),
+            "SOURCE_POLICY": raw_pol,
+            "MBILLFRM": mbillfrm,
+            "MBANKNO_EMITTED": "",
+            "PPACH_ACCOUNT": acct if acct.lower() not in ("nan", "none") else "",
+            "PPACH_ABA": aba if aba.lower() not in ("nan", "none") else "",
+            "EXCEPTION_REASON": "MISSING_BANK_ACCOUNT",
+            "EXCEPTION_DETAIL": "MBILLFRM=2 but PPACH E_ACCOUNT_NUMBER blank/missing",
+        })
+
+    def _write_bank_draft_account_exceptions(self, exceptions):
+        """Write Issue #45 client-review exception CSV under Reports/ (header always)."""
+        cols = [
+            "MPOLICY",
+            "SOURCE_POLICY",
+            "MBILLFRM",
+            "MBANKNO_EMITTED",
+            "PPACH_ACCOUNT",
+            "PPACH_ABA",
+            "EXCEPTION_REASON",
+            "EXCEPTION_DETAIL",
+        ]
+        reports = self._reports_dir()
+        os.makedirs(reports, exist_ok=True)
+        path = os.path.normpath(os.path.join(reports, "bank_draft_account_exceptions.csv"))
+        with open(path, "w", newline="", encoding="utf-8") as fh:
+            writer = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
+            writer.writeheader()
+            for row in exceptions or []:
+                writer.writerow({c: row.get(c, "") for c in cols})
+        self.log(
+            f"Issue 45: bank draft account exceptions: {len(exceptions or [])} -> {path}"
+        )
+        return path
+
     def _new_run_error_log(self):
         self._run_error_log = RL.RunErrorLog(self._error_logs_root())
         return self._run_error_log
@@ -5585,6 +5644,7 @@ class QLAdminEnterpriseIntegrationSuite:
                                 
                         # --- PPACH BANKING CACHE ---
                         self._ppach_bank_map = {}
+                        self._ppach_acct_meta = {}
                         # Issue 21H: full 9-digit ABA recovery. PPACH E_ABA_NUM is leading-/trailing-
                         # truncated; the authoritative full routing number comes from PPCOM
                         # (E_TRAN_ABA_NUMBER), joined by bank account number and pre-resolved into
@@ -5626,6 +5686,8 @@ class QLAdminEnterpriseIntegrationSuite:
                                             if full_aba and full_aba != aba:
                                                 aba_recovered += 1
                                             self._ppach_bank_map[pol] = f"{use_aba}/{acct}"
+                                            # Issue #45: track last complete ABA/account for exception detail
+                                            self._ppach_acct_meta[pol] = {"aba": use_aba, "account": acct}
                                             
                                     self.log(f"Auto-loaded PPACH Banking Cache for quikmstr ({len(self._ppach_bank_map)} records; {aba_recovered} full-ABA recoveries)")
                             except Exception as e:
@@ -5985,8 +6047,10 @@ class QLAdminEnterpriseIntegrationSuite:
                     )
 
                     output = qdf[schema].values.tolist()
+                    bank_draft_exceptions = None
                 else:
                     output = []
+                    bank_draft_exceptions = [] if t_id.lower() == "quikmstr" else None
                     base_phase_cache = {} if t_id.lower() == "quikridr" else None
                     pua_pending_rows = [] if t_id.lower() == "quikridr" else None
                     quikridr_valuation_date = datetime.now().date() if t_id.lower() == "quikridr" else None
@@ -6508,6 +6572,9 @@ class QLAdminEnterpriseIntegrationSuite:
                             if self._resolve_quikridr_mphdob(row_data, src_row, rel_name_cache):
                                 quikridr_mphdob_fix_count += 1
                             self._apply_quikridr_mlastann(row_data, src_row, quikridr_valuation_date)
+                        # Issue #45: bank-draft missing account → blank MBANKNO + exception (MBILLFRM unchanged)
+                        if t_id.lower() == "quikmstr":
+                            self._apply_issue45_bank_draft_gate(row_data, src_row, bank_draft_exceptions)
                         output.append([row_data[h] for h in schema])
                         if i % 1000 == 0: self.progress["value"] = (i/len(source))*100; self.root.update_idletasks()
 
@@ -6559,6 +6626,9 @@ class QLAdminEnterpriseIntegrationSuite:
                 aligned_out_df.to_csv(out_csv, index=False)
                 self.log(f"Success: {t_id}.csv - {len(output)} records.")
 
+                if t_id.lower() == "quikmstr" and bank_draft_exceptions is not None:
+                    self._write_bank_draft_account_exceptions(bank_draft_exceptions)
+
                 if t_id.lower() == "quikridr":
                     mstr_path = os.path.normpath(os.path.join(out_dir, "quikmstr.csv"))
                     if os.path.isfile(mstr_path):
@@ -6566,10 +6636,22 @@ class QLAdminEnterpriseIntegrationSuite:
                             mstr_path, dtype=str, encoding="latin1", low_memory=False,
                         ).fillna("")
                         mstr_df.columns = [str(c).strip().upper() for c in mstr_df.columns]
+                        quikplan_path = os.path.normpath(os.path.join(out_dir, "quikplan.csv"))
+                        mstr_df, plan_modal_stats = apply_plan_modal_factors_to_quikmstr(
+                            mstr_df,
+                            quikridr_df=aligned_out_df,
+                            quikplan_path=quikplan_path if os.path.isfile(quikplan_path) else None,
+                        )
                         mstr_df, pac_stats = apply_pac_gl85_modal_overrides(
                             mstr_df, quikridr_df=aligned_out_df,
                         )
                         mstr_df.to_csv(mstr_path, index=False)
+                        self.log(
+                            f"Issue 36: plan modal factors copied to quikmstr "
+                            f"(updated={plan_modal_stats.get('policies_updated', 0)}, "
+                            f"missing_plan={plan_modal_stats.get('policies_missing_plan', 0)}, "
+                            f"missing_factors={plan_modal_stats.get('policies_missing_factors', 0)})"
+                        )
                         self.log(
                             f"Issue 21J: PAC GL85 modal overrides on quikmstr "
                             f"(quarterly={pac_stats.get('qtr_overrides', 0)}, "

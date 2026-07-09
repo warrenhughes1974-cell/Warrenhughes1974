@@ -103,6 +103,91 @@ def _load_phase1_mplan(quikridr_path: str) -> dict[str, str]:
     return out
 
 
+def _phase1_mplan_lookup(
+    quikridr_df: pd.DataFrame | None = None,
+    quikridr_path: str | None = None,
+) -> dict[str, str]:
+    if quikridr_df is not None:
+        phase1: dict[str, str] = {}
+        cols = {str(c).strip().upper() for c in quikridr_df.columns}
+        for _, row in quikridr_df.iterrows():
+            if _strip(row.get("MPHASE", "") if "MPHASE" in cols else "") not in ("1", "01"):
+                continue
+            mp = format_qladmin_mpolicy(_strip(row.get("MPOLICY", "")))
+            if mp:
+                phase1[mp] = _strip(row.get("MPLAN", ""))
+        return phase1
+    return _load_phase1_mplan(quikridr_path or "")
+
+
+def apply_plan_modal_factors_to_quikmstr(
+    mstr_df: pd.DataFrame,
+    quikridr_df: pd.DataFrame | None = None,
+    quikridr_path: str | None = None,
+    quikplan_df: pd.DataFrame | None = None,
+    quikplan_path: str | None = None,
+) -> tuple[pd.DataFrame, dict[str, int]]:
+    """Copy quikplan SEMI/QTRL/MTHD/MTHB onto quikmstr MSEMI/MQTRL/MMTHD/MMTHB by phase-1 plan.
+
+    Issue #36 — Names-tab Modal Premiums require policy-level factors. MMTHD and MMTHB are
+    copied independently (often differ). Call *before* apply_pac_gl85_modal_overrides so the
+    two PAC special modes (Q→MQTRL=25, S→MSEMI=50) win on GL85 PAC policies.
+    """
+    stats = {
+        "policies_checked": 0,
+        "policies_updated": 0,
+        "policies_missing_plan": 0,
+        "policies_missing_factors": 0,
+        "used_mapping_fallback": 0,
+    }
+    if mstr_df is None or mstr_df.empty:
+        return mstr_df, stats
+
+    phase1 = _phase1_mplan_lookup(quikridr_df=quikridr_df, quikridr_path=quikridr_path)
+
+    if quikplan_df is not None and not quikplan_df.empty:
+        plan_factors: dict[str, dict[str, str]] = {}
+        qp = quikplan_df.copy()
+        qp.columns = [str(c).strip().upper() for c in qp.columns]
+        for _, row in qp.iterrows():
+            plan = _strip(row.get("PLAN", ""))
+            if plan:
+                plan_factors[plan] = {f: _strip(row.get(f, "")) for f in MODAL_FACTOR_FIELDS}
+    else:
+        plan_factors = load_quikplan_factor_lookup(quikplan_path or "")
+
+    # Fallback when quikplan.csv not yet emitted (e.g. product-setup isolated batch).
+    if not plan_factors:
+        plan_factors = load_modal_factor_mapping()
+        stats["used_mapping_fallback"] = 1 if plan_factors else 0
+    else:
+        stats["used_mapping_fallback"] = 0
+
+    out = mstr_df.copy()
+    for col in ("MSEMI", "MQTRL", "MMTHD", "MMTHB", "MPOLICY"):
+        if col not in out.columns:
+            out[col] = ""
+
+    field_map = (("SEMI", "MSEMI"), ("QTRL", "MQTRL"), ("MTHD", "MMTHD"), ("MTHB", "MMTHB"))
+    for idx, row in out.iterrows():
+        stats["policies_checked"] += 1
+        mpolicy = format_qladmin_mpolicy(_strip(row.get("MPOLICY", "")))
+        mplan = phase1.get(mpolicy, "")
+        if not mplan:
+            stats["policies_missing_plan"] += 1
+            continue
+        factors = plan_factors.get(mplan)
+        if not factors or not any(factors.get(src) for src, _ in field_map):
+            stats["policies_missing_factors"] += 1
+            continue
+        for src, dest in field_map:
+            val = factors.get(src, "")
+            if val:
+                out.at[idx, dest] = val
+        stats["policies_updated"] += 1
+    return out, stats
+
+
 def apply_pac_gl85_modal_overrides(
     mstr_df: pd.DataFrame,
     quikridr_df: pd.DataFrame | None = None,
@@ -118,17 +203,7 @@ def apply_pac_gl85_modal_overrides(
     if mstr_df is None or mstr_df.empty:
         return mstr_df, stats
 
-    if quikridr_df is not None:
-        phase1 = {}
-        cols = {str(c).strip().upper() for c in quikridr_df.columns}
-        for _, row in quikridr_df.iterrows():
-            if _strip(row.get("MPHASE", "") if "MPHASE" in cols else "") not in ("1", "01"):
-                continue
-            mp = format_qladmin_mpolicy(_strip(row.get("MPOLICY", "")))
-            if mp:
-                phase1[mp] = _strip(row.get("MPLAN", ""))
-    else:
-        phase1 = _load_phase1_mplan(quikridr_path or "")
+    phase1 = _phase1_mplan_lookup(quikridr_df=quikridr_df, quikridr_path=quikridr_path)
 
     out = mstr_df.copy()
     for col in ("MSEMI", "MQTRL", "MMTHD", "MMTHB", "MBILLFRM", "MMODE", "MPOLICY"):
