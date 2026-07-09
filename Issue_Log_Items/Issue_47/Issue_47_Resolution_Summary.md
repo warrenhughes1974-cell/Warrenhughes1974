@@ -96,8 +96,8 @@ Revert `app.py` / `QLA_Migration/app.py` Issue #47 interceptor and rulebook note
 
 | Item | Value |
 |------|-------|
-| Branch | *(filled after push)* |
-| Commit | *(filled after push)* |
+| Branch | `issue-34-pr7-quikisrr` |
+| Commit | `853e162948792aafcbcdf98d4cdd239770bfcde8` |
 | Message | `Close Issue #47: Bill Day zero fallback from Paid-To (v57.65)` |
 
 **Network:** After pull, run converter / re-emit `quikmstr` so UAT DBF/CSV picks up `MBILLDAY` corrections.
