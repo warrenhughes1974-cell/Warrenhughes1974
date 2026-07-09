@@ -1,0 +1,2 @@
+ID,Status,Short Name,Description,Date Raised,Priority (Go-No Go),Issue Owner,Assigned,Date Resolved,Notes
+44,Closed,QuikLoan PLOAN Latest-Row Sort (Phase A),"Resolution: QuikLoan sorts PLOAN LAST_CHG_TIME as HHMMSS so same-day zero-balance clears win the latest-row pick; stale loan balances no longer emit (v57.60). Phase B ETI/RPU status suppress withdrawn.",2026-07-09,Go (Phase A),Warren,Warren,2026-07-09,G0-G7 complete. Re-emit QuikLoan on network after pull.

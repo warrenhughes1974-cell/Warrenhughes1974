@@ -2,12 +2,12 @@ Source_Field,Target_Field,Default_Value,Lookup_Table,Join_Key,Transformation_Not
 COVERAGE_ID,PLAN,,,,Map to crosswalk via engine
 POLICY_FORM_NUM,FORM,,,,
 DESCRIPTION,DESCR,,,,
-,PAR,0,,,
+EXHIBIT_PAR_NONPAR,PAR,0,,,LifePRO P/N → QLAdmin 1/0 via PAR_ translation
 SEX_BASIS,SEX,,,,
 ,BASIS,,,,
 ,NFOINT,,,,
-,LOANINT,0.00,,,
-,LOANINTX,A,,,
+,LOANINT,0.00,,,PLOAN INTEREST_RATE modal by PLAN (AS_PERCENT) via apply_ploan_loanint_enrichment
+,LOANINTX,A,,,Issue 32 Advance default; enrichment sets A when missing/invalid
 ,DEPINT,0.00,,,
 ,VARDB,4,,,
 ,VARGP,4,,,

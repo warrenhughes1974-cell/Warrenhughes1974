@@ -34,6 +34,8 @@ _DATE_COLS = (
     "CAPITALIZED_DATE",
     "INT_START_DATE",
 )
+# HHMMSS (or HHMM) — never pass through parse_ploan_date (Issue #44 Phase A).
+_TIME_SORT_COLS = frozenset({"LAST_CHG_TIME"})
 
 
 def default_derivation_rules_path() -> str:
@@ -190,6 +192,24 @@ def load_quikmstr_mpolicy_set(path: str) -> set[str]:
     return {format_qladmin_mpolicy(_s(v)) for v in df["MPOLICY"] if _s(v)}
 
 
+def normalize_ploan_chg_time(val: Any) -> str:
+    """
+    Normalize PLOAN LAST_CHG_TIME for chronological sort (Issue #44 Phase A).
+
+    LifePRO stores HHMMSS (sometimes space-padded). Must NOT use parse_ploan_date —
+    values like 212541 are misread as calendar dates and invert same-day clear order.
+    """
+    s = _s(val)
+    if not s:
+        return "000000"
+    digits = "".join(ch for ch in s if ch.isdigit())
+    if not digits:
+        return "000000"
+    if len(digits) <= 6:
+        return digits.zfill(6)
+    return digits[-6:]
+
+
 def resolve_mloanintx(
     plan_code: str,
     *,
@@ -278,6 +298,12 @@ def sanitize_ploan_rows(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def select_latest_ploan_row_per_policy(df: pd.DataFrame, rules: dict | None = None) -> pd.DataFrame:
+    """
+    Pick latest PLOAN row per POLICY_NUMBER.
+
+    Issue #44 Phase A: LAST_CHG_TIME is HHMMSS — sort as a normalized time string.
+    Never run it through parse_ploan_date (same-day .00 clears were losing the tie-break).
+    """
     rules = rules or {}
     sort_cols = rules.get("latest_row_sort") or ["ACCRUAL_DATE", "LAST_CHG_DATE", "LAST_CHG_TIME"]
     work = df.copy()
@@ -286,15 +312,29 @@ def select_latest_ploan_row_per_policy(df: pd.DataFrame, rules: dict | None = No
             work[f"_{col}_TS"] = work[col].map(parse_ploan_date)
         else:
             work[f"_{col}_TS"] = pd.NaT
+
+    sort_keys: list[str] = ["POLICY_NUMBER"]
     for col in sort_cols:
+        if col in _TIME_SORT_COLS:
+            sort_key = f"_{col}_SORT"
+            if col in work.columns:
+                work[sort_key] = work[col].map(normalize_ploan_chg_time)
+            else:
+                work[sort_key] = "000000"
+            sort_keys.append(sort_key)
+            continue
         ts_col = f"_{col}_TS"
         if ts_col not in work.columns and col in work.columns:
+            # Date-like sort columns only — never invent a TS for time fields.
             work[ts_col] = work[col].map(parse_ploan_date)
-    policy_col = "POLICY_NUMBER"
-    sort_keys = [policy_col] + [f"_{c}_TS" if f"_{c}_TS" in work.columns else c for c in sort_cols]
+        if ts_col in work.columns:
+            sort_keys.append(ts_col)
+        elif col in work.columns:
+            sort_keys.append(col)
+
     existing = [k for k in sort_keys if k in work.columns]
     work = work.sort_values(existing, kind="mergesort")
-    latest = work.groupby(policy_col, as_index=False).tail(1).copy()
+    latest = work.groupby("POLICY_NUMBER", as_index=False).tail(1).copy()
     latest["_LATEST_BALANCE_CLASS"] = np.where(
         latest["_LOAN_BALANCE_NUM"].fillna(0) != 0,
         "ACTIVE_CANDIDATE",

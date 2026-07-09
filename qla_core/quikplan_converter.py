@@ -138,8 +138,15 @@ def _map_field_value(
         if val.isdigit() and len(val) == 1:
             val = val.zfill(2)
 
-    if t_f == "PAR" or note == "SKIP_TRANSLATION":
+    if note == "SKIP_TRANSLATION":
         pass
+    elif t_f == "PAR":
+        # LifePRO EXHIBIT_PAR_NONPAR (P/N/X/F) → QLAdmin PAR (1=participating, 0=non-par)
+        translated = trans_map.get(f"PAR_{val}", trans_map.get(val, ""))
+        if translated != "":
+            val = translated
+        elif val not in ("0", "1"):
+            val = normalize(rule.get("Default_Value", "0")) or "0"
     else:
         prefix = ""
         if not (t_f == "MTYPE"):
@@ -321,6 +328,7 @@ def run_quikplan_conversion(
     df = apply_rate_variation_flag_enrichment(df)
     df = apply_cso_cv_assumptions(df)
     repo_root = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
+    df = apply_ploan_loanint_enrichment(df, repo_root=repo_root, crosswalk_path=cw_path or None)
     df, modal_stats = apply_issue21j_modal_factors(df, repo_root=repo_root)
     try:
         df.attrs["issue21j_modal_stats"] = modal_stats
@@ -389,4 +397,161 @@ def apply_cso_cv_assumptions(
         df.attrs["cso_cv_qa"] = qa
     except Exception:
         pass
+    return df
+
+
+def _resolve_default_ploan_path(repo_root: str) -> str:
+    """Locate newest PLOAN Loan Information extract under QLA_Migration/Source."""
+    try:
+        from qla_core.lifepro_source_resolver import resolve_table_source
+    except ImportError:
+        resolve_table_source = None  # type: ignore
+
+    source_dir = os.path.normpath(os.path.join(repo_root, "QLA_Migration", "Source"))
+    if resolve_table_source is not None and os.path.isdir(source_dir):
+        path, _label = resolve_table_source(source_dir, "quikloan")
+        if path and os.path.isfile(path):
+            return path
+    if not os.path.isdir(source_dir):
+        return ""
+    candidates = []
+    for name in os.listdir(source_dir):
+        upper = name.upper()
+        if upper.startswith("PLOAN") and upper.endswith(".CSV"):
+            candidates.append(os.path.join(source_dir, name))
+    if not candidates:
+        return ""
+    candidates.sort(key=lambda p: os.path.getmtime(p), reverse=True)
+    return candidates[0]
+
+
+def build_ploan_loanint_by_quikplan(
+    ploan_path: str,
+    crosswalk_path: str | None = None,
+) -> dict[str, str]:
+    """
+    Aggregate PLOAN.INTEREST_RATE by LifePRO PLAN_CODE (modal rate), map to QuikPlan PLAN,
+    and return PLAN -> LOANINT percent string (AS_PERCENT, e.g. '.0500' -> '5.00').
+    """
+    from collections import Counter
+
+    from qla_core.quikloan_converter import (
+        load_ploan_extract,
+        load_ploan_plan_to_quikplan_map,
+        normalize_loan_interest_rate,
+        sanitize_ploan_rows,
+    )
+
+    if not ploan_path or not os.path.isfile(ploan_path):
+        return {}
+
+    raw = load_ploan_extract(ploan_path)
+    valid, _excluded = sanitize_ploan_rows(raw)
+    if valid.empty or "PLAN_CODE" not in valid.columns or "INTEREST_RATE" not in valid.columns:
+        return {}
+
+    plan_to_quikplan = load_ploan_plan_to_quikplan_map(crosswalk_path)
+    rate_counts: dict[str, Counter] = {}
+    for _, row in valid.iterrows():
+        lp_plan = normalize(row.get("PLAN_CODE", ""))
+        if not lp_plan or lp_plan.startswith("-"):
+            continue
+        rate_raw = str(row.get("INTEREST_RATE", "") or "").strip()
+        if not rate_raw:
+            continue
+        ql_plan = plan_to_quikplan.get(lp_plan.upper(), "")
+        if not ql_plan:
+            # Crosswalk may already store QLA plan as target; also try identity
+            ql_plan = plan_to_quikplan.get(lp_plan, "")
+        if not ql_plan:
+            continue
+        rate_counts.setdefault(ql_plan.upper(), Counter())[rate_raw] += 1
+
+    out: dict[str, str] = {}
+    for ql_plan, counts in rate_counts.items():
+        mode_rate, _n = counts.most_common(1)[0]
+        emit, _note = normalize_loan_interest_rate(mode_rate, "AS_PERCENT")
+        if emit:
+            out[ql_plan] = emit
+    return out
+
+
+def apply_ploan_loanint_enrichment(
+    df: pd.DataFrame,
+    repo_root: str | None = None,
+    ploan_path: str | None = None,
+    crosswalk_path: str | None = None,
+    log=None,
+) -> pd.DataFrame:
+    """
+    Populate quikplan.LOANINT from PLOAN.INTEREST_RATE (modal rate per plan, AS_PERCENT).
+
+    Rulebook defaults LOANINT to 0.00 with no LifePRO source — Product Setup never saw
+    loan rates. QuikLoan already maps PLOAN→MLOANINT; this lifts the same authority onto
+    the plan catalog. LOANINTX is set to A when missing/invalid (Issue #32 Advance default).
+    Blank-safe: plans with no PLOAN evidence keep existing LOANINT.
+    """
+    if df is None or df.empty or "PLAN" not in df.columns or "LOANINT" not in df.columns:
+        return df
+
+    repo_root = repo_root or os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
+    path = ploan_path or _resolve_default_ploan_path(repo_root)
+    if not path:
+        if log:
+            log("PLOAN loan-int enrichment: no PLOAN extract found; LOANINT left as-is.")
+        return df
+
+    if not crosswalk_path:
+        cw_candidate = os.path.normpath(
+            os.path.join(repo_root, "QLA_Migration", "Mapping", "Master_Crosswalk.csv")
+        )
+        if os.path.isfile(cw_candidate):
+            crosswalk_path = cw_candidate
+
+    try:
+        rate_by_plan = build_ploan_loanint_by_quikplan(path, crosswalk_path)
+    except Exception as exc:
+        if log:
+            log(f"PLOAN loan-int enrichment failed: {exc}")
+        return df
+
+    if not rate_by_plan:
+        if log:
+            log(f"PLOAN loan-int enrichment: no plan rates derived from {path}")
+        return df
+
+    placeholder = {"", "0", "0.0", "0.00", "0.000", "0.0000"}
+    updated = 0
+    intx_fixed = 0
+    for i in df.index:
+        plan = normalize(df.at[i, "PLAN"]).upper()
+        if not plan or plan not in rate_by_plan:
+            continue
+        new_rate = rate_by_plan[plan]
+        cur = str(df.at[i, "LOANINT"] if "LOANINT" in df.columns else "").strip()
+        if cur in placeholder or cur != new_rate:
+            df.at[i, "LOANINT"] = new_rate
+            updated += 1
+        if "LOANINTX" in df.columns:
+            cur_x = str(df.at[i, "LOANINTX"] or "").strip().upper()
+            if cur_x not in ("A", "R"):
+                df.at[i, "LOANINTX"] = "A"
+                intx_fixed += 1
+
+    qa = {
+        "ploan_path": path,
+        "plans_with_ploan_rate": len(rate_by_plan),
+        "loanint_cells_updated": updated,
+        "loanintx_cells_set_to_a": intx_fixed,
+    }
+    try:
+        df.attrs["ploan_loanint_qa"] = qa
+    except Exception:
+        pass
+    if log:
+        log(
+            f"PLOAN loan-int enrichment: plans_with_rate={qa['plans_with_ploan_rate']} "
+            f"LOANINT updated={updated} LOANINTX set to A={intx_fixed} "
+            f"source={os.path.basename(path)}"
+        )
     return df

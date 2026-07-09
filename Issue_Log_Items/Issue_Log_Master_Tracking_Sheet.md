@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-04 · **Engine:** `app.py` **v57.48** (Issue #13 closed) / cumulative **v57.34+**
+**Last updated:** 2026-07-09 · **Engine:** `app.py` **v57.60** / cumulative **v57.34+**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -67,6 +67,11 @@
 | **#28** | Product catalog PLAN mapping (crosswalk authority) | **CLOSED ✓** | **v57.35** | |
 | **#37** | Age/Duration rate placement — fleet-wide | **CLOSED ✓** · **v57.43** · QuikCvs grid fix | **v57.43** | |
 | **#38** | Dividend Accumulations (`quikdvdp.MDEPOSIT`) | **CLOSED ✓** · **v57.44** · 59 policies | **v57.44** | |
+| **#40** | Inherited CV rate load — missing QuikCvs on CV-capable plans | **IMPLEMENTED / CLIENT UAT** · QuikCvs + QuikPlCv regenerated | — | 10 inherited plans emit 101,793 source-matched CV rows; `17085M` now 1,002 keys; 100% source-to-QLA PASS; full guarded emit still blocked by unrelated QuikUint |
+| **#41** | CV age-100 endpoint off by one | **IMPLEMENTED / CLIENT UAT** · QuikCvs regenerated | — | 1960PO CV M/26 value 784.65 now maps to QLA duration index 57; age-100 endpoint proof PASS; full guarded emit still blocked by unrelated QuikUint dependency |
+| **#42** | Missing rate extract rows — L01 10Y NP and L10 LP9595 | **AWAITING CSO SOURCE EXTRACT** | — | Client screenshots show rates; delivered Rate_Table and PAAGERAT contain 0 exact rows; converter proof complete; CSO must resend extracts |
+| **#43** | ISWL expense charge source discovery | **INVESTIGATION COMPLETE / AWAITING CLIENT** | — | PCOVR.POLICY_FEE=25.00 on all 8 ISWL coverages; not proven equivalent to monthly expense per policy; no source for % premium or per-$1K charges |
+| **#44** | QuikLoan stale PLOAN latest-row (`LAST_CHG_TIME` sort) | **CLOSED ✓** · **v57.60** · Phase A only | **v57.60** | Resolution: QuikLoan sorts PLOAN LAST_CHG_TIME as HHMMSS so same-day zero clears win; Phase B withdrawn |
 
 **#13 detail:** `Issue_Log_Items/Issue_13/` · Option A termination precedence · G5/G6 PASS · samples 010516211C→54, 011101663C→56
 
@@ -75,6 +80,16 @@
 **#37 detail:** `Issue_Log_Items/Issue_37/` · CV duration placement · G5/G6 PASS · rollback: revert QuikCvs + loader
 
 **#38 detail:** `Issue_Log_Items/Issue_38/` · PPBENTYP balance authority · PACTG 641 MINTYTD/MINTDATE · G5/G6 PASS · client UAT pending on 010378830C / 010380808C
+
+**#40 detail:** `Issue_Log_Items/Issue_40/` · G5 PASS — `cv_inheritance_loader` + 100% source parity on 10 plans · `QuikCvs.csv` 38,047 rows · client UAT pending on `17085M` sample policies
+
+**#41 detail:** `Issue_Log_Items/Issue_41/` · QuikCvs endpoint follow-up to Issue #37 · `1960PO` M/26 source-vs-QLA proof PASS · `QuikCvs.csv` regenerated with 26,495 rows · next: client UAT reload + resolve unrelated `QuikUint` full-emit blocker
+
+**#42 detail:** `Issue_Log_Items/Issue_42/` · Screenshot-only source gaps · L01 10Y NP and L10 LP9595 NP/RV absent from delivered Rate_Table and PAAGERAT · proof in `client_l10_l01_followup/source_gap_proof/` · **No Go** until CSO resends missing extract rows
+
+**#43 detail:** `Issue_Log_Items/Issue_43/` · Client question on Policy fee vs monthly expense per policy for 8 ISWL products · `PCOVR.POLICY_FEE=25.00` confirmed · UF segment zero-valued only · **No Go** for expense mapping until client confirms equivalence and missing-charge defaults
+
+**#44 detail:** `Issue_Log_Items/Issue_44/` · **CLOSED** · **v57.60** Phase A · Resolution: QuikLoan sorts PLOAN LAST_CHG_TIME as HHMMSS so same-day zero clears win; Phase B withdrawn
 
 ---
 

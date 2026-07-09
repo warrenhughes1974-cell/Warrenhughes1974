@@ -1,6 +1,6 @@
 {
-  "version": "1.2",
-  "description": "PLOAN-primary QuikLoan derivation (Issue #32 v1.2). QLAdmin calculates loan interest; MLOANACCR=0 at conversion.",
+  "version": "1.3",
+  "description": "PLOAN-primary QuikLoan derivation (Issue #32 v1.2 + Issue #44 Phase A only). QLAdmin calculates loan interest; MLOANACCR=0 at conversion. Issue #44 Phase A: LAST_CHG_TIME sorted as HHMMSS. Phase B (ETI/RPU status suppress) withdrawn 2026-07-09.",
   "source_file": "PLOAN.csv",
   "source_alias": "PLOAN_LoanInformation_Extract_20260530.csv",
   "latest_row_sort": ["ACCRUAL_DATE", "LAST_CHG_DATE", "LAST_CHG_TIME"],

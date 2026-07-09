@@ -1,9 +1,23 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.53
-# Date:        2026-07-05
-# Change Note: v57.53 — RNA reader preserves over-wide LifePRO rows so IN/PO/PA relationships are not skipped.
+# Version:     v57.60
+# Date:        2026-07-09
+# SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
+# Change Note: v57.60 — Issue #44 Phase B withdrawn: QuikLoan no longer suppresses ETI/RPU by MSTATUS;
+#              Phase A LAST_CHG_TIME HHMMSS sort retained (clears stale same-day PLOAN balances).
+#              v57.59 — Issue #44: QuikLoan latest-row LAST_CHG_TIME HHMMSS sort (Phase A) + suppress
+#              emit when MSTATUS is ETI/RPU 44/45 (Phase B); clears stale loan balances on ETI.
+#              v57.58 — quikplan.LOANINT from PLOAN.INTEREST_RATE (modal AS_PERCENT) on Product Setup
+#              and batch quikplan; LOANINTX set to A when missing/invalid (e.g. 170858 → 5.00).
+#              v57.57 — quikplan.PAR from LifePRO EXHIBIT_PAR_NONPAR (P→1, N→0 via PAR_ translation);
+#              fixes participating plans (e.g. 2665ST) emitting PAR=0.
+#              v57.56 — UI: RUN PRODUCT SETUP CONVERSION always visible in Run Controls + Operator Dashboard
+#              (was below fold / off-screen on shorter displays).
+#              v57.55 — Root app synced with QLA_Migration engine; Issue #40 rate emit via qla_core.rate_emit;
+#              version banner now matches launcher (fixes v57.53 display when using run_converter.bat).
+#              v57.54 — Issue #40: inherited CV rate emit integrated in-app (QuikCvs/QuikPlCv/member tables).
+#              v57.53 — RNA reader preserves over-wide LifePRO rows so IN/PO/PA relationships are not skipped.
 #              v57.52 — UI version display synced to engine; UAT launcher enables reinsurance Phase 1 emit.
 #              v57.51 — Issue #30: RNA relationship MPOLICY fallback from IDENTIFYING_ALPHA; exact quikclid dedupe.
 #              v57.50 — Phase 1 Reinsurance: gated QuikRein/QuikRmst batch hook (root app parity with QLA_Migration).
@@ -56,7 +70,12 @@ from datetime import datetime
 from qla_core.normalize_utils import format_qladmin_mpolicy
 from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA, QUIKLOAN_SCHEMA, QUIKREIN_SCHEMA, QUIKRMST_SCHEMA
 from qla_core import run_logging as RL
-from qla_core.quikplan_converter import convert_quikplan_to_output, prepare_quikplan_source, apply_rate_variation_flag_enrichment
+from qla_core.quikplan_converter import (
+    convert_quikplan_to_output,
+    prepare_quikplan_source,
+    apply_rate_variation_flag_enrichment,
+    apply_ploan_loanint_enrichment,
+)
 from qla_core.cso_mortality_crosswalk import (
     apply_quikplan_cv_assumptions,
     default_crosswalk_path,
@@ -74,6 +93,7 @@ from qla_core.variation_classification import (
 from qla_core.quikactg_converter import convert_quikactg_from_pactg
 from qla_core.quikloan_converter import convert_quikloan_from_ploan, load_derivation_rules
 from qla_core.reinsurance_converter import convert_reinsurance_phase1, load_derivation_rules as load_reinsurance_derivation_rules
+from qla_core import rate_emit as RE
 from qla_core.quikmemo_converter import convert_quikmemo_from_pnote_pense
 from qla_core.quikmemo_dbf_generator import write_quikmemo_dbf
 from qla_core.modal_premium_factors import (
@@ -261,7 +281,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.53"
+APP_VERSION = "v57.60"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -425,17 +445,19 @@ class QLAdminEnterpriseIntegrationSuite:
         btn_frame = tk.Frame(run_controls, bg=self.bg_main)
         btn_frame.pack(fill="x")
         btn_specs = [
+            ("RUN PRODUCT SETUP CONVERSION", "#7C3AED", self.start_product_setup_from_ui),
             ("RUN SINGLE TABLE CONVERSION", self.btn_action, lambda: self.start_thread(False)),
             ("EXECUTE FULL BATCH MIGRATION", self.btn_batch, lambda: self.start_thread(True)),
             ("GENERATE RATE TABLES", "#0D9488", self.start_rate_loader_thread),
             ("RUN FINAL OUTPUT VALIDATION", "#7C2D12", self.start_final_validation_thread),
         ]
         for idx, (label, color, cmd) in enumerate(btn_specs):
+            row, col = divmod(idx, 3)
             tk.Button(
                 btn_frame, text=label, bg=color, fg="white", width=30, height=2,
                 font=("Segoe UI", 9, "bold"), command=cmd,
-            ).grid(row=0, column=idx, padx=8, pady=4, sticky="ew")
-            btn_frame.grid_columnconfigure(idx, weight=1)
+            ).grid(row=row, column=col, padx=8, pady=4, sticky="ew")
+            btn_frame.grid_columnconfigure(col, weight=1)
 
         self._setup_product_setup_panel()
         self._setup_rate_loader_panel()
@@ -2198,6 +2220,10 @@ class QLAdminEnterpriseIntegrationSuite:
         actions = tk.Frame(self.gov_banner_frame, bg=self.bg_card)
         actions.pack(fill="x", pady=(10, 0))
         tk.Button(
+            actions, text="RUN PRODUCT SETUP", bg="#7C3AED", fg="white", width=18, height=1,
+            font=("Segoe UI", 9, "bold"), command=self.start_product_setup_from_ui,
+        ).pack(side="left", padx=(0, 8))
+        tk.Button(
             actions, text="RUN FULL BATCH", bg=self.btn_batch, fg="white", width=18, height=1,
             font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(True),
         ).pack(side="left", padx=(0, 8))
@@ -2491,7 +2517,7 @@ class QLAdminEnterpriseIntegrationSuite:
 
         opts = tk.Frame(panel, bg=self.bg_card)
         opts.pack(fill="x", pady=(8, 0))
-        self.product_emit_var = tk.BooleanVar(value=False)
+        self.product_emit_var = tk.BooleanVar(value=True)
         self.product_overlay_var = tk.BooleanVar(value=False)
         self.product_isolated_var = tk.BooleanVar(
             value=os.environ.get("QLA_PRODUCT_SETUP_ISOLATED", "0").strip().lower() in ("1", "true", "yes"),
@@ -2518,10 +2544,18 @@ class QLAdminEnterpriseIntegrationSuite:
 
         actions = tk.Frame(panel, bg=self.bg_card)
         actions.pack(fill="x", pady=(8, 0))
-        tk.Button(
-            actions, text="RUN PRODUCT SETUP CONVERSION", width=32, bg="#7C3AED", fg="white",
-            command=self.start_product_setup_thread,
-        ).pack(side="left", padx=(0, 8))
+        tk.Label(
+            actions,
+            text="Use RUN PRODUCT SETUP CONVERSION in Run Controls (or Operator Dashboard) to convert quikplan.",
+            bg=self.bg_card, fg=self.ui_status_muted, font=("Segoe UI", 8),
+        ).pack(side="left")
+
+    def start_product_setup_from_ui(self):
+        """Always-visible Product Setup entry point — ensures emit is on for Output write."""
+        if hasattr(self, "product_emit_var") and not self.product_emit_var.get():
+            self.product_emit_var.set(True)
+            self.log("PRODUCT SETUP: Emit quikplan.csv to Output enabled for this run.")
+        self.start_product_setup_thread()
 
     def _load_product_validation_status(self):
         summary_path = os.path.normpath(os.path.join(
@@ -2820,56 +2854,46 @@ class QLAdminEnterpriseIntegrationSuite:
         return parsed
 
     def _invoke_rate_loader_runner(self, emit_csv=None, emit_dbf=None, dry_run=False):
-        runner = self._rate_loader_runner_path()
-        if not os.path.isfile(runner):
-            self.log(f"RATE LOADER ERROR: runner not found: {runner}")
-            return {"status": "FAILED", "error": "runner not found"}
-
         emit_csv = self.rate_emit_csv_var.get() if emit_csv is None else emit_csv
         emit_dbf = self.rate_emit_dbf_var.get() if emit_dbf is None else emit_dbf
         csv_dir = self._rate_loader_csv_dir()
         dbf_dir = self._rate_loader_dbf_dir()
         config = self._rate_loader_config_path()
 
-        cmd = [
-            sys.executable, runner,
-            "--repo-root", self._repo_root(),
-            "--config", config,
-            "--csv-dir", csv_dir,
-            "--dbf-dir", dbf_dir,
-        ]
-        if emit_csv:
-            cmd.append("--emit-csv")
-        if emit_dbf:
-            cmd.append("--emit-dbf")
-        if dry_run:
-            cmd.append("--dry-run")
-
-        self.log("RATE TABLE GENERATION (Phase R5): launching isolated subprocess...")
+        self.log("RATE TABLE GENERATION (Phase R5): running in-process rate pipeline...")
         self.log(f"  Config: {config}")
         self.log(f"  CSV dir: {csv_dir}")
         if emit_dbf:
             self.log(f"  DBF dir: {dbf_dir}")
         try:
-            proc = subprocess.run(
-                cmd, capture_output=True, text=True, timeout=RATE_LOADER_RUNNER_TIMEOUT,
-                cwd=self._repo_root(),
+            result = RE.run_rate_emit(
+                self._repo_root(),
+                config,
+                csv_dir=csv_dir,
+                dbf_dir=dbf_dir,
+                emit_csv=emit_csv,
+                emit_dbf=emit_dbf,
+                dry_run=dry_run,
             )
-            stdout_text = proc.stdout or ""
-            stderr_text = proc.stderr or ""
-            self._log_subprocess_stream("rate-loader-stdout", stdout_text)
-            self._log_subprocess_stream("rate-loader-stderr", stderr_text)
-            parsed = self._parse_rate_loader_stdout(stdout_text)
-            parsed["return_code"] = proc.returncode
-            if proc.returncode != 0 and parsed["status"] == "UNKNOWN":
-                parsed["status"] = "FAILED"
-            return parsed
-        except subprocess.TimeoutExpired:
-            self.log("RATE LOADER ERROR: subprocess timeout")
-            return {"status": "TIMEOUT"}
+            for msg in result.get("messages") or []:
+                self.log(f"  RATE: {msg}")
+            if result.get("inherited_plans"):
+                self.log(
+                    f"  RATE: Inherited CV plans: {', '.join(result['inherited_plans'])}"
+                )
+            iv = result.get("inherited_verify") or {}
+            if iv:
+                self.log(
+                    f"  RATE: Issue #40 verify: "
+                    f"{'PASS' if iv.get('pass') else 'FAIL'}"
+                )
+            if result.get("partial_emit"):
+                self.log("  RATE: Partial emit — CV/key/member tables written despite non-CV blockers")
+            result["return_code"] = result.get("return_code", 0 if result.get("status") == "SUCCESS" else 2)
+            return result
         except Exception as exc:
             self.log(f"RATE LOADER ERROR: {exc}")
-            return {"status": "FAILED", "error": str(exc)}
+            return {"status": "FAILED", "error": str(exc), "blockers": "", "tables": "0", "csv_rows": "0"}
 
     def _refresh_rate_loader_visibility(self):
         display = {key: "NOT YET RUN" for key in getattr(self, "rate_metric_vars", {})}
@@ -2941,8 +2965,18 @@ class QLAdminEnterpriseIntegrationSuite:
                 self.update_run_progress(4, detail=f"validation — status={status}")
                 self._run_output_hygiene(run_error_log)
                 if status == "SUCCESS":
-                    self.complete_run_progress("Complete — rate CSV outputs written to QLA_Migration\\Output\\rates")
+                    detail = "Complete — rate tables written to QLA_Migration\\Output\\rates"
+                    if result.get("partial_emit"):
+                        detail += " (partial: non-CV blockers ignored)"
+                    self.complete_run_progress(detail)
                     msg = "Rate tables generated successfully."
+                    if result.get("partial_emit"):
+                        msg += (
+                            f"\n\nNote: {result.get('blockers', '?')} non-CV blocker(s) remain "
+                            "(e.g. QuikUint). QuikCvs, QuikPlCv, and member tables were still written."
+                        )
+                    if result.get("inherited_plans"):
+                        msg += f"\n\nInherited CV plans: {', '.join(result['inherited_plans'])}"
                     if result.get("csv_dir"):
                         msg += f"\n\nCSV folder:\n{result['csv_dir']}"
                     messagebox.showinfo("Rate Tables", msg)
@@ -5253,7 +5287,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         quikmstr_path=qm_path or None,
                     )
                     self.log(
-                        f"QUIKLOAN Issue #32: {ql_stats.get('emit_passed', 0)} emit rows, "
+                        f"QUIKLOAN Issue #32/#44A: {ql_stats.get('emit_passed', 0)} emit rows, "
                         f"{ql_stats.get('emit_exceptions', 0)} exceptions; "
                         f"MLOANINTX fallback={ql_stats.get('mloanintx_fallback_count', 0)}; "
                         f"reports -> {phase_l1_dir}"
@@ -5936,6 +5970,13 @@ class QLAdminEnterpriseIntegrationSuite:
                     else:
                         self.log(f"CSO crosswalk not found at {cso_path}; quikplan CV assumptions left as-is.")
 
+                    qdf = apply_ploan_loanint_enrichment(
+                        qdf,
+                        repo_root=self._app_base_dir(),
+                        crosswalk_path=cw_path if cw_path and os.path.exists(cw_path) else None,
+                        log=self.log,
+                    )
+
                     qdf, modal_stats = apply_issue21j_modal_factors(qdf, repo_root=self._app_base_dir())
                     self.log(
                         f"Issue 21J: modal premium factors applied to quikplan "
@@ -6204,7 +6245,12 @@ class QLAdminEnterpriseIntegrationSuite:
                                     elif val in ['N', 'NO', 'FALSE', '0']: val = 'T' if 'INVALID' in s_f else 'F'
                                     if val not in ['T', 'F']: val = 'T' 
                                 elif t_id.lower() == "quikplan" and t_f == "PAR":
-                                    pass
+                                    # LifePRO EXHIBIT_PAR_NONPAR (P/N/X/F) → QLAdmin PAR (1=par, 0=non-par)
+                                    translated = trans_map.get(f"PAR_{val}", trans_map.get(val, ""))
+                                    if translated != "":
+                                        val = translated
+                                    elif val not in ("0", "1"):
+                                        val = "0"
                                 else:
                                     prefix = "BF_" if t_f == "MBILLFRM" else ("PM_" if t_f == "MMODE" else ("DV_" if t_f == "MDIVOPT" else ("NF_" if t_f == "MNFOPT" else ("AG_" if (t_f == "MSTATUS" and t_id.lower() == "quikagts") else ("ST_" if t_f == "MSTATUS" else ("PAR_" if t_f == "MPAR" else ""))))))
                                     if not (t_id.lower() == "quikbenf" and t_f == "MTYPE"):

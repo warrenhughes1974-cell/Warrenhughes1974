@@ -1,0 +1,42 @@
+{
+  "engine": "v57.60",
+  "issue": 44,
+  "scope": "Phase A only",
+  "emit_passed": 356,
+  "zero_balance_held": 558,
+  "ba_in_emit": {
+    "010391876C": false,
+    "010404602C": false,
+    "010456751C": false,
+    "010510671C": false,
+    "010525250C": false,
+    "011226579C": true
+  },
+  "ba_exceptions": [
+    {
+      "MPOLICY": "010391876C",
+      "MLOANBAL": "0.00",
+      "EXCEPTION_REASON": "ZERO_BALANCE_HELD"
+    },
+    {
+      "MPOLICY": "010404602C",
+      "MLOANBAL": "0.00",
+      "EXCEPTION_REASON": "ZERO_BALANCE_HELD"
+    },
+    {
+      "MPOLICY": "010456751C",
+      "MLOANBAL": "0.00",
+      "EXCEPTION_REASON": "ZERO_BALANCE_HELD"
+    },
+    {
+      "MPOLICY": "010510671C",
+      "MLOANBAL": "0.00",
+      "EXCEPTION_REASON": "ZERO_BALANCE_HELD"
+    },
+    {
+      "MPOLICY": "010525250C",
+      "MLOANBAL": "0.00",
+      "EXCEPTION_REASON": "ZERO_BALANCE_HELD"
+    }
+  ]
+}
