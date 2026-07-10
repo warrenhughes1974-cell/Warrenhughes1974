@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.67
+# Version:     v57.70
 # Date:        2026-07-10
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.67 — Remove Validate Output / Final Output Validation from UI; governance audit only.
+# Change Note: v57.70 — Issue #49: when quikmstr first-phase display status is >=50 and a later
+#              phase is 0–49, set MSTATUS to that first active later phase (after Issue #13).
+#              v57.67 — Remove Validate Output / Final Output Validation from UI; governance audit only.
 #              v57.66 — UI: RUN DATA GOVERNANCE AUDIT button (data_governance module → Reports/).
 #              v57.65 — Issue #47: when quikmstr.MBILLDAY is 0/blank, fallback to day of
 #              PAID_TO_DATE (preserve non-zero POLICY_BILL_DAY / Issue #21B).
@@ -121,6 +123,11 @@ from qla_core.issue21_open_item_decisions import (
     resolve_ppben_path,
     resolve_ppbentyp_extract_path,
     write_premium_basis_report,
+)
+from qla_core.quikmstr_active_phase_status import (
+    bare_status_map_from_trans_map,
+    build_ppben_phase_cache,
+    select_mstatus_from_active_phase,
 )
 from qla_core.crosswalk_enrichment import resolve_crosswalk_overlay_config
 from qla_core.product_catalog_authority import (
@@ -301,7 +308,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.68"
+APP_VERSION = "v57.70"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -5782,6 +5789,26 @@ class QLAdminEnterpriseIntegrationSuite:
                         except Exception as e:
                             self.log(f"Warning: Could not load Policy Fee cache - {e}")
                         # ---------------------------
+
+                        # --- Issue #49: PPBEN phase cache for active-phase MSTATUS ---
+                        self._ppben_phase_cache = {}
+                        self._issue49_mstatus_override_count = 0
+                        try:
+                            _ppben_i49 = resolve_ppben_path(src_dir)
+                            if _ppben_i49:
+                                self._ppben_phase_cache = build_ppben_phase_cache(
+                                    _ppben_i49, normalize_fn=self.normalize
+                                )
+                                self.log(
+                                    f"Auto-loaded PPBEN phase cache for Issue #49 "
+                                    f"({len(self._ppben_phase_cache)} policies; {os.path.basename(_ppben_i49)})"
+                                )
+                            else:
+                                self.log("Issue #49: PPBEN extract not found — active-phase MSTATUS override skipped")
+                        except Exception as e:
+                            self._ppben_phase_cache = {}
+                            self.log(f"Warning: Could not load PPBEN phase cache for Issue #49 - {e}")
+                        # ---------------------------
                 
                 quikmstr_paid_to = {}
                 if t_id.lower() == "quikdvdp":
@@ -6423,6 +6450,25 @@ class QLAdminEnterpriseIntegrationSuite:
                                     prefix = "BF_" if t_f == "MBILLFRM" else ("PM_" if t_f == "MMODE" else ("DV_" if t_f == "MDIVOPT" else ("NF_" if t_f == "MNFOPT" else ("AG_" if (t_f == "MSTATUS" and t_id.lower() == "quikagts") else ("ST_" if t_f == "MSTATUS" else ("PAR_" if t_f == "MPAR" else ""))))))
                                     if not (t_id.lower() == "quikbenf" and t_f == "MTYPE"):
                                         val = trans_map.get(f"{prefix}{val}", trans_map.get(val, val))
+
+                                # --- Issue #49: first active later phase → MSTATUS (after Issue #13 + ST_) ---
+                                if t_f == "MSTATUS" and t_id.lower() == "quikmstr":
+                                    _phase_cache = getattr(self, "_ppben_phase_cache", None) or {}
+                                    if _phase_cache:
+                                        _lp_pol = self.normalize(src_row.get("POLICY_NUMBER", ""))
+                                        _phases = _phase_cache.get(_lp_pol, [])
+                                        if _phases:
+                                            if not hasattr(self, "_issue49_bare_status_map"):
+                                                self._issue49_bare_status_map = bare_status_map_from_trans_map(trans_map)
+                                            _new_status, _overridden = select_mstatus_from_active_phase(
+                                                val, _phases, self._issue49_bare_status_map
+                                            )
+                                            if _overridden:
+                                                val = _new_status
+                                                self._issue49_mstatus_override_count = (
+                                                    getattr(self, "_issue49_mstatus_override_count", 0) + 1
+                                                )
+                                # -----------------------------------------------------------------
                                 
                                 # --- STRICT NUMERIC SHIELD FOR DIVIDENDS & NFO ---
                                 if t_f in ['MDIVOPT', 'MNFOPT'] and not str(val).isdigit():
@@ -6708,6 +6754,12 @@ class QLAdminEnterpriseIntegrationSuite:
                             f"Issue #21E: populated MCV0 from FV_BALANCE2 on "
                             f"{ul_fund_mcv0_count} phase-1 UL/fund-value row(s)"
                         )
+                    if t_id.lower() == "quikmstr":
+                        _i49 = getattr(self, "_issue49_mstatus_override_count", 0)
+                        if _i49:
+                            self.log(
+                                f"Issue #49: overridden MSTATUS from first active later phase on {_i49} polic(ies)"
+                            )
                     if t_id.lower() == "quikbenf" and output:
                         output, benf_stats = self._apply_quikbenf_dedupe_and_equal_split(output, schema)
                         self.log(
