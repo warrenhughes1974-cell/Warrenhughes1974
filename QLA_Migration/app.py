@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.65
-# Date:        2026-07-09
+# Version:     v57.67
+# Date:        2026-07-10
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v57.65 — Issue #47: when quikmstr.MBILLDAY is 0/blank, fallback to day of
+# Change Note: v57.67 — Remove Validate Output / Final Output Validation from UI; governance audit only.
+#              v57.66 — UI: RUN DATA GOVERNANCE AUDIT / GOVERNANCE AUDIT buttons (data_governance → Reports/).
+#              v57.65 — Issue #47: when quikmstr.MBILLDAY is 0/blank, fallback to day of
 #              PAID_TO_DATE (preserve non-zero POLICY_BILL_DAY / Issue #21B).
 #              v57.64 — Resolve PACTG_Accounting_Extract*.csv by pattern/date (QuikIsrr + claims);
 #              stop hardcoding 20260427/20260530 extract filenames.
@@ -151,8 +153,6 @@ from qla_core.claims_emit_enhancements import (
     validate_claims_emit_enhancements,
     write_claims_emit_enhancement_validation,
 )
-from validation import run_final_output_validation
-
 # --- Phase 18A–20: Claims orchestration, UAT handoff/emit/batch/DBF, MPOLICY validation ---
 VALID_RUN_MODES = ("UAT", "PRODUCTION", "DISABLED")
 DEFAULT_RUN_MODE = "UAT"
@@ -301,7 +301,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.65"
+APP_VERSION = "v57.68"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -354,10 +354,9 @@ class QLAdminEnterpriseIntegrationSuite:
         self._last_uat_dbf_result = None
         self._last_cross_table_validation = None
         self._last_product_setup_result = None
-        self._last_output_validation_result = None
-        self._last_final_validation_result = None
+        self._last_governance_report = None
         self._ui_last_run_at = None
-        self._ui_last_validation_at = None
+        self._ui_last_governance_at = None
         self._ui_run_state = "Ready"
         self.setup_ui()
 
@@ -469,7 +468,7 @@ class QLAdminEnterpriseIntegrationSuite:
             ("RUN SINGLE TABLE CONVERSION", self.btn_action, lambda: self.start_thread(False)),
             ("EXECUTE FULL BATCH MIGRATION", self.btn_batch, lambda: self.start_thread(True)),
             ("GENERATE RATE TABLES", "#0D9488", self.start_rate_loader_thread),
-            ("RUN FINAL OUTPUT VALIDATION", "#7C2D12", self.start_final_validation_thread),
+            ("RUN DATA GOVERNANCE AUDIT", "#1D4ED8", self.start_governance_audit_thread),
         ]
         for idx, (label, color, cmd) in enumerate(btn_specs):
             row, col = divmod(idx, 3)
@@ -610,19 +609,17 @@ class QLAdminEnterpriseIntegrationSuite:
             label += f" + {rate_count} rate table(s)"
         return label
 
-    def _ui_validation_status_label(self):
-        final = getattr(self, "_last_final_validation_result", None) or {}
-        if final.get("status"):
-            return str(final.get("status"))
-        batch_val = getattr(self, "_last_output_validation_result", None) or {}
-        if batch_val.get("status"):
-            status = batch_val.get("status")
-            if status == "PASS":
-                return "Batch validation PASS"
-            if status == "FAIL":
-                return f"Batch validation FAIL ({batch_val.get('errors', 0)} errors)"
-            return str(status)
-        return "Not yet validated"
+    def _ui_governance_status_label(self):
+        report = getattr(self, "_last_governance_report", None)
+        if report is None:
+            return "Not yet audited"
+        by = getattr(report, "by_severity", None) or {}
+        if getattr(report, "clean", False):
+            return "Governance CLEAN"
+        return (
+            f"Governance findings: {getattr(report, 'total_findings', 0)} "
+            f"(C={by.get('Critical', 0)} H={by.get('High', 0)})"
+        )
 
     def _ui_format_timestamp(self, ts):
         return ts if ts else "—"
@@ -642,8 +639,8 @@ class QLAdminEnterpriseIntegrationSuite:
         self._ui_run_state = state
         self._ui_update_status_strip()
 
-    def _ui_record_validation_timestamp(self):
-        self._ui_last_validation_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    def _ui_record_governance_timestamp(self):
+        self._ui_last_governance_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self._ui_update_status_strip()
 
     def _ui_open_output_folder(self):
@@ -688,11 +685,11 @@ class QLAdminEnterpriseIntegrationSuite:
         if hasattr(self, "dash_output_var"):
             self.dash_output_var.set(self._ui_output_readiness_label())
         if hasattr(self, "dash_validation_var"):
-            self.dash_validation_var.set(self._ui_validation_status_label())
+            self.dash_validation_var.set(self._ui_governance_status_label())
         if hasattr(self, "dash_last_run_var"):
             self.dash_last_run_var.set(self._ui_format_timestamp(self._ui_last_run_at))
         if hasattr(self, "dash_last_validation_var"):
-            self.dash_last_validation_var.set(self._ui_format_timestamp(self._ui_last_validation_at))
+            self.dash_last_validation_var.set(self._ui_format_timestamp(self._ui_last_governance_at))
         if hasattr(self, "dash_run_state_var"):
             self.dash_run_state_var.set(getattr(self, "_ui_run_state", "Ready"))
         if hasattr(self, "dash_run_state_badge"):
@@ -2203,12 +2200,12 @@ class QLAdminEnterpriseIntegrationSuite:
         kpi.pack(fill="x")
         self.dash_source_var = tk.StringVar(value="Source: —")
         self.dash_output_var = tk.StringVar(value="Output: —")
-        self.dash_validation_var = tk.StringVar(value="Validation: —")
+        self.dash_validation_var = tk.StringVar(value="Governance: —")
         self.dash_run_state_var = tk.StringVar(value="Ready")
         kpi_fields = [
             ("Source Package", self.dash_source_var),
             ("Output Readiness", self.dash_output_var),
-            ("Validation Status", self.dash_validation_var),
+            ("Governance Status", self.dash_validation_var),
             ("Run State", self.dash_run_state_var),
         ]
         for idx, (label_text, var) in enumerate(kpi_fields):
@@ -2233,7 +2230,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.dash_last_run_var, self.dash_last_validation_var,
             self.env_status_var, self.readiness_status_var,
         )):
-            prefix = ("Last Run:", "Last Validation:", "", "")[idx]
+            prefix = ("Last Run:", "Last Governance:", "", "")[idx]
             if prefix:
                 tk.Label(meta, text=prefix, bg=self.bg_card, fg=self.ui_status_muted,
                          font=("Segoe UI", 8)).grid(row=0, column=idx * 2, sticky="w", padx=(0, 4))
@@ -2254,8 +2251,8 @@ class QLAdminEnterpriseIntegrationSuite:
             font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(True),
         ).pack(side="left", padx=(0, 8))
         tk.Button(
-            actions, text="VALIDATE OUTPUT", bg="#7C2D12", fg="white", width=18, height=1,
-            font=("Segoe UI", 9, "bold"), command=self.start_final_validation_thread,
+            actions, text="GOVERNANCE AUDIT", bg="#1D4ED8", fg="white", width=18, height=1,
+            font=("Segoe UI", 9, "bold"), command=self.start_governance_audit_thread,
         ).pack(side="left", padx=(0, 8))
         tk.Button(
             actions, text="OPEN OUTPUT", bg=self.btn_action, fg="white", width=16, height=1,
@@ -4803,98 +4800,167 @@ class QLAdminEnterpriseIntegrationSuite:
         self.log(f"!!! {msg}")
         self._ui_record_run_timestamp("Failed")
 
-    def _run_post_conversion_validation(self, error_log=None):
-        """Run validate_output.py priority + standard checks after full batch (v57.10)."""
-        if os.environ.get("QLA_SKIP_OUTPUT_VALIDATION", "").strip() == "1":
-            self.log("OUTPUT VALIDATION: skipped (QLA_SKIP_OUTPUT_VALIDATION=1)")
-            return {"status": "SKIPPED", "errors": 0, "warnings": 0}
+    def _run_post_conversion_governance(self, error_log=None):
+        """Run Data Governance Audit after full batch (report-only; never blocks emit)."""
+        if os.environ.get("QLA_SKIP_GOVERNANCE_AUDIT", "").strip() == "1":
+            self.log("DATA GOVERNANCE AUDIT: skipped (QLA_SKIP_GOVERNANCE_AUDIT=1)")
+            return {"status": "SKIPPED", "critical": 0, "high": 0, "total": 0}
+        try:
+            summary = self._execute_governance_audit(open_html=False, show_dialog=False)
+            if error_log and summary.get("critical"):
+                error_log.write_warnings([
+                    ("WARN", "governance", "data_governance",
+                     f"Critical findings={summary.get('critical')} High={summary.get('high')} "
+                     f"see {summary.get('report_dir', 'Reports/governance')}"),
+                ])
+            return summary
+        except Exception as exc:
+            self.log(f"DATA GOVERNANCE AUDIT: non-fatal failure — {exc}")
+            if error_log:
+                error_log.write_warnings([("WARN", "governance", "data_governance", str(exc))])
+            return {"status": "ERROR", "critical": 0, "high": 0, "total": 0, "error": str(exc)}
+
+    def _governance_ui_progress(self, event, **kwargs):
+        """Drive progress bar / stage detail during an on-demand governance audit."""
+        try:
+            if event == "load":
+                self.update_run_progress(2, detail="Loading quik*.csv outputs")
+            elif event == "check":
+                idx = int(kwargs.get("index", 0))
+                total = max(int(kwargs.get("total", 1)), 1)
+                name = str(kwargs.get("name") or "check")
+                # Interpolate bar between stage-2 (20%) and stage-4 (90%)
+                pct = 20 + int(70 * ((idx + 1) / total))
+                plan = self._progress_plan or RL.stage_plan("governance_audit")
+                stage_total = len(plan)
+                self.update_progress(
+                    pct,
+                    f"Stage 3 of {stage_total} — Running governance rule checks",
+                )
+                if hasattr(self, "lbl_stage_detail"):
+                    self.lbl_stage_detail.config(
+                        text=f"Check {idx + 1}/{total}: {name}"
+                    )
+                if hasattr(self, "root"):
+                    self.root.update_idletasks()
+            elif event == "report":
+                self.update_run_progress(4, detail="Writing HTML / CSV / log reports")
+            elif event == "done":
+                self.update_run_progress(
+                    5,
+                    detail=(
+                        f"Findings={kwargs.get('total_findings', '?')} "
+                        f"clean={kwargs.get('clean', '?')}"
+                    ),
+                )
+        except Exception:
+            pass
+
+    def _execute_governance_audit(self, open_html=True, show_dialog=True, with_ui_progress=False):
+        """Shared governance runner for UI button and post-batch. Returns summary dict."""
+        out_dir = self.path_vars["Out"][0].get().strip() if hasattr(self, "path_vars") else ""
+        if not out_dir or not os.path.isdir(out_dir):
+            out_dir = self._migration_output_dir()
+        if not os.path.isdir(out_dir):
+            raise FileNotFoundError(f"Output folder not found: {out_dir}")
 
         repo = self._repo_root()
         if repo not in sys.path:
             sys.path.insert(0, repo)
-        import validate_output as vo
+        from data_governance import run_governance
 
-        out_dir = self.path_vars["Out"][0].get().strip() if hasattr(self, "path_vars") else ""
-        if not out_dir or not os.path.isdir(out_dir):
-            out_dir = self._migration_output_dir()
         source_dir = self._migration_source_dir()
-        config_dir = os.path.join(repo, "validation_config")
-        reports_dir = os.path.normpath(os.path.join(self._reports_dir(), "validation"))
-        os.makedirs(reports_dir, exist_ok=True)
+        report_dir = os.path.normpath(os.path.join(self._reports_dir(), "governance"))
+        os.makedirs(report_dir, exist_ok=True)
+
+        cw_path = ""
+        if hasattr(self, "path_vars") and "CW" in self.path_vars:
+            cw_path = self.path_vars["CW"][0].get().strip()
+        if not cw_path or not os.path.isfile(cw_path):
+            for candidate in (
+                os.path.join(self._migration_root(), "Mapping", "Master_Crosswalk.csv"),
+                os.path.join(repo, "Master_Crosswalk.csv"),
+            ):
+                if os.path.isfile(candidate):
+                    cw_path = candidate
+                    break
+
+        required = []
+        raw = os.environ.get("QLA_GOV_REQUIRED_SOURCE_FILES", "").strip()
+        if raw:
+            required = [x.strip() for x in raw.split(";") if x.strip()]
+
         stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        text_report = os.path.join(reports_dir, f"validation_report_{stamp}.txt")
-        csv_report = os.path.join(reports_dir, f"validation_findings_{stamp}.csv")
+        self.log("DATA GOVERNANCE AUDIT: starting (read-only; all checks run)...")
+        if with_ui_progress:
+            self.update_run_progress(1, detail="Preparing Data Governance Audit")
+        report = run_governance({
+            "conversion_id": f"UI-{stamp}",
+            "conversion_source": "LifePRO",
+            "conversion_target": "QLA",
+            "output_dir": out_dir,
+            "report_dir": report_dir,
+            "source_dir": source_dir if os.path.isdir(source_dir) else "",
+            "required_source_files": required,
+            "crosswalk_path": cw_path if cw_path and os.path.isfile(cw_path) else "",
+            "app_table_version": APP_VERSION,
+            "write_reports": True,
+            "progress_callback": self._governance_ui_progress if with_ui_progress else None,
+        })
+        self._last_governance_report = report
+        by = report.by_severity or {}
+        critical = by.get("Critical", 0)
+        high = by.get("High", 0)
+        html_path = os.path.join(report_dir, "governance_audit.html")
+        csv_path = os.path.join(report_dir, "governance_audit.csv")
+        log_path = os.path.join(report_dir, "governance_audit.log")
 
-        self.log("OUTPUT VALIDATION: starting (25 priority + schema/critical/dates/duplicates)...")
-        try:
-            config = vo.load_all_config(config_dir)
-            files = vo.discover_output_files(out_dir)
-            if not files:
-                self.log("OUTPUT VALIDATION: no quik*.csv in Output — skipped")
-                return {"status": "SKIPPED", "errors": 0, "warnings": 0}
+        self.log("DATA GOVERNANCE AUDIT COMPLETE:")
+        self.log(
+            f"  Findings: {report.total_findings} | "
+            f"Critical={critical} High={high} "
+            f"Advisory={by.get('Advisory', 0)} Info={by.get('Info', 0)}"
+        )
+        self.log(f"  Clean run: {'YES' if report.clean else 'NO'}")
+        self.log(f"  HTML: {html_path}")
+        self.log(f"  CSV:  {csv_path}")
+        self.log(f"  Log:  {log_path}")
 
-            enabled = set(vo.CATEGORIES) - {"regression"}
-            tables = vo.load_all_tables(files)
-            results = []
-            for path in files:
-                results.append(vo.validate_table(path, config, enabled))
-            priority_findings = vo.run_priority_checks(
-                tables, config, out_dir,
-                repo_root=repo, source_dir=source_dir if os.path.isdir(source_dir) else None,
+        summary = {
+            "status": "CLEAN" if report.clean else "FINDINGS",
+            "critical": critical,
+            "high": high,
+            "advisory": by.get("Advisory", 0),
+            "info": by.get("Info", 0),
+            "total": report.total_findings,
+            "report_dir": report_dir,
+            "html_path": html_path,
+            "csv_path": csv_path,
+            "log_path": log_path,
+            "clean": report.clean,
+        }
+
+        if show_dialog:
+            msg = (
+                f"Findings: {report.total_findings}\n"
+                f"Critical: {critical}  High: {high}\n"
+                f"Advisory: {by.get('Advisory', 0)}  Info: {by.get('Info', 0)}\n\n"
+                f"Reports:\n{report_dir}"
             )
-            results.append({
-                "table": "priority_checks",
-                "file": "priority_rules.json",
-                "path": os.path.join(config_dir, "priority_rules.json"),
-                "row_count": 0,
-                "metrics": {"priority_findings": len(priority_findings)},
-                "findings": priority_findings,
-            })
+            if report.clean:
+                messagebox.showinfo("Data Governance Audit", f"Clean run — no findings.\n\n{msg}")
+            else:
+                messagebox.showwarning("Data Governance Audit", msg)
 
-            report_text = vo.format_text_report(results, out_dir, sorted(enabled), sample_limit=25)
-            with open(text_report, "w", encoding="utf-8") as fh:
-                fh.write(report_text + "\n")
-            vo.write_csv_report(results, csv_report, sample_limit=500)
+        if open_html and os.path.isfile(html_path):
+            try:
+                os.startfile(html_path)  # noqa: S606
+            except OSError:
+                pass
 
-            errors = sum(1 for r in results for f in r["findings"] if f["severity"] == "ERROR")
-            warns = sum(1 for r in results for f in r["findings"] if f["severity"] == "WARN")
-            status = "PASS" if errors == 0 else "FAIL"
-            self.log(f"OUTPUT VALIDATION: {status} — ERROR={errors} WARN={warns}")
-            self.log(f"OUTPUT VALIDATION report: {text_report}")
-            self.log(f"OUTPUT VALIDATION findings CSV: {csv_report}")
-
-            if error_log and errors:
-                rows = []
-                for r in results:
-                    for f in r["findings"]:
-                        if f["severity"] != "ERROR":
-                            continue
-                        vid = (f.get("context") or {}).get("validation_id", "")
-                        rows.append([
-                            f["severity"],
-                            f.get("category", ""),
-                            f.get("table", ""),
-                            f"{vid} {f.get('message', '')}".strip(),
-                        ])
-                        if len(rows) >= 200:
-                            break
-                    if len(rows) >= 200:
-                        break
-                if rows:
-                    error_log.write_validation_errors(rows)
-
-            return {
-                "status": status,
-                "errors": errors,
-                "warnings": warns,
-                "text_report": text_report,
-                "csv_report": csv_report,
-            }
-        except Exception as exc:
-            self.log(f"OUTPUT VALIDATION: non-fatal failure — {exc}")
-            if error_log:
-                error_log.write_warnings([("WARN", "priority", "validate_output", str(exc))])
-            return {"status": "ERROR", "errors": 0, "warnings": 0, "error": str(exc)}
+        self._ui_record_governance_timestamp()
+        self._ui_update_status_strip()
+        return summary
 
     def _run_output_hygiene(self, error_log=None):
         """Keep QLA_Migration/Output CSV-only. Moves (never deletes) non-CSV files
@@ -4917,61 +4983,39 @@ class QLAdminEnterpriseIntegrationSuite:
         except Exception as exc:
             self.log(f"Output hygiene skipped (non-fatal): {exc}")
 
-    def start_final_validation_thread(self):
+    def start_governance_audit_thread(self):
         if self.is_running:
-            messagebox.showwarning("Validation", "A conversion or batch job is already running.")
+            messagebox.showwarning("Governance Audit", "A conversion or batch job is already running.")
             return
-        threading.Thread(target=self._run_final_output_validation_ui, daemon=True).start()
+        self.is_running = True
+        self.start_time = time.time()
+        threading.Thread(target=self.update_timer, daemon=True).start()
+        threading.Thread(target=self._run_governance_audit_ui, daemon=True).start()
 
-    def _run_final_output_validation_ui(self):
-        """On-demand read-only final output validation (v57.17)."""
+    def _run_governance_audit_ui(self):
+        """On-demand Data Governance Audit — report-only; never blocks or modifies data."""
         try:
-            self.is_running = True
-            self.log("FINAL OUTPUT VALIDATION: starting (read-only, output/ folder)...")
-            out_dir = self.path_vars["Out"][0].get().strip() if hasattr(self, "path_vars") else ""
-            if not out_dir or not os.path.isdir(out_dir):
-                out_dir = self._migration_output_dir()
-            repo = self._repo_root()
-            source_dir = self._migration_source_dir()
-            result = run_final_output_validation(
-                out_dir,
-                repo_root=repo,
-                source_dir=source_dir if os.path.isdir(source_dir) else None,
-                app_table_schemas=self.TABLE_SCHEMAS,
+            self.start_run_progress("governance_audit")
+            self.update_run_progress(1, detail="Preparing Data Governance Audit")
+            summary = self._execute_governance_audit(
+                open_html=True, show_dialog=True, with_ui_progress=True,
             )
-            self._last_final_validation_result = result
-            sm = result.get("summary") or {}
-            status = result.get("status", "UNKNOWN")
-            self.log("FINAL OUTPUT VALIDATION COMPLETE:")
-            self.log(f"  Overall Status: {status}")
-            self.log(f"  Rules Known: {sm.get('total_rules_known', 0)} | Executed: {sm.get('total_rules_executed', 0)} | "
-                     f"With Findings: {sm.get('rules_with_findings', 0)} | Skipped: {sm.get('rules_skipped', 0)} | "
-                     f"Failed: {sm.get('rules_failed_internally', 0)}")
-            self.log(f"  Records Scanned: {sm.get('total_records_scanned', 0)}")
-            self.log(f"  Block: {sm.get('block_count', 0)} | Hold: {sm.get('hold_count', 0)} | "
-                     f"Warning: {sm.get('warning_count', 0)} | Report-only: {sm.get('report_only_count', 0)}")
-            reports = result.get("reports") or {}
-            if reports.get("reports_dir"):
-                self.log(f"  Reports: {reports['reports_dir']}")
-            if reports.get("rule_audit_csv"):
-                self.log(f"  Rule Audit CSV: {reports['rule_audit_csv']}")
-            if reports.get("summary_csv"):
-                self.log(f"  Summary CSV: {reports['summary_csv']}")
-            if status == "BLOCKED":
-                messagebox.showerror("Final Output Validation", f"Status: BLOCKED\nSee {reports.get('reports_dir', 'validation_reports')}")
-            elif status == "HOLD":
-                messagebox.showwarning("Final Output Validation", f"Status: HOLD\nSee {reports.get('reports_dir', 'validation_reports')}")
-            elif status == "WARNING":
-                messagebox.showwarning("Final Output Validation", f"Status: WARNING\nSee {reports.get('reports_dir', 'validation_reports')}")
+            status = summary.get("status", "DONE")
+            detail = (
+                f"Complete — Critical={summary.get('critical', 0)} "
+                f"High={summary.get('high', 0)} Total={summary.get('total', 0)}"
+            )
+            if status == "CLEAN":
+                self.complete_run_progress("Complete — Data Governance Audit clean (no findings)")
             else:
-                messagebox.showinfo("Final Output Validation", f"Status: PASS\nReports: {reports.get('reports_dir', '')}")
-            self._ui_record_validation_timestamp()
-            self._ui_update_status_strip()
+                self.complete_run_progress(detail)
         except Exception as exc:
-            self.log(f"FINAL OUTPUT VALIDATION ERROR: {exc}")
-            messagebox.showerror("Final Output Validation", str(exc))
+            self.log(f"DATA GOVERNANCE AUDIT ERROR: {exc}")
+            self.fail_run_progress("Data Governance Audit", str(exc))
+            messagebox.showerror("Data Governance Audit", str(exc))
         finally:
             self.is_running = False
+            # Leave final elapsed time visible (timer thread stops when is_running is False).
 
     def update_progress(self, stage_percent, stage_message, state="running"):
         """Cosmetic staged progress feedback. Updates the progress bar (when a percent
@@ -6817,21 +6861,24 @@ class QLAdminEnterpriseIntegrationSuite:
 
             val_note = ""
             if is_batch:
-                current_stage = "Running validation and blocker checks"
-                self.update_run_progress(8, detail="validate_output — 25 priority checks")
-                self._last_output_validation_result = self._run_post_conversion_validation(run_error_log)
-                vr = self._last_output_validation_result or {}
+                current_stage = "Running data governance audit"
+                self.update_run_progress(8, detail="data_governance audit (report-only)")
+                self._last_governance_summary = self._run_post_conversion_governance(run_error_log)
+                vr = self._last_governance_summary or {}
                 if vr.get("status"):
-                    self._ui_record_validation_timestamp()
-                if vr.get("status") == "PASS":
-                    val_note = "\n\nOutput validation: PASS (see QLA_Migration/Reports/validation/)"
-                elif vr.get("status") == "FAIL":
+                    self._ui_record_governance_timestamp()
+                if vr.get("status") == "CLEAN":
+                    val_note = "\n\nData governance audit: CLEAN (see QLA_Migration/Reports/governance/)"
+                elif vr.get("status") == "FINDINGS":
                     val_note = (
-                        f"\n\nOutput validation: FAIL — {vr.get('errors', 0)} ERROR(s), "
-                        f"{vr.get('warnings', 0)} WARN(s).\nReport: {vr.get('text_report', 'Reports/validation')}"
+                        f"\n\nData governance audit: {vr.get('total', 0)} finding(s) — "
+                        f"Critical={vr.get('critical', 0)}, High={vr.get('high', 0)}.\n"
+                        f"Report: {vr.get('report_dir', 'Reports/governance')}"
                     )
                 elif vr.get("status") == "SKIPPED":
-                    val_note = "\n\nOutput validation: skipped."
+                    val_note = "\n\nData governance audit: skipped."
+                elif vr.get("status") == "ERROR":
+                    val_note = f"\n\nData governance audit: error — {vr.get('error', 'see log')}"
 
             if is_batch and batch_claims_result and batch_claims_result.get("emit_result"):
                 emit_info = batch_claims_result["emit_result"]
