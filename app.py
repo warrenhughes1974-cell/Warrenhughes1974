@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.70
+# Version:     v57.71
 # Date:        2026-07-10
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.70 — Issue #49: when quikmstr first-phase display status is >=50 and a later
+# Change Note: v57.71 — Issue #49 fix: phase-1 MPHSTAT inherit uses pre-override (Issue #13)
+#              provisional MSTATUS so QuikMstr active-phase override does not change phase 1.
+#              v57.70 — Issue #49: when quikmstr first-phase display status is >=50 and a later
 #              phase is 0–49, set MSTATUS to that first active later phase (after Issue #13).
 #              v57.67 — Remove Validate Output / Final Output Validation from UI; governance audit only.
 #              v57.66 — UI: RUN DATA GOVERNANCE AUDIT button (data_governance module → Reports/).
@@ -308,7 +310,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.70"
+APP_VERSION = "v57.71"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -5793,6 +5795,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         # --- Issue #49: PPBEN phase cache for active-phase MSTATUS ---
                         self._ppben_phase_cache = {}
                         self._issue49_mstatus_override_count = 0
+                        self._mstatus_provisional_for_phase1_cache = {}
                         try:
                             _ppben_i49 = resolve_ppben_path(src_dir)
                             if _ppben_i49:
@@ -6452,7 +6455,19 @@ class QLAdminEnterpriseIntegrationSuite:
                                         val = trans_map.get(f"{prefix}{val}", trans_map.get(val, val))
 
                                 # --- Issue #49: first active later phase → MSTATUS (after Issue #13 + ST_) ---
+                                # Record provisional (pre-override) status for phase-1 MPHSTAT inherit so
+                                # QuikMstr-only override does not change phase 1.
                                 if t_f == "MSTATUS" and t_id.lower() == "quikmstr":
+                                    if not hasattr(self, "_mstatus_provisional_for_phase1_cache"):
+                                        self._mstatus_provisional_for_phase1_cache = {}
+                                    _prov_pol = self.normalize(row_data.get("MPOLICY", ""))
+                                    if not _prov_pol:
+                                        _lp = self.normalize(src_row.get("POLICY_NUMBER", ""))
+                                        _prov_pol = self.normalize(
+                                            self._format_qladmin_mpolicy(cw_map.get(_lp, _lp))
+                                        )
+                                    if _prov_pol and val not in ["", None]:
+                                        self._mstatus_provisional_for_phase1_cache[_prov_pol] = self.normalize(val)
                                     _phase_cache = getattr(self, "_ppben_phase_cache", None) or {}
                                     if _phase_cache:
                                         _lp_pol = self.normalize(src_row.get("POLICY_NUMBER", ""))
@@ -6615,8 +6630,33 @@ class QLAdminEnterpriseIntegrationSuite:
                                             self._qm_status_cache = {self.normalize(k): self.normalize(v) for k, v in zip(qdf['MPOLICY'], qdf['MSTATUS'])}
                                 except Exception:
                                     pass
+                                # Issue #49: load provisional (pre-override) statuses for phase-1 inherit
+                                if not getattr(self, "_mstatus_provisional_for_phase1_cache", None):
+                                    self._mstatus_provisional_for_phase1_cache = {}
+                                    try:
+                                        _prov_path = os.path.normpath(os.path.join(
+                                            os.path.dirname(os.path.abspath(__file__)),
+                                            "QLA_Migration", "Reports", "quikmstr_phase1_inherit_mstatus.csv",
+                                        ))
+                                        if not os.path.isfile(_prov_path):
+                                            _out = self.path_vars["Out"][0].get()
+                                            _prov_path = os.path.normpath(os.path.join(
+                                                os.path.dirname(_out), "Reports", "quikmstr_phase1_inherit_mstatus.csv",
+                                            ))
+                                        if os.path.isfile(_prov_path):
+                                            _pdf = pd.read_csv(_prov_path, dtype=str).fillna("")
+                                            _pdf.columns = [str(c).strip().upper() for c in _pdf.columns]
+                                            if "MPOLICY" in _pdf.columns and "MSTATUS_PROVISIONAL" in _pdf.columns:
+                                                self._mstatus_provisional_for_phase1_cache = {
+                                                    self.normalize(k): self.normalize(v)
+                                                    for k, v in zip(_pdf["MPOLICY"], _pdf["MSTATUS_PROVISIONAL"])
+                                                }
+                                    except Exception:
+                                        pass
                                     
-                            qm_status = self._qm_status_cache.get(tp)
+                            # Prefer Issue #13 provisional status so #49 QuikMstr override does not change phase 1
+                            _prov_map = getattr(self, "_mstatus_provisional_for_phase1_cache", None) or {}
+                            qm_status = _prov_map.get(tp) or self._qm_status_cache.get(tp)
                             # Inherit meaningful policy-level terminal status; block active statuses
                             if qm_status and qm_status not in ["", "11", "22", "ACTIVE"]:
                                 row_data['MPHSTAT'] = qm_status
@@ -6760,6 +6800,23 @@ class QLAdminEnterpriseIntegrationSuite:
                             self.log(
                                 f"Issue #49: overridden MSTATUS from first active later phase on {_i49} polic(ies)"
                             )
+                        # Persist provisional MSTATUS for phase-1 inherit (Reports/, not Output/)
+                        _prov = getattr(self, "_mstatus_provisional_for_phase1_cache", None) or {}
+                        if _prov:
+                            try:
+                                _out = self.path_vars["Out"][0].get()
+                                _rep = os.path.normpath(os.path.join(os.path.dirname(_out), "Reports"))
+                                os.makedirs(_rep, exist_ok=True)
+                                _prov_path = os.path.join(_rep, "quikmstr_phase1_inherit_mstatus.csv")
+                                pd.DataFrame(
+                                    [{"MPOLICY": k, "MSTATUS_PROVISIONAL": v} for k, v in sorted(_prov.items())]
+                                ).to_csv(_prov_path, index=False)
+                                self.log(
+                                    f"Issue #49: wrote phase-1 inherit provisional MSTATUS cache "
+                                    f"({len(_prov)} policies) → {_prov_path}"
+                                )
+                            except Exception as e:
+                                self.log(f"Warning: could not write phase-1 inherit MSTATUS cache - {e}")
                     if t_id.lower() == "quikbenf" and output:
                         output, benf_stats = self._apply_quikbenf_dedupe_and_equal_split(output, schema)
                         self.log(

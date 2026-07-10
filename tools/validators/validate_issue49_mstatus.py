@@ -19,13 +19,14 @@ from pathlib import Path
 
 import pandas as pd
 
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "1.1"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 SRC = PROJECT_ROOT / "QLA_Migration" / "Source"
 CW = PROJECT_ROOT / "QLA_Migration" / "Mapping" / "Master_Crosswalk.csv"
 MVT = PROJECT_ROOT / "QLA_Migration" / "Mapping" / "Master_Value_Translation.csv"
 CANDIDATES = PROJECT_ROOT / "Issue_Log_Items" / "Issue_49" / "evidence" / "issue49_override_candidates.csv"
+RIDR_BASELINE = PROJECT_ROOT / "Issue_Log_Items" / "Issue_49" / "evidence" / "quikridr_pre_v5770_baseline.csv"
 
 sys.path.insert(0, str(PROJECT_ROOT))
 from qla_core.quikmstr_active_phase_status import (  # noqa: E402
@@ -144,7 +145,7 @@ def simulate_overrides() -> tuple[list[dict], list[str]]:
 
 def validate(output_dir: Path, simulate_only: bool = False) -> int:
     print("=" * 72)
-    print(f"ISSUE #49 MSTATUS VALIDATION (script v{SCRIPT_VERSION}, engine v57.70)")
+    print(f"ISSUE #49 MSTATUS VALIDATION (script v{SCRIPT_VERSION}, engine v57.71)")
     print(f"Output: {output_dir}")
     print("=" * 72)
 
@@ -236,6 +237,55 @@ def validate(output_dir: Path, simulate_only: bool = False) -> int:
             errors.append(f"Preserve trace {pol}: MSTATUS={got} expected unchanged {exp}")
         elif got == exp:
             print(f"  PASS preserve trace {pol}={exp}")
+
+    # Regression: phase-1 MPHSTAT must remain at pre-#49 baseline for override candidates
+    ridr_path = output_dir / "quikridr.csv"
+    if ridr_path.is_file() and RIDR_BASELINE.is_file() and CANDIDATES.is_file():
+        qr = _read(ridr_path)
+        qrb = _read(RIDR_BASELINE)
+        cand = _read(CANDIDATES)
+        cand_pols = {_s(p) for p in cand["MPOLICY"]}
+
+        def _phase1_map(df: pd.DataFrame) -> dict[str, str]:
+            out: dict[str, str] = {}
+            for _, r in df.iterrows():
+                pol = _s(r.get("MPOLICY", ""))
+                ph = _s(r.get("MPHASE", "")).lstrip("0") or "0"
+                if ph == "1" and pol:
+                    out[pol] = _s(r.get("MPHSTAT", ""))
+            return out
+
+        base_p1 = _phase1_map(qrb)
+        new_p1 = _phase1_map(qr)
+        p1_changed = []
+        for pol in sorted(cand_pols):
+            b = base_p1.get(pol, "")
+            n = new_p1.get(pol, "")
+            if b and n and b != n:
+                p1_changed.append(f"{pol}: phase1 MPHSTAT {b}->{n}")
+        if p1_changed:
+            errors.append(
+                f"Phase-1 MPHSTAT changed on {len(p1_changed)} override candidates "
+                f"(must remain unchanged): {p1_changed[:5]}"
+            )
+        else:
+            print(f"  PASS phase-1 MPHSTAT unchanged for {len(cand_pols)} override candidates")
+        # Spot-check 01ML8007C expected shape: MSTATUS 22, phase1 54, phase2 22
+        if "01ML8007C" in cand_pols:
+            p1 = new_p1.get("01ML8007C", "")
+            mst = by_pol.get("01ML8007C", "")
+            p2 = ""
+            for _, r in qr.iterrows():
+                if _s(r.get("MPOLICY")) == "01ML8007C" and _s(r.get("MPHASE")).lstrip("0") == "2":
+                    p2 = _s(r.get("MPHSTAT"))
+                    break
+            if mst == "22" and p1 == "54" and p2 == "22":
+                print("  PASS 01ML8007C shape MSTATUS=22 phase1=54 phase2=22")
+            elif mst == "22":
+                errors.append(
+                    f"01ML8007C expected MSTATUS=22 phase1=54 phase2=22; "
+                    f"got MSTATUS={mst} phase1={p1} phase2={p2}"
+                )
 
     for e in errors:
         print(f"FAIL: {e}")

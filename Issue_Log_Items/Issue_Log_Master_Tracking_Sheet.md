@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-10 · **Engine:** `app.py` **v57.70** / cumulative **v57.34+**
+**Last updated:** 2026-07-10 · **Engine:** `app.py` **v57.71** / cumulative **v57.34+**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -75,7 +75,7 @@
 | **#36** | Modal factors on `quikmstr` (Names-tab Modal Premiums) | **CLOSED ✓** · **v57.62** | **v57.62** | Resolution: quikmstr now receives plan-level modal factors (MSEMI/MQTRL/MMTHD/MMTHB) from quikplan, with PAC GL85 quarterly=25 and semiannual=50 overrides, so Names-tab Modal Premiums work (v57.62). |
 | **#47** | Bill Day zero → Paid-To day | **CLOSED ✓** · **v57.65** | **v57.65** | Resolution: When Bill Day is zero, quikmstr.MBILLDAY now uses the day from Paid-To date while non-zero Issue #21B bill days stay unchanged (v57.65). |
 | **#48** | Secondary Rate File (PAAGERAT fallback) | **G5 PASS → Ready for Regression** · **v57.69** | **v57.69** | Path wiring only; 0 new rates vs prior Rate_Table/PAAGERAT; 158 RT-only keys pre-existing |
-| **#49** | QuikMstr Active Phase Status | **CLOSED ✓** · **v57.70** | **v57.70** | When phase 1 display ≥ 50 and a later emitted phase is 0–49, set `quikmstr.MSTATUS` to first active later phase; 35 policies 54→22 |
+| **#49** | QuikMstr Active Phase Status | **CLOSED ✓** · **v57.71** | **v57.71** | QuikMstr uses first active later phase when phase 1 display ≥50; phase-1 MPHSTAT unchanged (v57.71 fix); 35 policies MSTATUS 54→22 |
 
 **#13 detail:** `Issue_Log_Items/Issue_13/` · Option A termination precedence · G5/G6 PASS · samples 010516211C→54, 011101663C→56
 
@@ -99,7 +99,7 @@
 
 **#48 detail:** `Issue_Log_Items/Issue_48/` · **v57.69** · G5 PASS · 0 new rate content · Next: Regression (G6)
 
-**#49 detail:** `Issue_Log_Items/Issue_49/` · **CLOSED** · **v57.70** · G5/G6 PASS · 35 policies `MSTATUS` 54→22 · RPU/Paid-Up masters preserved
+**#49 detail:** `Issue_Log_Items/Issue_49/` · **CLOSED** · **v57.71** · QuikMstr-only override; phase-1 MPHSTAT preserved via provisional inherit cache; validator asserts phase1 unchanged
 
 ---
 

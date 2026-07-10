@@ -2,7 +2,7 @@
 
 **Issue:** #49 — QuikMstr Active Phase Status  
 **Status:** **CLOSED** (conversion complete; client Decision remains No-Go until business Go)  
-**Engine:** **v57.70**  
+**Engine:** **v57.71**  
 **Date closed (technical):** 2026-07-10  
 **Owner:** Warren · **Client contact:** Eric  
 
@@ -11,18 +11,18 @@
 ## Issues log resolution (paste-ready)
 
 ```text
-49 Closed QuikMstr Active Phase Status — When the first phase display status is inactive (QLAdmin status >= 50) and a later emitted phase is active (0–49), quikmstr.MSTATUS now uses that first active later phase status; otherwise Issue #13 / PPOLC behavior is preserved (v57.70). Fleet: 35 policies changed 54→22. Validation samples: 018252C 54→22; 018253C 54→22; 01ML8007C 54→22; 018187C remains 45 (RPU preserved); 010380550C remains 41 (Paid Up preserved).
+49 Closed QuikMstr Active Phase Status — When the first phase display status is inactive (QLAdmin status >= 50) and a later emitted phase is active (0–49), quikmstr.MSTATUS now uses that first active later phase status; phase-1 MPHSTAT is unchanged (v57.71). Fleet: 35 policies MSTATUS 54→22. Validation: 01ML8007C MSTATUS=22 Ph1=54 Ph2=22; 018252C MSTATUS=22 Ph1=54 Ph2=22; 018253C MSTATUS=22 Ph1=54; 018187C remains 45; 010380550C remains 41.
 ```
 
 ### Validation policies (5)
 
-| Policy | Before | After | Role |
-|--------|-------:|------:|------|
-| `018252C` | 54 | **22** | Override — inactive phase 1, active phase 2 |
-| `018253C` | 54 | **22** | Override — multi later active phases |
-| `01ML8007C` | 54 | **22** | Override — fleet sample |
-| `018187C` | 45 | **45** | Preserve — phase 1 already active (RPU) |
-| `010380550C` | 41 | **41** | Preserve — phase 1 already active (Paid Up) |
+| Policy | MSTATUS | Phase 1 | Phase 2 | Role |
+|--------|--------:|--------:|--------:|------|
+| `01ML8007C` | **22** | **54** | **22** | Override master only |
+| `018252C` | **22** | **54** | **22** | Override master only |
+| `018253C` | **22** | **54** | 22+ | Override master only |
+| `018187C` | **45** | 45 | 22 | Preserve (RPU) |
+| `010380550C` | **41** | 41 | 22 | Preserve (Paid Up) |
 
 ---
 
