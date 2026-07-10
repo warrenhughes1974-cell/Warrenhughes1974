@@ -19,14 +19,17 @@ from pathlib import Path
 
 import pandas as pd
 
-SCRIPT_VERSION = "1.1"
+SCRIPT_VERSION = "1.2"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
+TEST_VALIDATION = DEFAULT_OUTPUT / "Test_Validation"
 SRC = PROJECT_ROOT / "QLA_Migration" / "Source"
 CW = PROJECT_ROOT / "QLA_Migration" / "Mapping" / "Master_Crosswalk.csv"
 MVT = PROJECT_ROOT / "QLA_Migration" / "Mapping" / "Master_Value_Translation.csv"
 CANDIDATES = PROJECT_ROOT / "Issue_Log_Items" / "Issue_49" / "evidence" / "issue49_override_candidates.csv"
+MSTR_BASELINE = PROJECT_ROOT / "Issue_Log_Items" / "Issue_49" / "evidence" / "quikmstr_pre_v5770_baseline.csv"
 RIDR_BASELINE = PROJECT_ROOT / "Issue_Log_Items" / "Issue_49" / "evidence" / "quikridr_pre_v5770_baseline.csv"
+ISSUE49_TABLES = ("quikmstr", "quikridr")
 
 sys.path.insert(0, str(PROJECT_ROOT))
 from qla_core.quikmstr_active_phase_status import (  # noqa: E402
@@ -143,7 +146,36 @@ def simulate_overrides() -> tuple[list[dict], list[str]]:
     return rows, errors
 
 
-def validate(output_dir: Path, simulate_only: bool = False) -> int:
+def _regression_non_candidate_mstatus(
+    qm: pd.DataFrame,
+    cand_pols: set[str],
+    errors: list[str],
+) -> None:
+    if not MSTR_BASELINE.is_file():
+        return
+    base = _read(MSTR_BASELINE)
+    base_by = {_s(r["MPOLICY"]): _s(r["MSTATUS"]) for _, r in base.iterrows()}
+    new_by = {_s(r["MPOLICY"]): _s(r["MSTATUS"]) for _, r in qm.iterrows()}
+    if len(base_by) != len(new_by):
+        errors.append(f"quikmstr row count {len(new_by)} != baseline {len(base_by)}")
+        return
+    print(f"  PASS quikmstr row count {len(new_by)} == baseline")
+    unexpected = []
+    for pol, b_stat in base_by.items():
+        if pol in cand_pols:
+            continue
+        n_stat = new_by.get(pol, "")
+        if n_stat != b_stat:
+            unexpected.append(f"{pol}: {b_stat}->{n_stat}")
+    if unexpected:
+        errors.append(
+            f"Non-candidate MSTATUS changed ({len(unexpected)}): {unexpected[:5]}"
+        )
+    else:
+        print(f"  PASS non-candidate MSTATUS unchanged ({len(base_by) - len(cand_pols)} policies)")
+
+
+def validate(output_dir: Path, simulate_only: bool = False, publish_test_validation: bool = False) -> int:
     print("=" * 72)
     print(f"ISSUE #49 MSTATUS VALIDATION (script v{SCRIPT_VERSION}, engine v57.71)")
     print(f"Output: {output_dir}")
@@ -200,6 +232,10 @@ def validate(output_dir: Path, simulate_only: bool = False) -> int:
 
     qm = _read(mstr_path)
     by_pol = {_s(r["MPOLICY"]): _s(r["MSTATUS"]) for _, r in qm.iterrows()}
+    cand_pols: set[str] = set()
+    if CANDIDATES.is_file():
+        cand_pols = {_s(p) for p in _read(CANDIDATES)["MPOLICY"]}
+    _regression_non_candidate_mstatus(qm, cand_pols, errors)
 
     # If output still has pre-#49 values, report as not-yet-batched
     changed = 0
@@ -240,11 +276,13 @@ def validate(output_dir: Path, simulate_only: bool = False) -> int:
 
     # Regression: phase-1 MPHSTAT must remain at pre-#49 baseline for override candidates
     ridr_path = output_dir / "quikridr.csv"
-    if ridr_path.is_file() and RIDR_BASELINE.is_file() and CANDIDATES.is_file():
+    if ridr_path.is_file() and RIDR_BASELINE.is_file() and cand_pols:
         qr = _read(ridr_path)
         qrb = _read(RIDR_BASELINE)
-        cand = _read(CANDIDATES)
-        cand_pols = {_s(p) for p in cand["MPOLICY"]}
+        if len(qr) != len(qrb):
+            errors.append(f"quikridr row count {len(qr)} != baseline {len(qrb)}")
+        else:
+            print(f"  PASS quikridr row count {len(qr)} == baseline")
 
         def _phase1_map(df: pd.DataFrame) -> dict[str, str]:
             out: dict[str, str] = {}
@@ -287,6 +325,18 @@ def validate(output_dir: Path, simulate_only: bool = False) -> int:
                     f"got MSTATUS={mst} phase1={p1} phase2={p2}"
                 )
 
+    if publish_test_validation and not errors:
+        sys.path.insert(0, str(PROJECT_ROOT / "tools"))
+        from publish_test_validation import publish_tables  # noqa: E402
+
+        dest = publish_tables(
+            list(ISSUE49_TABLES),
+            output_dir=output_dir,
+            dest_dir=TEST_VALIDATION,
+            issue_tag="Issue_49_v57.71",
+        )
+        print(f"  PASS published modified tables to {dest}")
+
     for e in errors:
         print(f"FAIL: {e}")
     for w in warnings:
@@ -299,8 +349,17 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Issue #49 MSTATUS validator")
     ap.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     ap.add_argument("--simulate-only", action="store_true")
+    ap.add_argument(
+        "--publish-test-validation",
+        action="store_true",
+        help="On PASS, copy quikmstr.csv and quikridr.csv to Output/Test_Validation",
+    )
     args = ap.parse_args()
-    return validate(args.output_dir, simulate_only=args.simulate_only)
+    return validate(
+        args.output_dir,
+        simulate_only=args.simulate_only,
+        publish_test_validation=args.publish_test_validation,
+    )
 
 
 if __name__ == "__main__":

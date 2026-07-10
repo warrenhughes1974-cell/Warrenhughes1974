@@ -46,8 +46,22 @@ When the first QLAdmin-display phase status is **inactive (≥ 50)** and a later
 | 4 Risk | GO |
 | 5 Development | v57.70 implemented |
 | 6 Validation | PASS |
-| 7 Regression | PASS |
+| 7 Regression | PASS (v57.71: phase-1 unchanged asserted) |
 | 8 Closure | This document |
+
+---
+
+## Test_Validation deliverable
+
+Partial UAT reload (no full batch required):
+
+| Path | Role |
+|------|------|
+| `QLA_Migration/Output/Test_Validation/quikmstr.csv` | 35 MSTATUS overrides |
+| `QLA_Migration/Output/Test_Validation/quikridr.csv` | Phase-1 preserved on those 35 |
+| `QLA_Migration/Output/Test_Validation/manifest.txt` | Publish stamp + table list |
+
+Publish: `python tools/validators/validate_issue49_mstatus.py --publish-test-validation`
 
 ---
 
@@ -56,8 +70,9 @@ When the first QLAdmin-display phase status is **inactive (≥ 50)** and a later
 | Path | Role |
 |------|------|
 | `qla_core/quikmstr_active_phase_status.py` | Selection helper |
-| `app.py` / `QLA_Migration/app.py` | v57.70 wiring |
-| `tools/validators/validate_issue49_mstatus.py` | Validator |
+| `app.py` / `QLA_Migration/app.py` | v57.71 wiring |
+| `tools/validators/validate_issue49_mstatus.py` | Validator v1.2 (regression + publish) |
+| `tools/publish_test_validation.py` | Test_Validation publisher |
 | `Issue_Log_Items/Issue_49/evidence/issue49_override_candidates.csv` | Candidate list |
 | `Issue_Log_Items/Issue_49/evidence/quikmstr_pre_v5770_baseline.csv` | Pre-change baseline |
 | `Issue_49_*_Report.md` / `Issue_49_Dependency_Gate.md` / Implementation Notes | Stage docs |

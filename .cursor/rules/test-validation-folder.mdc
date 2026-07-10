@@ -1,0 +1,35 @@
+# Test Validation Folder Policy
+
+`QLA_Migration/Output/Test_Validation/` holds **only the quik*.csv tables modified by the current issue fix** so Warren can reload QLAdmin without a full batch.
+
+## When to publish
+
+After any issue fix that changes one or more output tables:
+
+1. Rebatch or convert only the affected tables.
+2. Run the issue validator **and** regression checks (candidates changed correctly; non-candidates unchanged).
+3. On **PASS**, copy modified tables to `Output/Test_Validation/`.
+
+## How to publish
+
+```powershell
+python tools/publish_test_validation.py quikmstr quikridr --issue Issue_49
+```
+
+Or use the issue validator flag when available:
+
+```powershell
+python tools/validators/validate_issue49_mstatus.py --publish-test-validation
+```
+
+`manifest.txt` in the folder records publish time, issue tag, and table list.
+
+## What does NOT go here
+
+| Type | Relocate to |
+|------|-------------|
+| Audit / validation CSVs | `QLA_Migration/Reports/` |
+| Batch logs | `QLA_Migration/Logs/` |
+| Full Output snapshot | `QLA_Migration/Output/` (root) |
+
+`Test_Validation` is for **partial UAT reload** only — not the full QLAdmin load package.

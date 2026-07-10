@@ -35,6 +35,7 @@ BUSINESS RULES:
 OUTPUT FOLDER:
 - `QLA_Migration/Output/` — QLAdmin table CSVs only (`quik*.csv` + optional `rates/`)
 - audits, logs, validation, DBF staging → `Reports/`, `Logs/`, `Validation/`, `Staging/` (see `.cursor/rules/qla-output-folder.mdc`)
+- **`QLA_Migration/Output/Test_Validation/`** — after each issue fix, copy **only modified** `quik*.csv` tables here on validator PASS for partial UAT reload (see `.cursor/rules/test-validation-folder.mdc`)
 
 TESTING REQUIREMENTS:
 - validate output schema integrity
@@ -42,6 +43,8 @@ TESTING REQUIREMENTS:
 - preserve QLA formatting rules
 - validate no new blank MRIDRID values introduced
 - avoid breaking stable production conversions
+- run issue validator + regression: intended policies change correctly; **non-candidate policies unchanged**
+- publish modified tables to `Output/Test_Validation/` when validation passes
 
 CHANGE RESTRICTIONS:
 - never replace entire app.py unless explicitly requested

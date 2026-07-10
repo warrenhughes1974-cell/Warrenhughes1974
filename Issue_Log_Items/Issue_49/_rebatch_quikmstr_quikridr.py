@@ -1,22 +1,21 @@
 """Headless quikmstr + quikridr rebatch for Issue #49 (correct per-table source/rulebook)."""
-from pathlib import Path
 import os
 import sys
 import tkinter as tk
+from pathlib import Path
 from tkinter import messagebox
 
 BASE = str(Path(__file__).resolve().parents[2])
 MIG = str(Path(BASE) / "QLA_Migration")
+
+sys.path.insert(0, BASE)
+os.chdir(BASE)
 
 os.environ.setdefault("QLA_RUN_MODE", "UAT")
 os.environ["QLA_BATCH_INCLUDE_CLAIMS_UAT"] = "0"
 os.environ["QLA_BATCH_INCLUDE_RATE_TABLES"] = "0"
 os.environ["QLA_ENABLE_QUIKISRR_EMIT"] = "0"
 os.environ["QLA_ENABLE_REINSURANCE_EMIT"] = "0"
-
-sys.path.insert(0, BASE)
-os.chdir(BASE)
-
 messagebox.showinfo = lambda *args, **kwargs: None
 messagebox.showerror = lambda *args, **kwargs: None
 messagebox.showwarning = lambda *args, **kwargs: None
@@ -79,6 +78,14 @@ try:
     with open(log_path, "w", encoding="utf-8") as fh:
         fh.write(log_text)
     print(f"Console log saved: {log_path}", flush=True)
+    from tools.publish_test_validation import publish_tables  # noqa: E402
+
+    tv = publish_tables(
+        ["quikmstr", "quikridr"],
+        output_dir=Path(out_dir),
+        issue_tag="Issue_49_v57.71",
+    )
+    print(f"Test_Validation published: {tv}", flush=True)
 finally:
     root.destroy()
 
