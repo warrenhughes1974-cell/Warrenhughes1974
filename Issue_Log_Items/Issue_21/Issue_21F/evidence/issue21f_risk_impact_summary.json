@@ -1,0 +1,35 @@
+{
+  "ppbentyp_policies": 5084,
+  "iswl_excluded": 2348,
+  "load_candidates": 2622,
+  "load_adj_sum": 19993849.73,
+  "load_adj_median": 5969.02,
+  "load_adj_max": 159295.36,
+  "negative_exceptions": 1,
+  "quikprmh_rows_today": 206861,
+  "projected_quikprmh_rows_after": 209483,
+  "golden_010310404C": [
+    {
+      "POL": "9010310404",
+      "MPOLICY": "010310404C",
+      "ISWL": false,
+      "PREMIUMS_PAID": 12470.9,
+      "PU_PREMIUMS_PAID": 4569.15,
+      "SU_PREMIUMS_PAID": 0.0,
+      "SL_PREMIUMS_PAID": 0.0,
+      "LP_TOTAL": 17040.05,
+      "HIST": 1846.2,
+      "ADJ": 15193.85,
+      "HAS_HIST": true,
+      "STATUS": "LOAD_CANDIDATE"
+    }
+  ],
+  "status_counts": {
+    "LOAD_CANDIDATE": 2622,
+    "ISWL_EXCLUDED": 2348,
+    "NO_PREMIUM_DATA": 102,
+    "NO_GAP": 10,
+    "NO_CROSSWALK": 1,
+    "NEGATIVE_EXCEPTION": 1
+  }
+}

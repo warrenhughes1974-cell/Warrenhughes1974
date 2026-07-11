@@ -1,0 +1,19 @@
+{
+  "adj_count": 2609,
+  "hist_count": 206861,
+  "opening_balance": 359,
+  "table_counts": {
+    "quikmstr": 5083,
+    "quikridr": 6934,
+    "quikplan": 141,
+    "quikclid": 34449,
+    "quikclnt": 13597,
+    "quikbenf": 5916,
+    "quikprmh": 209470
+  },
+  "adj_mpolicy_len_dist": {
+    "10": 2609
+  },
+  "findings": [],
+  "verdict": "PASS"
+}

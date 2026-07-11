@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-10 · **Engine:** `app.py` **v57.71** / cumulative **v57.34+**
+**Last updated:** 2026-07-11 (21F closed v57.73) · **Engine:** `app.py` **v57.73** / cumulative **v57.34+**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -27,7 +27,7 @@
 
 | Area | Released in v57.34–35 | Awaiting client UAT / answers | Closed |
 |---|---:|---:|---:|
-| **Policy (Issue #21)** | 7 (#21B, 21C, 21H ABA, 21M, 21M-FU, + cumulative #25/#26) | 7 + 21H target-field + 21K | **3 (21A, 21J, 21L)** |
+| **Policy (Issue #21)** | 8 (#21B, 21C, 21F, 21H ABA, 21M, 21M-FU, + cumulative #25/#26) | 6 + 21H target-field + 21K | **4 (21A, 21F, 21J, 21L)** |
 | **Cross-cutting (#25/#26/#28)** | 3 (#25, #26, **#28**) | — | **2 (#28, #13)** |
 | **Claims (Items 14–19)** | 5 (14, 15, 16, 18, 19) | 147 claims in review | — |
 | **Production cutover** | Engine v57.35 (#28) ready | Authorization (`production_dbf_flag=N`) | — |
@@ -43,7 +43,7 @@
 | 21C | Policy Fees | **RELEASED ✓** | v57.22 / v57.34 | UAT — verify fee on base rider row |
 | 21D | Interest Crediting Rate | **DECIDED ✓** | v57.36 | ISWL 4.50% / non-ISWL 4.00% |
 | 21E | Cash Value | **DECIDED ✓** | v57.63 | Traditional=compute QuikCvs; UL=load FV_BALANCE2→MCV0 |
-| 21F | Premium History | **DECIDED ✓** | — | Accept ~2017 source floor |
+| 21F | Premium History | **CLOSED ✓** | **v57.73** | Non-ISWL Conversion Adjustment `quikprmh` row @ 12/31/2017 when LifePRO Base+PUA+SU+SL > history; ISWL excluded (v57.73). UAT pending. |
 | 21G | Total Premium / Cost Basis | **DECIDED ✓** | v57.63 | Source locked; staged to Reports/ |
 | 21H | Banking (ABA + target field) | **ABA RELEASED ✓** / target AWAITING | v57.22 / v57.34 | Verify 9-digit ABA; confirm Bill Acct vs Credit Card ID |
 | 21I | Beneficiary Information | **DECIDED ✓** | v57.29/63 | Type/split OK; MRELATION=1000 intentional |

@@ -1,10 +1,14 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.71
-# Date:        2026-07-10
+# Version:     v57.73
+# Date:        2026-07-11
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.71 — Issue #49 fix: phase-1 MPHSTAT inherit uses pre-override (Issue #13)
+# Change Note: v57.73 — Issue #21F fix: BA/BF-only base, sum SU/SL, strip-rebuild CONV_ADJ,
+#              validation report FINAL/VARIANCE math; OPENING_BALANCE status.
+#              v57.72 — Issue #21F: non-ISWL conversion premium adjustment rows on quikprmh
+#              (DATEPAID=20171231, MSOURCE=CONV_ADJ); validation/exception reports in Reports/.
+#              v57.71 — Issue #49 fix: phase-1 MPHSTAT inherit uses pre-override (Issue #13)
 #              provisional MSTATUS so QuikMstr active-phase override does not change phase 1.
 #              v57.70 — Issue #49: when quikmstr first-phase display status is >=50 and a later
 #              phase is 0–49, set MSTATUS to that first active later phase (after Issue #13).
@@ -126,6 +130,7 @@ from qla_core.issue21_open_item_decisions import (
     resolve_ppbentyp_extract_path,
     write_premium_basis_report,
 )
+from qla_core.issue21f_premium_adjustment import apply_issue21f_conversion_adjustments
 from qla_core.quikmstr_active_phase_status import (
     bare_status_map_from_trans_map,
     build_ppben_phase_cache,
@@ -310,7 +315,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.71"
+APP_VERSION = "v57.73"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -5293,14 +5298,48 @@ class QLAdminEnterpriseIntegrationSuite:
                     out_dir = self.path_vars["Out"][0].get()
                     out_path = os.path.normpath(os.path.join(out_dir, f"{t_id}.csv"))
                     qdf = pd.DataFrame(output, columns=schema)
+
+                    # Issue #21F: conversion premium adjustment (non-ISWL, additive only)
+                    if is_batch:
+                        try:
+                            _ppbentyp_21f = resolve_ppbentyp_extract_path(src_base)
+                            if not _ppbentyp_21f:
+                                _ppbentyp_21f = resolve_ppbentyp_extract_path(
+                                    os.path.normpath(os.path.join(self._app_base_dir(), "QLA_Migration", "Source"))
+                                )
+                            if _ppbentyp_21f:
+                                _reports_21f = os.path.normpath(
+                                    os.path.join(self._app_base_dir(), "QLA_Migration", "Reports")
+                                )
+                                qdf, _21f_stats = apply_issue21f_conversion_adjustments(
+                                    qdf,
+                                    _ppbentyp_21f,
+                                    normalize_fn=self.normalize,
+                                    format_mpolicy_fn=self._format_qladmin_mpolicy,
+                                    crosswalk=cw_map,
+                                    reports_dir=_reports_21f,
+                                )
+                                self.log(
+                                    f"Issue #21F: conversion adjustments loaded={_21f_stats.get('loaded', 0)} "
+                                    f"opening_balance={_21f_stats.get('opening_balance', 0)} "
+                                    f"stripped_prior={_21f_stats.get('stripped_adj', 0)} "
+                                    f"ISWL_excluded={_21f_stats.get('iswl_excluded', 0)} "
+                                    f"neg_exceptions={_21f_stats.get('negative_exceptions', 0)} "
+                                    f"rows {_21f_stats.get('rows_before', 0)}->{_21f_stats.get('rows_after', 0)}"
+                                )
+                            else:
+                                self.log("Issue #21F: skipped — PPBENTYP extract not found")
+                        except Exception as e:
+                            self.log(f"Warning: Issue #21F premium adjustment failed - {e}")
+
                     qdf.to_csv(out_path, index=False)
                     
-                    self.log(f"Success: {t_id}.csv - {len(output)} records.")
+                    self.log(f"Success: {t_id}.csv - {len(qdf)} records.")
                     
                     audit_path = os.path.normpath(os.path.join(out_dir, "Migration_Audit_Log.txt"))
                     is_new_log = not os.path.exists(audit_path)
                     source_count = len(source)
-                    output_count = len(output)
+                    output_count = len(qdf)
                     variance = source_count - output_count
                     
                     audit_msg = f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TABLE: {t_id.upper():<10} | SOURCE RECORDS: {source_count:<8} | QLA OUTPUT: {output_count:<8} | VARIANCE: {variance} (Filtered)\n"
