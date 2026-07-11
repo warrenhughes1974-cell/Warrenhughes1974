@@ -112,8 +112,8 @@ None — logic module + batch wire only.
 |-------|--------|
 | Validators PASS (G5 + G6) | Yes |
 | `app.py` version bumped | **v57.73** (both copies) |
-| Issue-scoped git commit | hash: *(recorded after commit)* |
-| **`git push` to remote** | branch: `issue-34-pr7-quikisrr` |
+| Issue-scoped git commit | hash: **b193821** |
+| **`git push` to remote** | branch: **issue-34-pr7-quikisrr** |
 | Network batch note | `Output/` gitignored — run **EXECUTE FULL BATCH MIGRATION** on network after pull |
 
 ---
@@ -146,7 +146,7 @@ None — logic module + batch wire only.
 
 ## Rollback
 
-1. Revert commit *(hash below)* or restore `quikprmh` from `QLA_Migration/Archive/quikprmh_pre_21f_v57.72.csv`
+1. Revert commit **b193821** or restore `quikprmh` from `QLA_Migration/Archive/quikprmh_pre_21f_v57.72.csv`
 2. Set `APP_VERSION` back to pre-21F baseline
 3. Remove `qla_core/issue21f_premium_adjustment.py` wire from `app.py`
 4. Re-run batch from baseline Source/
