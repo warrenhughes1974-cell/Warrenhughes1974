@@ -111,8 +111,8 @@ Surgical quikmemo ingest + DBF packaging only.
 | Validators PASS (G5 + G6) | **PASS** |
 | Client UAT Memo tab | **PASS** (018495BC) |
 | `app.py` version bumped | **v57.75** (both copies) |
-| Issue-scoped git commit | *(filled after commit)* |
-| **`git push` to remote** | *(filled after push)* |
+| Issue-scoped git commit | **8b5a198cf11c4ce37d6b260fb648fc00327de6b6** |
+| **`git push` to remote** | branch: **issue-34-pr7-quikisrr** |
 | Network batch note | `Output/` gitignored — after pull, re-run quikmemo (or full batch) and deploy **both** `quikmemo.dbf` + `quikmemo.dbt` from `Output/quikmemo_uat_dbf/` |
 
 ---
@@ -162,4 +162,4 @@ Surgical quikmemo ingest + DBF packaging only.
 - [x] Regression PASS
 - [x] Client UAT Pass
 - [x] Closure — **`Resolution:`** one-line + long-form summary
-- [ ] Git commit + push (G7 release gate) — in progress
+- [x] Git commit + push (G7 release gate) — `8b5a198` on `issue-34-pr7-quikisrr`
