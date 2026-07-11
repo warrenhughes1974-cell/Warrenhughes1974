@@ -11,7 +11,7 @@
 
 ## Resolution (issue log — paste-ready)
 
-**Resolution:** [One brief sentence — what the fix was. Plain language. Include version when code changed.]
+**Resolution:** [One brief sentence — what the fix was. Plain language. Do not include engine version.]
 
 > Copy the line above into tracking sheets and client readouts. Long-form detail follows.
 

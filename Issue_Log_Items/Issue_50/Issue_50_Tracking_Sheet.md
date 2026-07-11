@@ -7,7 +7,7 @@
 | Status | **Closed** |
 | Gates | G0–G7 complete · Client UAT Pass · **Closed** |
 | Engine | **v57.75** |
-| Resolution | QUIKMEMO now reads PNOTE notes with commas via fixed-width parse and stores left-padded MEMOKEY in the DBF so QLAdmin Memo tab SEEK matches quikmstr (v57.75). |
+| Resolution | QUIKMEMO now reads PNOTE notes with commas via fixed-width parse and stores left-padded MEMOKEY in the DBF so QLAdmin Memo tab SEEK matches quikmstr. Policies that previously had no notes but gained them include 01159D276C, 01222DCC, 01330D153C, 014075AC, 018187C, 018253C, 018910C, and 01ML8522C. |
 | Reporter | Eric |
 | Owner | Warren (Conversion) |
 | Example | 018495BC / 9018495B / 1SALML |

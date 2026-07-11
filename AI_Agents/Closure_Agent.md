@@ -1,7 +1,8 @@
 # Closure Agent
 
 **Stage:** 8 of 8  
-**Code changes:** **Prohibited** (documentation only)
+**Code changes:** **Prohibited** (documentation only)  
+**Assigned model (locked 2026-07-11):** **Composer 2.5** — change only if user manually overrides Framework / stage-agents rule
 
 ---
 
@@ -44,21 +45,23 @@ Save as: `Issue_Log_Items/Issue_<ID>/Issue_<ID>_Resolution_Summary.md`
 **Every closure must produce this line first**, before the long-form report:
 
 ```text
-Resolution: [One brief sentence — what the fix was. Plain language. Include engine version when code changed.]
+Resolution: [One brief sentence — what the fix was. Plain language. Do **not** include engine version in this line.]
 ```
 
 **Rules:**
 - **One sentence** (two only if truly needed for clarity).
 - State **what changed**, not the full root-cause essay.
+- **Do not put `app.py` / engine version in the Resolution line** — version stays in the resolution summary header / tracking Release column only.
 - Use in: resolution summary header, tracking sheet **Resolution** field, and client readout when the user asks for "the resolution."
 
 **Examples:**
 
 | Issue | Brief resolution |
 |-------|------------------|
-| #21A | Resolution: PPBENTYP cache reads BF_NON_FORFEITURE for ISWL/BF policies and maps LifePRO NFO codes 1 and 2 to APL (MNFOPT=1) per SME guidance (v57.47). |
-| #26 | Resolution: quikridr.MPREM now maps from ANN_PREM_PER_UNIT with MODE_PREMIUM fallback; modal premium on quikmstr unchanged (v57.31). |
-| #25 | Resolution: MPOLICY left-padded to 10 characters across all quik* emit tables (v57.30). |
+| #21A | Resolution: PPBENTYP cache reads BF_NON_FORFEITURE for ISWL/BF policies and maps LifePRO NFO codes 1 and 2 to APL (MNFOPT=1) per SME guidance. |
+| #26 | Resolution: quikridr.MPREM now maps from ANN_PREM_PER_UNIT with MODE_PREMIUM fallback; modal premium on quikmstr unchanged. |
+| #25 | Resolution: MPOLICY left-padded to 10 characters across all quik* emit tables. |
+| #50 | Resolution: QUIKMEMO fixed-width PNOTE parse + DBF MEMOKEY left-pad for Memo tab SEEK; sample new-note policies 01159D276C, 01222DCC, 01330D153C, … |
 
 Also update (required at G7):
 

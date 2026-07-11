@@ -1,8 +1,9 @@
 # LifePRO → QLAdmin Issue Resolution Framework
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Project:** Warrenhughes1974 / QLA Migration  
 **Scope:** Gated issue log remediation — no code until approved  
+**Agent map locked:** 2026-07-11 — change only if the user manually overrides  
 
 ---
 
@@ -44,16 +45,18 @@ flowchart TD
 
 ### Linear stage order
 
-| Stage | Agent | Code allowed? |
-|-------|--------|---------------|
-| 1 | Intake | **No** |
-| 2 | Planning | **No** |
-| 3 | Dependency Gate | **No** |
-| 4 | Risk | **No** |
-| 5 | Development | **Yes** (surgical only) |
-| 6 | Validation | Read-only + scripts |
-| 7 | Regression | Read-only + batch/compare |
-| 8 | Closure | Docs only |
+| Stage | Agent | Code allowed? | Assigned model |
+|-------|--------|---------------|----------------|
+| 1 | Intake | **No** | **Cursor Grok 4.5** |
+| 2 | Planning | **No** | **Cursor Grok 4.5** |
+| 3 | Dependency Gate | **No** | **Cursor Grok 4.5** |
+| 4 | Risk | **No** | **Cursor Grok 4.5** |
+| 5 | Development | **Yes** (surgical only) | **Composer 2.5** |
+| 6 | Validation | Read-only + scripts | **Cursor Grok 4.5** |
+| 7 | Regression | Read-only + batch/compare | **Cursor Grok 4.5** |
+| 8 | Closure | Docs only | **Composer 2.5** |
+
+**Agent assignment rule:** Use the Assigned model for each stage. **Do not swap models** unless the user manually changes this table (or the matching Cursor rule `.cursor/rules/issue-framework-stage-agents.mdc`). If the session model does not match the stage, stop and ask the user to switch or confirm a one-time override.
 
 ---
 
@@ -101,7 +104,7 @@ Use these statuses in issue tracking sheets and report headers:
 4. All code changes must be **surgical and issue-specific** — no wholesale rewrites.
 5. Every development change must include **validation and regression evidence**.
 6. Every issue must end with an **issue-log-ready resolution summary** (Closure Agent).
-7. **G7 brief resolution (required):** Closure must publish a single paste-ready line — **`Resolution:`** followed by one brief sentence stating what the fix was (version optional). This line goes in the resolution summary header, tracking sheets, and client readout — not only the long-form report.
+7. **G7 brief resolution (required):** Closure must publish a single paste-ready line — **`Resolution:`** followed by one brief sentence stating what the fix was (**do not include engine version** in this line; version belongs in the summary header / Release column). This line goes in the resolution summary header, tracking sheets, and client readout — not only the long-form report.
 8. **G7 release gate:** When Development touched conversion or rate code, Closure must **commit issue-scoped changes and `git push` to remote** so network batch machines can pull the fix. Bump **`app.py` version** when the batch path changes.
 8. **Preserve prior fixes:** Issue #25 MPOLICY padding (`format_qladmin_mpolicy`) and Issue #26 MPREM mapping (`ANN_PREM_PER_UNIT` + fallback) must not regress.
 

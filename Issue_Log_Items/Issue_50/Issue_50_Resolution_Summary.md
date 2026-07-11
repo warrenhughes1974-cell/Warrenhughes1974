@@ -11,7 +11,7 @@
 
 ## Resolution (issue log — paste-ready)
 
-**Resolution:** QUIKMEMO now reads PNOTE notes with commas via fixed-width parse and stores left-padded MEMOKEY in the DBF so QLAdmin Memo tab SEEK matches quikmstr (v57.75).
+**Resolution:** QUIKMEMO now reads PNOTE notes with commas via fixed-width parse and stores left-padded MEMOKEY in the DBF so QLAdmin Memo tab SEEK matches quikmstr. Policies that previously had no notes but gained them include 01159D276C, 01222DCC, 01330D153C, 014075AC, 018187C, 018253C, 018910C, and 01ML8522C.
 
 > Copy the line above into tracking sheets and client readouts. Long-form detail follows.
 
@@ -76,9 +76,16 @@ Surgical quikmemo ingest + DBF packaging only.
 
 | Policy | Client expected | Emitted / UAT | Match |
 |--------|-----------------|---------------|-------|
-| **018495BC** | LifePRO note (Bauerly) in Memo | CSV+DBF content; Memo tab visible after v57.75 reload | **Yes** |
+| **018495BC** | LifePRO note (Bauerly) restored | CSV+DBF content; Memo tab visible after pad fix | **Yes** |
 | **010335038C** | Prior #21M control note | Still has `[PNOTE]` | **Yes** |
-| SAL ONLY_MALFORMED (e.g. 01159D276C) | Notes recovered | Gained `[PNOTE]` | **Yes** |
+| **01159D276C** | Had no notes → gained notes | `[PNOTE]` present | **Yes** |
+| **01222DCC** | Had no notes → gained notes | `[PNOTE]` present | **Yes** |
+| **01330D153C** | Had no notes → gained notes | `[PNOTE]` present | **Yes** |
+| **014075AC** | Had no notes → gained notes | `[PNOTE]` present | **Yes** |
+| **018187C** | Had no notes → gained notes | `[PNOTE]` present | **Yes** |
+| **018253C** | Had no notes → gained notes | `[PNOTE]` present | **Yes** |
+| **018910C** | Had no notes → gained notes | `[PNOTE]` present | **Yes** |
+| **01ML8522C** | Had no notes → gained notes | `[PNOTE]` present | **Yes** |
 
 ---
 
@@ -146,7 +153,7 @@ Surgical quikmemo ingest + DBF packaging only.
 ## Issue Log Entry (paste-ready)
 
 > **Issue #50 — Policy Notes Missing — CLOSED (2026-07-11).**  
-> **Resolution:** QUIKMEMO now reads PNOTE notes with commas via fixed-width parse and stores left-padded MEMOKEY in the DBF so QLAdmin Memo tab SEEK matches quikmstr (v57.75).  
+> **Resolution:** QUIKMEMO now reads PNOTE notes with commas via fixed-width parse and stores left-padded MEMOKEY in the DBF so QLAdmin Memo tab SEEK matches quikmstr. Policies that previously had no notes but gained them include 01159D276C, 01222DCC, 01330D153C, 014075AC, 018187C, 018253C, 018910C, and 01ML8522C.  
 > **Evidence:** Validation and regression PASS; UAT Memo tab Pass on 018495BC. **Preserved:** MPOLICY padding (#25), MPREM (#26), #21M-FU grain, #21J CONVERSION prepend. **Follow-ups:** none required for close.
 
 ---
