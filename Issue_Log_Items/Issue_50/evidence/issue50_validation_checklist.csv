@@ -1,0 +1,23 @@
+POLICY,CHECK,PASS,MEMOKEY_LEN,TEXT_LEN
+018495BC,Bauerly,True,10,664
+018495BC,Last Known,True,10,664
+018495BC,[PNOTE],True,10,664
+018495BC,[CONVERSION],True,10,664
+010335038C,[PNOTE],True,10,709
+01159D276C,[PNOTE],True,10,635
+_FLEET,row_count_5083,True,,5083
+_FLEET,unique_memokey_eq_rows,True,,5083
+_FLEET,max_rows_per_key_1,True,,1
+_FLEET,all_memokey_width_10,True,,
+_FLEET,mstr_memo_key_parity,True,,
+010335038C,has_pnote_body,True,10,223
+_SAL_ONLY_MAL,gained_pnote_count,True,,74/74
+018495BC,quikridr_rows_present,True,,2
+018495BC,MPREM_present_field,True,,"['.00', '.00']"
+_FLEET,conversion_prefix_count,True,,5083
+_FLEET,policies_with_PNOTE,True,,3677
+_FLEET,policies_with_ENS,True,,3404
+_PKG,dbf_exists,True,,106841
+_PKG,dbt_exists,True,,8457336
+_TV,test_validation_published,True,,7255841
+018495BC,dbf_has_Bauerly,True,10,664

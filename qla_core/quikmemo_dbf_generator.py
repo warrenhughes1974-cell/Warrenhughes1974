@@ -45,7 +45,39 @@ def _memokey_for_dbf(raw: Any, length: int = 10) -> str | None:
         return None
     if len(s) > length:
         return s[:length]
+    if len(s) < length:
+        return s.ljust(length)
     return s
+
+
+def _rewrite_dbf_memokey_bytes(dbf_path: str, memokeys: list[str], length: int = 10) -> int:
+    """
+    Issue #50 UAT: Python `dbf` library strips leading spaces on CHARACTER append,
+    storing right-padded keys (e.g. b'018495BC  '). QLAdmin SEEK uses left-padded
+    MPOLICY (e.g. b'  018495BC') → Memo tab blank. Patch MEMOKEY bytes after write.
+    """
+    import struct
+
+    with open(dbf_path, "rb") as f:
+        data = bytearray(f.read())
+    header_len = struct.unpack_from("<H", data, 8)[0]
+    rec_len = struct.unpack_from("<H", data, 10)[0]
+    num_recs = struct.unpack_from("<I", data, 4)[0]
+    if num_recs != len(memokeys):
+        raise ValueError(
+            f"MEMOKEY rewrite count mismatch: dbf={num_recs} csv={len(memokeys)}"
+        )
+    for i, key in enumerate(memokeys):
+        raw = key.encode("latin-1", errors="replace")
+        if len(raw) > length:
+            raw = raw[:length]
+        elif len(raw) < length:
+            raw = raw.ljust(length)
+        off = header_len + i * rec_len + 1  # skip delete flag
+        data[off : off + length] = raw
+    with open(dbf_path, "wb") as f:
+        f.write(data)
+    return num_recs
 
 
 def csv_row_to_dbf_values(row: pd.Series, layout: list[dict]) -> tuple:
@@ -93,6 +125,10 @@ def write_quikmemo_dbf(csv_path: str, dbf_path: str) -> dict[str, Any]:
     for vals in row_values:
         table.append(vals)
     table.close()
+
+    # Preserve Issue #25 left-padded MEMOKEY bytes (dbf lib right-pads / strips lead spaces)
+    memokeys = [_memokey_for_dbf(row.get("MEMOKEY", ""), 10) or "" for _, row in df.iterrows()]
+    _rewrite_dbf_memokey_bytes(dbf_path, memokeys, 10)
 
     sidecar_written = (
         os.path.isfile(fpt_path)

@@ -1,0 +1,12 @@
+check,pass
+memokey_width_all_10,True
+mpolicy_width_mstr_10,True
+mpolicy_width_ridr_10,True
+mstr_memo_key_set_equal,True
+one_row_per_memokey,True
+all_start_conversion,True
+quikridr_has_MPREM,True
+018495BC_quikridr_2_phases,True
+quikmemo_schema_2col,True
+example_has_bauerly,True
+no_blank_memokey,True

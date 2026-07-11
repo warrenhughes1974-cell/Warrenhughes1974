@@ -1,0 +1,4 @@
+QLA,ROLE,BEFORE_HAS_BAUERLY,AFTER_HAS_BAUERLY,BEFORE_HAS_LAST_KNOWN,AFTER_HAS_LAST_KNOWN,BEFORE_LEN,AFTER_LEN,AFTER_PREVIEW,STABLE,BEFORE_HAS_PNOTE,AFTER_HAS_PNOTE
+018495BC,client_example,False,True,True,True,65,178,"[PNOTE] | Date: 2007-02-10 | Time:  | User: - | Seq: 2 | Last Known Address | --- | [PNOTE] | Date: 2007-02-10 | Time:  | User: - | Seq: 1 | Vincent J. Bauerly, if living otherwise to: Ethel R. Bauerly.",,,
+010335038C,21m_control,,,,,223,223,,True,,
+01159D276C,sal_only_malformed,,,,,0,151,,,False,True

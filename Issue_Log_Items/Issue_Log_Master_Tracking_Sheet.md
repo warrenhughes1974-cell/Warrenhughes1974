@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-11 (21F closed v57.73) · **Engine:** `app.py` **v57.73** / cumulative **v57.34+**
+**Last updated:** 2026-07-11 (#50 Closed v57.75; 21F closed v57.73) · **Engine:** `app.py` **v57.75**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -44,7 +44,7 @@
 | 21D | Interest Crediting Rate | **DECIDED ✓** | v57.36 | ISWL 4.50% / non-ISWL 4.00% |
 | 21E | Cash Value | **DECIDED ✓** | v57.63 | Traditional=compute QuikCvs; UL=load FV_BALANCE2→MCV0 |
 | 21F | Premium History | **CLOSED ✓** | **v57.73** | Non-ISWL Conversion Adjustment `quikprmh` row @ 12/31/2017 when LifePRO Base+PUA+SU+SL > history; ISWL excluded (v57.73). UAT pending. |
-| 21G | Total Premium / Cost Basis | **DECIDED ✓** | v57.63 | Source locked; staged to Reports/ |
+| 21G | Total Premium / Cost Basis | **CLOSED ✓** | v57.63 (staged only) | Not required in QL — New Era; no master-field load |
 | 21H | Banking (ABA + target field) | **ABA RELEASED ✓** / target AWAITING | v57.22 / v57.34 | Verify 9-digit ABA; confirm Bill Acct vs Credit Card ID |
 | 21I | Beneficiary Information | **DECIDED ✓** | v57.29/63 | Type/split OK; MRELATION=1000 intentional |
 | 21J | Modal Premium Factors | **CLOSED ✓** | **v57.46** | UAT — Coverage Detail modal grid on sample policies |
@@ -76,6 +76,7 @@
 | **#47** | Bill Day zero → Paid-To day | **CLOSED ✓** · **v57.65** | **v57.65** | Resolution: When Bill Day is zero, quikmstr.MBILLDAY now uses the day from Paid-To date while non-zero Issue #21B bill days stay unchanged (v57.65). |
 | **#48** | Secondary Rate File (PAAGERAT fallback) | **G5 PASS → Ready for Regression** · **v57.69** | **v57.69** | Path wiring only; 0 new rates vs prior Rate_Table/PAAGERAT; 158 RT-only keys pre-existing |
 | **#49** | QuikMstr Active Phase Status | **CLOSED ✓** · **v57.71** | **v57.71** | QuikMstr uses first active later phase when phase 1 display ≥50; phase-1 MPHSTAT unchanged (v57.71 fix); 35 policies MSTATUS 54→22 |
+| **#50** | Policy Notes Missing (`quikmemo` / PNOTE) | **CLOSED ✓** · **v57.75** | **v57.75** | Resolution: QUIKMEMO fixed-width PNOTE parse + DBF MEMOKEY left-pad for Memo tab SEEK (v57.75). |
 
 **#13 detail:** `Issue_Log_Items/Issue_13/` · Option A termination precedence · G5/G6 PASS · samples 010516211C→54, 011101663C→56
 
@@ -100,6 +101,8 @@
 **#48 detail:** `Issue_Log_Items/Issue_48/` · **v57.69** · G5 PASS · 0 new rate content · Next: Regression (G6)
 
 **#49 detail:** `Issue_Log_Items/Issue_49/` · **CLOSED** · **v57.71** · QuikMstr-only override; phase-1 MPHSTAT preserved via provisional inherit cache; validator asserts phase1 unchanged
+
+**#50 detail:** `Issue_Log_Items/Issue_50/` · **CLOSED** · **v57.75** · Resolution: QUIKMEMO fixed-width PNOTE parse + DBF MEMOKEY left-pad for Memo tab SEEK; UAT Pass on 018495BC
 
 ---
 

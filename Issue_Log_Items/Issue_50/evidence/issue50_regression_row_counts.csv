@@ -1,0 +1,13 @@
+table,after,baseline,delta,ok
+quikmstr.csv,5083,5083.0,0.0,PASS
+quikridr.csv,6934,6934.0,0.0,PASS
+quikprmh.csv,209470,,,N/A_no_baseline
+quikplan.csv,141,141.0,0.0,PASS
+quikclid.csv,34449,46753.0,-12304.0,FAIL
+quikclnt.csv,13597,13514.0,83.0,FAIL
+quikmemo.csv,5083,5083.0,0.0,PASS
+quikactg.csv,87,,,N/A_no_baseline
+quikbenf.csv,5916,,,N/A_no_baseline
+quikdvdp.csv,5083,,,N/A_no_baseline
+quikagts.csv,4843,,,N/A_no_baseline
+quikprmh.csv,209470,205577.0,3893.0,INFO_may_drift_21F

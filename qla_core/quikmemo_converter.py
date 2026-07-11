@@ -26,6 +26,53 @@ def _read_csv(path: str) -> pd.DataFrame:
     return df
 
 
+def _pnote_header_field_specs(header_line: str) -> list[tuple[str, int]]:
+    """Derive (column_name, width) pairs from padded PNOTE header line."""
+    specs: list[tuple[str, int]] = []
+    i = 0
+    while i < len(header_line):
+        if header_line[i] == ",":
+            i += 1
+            continue
+        j = i
+        while j < len(header_line) and header_line[j] != ",":
+            j += 1
+        specs.append((header_line[i:j].strip().upper(), j - i))
+        i = j
+    return specs
+
+
+def _read_pnote_csv(path: str) -> pd.DataFrame:
+    """
+    Issue #50: read LifePRO PNOTE extract by fixed field widths.
+
+    LINE_* note text may contain commas; pandas on_bad_lines='skip' drops those rows.
+    """
+    with open(path, "r", encoding="latin1", newline="") as f:
+        header_line = f.readline().rstrip("\r\n")
+        specs = _pnote_header_field_specs(header_line)
+        rows: list[dict[str, str]] = []
+        for line in f:
+            raw = line.rstrip("\r\n")
+            if not raw:
+                continue
+            if "---" in raw[:40]:
+                continue
+            pos = 0
+            rec: dict[str, str] = {}
+            for idx, (name, width) in enumerate(specs):
+                if pos + width > len(raw):
+                    chunk = raw[pos:].ljust(width)
+                else:
+                    chunk = raw[pos : pos + width]
+                rec[name] = _strip(chunk)
+                pos += width
+                if idx < len(specs) - 1 and pos < len(raw) and raw[pos] == ",":
+                    pos += 1
+            rows.append(rec)
+    return pd.DataFrame(rows)
+
+
 def _strip(val: Any) -> str:
     if val is None or (isinstance(val, float) and pd.isna(val)):
         return ""
@@ -215,7 +262,7 @@ def convert_quikmemo_from_pnote_pense(
             stats["emitted_pense"] += 1
 
     if pnote_path:
-        pnote = _read_csv(pnote_path)
+        pnote = _read_pnote_csv(pnote_path)
         stats["pnote_source_rows"] = len(pnote)
         for _, row in pnote.iterrows():
             text = _text_blob(row, PNOTE_LINE_COLS)

@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.73
+# Version:     v57.75
 # Date:        2026-07-11
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v57.73 — Issue #21F fix: BA/BF-only base, sum SU/SL, strip-rebuild CONV_ADJ,
+# Change Note: v57.75 — Issue #50 UAT: QUIKMEMO DBF MEMOKEY left-pad preserved (Memo tab SEEK match).
+#              v57.74 — Issue #50: PNOTE fixed-width reader preserves notes with commas in LINE text.
+#              v57.73 — Issue #21F fix: BA/BF-only base, sum SU/SL, strip-rebuild CONV_ADJ,
 #              validation report FINAL/VARIANCE math; OPENING_BALANCE status.
 #              v57.72 — Issue #21F: non-ISWL conversion premium adjustment rows on quikprmh
 #              (DATEPAID=20171231, MSOURCE=CONV_ADJ); validation/exception reports in Reports/.
@@ -315,7 +317,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.73"
+APP_VERSION = "v57.75"
 
 
 class QLAdminEnterpriseIntegrationSuite:
