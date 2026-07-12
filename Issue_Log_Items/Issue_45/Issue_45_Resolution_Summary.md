@@ -6,7 +6,7 @@
 **Engine version:** v57.77  
 **Closed date:** 2026-07-12  
 **Owner:** Conversion  
-**Git:** commit pending record below · branch `issue-34-pr7-quikisrr`
+**Git:** `c3a4e26f34bff1ba1ccad81cc2b6c834811062f4` · branch `issue-34-pr7-quikisrr`
 
 ---
 
@@ -114,8 +114,8 @@ None.
 |-------|--------|
 | Validators PASS (G5 + G6) | Yes |
 | `app.py` version bumped | **v57.77** (both copies) |
-| Issue-scoped git commit | _(recorded after push)_ |
-| **`git push` to remote** | branch `issue-34-pr7-quikisrr` |
+| Issue-scoped git commit | `c3a4e26f34bff1ba1ccad81cc2b6c834811062f4` |
+| **`git push` to remote** | `origin/issue-34-pr7-quikisrr` |
 | Network batch note | `Output/` gitignored — pull code, run full batch or reload `Test_Validation/quikmstr.csv`; ensure `PPPAC_PACDetail_Extract_*.csv` is in `Source/` |
 
 ---
