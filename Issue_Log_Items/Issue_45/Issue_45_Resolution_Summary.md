@@ -102,9 +102,60 @@ None.
 | Metric | Value |
 |--------|------:|
 | `MBANKNO` newly filled | 739 |
-| Exception rows remaining | 24 |
+| Exception rows remaining | **24** (listed below) |
 | quikmstr row count delta | 0 |
 | Non-candidate field changes | 0 |
+
+### Remaining policies without complete banking (`MBANKNO` blank)
+
+All **24** remain `MBILLFRM=2` (bank draft) and still convert; only banking is incomplete.  
+`MSTATUS` labels below follow the project translation (22=Active, 41=Paid-up, 44=ETI, 53=Death/terminated-death, 55=Surrender).
+
+#### A. No usable account in PPACH or PPPAC — `MISSING_BANK_ACCOUNT` (13)
+
+| MPOLICY | LifePRO POLICY | MSTATUS | Status meaning |
+|---------|----------------|---------|----------------|
+| 010772298C | 9010772298 | 22 | Active |
+| 010827081C | 9010827081 | 22 | Active |
+| 010847481C | 9010847481 | 22 | Active |
+| 011047403C | 9011047403 | 53 | Death / death-terminated |
+| 011192032C | 9011192032 | 53 | Death / death-terminated |
+| 015000043C | 9015000043 | 55 | Surrender |
+| 015000078C | 9015000078 | 53 | Death / death-terminated |
+| 015000080C | 9015000080 | 55 | Surrender |
+| 015000117C | 9015000117 | 55 | Surrender |
+| 015000138C | 9015000138 | 55 | Surrender |
+| 015000148C | 9015000148 | 22 | Active |
+| 015000211C | 9015000211 | 53 | Death / death-terminated |
+| 015000261C | 9015000261 | 53 | Death / death-terminated |
+
+#### B. PPPAC account present but ABA unresolved — `MISSING_ROUTING` (11)
+
+| MPOLICY | LifePRO POLICY | MSTATUS | Status meaning | PPPAC account (masked) |
+|---------|----------------|---------|----------------|------------------------|
+| 010408371C | 9010408371 | 41 | Paid-up | ****7294 |
+| 010785310C | 9010785310 | 55 | Surrender | ****5282 |
+| 010936709C | 9010936709 | 44 | ETI | ****3747 |
+| 011017289C | 9011017289 | 44 | ETI | ****0830 |
+| 011064372C | 9011064372 | 53 | Death / death-terminated | ****4018 |
+| 011090462C | 9011090462 | 22 | Active | ****7678 |
+| 011090463C | 9011090463 | 22 | Active | ****7678 |
+| 011090464C | 9011090464 | 22 | Active | ****7678 |
+| 011210337C | 9011210337 | 53 | Death / death-terminated | ****9071 |
+| 015000462C | 9015000462 | 22 | Active | ****1475 |
+| 015000581C | 9015000581 | 53 | Death / death-terminated | ****8859 |
+
+#### Status mix (all 24 remaining)
+
+| MSTATUS | Meaning | Count |
+|---------|---------|------:|
+| 22 | Active | 8 |
+| 53 | Death / death-terminated | 8 |
+| 55 | Surrender | 5 |
+| 44 | ETI | 2 |
+| 41 | Paid-up | 1 |
+
+Source file: `QLA_Migration/Reports/bank_draft_account_exceptions.csv` (post–v57.77 batch).
 
 ---
 
@@ -133,8 +184,8 @@ None.
 
 | Item | Owner | Notes |
 |------|-------|-------|
-| 11 `MISSING_ROUTING` (PPPAC account, no unique ABA) | Conversion / client | May need PPCOM re-pull or manual ABA |
-| 13 still no account in PPACH or PPPAC | Client | Includes several `9015000xxx` PAC policies |
+| 13 `MISSING_BANK_ACCOUNT` | Client | Full list in Fleet Impact §A — no account in PPACH or PPPAC |
+| 11 `MISSING_ROUTING` | Conversion / client | Full list in Fleet Impact §B — PPPAC account present; need unique ABA |
 | RNA ABA may be truncated | Known #21H | Lookup preferred; 40 used lookup, 699 RNA |
 
 ---
@@ -151,7 +202,7 @@ None.
 
 > **Issue #45 — Bank Draft / PPPAC Account Fallback — CLOSED (2026-07-12).**  
 > **Resolution:** Bank-draft policies missing PPACH account numbers now fall back to PPPAC `E_ACCOUNT_NUMBER`, with ABA from routing lookup or RelationshipNameAddress, and emit `MBANKNO` only when both account and routing resolve.  
-> **Evidence:** Validation and regression PASS; 739 fills; traces 010157076C / 010161748C / 010348734C confirmed. **Preserved:** PPACH-primary banking (#21H), MPOLICY (#25), MPREM (#26). **Follow-ups:** 24 remaining exceptions (13 no account, 11 missing routing).
+> **Evidence:** Validation and regression PASS; 739 fills; traces 010157076C / 010161748C / 010348734C confirmed. **Preserved:** PPACH-primary banking (#21H), MPOLICY (#25), MPREM (#26). **Still incomplete banking (24):** 13 no account (e.g. 010772298C Active, 015000043C Surrender, …); 11 account but no routing (e.g. 011090462C–464C Active, 010408371C Paid-up, …). Full list with MSTATUS in `Issue_45_Resolution_Summary.md` Fleet Impact.  
 
 ---
 

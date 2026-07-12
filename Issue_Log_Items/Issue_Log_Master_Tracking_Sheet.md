@@ -110,7 +110,7 @@
 
 **#50 detail:** `Issue_Log_Items/Issue_50/` · **CLOSED** · **v57.75** · Resolution: QUIKMEMO fixed-width PNOTE parse + DBF MEMOKEY left-pad for Memo tab SEEK; UAT Pass on 018495BC; new notes e.g. 01159D276C, 01222DCC, 01330D153C, 014075AC, 018187C, 018253C, 018910C, 01ML8522C
 
-**#45 detail:** `Issue_Log_Items/Issue_45/` · **CLOSED** · **v57.77** · Resolution: Bank-draft policies missing PPACH account numbers now fall back to PPPAC `E_ACCOUNT_NUMBER`, with ABA from routing lookup or RelationshipNameAddress, and emit `MBANKNO` only when both account and routing resolve. · 739 fills; 24 remaining exceptions · UAT: `Output/Test_Validation/quikmstr.csv` · samples 010157076C, 010161748C, 010348734C
+**#45 detail:** `Issue_Log_Items/Issue_45/` · **CLOSED** · **v57.77** · Resolution: Bank-draft policies missing PPACH account numbers now fall back to PPPAC `E_ACCOUNT_NUMBER`, with ABA from routing lookup or RelationshipNameAddress, and emit `MBANKNO` only when both account and routing resolve. · 739 fills; **24 still incomplete** (13 no account, 11 missing routing — list + MSTATUS in Resolution Summary Fleet Impact) · UAT: `Output/Test_Validation/quikmstr.csv` · samples 010157076C, 010161748C, 010348734C
 
 **#51 detail:** `Issue_Log_Items/Issue_51/` · **Ready for Client UAT** · **v57.76** · G0–G6 PASS · Resolution: Added QuikAint interest-rate stubs for closed riders A60MIR and A96DAR so QLAdmin Projected Values no longer fails looking up a missing interest table. · UAT: load QuikAint; retest Projected Values on 010348734C · Git commit/push pending user request
 
