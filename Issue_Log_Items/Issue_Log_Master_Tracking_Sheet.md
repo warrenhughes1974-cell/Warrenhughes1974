@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-11 (#50 Closed v57.75; 21F closed v57.73) · **Engine:** `app.py` **v57.75**
+**Last updated:** 2026-07-12 (#45 Closed v57.77; #18 OPEN; #54 OPEN HOLD; #51 Ready for Client UAT v57.76; #50 Closed v57.75) · **Engine:** `app.py` **v57.77**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -77,6 +77,12 @@
 | **#48** | Secondary Rate File (PAAGERAT fallback) | **G5 PASS → Ready for Regression** · **v57.69** | **v57.69** | Path wiring only; 0 new rates vs prior Rate_Table/PAAGERAT; 158 RT-only keys pre-existing |
 | **#49** | QuikMstr Active Phase Status | **CLOSED ✓** · **v57.71** | **v57.71** | QuikMstr uses first active later phase when phase 1 display ≥50; phase-1 MPHSTAT unchanged (v57.71 fix); 35 policies MSTATUS 54→22 |
 | **#50** | Policy Notes Missing (`quikmemo` / PNOTE) | **CLOSED ✓** · **v57.75** | **v57.75** | Resolution: QUIKMEMO fixed-width PNOTE parse + DBF MEMOKEY left-pad for Memo tab SEEK. New notes e.g. 01159D276C, 01222DCC, 01330D153C, 014075AC, 018187C, 018253C, 018910C, 01ML8522C. |
+| **#45** | Bank Draft Account / PPPAC fallback (`quikmstr.MBANKNO`) | **CLOSED ✓** · **v57.77** | **v57.77** | Resolution: Bank-draft policies missing PPACH account numbers now fall back to PPPAC `E_ACCOUNT_NUMBER`, with ABA from routing lookup or RelationshipNameAddress, and emit `MBANKNO` only when both account and routing resolve. |
+| **#51** | Missing Interest Table (`QuikAint` for A60MIR / A96DAR) — Projected Values crash loop | **Ready for Client UAT** · **v57.76** | **v57.76** | Resolution: Added QuikAint interest-rate stubs for closed riders A60MIR and A96DAR so QLAdmin Projected Values no longer fails looking up a missing interest table. |
+| **#54** | Full Loan History Load (PACTG → **QuikBenh** 10/11/12) | **OPEN — HOLD coding** | — | Type/Date/Amount research OK; Balance wrong without opening. **OBQ-1:** where does QLA get 2018 opening loan balance? `Issue_54_Open_Business_Questions.md`. Not in app.py. |
+| **#18** | Citizens FoxPro Rate Tables (Reserve / Plans / CIFIANU1) | **OPEN — Awaiting source** | — | Request full tables from Tom/Debbie/Jelaine. Schema evidence in `SourceData_11-18-2024` Rate.cpy, Plan.cpy, AnnPrems,cpy. No Go until received. CFIC tracker: `CFIC_Rates/tracking/`. |
+
+**#18 detail:** `Issue_Log_Items/Issue_18/` · Citizens QLAdmin rate load · Not Warren app.py · Reserve file = CV/reserve/paid-up/ETI only (not gross premium, dividends, COI, loan values)
 
 **#13 detail:** `Issue_Log_Items/Issue_13/` · Option A termination precedence · G5/G6 PASS · samples 010516211C→54, 011101663C→56
 
@@ -103,6 +109,12 @@
 **#49 detail:** `Issue_Log_Items/Issue_49/` · **CLOSED** · **v57.71** · QuikMstr-only override; phase-1 MPHSTAT preserved via provisional inherit cache; validator asserts phase1 unchanged
 
 **#50 detail:** `Issue_Log_Items/Issue_50/` · **CLOSED** · **v57.75** · Resolution: QUIKMEMO fixed-width PNOTE parse + DBF MEMOKEY left-pad for Memo tab SEEK; UAT Pass on 018495BC; new notes e.g. 01159D276C, 01222DCC, 01330D153C, 014075AC, 018187C, 018253C, 018910C, 01ML8522C
+
+**#45 detail:** `Issue_Log_Items/Issue_45/` · **CLOSED** · **v57.77** · Resolution: Bank-draft policies missing PPACH account numbers now fall back to PPPAC `E_ACCOUNT_NUMBER`, with ABA from routing lookup or RelationshipNameAddress, and emit `MBANKNO` only when both account and routing resolve. · 739 fills; 24 remaining exceptions · UAT: `Output/Test_Validation/quikmstr.csv` · samples 010157076C, 010161748C, 010348734C
+
+**#51 detail:** `Issue_Log_Items/Issue_51/` · **Ready for Client UAT** · **v57.76** · G0–G6 PASS · Resolution: Added QuikAint interest-rate stubs for closed riders A60MIR and A96DAR so QLAdmin Projected Values no longer fails looking up a missing interest table. · UAT: load QuikAint; retest Projected Values on 010348734C · Git commit/push pending user request
+
+**#54 detail:** `Issue_Log_Items/Issue_54/` · **OPEN HOLD** · Blocker OBQ-1 opening loan balance when Benh starts mid-stream (e.g. 010822238C 2018). Coding paused; not in app.py. See `Issue_54_Open_Business_Questions.md`.
 
 ---
 

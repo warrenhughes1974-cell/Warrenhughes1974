@@ -1,0 +1,120 @@
+=== STRUCTURE ===
+PPPAC rows: 2122
+PPPAC cols: ['PAC_ID', 'COMPANY_CODE', 'POLICY_NUMBER', 'PAC_DATE', 'BASE_DRAW_DATE', 'AR_DRAW_DATE', 'LOAN_DRAW_DATE', 'E_ACCOUNT_NUMBER', 'P_ACCOUNT_NUMBER', 'E_TRAN_CODE', 'P_TRAN_CODE', 'AUTH_SIGNATURE1', 'AUTH_SIGNATURE2', 'CHANGE_TEMP_CODE', 'CHG_CODER_ID', 'CHG_DATE', 'CHG_TIME', 'LOAN_INT_IND', 'PRENOTE_DATE', 'PAC_DAYS_HOLD_DRAW', 'PAC_DY_HLD_NXT_DRW', 'FST_DRAW_DATE', 'PPAC_UPD_COUNT', 'PPAC_KEY0', 'ROW_COLUMN']
+PPACH rows: 7819
+PPACH cols: ['COMPANY_CODE', 'POLICY_NUMBER', 'CHANGE_DATE', 'CHANGE_TIME', 'PAC_ID', 'BASE_DRAW_DATE', 'BASE_CHG_IND', 'AR_DRAW_DATE', 'AR_CHG_IND', 'LOAN_DRAW_DATE', 'LOAN_CHG_IND', 'E_ACCOUNT_NUMBER', 'P_ACCOUNT_NUMBER', 'E_ABA_NUM', 'P_ABA_NUM', 'E_TRAN_CODE', 'P_TRAN_CODE', 'AUTH_SIGNATURE_1', 'AUTH_SIGNATURE_2', 'CHANGE_PREF_CODE', 'TEMP_PERM_FLAG', 'BANK_ID', 'CODER', 'STATUS_CODE', 'DAYS_HOLD_DRAW', 'DAYS_HLD_NXT_DRAW', 'PACH_UPD_COUNT', 'PACH_KEY0', 'ROW_COLUMN']
+Exceptions: 763
+PPOLC bill form col: BILLING_FORM
+PPOLC PAC policies: 2132
+
+=== PPPAC POLICY UNIQUENESS ===
+unique POLICY_NUMBER: 2122
+policies with >1 row: 0
+max rows per policy: 1
+PAC_ID uniqueness: 2122 of 2122
+COMPANY_CODE value counts: {'03': 2122}
+
+PPPAC E_ACCOUNT usable: 2120
+PPPAC P_ACCOUNT usable: 0
+PPPAC either account usable: 2120
+PPPAC E_ACCOUNT class: {'usable': 2120, 'too_short': 2}
+PPPAC P_ACCOUNT class: {'blank': 2122}
+PAC_DATE: nonblank=2121, min=19790603, max=20270627
+BASE_DRAW_DATE: nonblank=2122, min=19790603, max=20270627
+PRENOTE_DATE: nonblank=2025, min=19790503, max=20260602
+FST_DRAW_DATE: nonblank=2025, min=19790503, max=20270305
+CHG_DATE: nonblank=1372, min=20020919, max=20260602
+E_TRAN_CODE top: {'27': 2104, '37': 17, '28': 1}
+CHANGE_TEMP_CODE top: {'': 2121, 'CF': 1}
+LOAN_INT_IND top: {'Y': 2104, 'N': 18}
+PPPAC ABA/routing-like cols: []
+usable E_ACCOUNT digit-length counts: {4: 4, 5: 35, 6: 321, 7: 241, 8: 161, 9: 280, 10: 603, 11: 75, 12: 153, 13: 207, 14: 16, 15: 2, 17: 22}
+
+=== PPACH ACCOUNTABILITY ===
+unique policies: 1997
+rows with usable E_ACCOUNT: 7797
+rows with usable E_ABA: 7815
+STATUS_CODE top: {'': 5974, 'D': 1845}
+PPACH policies with >1 history row: 1847
+max history rows/policy: 101
+PPACH policies with last usable acct+aba: 1995
+PPACH policies with last usable acct (any aba): 1995
+PPPAC map size: 2122
+
+=== RELATION TO PPOLC PAC ===
+PPPAC intersect PPOLC PAC: 2119
+PPPAC not in PPOLC PAC: 3
+PPOLC PAC not in PPPAC: 13
+PPPAC row count vs PPOLC PAC count: 2122 vs 2132
+
+=== EXCEPTION RECONCILIATION ===
+exception policies: 763
+found in PPPAC: 750
+usable account in PPPAC: 750
+usable routing in PPPAC: 0
+both acct+routing: 0
+still missing account: 13
+not found: 13
+duplicate conflicting accounts: 0
+masked/invalid present values among found: 0
+found but blank/unusable account in PPPAC: 0
+exceptions rescued by PPPAC account: 750
+of rescued, present in PPACH at all: 0
+of rescued, PPACH has usable acct: 0
+exceptions with any PPACH rows: 0
+exceptions with NO PPACH rows: 763
+exceptions with PPACH rows: 0
+exceptions with PPACH rows but last E_ACCOUNT not usable: 0
+
+SAMPLES (masked):
+{'SOURCE_POLICY': '9010149834', 'MPOLICY': '010149834C', 'PPPAC_ACCOUNT': '****5305', 'PPPAC_ACCT_DIGITS': 5, 'PAC_DATE': '20180401', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031101', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010154425', 'MPOLICY': '010154425C', 'PPPAC_ACCOUNT': '****3849', 'PPPAC_ACCT_DIGITS': 6, 'PAC_DATE': '20201203', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031103', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010157076', 'MPOLICY': '010157076C', 'PPPAC_ACCOUNT': '****2919', 'PPPAC_ACCT_DIGITS': 6, 'PAC_DATE': '20270203', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20040203', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010161748', 'MPOLICY': '010161748C', 'PPPAC_ACCOUNT': '****0581', 'PPPAC_ACCT_DIGITS': 13, 'PAC_DATE': '20260701', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031101', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010348734', 'MPOLICY': '010348734C', 'PPPAC_ACCOUNT': '****8787', 'PPPAC_ACCT_DIGITS': 6, 'PAC_DATE': '20260713', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031113', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010360289', 'MPOLICY': '010360289C', 'PPPAC_ACCOUNT': '****8001', 'PPPAC_ACCT_DIGITS': 8, 'PAC_DATE': '20260415', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031115', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010360290', 'MPOLICY': '010360290C', 'PPPAC_ACCOUNT': '****8001', 'PPPAC_ACCT_DIGITS': 8, 'PAC_DATE': '20260415', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031115', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010367704', 'MPOLICY': '010367704C', 'PPPAC_ACCOUNT': '****1448', 'PPPAC_ACCT_DIGITS': 6, 'PAC_DATE': '20260703', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031103', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010367705', 'MPOLICY': '010367705C', 'PPPAC_ACCOUNT': '****2292', 'PPPAC_ACCT_DIGITS': 7, 'PAC_DATE': '20250701', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031101', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010371171', 'MPOLICY': '010371171C', 'PPPAC_ACCOUNT': '****1214', 'PPPAC_ACCT_DIGITS': 6, 'PAC_DATE': '20240901', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031101', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010371356', 'MPOLICY': '010371356C', 'PPPAC_ACCOUNT': '****0342', 'PPPAC_ACCT_DIGITS': 6, 'PAC_DATE': '20260701', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031101', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+{'SOURCE_POLICY': '9010374779', 'MPOLICY': '010374779C', 'PPPAC_ACCOUNT': '****5461', 'PPPAC_ACCT_DIGITS': 7, 'PAC_DATE': '20181003', 'E_TRAN_CODE': '27', 'PRENOTE_DATE': '20031103', 'DUP_ROWS': 1, 'IN_PPACH': False, 'PPACH_HAS_ACCT': False}
+
+=== POLICY FORMAT ===
+exc SOURCE_POLICY lens: [(10, 763)]
+PPPAC POLICY lens: [(10, 2122)]
+exc sample: ['9010157076', '9010161748', '9010348734']
+PPPAC sample: ['9010149834', '9010154425', '9010157076']
+exact match found: 750
+match after strip leading zeros (exc in pppac): 750
+PAC_ID format sample: ['039010149834', '039010154425', '039010157076']
+PAC_ID == COMPANY+POLICY?: 1.0
+
+=== PPACH vs PPPAC BANKING COMPARISON (all PPPAC policies) ===
+PAC universe size: 2132
+both agree (account digits): 1361
+both differ: 6
+only PPACH has account: 0
+only PPPAC has account: 750
+neither has usable account: 15
+differ samples: [{'pol': '9010749041', 'ppach': '****2196', 'pppac': '****2048', 'ppach_aba': '*****1338'}, {'pol': '9010880951', 'ppach': '****0992', 'pppac': '****8711', 'ppach_aba': '*****0160'}, {'pol': '9011118400', 'ppach': '****9758', 'pppac': '****1912', 'ppach_aba': '*****0751'}, {'pol': '9011120163', 'ppach': '****5389', 'pppac': '****9008', 'ppach_aba': '*****0452'}, {'pol': '9011194622', 'ppach': '****2301', 'pppac': '****3590', 'ppach_aba': '*****7777'}, {'pol': '9011194623', 'ppach': '****2301', 'pppac': '****3590', 'ppach_aba': '*****7777'}]
+
+=== NON-EXCEPTION BANK-DRAFT POLICIES ===
+PAC not in exceptions: 1369
+non-exc with PPACH usable acct: 1367
+non-exc with PPPAC usable acct: 1367
+
+=== BANK DRAFT COUNT CROSSCHECK ===
+PPPAC total rows: 2122
+PPOLC PAC: 2132
+exceptions: 763
+implied with banking from prior: 2132-763=1369
+PAC minus exceptions: 1369
+sample usable accounts (masked): ['****5305', '****3849', '****2919', '****4006', '****0581']
+E_ACCOUNT_NUMBER values containing whitespace: 105
+
+=== ROUTING GAP FOR RESCUED EXCEPTIONS ===
+rescued exceptions with some PPACH ABA history: 0
+rescued exceptions with NO PPACH ABA anywhere: 750
+aba_routing_lookup rows: 2692 cols: ['ACCOUNT_DIGITS', 'FULL_ABA']
+rescued exceptions with account in aba_routing_lookup: 40

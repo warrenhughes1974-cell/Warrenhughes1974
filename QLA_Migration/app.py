@@ -1,10 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.75
-# Date:        2026-07-11
+# Version:     v57.77
+# Date:        2026-07-12
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v57.75 — Issue #50 UAT: QUIKMEMO DBF MEMOKEY left-pad preserved (Memo tab SEEK match).
+# Change Note: v57.77 — Issue #45: PPPAC E_ACCOUNT_NUMBER fallback when PPACH account missing;
+#              ABA via lookup/RNA; emit MBANKNO only when both present; refined exceptions.
+#              v57.76 — Issue #51: emit QuikAint stubs for A60MIR/A96DAR (Projected Values crash-stop).
+#              v57.75 — Issue #50 UAT: QUIKMEMO DBF MEMOKEY left-pad preserved (Memo tab SEEK match).
 #              v57.74 — Issue #50: PNOTE fixed-width reader preserves notes with commas in LINE text.
 #              v57.73 — Issue #21F fix: BA/BF-only base, sum SU/SL, strip-rebuild CONV_ADJ,
 #              validation report FINAL/VARIANCE math; OPENING_BALANCE status.
@@ -317,7 +320,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.75"
+APP_VERSION = "v57.77"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -4715,10 +4718,40 @@ class QLAdminEnterpriseIntegrationSuite:
     def _reports_dir(self):
         return os.path.normpath(os.path.join(self._migration_root(), "Reports"))
 
-    def _apply_issue45_bank_draft_gate(self, row_data, src_row, exceptions):
-        """Issue #45: MBILLFRM=2 without valid PPACH account → blank MBANKNO + exception row.
+    def _issue45_usable_bank_account(self, acct_raw):
+        """Issue #45: PPPAC fallback account usability (>=4 digits, not masked/zero)."""
+        raw = str(acct_raw or "").strip()
+        if not raw or raw.lower() in ("nan", "none", ""):
+            return ""
+        if re.search(r"[xX*]{2,}|REDACT|MASK|HIDDEN|XXXX", raw, re.I):
+            return ""
+        acct_d = re.sub(r"\D", "", raw)
+        if not acct_d or set(acct_d) <= {"0"} or len(acct_d) < 4:
+            return ""
+        if acct_d in ("1234", "123456", "123456789", "0000", "1111", "9999", "999999999"):
+            return ""
+        return re.sub(r"\s+", "", raw)
 
-        Does not change MBILLFRM. Does not alter #21H banking for policies with a non-blank account.
+    def _issue45_lookup_aba_for_account(self, acct_digits, aba_lookup):
+        """Issue #45 / #21H: resolve full ABA from lookup by account digits."""
+        if not acct_digits or not aba_lookup:
+            return ""
+        for lk_key in (acct_digits, acct_digits.lstrip("0") or "0", acct_digits.zfill(17)):
+            full_aba = aba_lookup.get(lk_key)
+            if not full_aba:
+                continue
+            aba = str(full_aba).strip()
+            if aba.endswith(".0"):
+                aba = aba[:-2]
+            aba_d = re.sub(r"\D", "", aba)
+            if len(aba_d) >= 5 and set(aba_d) != {"0"}:
+                return aba_d
+        return ""
+
+    def _apply_issue45_bank_draft_gate(self, row_data, src_row, exceptions):
+        """Issue #45: MBILLFRM=2 without valid bank account+ABA → blank MBANKNO + exception row.
+
+        PPACH primary; PPPAC fallback when PPACH account missing. Does not change MBILLFRM.
         """
         if exceptions is None:
             return
@@ -4727,12 +4760,24 @@ class QLAdminEnterpriseIntegrationSuite:
             return
         raw_pol = self.normalize(src_row.get("POLICY_NUMBER", src_row.get("MPOLICY", "")))
         meta = getattr(self, "_ppach_acct_meta", {}).get(raw_pol, {}) or {}
+        pppac_only = getattr(self, "_pppac_acct_only_meta", {}).get(raw_pol, {}) or {}
         acct = str(meta.get("account", "")).strip()
         aba = str(meta.get("aba", "")).strip()
         has_valid_account = bool(acct) and acct.lower() not in ("nan", "none", "")
-        if has_valid_account:
+        if has_valid_account and aba and aba.lower() not in ("nan", "none", ""):
             return
         row_data["MBANKNO"] = ""
+        pppac_acct = str(pppac_only.get("account", "")).strip()
+        if pppac_acct and pppac_acct.lower() not in ("nan", "none", ""):
+            exc_reason = "MISSING_ROUTING"
+            exc_detail = "MBILLFRM=2; PPPAC account present but ABA unresolved"
+            bank_source = "PPPAC"
+            aba_source = ""
+        else:
+            exc_reason = "MISSING_BANK_ACCOUNT"
+            exc_detail = "MBILLFRM=2 but no usable account in PPACH or PPPAC"
+            bank_source = ""
+            aba_source = ""
         exceptions.append({
             "MPOLICY": str(row_data.get("MPOLICY", "")).strip(),
             "SOURCE_POLICY": raw_pol,
@@ -4740,8 +4785,11 @@ class QLAdminEnterpriseIntegrationSuite:
             "MBANKNO_EMITTED": "",
             "PPACH_ACCOUNT": acct if acct.lower() not in ("nan", "none") else "",
             "PPACH_ABA": aba if aba.lower() not in ("nan", "none") else "",
-            "EXCEPTION_REASON": "MISSING_BANK_ACCOUNT",
-            "EXCEPTION_DETAIL": "MBILLFRM=2 but PPACH E_ACCOUNT_NUMBER blank/missing",
+            "PPPAC_ACCOUNT": pppac_acct if pppac_acct.lower() not in ("nan", "none") else "",
+            "ABA_SOURCE": str(meta.get("aba_source", aba_source)).strip(),
+            "BANK_SOURCE": str(meta.get("bank_source", bank_source)).strip(),
+            "EXCEPTION_REASON": exc_reason,
+            "EXCEPTION_DETAIL": exc_detail,
         })
 
     def _write_bank_draft_account_exceptions(self, exceptions):
@@ -4753,6 +4801,9 @@ class QLAdminEnterpriseIntegrationSuite:
             "MBANKNO_EMITTED",
             "PPACH_ACCOUNT",
             "PPACH_ABA",
+            "PPPAC_ACCOUNT",
+            "ABA_SOURCE",
+            "BANK_SOURCE",
             "EXCEPTION_REASON",
             "EXCEPTION_DETAIL",
         ]
@@ -5807,6 +5858,95 @@ class QLAdminEnterpriseIntegrationSuite:
                                     self.log(f"Auto-loaded PPACH Banking Cache for quikmstr ({len(self._ppach_bank_map)} records; {aba_recovered} full-ABA recoveries)")
                             except Exception as e:
                                 self.log(f"Warning: Could not load PPACH cache - {e}")
+
+                        # --- PPPAC ACCOUNT FALLBACK (Issue #45) ---
+                        self._pppac_acct_only_meta = {}
+                        pppac_fallback_applied = 0
+                        pppac_lookup_aba = 0
+                        pppac_rna_aba = 0
+                        rna_aba_by_pol = {}
+                        try:
+                            rna_path = self._resolve_rna_source_path(src_dir)
+                            if rna_path and os.path.isfile(rna_path):
+                                rdf = pd.read_csv(
+                                    rna_path, encoding='latin1', low_memory=False, dtype=str, on_bad_lines='skip'
+                                ).fillna("")
+                                rdf.columns = [str(c).strip().upper() for c in rdf.columns]
+                                if 'POLICY_NUMBER' in rdf.columns:
+                                    for _, rr in rdf.iterrows():
+                                        rpol = self.normalize(rr.get('POLICY_NUMBER'))
+                                        if not rpol:
+                                            continue
+                                        abas = set(rna_aba_by_pol.get(rpol, []))
+                                        for aba_col in ('ELEC_ABA_NUMBER', 'PAPER_ABA_NUM'):
+                                            if aba_col not in rdf.columns:
+                                                continue
+                                            aba_raw = str(rr.get(aba_col, '')).strip()
+                                            if aba_raw.endswith('.0'):
+                                                aba_raw = aba_raw[:-2]
+                                            aba_d = re.sub(r'\D', '', aba_raw)
+                                            if len(aba_d) >= 5 and set(aba_d) != {'0'} and not re.search(r'[xX*]{2,}', aba_raw, re.I):
+                                                abas.add(aba_d)
+                                        if abas:
+                                            rna_aba_by_pol[rpol] = sorted(abas)
+                        except Exception as e:
+                            self.log(f"Warning: Could not load RNA ABA aid for PPPAC fallback - {e}")
+
+                        pppac_path = find_extract('pppac')
+                        if pppac_path:
+                            try:
+                                pacdf = pd.read_csv(
+                                    pppac_path, encoding='latin1', low_memory=False, dtype=str, on_bad_lines='skip'
+                                ).fillna("")
+                                pacdf.columns = [str(c).strip().upper() for c in pacdf.columns]
+                                if 'POLICY_NUMBER' in pacdf.columns and 'E_ACCOUNT_NUMBER' in pacdf.columns:
+                                    pacdf = pacdf[~pacdf['POLICY_NUMBER'].astype(str).str.contains('---', na=False)]
+                                    for _, pr in pacdf.iterrows():
+                                        pol = self.normalize(pr.get('POLICY_NUMBER'))
+                                        if not pol or pol in self._ppach_bank_map:
+                                            continue
+                                        acct_raw = str(pr.get('E_ACCOUNT_NUMBER', '')).strip()
+                                        display_acct = self._issue45_usable_bank_account(acct_raw)
+                                        if not display_acct:
+                                            continue
+                                        acct_d = re.sub(r'\D', '', display_acct)
+                                        use_aba = self._issue45_lookup_aba_for_account(acct_d, aba_lookup)
+                                        aba_src = "LOOKUP" if use_aba else ""
+                                        if not use_aba:
+                                            pol_abas = rna_aba_by_pol.get(pol, [])
+                                            if len(pol_abas) == 1:
+                                                use_aba = pol_abas[0]
+                                                aba_src = "RNA"
+                                                pppac_rna_aba += 1
+                                            elif len(pol_abas) > 1:
+                                                self._pppac_acct_only_meta[pol] = {
+                                                    "account": display_acct,
+                                                    "aba_source": "RNA_AMBIGUOUS",
+                                                }
+                                                continue
+                                        else:
+                                            pppac_lookup_aba += 1
+                                        if not use_aba:
+                                            self._pppac_acct_only_meta[pol] = {
+                                                "account": display_acct,
+                                                "aba_source": "",
+                                            }
+                                            continue
+                                        self._ppach_bank_map[pol] = f"{use_aba}/{display_acct}"
+                                        self._ppach_acct_meta[pol] = {
+                                            "aba": use_aba,
+                                            "account": display_acct,
+                                            "bank_source": "PPPAC",
+                                            "aba_source": aba_src,
+                                        }
+                                        pppac_fallback_applied += 1
+                                    self.log(
+                                        f"Issue 45: PPPAC banking fallback applied for {pppac_fallback_applied} policies "
+                                        f"(lookup ABA={pppac_lookup_aba}, RNA ABA={pppac_rna_aba}; "
+                                        f"account-only unresolved={len(self._pppac_acct_only_meta)})"
+                                    )
+                            except Exception as e:
+                                self.log(f"Warning: Could not load PPPAC banking fallback - {e}")
                         # ---------------------------
 
                         # --- POLICY FEE CACHE (Issue 21C) ---
