@@ -12,9 +12,39 @@
 
 ## Resolution (issue log — paste-ready)
 
-**Resolution:** Bank-draft policies missing PPACH account numbers now fall back to PPPAC `E_ACCOUNT_NUMBER`, with ABA from routing lookup or RelationshipNameAddress, and emit `MBANKNO` only when both account and routing resolve.
+Copy everything in the box below:
 
-> Copy the line above into tracking sheets and client readouts. Long-form detail follows.
+```text
+Resolution: Bank-draft policies missing PPACH account numbers now fall back to PPPAC E_ACCOUNT_NUMBER, with ABA from routing lookup or RelationshipNameAddress, and emit MBANKNO only when both account and routing resolve. 739 policies newly filled; 24 remain incomplete (policy still converts; MBILLFRM=2; MBANKNO blank).
+
+Still incomplete — no account in PPACH or PPPAC (13):
+010772298C — Active (22)
+010827081C — Active (22)
+010847481C — Active (22)
+011047403C — Death / death-terminated (53)
+011192032C — Death / death-terminated (53)
+015000043C — Surrender (55)
+015000078C — Death / death-terminated (53)
+015000080C — Surrender (55)
+015000117C — Surrender (55)
+015000138C — Surrender (55)
+015000148C — Active (22)
+015000211C — Death / death-terminated (53)
+015000261C — Death / death-terminated (53)
+
+Still incomplete — PPPAC account present but routing/ABA unresolved (11):
+010408371C — Paid-up (41)
+010785310C — Surrender (55)
+010936709C — ETI (44)
+011017289C — ETI (44)
+011064372C — Death / death-terminated (53)
+011090462C — Active (22)
+011090463C — Active (22)
+011090464C — Active (22)
+011210337C — Death / death-terminated (53)
+015000462C — Active (22)
+015000581C — Death / death-terminated (53)
+```
 
 ---
 
@@ -200,9 +230,17 @@ Source file: `QLA_Migration/Reports/bank_draft_account_exceptions.csv` (post–v
 
 ## Issue Log Entry (paste-ready)
 
-> **Issue #45 — Bank Draft / PPPAC Account Fallback — CLOSED (2026-07-12).**  
-> **Resolution:** Bank-draft policies missing PPACH account numbers now fall back to PPPAC `E_ACCOUNT_NUMBER`, with ABA from routing lookup or RelationshipNameAddress, and emit `MBANKNO` only when both account and routing resolve.  
-> **Evidence:** Validation and regression PASS; 739 fills; traces 010157076C / 010161748C / 010348734C confirmed. **Preserved:** PPACH-primary banking (#21H), MPOLICY (#25), MPREM (#26). **Still incomplete banking (24):** 13 no account (e.g. 010772298C Active, 015000043C Surrender, …); 11 account but no routing (e.g. 011090462C–464C Active, 010408371C Paid-up, …). Full list with MSTATUS in `Issue_45_Resolution_Summary.md` Fleet Impact.  
+```text
+Issue #45 — Bank Draft / PPPAC Account Fallback — CLOSED (2026-07-12).
+Resolution: Bank-draft policies missing PPACH account numbers now fall back to PPPAC E_ACCOUNT_NUMBER, with ABA from routing lookup or RelationshipNameAddress, and emit MBANKNO only when both account and routing resolve. 739 policies newly filled; 24 remain incomplete (policy still converts; MBILLFRM=2; MBANKNO blank).
+Evidence: Validation and regression PASS; traces 010157076C / 010161748C / 010348734C confirmed. Preserved: PPACH-primary banking (#21H), MPOLICY (#25), MPREM (#26).
+
+Still incomplete — no account in PPACH or PPPAC (13):
+010772298C — Active (22); 010827081C — Active (22); 010847481C — Active (22); 011047403C — Death / death-terminated (53); 011192032C — Death / death-terminated (53); 015000043C — Surrender (55); 015000078C — Death / death-terminated (53); 015000080C — Surrender (55); 015000117C — Surrender (55); 015000138C — Surrender (55); 015000148C — Active (22); 015000211C — Death / death-terminated (53); 015000261C — Death / death-terminated (53).
+
+Still incomplete — PPPAC account present but routing/ABA unresolved (11):
+010408371C — Paid-up (41); 010785310C — Surrender (55); 010936709C — ETI (44); 011017289C — ETI (44); 011064372C — Death / death-terminated (53); 011090462C — Active (22); 011090463C — Active (22); 011090464C — Active (22); 011210337C — Death / death-terminated (53); 015000462C — Active (22); 015000581C — Death / death-terminated (53).
+```
 
 ---
 
