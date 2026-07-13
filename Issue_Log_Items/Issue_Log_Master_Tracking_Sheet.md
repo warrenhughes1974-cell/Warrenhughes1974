@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-12 (#45 Closed v57.77; #18 OPEN; #54 OPEN HOLD; #51 Ready for Client UAT v57.76; #50 Closed v57.75) · **Engine:** `app.py` **v57.77**
+**Last updated:** 2026-07-13 (#55 CLOSED v57.78; #57 Risk CONDITIONAL GO Option B; #56 Risk CONDITIONAL GO Option B; #45 Closed v57.77; #18 OPEN; #54 OPEN HOLD; #51 Ready for Client UAT v57.76) · **Engine:** `app.py` **v57.78**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -70,7 +70,8 @@
 | **#40** | Inherited CV rate load — missing QuikCvs on CV-capable plans | **IMPLEMENTED / CLIENT UAT** · QuikCvs + QuikPlCv regenerated | — | 10 inherited plans emit 101,793 source-matched CV rows; `17085M` now 1,002 keys; 100% source-to-QLA PASS; full guarded emit still blocked by unrelated QuikUint |
 | **#41** | CV age-100 endpoint off by one | **IMPLEMENTED / CLIENT UAT** · QuikCvs regenerated | — | 1960PO CV M/26 value 784.65 now maps to QLA duration index 57; age-100 endpoint proof PASS; full guarded emit still blocked by unrelated QuikUint dependency |
 | **#42** | Missing rate extract rows — L01 10Y NP and L10 LP9595 | **AWAITING CSO SOURCE EXTRACT** | — | Client screenshots show rates; delivered Rate_Table and PAAGERAT contain 0 exact rows; converter proof complete; CSO must resend extracts |
-| **#43** | ISWL expense charge source discovery | **INVESTIGATION COMPLETE / AWAITING CLIENT** | — | PCOVR.POLICY_FEE=25.00 on all 8 ISWL coverages; not proven equivalent to monthly expense per policy; no source for % premium or per-$1K charges |
+| **#23** | ISWL 3.5% premium expense charge (plan setup) | **DECIDED / Ready for plan setup** | — | Eric 2026-07-13: all ISWL have 3.5%; statement Censi I proves Premium Charge ≈ 3.5% of premium; exclude single premium |
+| **#43** | ISWL expense charge source discovery | **DECIDED / Ready for plan setup** | — | Eric 2026-07-13: $25 POLICY_FEE taken monthly (~$2.08/mo); 3.5% confirmed; U6 = COI not expense |
 | **#44** | QuikLoan stale PLOAN latest-row (`LAST_CHG_TIME` sort) | **CLOSED ✓** · **v57.60** · Phase A only | **v57.60** | Resolution: QuikLoan sorts PLOAN LAST_CHG_TIME as HHMMSS so same-day zero clears win; Phase B withdrawn |
 | **#36** | Modal factors on `quikmstr` (Names-tab Modal Premiums) | **CLOSED ✓** · **v57.62** | **v57.62** | Resolution: quikmstr now receives plan-level modal factors (MSEMI/MQTRL/MMTHD/MMTHB) from quikplan, with PAC GL85 quarterly=25 and semiannual=50 overrides, so Names-tab Modal Premiums work (v57.62). |
 | **#47** | Bill Day zero → Paid-To day | **CLOSED ✓** · **v57.65** | **v57.65** | Resolution: When Bill Day is zero, quikmstr.MBILLDAY now uses the day from Paid-To date while non-zero Issue #21B bill days stay unchanged (v57.65). |
@@ -80,6 +81,9 @@
 | **#45** | Bank Draft Account / PPPAC fallback (`quikmstr.MBANKNO`) | **CLOSED ✓** · **v57.77** | **v57.77** | Resolution: Bank-draft policies missing PPACH account numbers now fall back to PPPAC `E_ACCOUNT_NUMBER`, with ABA from routing lookup or RelationshipNameAddress, and emit `MBANKNO` only when both account and routing resolve. |
 | **#51** | Missing Interest Table (`QuikAint` for A60MIR / A96DAR) — Projected Values crash loop | **Ready for Client UAT** · **v57.76** | **v57.76** | Resolution: Added QuikAint interest-rate stubs for closed riders A60MIR and A96DAR so QLAdmin Projected Values no longer fails looking up a missing interest table. |
 | **#54** | Full Loan History Load (PACTG → **QuikBenh** 10/11/12) | **OPEN — HOLD coding** | — | Type/Date/Amount research OK; Balance wrong without opening. **OBQ-1:** where does QLA get 2018 opening loan balance? `Issue_54_Open_Business_Questions.md`. Not in app.py. |
+| **#55** | Unit Issues (tiny `MUNIT` floor + leading-zero emit) | **CLOSED ✓** · **v57.78** | **v57.78** | Resolution: quikridr MUNIT below 0.001 floored to zero; rider decimals emit with leading digit (0.53000 not .53000); #25/#26 preserved. QLAdmin false `3000` Units = out of scope. |
+| **#56** | PUA CV incorrect (`010310404C` / `960 PO PUA`) | **Conditional Go — await client OBQ** | — | Stop `*PA` rewrite (Option B); emit PAAGERAT CV under catalog plans. Reject A/C — `1960PA` collapses 4 PUA products. |
+| **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **Conditional Go — Option B** | — | Product Book: 3=APL→1, 4=ETI→2, 5=RPU→3. Remove `PAID_UP_TYPE→MNFOPT`. Translation-only fails Eric RPU `010392763C`. |
 | **#18** | Citizens FoxPro Rate Tables (Reserve / Plans / CIFIANU1) | **OPEN — Awaiting source** | — | Request full tables from Tom/Debbie/Jelaine. Schema evidence in `SourceData_11-18-2024` Rate.cpy, Plan.cpy, AnnPrems,cpy. No Go until received. CFIC tracker: `CFIC_Rates/tracking/`. |
 
 **#18 detail:** `Issue_Log_Items/Issue_18/` · Citizens QLAdmin rate load · Not Warren app.py · Reserve file = CV/reserve/paid-up/ETI only (not gross premium, dividends, COI, loan values)
@@ -98,7 +102,9 @@
 
 **#42 detail:** `Issue_Log_Items/Issue_42/` · Screenshot-only source gaps · L01 10Y NP and L10 LP9595 NP/RV absent from delivered Rate_Table and PAAGERAT · proof in `client_l10_l01_followup/source_gap_proof/` · **No Go** until CSO resends missing extract rows
 
-**#43 detail:** `Issue_Log_Items/Issue_43/` · Client question on Policy fee vs monthly expense per policy for 8 ISWL products · `PCOVR.POLICY_FEE=25.00` confirmed · UF segment zero-valued only · **No Go** for expense mapping until client confirms equivalence and missing-charge defaults
+**#23 detail:** `Issue_Log_Items/Issue_23/` · **DECIDED 2026-07-13** · 3.5% premium expense all ISWL (non–single premium) · statement proof `Annual_Statement_Censi_I_9010817956.pdf` · companion #43
+
+**#43 detail:** `Issue_Log_Items/Issue_43/` · **DECIDED 2026-07-13** · $25 Policy fee = monthly per-policy expense amortized ($2.08/mo) · 3.5% premium expense confirmed · U6 Curr COI is **not** expense · Decisions: `Issue_43_Meeting_Decisions_20260713.md` · Next: Sujitha plan expense setup
 
 **#44 detail:** `Issue_Log_Items/Issue_44/` · **CLOSED** · **v57.60** Phase A · Resolution: QuikLoan sorts PLOAN LAST_CHG_TIME as HHMMSS so same-day zero clears win; Phase B withdrawn
 
@@ -115,6 +121,10 @@
 **#51 detail:** `Issue_Log_Items/Issue_51/` · **Ready for Client UAT** · **v57.76** · G0–G6 PASS · Resolution: Added QuikAint interest-rate stubs for closed riders A60MIR and A96DAR so QLAdmin Projected Values no longer fails looking up a missing interest table. · UAT: load QuikAint; retest Projected Values on 010348734C · Git commit/push pending user request
 
 **#54 detail:** `Issue_Log_Items/Issue_54/` · **OPEN HOLD** · Blocker OBQ-1 opening loan balance when Benh starts mid-stream (e.g. 010822238C 2018). Coding paused; not in app.py. See `Issue_54_Open_Business_Questions.md`.
+
+**#55 detail:** `Issue_Log_Items/Issue_55/` · **CLOSED** · **v57.78** · Resolution: MUNIT floor + leading-zero decimal emit on quikridr; 148 floor rows; G0–G7 PASS. `Issue_55_Resolution_Summary.md`. Client UAT: reload quikridr + DBF Append Tool v1.5.
+
+**#56 detail:** `Issue_Log_Items/Issue_56/` · G0–G2 PASS · **G3 CONDITIONAL GO (Option B)** · Reject A/C (`1960PA` mixes 4 LifePRO PUA CV tables). **493** ridr MPLAN changes; **7** catalog plans need QuikCvs. Development hold until Eric: correct PUA CV $ + catalog plan OK. Then Composer 2.5.
 
 ---
 

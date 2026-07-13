@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.77
-# Date:        2026-07-12
+# Version:     v57.78
+# Date:        2026-07-13
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v57.77 — Issue #45: PPPAC E_ACCOUNT_NUMBER fallback when PPACH account missing;
+# Change Note: v57.78 — Issue #55: quikridr MUNIT floor (0 < x < 0.001 → 0) + leading-zero decimal
+#              emit for rider numerics (never `.53000`); MPREM #26 numeric preserved.
+#              v57.77 — Issue #45: PPPAC E_ACCOUNT_NUMBER fallback when PPACH account missing;
 #              ABA via lookup/RNA; emit MBANKNO only when both present; refined exceptions.
 #              v57.76 — Issue #51: emit QuikAint stubs for A60MIR/A96DAR (Projected Values crash-stop).
 #              v57.75 — Issue #50 UAT: QUIKMEMO DBF MEMOKEY left-pad preserved (Memo tab SEEK match).
@@ -94,6 +96,7 @@ import csv
 from datetime import datetime
 
 from qla_core.normalize_utils import format_qladmin_mpolicy
+from qla_core.quikridr_decimal_emit import apply_quikridr_decimal_emit
 from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA, QUIKLOAN_SCHEMA, QUIKREIN_SCHEMA, QUIKRMST_SCHEMA
 from qla_core import run_logging as RL
 from qla_core.quikplan_converter import (
@@ -320,7 +323,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.77"
+APP_VERSION = "v57.78"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -6953,6 +6956,7 @@ class QLAdminEnterpriseIntegrationSuite:
                             if self._resolve_quikridr_mphdob(row_data, src_row, rel_name_cache):
                                 quikridr_mphdob_fix_count += 1
                             self._apply_quikridr_mlastann(row_data, src_row, quikridr_valuation_date)
+                            apply_quikridr_decimal_emit(row_data)
                         # Issue #45: bank-draft missing account → blank MBANKNO + exception (MBILLFRM unchanged)
                         if t_id.lower() == "quikmstr":
                             self._apply_issue45_bank_draft_gate(row_data, src_row, bank_draft_exceptions)
@@ -6967,6 +6971,7 @@ class QLAdminEnterpriseIntegrationSuite:
                             if self._resolve_quikridr_mphdob(pua_row, {}, rel_name_cache):
                                 quikridr_mphdob_fix_count += 1
                             self._apply_quikridr_mlastann(pua_row, {}, quikridr_valuation_date)
+                            apply_quikridr_decimal_emit(pua_row)
                             output.append([pua_row[h] for h in schema])
                     if t_id.lower() == "quikridr" and quikridr_mphdob_fix_count:
                         self.log(f"QUIKRIDR MPHDOB: corrected {quikridr_mphdob_fix_count} invalid DOB row(s)")
