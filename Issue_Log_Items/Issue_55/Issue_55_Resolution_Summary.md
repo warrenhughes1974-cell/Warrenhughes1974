@@ -6,7 +6,7 @@
 **Engine version:** v57.78  
 **Closed date:** 2026-07-13  
 **Owner:** Conversion  
-**Git:** `[pending]` · branch `issue-34-pr7-quikisrr`
+**Git:** `842274a` · branch `issue-34-pr7-quikisrr`
 
 ---
 
@@ -116,7 +116,7 @@ None — mapping `NUMBER_OF_UNITS → MUNIT` unchanged.
 |-------|--------|
 | Validators PASS (G5 + G6) | Yes |
 | `app.py` version v57.78 | Yes (both root + QLA_Migration) |
-| Issue-scoped git commit | `[pending]` |
+| Issue-scoped git commit | `842274a` |
 | **`git push` to remote** | branch `issue-34-pr7-quikisrr` |
 | Network batch note | `Output/` gitignored — pull then run full batch or `tools/batch_tests/run_full_batch_test.py`; re-append `quikridr.csv` with DBF Append Tool v1.5 |
 
