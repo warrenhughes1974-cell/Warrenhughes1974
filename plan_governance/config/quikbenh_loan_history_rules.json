@@ -1,0 +1,28 @@
+{
+  "version": "1.2",
+  "description": "PACTG 04xx → QuikBenh loan history (Issue #54). Side-aware 0412: debit→11, credit→12. Opening seed from PLOAN. MBENTYP 20 deferred.",
+  "source_file": "PACTG_Accounting_Extract*.csv",
+  "ploan_source_file": "PLOAN_LoanInformation_Extract*.csv",
+  "opening_balance_seed_enabled": true,
+  "opening_balance_seed_mbentyp": "10",
+  "opening_balance_seed_skip_if_same_day_type10": true,
+  "pactg_side_aware_mbentyp": true,
+  "credit_side_decrease_mbentyp": "12",
+  "pactg_emit_codes": {
+    "0411": "10",
+    "0412": "11",
+    "0413": "12"
+  },
+  "pactg_exclude_codes": ["0451"],
+  "pactg_scan_codes": ["0411", "0412", "0413", "0414", "0415", "0416", "0417", "0451"],
+  "exclude_reversal_code_y": true,
+  "loan_mbentyp_replace_on_rerun": ["10", "11", "12"],
+  "preserve_mbentyp": ["8"],
+  "defer_mbentyp": ["20"],
+  "amount_scale": "ABS_TRANS_AMOUNT",
+  "date_source": "EFFECTIVE_DATE",
+  "date_format": "YYYYMMDD",
+  "write_output_csv": false,
+  "output_filename": "quikbenh.csv",
+  "staging_subdir": "staged"
+}

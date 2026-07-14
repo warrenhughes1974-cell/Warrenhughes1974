@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-13 (#57 CLOSED — NFO Option B; #55 CLOSED v57.78; #56 Risk CONDITIONAL GO Option B; #45 Closed v57.77; #18 OPEN; #54 OPEN HOLD; #51 Ready for Client UAT v57.76) · **Engine:** `app.py` **v57.78**
+**Last updated:** 2026-07-13 (#58 IMPLEMENTED v57.80; #57 CLOSED — NFO Option B; #55 CLOSED v57.78) · **Engine:** `app.py` **v57.80**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -69,7 +69,7 @@
 | **#38** | Dividend Accumulations (`quikdvdp.MDEPOSIT`) | **CLOSED ✓** · **v57.44** · 59 policies | **v57.44** | |
 | **#40** | Inherited CV rate load — missing QuikCvs on CV-capable plans | **IMPLEMENTED / CLIENT UAT** · QuikCvs + QuikPlCv regenerated | — | 10 inherited plans emit 101,793 source-matched CV rows; `17085M` now 1,002 keys; 100% source-to-QLA PASS; full guarded emit still blocked by unrelated QuikUint |
 | **#41** | CV age-100 endpoint off by one | **IMPLEMENTED / CLIENT UAT** · QuikCvs regenerated | — | 1960PO CV M/26 value 784.65 now maps to QLA duration index 57; age-100 endpoint proof PASS; full guarded emit still blocked by unrelated QuikUint dependency |
-| **#42** | Missing rate extract rows — L01 10Y NP and L10 LP9595 | **AWAITING CSO SOURCE EXTRACT** | — | Client screenshots show rates; delivered Rate_Table and PAAGERAT contain 0 exact rows; converter proof complete; CSO must resend extracts |
+| **#42** | Missing rate extract rows — L01 10Y NP and L10 LP9595 | **CLOSED** · **v57.79** | **v57.79** | PDAGE miss-fill; full rate package emitted 2026-07-14; residual L17/LP85-8 CV → CSO |
 | **#23** | ISWL 3.5% premium expense charge (plan setup) | **DECIDED / Ready for plan setup** | — | Eric 2026-07-13: all ISWL have 3.5%; statement Censi I proves Premium Charge ≈ 3.5% of premium; exclude single premium |
 | **#43** | ISWL expense charge source discovery | **DECIDED / Ready for plan setup** | — | Eric 2026-07-13: $25 POLICY_FEE taken monthly (~$2.08/mo); 3.5% confirmed; U6 = COI not expense |
 | **#44** | QuikLoan stale PLOAN latest-row (`LAST_CHG_TIME` sort) | **CLOSED ✓** · **v57.60** · Phase A only | **v57.60** | Resolution: QuikLoan sorts PLOAN LAST_CHG_TIME as HHMMSS so same-day zero clears win; Phase B withdrawn |
@@ -80,10 +80,11 @@
 | **#50** | Policy Notes Missing (`quikmemo` / PNOTE) | **CLOSED ✓** · **v57.75** | **v57.75** | Resolution: QUIKMEMO fixed-width PNOTE parse + DBF MEMOKEY left-pad for Memo tab SEEK. New notes e.g. 01159D276C, 01222DCC, 01330D153C, 014075AC, 018187C, 018253C, 018910C, 01ML8522C. |
 | **#45** | Bank Draft Account / PPPAC fallback (`quikmstr.MBANKNO`) | **CLOSED ✓** · **v57.77** | **v57.77** | Resolution: Bank-draft policies missing PPACH account numbers now fall back to PPPAC `E_ACCOUNT_NUMBER`, with ABA from routing lookup or RelationshipNameAddress, and emit `MBANKNO` only when both account and routing resolve. |
 | **#51** | Missing Interest Table (`QuikAint` for A60MIR / A96DAR) — Projected Values crash loop | **Ready for Client UAT** · **v57.76** | **v57.76** | Resolution: Added QuikAint interest-rate stubs for closed riders A60MIR and A96DAR so QLAdmin Projected Values no longer fails looking up a missing interest table. |
-| **#54** | Full Loan History Load (PACTG → **QuikBenh** 10/11/12) | **OPEN — HOLD coding** | — | Type/Date/Amount research OK; Balance wrong without opening. **OBQ-1:** where does QLA get 2018 opening loan balance? `Issue_54_Open_Business_Questions.md`. Not in app.py. |
+| **#54** | Full Loan History Load (PACTG → **QuikBenh** + PLOAN seed + side-aware 0412) | **CLOSED ✓** · **v57.82** | **v57.82** | Resolution: Loan History now loads from QuikBenh with a PLOAN opening-balance seed for mid-stream loans, and CREDIT-side PACTG 0412 interest offsets map to type 12 so QLAdmin Balance closes to the QuikLoan current balance. |
 | **#55** | Unit Issues (tiny `MUNIT` floor + leading-zero emit) | **CLOSED ✓** · **v57.78** | **v57.78** | Resolution: quikridr MUNIT below 0.001 floored to zero; rider decimals emit with leading digit (0.53000 not .53000); #25/#26 preserved. QLAdmin false `3000` Units = out of scope. |
-| **#56** | PUA CV incorrect (`010310404C` / `960 PO PUA`) | **Conditional Go — await client OBQ** | — | Stop `*PA` rewrite (Option B); emit PAAGERAT CV under catalog plans. Reject A/C — `1960PA` collapses 4 PUA products. |
+| **#56** | PUA CV incorrect (`010310404C` / `960 PO PUA`) | **HOLD — await Slack support reply** | — | Conditional Go Option A (`1960PA` + PO CV rates). Paused 2026-07-14; see `Issue_56_Pause_Checkpoint.md`. |
 | **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
+| **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
 | **#18** | Citizens FoxPro Rate Tables (Reserve / Plans / CIFIANU1) | **OPEN — Awaiting source** | — | Request full tables from Tom/Debbie/Jelaine. Schema evidence in `SourceData_11-18-2024` Rate.cpy, Plan.cpy, AnnPrems,cpy. No Go until received. CFIC tracker: `CFIC_Rates/tracking/`. |
 
 **#18 detail:** `Issue_Log_Items/Issue_18/` · Citizens QLAdmin rate load · Not Warren app.py · Reserve file = CV/reserve/paid-up/ETI only (not gross premium, dividends, COI, loan values)
@@ -100,7 +101,7 @@
 
 **#41 detail:** `Issue_Log_Items/Issue_41/` · QuikCvs endpoint follow-up to Issue #37 · `1960PO` M/26 source-vs-QLA proof PASS · `QuikCvs.csv` regenerated with 26,495 rows · next: client UAT reload + resolve unrelated `QuikUint` full-emit blocker
 
-**#42 detail:** `Issue_Log_Items/Issue_42/` · Screenshot-only source gaps · L01 10Y NP and L10 LP9595 NP/RV absent from delivered Rate_Table and PAAGERAT · proof in `client_l10_l01_followup/source_gap_proof/` · **No Go** until CSO resends missing extract rows
+**#42 detail:** `Issue_Log_Items/Issue_42/` · **CLOSED 2026-07-14** · **v57.79** · Resolution: PDAGE miss-fill + segment resolve → QuikNps/Tvs · full `Output/rates/` + `Test_Validation/rates/` package · QuikUint waived (PDINTTBL missing) · residual `L17`/`960 LP85-8` CV → CSO
 
 **#23 detail:** `Issue_Log_Items/Issue_23/` · **DECIDED 2026-07-13** · 3.5% premium expense all ISWL (non–single premium) · statement proof `Annual_Statement_Censi_I_9010817956.pdf` · companion #43
 
@@ -120,11 +121,11 @@
 
 **#51 detail:** `Issue_Log_Items/Issue_51/` · **Ready for Client UAT** · **v57.76** · G0–G6 PASS · Resolution: Added QuikAint interest-rate stubs for closed riders A60MIR and A96DAR so QLAdmin Projected Values no longer fails looking up a missing interest table. · UAT: load QuikAint; retest Projected Values on 010348734C · Git commit/push pending user request
 
-**#54 detail:** `Issue_Log_Items/Issue_54/` · **OPEN HOLD** · Blocker OBQ-1 opening loan balance when Benh starts mid-stream (e.g. 010822238C 2018). Coding paused; not in app.py. See `Issue_54_Open_Business_Questions.md`.
+**#54 detail:** `Issue_Log_Items/Issue_54/` · **CLOSED** · **v57.82** · UAT Pass. Resolution: QuikBenh loan history + PLOAN seed + CREDIT 0412→type 12 for Balance close. `Issue_54_Resolution_Summary.md`.
 
 **#55 detail:** `Issue_Log_Items/Issue_55/` · **CLOSED** · **v57.78** · Resolution: MUNIT floor + leading-zero decimal emit on quikridr; 148 floor rows; G0–G7 PASS. `Issue_55_Resolution_Summary.md`. Client UAT: reload quikridr + DBF Append Tool v1.5.
 
-**#56 detail:** `Issue_Log_Items/Issue_56/` · G0–G2 PASS · **G3 CONDITIONAL GO (Option B)** · Reject A/C (`1960PA` mixes 4 LifePRO PUA CV tables). **493** ridr MPLAN changes; **7** catalog plans need QuikCvs. Development hold until Eric: correct PUA CV $ + catalog plan OK. Then Composer 2.5.
+**#56 detail:** `Issue_Log_Items/Issue_56/` · **PAUSED 2026-07-14** awaiting Slack support on PUA plan setup/CV attach. Checkpoint: `Issue_56_Pause_Checkpoint.md`. Option A / `1960PA`; rate source confirmed; no Development yet.
 
 ---
 

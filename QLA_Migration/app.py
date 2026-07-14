@@ -1,10 +1,16 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.78
-# Date:        2026-07-13
+# Version:     v57.82
+# Date:        2026-07-14
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v57.78 — Issue #55: quikridr MUNIT floor (0 < x < 0.001 → 0) + leading-zero decimal
+# Change Note: v57.82 — Issue #54: PACTG side-aware QuikBenh map (CREDIT 0412 → MBENTYP 12) so
+#              Loan History Balance closes to QuikLoan; keeps PLOAN opening seed.
+#              v57.81 — Issue #54: QuikBenh loan history (PACTG 10/11/12) + PLOAN opening-balance
+#              seed for mid-stream policies; gated QLA_ENABLE_QUIKBENH_LOAN_EMIT.
+#              v57.80 — Issue #58: derive quikridr MSEMIFEE/MQTRLFEE/MMTHDFEE/MMTHBFEE from
+#              MANNLFEE × post-PAC quikmstr modal factors (Names-tab premium amounts).
+#              v57.78 — Issue #55: quikridr MUNIT floor (0 < x < 0.001 → 0) + leading-zero decimal
 #              emit for rider numerics (never `.53000`); MPREM #26 numeric preserved.
 #              v57.77 — Issue #45: PPPAC E_ACCOUNT_NUMBER fallback when PPACH account missing;
 #              ABA via lookup/RNA; emit MBANKNO only when both present; refined exceptions.
@@ -97,7 +103,14 @@ from datetime import datetime
 
 from qla_core.normalize_utils import format_qladmin_mpolicy
 from qla_core.quikridr_decimal_emit import apply_quikridr_decimal_emit
-from qla_core.schema_constants import QUIKPLAN_SCHEMA, QUIKACTG_SCHEMA, QUIKLOAN_SCHEMA, QUIKREIN_SCHEMA, QUIKRMST_SCHEMA
+from qla_core.schema_constants import (
+    QUIKPLAN_SCHEMA,
+    QUIKACTG_SCHEMA,
+    QUIKLOAN_SCHEMA,
+    QUIKREIN_SCHEMA,
+    QUIKRMST_SCHEMA,
+    QUIKBENH_SCHEMA,
+)
 from qla_core import run_logging as RL
 from qla_core.quikplan_converter import (
     convert_quikplan_to_output,
@@ -121,12 +134,18 @@ from qla_core.variation_classification import (
 )
 from qla_core.quikactg_converter import convert_quikactg_from_pactg
 from qla_core.quikloan_converter import convert_quikloan_from_ploan, load_derivation_rules
+from qla_core.quikbenh_loan_history_converter import (
+    convert_quikbenh_loan_history_from_pactg,
+    load_derivation_rules as load_benh_loan_rules,
+    write_quikbenh_csv,
+)
 from qla_core.reinsurance_converter import convert_reinsurance_phase1, load_derivation_rules as load_reinsurance_derivation_rules
 from qla_core import rate_emit as RE
 from qla_core.quikmemo_converter import convert_quikmemo_from_pnote_pense
 from qla_core.quikmemo_dbf_generator import write_quikmemo_dbf
 from qla_core.modal_premium_factors import (
     apply_modal_factors_to_quikplan as apply_issue21j_modal_factors,
+    apply_modal_policy_fees_to_quikridr,
     apply_plan_modal_factors_to_quikmstr,
     apply_pac_gl85_modal_overrides,
     append_issue21j_conversion_memos,
@@ -323,7 +342,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.78"
+APP_VERSION = "v57.82"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -359,6 +378,7 @@ class QLAdminEnterpriseIntegrationSuite:
             "quikprmh": ["MPOLICY", "DATEPAID", "RENEWAL", "PREMIUM", "MLIFE", "MTERM", "MSUPP", "MANN", "MHEALTH", "XS", "MPAIDTO", "POSTDATE", "MPOSTDATE", "MSOURCE", "MBATCH", "USER_ID", "MBILLFRM", "MMODEPD"],
             "quikactg": QUIKACTG_SCHEMA,
             "quikloan": QUIKLOAN_SCHEMA,
+            "quikbenh": QUIKBENH_SCHEMA,
             "quikrein": QUIKREIN_SCHEMA,
             "quikrmst": QUIKRMST_SCHEMA,
             "quikagts": ["MAGENT", "MAGTNAME", "MAGTADDR1", "MAGTADDR2", "MAGTCITY", "MAGTST", "MAGTZIP", "MAGTZIP2", "MAGTSSN", "MAGTFEIN", "MCOMP", "MAGENCY", "MAGCYNAME", "MDATE", "MAGTACCT", "MAGTPHONE", "MAGTFAX", "MAGTCELL", "MAGTOFCE", "MAGTEMAIL", "MEMOTEXT", "MSUPPRESS", "MCOMMGRP", "MOTHNAME", "MPREMACCT", "MSTATUS", "MAGTNPN", "MTAXIDTYPE"],
@@ -5123,6 +5143,7 @@ class QLAdminEnterpriseIntegrationSuite:
             batch_claims_flag = self._batch_include_claims_uat_enabled()
             quikisrr_flag = self._batch_include_quikisrr_enabled()
             quikloan_flag = os.environ.get("QLA_ENABLE_QUIKLOAN_EMIT", "").strip() == "1"
+            quikbenh_loan_flag = os.environ.get("QLA_ENABLE_QUIKBENH_LOAN_EMIT", "").strip() == "1"
             reinsurance_flag = os.environ.get("QLA_ENABLE_REINSURANCE_EMIT", "").strip() == "1"
             rate_batch_flag = os.environ.get("QLA_BATCH_INCLUDE_RATE_TABLES", "").strip().lower() in ("1", "true", "yes")
             uat_dbf_flag = self._claims_uat_dbf_generation_enabled()
@@ -5133,6 +5154,7 @@ class QLAdminEnterpriseIntegrationSuite:
                 f"batch_include_claims_uat={'Y' if batch_claims_flag else 'N'} | "
                 f"quikisrr_emit={'Y' if quikisrr_flag else 'N'} | "
                 f"quikloan_emit={'Y' if quikloan_flag else 'N'} | "
+                f"quikbenh_loan_emit={'Y' if quikbenh_loan_flag else 'N'} | "
                 f"reinsurance_emit={'Y' if reinsurance_flag else 'N'} | "
                 f"rate_tables_batch={'Y' if rate_batch_flag else 'N'} | "
                 f"generate_uat_claims_dbf={'Y' if uat_dbf_flag else 'N'} | "
@@ -5524,6 +5546,55 @@ class QLAdminEnterpriseIntegrationSuite:
                         out_path = os.path.normpath(os.path.join(out_dir, "quikloan.csv"))
                         passed_df.to_csv(out_path, index=False)
                         self.log(f"GATED OUTPUT: {out_path} ({len(passed_df)} rows)")
+                    continue
+                if t_id.lower() == "quikbenh":
+                    if os.environ.get("QLA_ENABLE_QUIKBENH_LOAN_EMIT", "").strip() != "1":
+                        self.log(
+                            "Skipping QUIKBENH loan history — set QLA_ENABLE_QUIKBENH_LOAN_EMIT=1 "
+                            "for Issue #54 (or run plan_analysis/phase_benh_loan_history/"
+                            "quikbenh_loan_runner.py)."
+                        )
+                        continue
+                    if not os.path.exists(src_path):
+                        self.log(f"Skipping {t_id.upper()} -> Missing Source Data: {src_path}")
+                        continue
+                    ploan_path, ploan_label = resolve_table_source(src_base, "quikloan")
+                    if not ploan_path:
+                        self.log(f"Skipping {t_id.upper()} -> Missing PLOAN source in {src_base}")
+                        continue
+                    self.log(
+                        f"Working Table: {t_id.upper()} "
+                        "(PACTG → QuikBenh loan history + PLOAN opening seed Issue #54)"
+                    )
+                    self.log(f"  PLOAN seed source: {ploan_path} ({ploan_label})")
+                    phase_benh_dir = os.path.normpath(
+                        os.path.join(self._app_base_dir(), "plan_analysis", "phase_benh_loan_history")
+                    )
+                    out_dir = self.path_vars["Out"][0].get()
+                    existing_benh = os.path.normpath(os.path.join(out_dir, "quikbenh.csv"))
+                    rules = load_benh_loan_rules()
+                    merged_df, loan_df, trace_df, exceptions_df, bh_stats = (
+                        convert_quikbenh_loan_history_from_pactg(
+                            src_path,
+                            cw_map=cw_map,
+                            rules=rules,
+                            ploan_path=ploan_path,
+                            output_dir=phase_benh_dir,
+                            existing_benh_path=existing_benh if os.path.isfile(existing_benh) else None,
+                        )
+                    )
+                    self.log(
+                        f"QUIKBENH Issue #54: {bh_stats.get('emit_passed', 0)} PACTG rows + "
+                        f"{bh_stats.get('seed_emit', 0)} opening seeds -> "
+                        f"{bh_stats.get('merged_rows', 0)} merged; "
+                        f"type-8 preserved={bh_stats.get('existing_type8_rows', 0)}; "
+                        f"seed_skip_no_prior={bh_stats.get('seed_skip_no_prior', 0)}; "
+                        f"reports -> {phase_benh_dir}"
+                    )
+                    if os.environ.get("QLA_QUIKBENH_LOAN_WRITE_OUTPUT", "").strip() == "1":
+                        out_path = os.path.normpath(os.path.join(out_dir, "quikbenh.csv"))
+                        write_quikbenh_csv(merged_df, out_path)
+                        self.log(f"GATED OUTPUT: {out_path} ({len(merged_df)} rows)")
                     continue
                 if t_id.lower() in ("quikrein", "quikrmst"):
                     if getattr(self, "_reinsurance_batch_done", False):
@@ -7060,6 +7131,10 @@ class QLAdminEnterpriseIntegrationSuite:
                             mstr_df, quikridr_df=aligned_out_df,
                         )
                         mstr_df.to_csv(mstr_path, index=False)
+                        aligned_out_df, fee_stats = apply_modal_policy_fees_to_quikridr(
+                            aligned_out_df, mstr_df,
+                        )
+                        aligned_out_df.to_csv(out_csv, index=False)
                         self.log(
                             f"Issue 36: plan modal factors copied to quikmstr "
                             f"(updated={plan_modal_stats.get('policies_updated', 0)}, "
@@ -7070,6 +7145,12 @@ class QLAdminEnterpriseIntegrationSuite:
                             f"Issue 21J: PAC GL85 modal overrides on quikmstr "
                             f"(quarterly={pac_stats.get('qtr_overrides', 0)}, "
                             f"semiannual={pac_stats.get('semi_overrides', 0)})"
+                        )
+                        self.log(
+                            f"Issue 58: modal policy fees on quikridr "
+                            f"(updated={fee_stats.get('rows_updated', 0)}, "
+                            f"zero_fee={fee_stats.get('skipped_zero_fee', 0)}, "
+                            f"missing_factors={fee_stats.get('skipped_missing_factors', 0)})"
                         )
 
                 if is_batch and t_id.lower() == "quikplan" and self._closed_mplan_authority_enabled():

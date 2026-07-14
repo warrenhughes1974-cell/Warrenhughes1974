@@ -1,0 +1,17 @@
+metric,value
+existing_quikbenh_rows,3657
+existing_quikbenh_policies,637
+existing_MBENTYP_8,3657
+existing_loan_type_rows_10_11_12_20,0
+existing_quikloan_rows,356
+pactg_bm_rows,37375
+emit_candidate_rows,36853
+emit_policies,665
+emit_0411_to_10,3562
+emit_0412_to_11,25253
+emit_0413_to_12,8038
+reversed_excluded,521
+excluded_0451_only_rows,1
+orphan_policies,0
+intersect_existing_benh_policies,15
+intersect_quikloan_policies,295

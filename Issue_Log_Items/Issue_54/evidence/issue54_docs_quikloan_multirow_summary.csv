@@ -1,0 +1,6 @@
+metric,value
+total_rows,2744
+unique_policies,2744
+policies_with_gt1_row,0
+max_rows_per_policy,1
+policy_14560K_rows,1

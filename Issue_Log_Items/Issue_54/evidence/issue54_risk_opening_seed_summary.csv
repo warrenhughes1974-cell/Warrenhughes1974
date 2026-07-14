@@ -1,0 +1,12 @@
+metric,value
+existing_quikbenh_rows,3657
+existing_quikloan_rows,356
+pactg_emit_rows_option_a,36853
+pactg_emit_policies,665
+seed_emit_rows,556
+seed_skip_no_ploan,0
+seed_skip_no_prior,96
+seed_skip_zero_prior,13
+seed_skip_dedupe_same_day_10,0
+proposed_total_new_loan_benh_rows,37409
+proposed_quikbenh_after_append,41066

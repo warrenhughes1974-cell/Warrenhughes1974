@@ -1,0 +1,9 @@
+metric,value
+quikactg_rows,325
+quikactg_has_mpolicy,False
+quikactg_unique_mplan,324
+quikloan_rows,2744
+quikloan_14560K_rows,1
+join_on_policy_possible,False
+quikactg_grain,plan-level GL chart (MCOMP+MPLAN); MLOAN/MLOANINT are account numbers not txn amounts
+loan_history_grid_in_quikactg,NO — no Transaction/Date/Amount/Balance; no policy key; not multi-row policy history
