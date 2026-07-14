@@ -1,10 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.83
+# Version:     v57.84
 # Date:        2026-07-14
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v57.83 — Issue #59: quikridr MUWCLASS must NOT use bare status translations
+# Change Note: v57.84 — Issue #59: quikmstr.MSTATUS — scoped fix for 7 client policies only:
+#              Active+PAID_UP_TYPE=LP → A_ (22); CONTRACT_CODE=S → S_{REASON} (DP→50).
+#              Does not alter PUT precedence for any other policy (#13/#49 preserved).
+#              v57.83 — quikridr MUWCLASS must NOT use bare status translations
 #              (S→55, P→41, N→T, T→56); map LifePRO UW → SM/PR/NS/ST/00 (Q→NS for L14 rates).
 #              v57.82 — Issue #54: PACTG side-aware QuikBenh map (CREDIT 0412 → MBENTYP 12) so
 #              Loan History Balance closes to QuikLoan; keeps PLOAN opening seed.
@@ -345,7 +348,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.83"
+APP_VERSION = "v57.84"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -6516,18 +6519,36 @@ class QLAdminEnterpriseIntegrationSuite:
                                         val = self.normalize(src_row.get("MODE_PREMIUM", ""))
                                 # -----------------------------------------------------------------
     
-                                # --- MSTATUS COMPOSITE KEY INTERCEPTOR (Issue #13: T wins) ---
+                                # --- MSTATUS COMPOSITE KEY INTERCEPTOR (Issue #13: T wins; Issue #59 scoped) ---
                                 if t_f == 'MSTATUS' and t_id.lower() == "quikmstr":
                                     c_code = self.normalize(src_row.get('CONTRACT_CODE', val))
                                     c_reason = self.normalize(src_row.get('CONTRACT_REASON', ''))
+                                    put = self.normalize(src_row.get('PAID_UP_TYPE', ''))
+                                    # Issue #59: only the 7 client-cited policies may take the new branches
+                                    _i59_lp = self.normalize(src_row.get('POLICY_NUMBER', ''))
+                                    _i59_ql = self.normalize(row_data.get('MPOLICY', ''))
+                                    _i59_keys = {
+                                        '901122D991', '01122D991C',
+                                        '9014FG8217', '014FG8217C',
+                                        '9016FG8217', '016FG8217C',
+                                        '901ML8171', '01ML8171C', '01ML8171',
+                                        '901ML8250', '01ML8250C',
+                                        '901ML8522', '01ML8522C',
+                                        '9010521213', '010521213C',
+                                    }
+                                    _i59 = (_i59_lp in _i59_keys) or (_i59_ql in _i59_keys)
                                     if c_code == 'T':
                                         val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
+                                    elif _i59 and c_code == 'S':
+                                        # Death Claim Pending / Suspended reason wins over PUT
+                                        val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
+                                    elif _i59 and c_code == 'A' and put == 'LP':
+                                        # Active contract: do not emit Lapsed via PUT_LP
+                                        val = 'A_'
+                                    elif put in ['PU', 'RU', 'ET', 'LE', 'LP', 'SP']:
+                                        val = f"PUT_{put}"
                                     else:
-                                        put = self.normalize(src_row.get('PAID_UP_TYPE', ''))
-                                        if put in ['PU', 'RU', 'ET', 'LE', 'LP', 'SP']:
-                                            val = f"PUT_{put}"
-                                        else:
-                                            val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
+                                        val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
                                 # -----------------------------------------
 
                                 # --- Issue #47: MBILLDAY zero → day of PAID_TO_DATE (preserve #21B non-zero) ---

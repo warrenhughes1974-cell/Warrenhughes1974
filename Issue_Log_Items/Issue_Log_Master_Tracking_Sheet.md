@@ -1,6 +1,6 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-13 (#58 IMPLEMENTED v57.80; #57 CLOSED — NFO Option B; #55 CLOSED v57.78) · **Engine:** `app.py` **v57.80**
+**Last updated:** 2026-07-14 (#59 CLOSED v57.84; #58 IMPLEMENTED v57.80; #57 CLOSED — NFO Option B; #55 CLOSED v57.78) · **Engine:** `app.py` **v57.84**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 ---
@@ -82,9 +82,10 @@
 | **#51** | Missing Interest Table (`QuikAint` for A60MIR / A96DAR) — Projected Values crash loop | **Ready for Client UAT** · **v57.76** | **v57.76** | Resolution: Added QuikAint interest-rate stubs for closed riders A60MIR and A96DAR so QLAdmin Projected Values no longer fails looking up a missing interest table. |
 | **#54** | Full Loan History Load (PACTG → **QuikBenh** + PLOAN seed + side-aware 0412) | **CLOSED ✓** · **v57.82** | **v57.82** | Resolution: Loan History now loads from QuikBenh with a PLOAN opening-balance seed for mid-stream loans, and CREDIT-side PACTG 0412 interest offsets map to type 12 so QLAdmin Balance closes to the QuikLoan current balance. |
 | **#55** | Unit Issues (tiny `MUNIT` floor + leading-zero emit) | **CLOSED ✓** · **v57.78** | **v57.78** | Resolution: quikridr MUNIT below 0.001 floored to zero; rider decimals emit with leading digit (0.53000 not .53000); #25/#26 preserved. QLAdmin false `3000` Units = out of scope. |
-| **#56** | PUA CV incorrect (`010310404C` / `960 PO PUA`) | **HOLD — await Slack support reply** | — | Conditional Go Option A (`1960PA` + PO CV rates). Paused 2026-07-14; see `Issue_56_Pause_Checkpoint.md`. |
+| **#56** | PUA CV incorrect (`010310404C` / `960 PO PUA`) | **Ready for Development** (await approval) | — | Eric: PA CV ≠ base (forms). Robert: add `1960PA` plan + full CV/TV/basis. See `Issue_56_Pause_Checkpoint.md`. |
 | **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
 | **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
+| **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |
 | **#18** | Citizens FoxPro Rate Tables (Reserve / Plans / CIFIANU1) | **OPEN — Awaiting source** | — | Request full tables from Tom/Debbie/Jelaine. Schema evidence in `SourceData_11-18-2024` Rate.cpy, Plan.cpy, AnnPrems,cpy. No Go until received. CFIC tracker: `CFIC_Rates/tracking/`. |
 
 **#18 detail:** `Issue_Log_Items/Issue_18/` · Citizens QLAdmin rate load · Not Warren app.py · Reserve file = CV/reserve/paid-up/ETI only (not gross premium, dividends, COI, loan values)
@@ -125,7 +126,9 @@
 
 **#55 detail:** `Issue_Log_Items/Issue_55/` · **CLOSED** · **v57.78** · Resolution: MUNIT floor + leading-zero decimal emit on quikridr; 148 floor rows; G0–G7 PASS. `Issue_55_Resolution_Summary.md`. Client UAT: reload quikridr + DBF Append Tool v1.5.
 
-**#56 detail:** `Issue_Log_Items/Issue_56/` · **PAUSED 2026-07-14** awaiting Slack support on PUA plan setup/CV attach. Checkpoint: `Issue_56_Pause_Checkpoint.md`. Option A / `1960PA`; rate source confirmed; no Development yet.
+**#56 detail:** `Issue_Log_Items/Issue_56/` · Slack/Eric answered 2026-07-14 — add `1960PA` + own CV/TV/basis (not base fallback). **Ready for Development** on Composer 2.5 after approval. Checkpoint: `Issue_56_Pause_Checkpoint.md`.
+
+**#59 detail:** `Issue_Log_Items/Issue_59/` · **CLOSED 2026-07-14** · **v57.84** · Resolution: seven-policy scoped MSTATUS fix (6×54→22; 010521213C→50). `Issue_59_Resolution_Summary.md`. Client UAT pending Eric.
 
 ---
 
