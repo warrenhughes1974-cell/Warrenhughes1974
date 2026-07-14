@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.82
+# Version:     v57.83
 # Date:        2026-07-14
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.82 — Issue #54: PACTG side-aware QuikBenh map (CREDIT 0412 → MBENTYP 12) so
+# Change Note: v57.83 — Issue #59: quikridr MUWCLASS must NOT use bare status translations
+#              (S→55, P→41, N→T, T→56); map LifePRO UW → SM/PR/NS/ST/00 (Q→NS for L14 rates).
+#              v57.82 — Issue #54: PACTG side-aware QuikBenh map (CREDIT 0412 → MBENTYP 12) so
 #              Loan History Balance closes to QuikLoan; keeps PLOAN opening seed.
 #              v57.81 — Issue #54: QuikBenh loan history (PACTG 10/11/12) + PLOAN opening-balance
 #              seed for mid-stream policies; gated QLA_ENABLE_QUIKBENH_LOAN_EMIT.
@@ -102,6 +104,7 @@ from datetime import datetime
 
 from qla_core.normalize_utils import format_qladmin_mpolicy
 from qla_core.quikridr_decimal_emit import apply_quikridr_decimal_emit
+from qla_core.rate_dbf_schema import map_rider_uwclass
 from qla_core.schema_constants import (
     QUIKPLAN_SCHEMA,
     QUIKACTG_SCHEMA,
@@ -342,7 +345,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.82"
+APP_VERSION = "v57.83"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -6697,6 +6700,9 @@ class QLAdminEnterpriseIntegrationSuite:
                                     if val in ['Y', 'YES', 'TRUE', '1']: val = 'F' if 'INVALID' in s_f else 'T'
                                     elif val in ['N', 'NO', 'FALSE', '0']: val = 'T' if 'INVALID' in s_f else 'F'
                                     if val not in ['T', 'F']: val = 'T' 
+                                elif t_f == "MUWCLASS":
+                                    # Issue #59: never apply bare status map (S→55/P→41/N→T/T→56)
+                                    val = map_rider_uwclass(val)
                                 elif t_id.lower() == "quikplan" and t_f == "PAR":
                                     # LifePRO EXHIBIT_PAR_NONPAR (P/N/X/F) → QLAdmin PAR (1=par, 0=non-par)
                                     translated = trans_map.get(f"PAR_{val}", trans_map.get(val, ""))

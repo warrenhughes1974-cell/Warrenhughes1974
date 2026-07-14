@@ -40,6 +40,18 @@ EXCLUDED_TYPE_CODES = frozenset({"NN", "PN", "TP", "TX", "UF", "SL"})
 SEX_MAP = {"F": "F", "M": "M", "J": "J"}
 BAND_MAP = {"1": "01", "2": "02", "3": "03"}
 UWCLASS_MAP = {"0": "00", "N": "NS", "S": "SM", "P": "PR", "B": "ST"}
+# Rider MUWCLASS (Issue #59): LifePRO UW letters → QLAdmin rate keys.
+# Includes Q→NS (L14 policies use Q; rate grids are N→NS). Do NOT use bare
+# Master_Value_Translation status rows (S→55, P→41, N→T, T→56).
+RIDER_UWCLASS_MAP = {
+    "0": "00",
+    "N": "NS",
+    "S": "SM",
+    "P": "PR",
+    "B": "ST",
+    "Q": "NS",
+}
+QLA_RIDER_UWCLASS_PASS = frozenset({"00", "NS", "SM", "PR", "ST"})
 
 FACTOR_FIELD_LEN = 7
 COI_FACTOR_FIELD_LEN = 10  # QuikCoi/QuikGcoi QX0–QX9 per QLAdmin Help §7.73 / §7.93
@@ -100,6 +112,8 @@ _MEMBER_TABLE_FIELDS = {
                  ("EFFDATE", "D", 8, 0), ("TERMDATE", "D", 8, 0)],
     "QuikUint": [("MPLAN", "C", 6, 0), ("MEFFDATE", "D", 8, 0),
                  ("MGTDRATE", "N", 8, 4), ("MCURRATE", "N", 8, 4)],
+    "QuikAint": [("MPLAN", "C", 6, 0), ("MEFFDATE", "D", 8, 0),
+                 ("MINTRATE", "N", 7, 4), ("MINTRATE1", "N", 7, 4)],
     "QuikIssc": [("PLAN", "C", 6, 0), ("AGE", "N", 3, 0), ("GENDER", "C", 1, 0),
                  ("UWCLASS", "C", 2, 0), ("BAND", "C", 2, 0), ("ISSCNTRY", "C", 4, 0),
                  ("ISSUEST", "C", 2, 0)]
@@ -123,6 +137,11 @@ def member_table_fields(name):
 def quikuint_fields():
     """QuikUint UL interest rates — QLAdmin Help §7.223."""
     return list(_MEMBER_TABLE_FIELDS["QuikUint"])
+
+
+def quikaint_fields():
+    """QuikAint annuity interest rates — QLAdmin Help §7.31."""
+    return list(_MEMBER_TABLE_FIELDS["QuikAint"])
 
 
 def quikissc_fields():
@@ -163,6 +182,22 @@ def map_band(raw):
 
 def map_uwclass(raw):
     return UWCLASS_MAP.get((raw or "").strip(), None)
+
+
+def map_rider_uwclass(raw):
+    """Map LifePRO UNDERWRITING_CLASS → quikridr MUWCLASS (rate-key codes).
+
+    Never apply status/boolean bare translations (S→55, P→41, N→T, T→56).
+    Unknown codes (e.g. R, T) pass through unchanged for business review.
+    """
+    v = (raw or "").strip()
+    if not v:
+        return v
+    if v in RIDER_UWCLASS_MAP:
+        return RIDER_UWCLASS_MAP[v]
+    if v in QLA_RIDER_UWCLASS_PASS:
+        return v
+    return v
 
 
 def duration_to_cntl_col(ql_duration):
