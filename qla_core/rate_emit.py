@@ -14,6 +14,7 @@ from datetime import datetime
 from qla_core import rate_dbf_schema as S
 from qla_core import rate_dbf_writer as W
 from qla_core import rate_pipeline as P
+from qla_core import quikaint_closed_riders as QAINT
 
 # Blockers that must not prevent CV / factor / key / member CSV emit.
 PARTIAL_EMIT_BLOCKERS = frozenset({"V-UINT-PDINT", "V-ISSC-RATE", "V-ISSC-SL"})
@@ -110,6 +111,8 @@ def _write_dbf_tables(res, emit_dir, manifest):
         path = os.path.join(emit_dir, "QuikIssc.dbf")
         n = W.write_quikissc_table(path, res.quikissc_rows, overwrite=True)
         manifest.append({"kind": "surrender", "table": "QuikIssc", "format": "dbf", "path": path, "rows": n})
+    qaint_entry = QAINT.emit_issue51_quikaint(emit_dir, overwrite=True, emit_csv=False, emit_dbf=True)
+    manifest.append(qaint_entry)
 
 
 def _write_csv_manifest(csv_dir, manifest):
@@ -204,6 +207,12 @@ def run_rate_emit(
             )
             manifest.extend(csv_manifest)
             emitted_csv = True
+            qaint_entry = QAINT.emit_issue51_quikaint(csv_dir, overwrite=True)
+            manifest.append(qaint_entry)
+            messages.append(
+                f"Issue #51 QuikAint stubs: {qaint_entry['rows']} row(s) "
+                f"({', '.join(QAINT.CLOSED_RIDER_MPLANS)})"
+            )
             csv_manifest_path = _write_csv_manifest(csv_dir, manifest)
             if partial and not gate_ok:
                 messages.append(

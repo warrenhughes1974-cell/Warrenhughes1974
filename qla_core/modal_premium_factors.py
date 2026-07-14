@@ -10,6 +10,12 @@ import pandas as pd
 from qla_core.normalize_utils import format_qladmin_mpolicy
 
 MODAL_FACTOR_FIELDS = ("ANNL", "SEMI", "QTRL", "MTHD", "MTHB")
+MODAL_FEE_FACTOR_MAP = (
+    ("MSEMI", "MSEMIFEE"),
+    ("MQTRL", "MQTRLFEE"),
+    ("MMTHD", "MMTHDFEE"),
+    ("MMTHB", "MMTHBFEE"),
+)
 PAC_GL85_PLANS = frozenset({"170858", "17085M"})
 PAC_QTR_FACTOR = "25.0000"
 PAC_SEMI_FACTOR = "50.0000"
@@ -84,6 +90,17 @@ def _normalize_mode(val: str) -> str:
     if v.endswith(".0") and v[:-2].isdigit():
         v = v[:-2]
     return v.lstrip("0") or "0"
+
+
+def _parse_positive_amount(val: Any) -> float:
+    try:
+        return max(0.0, float(_strip(val).replace(",", "") or 0))
+    except ValueError:
+        return 0.0
+
+
+def _format_modal_fee(amount: float) -> str:
+    return f"{amount:.4f}"
 
 
 def _load_phase1_mplan(quikridr_path: str) -> dict[str, str]:
@@ -226,6 +243,69 @@ def apply_pac_gl85_modal_overrides(
         elif mode == "6":
             out.at[idx, "MSEMI"] = PAC_SEMI_FACTOR
             stats["semi_overrides"] += 1
+    return out, stats
+
+
+def apply_modal_policy_fees_to_quikridr(
+    ridr_df: pd.DataFrame,
+    mstr_df: pd.DataFrame,
+) -> tuple[pd.DataFrame, dict[str, int]]:
+    """Derive quikridr modal policy fees from MANNLFEE and post-PAC quikmstr factors.
+
+    Issue #58 — Names-tab Modal Premium amounts need MSEMIFEE/MQTRLFEE/MMTHDFEE/MMTHBFEE
+    on base-coverage rows when MANNLFEE > 0. Call after apply_pac_gl85_modal_overrides.
+    """
+    stats = {
+        "rows_checked": 0,
+        "rows_updated": 0,
+        "skipped_not_phase1": 0,
+        "skipped_zero_fee": 0,
+        "skipped_missing_mstr": 0,
+        "skipped_missing_factors": 0,
+    }
+    if ridr_df is None or ridr_df.empty:
+        return ridr_df, stats
+
+    factors_by_policy: dict[str, dict[str, str]] = {}
+    if mstr_df is not None and not mstr_df.empty:
+        for _, row in mstr_df.iterrows():
+            pol = format_qladmin_mpolicy(_strip(row.get("MPOLICY", "")))
+            if not pol:
+                continue
+            factors_by_policy[pol] = {
+                src: _strip(row.get(src, "")) for src, _ in MODAL_FEE_FACTOR_MAP
+            }
+
+    out = ridr_df.copy()
+    for col in ("MSEMIFEE", "MQTRLFEE", "MMTHDFEE", "MMTHBFEE", "MANNLFEE", "MPHASE", "MPOLICY"):
+        if col not in out.columns:
+            out[col] = ""
+
+    for idx, row in out.iterrows():
+        stats["rows_checked"] += 1
+        if _strip(row.get("MPHASE", "")) not in ("1", "01"):
+            stats["skipped_not_phase1"] += 1
+            continue
+        annual_fee = _parse_positive_amount(row.get("MANNLFEE"))
+        if annual_fee <= 0:
+            stats["skipped_zero_fee"] += 1
+            continue
+        pol = format_qladmin_mpolicy(_strip(row.get("MPOLICY", "")))
+        fac = factors_by_policy.get(pol)
+        if not fac:
+            stats["skipped_missing_mstr"] += 1
+            continue
+        written = 0
+        for src, dest in MODAL_FEE_FACTOR_MAP:
+            pct = _parse_positive_amount(fac.get(src, ""))
+            if pct <= 0:
+                continue
+            out.at[idx, dest] = _format_modal_fee(annual_fee * pct / 100.0)
+            written += 1
+        if written:
+            stats["rows_updated"] += 1
+        else:
+            stats["skipped_missing_factors"] += 1
     return out, stats
 
 
