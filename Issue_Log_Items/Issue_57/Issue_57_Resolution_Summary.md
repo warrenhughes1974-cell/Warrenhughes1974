@@ -11,7 +11,7 @@
 
 ## Resolution (issue log — paste-ready)
 
-**Resolution:** LifePRO NFO codes 3/4/5 now map to QLAdmin APL/ETI/RPU (MNFOPT 1/2/3) via Master_Value_Translation; removed PAID_UP_TYPE→MNFOPT rulebook overwrite so PPBENTYP is authoritative.
+**Resolution:** LifePRO NFO codes 3/4/5 now map to QLAdmin APL/ETI/RPU (MNFOPT 1/2/3) via Master_Value_Translation; removed PAID_UP_TYPE→MNFOPT rulebook overwrite so PPBENTYP is authoritative. Eric sample policies: **010367131C**, **010148272C**, **010143726C** (ETI); **010392763C** (RPU); **011221309C** (APL).
 
 > Long-form audit detail below.
 
@@ -34,7 +34,7 @@
 
 Non-Forfeiture Option (NFO) showed **0** or the wrong election in QLAdmin while LifePRO displayed the correct choice. Eric confirmed Product Book mapping: LifePRO **3=APL**, **4=ETI**, **5=RPU** — but QLAdmin uses **1=APL**, **2=ETI**, **3=RPU**. Issue #21A fixed codes 1–2 only; codes 3–5 were left at `NF_4→0` / `NF_5→0` and code 3 passthrough showed as RPU. Additionally, `PAID_UP_TYPE→MNFOPT` in the rulebook overwrote PPBENTYP elections (e.g. RPU code 5 with PUT=PU stayed at 0).
 
-**Examples:** `010367131C` (ETI/4 → 0), `010392763C` (RPU/5 → 0), `011221309C` (APL/3 → showed RPU).
+**Examples (Eric):** `010367131C`, `010148272C`, `010143726C` (LifePRO code 4 ETI → was 0); `010392763C` (code 5 RPU → was 0); `011221309C` (code 3 APL → showed RPU).
 
 ---
 
@@ -145,8 +145,8 @@ Non-Forfeiture Option (NFO) showed **0** or the wrong election in QLAdmin while 
 ## Issue Log Entry (paste-ready)
 
 > **Issue #57 — NFO Option incorrect — CLOSED (2026-07-13).**  
-> **Resolution:** LifePRO NFO codes 3/4/5 now map to QLAdmin APL/ETI/RPU (MNFOPT 1/2/3) via Master_Value_Translation; removed PAID_UP_TYPE→MNFOPT rulebook overwrite so PPBENTYP is authoritative.  
-> **Evidence:** Validation + regression PASS; Eric traces confirmed. **Preserved:** #21A codes 1/2, MPOLICY (#25), MPREM (#26). **UAT:** Reload quikmstr; verify NFO on sample policies.
+> **Resolution:** LifePRO NFO codes 3/4/5 now map to QLAdmin APL/ETI/RPU (MNFOPT 1/2/3) via Master_Value_Translation; removed PAID_UP_TYPE→MNFOPT rulebook overwrite so PPBENTYP is authoritative. Eric sample policies: **010367131C**, **010148272C**, **010143726C** (ETI); **010392763C** (RPU); **011221309C** (APL).  
+> **Evidence:** Validation + regression PASS; Eric traces confirmed. **Preserved:** #21A codes 1/2, MPOLICY (#25), MPREM (#26). **UAT:** Reload quikmstr; verify NFO on Eric policies above.
 
 ---
 

@@ -83,7 +83,7 @@
 | **#54** | Full Loan History Load (PACTG → **QuikBenh** 10/11/12) | **OPEN — HOLD coding** | — | Type/Date/Amount research OK; Balance wrong without opening. **OBQ-1:** where does QLA get 2018 opening loan balance? `Issue_54_Open_Business_Questions.md`. Not in app.py. |
 | **#55** | Unit Issues (tiny `MUNIT` floor + leading-zero emit) | **CLOSED ✓** · **v57.78** | **v57.78** | Resolution: quikridr MUNIT below 0.001 floored to zero; rider decimals emit with leading digit (0.53000 not .53000); #25/#26 preserved. QLAdmin false `3000` Units = out of scope. |
 | **#56** | PUA CV incorrect (`010310404C` / `960 PO PUA`) | **Conditional Go — await client OBQ** | — | Stop `*PA` rewrite (Option B); emit PAAGERAT CV under catalog plans. Reject A/C — `1960PA` collapses 4 PUA products. |
-| **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** LifePRO NFO codes 3/4/5 map to QLAdmin APL/ETI/RPU (MNFOPT 1/2/3); removed PAID_UP_TYPE→MNFOPT overwrite. Eric traces PASS. |
+| **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
 | **#18** | Citizens FoxPro Rate Tables (Reserve / Plans / CIFIANU1) | **OPEN — Awaiting source** | — | Request full tables from Tom/Debbie/Jelaine. Schema evidence in `SourceData_11-18-2024` Rate.cpy, Plan.cpy, AnnPrems,cpy. No Go until received. CFIC tracker: `CFIC_Rates/tracking/`. |
 
 **#18 detail:** `Issue_Log_Items/Issue_18/` · Citizens QLAdmin rate load · Not Warren app.py · Reserve file = CV/reserve/paid-up/ETI only (not gross premium, dividends, COI, loan values)
