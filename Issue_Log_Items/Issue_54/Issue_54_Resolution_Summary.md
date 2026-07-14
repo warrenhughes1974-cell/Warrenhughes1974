@@ -113,7 +113,7 @@ None (JSON derivation rules only).
 | Validators PASS (G5 + G6) | PASS |
 | Client UAT | PASS |
 | `app.py` version bumped | **v57.82** (both copies) |
-| Issue-scoped git commit | *(filled after commit)* |
+| Issue-scoped git commit | `716898a` on `issue-34-pr7-quikisrr` — Close Issue #54: QuikBenh loan history with PLOAN seed and side-aware 0412 (v57.82). |
 | **`git push` to remote** | *(filled after push)* |
 | Network batch note | Pull → full batch with QuikBenh flags; **re-run** `quikbenh_loan_runner.py` after QuikIsrr (Isrr overwrites Benh with type-8 only) → Append Tool → `Q:\CSO\CSO_Test` |
 
@@ -163,4 +163,4 @@ None (JSON derivation rules only).
 - [x] Validation PASS  
 - [x] Regression PASS  
 - [x] Closure — **`Resolution:`** one-line + long-form summary  
-- [ ] Git commit + push (G7 release gate) — in progress
+- [x] Git commit + push (G7 release gate) — `716898a` on `issue-34-pr7-quikisrr`
