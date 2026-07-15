@@ -1,7 +1,8 @@
 # Validation Agent
 
 **Stage:** 6 of 8  
-**Code changes:** **Prohibited** (validation scripts may be run, not production logic)
+**Code changes:** **Prohibited** (validation scripts may be run, not production logic)  
+**Assigned model (locked 2026-07-11):** **Cursor Grok 4.5** — change only if user manually overrides Framework / stage-agents rule
 
 ---
 

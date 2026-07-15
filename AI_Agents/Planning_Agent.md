@@ -1,7 +1,8 @@
 # Planning Agent
 
 **Stage:** 2 of 8  
-**Code changes:** **Prohibited**
+**Code changes:** **Prohibited**  
+**Assigned model (locked 2026-07-11):** **Cursor Grok 4.5** — change only if user manually overrides Framework / stage-agents rule
 
 ---
 
@@ -61,16 +62,18 @@ Optional read-only script: `QLA_Migration/_research_issue<id>_<topic>.py`
 
 ---
 
-## Stop Conditions
+## Stop Conditions / Auto-Chain
 
-Stop after Planning and run **Dependency Gate** before Risk if any of:
+Per Framework **Pre-Risk Auto-Chain**: after Planning deliverables are written, **immediately run Dependency Gate** in the same session (do not wait for a separate prompt).
+
+Dependency Gate remains a hard stop before Risk when:
 
 - Source file not in repo and not confirmed deliverable
 - QLAdmin target field undefined
 - Client scope ambiguous (convert X or Y?)
 - Mapping requires premium recalculation globally
 
-**Do not proceed to Risk Agent** until Dependency Gate clears blockers (or documents accepted assumptions with client sign-off).
+**Do not proceed to Risk Agent** until the user explicitly says “Proceed to Risk Agent” **and** Dependency Gate clears blockers (or documents accepted assumptions with client sign-off).
 
 ---
 

@@ -92,6 +92,9 @@
 | **#60** | PUA phase + base interest (Chris 7/14) | **G6 PASS → Ready for Client UAT** · **v57.85** | **v57.85** | Track A: PUA-only phase fix; 0 non-PUA/phase-1 field drift. UAT: Test_Validation quikridr + rebuild CV. Track B (NFOINT) blocked. |
 | **#70** | QuikPlan `LOANINTX` Advance/Arrears | **IMPLEMENTED v57.89 — Awaiting CSO** | **v57.89** | Fleet LOANINTX normalized to `A` (141 plans). Emit + Test_Validation published. Still need CSO: fleet Advance vs Arrears (`R`) plan list. |
 | **#71** | Rate/plan/policy BAND → `00` | **CLOSED ✓** | **v57.90** | **Resolution:** All rate factor and rate-key BAND values (and QuikPlBd BDCODE) now emit as `00` (NOT APPLICABLE) to match quikridr MBAND=00, restoring Policy Display cash-value lookup. Client UAT PASS (`010718309C`). |
+| **#72** | NFO must match ETI/RPU status (44→2, 45→3) | **Ready for Validation** · **v57.91** | **v57.91** | Post-map force MNFOPT from final MSTATUS 44/45; 277 policies; validator PASS; `Test_Validation/quikmstr.csv`. |
+| **#74** | Var DB Code (`quikplan.VARDB`) `4` → `0` only | **CLOSED ✓** | — | **Resolution:** Rulebook VARDB `4`→`0` (121 plans); structure `1`/`2`/`3` unchanged (20). Val+Reg PASS. `Test_Validation/quikplan.csv`. |
+| **#75** | Bank Acct / `MBANKNO` QLA validation | **Ready for Regression** · **v57.92** | **v57.92** | Val PASS: 0 invalid MBANKNO; 1074 intentional changes; Test_Validation/quikmstr.csv. Next: Regression Agent. |
 | **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
 | **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
 | **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |
@@ -140,6 +143,16 @@
 **#70 detail:** `Issue_Log_Items/Issue_70/` · **IMPLEMENTED v57.89 — Awaiting CSO** · fleet `LOANINTX=A` (141) · `Output/quikplan.csv` + `Test_Validation/quikplan.csv` · CSO still needed for any `R` plans
 
 **#71 detail:** `Issue_Log_Items/Issue_71/` · **CLOSED 2026-07-14** · **v57.90** · Resolution: rate BAND/BDCODE→`00` aligns with MBAND=00; CV lookup restored. Reload `Test_Validation/rates/` on network after pull.
+
+**#72 detail:** `Issue_Log_Items/Issue_72/` · **Ready for Validation** · **v57.91** · 277 MNFOPT forced · `010407670C` 45→NFO 3 · `Test_Validation/quikmstr.csv`
+
+**#73 detail:** `Issue_Log_Items/Issue_73/` · **CLOSED 2026-07-15** · `MISSCNTRY` default `USA`→`0000` (rulebook) · `Issue_73_Resolution_Summary.md`
+
+**#74 detail:** `Issue_Log_Items/Issue_74/` · **CLOSED 2026-07-15** · `Issue_74_Resolution_Summary.md` · rulebook-only · 121×`4`→`0` / 20 keep · `Test_Validation/quikplan.csv`
+
+**#75 detail:** `Issue_Log_Items/Issue_75/` · **Ready for Regression** · **v57.92** · `Issue_75_Validation_Report.md` PASS · `Test_Validation/quikmstr.csv`
+
+**#76 detail:** `Issue_Log_Items/Issue_76/` · **CLOSED 2026-07-15** · **v57.93** · `Issue_76_Resolution_Summary.md` · 400 ETI/RPU phase-1 adjusted · `Test_Validation/quikridr.csv` · UAT: Rebuild CV on `010407670C`
 
 **#59 detail:** `Issue_Log_Items/Issue_59/` · **CLOSED 2026-07-14** · **v57.84** · Resolution: seven-policy scoped MSTATUS fix (6×54→22; 010521213C→50). `Issue_59_Resolution_Summary.md`. Client UAT pending Eric.
 

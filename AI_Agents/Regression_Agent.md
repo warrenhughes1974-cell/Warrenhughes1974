@@ -1,7 +1,8 @@
 # Regression Agent
 
 **Stage:** 7 of 8  
-**Code changes:** **Prohibited**
+**Code changes:** **Prohibited**  
+**Assigned model (locked 2026-07-11):** **Cursor Grok 4.5** — change only if user manually overrides Framework / stage-agents rule
 
 ---
 

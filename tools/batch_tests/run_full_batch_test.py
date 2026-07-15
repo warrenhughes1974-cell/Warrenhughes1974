@@ -21,6 +21,22 @@ os.environ.setdefault("QLA_BATCH_INCLUDE_RATE_TABLES", "1")
 os.environ.setdefault("QLA_ENABLE_QUIKISRR_EMIT", "1")
 os.environ.setdefault("QLA_ENABLE_REINSURANCE_EMIT", "1")
 os.environ.setdefault("QLA_REINSURANCE_WRITE_OUTPUT", "1")
+# Match run_converter.bat UAT UI — every emit path for training / client package
+os.environ["QLA_RUN_MODE"] = "UAT"
+os.environ["QLA_BATCH_INCLUDE_CLAIMS_UAT"] = "1"
+os.environ["QLA_VALIDATE_CLAIMS_MPOLICY"] = "1"
+os.environ["QLA_GENERATE_UAT_CLAIMS_DBF"] = "1"
+os.environ["QLA_CLAIMS_ORCHESTRATE"] = "1"
+os.environ["QLA_ENABLE_QUIKLOAN_EMIT"] = "1"
+os.environ["QLA_QUIKLOAN_WRITE_OUTPUT"] = "1"
+os.environ["QLA_ENABLE_QUIKBENH_LOAN_EMIT"] = "1"
+os.environ["QLA_QUIKBENH_LOAN_WRITE_OUTPUT"] = "1"
+os.environ["QLA_BATCH_INCLUDE_RATE_TABLES"] = "1"
+os.environ["QLA_ENABLE_QUIKISRR_EMIT"] = "1"
+os.environ["QLA_ENABLE_REINSURANCE_EMIT"] = "1"
+os.environ["QLA_REINSURANCE_WRITE_OUTPUT"] = "1"
+# Year-end valuation as-of date for QUIKRIDR.MLASTANN (12/31/2025 extract)
+os.environ["QLA_VALUATION_DATE"] = os.environ.get("QLA_VALUATION_DATE", "20251231")
 
 sys.path.insert(0, BASE)
 os.chdir(BASE)
@@ -35,12 +51,29 @@ root = tk.Tk()
 root.withdraw()
 app = QLAdminEnterpriseIntegrationSuite(root)
 
-# Prefer dated PolicyMaster extract; fall back to any PPOLC*.csv in Source.
+# Prefer YE 12/31/2025 extract (LifePRO_Extracts_20260102), then midyear.
+# Override: QLA_FORCE_PPOLC_EXTRACT=<absolute or Source-relative path>
+#           QLA_PREFER_MIDYEAR_EXTRACT=1 → prefer 20260630 over YE package
+_force_ppolc = os.environ.get("QLA_FORCE_PPOLC_EXTRACT", "").strip()
+_prefer_midyear = os.environ.get("QLA_PREFER_MIDYEAR_EXTRACT", "").strip().lower() in (
+    "1", "true", "yes",
+)
 src_candidates = [
+    os.path.join(MIG, "Source", "PPOLC_PolicyMaster_Extract_20260102.csv"),
     os.path.join(MIG, "Source", "PPOLC_PolicyMaster_Extract_20260630.csv"),
     os.path.join(MIG, "Source", "PPOLC_PolicyMaster_Extract_20260530.csv"),
 ]
-src_path = next((p for p in src_candidates if os.path.isfile(p)), src_candidates[0])
+if _prefer_midyear:
+    src_candidates = [
+        os.path.join(MIG, "Source", "PPOLC_PolicyMaster_Extract_20260630.csv"),
+        os.path.join(MIG, "Source", "PPOLC_PolicyMaster_Extract_20260102.csv"),
+        os.path.join(MIG, "Source", "PPOLC_PolicyMaster_Extract_20260530.csv"),
+    ]
+if _force_ppolc:
+    _fp = _force_ppolc if os.path.isabs(_force_ppolc) else os.path.join(MIG, "Source", _force_ppolc)
+    src_path = _fp
+else:
+    src_path = next((p for p in src_candidates if os.path.isfile(p)), src_candidates[0])
 if not os.path.isfile(src_path):
     for name in sorted(os.listdir(os.path.join(MIG, "Source"))):
         if name.upper().startswith("PPOLC") and name.lower().endswith(".csv"):

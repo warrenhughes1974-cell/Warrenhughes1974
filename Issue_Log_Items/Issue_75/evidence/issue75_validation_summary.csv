@@ -1,0 +1,8 @@
+METRIC,VALUE
+quikmstr_rows,5083
+mbankno_filled_after,1824
+mbankno_invalid_after,0
+mbankno_changes,1074
+non_mbankno_side_changes,0
+pac_filled_after,1222
+pac_blank_after,910

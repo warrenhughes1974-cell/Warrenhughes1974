@@ -1,7 +1,8 @@
 # Risk Agent
 
 **Stage:** 4 of 8  
-**Code changes:** **Prohibited**
+**Code changes:** **Prohibited**  
+**Assigned model (locked 2026-07-11):** **Cursor Grok 4.5** — do not change unless the user manually overrides `AI_Agents/Framework.md` / `.cursor/rules/issue-framework-stage-agents.mdc`
 
 ---
 

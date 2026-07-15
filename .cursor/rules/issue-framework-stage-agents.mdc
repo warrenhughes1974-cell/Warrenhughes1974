@@ -1,0 +1,48 @@
+---
+description: Issue Resolution Framework stage order and locked agent model assignments — do not change models unless the user manually overrides.
+alwaysApply: true
+---
+
+# Issue Framework — Stage Agents (locked)
+
+**Authority:** User-locked 2026-07-11. **Do not change assigned agents/models unless the user manually overrides them in chat or edits this rule / `AI_Agents/Framework.md`.**
+
+## Linear stage order
+
+| Stage | Agent | Code allowed? | Assigned model |
+|-------|--------|---------------|----------------|
+| 1 | Intake | **No** | Cursor Grok 4.5 |
+| 2 | Planning | **No** | Cursor Grok 4.5 |
+| 3 | Dependency Gate | **No** | Cursor Grok 4.5 |
+| 4 | Risk | **No** | Cursor Grok 4.5 |
+| 5 | Development | **Yes** (surgical only) | Composer 2.5 |
+| 6 | Validation | Read-only + scripts | Cursor Grok 4.5 |
+| 7 | Regression | Read-only + batch/compare | Cursor Grok 4.5 |
+| 8 | Closure | Docs only | Composer 2.5 |
+
+## Pre-Risk Auto-Chain (default — locked 2026-07-15)
+
+When the user **opens** an issue (e.g. “open issue N”, new tracking row + symptom, or Run Framework prompt), **automatically continue** without waiting for a second prompt:
+
+**Intake → Planning → Dependency Gate** → then **stop**.
+
+Do **not** auto-run Risk, Development, Validation, Regression, or Closure. Those still need an explicit user advance (“Proceed to Risk Agent”, “Approved for Development”, etc.).
+
+**Opt-out:** User says “Intake only” / “stop after Intake” → stop after Intake for that issue.
+
+**Hard stops:** missing issue ID/symptom; Dependency Gate BLOCKED; wrong session model for Grok stages (ask to switch).
+
+## Enforcement
+
+1. When the user advances an issue to a stage, **use (or recommend switching to) the assigned model** for that stage.
+2. Intake → Risk stages: **no production code** (`app.py`, rulebooks, converters).
+3. Opening an issue triggers the Pre-Risk Auto-Chain (Intake → Planning → Dependency Gate) unless the user opts out.
+4. Development cannot start until G1 + G2 + G3 pass, and only after explicit Development approval.
+5. If the current session model does not match the stage assignment, **say so** and ask the user to switch (or confirm a one-time override) before continuing that stage’s work.
+6. Canonical copy also lives in `AI_Agents/Framework.md` — keep both in sync when the user changes the map.
+
+## Related
+
+- `AI_Agents/Framework.md`
+- `AI_Agents/Run_Issue_Framework_Prompt.md`
+- `AGENTS.md`

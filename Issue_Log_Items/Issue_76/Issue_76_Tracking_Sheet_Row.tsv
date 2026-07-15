@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+76	CLOSED	ETI/RPU phase-1 payup + duration for CV dates	Policy Display CV dates wrong on exercised ETI/RPU. v57.93: phase-1 MPAYUP=MPAIDTO; MLASTANN=run year−payup year for MSTATUS 44/45. 400 policies. Sample 010407670C.	2026-07-15	Go-No Go	Conversion	Composer 2.5 (Dev)	2026-07-15	CLOSED. G0–G6 PASS. Test_Validation/quikridr.csv. See Issue_76_Resolution_Summary.md. Client UAT: Data Admin + Rebuild CV.

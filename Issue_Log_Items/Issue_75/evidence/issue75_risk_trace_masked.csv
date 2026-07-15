@@ -1,0 +1,6 @@
+MPOLICY,MBILLFRM,BEFORE_MASKED,AFTER_MASKED,ACTION,REASON,CHANGED
+010157076C,2,****1013/**2919,,BLANK,aba_or_acct_unusable,Y
+010161748C,2,****0385/*********0581,,BLANK,aba_or_acct_unusable,Y
+010348734C,2,****1811/**8787,,BLANK,aba_or_acct_unusable,Y
+010713704C,2,*****0016/****4579,*****0016/****4579,UNCHANGED,already_valid,N
+010464590C,2,****0068/******0387,,BLANK,aba_or_acct_unusable,Y

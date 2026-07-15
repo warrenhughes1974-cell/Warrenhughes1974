@@ -1,10 +1,16 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.89
-# Date:        2026-07-14
+# Version:     v57.93
+# Date:        2026-07-15
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v57.89 — Issue #70: quikplan LOANINTX fleet-normalize to A when missing/invalid
+# Change Note: v57.93 — Issue #76: quikridr phase-1 MPAYUP←MPAIDTO + MLASTANN=sys year−payup
+#              year when quikmstr MSTATUS 44/45 (ETI/RPU CV anniversary dates); #60 PUA untouched.
+#              v57.92 — Issue #75: quikmstr.MBANKNO QLA-safe emit — 9-digit ABA only, digits-only
+#              account, single slash; strip punct; blank + exception when unrecoverable (#45 gate).
+#              v57.91 — Issue #72: quikmstr MNFOPT forced from final MSTATUS when exercised
+#              (44→2 ETI, 45→3 RPU); #57 election mapping unchanged for other statuses.
+#              v57.89 — Issue #70: quikplan LOANINTX fleet-normalize to A when missing/invalid
 #              (A/R only; interim Advance default pending CSO guidance).
 #              v57.88 — Chris UAT: quikclnt MTAXIDTYPE default S (SKIP_TRANSLATION; was 55 via S→55);
 #              right-justify MCLIENTID and linked client IDs to C(11), including rel_map MPRIMID/MRIDRID;
@@ -364,7 +370,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.90"
+APP_VERSION = "v57.93"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -4797,7 +4803,7 @@ class QLAdminEnterpriseIntegrationSuite:
         return re.sub(r"\s+", "", raw)
 
     def _issue45_lookup_aba_for_account(self, acct_digits, aba_lookup):
-        """Issue #45 / #21H: resolve full ABA from lookup by account digits."""
+        """Issue #45 / #21H: resolve full 9-digit ABA from lookup by account digits."""
         if not acct_digits or not aba_lookup:
             return ""
         for lk_key in (acct_digits, acct_digits.lstrip("0") or "0", acct_digits.zfill(17)):
@@ -4808,12 +4814,58 @@ class QLAdminEnterpriseIntegrationSuite:
             if aba.endswith(".0"):
                 aba = aba[:-2]
             aba_d = re.sub(r"\D", "", aba)
-            if len(aba_d) >= 5 and set(aba_d) != {"0"}:
+            if len(aba_d) == 9 and set(aba_d) != {"0"}:
                 return aba_d
         return ""
 
+    def _issue75_usable_acct_digits(self, acct_raw):
+        """Issue #75: digits-only account half for QLA-safe MBANKNO."""
+        usable = self._issue45_usable_bank_account(acct_raw)
+        if not usable:
+            return ""
+        acct_d = re.sub(r"\D", "", usable)
+        if not acct_d or len(acct_d) < 4:
+            return ""
+        return acct_d
+
+    def _issue75_usable_aba_digits(self, aba_raw, acct_digits=None, aba_lookup=None):
+        """Issue #75: emit only 9-digit ABA — lookup by account, else raw when already 9."""
+        if acct_digits and aba_lookup:
+            lk = self._issue45_lookup_aba_for_account(acct_digits, aba_lookup)
+            if lk:
+                return lk
+        aba = str(aba_raw or "").strip()
+        if aba.endswith(".0"):
+            aba = aba[:-2]
+        aba_d = re.sub(r"\D", "", aba)
+        if len(aba_d) == 9 and set(aba_d) != {"0"}:
+            return aba_d
+        return ""
+
+    def _issue75_build_mbankno(self, aba_digits, acct_digits):
+        """Issue #75: QLA Bank Acct = 9-digit routing / digits-only account."""
+        if not aba_digits or not acct_digits:
+            return ""
+        if len(aba_digits) != 9:
+            return ""
+        return f"{aba_digits}/{acct_digits}"
+
+    def _issue75_mbankno_is_ql_safe(self, mbankno):
+        """Issue #75: routing validated in QLA — single slash, 9-digit ABA, digits-only account."""
+        mb = str(mbankno or "").strip()
+        if not mb or mb.count("/") != 1:
+            return False
+        aba, acct = mb.split("/", 1)
+        aba_d = re.sub(r"\D", "", aba)
+        acct_d = re.sub(r"\D", "", acct)
+        if len(aba_d) != 9 or not acct_d or len(acct_d) < 4:
+            return False
+        if re.search(r"[^0-9]", acct or ""):
+            return False
+        return True
+
     def _apply_issue45_bank_draft_gate(self, row_data, src_row, exceptions):
-        """Issue #45: MBILLFRM=2 without valid bank account+ABA → blank MBANKNO + exception row.
+        """Issue #45/#75: MBILLFRM=2 without QLA-safe bank account+ABA → blank MBANKNO + exception.
 
         PPACH primary; PPPAC fallback when PPACH account missing. Does not change MBILLFRM.
         """
@@ -4822,21 +4874,37 @@ class QLAdminEnterpriseIntegrationSuite:
         mbillfrm = str(row_data.get("MBILLFRM", "")).strip()
         if mbillfrm != "2":
             return
+        if self._issue75_mbankno_is_ql_safe(row_data.get("MBANKNO", "")):
+            return
         raw_pol = self.normalize(src_row.get("POLICY_NUMBER", src_row.get("MPOLICY", "")))
         meta = getattr(self, "_ppach_acct_meta", {}).get(raw_pol, {}) or {}
         pppac_only = getattr(self, "_pppac_acct_only_meta", {}).get(raw_pol, {}) or {}
         acct = str(meta.get("account", "")).strip()
         aba = str(meta.get("aba", "")).strip()
-        has_valid_account = bool(acct) and acct.lower() not in ("nan", "none", "")
-        if has_valid_account and aba and aba.lower() not in ("nan", "none", ""):
-            return
+        acct_digits = re.sub(r"\D", "", acct) if acct and acct.lower() not in ("nan", "none", "") else ""
+        aba_digits = re.sub(r"\D", "", aba) if aba and aba.lower() not in ("nan", "none", "") else ""
         row_data["MBANKNO"] = ""
         pppac_acct = str(pppac_only.get("account", "")).strip()
-        if pppac_acct and pppac_acct.lower() not in ("nan", "none", ""):
+        if acct_digits and aba_digits and len(aba_digits) != 9:
+            exc_reason = "ABA_NOT_9"
+            exc_detail = "MBILLFRM=2; account present but routing is not 9 digits"
+            bank_source = str(meta.get("bank_source", "")).strip()
+            aba_source = str(meta.get("aba_source", "")).strip()
+        elif acct_digits and not aba_digits:
+            exc_reason = "MISSING_ROUTING"
+            exc_detail = "MBILLFRM=2; account present but ABA unresolved"
+            bank_source = str(meta.get("bank_source", "PPPAC" if pppac_acct else "")).strip()
+            aba_source = str(meta.get("aba_source", "")).strip()
+        elif pppac_acct and pppac_acct.lower() not in ("nan", "none", ""):
             exc_reason = "MISSING_ROUTING"
             exc_detail = "MBILLFRM=2; PPPAC account present but ABA unresolved"
             bank_source = "PPPAC"
             aba_source = ""
+        elif str(row_data.get("MBANKNO", "")).strip():
+            exc_reason = "ACCT_INVALID"
+            exc_detail = "MBILLFRM=2; MBANKNO not QLA-safe (punctuation or multi-slash)"
+            bank_source = str(meta.get("bank_source", "")).strip()
+            aba_source = str(meta.get("aba_source", "")).strip()
         else:
             exc_reason = "MISSING_BANK_ACCOUNT"
             exc_detail = "MBILLFRM=2 but no usable account in PPACH or PPPAC"
@@ -4855,6 +4923,43 @@ class QLAdminEnterpriseIntegrationSuite:
             "EXCEPTION_REASON": exc_reason,
             "EXCEPTION_DETAIL": exc_detail,
         })
+
+    def _apply_issue72_mnfopt_status_force(self, row_data):
+        """Issue #72: exercised ETI/RPU status must match MNFOPT (Robert rule)."""
+        st = self.normalize(row_data.get("MSTATUS", ""))
+        if st == "44":
+            before = self.normalize(row_data.get("MNFOPT", ""))
+            row_data["MNFOPT"] = "2"
+            if before != "2":
+                self._issue72_mnfopt_force_count = (
+                    getattr(self, "_issue72_mnfopt_force_count", 0) + 1
+                )
+        elif st == "45":
+            before = self.normalize(row_data.get("MNFOPT", ""))
+            row_data["MNFOPT"] = "3"
+            if before != "3":
+                self._issue72_mnfopt_force_count = (
+                    getattr(self, "_issue72_mnfopt_force_count", 0) + 1
+                )
+
+    def _apply_issue76_eti_rpu_phase1_payup_mlastann(self, row_data, qm_status, qm_paidto):
+        """Issue #76: ETI/RPU phase-1 pay-up = paid-to; duration = run-year − pay-up year."""
+        st = self.normalize(qm_status)
+        if st not in ("44", "45"):
+            return
+        paidto = self._normalize_yyyymmdd_date(qm_paidto)
+        if not paidto:
+            return
+        before_payup = self.normalize(row_data.get("MPAYUP", ""))
+        before_mlast = self.normalize(row_data.get("MLASTANN", ""))
+        duration_year = datetime.now().year
+        new_mlast = str(duration_year - int(paidto[:4]))
+        row_data["MPAYUP"] = paidto
+        row_data["MLASTANN"] = new_mlast
+        if before_payup != paidto or before_mlast != new_mlast:
+            self._issue76_payup_adjust_count = (
+                getattr(self, "_issue76_payup_adjust_count", 0) + 1
+            )
 
     def _write_bank_draft_account_exceptions(self, exceptions):
         """Write Issue #45 client-review exception CSV under Reports/ (header always)."""
@@ -5962,13 +6067,28 @@ class QLAdminEnterpriseIntegrationSuite:
                                         if acct.endswith('.0'): acct = acct[:-2]
                                         
                                         if pol and aba and acct and aba.lower() not in ['nan', 'none', ''] and acct.lower() not in ['nan', 'none', '']:
-                                            full_aba = aba_lookup.get(re.sub(r'\D', '', acct))
-                                            use_aba = full_aba if full_aba else aba
-                                            if full_aba and full_aba != aba:
+                                            acct_digits = self._issue75_usable_acct_digits(acct)
+                                            if not acct_digits:
+                                                continue
+                                            aba_digits = self._issue75_usable_aba_digits(
+                                                aba, acct_digits, aba_lookup
+                                            )
+                                            if not aba_digits:
+                                                self._ppach_acct_meta[pol] = {
+                                                    "aba": aba,
+                                                    "account": acct_digits,
+                                                }
+                                                continue
+                                            if aba_digits != re.sub(r"\D", "", aba):
                                                 aba_recovered += 1
-                                            self._ppach_bank_map[pol] = f"{use_aba}/{acct}"
-                                            # Issue #45: track last complete ABA/account for exception detail
-                                            self._ppach_acct_meta[pol] = {"aba": use_aba, "account": acct}
+                                            mbankno = self._issue75_build_mbankno(aba_digits, acct_digits)
+                                            if not mbankno:
+                                                continue
+                                            self._ppach_bank_map[pol] = mbankno
+                                            self._ppach_acct_meta[pol] = {
+                                                "aba": aba_digits,
+                                                "account": acct_digits,
+                                            }
                                             
                                     self.log(f"Auto-loaded PPACH Banking Cache for quikmstr ({len(self._ppach_bank_map)} records; {aba_recovered} full-ABA recoveries)")
                             except Exception as e:
@@ -6000,7 +6120,7 @@ class QLAdminEnterpriseIntegrationSuite:
                                             if aba_raw.endswith('.0'):
                                                 aba_raw = aba_raw[:-2]
                                             aba_d = re.sub(r'\D', '', aba_raw)
-                                            if len(aba_d) >= 5 and set(aba_d) != {'0'} and not re.search(r'[xX*]{2,}', aba_raw, re.I):
+                                            if len(aba_d) == 9 and set(aba_d) != {'0'} and not re.search(r'[xX*]{2,}', aba_raw, re.I):
                                                 abas.add(aba_d)
                                         if abas:
                                             rna_aba_by_pol[rpol] = sorted(abas)
@@ -6021,11 +6141,10 @@ class QLAdminEnterpriseIntegrationSuite:
                                         if not pol or pol in self._ppach_bank_map:
                                             continue
                                         acct_raw = str(pr.get('E_ACCOUNT_NUMBER', '')).strip()
-                                        display_acct = self._issue45_usable_bank_account(acct_raw)
-                                        if not display_acct:
+                                        acct_digits = self._issue75_usable_acct_digits(acct_raw)
+                                        if not acct_digits:
                                             continue
-                                        acct_d = re.sub(r'\D', '', display_acct)
-                                        use_aba = self._issue45_lookup_aba_for_account(acct_d, aba_lookup)
+                                        use_aba = self._issue45_lookup_aba_for_account(acct_digits, aba_lookup)
                                         aba_src = "LOOKUP" if use_aba else ""
                                         if not use_aba:
                                             pol_abas = rna_aba_by_pol.get(pol, [])
@@ -6035,7 +6154,7 @@ class QLAdminEnterpriseIntegrationSuite:
                                                 pppac_rna_aba += 1
                                             elif len(pol_abas) > 1:
                                                 self._pppac_acct_only_meta[pol] = {
-                                                    "account": display_acct,
+                                                    "account": acct_digits,
                                                     "aba_source": "RNA_AMBIGUOUS",
                                                 }
                                                 continue
@@ -6043,14 +6162,21 @@ class QLAdminEnterpriseIntegrationSuite:
                                             pppac_lookup_aba += 1
                                         if not use_aba:
                                             self._pppac_acct_only_meta[pol] = {
-                                                "account": display_acct,
+                                                "account": acct_digits,
                                                 "aba_source": "",
                                             }
                                             continue
-                                        self._ppach_bank_map[pol] = f"{use_aba}/{display_acct}"
+                                        mbankno = self._issue75_build_mbankno(use_aba, acct_digits)
+                                        if not mbankno:
+                                            self._pppac_acct_only_meta[pol] = {
+                                                "account": acct_digits,
+                                                "aba_source": aba_src,
+                                            }
+                                            continue
+                                        self._ppach_bank_map[pol] = mbankno
                                         self._ppach_acct_meta[pol] = {
                                             "aba": use_aba,
-                                            "account": display_acct,
+                                            "account": acct_digits,
                                             "bank_source": "PPPAC",
                                             "aba_source": aba_src,
                                         }
@@ -6458,6 +6584,8 @@ class QLAdminEnterpriseIntegrationSuite:
                 else:
                     output = []
                     bank_draft_exceptions = [] if t_id.lower() == "quikmstr" else None
+                    if t_id.lower() == "quikmstr":
+                        self._issue72_mnfopt_force_count = 0
                     # Safe defaults when table is not quikridr (Issue #21E vars set in quikridr branch).
                     if t_id.lower() != "quikridr":
                         ul_fund_balance_cache = {}
@@ -6466,6 +6594,8 @@ class QLAdminEnterpriseIntegrationSuite:
                     pua_pending_rows = [] if t_id.lower() == "quikridr" else None
                     quikridr_valuation_date = datetime.now().date() if t_id.lower() == "quikridr" else None
                     quikridr_mphdob_fix_count = 0
+                    if t_id.lower() == "quikridr":
+                        self._issue76_payup_adjust_count = 0
                     if quikridr_valuation_date is not None:
                         _vd_env = os.environ.get("QLA_VALUATION_DATE", "").strip()
                         _vd_src = "conversion run date"
@@ -6952,9 +7082,11 @@ class QLAdminEnterpriseIntegrationSuite:
                             if getattr(self, '_qm_sync_table', None) != t_id:
                                 self._qm_sync_table = t_id
                                 self._qm_status_cache = None
+                                self._qm_paidto_cache = None
                                 
                             if self._qm_status_cache is None:
                                 self._qm_status_cache = {}
+                                self._qm_paidto_cache = {}
                                 try:
                                     qm_path = os.path.normpath(os.path.join(self.path_vars["Out"][0].get(), "quikmstr.csv"))
                                     if os.path.exists(qm_path):
@@ -6962,6 +7094,12 @@ class QLAdminEnterpriseIntegrationSuite:
                                         qdf.columns = [str(c).strip().upper() for c in qdf.columns]
                                         if 'MPOLICY' in qdf.columns and 'MSTATUS' in qdf.columns:
                                             self._qm_status_cache = {self.normalize(k): self.normalize(v) for k, v in zip(qdf['MPOLICY'], qdf['MSTATUS'])}
+                                        if 'MPOLICY' in qdf.columns and 'MPAIDTO' in qdf.columns:
+                                            self._qm_paidto_cache = {
+                                                self.normalize(k): self.normalize(v)
+                                                for k, v in zip(qdf['MPOLICY'], qdf['MPAIDTO'])
+                                                if self.normalize(v) not in ("", "NAN", "NONE", "NULL")
+                                            }
                                 except Exception:
                                     pass
                                 # Issue #49: load provisional (pre-override) statuses for phase-1 inherit
@@ -7106,7 +7244,16 @@ class QLAdminEnterpriseIntegrationSuite:
                             if self._resolve_quikridr_mphdob(row_data, src_row, rel_name_cache):
                                 quikridr_mphdob_fix_count += 1
                             self._apply_quikridr_mlastann(row_data, src_row, quikridr_valuation_date)
+                            if tphase == "1":
+                                _qm_st = (getattr(self, "_qm_status_cache", None) or {}).get(tp, "")
+                                _qm_pd = (getattr(self, "_qm_paidto_cache", None) or {}).get(tp, "")
+                                self._apply_issue76_eti_rpu_phase1_payup_mlastann(
+                                    row_data, _qm_st, _qm_pd,
+                                )
                             apply_quikridr_decimal_emit(row_data)
+                        # Issue #72: ETI/RPU status → matching MNFOPT (after final MSTATUS)
+                        if t_id.lower() == "quikmstr":
+                            self._apply_issue72_mnfopt_status_force(row_data)
                         # Issue #45: bank-draft missing account → blank MBANKNO + exception (MBILLFRM unchanged)
                         if t_id.lower() == "quikmstr":
                             self._apply_issue45_bank_draft_gate(row_data, src_row, bank_draft_exceptions)
@@ -7130,7 +7277,19 @@ class QLAdminEnterpriseIntegrationSuite:
                             f"Issue #21E: populated MCV0 from FV_BALANCE2 on "
                             f"{ul_fund_mcv0_count} phase-1 UL/fund-value row(s)"
                         )
+                    if t_id.lower() == "quikridr":
+                        _i76 = getattr(self, "_issue76_payup_adjust_count", 0)
+                        if _i76:
+                            self.log(
+                                f"Issue #76: adjusted phase-1 MPAYUP/MLASTANN on "
+                                f"{_i76} ETI/RPU polic(ies)"
+                            )
                     if t_id.lower() == "quikmstr":
+                        _i72 = getattr(self, "_issue72_mnfopt_force_count", 0)
+                        if _i72:
+                            self.log(
+                                f"Issue #72: forced MNFOPT from ETI/RPU status on {_i72} polic(ies)"
+                            )
                         _i49 = getattr(self, "_issue49_mstatus_override_count", 0)
                         if _i49:
                             self.log(

@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+74	Closed	Var DB Code 4→0	quikplan.VARDB: change only plans that are currently 4 to 0 (rulebook default). Do NOT change plans that already have VARDB 1/2/3 (structure codes). Today: 121 plans=4 (change to 0); 20 plans=1/2/3 (leave as-is). VARGP out of scope.	2026-07-15	Go-No Go	Conversion	Conversion	2026-07-15	Resolution: quikplan.VARDB default 4→0 for 121 standard plans; 20 structure plans 1/2/3 unchanged. Rulebook-only. Val+Reg PASS. Test_Validation/quikplan.csv.

@@ -1,0 +1,10 @@
+check,value1,value2,value3
+rowcount,quikmstr.csv,5083
+rowcount,quikridr.csv,6934
+rowcount,quikplan.csv,141
+rowcount,quikclnt.csv,13597
+rowcount,quikprmh.csv,209470
+tv_parity_mismatch,0,
+issue72_bad44,0,
+issue72_bad45,0,
+result,PASS,,

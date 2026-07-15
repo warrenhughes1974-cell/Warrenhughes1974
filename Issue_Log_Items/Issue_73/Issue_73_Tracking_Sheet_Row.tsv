@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+73	CLOSED	Country code must be 0000	quikmstr.MISSCNTRY (Issue Country) must be 0000 for all policies so policy keys match rate segmentation ISSCNTRY=0000. Rulebook default USA→0000. Fleet 5083.	2026-07-15	Go-No Go	Conversion		2026-07-15	CLOSED. Resolution: MISSCNTRY default 0000. See Issue_73_Resolution_Summary.md. Do not reuse #73 for new work.

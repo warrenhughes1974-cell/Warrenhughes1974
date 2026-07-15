@@ -1,9 +1,10 @@
 # LifePRO → QLAdmin Issue Resolution Framework
 
-**Version:** 1.1  
+**Version:** 1.2  
 **Project:** Warrenhughes1974 / QLA Migration  
 **Scope:** Gated issue log remediation — no code until approved  
 **Agent map locked:** 2026-07-11 — change only if the user manually overrides  
+**Pre-Risk Auto-Chain:** 2026-07-15 — Intake → Planning → Dependency Gate run as one block  
 
 ---
 
@@ -17,6 +18,34 @@ Every issue log item must pass through the same **gated process** before product
 - Unresolved client questions shipped as assumptions
 
 **Hard rule:** Follow `AGENTS.md` enterprise conversion rules at all times. Surgical edits only.
+
+---
+
+## Pre-Risk Auto-Chain (default)
+
+When the user **opens** an issue (e.g. “open issue 73”, “start issue N”, tracking-sheet row + symptom, or the master Run prompt), the agent **must** complete stages **1 → 2 → 3 in the same session** without waiting for a separate “proceed to Planning / Dependency Gate” prompt:
+
+| Order | Stage | Deliverable |
+|------:|-------|-------------|
+| 1 | Intake | `Issue_<ID>_Intake_Summary.md` (+ tracking row if needed) |
+| 2 | Planning | `Issue_<ID>_Planning_Report.md` (+ scope decisions / research scripts as needed) |
+| 3 | Dependency Gate | `Issue_<ID>_Dependency_Gate.md` |
+
+**Stop after Dependency Gate.** Do **not** auto-run Risk, Development, Validation, Regression, or Closure.
+
+**Still require an explicit user prompt for:**
+- Risk → “Proceed to Risk Agent”
+- Development → “Approved for Development” (Composer 2.5)
+- Later stages → per `Run_Issue_Framework_Prompt.md`
+
+**Hard stops inside the auto-chain:**
+- Intake incomplete (no ID / no symptom) → stop; do not Planning
+- Dependency Gate **BLOCKED** → publish gate file; status = Blocked; do not Risk
+- Session model is not Cursor Grok 4.5 → ask user to switch (or confirm override) before continuing the chain
+
+**Opt-out:** User says “Intake only” or “stop after Intake” → honor that for this issue.
+
+Mirror: `.cursor/rules/issue-framework-stage-agents.mdc`
 
 ---
 
@@ -180,10 +209,10 @@ Use these statuses in issue tracking sheets and report headers:
 
 ## How to Run
 
-1. Open `AI_Agents/Run_Issue_Framework_Prompt.md`
-2. Paste your issue description
-3. Instruct Cursor: *"Run the Issue Resolution Framework. Start with Intake and Planning only. Do not code unless explicitly approved."*
-4. Advance stage-by-stage; do not skip gates
+1. Open an issue in chat (or paste the master prompt from `AI_Agents/Run_Issue_Framework_Prompt.md`)
+2. Agent auto-runs **Intake → Planning → Dependency Gate** (Pre-Risk Auto-Chain) on Cursor Grok 4.5
+3. Review gate result; then say **“Proceed to Risk Agent”** when ready
+4. Development and later stages still require explicit advancement; do not skip gates
 
 ---
 

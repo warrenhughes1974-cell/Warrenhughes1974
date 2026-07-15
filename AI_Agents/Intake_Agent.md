@@ -1,7 +1,8 @@
 # Intake Agent
 
 **Stage:** 1 of 8  
-**Code changes:** **Prohibited**
+**Code changes:** **Prohibited**  
+**Assigned model (locked 2026-07-11):** **Cursor Grok 4.5** — change only if user manually overrides Framework / stage-agents rule
 
 ---
 
@@ -58,8 +59,9 @@ Stop and **do not advance to Planning** if:
 
 - Issue ID or client symptom is missing entirely
 - Issue is a duplicate of an open item with no new information (merge instead)
+- User explicitly said **“Intake only”** / **“stop after Intake”**
 
-Otherwise proceed to Planning Agent.
+Otherwise, per Framework **Pre-Risk Auto-Chain**, continue in the **same session** to Planning Agent, then Dependency Gate. Do not wait for a separate “proceed to Planning” prompt.
 
 ---
 
@@ -76,18 +78,21 @@ Otherwise proceed to Planning Agent.
 ## Example Cursor Prompt
 
 ```
-Intake Agent — Issue [ID]: [Title]
+Open Issue [ID]: [Title]
 
-Read AI_Agents/Intake_Agent.md and AI_Agents/Framework.md.
+Read AI_Agents/Framework.md (Pre-Risk Auto-Chain), Intake_Agent.md,
+Planning_Agent.md, and Dependency_Gate.md.
 
-Accept this client report and produce Issue_<ID>_Intake_Summary.md only.
-Do not code. Do not modify rulebooks. Do not run conversion.
+Run Intake → Planning → Dependency Gate in this session. Stop after the gate.
+Do not code. Do not modify rulebooks. Do not run conversion. Do not start Risk.
 
 Client report:
 [paste]
 
 Example policies: [list]
 ```
+
+*(Opt-out: add “Intake only” to stop after the intake summary.)*
 
 ---
 

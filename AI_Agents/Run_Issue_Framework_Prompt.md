@@ -2,6 +2,21 @@
 
 Copy everything below the line into Cursor. Replace the `[ISSUE BLOCK]` with your issue details.
 
+## Locked stage → model map (2026-07-11)
+
+| Stage | Agent | Model |
+|-------|--------|-------|
+| 1 | Intake | Cursor Grok 4.5 |
+| 2 | Planning | Cursor Grok 4.5 |
+| 3 | Dependency Gate | Cursor Grok 4.5 |
+| 4 | Risk | Cursor Grok 4.5 |
+| 5 | Development | Composer 2.5 |
+| 6 | Validation | Cursor Grok 4.5 |
+| 7 | Regression | Cursor Grok 4.5 |
+| 8 | Closure | Composer 2.5 |
+
+Do **not** change this map unless the user manually overrides it. Mirror: `AI_Agents/Framework.md` and `.cursor/rules/issue-framework-stage-agents.mdc`.
+
 ---
 
 ## Prompt (copy from here)
@@ -14,14 +29,20 @@ Read and follow:
 - AI_Agents/Intake_Agent.md
 - AI_Agents/Planning_Agent.md
 - AI_Agents/Dependency_Gate.md
+- .cursor/rules/issue-framework-stage-agents.mdc
 
-Start with Intake Agent and Planning Agent ONLY.
+Use the locked stage→model map in Framework.md.
+
+**Pre-Risk Auto-Chain (default):** In this session, run Intake → Planning → Dependency Gate
+automatically on Cursor Grok 4.5. Do not wait for a separate "proceed to Planning" prompt.
+Same rule applies when the user says "open issue [ID]" with a symptom.
 
 Do NOT:
 - Write or modify conversion code
 - Modify Sync_Rulebook_*.csv
 - Run full batch conversion
 - Skip Dependency Gate if inputs are missing
+- Auto-run Risk, Development, or later stages
 
 DO:
 - Research the repo, source extracts, rulebooks, QLAdmin Help, and prior Issue_Log_Items artifacts
@@ -31,7 +52,7 @@ DO:
 - Preserve Issue #25 MPOLICY padding and Issue #26 MPREM mapping in all recommendations
 - Follow AGENTS.md surgical-change rules
 
-Stop after Planning (+ Dependency Gate assessment) unless I explicitly say:
+Stop after Dependency Gate unless I explicitly say:
 "Proceed to Risk Agent" or "Approved for Development."
 
 At the end, report:
@@ -60,36 +81,35 @@ Any screenshots or docx references:
 
 ## Stage advancement prompts
 
-Use these **only after** the prior stage deliverable exists and gates pass.
+**Not needed for Planning or Dependency Gate** — those are part of the Pre-Risk Auto-Chain when an issue is opened.
 
-### Risk Agent
+Use these **only after** Dependency Gate (or later) and gates pass.
+
+### Risk Agent (Cursor Grok 4.5)
 
 ```
 Proceed to Risk Agent for Issue [ID].
 
 Read AI_Agents/Risk_Agent.md and AI_Agents/Templates/Risk_Report_Template.md.
-
-Do not code. Produce before/after impact analysis and go/no-go recommendation.
+Model: Cursor Grok 4.5 (locked). Do not code. Produce before/after impact analysis and go/no-go recommendation.
 ```
 
-### Development Agent (requires explicit approval)
+### Development Agent (Composer 2.5 — requires explicit approval)
 
 ```
 Issue [ID] is approved for Development.
 
-Read AI_Agents/Development_Agent.md.
-
+Switch to Composer 2.5. Read AI_Agents/Development_Agent.md.
 Make surgical changes only. Version-bump app.py. Add validation script.
 Do not regress Issue #25 MPOLICY padding or Issue #26 MPREM mapping.
 ```
 
-### Validation + Regression + Closure
+### Validation + Regression (Cursor Grok 4.5) + Closure (Composer 2.5)
 
 ```
 Issue [ID] development is complete.
 
-Run Validation Agent, then Regression Agent, then Closure Agent per AI_Agents/*.md.
-
+Run Validation Agent then Regression Agent on Cursor Grok 4.5; then Closure Agent on Composer 2.5 per AI_Agents/*.md.
 Produce validation and regression reports from Templates/.
 End with issue-log-ready resolution summary.
 ```

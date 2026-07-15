@@ -31,7 +31,7 @@ ANN_PREM_PER_UNIT,MPREM,,Issue 26: annual premium per unit; engine fallback to M
 NAME_ID,MRIDRID,,Injected by Engine
 ,MSSN,,
 UNDERWRITING_CLASS,MUWCLASS,,
-,MBAND,01,Band aligned to LifePRO base band 1 -> QLAdmin 01 to match QuikPlCv/QuikCvs rate keys
+,MBAND,00,QLAdmin default band 00 (NOT APPLICABLE); Chris 2026-07-14 — do not default to 01
 ,MSAVESTAT,,
 ,MCOMMPREM,,
 ,MSPCODE,,

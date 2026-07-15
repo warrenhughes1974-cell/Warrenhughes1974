@@ -1,0 +1,16 @@
+METRIC,COUNT
+quikmstr_rows,5083
+mbankno_filled_before,2736
+mbankno_blank_before,2347
+would_change,1074
+unchanged,4009
+action_UNCHANGED,1662
+action_CLEANUP,88
+action_RECOVER_ABA,2
+action_BLANK,984
+action_BLANK_KEEP,2347
+pac_bf2_would_change,961
+pac_bf2_blank_from_filled,948
+lookup_size,2692
+after_filled_estimate,1752
+after_valid_9digit_estimate,1752

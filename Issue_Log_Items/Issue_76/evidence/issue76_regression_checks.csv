@@ -1,0 +1,24 @@
+CHECK,RESULT,DETAIL
+rowcount_quikmstr,PASS,got=5083 exp=5083
+rowcount_quikridr,PASS,got=6934 exp=6934
+rowcount_quikprmh,PASS,got=209470 exp=209470
+rowcount_quikplan,PASS,got=141 exp=141
+rowcount_quikclid,PASS,got=34449 exp=34449
+rowcount_quikclnt,PASS,got=13597 exp=13597
+rowcount_quikbenf,PASS,got=5916 exp=5916
+rowcount_quikdvdp,PASS,got=5083 exp=5083
+quikridr_schema_headers,PASS,cols=40 base=40
+quikridr_key_identity,PASS,missing=0 orphan=0
+blank_MRIDRID,PASS,count=0
+candidate_MPAYUP_vs_risk,PASS,bad=0
+candidate_MLASTANN_vs_risk,PASS,bad=0
+candidate_MEFFDATE_unchanged,PASS,bad=0
+candidate_MPLAN_unchanged,PASS,bad=0
+non_candidate_false_override,PASS,count=0
+pua_phase_gt1_MPAYUP,PASS,checked=27 bad=0
+pua_sample_phase2,PASS,010407670C
+active_control_payup,PASS,010367131C
+mprem_010310404C,PASS,got=13.20000 exp=13.20
+mprem_010331768C,PASS,got=10.96000 exp=10.96
+mprem_010367131C,PASS,got=9.12000 exp=9.12
+issue72_sample_mnfopt,PASS,st=45 nfo=3

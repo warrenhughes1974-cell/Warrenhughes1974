@@ -1,0 +1,20 @@
+CHECK,RESULT,DETAIL
+rowcount_quikmstr,PASS,got=5083 expected=5083
+rowcount_quikridr,PASS,got=6934 expected=6934
+rowcount_quikprmh,PASS,got=209470 expected=209470
+rowcount_quikplan,PASS,got=141 expected=141
+rowcount_quikclid,PASS,got=34449 expected=34449
+rowcount_quikclnt,PASS,got=13597 expected=13597
+rowcount_quikbenf,PASS,got=5916 expected=5916
+rowcount_quikdvdp,PASS,got=5083 expected=5083
+rowcount_quikagts,PASS,got=4843 expected=4843
+schema_field_order,PASS,after=45 base=45
+fleet_MISSCNTRY_0000,PASS,not_0000=0
+intentional_MISSCNTRY_changes,PASS,rows=5083 expected=5083 USA->0000
+issue72_sample_010407670C,PASS,MSTATUS=45 MNFOPT=3
+issue25_mpolicy_width,PASS,not_len10=0
+issue26_mprem_010310404C,PASS,MPREM=13.20000
+issue26_mprem_010331768C,PASS,MPREM=10.96000
+issue26_mprem_010367131C,PASS,MPREM=9.12000
+rulebook_MISSCNTRY_0000,PASS,
+test_validation_parity,PASS,tv_not_0000=0 diffs=0

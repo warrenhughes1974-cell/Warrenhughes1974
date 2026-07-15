@@ -1,0 +1,13 @@
+metric,count
+quikplan_rows,141
+VARDB_before_1,3
+VARDB_before_2,7
+VARDB_before_3,10
+VARDB_before_4,121
+VARDB_after_0,121
+VARDB_after_1,3
+VARDB_after_2,7
+VARDB_after_3,10
+would_change_4_to_0,121
+unchanged_structure_1_2_3,20
+residual_VARDB_4_after_target,0

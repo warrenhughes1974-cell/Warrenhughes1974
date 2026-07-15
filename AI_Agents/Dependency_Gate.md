@@ -1,13 +1,16 @@
 # Dependency Gate
 
-**Stage:** 2.5 (between Planning and Risk)  
-**Code changes:** **Prohibited**
+**Stage:** 3 of 8 (between Planning and Risk)  
+**Code changes:** **Prohibited**  
+**Assigned model (locked 2026-07-11):** **Cursor Grok 4.5** — change only if user manually overrides Framework / stage-agents rule
 
 ---
 
 ## Purpose
 
 Hard stop checkpoint. Verify all **external and client-owned dependencies** are satisfied before spending effort on risk quantification or development. The gate prevents building on missing extracts, undefined fields, or unanswered business questions.
+
+**Auto-chain:** When an issue is opened, Dependency Gate runs automatically after Planning in the same session (Framework Pre-Risk Auto-Chain). Publish the gate file, then **stop** — do not start Risk until the user says “Proceed to Risk Agent.”
 
 ---
 

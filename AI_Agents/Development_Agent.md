@@ -1,7 +1,8 @@
 # Development Agent
 
 **Stage:** 5 of 8  
-**Code changes:** **Allowed — surgical only**
+**Code changes:** **Allowed — surgical only**  
+**Assigned model (locked 2026-07-11):** **Composer 2.5** — change only if user manually overrides Framework / stage-agents rule
 
 ---
 
