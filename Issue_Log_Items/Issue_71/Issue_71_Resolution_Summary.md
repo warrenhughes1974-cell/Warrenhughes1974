@@ -124,9 +124,9 @@ No rulebook edit required — fix was rate emit only.
 |-------|--------|
 | Validators PASS (G5 + G6) | **Yes** |
 | `app.py` version bumped | **v57.90** (both app.py files) |
-| Issue-scoped git commit | Pending — see below |
-| **`git push` to remote** | Pending — see below |
-| Network batch note | **`Output/` gitignored** — after pull: run **GENERATE RATE TABLES** (or `QLA_Migration/_emit_all_rate_csvs.py`), reload `Test_Validation/rates/` into QLAdmin Data Admin |
+| Issue-scoped git commit | **91baff5** |
+| **`git push` to remote** | branch: **issue-34-pr7-quikisrr** |
+| Network batch note | **`Output/` gitignored** — after pull: run **GENERATE RATE TABLES** (or `python QLA_Migration/_emit_all_rate_csvs.py`), reload `Test_Validation/rates/` into QLAdmin Data Admin |
 
 ---
 
@@ -177,4 +177,4 @@ No rulebook edit required — fix was rate emit only.
 - [x] Regression PASS
 - [x] Client UAT PASS
 - [x] Closure — **`Resolution:`** one-line + long-form summary
-- [ ] Git commit + push (G7 release gate) — next step below
+- [x] Git commit + push (G7 release gate) — **91baff5** on **issue-34-pr7-quikisrr**
