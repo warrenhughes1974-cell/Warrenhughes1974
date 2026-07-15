@@ -176,8 +176,31 @@ def map_sex(raw):
 
 
 def map_band(raw):
+    """Map LifePRO band to QLAdmin BAND.
+
+    Issue #71: fleet standard is 00 (NOT APPLICABLE), matching quikridr MBAND=00.
+    LifePRO bands 1/2/3 (and padded 01/02/03) all collapse to 00 at emit.
+    """
     raw = (raw or "").strip()
-    return BAND_MAP.get(raw, raw.zfill(2) if raw else None)
+    if not raw:
+        return None
+    if raw in BAND_MAP or raw in ("00", "01", "02", "03"):
+        return "00"
+    return None
+
+
+def band_collapse_priority(raw):
+    """Prefer former band 01 when multi-band rows collapse (Issue #71 SD-71-5). Lower wins."""
+    raw = (raw or "").strip()
+    if raw in ("1", "01"):
+        return 1
+    if raw in ("2", "02"):
+        return 2
+    if raw in ("3", "03"):
+        return 3
+    if raw in ("0", "00"):
+        return 0
+    return 99
 
 
 def map_uwclass(raw):

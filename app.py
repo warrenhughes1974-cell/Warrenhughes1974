@@ -1,10 +1,22 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.84
+# Version:     v57.89
 # Date:        2026-07-14
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.84 — Issue #59: quikmstr.MSTATUS — scoped fix for 7 client policies only:
+# Change Note: v57.89 — Issue #70: quikplan LOANINTX fleet-normalize to A when missing/invalid
+#              (A/R only; interim Advance default pending CSO guidance).
+#              v57.88 — Chris UAT: quikclnt MTAXIDTYPE default S (SKIP_TRANSLATION; was 55 via S→55);
+#              right-justify MCLIENTID and linked client IDs to C(11), including rel_map MPRIMID/MRIDRID;
+#              quikridr MBAND default 00.
+#              v57.87 — quikplan: SEX_BASIS B → blank SEX; SKIP_TRANSLATION on RENEW/CALCADV/BACTIVE/LOANINTX
+#              so defaults N/A are not flipped by bare Master_Value_Translation (N→T, A→22).
+#              v57.86 — QLA_VALUATION_DATE=YYYYMMDD overrides QUIKRIDR.MLASTANN valuation date
+#              (year-end / extract-as-of runs; default remains conversion run date).
+#              v57.85 — Issue #60: PUA phase fields (Chris plan) — gated by _is_paid_up_addition_product
+#              only; inherit MEFFDATE/MAGE from base; MPAYUP=MEFFDATE; MPHSTAT=41 when base < 50;
+#              MLASTANN follows inherited MEFFDATE. Other riders unchanged. No PA plan file.
+#              v57.84 — Issue #59: quikmstr.MSTATUS — scoped fix for 7 client policies only:
 #              Active+PAID_UP_TYPE=LP → A_ (22); CONTRACT_CODE=S → S_{REASON} (DP→50).
 #              Does not alter PUT precedence for any other policy (#13/#49 preserved).
 #              v57.83 — quikridr MUWCLASS must NOT use bare status translations
@@ -105,7 +117,11 @@ import re
 import csv
 from datetime import datetime
 
-from qla_core.normalize_utils import format_qladmin_mpolicy
+from qla_core.normalize_utils import (
+    CLIENT_ID_TARGET_FIELDS,
+    format_qladmin_mclientid,
+    format_qladmin_mpolicy,
+)
 from qla_core.quikridr_decimal_emit import apply_quikridr_decimal_emit
 from qla_core.rate_dbf_schema import map_rider_uwclass
 from qla_core.schema_constants import (
@@ -348,7 +364,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.84"
+APP_VERSION = "v57.90"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -2504,18 +2520,28 @@ class QLAdminEnterpriseIntegrationSuite:
                 return True
         return False
 
+    def _quikridr_status_code_int(self, raw):
+        """Parse QUIKRIDR/QUIKMSTR status code for Issue #60 active-base check."""
+        try:
+            return int(re.sub(r"[^0-9]", "", str(raw).strip() or "") or "99")
+        except ValueError:
+            return 99
+
     def _cache_quikridr_base_phase(self, base_phase_cache, mpolicy, row_data):
-        """Store converted Phase 1 MPLAN/MEXPRY/MPAYUP for PUA inheritance (quikridr only)."""
+        """Store converted Phase 1 fields for PUA inheritance (quikridr only)."""
         if not mpolicy:
             return
         base_phase_cache[mpolicy] = {
             "MPLAN": self.normalize(row_data.get("MPLAN", "")),
             "MEXPRY": self.normalize(row_data.get("MEXPRY", "")),
             "MPAYUP": self.normalize(row_data.get("MPAYUP", "")),
+            "MEFFDATE": self.normalize(row_data.get("MEFFDATE", "")),
+            "MAGE": self.normalize(row_data.get("MAGE", "")),
+            "MPHSTAT": self.normalize(row_data.get("MPHSTAT", "")),
         }
 
     def _apply_pua_rider_inheritance(self, row_data, mpolicy, source_plan_code, base_phase_cache, cw_map=None):
-        """PUA riders inherit MPLAN/MEXPRY/MPAYUP from same-policy Phase 1 base coverage."""
+        """PUA riders inherit base phase dates/age/status; other riders are not touched."""
         if not self._is_paid_up_addition_product(source_plan_code, cw_map):
             return row_data
         entry = base_phase_cache.get(mpolicy)
@@ -2524,13 +2550,22 @@ class QLAdminEnterpriseIntegrationSuite:
             return row_data
         base_mplan = entry.get("MPLAN", "")
         new_mplan = (base_mplan[:4] + "PA") if base_mplan else ""
+        base_meff = entry.get("MEFFDATE", "")
+        base_mage = entry.get("MAGE", "")
         row_data["MPLAN"] = new_mplan
         row_data["MEXPRY"] = entry.get("MEXPRY", row_data.get("MEXPRY", ""))
-        row_data["MPAYUP"] = entry.get("MPAYUP", row_data.get("MPAYUP", ""))
+        if base_meff:
+            row_data["MEFFDATE"] = base_meff
+            row_data["MPAYUP"] = base_meff
+        if base_mage:
+            row_data["MAGE"] = base_mage
+        if self._quikridr_status_code_int(entry.get("MPHSTAT", "")) < 50:
+            row_data["MPHSTAT"] = "41"
         self.log(
             "PUA RULE APPLIED: "
             f"MPOLICY={mpolicy} BASE_MPLAN={base_mplan} PUA_MPLAN={new_mplan} "
-            f"BASE_MEXPRY={entry.get('MEXPRY', '')} BASE_MPAYUP={entry.get('MPAYUP', '')}"
+            f"BASE_MEFFDATE={base_meff} BASE_MAGE={base_mage} "
+            f"PUA_MPHSTAT={row_data.get('MPHSTAT', '')}"
         )
         return row_data
 
@@ -6432,9 +6467,22 @@ class QLAdminEnterpriseIntegrationSuite:
                     quikridr_valuation_date = datetime.now().date() if t_id.lower() == "quikridr" else None
                     quikridr_mphdob_fix_count = 0
                     if quikridr_valuation_date is not None:
+                        _vd_env = os.environ.get("QLA_VALUATION_DATE", "").strip()
+                        _vd_src = "conversion run date"
+                        if _vd_env:
+                            _digits = re.sub(r"[^0-9]", "", _vd_env)[:8]
+                            if len(_digits) == 8:
+                                try:
+                                    quikridr_valuation_date = datetime.strptime(_digits, "%Y%m%d").date()
+                                    _vd_src = f"QLA_VALUATION_DATE={_digits}"
+                                except ValueError:
+                                    self.log(
+                                        f"QUIKRIDR MLASTANN WARNING: invalid QLA_VALUATION_DATE={_vd_env!r}; "
+                                        f"using conversion run date"
+                                    )
                         self.log(
                             f"QUIKRIDR MLASTANN: valuation date {quikridr_valuation_date.strftime('%Y%m%d')} "
-                            f"(conversion run date); issue source PPBEN.ISSUE_DATE -> MEFFDATE"
+                            f"({_vd_src}); issue source PPBEN.ISSUE_DATE -> MEFFDATE"
                         )
                     for i, src_row in source.iterrows():
                         if any("---" in str(v) for v in src_row.values[:3]): continue
@@ -6717,7 +6765,9 @@ class QLAdminEnterpriseIntegrationSuite:
                                             val = clean_temp
                                 # ----------------------------------------
                                 
-                                if t_f == "MVALID":
+                                if note == "SKIP_TRANSLATION":
+                                    pass
+                                elif t_f == "MVALID":
                                     if val in ['Y', 'YES', 'TRUE', '1']: val = 'F' if 'INVALID' in s_f else 'T'
                                     elif val in ['N', 'NO', 'FALSE', '0']: val = 'T' if 'INVALID' in s_f else 'F'
                                     if val not in ['T', 'F']: val = 'T' 
@@ -6795,6 +6845,8 @@ class QLAdminEnterpriseIntegrationSuite:
 
                                 if t_f == "MPOLICY" and val:
                                     val = self._format_qladmin_mpolicy(val)
+                                elif t_f in CLIENT_ID_TARGET_FIELDS and val:
+                                    val = format_qladmin_mclientid(val)
                                 
                                 if t_id.lower() == "quikdvdp":
                                     if actual_h in ["MDEPOSIT", "MINTYTD", "MDEPINT"] and val:
@@ -6848,7 +6900,7 @@ class QLAdminEnterpriseIntegrationSuite:
                                 # Includes raw LifePRO source codes alongside standard QLAdmin roles
                                 for r, f in {'IN':'MPRIMID', 'INSD':'MPRIMID', 'PO':'MOWNRID', 'OWNR':'MOWNRID', 'PA':'MPAYRID', 'PAYR':'MPAYRID', 'ASGN':'MASGNID', 'B1':'MBENPID', 'BENP':'MBENPID', 'B2':'MBENCID', 'BENC':'MBENCID'}.items():
                                     if r in p_rel and f in row_data: 
-                                        row_data[f] = cw_map.get(p_rel[r], p_rel[r])
+                                        row_data[f] = format_qladmin_mclientid(cw_map.get(p_rel[r], p_rel[r]))
                             
                         if t_id.lower() == "quikridr" and 'MRIDRID' in row_data and tp in rel_map:
                             rel_id = None
@@ -6878,7 +6930,7 @@ class QLAdminEnterpriseIntegrationSuite:
                                     rel_source = f"fallback phase 1 INSD (requested phase {tphase})"
                             
                             if rel_id:
-                                row_data['MRIDRID'] = cw_map.get(rel_id, rel_id)
+                                row_data['MRIDRID'] = format_qladmin_mclientid(cw_map.get(rel_id, rel_id))
                             
                             if self.debug_rel_fallback and self._diag_rel_fallback_count < 25:
                                 if rel_id:

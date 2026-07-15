@@ -162,6 +162,7 @@ def transform_paagerat_attained_age(
                 "gender": gender,
                 "uwclass": uwclass,
                 "band": band2,
+                "source_band_raw": band,
                 "isscntry": config.isscntry,
                 "issuest": config.issuest,
                 "effdate": config.effdate,

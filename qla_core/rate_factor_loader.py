@@ -144,13 +144,16 @@ def cv_remap_ql_duration(source_d, sex, age_int, fnz):
     return lp_d
 
 
-def transform_source(source_csv, cov2plan, config, cv_fnz=None):
+def transform_source(source_csv, cov2plan, config, cv_fnz=None, segment_resolver=None, rt_key_index=None):
     """
     Stream the LifePRO rate extract and classify/transform each row.
 
     Yields dicts with keys:
       status: IN_SCOPE | EXCLUDED | PLAN_UNRESOLVED | PLAN_INVALID | BAD_VALUE
       and (for IN_SCOPE) the transformed target key + value + provenance.
+
+    When segment_resolver is supplied, unresolved COVERAGE_ID values are retried
+    via PCOVRSGT segment chain (Issue #42 PDAGE miss-fill segment IDs).
     """
     with open(source_csv, encoding="utf-8-sig", errors="replace", newline="") as f:
         rd = csv.reader(f)
@@ -176,6 +179,19 @@ def transform_source(source_csv, cov2plan, config, cv_fnz=None):
                 continue
 
             plan = cov2plan.get(cov)
+            segment_resolution = "DIRECT"
+            if not plan and segment_resolver is not None:
+                parent = segment_resolver.parent_coverage(cov)
+                parent_has_direct = (
+                    rt_key_index is not None
+                    and parent
+                    and (parent, typ) in rt_key_index
+                )
+                if not parent_has_direct:
+                    seg_res = segment_resolver.resolve(cov, source="rate_table")
+                    if seg_res and seg_res.plan:
+                        plan = seg_res.plan
+                        segment_resolution = seg_res.resolution_path
             if not plan:
                 yield {"status": "PLAN_UNRESOLVED", "type_code": typ, "coverage_id": cov,
                        "lineno": lineno}
@@ -200,6 +216,11 @@ def transform_source(source_csv, cov2plan, config, cv_fnz=None):
             gender = S.map_sex(sex)
             uwclass = S.map_uwclass(uw)
             band2 = S.map_band(band)
+            if gender is None or uwclass is None or band2 is None:
+                yield {"status": "BAD_VALUE", "type_code": typ, "coverage_id": cov,
+                       "plan": plan, "raw_sex": sex, "raw_band": band, "raw_uw": uw,
+                       "lineno": lineno, "note": "unmapped classification tuple"}
+                continue
 
             # Controlled AGE capping (business rule): QLAdmin AGE is C2 (0-99). Source ages
             # above 99 are capped to 99 with preserved lineage. Magnitude of the cap is audited;
@@ -242,10 +263,12 @@ def transform_source(source_csv, cov2plan, config, cv_fnz=None):
                 "coverage_id": cov, "type_code": typ, "table": table,
                 "plan": plan, "age": age2, "cntl": cntl, "col": col,
                 "gender": gender, "uwclass": uwclass, "band": band2,
+                "source_band_raw": band,
                 "isscntry": config.isscntry, "issuest": config.issuest, "effdate": config.effdate,
                 "source_duration": dur, "ql_duration": ql_dur,
                 "value": value, "raw_value": val, "lineno": lineno,
                 "original_age": original_age, "age_capped": age_capped,
+                "segment_resolution": segment_resolution,
             }
 
 
@@ -277,7 +300,8 @@ def build_factor_grid(transformed_iter, config):
         cell = grids[t["table"]][key]
         col = t["col"]
         cur = (t["value"], t["raw_value"], t["lineno"], t.get("age_capped", False),
-               t.get("segment_tier", 0))
+               t.get("segment_tier", 0),
+               S.band_collapse_priority(t.get("source_band_raw", "")))
         prior = cell.get(col)
         if prior is None:
             cell[col] = cur
@@ -307,8 +331,17 @@ def build_factor_grid(transformed_iter, config):
                 # sibling PAAGERAT segments under the same parent: first row wins (stream order)
                 pass
         else:
-            collisions.append((t["table"], key, col, prior[2], t["lineno"]))  # genuine dup
-            cell[col] = cur
+            prior_prio = prior[5] if len(prior) > 5 else 99
+            cur_prio = cur[5] if len(cur) > 5 else 99
+            if cur_prio < prior_prio:
+                cell[col] = cur
+            elif cur_prio > prior_prio:
+                pass
+            elif round(prior[0], 8) == round(cur[0], 8):
+                pass
+            else:
+                collisions.append((t["table"], key, col, prior[2], t["lineno"]))  # genuine dup
+                cell[col] = cur
     return grids, collisions, cap_collisions
 
 

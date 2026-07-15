@@ -1,7 +1,10 @@
 # Master Issue Log — LifePRO → QLAdmin Conversion
 
-**Last updated:** 2026-07-14 (#59 CLOSED v57.84; #58 IMPLEMENTED v57.80; #57 CLOSED — NFO Option B; #55 CLOSED v57.78) · **Engine:** `app.py` **v57.84**
+**Last updated:** 2026-07-14 (**YE 12/31/2025** conversion COMPLETE v57.86; Source=`LifePRO_Extracts_20260102`) · **Engine:** `app.py` **v57.86**
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
+
+**Data accountability (midyear):** `Issue_Log_Items/Issue_Log_Data_Accountability_20260714.md`  
+**Year-end package:** `Issue_Log_Items/YearEnd_20251231_Conversion_Notes.md` · load `Output/Test_Validation/`
 
 ---
 
@@ -82,7 +85,13 @@
 | **#51** | Missing Interest Table (`QuikAint` for A60MIR / A96DAR) — Projected Values crash loop | **Ready for Client UAT** · **v57.76** | **v57.76** | Resolution: Added QuikAint interest-rate stubs for closed riders A60MIR and A96DAR so QLAdmin Projected Values no longer fails looking up a missing interest table. |
 | **#54** | Full Loan History Load (PACTG → **QuikBenh** + PLOAN seed + side-aware 0412) | **CLOSED ✓** · **v57.82** | **v57.82** | Resolution: Loan History now loads from QuikBenh with a PLOAN opening-balance seed for mid-stream loans, and CREDIT-side PACTG 0412 interest offsets map to type 12 so QLAdmin Balance closes to the QuikLoan current balance. |
 | **#55** | Unit Issues (tiny `MUNIT` floor + leading-zero emit) | **CLOSED ✓** · **v57.78** | **v57.78** | Resolution: quikridr MUNIT below 0.001 floored to zero; rider decimals emit with leading digit (0.53000 not .53000); #25/#26 preserved. QLAdmin false `3000` Units = out of scope. |
-| **#56** | PUA CV incorrect (`010310404C` / `960 PO PUA`) | **Ready for Development** (await approval) | — | Eric: PA CV ≠ base (forms). Robert: add `1960PA` plan + full CV/TV/basis. See `Issue_56_Pause_Checkpoint.md`. |
+| **#56** | PUA CV incorrect (`010310404C` / `960 PO PUA`) | **WITHDRAWN — superseded by #60** | — | Chris (actuary) plan wins: do not add PA plans; fix PUA phase + base interest. See Issue #60. |
+| **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
+| **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
+| **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |
+| **#60** | PUA phase + base interest (Chris 7/14) | **G6 PASS → Ready for Client UAT** · **v57.85** | **v57.85** | Track A: PUA-only phase fix; 0 non-PUA/phase-1 field drift. UAT: Test_Validation quikridr + rebuild CV. Track B (NFOINT) blocked. |
+| **#70** | QuikPlan `LOANINTX` Advance/Arrears | **IMPLEMENTED v57.89 — Awaiting CSO** | **v57.89** | Fleet LOANINTX normalized to `A` (141 plans). Emit + Test_Validation published. Still need CSO: fleet Advance vs Arrears (`R`) plan list. |
+| **#71** | Rate/plan/policy BAND → `00` | **CLOSED ✓** | **v57.90** | **Resolution:** All rate factor and rate-key BAND values (and QuikPlBd BDCODE) now emit as `00` (NOT APPLICABLE) to match quikridr MBAND=00, restoring Policy Display cash-value lookup. Client UAT PASS (`010718309C`). |
 | **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
 | **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
 | **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |
@@ -126,9 +135,15 @@
 
 **#55 detail:** `Issue_Log_Items/Issue_55/` · **CLOSED** · **v57.78** · Resolution: MUNIT floor + leading-zero decimal emit on quikridr; 148 floor rows; G0–G7 PASS. `Issue_55_Resolution_Summary.md`. Client UAT: reload quikridr + DBF Append Tool v1.5.
 
-**#56 detail:** `Issue_Log_Items/Issue_56/` · Slack/Eric answered 2026-07-14 — add `1960PA` + own CV/TV/basis (not base fallback). **Ready for Development** on Composer 2.5 after approval. Checkpoint: `Issue_56_Pause_Checkpoint.md`.
+**#56 detail:** `Issue_Log_Items/Issue_56/` · **WITHDRAWN 2026-07-14** — superseded by Chris plan in Issue #60. Do not Develop add-`1960PA` path.
+
+**#70 detail:** `Issue_Log_Items/Issue_70/` · **IMPLEMENTED v57.89 — Awaiting CSO** · fleet `LOANINTX=A` (141) · `Output/quikplan.csv` + `Test_Validation/quikplan.csv` · CSO still needed for any `R` plans
+
+**#71 detail:** `Issue_Log_Items/Issue_71/` · **CLOSED 2026-07-14** · **v57.90** · Resolution: rate BAND/BDCODE→`00` aligns with MBAND=00; CV lookup restored. Reload `Test_Validation/rates/` on network after pull.
 
 **#59 detail:** `Issue_Log_Items/Issue_59/` · **CLOSED 2026-07-14** · **v57.84** · Resolution: seven-policy scoped MSTATUS fix (6×54→22; 010521213C→50). `Issue_59_Resolution_Summary.md`. Client UAT pending Eric.
+
+**#60 detail:** `Issue_Log_Items/Issue_60/` · **G6 PASS** v57.85 Track A · `Issue_60_Regression_Report.md` · Ready for Client UAT / Closure · Track B NFOINT still blocked.
 
 ---
 

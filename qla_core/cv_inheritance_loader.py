@@ -190,6 +190,7 @@ def transform_inherited_cv(source_csv, manifest, config, cv_fnz=None):
                     "gender": gender,
                     "uwclass": uwclass,
                     "band": band2,
+                    "source_band_raw": band,
                     "isscntry": config.isscntry,
                     "issuest": config.issuest,
                     "effdate": config.effdate,

@@ -193,6 +193,7 @@ def transform_paagerat_ul_scalar(
                 "gender": gender,
                 "uwclass": uwclass,
                 "band": band2,
+                "source_band_raw": band,
                 "isscntry": config.isscntry,
                 "issuest": config.issuest,
                 "effdate": config.effdate,

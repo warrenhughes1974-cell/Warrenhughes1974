@@ -127,7 +127,7 @@ def build_quikissc_row(
 ) -> dict:
     gender = S.map_sex(DEFAULT_SEX) or "M"
     uwclass = S.map_uwclass(DEFAULT_UWCLASS) or "SM"
-    band = S.map_band(DEFAULT_BAND) or "01"
+    band = S.map_band(DEFAULT_BAND) or "00"
     row = {
         "PLAN": plan,
         "AGE": DEFAULT_AGE,
