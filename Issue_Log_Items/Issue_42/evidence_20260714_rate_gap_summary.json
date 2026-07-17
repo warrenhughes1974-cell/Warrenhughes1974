@@ -1,0 +1,65 @@
+{
+  "wired_pdage": "c:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\PDAGE_AgeDuration_Rates_Extract_20260714.csv",
+  "wired_paagerat": "c:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\PAAGERAT_AttainedAge_Rates_Extract_20260714.csv",
+  "critical_present": [
+    {
+      "coverage_id": "L01 10Y",
+      "type_code": "NP",
+      "sources": [
+        "PDAGE_20260714:5088"
+      ],
+      "total": 5088
+    },
+    {
+      "coverage_id": "L01 10Y",
+      "type_code": "RV",
+      "sources": [
+        "PDAGE_20260714:5088"
+      ],
+      "total": 5088
+    },
+    {
+      "coverage_id": "L10 LP9595",
+      "type_code": "NP",
+      "sources": [
+        "PDAGE_20260714:12384"
+      ],
+      "total": 12384
+    },
+    {
+      "coverage_id": "L10 LP9595",
+      "type_code": "RV",
+      "sources": [
+        "PDAGE_20260714:12384"
+      ],
+      "total": 12384
+    },
+    {
+      "coverage_id": "L17",
+      "type_code": "CV",
+      "sources": [
+        "PDAGE_20260714:720"
+      ],
+      "total": 720
+    },
+    {
+      "coverage_id": "960 LP85-8",
+      "type_code": "CV",
+      "sources": [
+        "PDAGE_20260714:3408"
+      ],
+      "total": 3408
+    }
+  ],
+  "critical_still_missing": [
+    {
+      "coverage_id": "0824 P DTH",
+      "type_code": "NP"
+    },
+    {
+      "coverage_id": "L10 GPO OL",
+      "type_code": "NP"
+    }
+  ],
+  "evidence_csv": "c:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_42\\evidence_20260714_rate_gap_scan.csv"
+}

@@ -1,0 +1,968 @@
+sheet,row,policy_form,rate_type_col,col,segment,assessment
+Non-ISWL,2,L10 LP95,Premiums (PR),B,L10 LP95,dark_green
+Non-ISWL,2,L10 LP95,Cash Values (CV),C,L10 LP95,dark_green
+Non-ISWL,2,L10 LP95,Reserve Factors (RV),F,L10 LP9595,red
+Non-ISWL,2,L10 LP95,Net Valuation Premiums (NP),G,L10 LP9595,red
+Non-ISWL,2,L10 LP95,Non-Forfeiture Factors (NF),H,L10 LP95,dark_green
+Non-ISWL,2,L10 LP95,Non-Deduction Reserve  (NN),I,L10 LP95,dark_green
+Non-ISWL,2,L10 LP95,Non-Ded Valuation Prem (PN),J,L10 LP95,dark_green
+Non-ISWL,2,L10 LP95,Loan Interest Rates (LN),M,L10 PRE97,none
+Non-ISWL,2,L10 LP95,"Endowment,Deposit Return (RD)",N,L10 PRE97,none
+Non-ISWL,2,L10 LP95,Notify Messages/Letters (NT),O,AGE 95,none
+Non-ISWL,2,L10 LP95,Commissions(CC),P,BA2,none
+Non-ISWL,2,L10 LP95,Ext Term/Reduced Paid Up (ET),S,L10 PRE97,none
+Non-ISWL,2,L10 LP95,IBA Accounts (IB),T,L10 LP95,none
+Non-ISWL,2,L10 LP95,New Business Defaults (NB),U,L10 PRE97,none
+Non-ISWL,2,L10 LP95,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,2,L10 LP95,Billng Setup (BS),X,LIFE,none
+Non-ISWL,2,L10 LP95,Non Forfeiture Rules (NO),Z,L10 PREUNI,none
+Non-ISWL,3,L10 WP,Premiums (PR),B,L10 WP,dark_green
+Non-ISWL,3,L10 WP,Death Benefits (DB),E,L10ZERO,light_green
+Non-ISWL,3,L10 WP,Reserve Factors (RV),F,WPAD 34 4,peach
+Non-ISWL,3,L10 WP,Net Valuation Premiums (NP),G,WPAD34 4,peach
+Non-ISWL,3,L10 WP,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,3,L10 WP,Commissions(CC),P,BASE,none
+Non-ISWL,4,L10 ADB,Premiums (PR),B,L10 ADB OL,purple
+Non-ISWL,4,L10 ADB,Reserve Factors (RV),F,ADB 30 65,red
+Non-ISWL,4,L10 ADB,Net Valuation Premiums (NP),G,ADB 30 65,red
+Non-ISWL,4,L10 ADB,Notify Messages/Letters (NT),O,ADB,none
+Non-ISWL,4,L10 ADB,Commissions(CC),P,BASE,none
+Non-ISWL,5,L10 GPO,Premiums (PR),B,L10 GPO OL,purple
+Non-ISWL,5,L10 GPO,Death Benefits (DB),E,L10ZERO,light_green
+Non-ISWL,5,L10 GPO,Reserve Factors (RV),F,ZERO LIFE,light_green
+Non-ISWL,5,L10 GPO,Net Valuation Premiums (NP),G,L10 GPO OL,red
+Non-ISWL,5,L10 GPO,Notify Messages/Letters (NT),O,L10 GPO OL,none
+Non-ISWL,5,L10 GPO,Commissions(CC),P,BASE,none
+Non-ISWL,6,L10 JPO,Premiums (PR),B,L10 JPO OL,purple
+Non-ISWL,6,L10 JPO,Death Benefits (DB),E,L10ZERO,light_green
+Non-ISWL,6,L10 JPO,Reserve Factors (RV),F,ZERO LIFE,light_green
+Non-ISWL,6,L10 JPO,Net Valuation Premiums (NP),G,L10 GPO OL,red
+Non-ISWL,6,L10 JPO,Notify Messages/Letters (NT),O,8286 GI,none
+Non-ISWL,6,L10 JPO,Commissions(CC),P,BASE,none
+Non-ISWL,7,L10 SDT,Premiums (PR),B,L10 SDT OL,purple
+Non-ISWL,7,L10 SDT,Death Benefits (DB),E,L10 SDT OL,light_green
+Non-ISWL,7,L10 SDT,Reserve Factors (RV),F,L10 SDT,dark_green
+Non-ISWL,7,L10 SDT,Net Valuation Premiums (NP),G,L10 SDT,dark_green
+Non-ISWL,7,L10 SDT,Notify Messages/Letters (NT),O,SPS TRM RD,none
+Non-ISWL,7,L10 SDT,Commissions(CC),P,BASE,none
+Non-ISWL,8,L10 CDT,Premiums (PR),B,L10 CDT OL,purple
+Non-ISWL,8,L10 CDT,Reserve Factors (RV),F,L10 CDT,dark_green
+Non-ISWL,8,L10 CDT,Net Valuation Premiums (NP),G,L10 CDT,dark_green
+Non-ISWL,8,L10 CDT,Notify Messages/Letters (NT),O,CTR,none
+Non-ISWL,8,L10 CDT,Commissions(CC),P,BASE,none
+Non-ISWL,9,L10 SPSWP,Premiums (PR),B,L10 SPSWP,dark_green
+Non-ISWL,9,L10 SPSWP,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,9,L10 SPSWP,Reserve Factors (RV),F,WPAD 34 4,red
+Non-ISWL,9,L10 SPSWP,Net Valuation Premiums (NP),G,WPAD 34 4,red
+Non-ISWL,9,L10 SPSWP,Commissions(CC),P,BASE,none
+Non-ISWL,10,L10 WP CDT,Premiums (PR),B,L10 WP CDT,dark_green
+Non-ISWL,10,L10 WP CDT,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,10,L10 WP CDT,Reserve Factors (RV),F,WPAD 34 4,red
+Non-ISWL,10,L10 WP CDT,Net Valuation Premiums (NP),G,WPAD 34 4,red
+Non-ISWL,10,L10 WP CDT,Notify Messages/Letters (NT),O,CTR,none
+Non-ISWL,10,L10 WP CDT,Commissions(CC),P,BASE,none
+Non-ISWL,11,DISCHO2475,Premiums (PR),B,DISCHO2475,peach
+Non-ISWL,11,DISCHO2475,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,11,DISCHO2475,Notify Messages/Letters (NT),O,DISCHO2475,none
+Non-ISWL,11,DISCHO2475,Commissions(CC),P,AA1,none
+Non-ISWL,12,670 GL85-8,Premiums (PR),B,GL LP85,purple
+Non-ISWL,12,670 GL85-8,Cash Values (CV),C,670 GL85-8,dark_green
+Non-ISWL,12,670 GL85-8,Dividends (DV),D,670 GL85-8,dark_green
+Non-ISWL,12,670 GL85-8,Reserve Factors (RV),F,670 GL85-8,dark_green
+Non-ISWL,12,670 GL85-8,Net Valuation Premiums (NP),G,670 GL85-8,dark_green
+Non-ISWL,12,670 GL85-8,Non-Forfeiture Factors (NF),H,670 GL85-8,dark_green
+Non-ISWL,12,670 GL85-8,Non-Deduction Reserve  (NN),I,670 GL85-8,dark_green
+Non-ISWL,12,670 GL85-8,Non-Ded Valuation Prem (PN),J,670 GL85-8,dark_green
+Non-ISWL,12,670 GL85-8,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,12,670 GL85-8,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,12,670 GL85-8,Notify Messages/Letters (NT),O,AGE 88,none
+Non-ISWL,12,670 GL85-8,Commissions(CC),P,DA3,none
+Non-ISWL,12,670 GL85-8,Ext Term/Reduced Paid Up (ET),S,670 GL85-8,none
+Non-ISWL,12,670 GL85-8,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,12,670 GL85-8,Dividend Option Setup,W,LIFE,none
+Non-ISWL,12,670 GL85-8,Billng Setup (BS),X,LIFE,none
+Non-ISWL,12,670 GL85-8,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,13,L01 10Y LT,Premiums (PR),B,L01 10Y LT,dark_green
+Non-ISWL,13,L01 10Y LT,Reserve Factors (RV),F,L01 10Y,red
+Non-ISWL,13,L01 10Y LT,Net Valuation Premiums (NP),G,L01 10Y,red
+Non-ISWL,13,L01 10Y LT,Non-Deduction Reserve  (NN),I,L01 10Y,none
+Non-ISWL,13,L01 10Y LT,Non-Ded Valuation Prem (PN),J,L01 10Y,none
+Non-ISWL,13,L01 10Y LT,Notify Messages/Letters (NT),O,10YR LV TM,none
+Non-ISWL,13,L01 10Y LT,Commissions(CC),P,DA9,none
+Non-ISWL,14,L14,Premiums (PR),B,L14,dark_green
+Non-ISWL,14,L14,Cash Values (CV),C,L14,dark_green
+Non-ISWL,14,L14,Reserve Factors (RV),F,L14,dark_green
+Non-ISWL,14,L14,Net Valuation Premiums (NP),G,L14,dark_green
+Non-ISWL,14,L14,Non-Forfeiture Factors (NF),H,L14,dark_green
+Non-ISWL,14,L14,Non-Deduction Reserve  (NN),I,L14L15,none
+Non-ISWL,14,L14,Non-Ded Valuation Prem (PN),J,L14L15,none
+Non-ISWL,14,L14,Loan Interest Rates (LN),M,L14,none
+Non-ISWL,14,L14,"Endowment,Deposit Return (RD)",N,L14,dark_green
+Non-ISWL,14,L14,Commissions(CC),P,DB2,none
+Non-ISWL,14,L14,Retention Limits (RE),Q,L14,none
+Non-ISWL,14,L14,Treaty Selection (TR),R,L14,none
+Non-ISWL,14,L14,Ext Term/Reduced Paid Up (ET),S,L14,none
+Non-ISWL,14,L14,IBA Accounts (IB),T,L14,none
+Non-ISWL,14,L14,New Business Defaults (NB),U,L14,none
+Non-ISWL,14,L14,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,14,L14,Billng Setup (BS),X,LIFE,none
+Non-ISWL,14,L14,Non Forfeiture Rules (NO),Z,L14,none
+Non-ISWL,15,DISCHO29,Premiums (PR),B,DISCHO29,peach
+Non-ISWL,15,DISCHO29,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,15,DISCHO29,Commissions(CC),P,AA1,none
+Non-ISWL,16,SAL ML,Premiums (PR),B,SAL ML,dark_green
+Non-ISWL,16,SAL ML,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,16,SAL ML,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,16,SAL ML,Commissions(CC),P,AA1,none
+Non-ISWL,16,SAL ML,Ext Term/Reduced Paid Up (ET),S,SAL OL,none
+Non-ISWL,16,SAL ML,IBA Accounts (IB),T,SAL,none
+Non-ISWL,16,SAL ML,Dividend Option Setup,W,LIFE,none
+Non-ISWL,16,SAL ML,Billng Setup (BS),X,LIFE,none
+Non-ISWL,16,SAL ML,Fund Package (F0),Y,SAL ML,none
+Non-ISWL,16,SAL ML,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,17,SAL MULTPL,Premiums (PR),B,SAL MULTPL,dark_green
+Non-ISWL,17,SAL MULTPL,Reserve Factors (RV),F,SAL OL,dark_green
+Non-ISWL,17,SAL MULTPL,Net Valuation Premiums (NP),G,SAL OL,dark_green
+Non-ISWL,17,SAL MULTPL,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,17,SAL MULTPL,Commissions(CC),P,BASE,none
+Non-ISWL,17,SAL MULTPL,Ext Term/Reduced Paid Up (ET),S,SAL OL,none
+Non-ISWL,18,SAL ADB,Premiums (PR),B,SAL ADB,dark_green
+Non-ISWL,18,SAL ADB,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,18,SAL ADB,Commissions(CC),P,BASE,none
+Non-ISWL,19,667 ART,Premiums (PR),B,667 ART,dark_green
+Non-ISWL,19,667 ART,Reserve Factors (RV),F,667 ART,red
+Non-ISWL,19,667 ART,Net Valuation Premiums (NP),G,667 ART,dark_green
+Non-ISWL,19,667 ART,Notify Messages/Letters (NT),O,ART,none
+Non-ISWL,19,667 ART,Commissions(CC),P,GA4,none
+Non-ISWL,20,1595,Premiums (PR),B,1595,dark_green
+Non-ISWL,20,1595,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,20,1595,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,20,1595,Commissions(CC),P,BASE,none
+Non-ISWL,21,1596 667,Premiums (PR),B,1596 667,dark_green
+Non-ISWL,21,1596 667,Notify Messages/Letters (NT),O,ADB,none
+Non-ISWL,21,1596 667,Commissions(CC),P,BASE,none
+Non-ISWL,22,670 GL85-M,Premiums (PR),B,GL LP85,purple
+Non-ISWL,22,670 GL85-M,Cash Values (CV),C,670 GL85-8,dark_green
+Non-ISWL,22,670 GL85-M,Dividends (DV),D,670 GL85-8,dark_green
+Non-ISWL,22,670 GL85-M,Reserve Factors (RV),F,670 GL85-8,dark_green
+Non-ISWL,22,670 GL85-M,Net Valuation Premiums (NP),G,670 GL85-8,dark_green
+Non-ISWL,22,670 GL85-M,Non-Forfeiture Factors (NF),H,670 GL85-8,dark_green
+Non-ISWL,22,670 GL85-M,Non-Deduction Reserve  (NN),I,670 GL85-8,dark_green
+Non-ISWL,22,670 GL85-M,Non-Ded Valuation Prem (PN),J,670 GL85-8,dark_green
+Non-ISWL,22,670 GL85-M,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,22,670 GL85-M,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,22,670 GL85-M,Notify Messages/Letters (NT),O,AGE 85,none
+Non-ISWL,22,670 GL85-M,Commissions(CC),P,DA3,none
+Non-ISWL,22,670 GL85-M,Ext Term/Reduced Paid Up (ET),S,670 GL85-8,none
+Non-ISWL,22,670 GL85-M,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,22,670 GL85-M,Dividend Option Setup,W,LIFE,none
+Non-ISWL,22,670 GL85-M,Billng Setup (BS),X,LIFE,none
+Non-ISWL,22,670 GL85-M,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,23,L10 OLD,Premiums (PR),B,L10 PRE97,dark_green
+Non-ISWL,23,L10 OLD,Cash Values (CV),C,L10 PRE97,dark_green
+Non-ISWL,23,L10 OLD,Reserve Factors (RV),F,L10 LP95,dark_green
+Non-ISWL,23,L10 OLD,Net Valuation Premiums (NP),G,L10 LP95,dark_green
+Non-ISWL,23,L10 OLD,Non-Forfeiture Factors (NF),H,L10 PRE97,dark_green
+Non-ISWL,23,L10 OLD,Non-Deduction Reserve  (NN),I,L10 LP95,dark_green
+Non-ISWL,23,L10 OLD,Non-Ded Valuation Prem (PN),J,L10 LP95,dark_green
+Non-ISWL,23,L10 OLD,Loan Interest Rates (LN),M,L10 PRE97,none
+Non-ISWL,23,L10 OLD,"Endowment,Deposit Return (RD)",N,L10 PRE97,none
+Non-ISWL,23,L10 OLD,Notify Messages/Letters (NT),O,AGE 95,none
+Non-ISWL,23,L10 OLD,Commissions(CC),P,BA2,none
+Non-ISWL,23,L10 OLD,Ext Term/Reduced Paid Up (ET),S,L10 PRE97,none
+Non-ISWL,23,L10 OLD,IBA Accounts (IB),T,L10 LP95,none
+Non-ISWL,23,L10 OLD,New Business Defaults (NB),U,L10 PRE97,none
+Non-ISWL,23,L10 OLD,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,23,L10 OLD,Billng Setup (BS),X,LIFE,none
+Non-ISWL,23,L10 OLD,Non Forfeiture Rules (NO),Z,L10 PREUNI,none
+Non-ISWL,24,L10 WP OLD,Premiums (PR),B,L10 WP OLD,dark_green
+Non-ISWL,24,L10 WP OLD,Death Benefits (DB),E,L10ZERO,light_green
+Non-ISWL,24,L10 WP OLD,Reserve Factors (RV),F,WPAD 34 4,red
+Non-ISWL,24,L10 WP OLD,Net Valuation Premiums (NP),G,WPAD 34 4,red
+Non-ISWL,24,L10 WP OLD,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,24,L10 WP OLD,Commissions(CC),P,BASE,none
+Non-ISWL,25,DISCHO247C,Premiums (PR),B,DISCHO247C,peach
+Non-ISWL,25,DISCHO247C,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,25,DISCHO247C,Commissions(CC),P,AA1,none
+Non-ISWL,26,L10 SR OLD,Premiums (PR),B,L10SR OLD,purple
+Non-ISWL,26,L10 SR OLD,Cash Values (CV),C,L10 PRE97,dark_green
+Non-ISWL,26,L10 SR OLD,Reserve Factors (RV),F,L10 LP95SR,dark_green
+Non-ISWL,26,L10 SR OLD,Net Valuation Premiums (NP),G,L10 LP95SR,dark_green
+Non-ISWL,26,L10 SR OLD,Non-Deduction Reserve  (NN),I,L10 LP95SR,dark_green
+Non-ISWL,26,L10 SR OLD,Non-Ded Valuation Prem (PN),J,L10 LP95SR,dark_green
+Non-ISWL,26,L10 SR OLD,Loan Interest Rates (LN),M,L10 PRE97,none
+Non-ISWL,26,L10 SR OLD,"Endowment,Deposit Return (RD)",N,L10 PRE97,none
+Non-ISWL,26,L10 SR OLD,Notify Messages/Letters (NT),O,AGE 95,none
+Non-ISWL,26,L10 SR OLD,Commissions(CC),P,BA2,none
+Non-ISWL,26,L10 SR OLD,Ext Term/Reduced Paid Up (ET),S,L10 PRE97,none
+Non-ISWL,26,L10 SR OLD,IBA Accounts (IB),T,L10 LP95,none
+Non-ISWL,26,L10 SR OLD,New Business Defaults (NB),U,L10 PRE97,none
+Non-ISWL,26,L10 SR OLD,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,26,L10 SR OLD,Billng Setup (BS),X,LIFE,none
+Non-ISWL,26,L10 SR OLD,Non Forfeiture Rules (NO),Z,L10 PREUNI,none
+Non-ISWL,27,L10 LP95SR,Premiums (PR),B,L10 LP95SR,dark_green
+Non-ISWL,27,L10 LP95SR,Cash Values (CV),C,L10 LP95,dark_green
+Non-ISWL,27,L10 LP95SR,Reserve Factors (RV),F,L10SR 95,red
+Non-ISWL,27,L10 LP95SR,Net Valuation Premiums (NP),G,L10SR 95,red
+Non-ISWL,27,L10 LP95SR,Non-Forfeiture Factors (NF),H,L10 LP95,dark_green
+Non-ISWL,27,L10 LP95SR,Non-Deduction Reserve  (NN),I,L10 LP95SR,dark_green
+Non-ISWL,27,L10 LP95SR,Non-Ded Valuation Prem (PN),J,L10 LP95SR,dark_green
+Non-ISWL,27,L10 LP95SR,Tax Reserve Factors (TX),K,L10 LP95,none
+Non-ISWL,27,L10 LP95SR,Tax Valuation Premiums (TP),L,L10 LP95,none
+Non-ISWL,27,L10 LP95SR,Loan Interest Rates (LN),M,L10 PRE97,none
+Non-ISWL,27,L10 LP95SR,"Endowment,Deposit Return (RD)",N,L10 PRE97,none
+Non-ISWL,27,L10 LP95SR,Notify Messages/Letters (NT),O,AGE 95,none
+Non-ISWL,27,L10 LP95SR,Commissions(CC),P,BA2,none
+Non-ISWL,27,L10 LP95SR,Ext Term/Reduced Paid Up (ET),S,L10 PRE97,none
+Non-ISWL,27,L10 LP95SR,IBA Accounts (IB),T,L10 LP95,none
+Non-ISWL,27,L10 LP95SR,New Business Defaults (NB),U,L10 PRE97,none
+Non-ISWL,27,L10 LP95SR,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,27,L10 LP95SR,Billng Setup (BS),X,LIFE,none
+Non-ISWL,27,L10 LP95SR,Non Forfeiture Rules (NO),Z,L10 PREUNI,none
+Non-ISWL,28,960 OL,Premiums (PR),B,960 OL,dark_green
+Non-ISWL,28,960 OL,Cash Values (CV),C,960 OL,dark_green
+Non-ISWL,28,960 OL,Dividends (DV),D,960 OL,dark_green
+Non-ISWL,28,960 OL,Reserve Factors (RV),F,960 OL,dark_green
+Non-ISWL,28,960 OL,Net Valuation Premiums (NP),G,960 OL,dark_green
+Non-ISWL,28,960 OL,Non-Deduction Reserve  (NN),I,960 OL,dark_green
+Non-ISWL,28,960 OL,Non-Ded Valuation Prem (PN),J,960 OL,dark_green
+Non-ISWL,28,960 OL,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,28,960 OL,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,28,960 OL,Commissions(CC),P,DA2,none
+Non-ISWL,28,960 OL,Ext Term/Reduced Paid Up (ET),S,960 OL,none
+Non-ISWL,28,960 OL,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,28,960 OL,Dividend Option Setup,W,LIFE,none
+Non-ISWL,28,960 OL,Billng Setup (BS),X,LIFE,none
+Non-ISWL,28,960 OL,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,29,0823 960OL,Premiums (PR),B,0823 960OL,dark_green
+Non-ISWL,29,0823 960OL,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,29,0823 960OL,Reserve Factors (RV),F,WPAD061 2,red
+Non-ISWL,29,0823 960OL,Net Valuation Premiums (NP),G,WPAD061 2,red
+Non-ISWL,29,0823 960OL,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,29,0823 960OL,Commissions(CC),P,BASE,none
+Non-ISWL,30,0824 P DIS,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,30,0824 P DIS,Commissions(CC),P,BASE,none
+Non-ISWL,31,0824 P DTH,Premiums (PR),B,0824 P DTH,dark_green
+Non-ISWL,31,0824 P DTH,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,31,0824 P DTH,Reserve Factors (RV),F,ZERO LIFE,light_green
+Non-ISWL,31,0824 P DTH,Net Valuation Premiums (NP),G,0824 P DTH,red
+Non-ISWL,31,0824 P DTH,Commissions(CC),P,BASE,none
+Non-ISWL,32,960 PO,Premiums (PR),B,960 PO,dark_green
+Non-ISWL,32,960 PO,Cash Values (CV),C,960 PO,dark_green
+Non-ISWL,32,960 PO,Dividends (DV),D,960 PO,dark_green
+Non-ISWL,32,960 PO,Reserve Factors (RV),F,960 PO,dark_green
+Non-ISWL,32,960 PO,Net Valuation Premiums (NP),G,960 PO,dark_green
+Non-ISWL,32,960 PO,Non-Deduction Reserve  (NN),I,960 PO,dark_green
+Non-ISWL,32,960 PO,Non-Ded Valuation Prem (PN),J,960 PO,dark_green
+Non-ISWL,32,960 PO,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,32,960 PO,"Endowment,Deposit Return (RD)",N,ENDOW103F,none
+Non-ISWL,32,960 PO,Commissions(CC),P,CA8,none
+Non-ISWL,32,960 PO,Ext Term/Reduced Paid Up (ET),S,960 PO,none
+Non-ISWL,32,960 PO,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,32,960 PO,Dividend Option Setup,W,LIFE,none
+Non-ISWL,32,960 PO,Billng Setup (BS),X,LIFE,none
+Non-ISWL,32,960 PO,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,33,0823 960PO,Premiums (PR),B,WP 960PO,purple
+Non-ISWL,33,0823 960PO,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,33,0823 960PO,Reserve Factors (RV),F,WPAD061 2,red
+Non-ISWL,33,0823 960PO,Net Valuation Premiums (NP),G,WPAD061 2,red
+Non-ISWL,33,0823 960PO,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,33,0823 960PO,Commissions(CC),P,BASE,none
+Non-ISWL,34,0822 960PO,Premiums (PR),B,0822 960PO,dark_green
+Non-ISWL,34,0822 960PO,Reserve Factors (RV),F,ADB 25 65,red
+Non-ISWL,34,0822 960PO,Net Valuation Premiums (NP),G,ADB 25 65,red
+Non-ISWL,34,0822 960PO,Notify Messages/Letters (NT),O,ADB,none
+Non-ISWL,34,0822 960PO,Commissions(CC),P,BASE,none
+Non-ISWL,35,L17,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,35,L17,Loan Interest Rates (LN),M,L17,none
+Non-ISWL,35,L17,Commissions(CC),P,AA1,none
+Non-ISWL,35,L17,New Business Defaults (NB),U,L17,none
+Non-ISWL,36,L17 1,Premiums (PR),B,L17,purple
+Non-ISWL,36,L17 1,Cash Values (CV),C,L17,red
+Non-ISWL,36,L17 1,Reserve Factors (RV),F,L17,red
+Non-ISWL,36,L17 1,Net Valuation Premiums (NP),G,L17,red
+Non-ISWL,36,L17 1,Loan Interest Rates (LN),M,L17,none
+Non-ISWL,36,L17 1,"Endowment,Deposit Return (RD)",N,L17,none
+Non-ISWL,36,L17 1,Commissions(CC),P,IB1,none
+Non-ISWL,37,L17 1 JPO,Premiums (PR),B,L17,purple
+Non-ISWL,37,L17 1 JPO,Cash Values (CV),C,L17,red
+Non-ISWL,37,L17 1 JPO,Reserve Factors (RV),F,L17,red
+Non-ISWL,37,L17 1 JPO,Net Valuation Premiums (NP),G,L17,red
+Non-ISWL,37,L17 1 JPO,Loan Interest Rates (LN),M,L17,none
+Non-ISWL,37,L17 1 JPO,"Endowment,Deposit Return (RD)",N,L17,none
+Non-ISWL,37,L17 1 JPO,Commissions(CC),P,IB1,none
+Non-ISWL,38,L17 2+,Premiums (PR),B,L17 2+,dark_green
+Non-ISWL,38,L17 2+,Cash Values (CV),C,L17,red
+Non-ISWL,38,L17 2+,Reserve Factors (RV),F,L17,red
+Non-ISWL,38,L17 2+,Net Valuation Premiums (NP),G,L17,red
+Non-ISWL,38,L17 2+,Loan Interest Rates (LN),M,L17,none
+Non-ISWL,38,L17 2+,"Endowment,Deposit Return (RD)",N,L17,none
+Non-ISWL,38,L17 2+,Commissions(CC),P,IB1,none
+Non-ISWL,39,L17 2+ JPO,Premiums (PR),B,L17 2+,dark_green
+Non-ISWL,39,L17 2+ JPO,Cash Values (CV),C,L17,red
+Non-ISWL,39,L17 2+ JPO,Reserve Factors (RV),F,L17,red
+Non-ISWL,39,L17 2+ JPO,Net Valuation Premiums (NP),G,L17,red
+Non-ISWL,39,L17 2+ JPO,Loan Interest Rates (LN),M,L17,none
+Non-ISWL,39,L17 2+ JPO,"Endowment,Deposit Return (RD)",N,L17,none
+Non-ISWL,39,L17 2+ JPO,Commissions(CC),P,IB1,none
+Non-ISWL,40,8286 GI 1,Premiums (PR),B,8286 GI,purple
+Non-ISWL,40,8286 GI 1,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,40,8286 GI 1,Notify Messages/Letters (NT),O,8286 GI,none
+Non-ISWL,40,8286 GI 1,Commissions(CC),P,IB2,none
+Non-ISWL,41,8286 GI 2+,Premiums (PR),B,8286 GI 2+,purple
+Non-ISWL,41,8286 GI 2+,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,41,8286 GI 2+,Notify Messages/Letters (NT),O,8286 GI,none
+Non-ISWL,41,8286 GI 2+,Commissions(CC),P,IB2,none
+Non-ISWL,42,L05,Premiums (PR),B,L05 10 Y LT,dark_green
+Non-ISWL,42,L05,Reserve Factors (RV),F,L05 10Y,red
+Non-ISWL,42,L05,Net Valuation Premiums (NP),G,L05 10Y,red
+Non-ISWL,42,L05,Notify Messages/Letters (NT),O,10 YR LV TM,none
+Non-ISWL,42,L05,Commissions(CC),P,HA1,none
+Non-ISWL,43,8115,Premiums (PR),B,8115,dark_green
+Non-ISWL,43,8115,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,43,8115,Commissions(CC),P,BASE,none
+Non-ISWL,44,1596,Premiums (PR),B,1596,dark_green
+Non-ISWL,44,1596,Reserve Factors (RV),F,ADB 25 69,red
+Non-ISWL,44,1596,Net Valuation Premiums (NP),G,ADB 25 69,red
+Non-ISWL,44,1596,Notify Messages/Letters (NT),O,ADB,none
+Non-ISWL,44,1596,Commissions(CC),P,BASE,none
+Non-ISWL,45,960 LP65,Premiums (PR),B,960 LP65,dark_green
+Non-ISWL,45,960 LP65,Cash Values (CV),C,960 LP65,dark_green
+Non-ISWL,45,960 LP65,Dividends (DV),D,960 LP65,dark_green
+Non-ISWL,45,960 LP65,Reserve Factors (RV),F,960 LP65,dark_green
+Non-ISWL,45,960 LP65,Net Valuation Premiums (NP),G,960 LP65,dark_green
+Non-ISWL,45,960 LP65,Non-Deduction Reserve  (NN),I,960 LP65,dark_green
+Non-ISWL,45,960 LP65,Non-Ded Valuation Prem (PN),J,960 LP65,dark_green
+Non-ISWL,45,960 LP65,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,45,960 LP65,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,45,960 LP65,Notify Messages/Letters (NT),O,AGE 65,none
+Non-ISWL,45,960 LP65,Commissions(CC),P,DA1,none
+Non-ISWL,45,960 LP65,Ext Term/Reduced Paid Up (ET),S,960 LP65,none
+Non-ISWL,45,960 LP65,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,45,960 LP65,Dividend Option Setup,W,LIFE,none
+Non-ISWL,45,960 LP65,Billng Setup (BS),X,LIFE,none
+Non-ISWL,45,960 LP65,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,46,0823 960LP,Premiums (PR),B,0823 960LP,dark_green
+Non-ISWL,46,0823 960LP,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,46,0823 960LP,Reserve Factors (RV),F,WPAD061 1,red
+Non-ISWL,46,0823 960LP,Net Valuation Premiums (NP),G,WPAD061 1,red
+Non-ISWL,46,0823 960LP,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,46,0823 960LP,Commissions(CC),P,BASE,none
+Non-ISWL,47,0822 960,Premiums (PR),B,0822 960 PO,dark_green
+Non-ISWL,47,0822 960,Reserve Factors (RV),F,ADB 25 5,red
+Non-ISWL,47,0822 960,Net Valuation Premiums (NP),G,ADB 25 5,red
+Non-ISWL,47,0822 960,Notify Messages/Letters (NT),O,ADB,none
+Non-ISWL,47,0822 960,Commissions(CC),P,BASE,none
+Non-ISWL,48,826,Premiums (PR),B,826,dark_green
+Non-ISWL,48,826,Commissions(CC),P,BASE,none
+Non-ISWL,49,0823 960SP,Premiums (PR),B,0823 960SP,dark_green
+Non-ISWL,49,0823 960SP,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,49,0823 960SP,Reserve Factors (RV),F,WPAD061 2,red
+Non-ISWL,49,0823 960SP,Net Valuation Premiums (NP),G,WPAD061 2,red
+Non-ISWL,49,0823 960SP,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,49,0823 960SP,Commissions(CC),P,BASE,none
+Non-ISWL,50,828,Premiums (PR),B,828,dark_green
+Non-ISWL,50,828,Reserve Factors (RV),F,828,dark_green
+Non-ISWL,50,828,Net Valuation Premiums (NP),G,828,dark_green
+Non-ISWL,50,828,Commissions(CC),P,BASE,none
+Non-ISWL,51,0823 960CH,Premiums (PR),B,0823 960CH,dark_green
+Non-ISWL,51,0823 960CH,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,51,0823 960CH,Reserve Factors (RV),F,WPAD061 2,red
+Non-ISWL,51,0823 960CH,Net Valuation Premiums (NP),G,WPAD061 2,red
+Non-ISWL,51,0823 960CH,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,51,0823 960CH,Commissions(CC),P,BASE,none
+Non-ISWL,52,863,Premiums (PR),B,863,dark_green
+Non-ISWL,52,863,Death Benefits (DB),E,863,dark_green
+Non-ISWL,52,863,Reserve Factors (RV),F,863,dark_green
+Non-ISWL,52,863,Net Valuation Premiums (NP),G,863,dark_green
+Non-ISWL,52,863,Commissions(CC),P,BASE,none
+Non-ISWL,53,621 END85,Premiums (PR),B,620 END85,purple
+Non-ISWL,53,621 END85,Cash Values (CV),C,621 END85,dark_green
+Non-ISWL,53,621 END85,Dividends (DV),D,621 END85,dark_green
+Non-ISWL,53,621 END85,Reserve Factors (RV),F,621 END85,dark_green
+Non-ISWL,53,621 END85,Net Valuation Premiums (NP),G,621 END85,dark_green
+Non-ISWL,53,621 END85,Non-Deduction Reserve  (NN),I,621 END85,dark_green
+Non-ISWL,53,621 END85,Non-Ded Valuation Prem (PN),J,621 END85,dark_green
+Non-ISWL,53,621 END85,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,53,621 END85,"Endowment,Deposit Return (RD)",N,620 END85,none
+Non-ISWL,53,621 END85,Notify Messages/Letters (NT),O,AA8,none
+Non-ISWL,53,621 END85,Ext Term/Reduced Paid Up (ET),S,621 END85,none
+Non-ISWL,53,621 END85,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,53,621 END85,Dividend Option Setup,W,LIFE,none
+Non-ISWL,53,621 END85,Billng Setup (BS),X,LIFE,none
+Non-ISWL,53,621 END85,Non Forfeiture Rules (NO),Z,ENDOW,none
+Non-ISWL,54,0822 620,Premiums (PR),B,0822 620,dark_green
+Non-ISWL,54,0822 620,Notify Messages/Letters (NT),O,ADB,none
+Non-ISWL,54,0822 620,Commissions(CC),P,BASE,none
+Non-ISWL,55,0823 620,Premiums (PR),B,0823 620,purple
+Non-ISWL,55,0823 620,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,55,0823 620,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,55,0823 620,Commissions(CC),P,BASE,none
+Non-ISWL,56,L07 5Y LT,Premiums (PR),B,L07 5Y LT,dark_green
+Non-ISWL,56,L07 5Y LT,Reserve Factors (RV),F,L07 5Y,red
+Non-ISWL,56,L07 5Y LT,Net Valuation Premiums (NP),G,L07 5Y,red
+Non-ISWL,56,L07 5Y LT,Notify Messages/Letters (NT),O,5YR LV TRM,none
+Non-ISWL,56,L07 5Y LT,Commissions(CC),P,HA1,none
+Non-ISWL,57,10827 CSI5,Premiums (PR),B,10827 CSI5,dark_green
+Non-ISWL,57,10827 CSI5,Cash Values (CV),C,10827 CSI5,dark_green
+Non-ISWL,57,10827 CSI5,Death Benefits (DB),E,10827 CSI5,dark_green
+Non-ISWL,57,10827 CSI5,Reserve Factors (RV),F,10827 CSI5,dark_green
+Non-ISWL,57,10827 CSI5,Net Valuation Premiums (NP),G,10827 CSI5,dark_green
+Non-ISWL,57,10827 CSI5,Non-Deduction Reserve  (NN),I,10827 CSI5,dark_green
+Non-ISWL,57,10827 CSI5,Non-Ded Valuation Prem (PN),J,10827 CSI5,dark_green
+Non-ISWL,57,10827 CSI5,Loan Interest Rates (LN),M,74 ADV,none
+Non-ISWL,57,10827 CSI5,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,57,10827 CSI5,Commissions(CC),P,JA1,none
+Non-ISWL,57,10827 CSI5,Ext Term/Reduced Paid Up (ET),S,10827,none
+Non-ISWL,57,10827 CSI5,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,57,10827 CSI5,Billng Setup (BS),X,LIFE,none
+Non-ISWL,57,10827 CSI5,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,58,SAL OL,Premiums (PR),B,SAL OL,dark_green
+Non-ISWL,58,SAL OL,Cash Values (CV),C,SAL OL,dark_green
+Non-ISWL,58,SAL OL,Reserve Factors (RV),F,SAL OL,dark_green
+Non-ISWL,58,SAL OL,Net Valuation Premiums (NP),G,SAL OL,dark_green
+Non-ISWL,58,SAL OL,Non-Forfeiture Factors (NF),H,SAL OL,dark_green
+Non-ISWL,58,SAL OL,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,58,SAL OL,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,58,SAL OL,Commissions(CC),P,AA1,none
+Non-ISWL,58,SAL OL,Ext Term/Reduced Paid Up (ET),S,SAL OL,none
+Non-ISWL,58,SAL OL,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,58,SAL OL,Dividend Option Setup,W,LIFE,none
+Non-ISWL,58,SAL OL,Billng Setup (BS),X,LIFE,none
+Non-ISWL,58,SAL OL,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,59,L15,Premiums (PR),B,L15,dark_green
+Non-ISWL,59,L15,Cash Values (CV),C,L15,dark_green
+Non-ISWL,59,L15,Reserve Factors (RV),F,L15,dark_green
+Non-ISWL,59,L15,Net Valuation Premiums (NP),G,L15,dark_green
+Non-ISWL,59,L15,Non-Forfeiture Factors (NF),H,L15,dark_green
+Non-ISWL,59,L15,Non-Deduction Reserve  (NN),I,L14L15,none
+Non-ISWL,59,L15,Non-Ded Valuation Prem (PN),J,L14L15,none
+Non-ISWL,59,L15,Loan Interest Rates (LN),M,L15,none
+Non-ISWL,59,L15,"Endowment,Deposit Return (RD)",N,L15,none
+Non-ISWL,59,L15,Commissions(CC),P,DB3,none
+Non-ISWL,59,L15,Retention Limits (RE),Q,L15,none
+Non-ISWL,59,L15,Treaty Selection (TR),R,L15,none
+Non-ISWL,59,L15,Ext Term/Reduced Paid Up (ET),S,L15,none
+Non-ISWL,59,L15,IBA Accounts (IB),T,L15,none
+Non-ISWL,59,L15,New Business Defaults (NB),U,L15,none
+Non-ISWL,59,L15,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,59,L15,Billng Setup (BS),X,LIFE,none
+Non-ISWL,59,L15,Non Forfeiture Rules (NO),Z,L15,none
+Non-ISWL,60,L15 ADB,Commissions(CC),P,BASE,none
+Non-ISWL,61,10827 CSI7,Premiums (PR),B,10827 CSI7,dark_green
+Non-ISWL,61,10827 CSI7,Cash Values (CV),C,10827 CSI7,dark_green
+Non-ISWL,61,10827 CSI7,Death Benefits (DB),E,10827 CSI7,dark_green
+Non-ISWL,61,10827 CSI7,Reserve Factors (RV),F,10827 CSI7,dark_green
+Non-ISWL,61,10827 CSI7,Net Valuation Premiums (NP),G,10827 CSI7,dark_green
+Non-ISWL,61,10827 CSI7,Loan Interest Rates (LN),M,74 ADV,none
+Non-ISWL,61,10827 CSI7,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,61,10827 CSI7,Commissions(CC),P,JA1,none
+Non-ISWL,61,10827 CSI7,Ext Term/Reduced Paid Up (ET),S,10827,none
+Non-ISWL,61,10827 CSI7,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,61,10827 CSI7,Billng Setup (BS),X,LIFE,none
+Non-ISWL,61,10827 CSI7,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,62,619 DT,Premiums (PR),B,619 DT,dark_green
+Non-ISWL,62,619 DT,Death Benefits (DB),E,619 DT,dark_green
+Non-ISWL,62,619 DT,Reserve Factors (RV),F,619 DT,dark_green
+Non-ISWL,62,619 DT,Net Valuation Premiums (NP),G,619 DT,dark_green
+Non-ISWL,62,619 DT,Non-Deduction Reserve  (NN),I,619 DT,dark_green
+Non-ISWL,62,619 DT,Non-Ded Valuation Prem (PN),J,619 DT,dark_green
+Non-ISWL,62,619 DT,Notify Messages/Letters (NT),O,619 DT,none
+Non-ISWL,62,619 DT,Commissions(CC),P,BA3,none
+Non-ISWL,62,619 DT,IBA Accounts (IB),T,IBA01 45,none
+Non-ISWL,63,619 DT SP,Premiums (PR),B,619 DT SP,dark_green
+Non-ISWL,63,619 DT SP,Death Benefits (DB),E,619 DT SP,dark_green
+Non-ISWL,63,619 DT SP,Reserve Factors (RV),F,619 DT SP,dark_green
+Non-ISWL,63,619 DT SP,Net Valuation Premiums (NP),G,619 DT SP,dark_green
+Non-ISWL,63,619 DT SP,Notify Messages/Letters (NT),O,SPS TRM RD,none
+Non-ISWL,63,619 DT SP,Commissions(CC),P,BASE,none
+Non-ISWL,64,619 DT CH,Premiums (PR),B,619 DT CH,dark_green
+Non-ISWL,64,619 DT CH,Death Benefits (DB),E,619 DT CH,dark_green
+Non-ISWL,64,619 DT CH,Notify Messages/Letters (NT),O,CTR 22,none
+Non-ISWL,64,619 DT CH,Commissions(CC),P,BASE,none
+Non-ISWL,65,DISCHO25,Premiums (PR),B,DISCHO25,peach
+Non-ISWL,65,DISCHO25,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,65,DISCHO25,Commissions(CC),P,AA1,none
+Non-ISWL,66,991 PWL,Premiums (PR),B,991 PWL,dark_green
+Non-ISWL,66,991 PWL,Cash Values (CV),C,991 PWL,dark_green
+Non-ISWL,66,991 PWL,Dividends (DV),D,991 PWL,dark_green
+Non-ISWL,66,991 PWL,Reserve Factors (RV),F,991 PWL,dark_green
+Non-ISWL,66,991 PWL,Net Valuation Premiums (NP),G,991 PWL,dark_green
+Non-ISWL,66,991 PWL,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,66,991 PWL,"Endowment,Deposit Return (RD)",N,ENDOW103F,none
+Non-ISWL,66,991 PWL,Commissions(CC),P,EA2,none
+Non-ISWL,66,991 PWL,Ext Term/Reduced Paid Up (ET),S,991 PWL,none
+Non-ISWL,66,991 PWL,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,66,991 PWL,Dividend Option Setup,W,LIFE,none
+Non-ISWL,66,991 PWL,Billng Setup (BS),X,LIFE,none
+Non-ISWL,66,991 PWL,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,67,666 WL,Premiums (PR),B,666 WL,dark_green
+Non-ISWL,67,666 WL,Cash Values (CV),C,666 WL,dark_green
+Non-ISWL,67,666 WL,Reserve Factors (RV),F,666 WL,dark_green
+Non-ISWL,67,666 WL,Net Valuation Premiums (NP),G,666 WL,dark_green
+Non-ISWL,67,666 WL,Non-Deduction Reserve  (NN),I,666 WL,dark_green
+Non-ISWL,67,666 WL,Non-Ded Valuation Prem (PN),J,666 WL,dark_green
+Non-ISWL,67,666 WL,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,67,666 WL,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,67,666 WL,Commissions(CC),P,FA7,none
+Non-ISWL,67,666 WL,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,67,666 WL,Dividend Option Setup,W,LIFE,none
+Non-ISWL,67,666 WL,Billng Setup (BS),X,LIFE,none
+Non-ISWL,67,666 WL,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,68,897 666,Premiums (PR),B,666 WL,dark_green
+Non-ISWL,68,897 666,Cash Values (CV),C,666 WL,dark_green
+Non-ISWL,68,897 666,Reserve Factors (RV),F,666 WL,dark_green
+Non-ISWL,68,897 666,Net Valuation Premiums (NP),G,666 WL,dark_green
+Non-ISWL,68,897 666,Commissions(CC),P,BASE,none
+Non-ISWL,69,10827 CSI3,Premiums (PR),B,10827 CSI3,dark_green
+Non-ISWL,69,10827 CSI3,Cash Values (CV),C,10827 CSI3,dark_green
+Non-ISWL,69,10827 CSI3,Death Benefits (DB),E,10827 CSI3,dark_green
+Non-ISWL,69,10827 CSI3,Reserve Factors (RV),F,10827 CSI3,dark_green
+Non-ISWL,69,10827 CSI3,Net Valuation Premiums (NP),G,10827 CSI3,dark_green
+Non-ISWL,69,10827 CSI3,Non-Deduction Reserve  (NN),I,10827 CSI3,dark_green
+Non-ISWL,69,10827 CSI3,Non-Ded Valuation Prem (PN),J,10827 CSI5,dark_green
+Non-ISWL,69,10827 CSI3,Loan Interest Rates (LN),M,74 ADV,none
+Non-ISWL,69,10827 CSI3,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,69,10827 CSI3,Commissions(CC),P,JA1,none
+Non-ISWL,69,10827 CSI3,Ext Term/Reduced Paid Up (ET),S,10827,none
+Non-ISWL,69,10827 CSI3,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,69,10827 CSI3,Billng Setup (BS),X,LIFE,none
+Non-ISWL,69,10827 CSI3,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,70,10827 MN5K,Premiums (PR),B,10827 CSI5,dark_green
+Non-ISWL,70,10827 MN5K,Cash Values (CV),C,10827 MN5K,dark_green
+Non-ISWL,70,10827 MN5K,Death Benefits (DB),E,10827 MN5K,dark_green
+Non-ISWL,70,10827 MN5K,Reserve Factors (RV),F,10827 MN5K,dark_green
+Non-ISWL,70,10827 MN5K,Net Valuation Premiums (NP),G,10827 MN5K,dark_green
+Non-ISWL,70,10827 MN5K,Loan Interest Rates (LN),M,74 ADV,none
+Non-ISWL,70,10827 MN5K,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,70,10827 MN5K,Commissions(CC),P,JA1,none
+Non-ISWL,70,10827 MN5K,Ext Term/Reduced Paid Up (ET),S,10827,none
+Non-ISWL,70,10827 MN5K,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,70,10827 MN5K,Billng Setup (BS),X,LIFE,none
+Non-ISWL,70,10827 MN5K,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,71,622 END85,Cash Values (CV),C,622 END85,dark_green
+Non-ISWL,71,622 END85,Dividends (DV),D,622 END85,dark_green
+Non-ISWL,71,622 END85,Reserve Factors (RV),F,622 END85,dark_green
+Non-ISWL,71,622 END85,Net Valuation Premiums (NP),G,622 END85,dark_green
+Non-ISWL,71,622 END85,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,71,622 END85,"Endowment,Deposit Return (RD)",N,620 END85,none
+Non-ISWL,71,622 END85,Commissions(CC),P,AA9B1,none
+Non-ISWL,71,622 END85,Ext Term/Reduced Paid Up (ET),S,622 END85,none
+Non-ISWL,71,622 END85,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,71,622 END85,Dividend Option Setup,W,LIFE,none
+Non-ISWL,71,622 END85,Billng Setup (BS),X,LIFE,none
+Non-ISWL,71,622 END85,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,72,665 STME95,Premiums (PR),B,665 STME95,yellow
+Non-ISWL,72,665 STME95,Cash Values (CV),C,665 STME95,dark_green
+Non-ISWL,72,665 STME95,Dividends (DV),D,665 STME95,dark_green
+Non-ISWL,72,665 STME95,Death Benefits (DB),E,665 STME95,dark_green
+Non-ISWL,72,665 STME95,Reserve Factors (RV),F,665 STME95,dark_green
+Non-ISWL,72,665 STME95,Net Valuation Premiums (NP),G,665 STME95,dark_green
+Non-ISWL,72,665 STME95,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,72,665 STME95,"Endowment,Deposit Return (RD)",N,665 STME95,none
+Non-ISWL,72,665 STME95,Notify Messages/Letters (NT),O,AGE 95,none
+Non-ISWL,72,665 STME95,Commissions(CC),P,EA5,none
+Non-ISWL,72,665 STME95,Ext Term/Reduced Paid Up (ET),S,665 STME95,none
+Non-ISWL,72,665 STME95,IBA Accounts (IB),T,896 DAR,none
+Non-ISWL,72,665 STME95,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,72,665 STME95,Dividend Option Setup,W,LIFE,none
+Non-ISWL,72,665 STME95,Billng Setup (BS),X,LIFE,none
+Non-ISWL,72,665 STME95,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,73,0823 665,Premiums (PR),B,0823 665,dark_green
+Non-ISWL,73,0823 665,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,73,0823 665,Reserve Factors (RV),F,WP AD 02,red
+Non-ISWL,73,0823 665,Net Valuation Premiums (NP),G,WP AD 02,red
+Non-ISWL,73,0823 665,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,73,0823 665,Commissions(CC),P,BASE,none
+Non-ISWL,74,0822 665,Premiums (PR),B,0822 665,dark_green
+Non-ISWL,74,0822 665,Reserve Factors (RV),F,ADB 25 66,red
+Non-ISWL,74,0822 665,Net Valuation Premiums (NP),G,ADB 25 66,red
+Non-ISWL,74,0822 665,Notify Messages/Letters (NT),O,ADB,none
+Non-ISWL,74,0822 665,Commissions(CC),P,BASE,none
+Non-ISWL,75,896 DAR,Premiums (PR),B,896 DAR,dark_green
+Non-ISWL,75,896 DAR,Cash Values (CV),C,896 DAR,dark_green
+Non-ISWL,75,896 DAR,Dividends (DV),D,896 DAR,dark_green
+Non-ISWL,75,896 DAR,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,75,896 DAR,Reserve Factors (RV),F,896 DAR,dark_green
+Non-ISWL,75,896 DAR,Net Valuation Premiums (NP),G,896 DAR,dark_green
+Non-ISWL,75,896 DAR,Notify Messages/Letters (NT),O,ANNUITY RD,none
+Non-ISWL,75,896 DAR,Commissions(CC),P,BASE,none
+Non-ISWL,75,896 DAR,Dividend Option Setup,W,896 DAR,none
+Non-ISWL,75,896 DAR,Billng Setup (BS),X,LIFE,none
+Non-ISWL,75,896 DAR,Non Forfeiture Rules (NO),Z,896 DAR,none
+Non-ISWL,76,0823 896,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,76,0823 896,Reserve Factors (RV),F,WP AD 02,red
+Non-ISWL,76,0823 896,Net Valuation Premiums (NP),G,WP AD 02,red
+Non-ISWL,76,0823 896,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,76,0823 896,Commissions(CC),P,BASE,none
+Non-ISWL,77,980 END65,Premiums (PR),B,980 END65,dark_green
+Non-ISWL,77,980 END65,Cash Values (CV),C,980 END65,dark_green
+Non-ISWL,77,980 END65,Dividends (DV),D,980 END65,dark_green
+Non-ISWL,77,980 END65,Reserve Factors (RV),F,980 END65,dark_green
+Non-ISWL,77,980 END65,Net Valuation Premiums (NP),G,980 END65,dark_green
+Non-ISWL,77,980 END65,Non-Deduction Reserve  (NN),I,980 END65,dark_green
+Non-ISWL,77,980 END65,Non-Ded Valuation Prem (PN),J,980 END65,dark_green
+Non-ISWL,77,980 END65,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,77,980 END65,"Endowment,Deposit Return (RD)",N,980 END65,none
+Non-ISWL,77,980 END65,Commissions(CC),P,DA7,none
+Non-ISWL,77,980 END65,Ext Term/Reduced Paid Up (ET),S,980 END65,none
+Non-ISWL,77,980 END65,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,77,980 END65,Dividend Option Setup,W,LIFE,none
+Non-ISWL,77,980 END65,Billng Setup (BS),X,LIFE,none
+Non-ISWL,77,980 END65,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,78,L16,Premiums (PR),B,L16,dark_green
+Non-ISWL,78,L16,Cash Values (CV),C,L16,dark_green
+Non-ISWL,78,L16,Death Benefits (DB),E,L16,dark_green
+Non-ISWL,78,L16,Reserve Factors (RV),F,L16,dark_green
+Non-ISWL,78,L16,Net Valuation Premiums (NP),G,L16,dark_green
+Non-ISWL,78,L16,Non-Forfeiture Factors (NF),H,L16,dark_green
+Non-ISWL,78,L16,Non-Deduction Reserve  (NN),I,L14L15,none
+Non-ISWL,78,L16,Non-Ded Valuation Prem (PN),J,L14L15,none
+Non-ISWL,78,L16,Loan Interest Rates (LN),M,L15,none
+Non-ISWL,78,L16,"Endowment,Deposit Return (RD)",N,L15,none
+Non-ISWL,78,L16,Commissions(CC),P,DB3,none
+Non-ISWL,78,L16,Retention Limits (RE),Q,L15,none
+Non-ISWL,78,L16,Treaty Selection (TR),R,L15,none
+Non-ISWL,78,L16,Ext Term/Reduced Paid Up (ET),S,L15,none
+Non-ISWL,78,L16,IBA Accounts (IB),T,L15,none
+Non-ISWL,78,L16,New Business Defaults (NB),U,L15,none
+Non-ISWL,78,L16,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,78,L16,Billng Setup (BS),X,LIFE,none
+Non-ISWL,78,L16,Non Forfeiture Rules (NO),Z,L15,none
+Non-ISWL,79,L16POLFEE,Death Benefits (DB),E,L16POLFEE,dark_green
+Non-ISWL,79,L16POLFEE,Commissions(CC),P,BASE,none
+Non-ISWL,80,619 SPS PU,Death Benefits (DB),E,619 DT SP,yellow
+Non-ISWL,80,619 SPS PU,Reserve Factors (RV),F,619 SPS PU,dark_green
+Non-ISWL,80,619 SPS PU,Net Valuation Premiums (NP),G,619 SPS PU,dark_green
+Non-ISWL,80,619 SPS PU,Notify Messages/Letters (NT),O,SPS PD UP,none
+Non-ISWL,80,619 SPS PU,Commissions(CC),P,AA1,none
+Non-ISWL,81,647 FLP,Premiums (PR),B,647 FLP,dark_green
+Non-ISWL,81,647 FLP,Death Benefits (DB),E,647 FLP,dark_green
+Non-ISWL,81,647 FLP,Reserve Factors (RV),F,647 FLP,dark_green
+Non-ISWL,81,647 FLP,Net Valuation Premiums (NP),G,647 FLP,dark_green
+Non-ISWL,81,647 FLP,Commissions(CC),P,FA8,none
+Non-ISWL,82,647 FLP SP,Death Benefits (DB),E,647 FLP SP,dark_green
+Non-ISWL,82,647 FLP SP,Commissions(CC),P,BASE,none
+Non-ISWL,83,647 FLP CH,Commissions(CC),P,BASE,none
+Non-ISWL,84,670 GL858,Premiums (PR),B,GL LP85,purple
+Non-ISWL,84,670 GL858,Cash Values (CV),C,670 GL85-8,dark_green
+Non-ISWL,84,670 GL858,Dividends (DV),D,670 GL85-8,dark_green
+Non-ISWL,84,670 GL858,Reserve Factors (RV),F,670 GL8588,peach
+Non-ISWL,84,670 GL858,Net Valuation Premiums (NP),G,670 GL8588,peach
+Non-ISWL,84,670 GL858,Non-Deduction Reserve  (NN),I,670 GL8588,none
+Non-ISWL,84,670 GL858,Non-Ded Valuation Prem (PN),J,670 GL8588,none
+Non-ISWL,84,670 GL858,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,84,670 GL858,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,84,670 GL858,Notify Messages/Letters (NT),O,AGE 88,none
+Non-ISWL,84,670 GL858,Commissions(CC),P,AA4,none
+Non-ISWL,84,670 GL858,Ext Term/Reduced Paid Up (ET),S,670 GL85-8,none
+Non-ISWL,84,670 GL858,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,84,670 GL858,Dividend Option Setup,W,LIFE,none
+Non-ISWL,84,670 GL858,Billng Setup (BS),X,LIFE,none
+Non-ISWL,84,670 GL858,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,85,960 LP85-M,Premiums (PR),B,960 LP85-8,purple
+Non-ISWL,85,960 LP85-M,Cash Values (CV),C,960 LP85-8,red
+Non-ISWL,85,960 LP85-M,Dividends (DV),D,960 LP85-8,red
+Non-ISWL,85,960 LP85-M,Reserve Factors (RV),F,960 LP85-8,red
+Non-ISWL,85,960 LP85-M,Net Valuation Premiums (NP),G,960 LP85-8,red
+Non-ISWL,85,960 LP85-M,Non-Deduction Reserve  (NN),I,960 LP85-8,none
+Non-ISWL,85,960 LP85-M,Non-Ded Valuation Prem (PN),J,960 LP85-8,none
+Non-ISWL,85,960 LP85-M,Tax Reserve Factors (TX),K,960 LP858A,none
+Non-ISWL,85,960 LP85-M,Tax Valuation Premiums (TP),L,960 LP858A,none
+Non-ISWL,85,960 LP85-M,Loan Interest Rates (LN),M,5 ADV,none
+Non-ISWL,85,960 LP85-M,"Endowment,Deposit Return (RD)",N,ENDOW100,none
+Non-ISWL,85,960 LP85-M,Notify Messages/Letters (NT),O,AGE 85,none
+Non-ISWL,85,960 LP85-M,Commissions(CC),P,CA7,none
+Non-ISWL,85,960 LP85-M,Ext Term/Reduced Paid Up (ET),S,960 LP85-8,none
+Non-ISWL,85,960 LP85-M,Letter Type (L0),V,LIFEWCV,none
+Non-ISWL,85,960 LP85-M,Dividend Option Setup,W,LIFE,none
+Non-ISWL,85,960 LP85-M,Billng Setup (BS),X,LIFE,none
+Non-ISWL,85,960 LP85-M,Non Forfeiture Rules (NO),Z,DEFAULT,none
+Non-ISWL,86,0823 96085,Premiums (PR),B,0823 96085,dark_green
+Non-ISWL,86,0823 96085,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,86,0823 96085,Reserve Factors (RV),F,WPAD061 2,red
+Non-ISWL,86,0823 96085,Net Valuation Premiums (NP),G,WPAD061 2,red
+Non-ISWL,86,0823 96085,Notify Messages/Letters (NT),O,LIFE WP,none
+Non-ISWL,86,0823 96085,Commissions(CC),P,BASE,none
+Non-ISWL,87,L01 10Y MA,Premiums (PR),B,L01 10Y MA,dark_green
+Non-ISWL,87,L01 10Y MA,Reserve Factors (RV),F,L01 10Y MA,dark_green
+Non-ISWL,87,L01 10Y MA,Net Valuation Premiums (NP),G,L01 10Y MA,dark_green
+Non-ISWL,87,L01 10Y MA,Non-Deduction Reserve  (NN),I,L01 10Y MA,dark_green
+Non-ISWL,87,L01 10Y MA,Non-Ded Valuation Prem (PN),J,L01 10Y MA,dark_green
+Non-ISWL,87,L01 10Y MA,Notify Messages/Letters (NT),O,10YR LV TM,none
+Non-ISWL,87,L01 10Y MA,Commissions(CC),P,DA9,none
+Non-ISWL,88,8115 L01,Premiums (PR),B,8115 L01,dark_green
+Non-ISWL,88,8115 L01,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,88,8115 L01,Reserve Factors (RV),F,WP AD 24,red
+Non-ISWL,88,8115 L01,Net Valuation Premiums (NP),G,WP AD 24,red
+Non-ISWL,88,8115 L01,Notify Messages/Letters (NT),O,DISAB WP,none
+Non-ISWL,88,8115 L01,Commissions(CC),P,BASE,none
+Non-ISWL,89,1596 L01,Premiums (PR),B,1596,dark_green
+Non-ISWL,89,1596 L01,Reserve Factors (RV),F,ADB 25 68,red
+Non-ISWL,89,1596 L01,Net Valuation Premiums (NP),G,ADB 25 68,red
+Non-ISWL,89,1596 L01,Commissions(CC),P,BASE,none
+Non-ISWL,90,DISCH070,Premiums (PR),B,DISCHO70,peach
+Non-ISWL,90,DISCH070,Death Benefits (DB),E,ZERO,light_green
+Non-ISWL,90,DISCH070,Commissions(CC),P,AA1,none
+ISWL,2,659 CEN II,Cash Values (CV),C,659 CEN II,dark_green
+ISWL,2,659 CEN II,Net Valuation Premiums (NP),D,659 CEN II,dark_green
+ISWL,2,659 CEN II,Reserve Factors (RV),F,659 CEN II,dark_green
+ISWL,2,659 CEN II,Non-Forfeiture Factors (NF),G,659 CEN II,dark_green
+ISWL,2,659 CEN II,Guar COI Rates (U5),H,659 CEN II,dark_green
+ISWL,2,659 CEN II,Curr COI Rates (U6),I,659 CEN II,dark_green
+ISWL,2,659 CEN II,Tax Reserve Factors (TX),J,659 CEN II,dark_green
+ISWL,2,659 CEN II,Tax Valuation Premiums (TP),K,659 CEN II,dark_green
+ISWL,2,659 CEN II,Targe Permiums (UH),M,659 CEN II,none
+ISWL,2,659 CEN II,Minimum Premiums (UG),N,659 CEN II,none
+ISWL,2,659 CEN II,Per Policy Monthly Exp (UF),O,659 CEN II,none
+ISWL,2,659 CEN II,Loan Interest Raes (LN),P,659 CEN II,none
+ISWL,2,659 CEN II,Fund Package (F0),Q,659 CEN II,none
+ISWL,2,659 CEN II,Fund Contract Rules (FC),R,659 CEN II,none
+ISWL,2,659 CEN II,Monthaversary Control (UI),S,659 CEN II,none
+ISWL,2,659 CEN II,Corridor Calculation (UL),T,DEFRA,none
+ISWL,2,659 CEN II,Waiver Of Premium (UM),U,1576 659,none
+ISWL,2,659 CEN II,Commissions (CC),V,AA9B1,none
+ISWL,2,659 CEN II,UL Reserve Method (RX),Y,659 CEN II,none
+ISWL,2,659 CEN II,Billable Premium (BP),Z,659 CEN II,none
+ISWL,2,659 CEN II,Net Premium Credited (NC),AA,659 CEN II,none
+ISWL,2,659 CEN II,IBA Accounts (IB),AB,IBA01 45,none
+ISWL,2,659 CEN II,New Business Defaults (NB),AC,L14,none
+ISWL,2,659 CEN II,Full Surrender Segments (SR),AD,659 CEN II,none
+ISWL,2,659 CEN II,Partial Withdrl Segments (WD),AE,659 CEN II,none
+ISWL,2,659 CEN II,Lapse Control (LP),AF,659 CEN II,none
+ISWL,2,659 CEN II,Letter Type (L0),AG,LIFEWCV,none
+ISWL,2,659 CEN II,Billing Setup (BS),AH,LIFE,none
+ISWL,2,659 CEN II,Vanish Rules (VN),AI,659 CEN II,none
+ISWL,3,1576 659,Premiums (PR),B,1576 659,dark_green
+ISWL,3,1576 659,Net Valuation Premiums (NP),D,WP AA 20,red
+ISWL,3,1576 659,Death Benefits (DB),E,ZERO,light_green
+ISWL,3,1576 659,Reserve Factors (RV),F,WP AA 20,red
+ISWL,3,1576 659,Commissions (CC),V,BASE,none
+ISWL,4,1577 ADB,Premiums (PR),B,1577 ADB,dark_green
+ISWL,5,1578 FTR,Premiums (PR),B,1578 FTR,dark_green
+ISWL,5,1578 FTR,Net Valuation Premiums (NP),D,1578 FTR,dark_green
+ISWL,5,1578 FTR,Death Benefits (DB),E,1578 FTR,dark_green
+ISWL,5,1578 FTR,Reserve Factors (RV),F,1578 FTR,dark_green
+ISWL,6,1578 CTR,Premiums (PR),B,1578 CTR,dark_green
+ISWL,7,1578FTR WP,Premiums (PR),B,1578FTR WP,dark_green
+ISWL,7,1578FTR WP,Death Benefits (DB),E,ZERO,light_green
+ISWL,8,1578CTR WP,Premiums (PR),B,1578CTR WP,dark_green
+ISWL,8,1578CTR WP,Death Benefits (DB),E,ZERO,light_green
+ISWL,9,1579 GPO,Premiums (PR),B,1579 GPO,dark_green
+ISWL,9,1579 GPO,Net Valuation Premiums (NP),D,1579 GPO,peach
+ISWL,9,1579 GPO,Death Benefits (DB),E,ZERO,light_green
+ISWL,9,1579 GPO,Reserve Factors (RV),F,ZERO LIFE,light_green
+ISWL,10,1580 JPO,Premiums (PR),B,1580 JPO,dark_green
+ISWL,10,1580 JPO,Net Valuation Premiums (NP),D,1580 JPO,peach
+ISWL,10,1580 JPO,Death Benefits (DB),E,ZERO,light_green
+ISWL,10,1580 JPO,Reserve Factors (RV),F,ZERO LIFE,light_green
+ISWL,11,8042 STR,Premiums (PR),B,8042 STR,dark_green
+ISWL,11,8042 STR,Net Valuation Premiums (NP),D,8042 STR,dark_green
+ISWL,11,8042 STR,Death Benefits (DB),E,8042 STR,dark_green
+ISWL,11,8042 STR,Reserve Factors (RV),F,8042 STR,dark_green
+ISWL,12,8043 CTR,Premiums (PR),B,8043 CTR,dark_green
+ISWL,12,8043 CTR,Net Valuation Premiums (NP),D,8043 CTR,dark_green
+ISWL,12,8043 CTR,Reserve Factors (RV),F,8043 CTR,dark_green
+ISWL,13,8042STR WP,Premiums (PR),B,8042STR WP,dark_green
+ISWL,13,8042STR WP,Death Benefits (DB),E,ZERO,light_green
+ISWL,14,8043CTR WP,Premiums (PR),B,8043CTR WP,dark_green
+ISWL,14,8043CTR WP,Death Benefits (DB),E,ZERO,light_green
+ISWL,15,8046 JPO,Premiums (PR),B,8046 JPO,dark_green
+ISWL,15,8046 JPO,Net Valuation Premiums (NP),D,8046 JPO,peach
+ISWL,15,8046 JPO,Death Benefits (DB),E,ZERO,light_green
+ISWL,15,8046 JPO,Reserve Factors (RV),F,ZERO LIFE,light_green
+ISWL,16,DISCHO20 B,Premiums (PR),B,DISCHO20 B,light_green
+ISWL,16,DISCHO20 B,Death Benefits (DB),E,ZERO,light_green
+ISWL,17,DISCHO80,Premiums (PR),B,DISCHO80,light_green
+ISWL,17,DISCHO80,Death Benefits (DB),E,ZERO,light_green
+ISWL,18,DISCHO90,Premiums (PR),B,DISCHO90,light_green
+ISWL,18,DISCHO90,Death Benefits (DB),E,ZERO,light_green
+ISWL,19,658 CEN I,Cash Values (CV),C,658 CEN I,dark_green
+ISWL,19,658 CEN I,Net Valuation Premiums (NP),D,658 CEN I,dark_green
+ISWL,19,658 CEN I,Reserve Factors (RV),F,658 CEN I,dark_green
+ISWL,19,658 CEN I,Non-Forfeiture Factors (NF),G,658 CEN I,dark_green
+ISWL,19,658 CEN I,Guar COI Rates (U5),H,659 CEN II,dark_green
+ISWL,19,658 CEN I,Curr COI Rates (U6),I,658 CEN I,dark_green
+ISWL,19,658 CEN I,Targe Permiums (UH),M,658 CEN I,none
+ISWL,19,658 CEN I,Minimum Premiums (UG),N,658 CEN I,none
+ISWL,19,658 CEN I,Per Policy Monthly Exp (UF),O,659 CEN II,none
+ISWL,19,658 CEN I,Loan Interest Raes (LN),P,659 CEN II,none
+ISWL,19,658 CEN I,Fund Package (F0),Q,659 CEN II,none
+ISWL,19,658 CEN I,Fund Contract Rules (FC),R,659 CEN II,none
+ISWL,19,658 CEN I,Monthaversary Control (UI),S,659 CEN II,none
+ISWL,19,658 CEN I,Corridor Calculation (UL),T,DEFRA,none
+ISWL,19,658 CEN I,Waiver Of Premium (UM),U,1576 658,none
+ISWL,19,658 CEN I,Commissions (CC),V,AA9B2,none
+ISWL,19,658 CEN I,Retention Limits (RE),W,BMA658,none
+ISWL,19,658 CEN I,Treaty Selection (TR),X,BMA658,none
+ISWL,19,658 CEN I,UL Reserve Method (RX),Y,659 CEN II,none
+ISWL,19,658 CEN I,Billable Premium (BP),Z,658 CEN I,none
+ISWL,19,658 CEN I,Net Premium Credited (NC),AA,658 CEN I,none
+ISWL,19,658 CEN I,IBA Accounts (IB),AB,IBA01 45,none
+ISWL,19,658 CEN I,New Business Defaults (NB),AC,L14,none
+ISWL,19,658 CEN I,Full Surrender Segments (SR),AD,659 CEN II,none
+ISWL,19,658 CEN I,Letter Type (L0),AG,LIFEWCV,none
+ISWL,19,658 CEN I,Billing Setup (BS),AH,LIFE,none
+ISWL,20,1576 658,Premiums (PR),B,1576 658,dark_green
+ISWL,20,1576 658,Net Valuation Premiums (NP),D,WP AA 20,red
+ISWL,20,1576 658,Death Benefits (DB),E,ZERO,light_green
+ISWL,20,1576 658,Reserve Factors (RV),F,WP AA 20,red
+ISWL,21,659 CEN SR,Cash Values (CV),C,659 CEN SR,dark_green
+ISWL,21,659 CEN SR,Net Valuation Premiums (NP),D,659 CEN SR,dark_green
+ISWL,21,659 CEN SR,Reserve Factors (RV),F,659 CEN SR,dark_green
+ISWL,21,659 CEN SR,Non-Forfeiture Factors (NF),G,659 CEN II,dark_green
+ISWL,21,659 CEN SR,Guar COI Rates (U5),H,659 CEN II,dark_green
+ISWL,21,659 CEN SR,Curr COI Rates (U6),I,659 CEN II,dark_green
+ISWL,21,659 CEN SR,Tax Reserve Factors (TX),J,659 CEN II,none
+ISWL,21,659 CEN SR,Tax Valuation Premiums (TP),K,659 CEN II,none
+ISWL,21,659 CEN SR,Targe Permiums (UH),M,659 CEN II,none
+ISWL,21,659 CEN SR,Minimum Premiums (UG),N,659 CEN II,none
+ISWL,21,659 CEN SR,Per Policy Monthly Exp (UF),O,659 CEN II,none
+ISWL,21,659 CEN SR,Loan Interest Raes (LN),P,659 CEN II,none
+ISWL,21,659 CEN SR,Fund Package (F0),Q,659 CEN II,none
+ISWL,21,659 CEN SR,Fund Contract Rules (FC),R,659 CEN II,none
+ISWL,21,659 CEN SR,Monthaversary Control (UI),S,659 CEN II,none
+ISWL,21,659 CEN SR,Corridor Calculation (UL),T,DEFRA,none
+ISWL,21,659 CEN SR,Waiver Of Premium (UM),U,1576 659,none
+ISWL,21,659 CEN SR,Commissions (CC),V,AA9B1,none
+ISWL,21,659 CEN SR,UL Reserve Method (RX),Y,659 CEN II,none
+ISWL,21,659 CEN SR,Billable Premium (BP),Z,659 CEN SR,none
+ISWL,21,659 CEN SR,Net Premium Credited (NC),AA,659 CEN II,none
+ISWL,21,659 CEN SR,IBA Accounts (IB),AB,IBA01 45,none
+ISWL,21,659 CEN SR,New Business Defaults (NB),AC,L14,none
+ISWL,21,659 CEN SR,Full Surrender Segments (SR),AD,659 CEN II,none
+ISWL,21,659 CEN SR,Partial Withdrl Segments (WD),AE,659 CEN II,none
+ISWL,21,659 CEN SR,Lapse Control (LP),AF,659 CEN II,none
+ISWL,21,659 CEN SR,Letter Type (L0),AG,LIFEWCV,none
+ISWL,21,659 CEN SR,Billing Setup (BS),AH,LIFE,none
+ISWL,21,659 CEN SR,Vanish Rules (VN),AI,659 CEN II,none
+ISWL,22,668 SPWL,Cash Values (CV),C,668 SPWL,dark_green
+ISWL,22,668 SPWL,Net Valuation Premiums (NP),D,668 SPWL,dark_green
+ISWL,22,668 SPWL,Reserve Factors (RV),F,668 SPWL,dark_green
+ISWL,22,668 SPWL,Guar COI Rates (U5),H,668 SPWL,dark_green
+ISWL,22,668 SPWL,Curr COI Rates (U6),I,ZERO,light_green
+ISWL,22,668 SPWL,Crvm Tax Reserve (RT),L,659 CEN II,none
+ISWL,22,668 SPWL,Targe Permiums (UH),M,668 SPWL,none
+ISWL,22,668 SPWL,Minimum Premiums (UG),N,668 SPWL,none
+ISWL,22,668 SPWL,Loan Interest Raes (LN),P,659 CEN II,none
+ISWL,22,668 SPWL,Fund Package (F0),Q,668 SPWL,none
+ISWL,22,668 SPWL,Fund Contract Rules (FC),R,659 CEN II,none
+ISWL,22,668 SPWL,Monthaversary Control (UI),S,659 CEN II,none
+ISWL,22,668 SPWL,Corridor Calculation (UL),T,DEFRA,none
+ISWL,22,668 SPWL,Commissions (CC),V,GA6,none
+ISWL,22,668 SPWL,UL Reserve Method (RX),Y,659 CEN II,none
+ISWL,22,668 SPWL,Billable Premium (BP),Z,668SPWL,none
+ISWL,22,668 SPWL,Net Premium Credited (NC),AA,668SPWL,none
+ISWL,22,668 SPWL,New Business Defaults (NB),AC,L17,none
+ISWL,22,668 SPWL,Full Surrender Segments (SR),AD,668SPWL,none
+ISWL,22,668 SPWL,Letter Type (L0),AG,LIFEWCV,none
+ISWL,23,658 CEN SD,Cash Values (CV),C,658 CEN SD,dark_green
+ISWL,23,658 CEN SD,Net Valuation Premiums (NP),D,658 CEN SD,dark_green
+ISWL,23,658 CEN SD,Reserve Factors (RV),F,658 CEN SD,dark_green
+ISWL,23,658 CEN SD,Non-Forfeiture Factors (NF),G,658 CEN I,dark_green
+ISWL,23,658 CEN SD,Guar COI Rates (U5),H,659 CEN II,dark_green
+ISWL,23,658 CEN SD,Curr COI Rates (U6),I,658 CEN I,dark_green
+ISWL,23,658 CEN SD,Targe Permiums (UH),M,658 CEN I,none
+ISWL,23,658 CEN SD,Minimum Premiums (UG),N,658 CEN I,none
+ISWL,23,658 CEN SD,Per Policy Monthly Exp (UF),O,659 CEN II,none
+ISWL,23,658 CEN SD,Loan Interest Raes (LN),P,659 CEN II,none
+ISWL,23,658 CEN SD,Fund Package (F0),Q,659 CEN II,none
+ISWL,23,658 CEN SD,Fund Contract Rules (FC),R,659 CEN II,none
+ISWL,23,658 CEN SD,Monthaversary Control (UI),S,659 CEN II,none
+ISWL,23,658 CEN SD,Corridor Calculation (UL),T,DEFRA,none
+ISWL,23,658 CEN SD,Waiver Of Premium (UM),U,1576 658,none
+ISWL,23,658 CEN SD,Commissions (CC),V,GA4,none
+ISWL,23,658 CEN SD,Retention Limits (RE),W,BMA658,none
+ISWL,23,658 CEN SD,Treaty Selection (TR),X,BMA658,none
+ISWL,23,658 CEN SD,UL Reserve Method (RX),Y,659 CEN II,none
+ISWL,23,658 CEN SD,Billable Premium (BP),Z,658 CEN SD,none
+ISWL,23,658 CEN SD,Net Premium Credited (NC),AA,658 CEN I,none
+ISWL,23,658 CEN SD,IBA Accounts (IB),AB,IBA01 45,none
+ISWL,23,658 CEN SD,New Business Defaults (NB),AC,L14,none
+ISWL,23,658 CEN SD,Full Surrender Segments (SR),AD,659 CEN II,none
+ISWL,23,658 CEN SD,Letter Type (L0),AG,LIFEWCV,none
+ISWL,23,658 CEN SD,Billing Setup (BS),AH,LIFE,none
+ISWL,24,659 CEN SD,Cash Values (CV),C,659 CEN SD,dark_green
+ISWL,24,659 CEN SD,Net Valuation Premiums (NP),D,659 CEN SD,dark_green
+ISWL,24,659 CEN SD,Reserve Factors (RV),F,659 CEN SD,dark_green
+ISWL,24,659 CEN SD,Non-Forfeiture Factors (NF),G,659 CEN II,dark_green
+ISWL,24,659 CEN SD,Guar COI Rates (U5),H,659 CEN II,dark_green
+ISWL,24,659 CEN SD,Curr COI Rates (U6),I,659 CEN II,dark_green
+ISWL,24,659 CEN SD,Tax Reserve Factors (TX),J,659 CEN II,none
+ISWL,24,659 CEN SD,Tax Valuation Premiums (TP),K,659 CEN II,none
+ISWL,24,659 CEN SD,Targe Permiums (UH),M,659 CEN II,none
+ISWL,24,659 CEN SD,Minimum Premiums (UG),N,659 CEN II,none
+ISWL,24,659 CEN SD,Per Policy Monthly Exp (UF),O,659 CEN II,none
+ISWL,24,659 CEN SD,Loan Interest Raes (LN),P,659 CEN II,none
+ISWL,24,659 CEN SD,Fund Package (F0),Q,659 CEN II,none
+ISWL,24,659 CEN SD,Fund Contract Rules (FC),R,659 CEN II,none
+ISWL,24,659 CEN SD,Monthaversary Control (UI),S,659 CEN II,none
+ISWL,24,659 CEN SD,Corridor Calculation (UL),T,DEFRA,none
+ISWL,24,659 CEN SD,Waiver Of Premium (UM),U,1576 659,none
+ISWL,24,659 CEN SD,Commissions (CC),V,GA4,none
+ISWL,24,659 CEN SD,UL Reserve Method (RX),Y,659 CEN II,none
+ISWL,24,659 CEN SD,Billable Premium (BP),Z,659 CEN SD,none
+ISWL,24,659 CEN SD,Net Premium Credited (NC),AA,659 CEN II,none
+ISWL,24,659 CEN SD,IBA Accounts (IB),AB,IBA01 45,none
+ISWL,24,659 CEN SD,New Business Defaults (NB),AC,L14,none
+ISWL,24,659 CEN SD,Full Surrender Segments (SR),AD,659 CEN II,none
+ISWL,24,659 CEN SD,Partial Withdrl Segments (WD),AE,659 CEN II,none
+ISWL,24,659 CEN SD,Lapse Control (LP),AF,659 CEN II,none
+ISWL,24,659 CEN SD,Letter Type (L0),AG,LIFEWCV,none
+ISWL,24,659 CEN SD,Billing Setup (BS),AH,LIFE,none
+ISWL,24,659 CEN SD,Vanish Rules (VN),AI,659 CEN II,none
+ISWL,25,659 SR GD,Cash Values (CV),C,659 SR GD,dark_green
+ISWL,25,659 SR GD,Net Valuation Premiums (NP),D,659 SR GD,dark_green
+ISWL,25,659 SR GD,Reserve Factors (RV),F,659 SR GD,dark_green
+ISWL,25,659 SR GD,Non-Forfeiture Factors (NF),G,659 SR GD,purple
+ISWL,25,659 SR GD,Guar COI Rates (U5),H,659 CEN II,dark_green
+ISWL,25,659 SR GD,Curr COI Rates (U6),I,659 CEN II,dark_green
+ISWL,25,659 SR GD,Tax Reserve Factors (TX),J,659 CEN II,none
+ISWL,25,659 SR GD,Tax Valuation Premiums (TP),K,659 CEN II,none
+ISWL,25,659 SR GD,Targe Permiums (UH),M,659 CEN II,none
+ISWL,25,659 SR GD,Minimum Premiums (UG),N,659 CEN II,none
+ISWL,25,659 SR GD,Per Policy Monthly Exp (UF),O,659 CEN II,none
+ISWL,25,659 SR GD,Loan Interest Raes (LN),P,659 CEN II,none
+ISWL,25,659 SR GD,Fund Package (F0),Q,659 CEN II,none
+ISWL,25,659 SR GD,Fund Contract Rules (FC),R,659 CEN II,none
+ISWL,25,659 SR GD,Monthaversary Control (UI),S,659 CEN II,none
+ISWL,25,659 SR GD,Corridor Calculation (UL),T,DEFRA,none
+ISWL,25,659 SR GD,Waiver Of Premium (UM),U,1576 659,none
+ISWL,25,659 SR GD,Commissions (CC),V,BA1,none
+ISWL,25,659 SR GD,UL Reserve Method (RX),Y,659 CEN II,none
+ISWL,25,659 SR GD,Billable Premium (BP),Z,659 CEN SR,none
+ISWL,25,659 SR GD,Net Premium Credited (NC),AA,659 CEN II,none
+ISWL,25,659 SR GD,IBA Accounts (IB),AB,IBA01 45,none
+ISWL,25,659 SR GD,New Business Defaults (NB),AC,L14,none
+ISWL,25,659 SR GD,Full Surrender Segments (SR),AD,659 CEN II,none
+ISWL,25,659 SR GD,Partial Withdrl Segments (WD),AE,659 CEN II,none
+ISWL,25,659 SR GD,Lapse Control (LP),AF,659 CEN II,none
+ISWL,25,659 SR GD,Letter Type (L0),AG,LIFEWCV,none
+ISWL,25,659 SR GD,Billing Setup (BS),AH,LIFE,none
+ISWL,25,659 SR GD,Vanish Rules (VN),AI,659 CEN II,none
+ISWL,26,679 CEN SD,Cash Values (CV),C,679 CEN SD,dark_green
+ISWL,26,679 CEN SD,Net Valuation Premiums (NP),D,659 CEN SD,dark_green
+ISWL,26,679 CEN SD,Reserve Factors (RV),F,659 CEN SD,dark_green
+ISWL,26,679 CEN SD,Non-Forfeiture Factors (NF),G,678 CEN SD,purple
+ISWL,26,679 CEN SD,Guar COI Rates (U5),H,678 CEN SD,purple
+ISWL,26,679 CEN SD,Curr COI Rates (U6),I,678 CEN SD,purple
+ISWL,26,679 CEN SD,Targe Permiums (UH),M,679 CEN SD,none
+ISWL,26,679 CEN SD,Minimum Premiums (UG),N,679 CEN SD,none
+ISWL,26,679 CEN SD,Per Policy Monthly Exp (UF),O,659 CEN II,none
+ISWL,26,679 CEN SD,Loan Interest Raes (LN),P,659 CEN II,none
+ISWL,26,679 CEN SD,Fund Package (F0),Q,659 CEN II,none
+ISWL,26,679 CEN SD,Fund Contract Rules (FC),R,659 CEN II,none
+ISWL,26,679 CEN SD,Monthaversary Control (UI),S,659 CEN II,none
+ISWL,26,679 CEN SD,Corridor Calculation (UL),T,DEFRA,none
+ISWL,26,679 CEN SD,Commissions (CC),V,GA4,none
+ISWL,26,679 CEN SD,Retention Limits (RE),W,BMA658,none
+ISWL,26,679 CEN SD,Treaty Selection (TR),X,BMA658,none
+ISWL,26,679 CEN SD,UL Reserve Method (RX),Y,659 CEN II,none
+ISWL,26,679 CEN SD,Billable Premium (BP),Z,679 CEN SD,none
+ISWL,26,679 CEN SD,Net Premium Credited (NC),AA,679 CEN SD,none
+ISWL,26,679 CEN SD,IBA Accounts (IB),AB,IBA01 45,none
+ISWL,26,679 CEN SD,New Business Defaults (NB),AC,L14,none
+ISWL,26,679 CEN SD,Full Surrender Segments (SR),AD,659 CEN II,none
+ISWL,26,679 CEN SD,Letter Type (L0),AG,LIFEWCV,none
+ISWL,26,679 CEN SD,Billing Setup (BS),AH,LIFE,none
+ISWL,26,679 CEN SD,Vanish Rules (VN),AI,659 CEN II,none

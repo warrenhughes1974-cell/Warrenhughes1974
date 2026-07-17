@@ -1,0 +1,85 @@
+{
+  "tables": {
+    "QuikNps": 52647,
+    "QuikTvs": 53818,
+    "QuikPlTv": 220
+  },
+  "focus": [
+    {
+      "table": "QuikNps",
+      "plan": "196085",
+      "rows": 284
+    },
+    {
+      "table": "QuikNps",
+      "plan": "1L1095",
+      "rows": 3000
+    },
+    {
+      "table": "QuikNps",
+      "plan": "1L10OD",
+      "rows": 3000
+    },
+    {
+      "table": "QuikNps",
+      "plan": "1L10PR",
+      "rows": 3000
+    },
+    {
+      "table": "QuikNps",
+      "plan": "1L10SO",
+      "rows": 3000
+    },
+    {
+      "table": "QuikNps",
+      "plan": "1L17SP",
+      "rows": 38
+    },
+    {
+      "table": "QuikNps",
+      "plan": "5L0110",
+      "rows": 424
+    },
+    {
+      "table": "QuikTvs",
+      "plan": "196085",
+      "rows": 284
+    },
+    {
+      "table": "QuikTvs",
+      "plan": "1L1095",
+      "rows": 3096
+    },
+    {
+      "table": "QuikTvs",
+      "plan": "1L10OD",
+      "rows": 3096
+    },
+    {
+      "table": "QuikTvs",
+      "plan": "1L10PR",
+      "rows": 3096
+    },
+    {
+      "table": "QuikTvs",
+      "plan": "1L10SO",
+      "rows": 3096
+    },
+    {
+      "table": "QuikTvs",
+      "plan": "1L17SP",
+      "rows": 38
+    },
+    {
+      "table": "QuikTvs",
+      "plan": "5L0110",
+      "rows": 424
+    }
+  ],
+  "test_validation": [
+    "QuikNps",
+    "QuikTvs",
+    "QuikPlTv"
+  ],
+  "quikuint_blocker_waived": true
+}

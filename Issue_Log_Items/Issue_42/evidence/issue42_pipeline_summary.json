@@ -1,0 +1,371 @@
+{
+  "phase": "Issue42 validation",
+  "source": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration/Source/Rate_Table_Extract_Txt.txt",
+  "row_status": {
+    "IN_SCOPE": 1551051,
+    "EXCLUDED": 415271,
+    "PLAN_UNRESOLVED": 1864,
+    "SEGMENT_UNRESOLVED": 5120,
+    "BAD_VALUE": 5993
+  },
+  "excluded_type_codes": {
+    "BP": {
+      "rows": 7005,
+      "distinct_coverage_ids": 8
+    },
+    "CV": {
+      "rows": 14175,
+      "distinct_coverage_ids": 40
+    },
+    "DB": {
+      "rows": 2512,
+      "distinct_coverage_ids": 10
+    },
+    "JT": {
+      "rows": 575,
+      "distinct_coverage_ids": 1
+    },
+    "NC": {
+      "rows": 3775,
+      "distinct_coverage_ids": 4
+    },
+    "NF": {
+      "rows": 2552,
+      "distinct_coverage_ids": 4
+    },
+    "NN": {
+      "rows": 118642,
+      "distinct_coverage_ids": 16
+    },
+    "NP": {
+      "rows": 5015,
+      "distinct_coverage_ids": 7
+    },
+    "PN": {
+      "rows": 110852,
+      "distinct_coverage_ids": 15
+    },
+    "PR": {
+      "rows": 84513,
+      "distinct_coverage_ids": 136
+    },
+    "PU": {
+      "rows": 11115,
+      "distinct_coverage_ids": 14
+    },
+    "RD": {
+      "rows": 60,
+      "distinct_coverage_ids": 10
+    },
+    "RV": {
+      "rows": 4565,
+      "distinct_coverage_ids": 8
+    },
+    "SL": {
+      "rows": 24,
+      "distinct_coverage_ids": 2
+    },
+    "TP": {
+      "rows": 22840,
+      "distinct_coverage_ids": 2
+    },
+    "TX": {
+      "rows": 19780,
+      "distinct_coverage_ids": 1
+    },
+    "U5": {
+      "rows": 2685,
+      "distinct_coverage_ids": 3
+    },
+    "U6": {
+      "rows": 4000,
+      "distinct_coverage_ids": 3
+    },
+    "UF": {
+      "rows": 1,
+      "distinct_coverage_ids": 1
+    },
+    "YP": {
+      "rows": 585,
+      "distinct_coverage_ids": 1
+    }
+  },
+  "factor_rows_by_family": {
+    "CURRENT_COI": {
+      "factor_rows": 792,
+      "distinct_keys": 792,
+      "distinct_plans": 2
+    },
+    "CASH_VALUE": {
+      "factor_rows": 38047,
+      "distinct_keys": 38047,
+      "distinct_plans": 46
+    },
+    "NONFORFEITURE_FACTOR": {
+      "factor_rows": 20217,
+      "distinct_keys": 20217,
+      "distinct_plans": 23
+    },
+    "GROSS_PREMIUM": {
+      "factor_rows": 17765,
+      "distinct_keys": 17765,
+      "distinct_plans": 109
+    },
+    "GUARANTEED_COI": {
+      "factor_rows": 198,
+      "distinct_keys": 198,
+      "distinct_plans": 1
+    },
+    "NET_PREMIUM": {
+      "factor_rows": 52647,
+      "distinct_keys": 52647,
+      "distinct_plans": 76
+    },
+    "DIVIDEND": {
+      "factor_rows": 6452,
+      "distinct_keys": 6452,
+      "distinct_plans": 20
+    },
+    "DEATH_BENEFIT": {
+      "factor_rows": 2513,
+      "distinct_keys": 2513,
+      "distinct_plans": 23
+    },
+    "TERMINAL_RESERVE": {
+      "factor_rows": 53818,
+      "distinct_keys": 53818,
+      "distinct_plans": 80
+    }
+  },
+  "key_tables": {
+    "QuikPlCv": 94,
+    "QuikPlDb": 25,
+    "QuikPlTv": 220,
+    "QuikPlDv": 29,
+    "QuikPlGp": 300
+  },
+  "member_tables": {
+    "QuikPlGd": 210,
+    "QuikPlUw": 186,
+    "QuikPlBd": 152,
+    "QuikPlSt": 126,
+    "QuikPlNb": 126,
+    "QuikUint": 0,
+    "QuikAint": 0,
+    "QuikIssc": 0
+  },
+  "member_placeholders_deferred": {
+    "BDLOWVAL": 152,
+    "MLOANINT": 126,
+    "TERMDATE": 126
+  },
+  "age_capping": {
+    "groups": 334,
+    "rows_capped": 499,
+    "cap_induced_collisions_resolved": 491,
+    "rule": "AGE>99 -> 99 (QLAdmin AGE is C2); audited, non-blocking. Capped cells colliding with genuine AGE 99 data yield to the genuine value (retained), capped value dropped + audited."
+  },
+  "validation": {
+    "total_issues": 803,
+    "by_severity": {
+      "WARNING": 802,
+      "BLOCKER": 1
+    },
+    "by_id": {
+      "V10": 260,
+      "V15": 184,
+      "AGE_CAPPED_TO_99": 334,
+      "AGE_CAP_COLLISION_RESOLVED": 24,
+      "V-UINT-PDINT": 1
+    },
+    "blocker_count": 1
+  },
+  "format_observations": {
+    "does_not_fit": 0,
+    "precision_reduced": 260
+  },
+  "assumption_dependencies_deferred": 184,
+  "emit_ready": false,
+  "paagerat_pr": {
+    "vargp3_plan_count": 86,
+    "row_status": {
+      "IN_SCOPE": 13331,
+      "SEGMENT_UNRESOLVED": 5120,
+      "BAD_VALUE": 2121,
+      "EXCLUDED": 11536
+    },
+    "grid_mode": "VARGP=3 attained-age (SEQ->AGE, CNTL=00/GP0)"
+  },
+  "paagerat_nf": {
+    "row_status": {
+      "EXCLUDED": 31470,
+      "IN_SCOPE": 638
+    },
+    "grid_mode": "VARGP=3 attained-age (SEQ->AGE, CNTL=00/NFF0)"
+  },
+  "paagerat_bp": {
+    "enabled": true,
+    "bp_plan_count": 0,
+    "row_status": {},
+    "mplan_allowlist": [
+      "1658CS",
+      "1659CS",
+      "1669SR",
+      "1679CS"
+    ]
+  },
+  "paagerat_coi": {
+    "enabled": true,
+    "coi_plan_count": 2,
+    "row_status": {
+      "EXCLUDED": 31108,
+      "IN_SCOPE": 1000
+    },
+    "mplan_allowlist": [
+      "1658CS",
+      "1679CS"
+    ]
+  },
+  "paagerat_gcoi": {
+    "enabled": true,
+    "gcoi_plan_count": 1,
+    "row_status": {
+      "EXCLUDED": 31708,
+      "IN_SCOPE": 400
+    },
+    "mplan_allowlist": [
+      "1679CS"
+    ]
+  },
+  "paagerat_db": {
+    "enabled": true,
+    "db_plan_count": 10,
+    "row_status": {
+      "EXCLUDED": 31480,
+      "IN_SCOPE": 628
+    },
+    "mplan_allowlist": [
+      "130JEB",
+      "1970JB",
+      "542STR",
+      "578STR",
+      "719CDT",
+      "7619DT",
+      "7619PU",
+      "7647FP",
+      "7647SP",
+      "7690DT"
+    ],
+    "grid_mode": "VARDB=3 attained-age (SEQ->AGE, CNTL=00/DB0)"
+  },
+  "quikuint": {
+    "enabled": true,
+    "row_count": 0,
+    "status": {
+      "BLOCKER_NO_PDINTTBL": 1
+    },
+    "distinct_mplans": 0
+  },
+  "quikissc": {
+    "enabled": true,
+    "row_count": 8,
+    "status": {
+      "HUB_DURATIONS": 14,
+      "ROWS_EMITTED": 8,
+      "MPLANS": 8
+    },
+    "distinct_plans": 8
+  },
+  "issue40_cv_inheritance": {
+    "manifest_entries": 10,
+    "row_status": {
+      "IN_SCOPE": 101793,
+      "EXCLUDED": 1954
+    },
+    "issuing_plans": [
+      "1666AI",
+      "1668SP",
+      "17085M",
+      "1L10SO",
+      "1L10SR",
+      "1SALMI",
+      "1SALML",
+      "261PUA",
+      "265PUA",
+      "280PUA"
+    ]
+  },
+  "non_cv_rate_inheritance": {
+    "manifest_entries": 24,
+    "row_status": {
+      "IN_SCOPE": 375840
+    },
+    "issuing_plans": [
+      "1666AI",
+      "1668SP",
+      "1669SR",
+      "1679CS",
+      "170588",
+      "17085M",
+      "1L10OD",
+      "1L10PR",
+      "1L10SO",
+      "1SALMI",
+      "1SALML",
+      "7687J3"
+    ],
+    "rate_types": [
+      "DB",
+      "DV",
+      "NP",
+      "RV"
+    ]
+  },
+  "shared_rate_candidates": {
+    "manifest_entries": 43,
+    "row_status": {
+      "IN_SCOPE": 137641,
+      "BAD_VALUE": 3872
+    },
+    "issuing_plans": [
+      "1658C1",
+      "1658CS",
+      "1659C2",
+      "1659CR",
+      "1659CS",
+      "1659SR",
+      "1668SP",
+      "1669SR",
+      "1679CS",
+      "170588",
+      "17085M",
+      "1L1095",
+      "1L10OD",
+      "1L10SO",
+      "1L10SR",
+      "1SALMI",
+      "1SALML",
+      "261PUA",
+      "265PUA",
+      "280PUA",
+      "719CTR",
+      "960ADB"
+    ],
+    "rate_types": [
+      "DB",
+      "DV",
+      "NF",
+      "NP",
+      "PR",
+      "RV"
+    ]
+  },
+  "issue42_pdage_missfill": {
+    "enabled": true,
+    "merge": {
+      "staging_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration/Staging/rate_table_pdage_missfill_merged.csv",
+      "reused": true
+    },
+    "row_status": {}
+  }
+}

@@ -1,0 +1,39 @@
+check,status,detail
+policy_present:quikmstr.csv,PASS,rows=5083
+policy_present:quikridr.csv,PASS,rows=6934
+policy_present:quikprmh.csv,PASS,rows=209470
+policy_present:quikplan.csv,PASS,rows=141
+policy_present:quikclid.csv,PASS,rows=34449
+policy_present:quikclnt.csv,PASS,rows=13597
+policy_present:quikmemo.csv,PASS,rows=337882
+policy_present:quikdvdp.csv,PASS,rows=5083
+untouched_mtime:QuikAint.csv,PASS,rows=2
+untouched_mtime:QuikCoi.csv,PASS,rows=792
+untouched_mtime:QuikCvs.csv,PASS,rows=38047
+untouched_mtime:QuikDbs.csv,PASS,rows=2513
+untouched_mtime:QuikDvs.csv,PASS,rows=6452
+untouched_mtime:QuikGcoi.csv,PASS,rows=198
+untouched_mtime:QuikGps.csv,PASS,rows=17137
+untouched_mtime:QuikIssc.csv,PASS,rows=0
+untouched_mtime:QuikNff.csv,PASS,rows=20217
+untouched_mtime:QuikPlBd.csv,PASS,rows=142
+untouched_mtime:QuikPlCv.csv,PASS,rows=94
+untouched_mtime:QuikPlDb.csv,PASS,rows=25
+untouched_mtime:QuikPlDv.csv,PASS,rows=29
+untouched_mtime:QuikPlGd.csv,PASS,rows=190
+untouched_mtime:QuikPlGp.csv,PASS,rows=284
+untouched_mtime:QuikPlNb.csv,PASS,rows=117
+untouched_mtime:QuikPlSt.csv,PASS,rows=117
+untouched_mtime:QuikPlUw.csv,PASS,rows=166
+untouched_mtime:QuikUint.csv,PASS,rows=0
+QuikNps:non_candidate_stable,PASS,changed_noncand=[] unchanged_noncand=54
+QuikNps:candidates_present,PASS,"missing=[] changed_cands=['196085', '1L17SP', '5L0110', '5L0510', '5L075Y', '901ADB', '9065WP', '910RWP', '960ADB', '960SWP', '965ADB', '976659', '9896WP', '996ADB', '9ADB10']"
+QuikTvs:non_candidate_stable,PASS,changed_noncand=[] unchanged_noncand=58
+QuikTvs:candidates_present,PASS,"missing=[] changed_cands=['196085', '1L17SP', '5L0110', '5L0510', '5L075Y', '901ADB', '9065WP', '910RWP', '960ADB', '960SWP', '965ADB', '976659', '9896WP', '996ADB', '9ADB10']"
+QuikNps_schema_prefix,PASS,"hdr0-2=['PLAN', 'AGE', 'CNTL']"
+QuikNps_has_NP_cols,PASS,"np_cols=['NP0', 'NP1', 'NP2', 'NP3', 'NP4', 'NP5', 'NP6', 'NP7', 'NP8', 'NP9']"
+issue25_mpolicy_width_sample,PASS,"bad=0 samples=[""'010143726C'(10)"", ""'010148272C'(10)"", ""'010148856C'(10)"", ""'010149295C'(10)"", ""'010157076C'(10)""]"
+issue26_mprem_column_present,PASS,populated_in_sample=502
+test_validation_match:QuikTvs.csv,PASS,
+test_validation_match:QuikNps.csv,PASS,
+test_validation_match:QuikPlTv.csv,PASS,

@@ -3,6 +3,7 @@ import os
 
 _ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 _SRC = os.path.join(_ROOT, "plan_analysis", "source_data")
+_QLA_SOURCE = os.path.join(_ROOT, "QLA_Migration", "Source")
 _LEGACY = os.path.join(_ROOT, "docs", "plan_conversion_reference")
 
 
@@ -14,16 +15,32 @@ def _first(*candidates):
 
 
 def rate_table_extract():
+    """Prefer client Source secondary Rate_Table (Issue #48), then dated twins."""
     return _first(
+        os.path.join(_QLA_SOURCE, "Rate_Table_Extract_Txt.txt"),
         os.path.join(_SRC, "rates", "Rate_Table_Extract_20260427.csv"),
         os.path.join(_LEGACY, "Rate_Table_Extract_20260427.csv"),
     )
 
 
 def paagerat_extract():
+    """Prefer QLA Source package PAAGERAT, then plan_analysis / legacy twins."""
     return _first(
+        os.path.join(_QLA_SOURCE, "PAAGERAT_AttainedAge_Rates_Extract_20260714.csv"),
+        os.path.join(_QLA_SOURCE, "PAAGERAT_AttainedAge_Rates_Extract_20260713.csv"),
+        os.path.join(_QLA_SOURCE, "PAAGERAT_AttainedAge_Rates_Extract_20260630.csv"),
         os.path.join(_SRC, "rates", "PAAGERAT_AttainedAge_Rates_Extract_20260428.csv"),
         os.path.join(_LEGACY, "PAAGERAT_AttainedAge_Rates_Extract_20260428.csv"),
+    )
+
+
+def pdage_extract():
+    """Prefer QLA Source package PDAGE (Issue #42 miss-fill), then legacy twins."""
+    return _first(
+        os.path.join(_QLA_SOURCE, "PDAGE_AgeDuration_Rates_Extract_20260714.csv"),
+        os.path.join(_QLA_SOURCE, "PDAGE_AgeDuration_Rates_Extract_20260713.csv"),
+        os.path.join(_QLA_SOURCE, "PDAGE_AgeDuration_Rates_Extract_20260630.csv"),
+        os.path.join(_QLA_SOURCE, "PDAGE_AgeDuration_Rates_Extract_20260530.csv"),
     )
 
 

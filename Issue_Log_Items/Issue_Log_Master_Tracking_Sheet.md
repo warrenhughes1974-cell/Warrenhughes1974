@@ -72,7 +72,7 @@
 | **#38** | Dividend Accumulations (`quikdvdp.MDEPOSIT`) | **CLOSED ✓** · **v57.44** · 59 policies | **v57.44** | |
 | **#40** | Inherited CV rate load — missing QuikCvs on CV-capable plans | **IMPLEMENTED / CLIENT UAT** · QuikCvs + QuikPlCv regenerated | — | 10 inherited plans emit 101,793 source-matched CV rows; `17085M` now 1,002 keys; 100% source-to-QLA PASS; full guarded emit still blocked by unrelated QuikUint |
 | **#41** | CV age-100 endpoint off by one | **IMPLEMENTED / CLIENT UAT** · QuikCvs regenerated | — | 1960PO CV M/26 value 784.65 now maps to QLA duration index 57; age-100 endpoint proof PASS; full guarded emit still blocked by unrelated QuikUint dependency |
-| **#42** | Missing rate extract rows — L01 10Y NP and L10 LP9595 | **CLOSED** · **v57.79** | **v57.79** | PDAGE miss-fill; full rate package emitted 2026-07-14; residual L17/LP85-8 CV → CSO |
+| **#42** | Missing rate extract rows — L01 10Y NP and L10 LP9595 | **CLOSED** · **v57.97** | **v57.97** | PDAGE miss-fill; wired to 20260714 + rates re-emitted 2026-07-17; L17/LP85-8 CV now in source; residual 0824/GPO OL NP |
 | **#23** | ISWL 3.5% premium expense charge (plan setup) | **DECIDED / Ready for plan setup** | — | Eric 2026-07-13: all ISWL have 3.5%; statement Censi I proves Premium Charge ≈ 3.5% of premium; exclude single premium |
 | **#43** | ISWL expense charge source discovery | **DECIDED / Ready for plan setup** | — | Eric 2026-07-13: $25 POLICY_FEE taken monthly (~$2.08/mo); 3.5% confirmed; U6 = COI not expense |
 | **#44** | QuikLoan stale PLOAN latest-row (`LAST_CHG_TIME` sort) | **CLOSED ✓** · **v57.60** · Phase A only | **v57.60** | Resolution: QuikLoan sorts PLOAN LAST_CHG_TIME as HHMMSS so same-day zero clears win; Phase B withdrawn |
@@ -115,7 +115,7 @@
 
 **#41 detail:** `Issue_Log_Items/Issue_41/` · QuikCvs endpoint follow-up to Issue #37 · `1960PO` M/26 source-vs-QLA proof PASS · `QuikCvs.csv` regenerated with 26,495 rows · next: client UAT reload + resolve unrelated `QuikUint` full-emit blocker
 
-**#42 detail:** `Issue_Log_Items/Issue_42/` · **CLOSED 2026-07-14** · **v57.79** · Resolution: PDAGE miss-fill + segment resolve → QuikNps/Tvs · full `Output/rates/` + `Test_Validation/rates/` package · QuikUint waived (PDINTTBL missing) · residual `L17`/`960 LP85-8` CV → CSO
+**#42 detail:** `Issue_Log_Items/Issue_42/` · **CLOSED** · **v57.97** (refresh 2026-07-17) · Resolution: PDAGE miss-fill + segment resolve → QuikNps/Tvs · wired to 20260714 extracts · full `Output/rates/` + `Test_Validation/rates/` · QuikUint waived (PDINTTBL missing) · L17/LP85-8 CV now in source · residual `0824 P DTH` / `L10 GPO OL` NP
 
 **#23 detail:** `Issue_Log_Items/Issue_23/` · **DECIDED 2026-07-13** · 3.5% premium expense all ISWL (non–single premium) · statement proof `Annual_Statement_Censi_I_9010817956.pdf` · companion #43
 

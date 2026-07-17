@@ -1,0 +1,407 @@
+sheet,policy_form,rate_type_col,type_codes,segment,assessment,rt_rows,pa_rows,rt_types_present,pa_types_present,verdict,note
+Non-ISWL,L10 LP95,Premiums (PR),PR,L10 LP95,dark_green,0,1832,CV|NF|NN|NP|PN|RV,PR,AGREE,found RT=0 PA=1832
+Non-ISWL,L10 LP95,Cash Values (CV),CV,L10 LP95,dark_green,29599,0,CV|NF|NN|NP|PN|RV,PR,AGREE,found RT=29599 PA=0
+Non-ISWL,L10 LP95,Reserve Factors (RV),RV,L10 LP9595,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 LP95,Net Valuation Premiums (NP),NP,L10 LP9595,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 LP95,Non-Forfeiture Factors (NF),NF,L10 LP95,dark_green,27090,0,CV|NF|NN|NP|PN|RV,PR,AGREE,found RT=27090 PA=0
+Non-ISWL,L10 WP,Premiums (PR),PR,L10 WP,dark_green,0,222,,PR,AGREE,found RT=0 PA=222
+Non-ISWL,L10 WP,Death Benefits (DB),DB,L10ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L10 WP,Reserve Factors (RV),RV,WPAD 34 4,peach,0,0,,,AGREE,absent from both extracts
+Non-ISWL,L10 WP,Net Valuation Premiums (NP),NP,WPAD34 4,peach,0,0,,,AGREE,absent from both extracts
+Non-ISWL,L10 ADB,Premiums (PR),PR,L10 ADB OL,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,L10 ADB,Reserve Factors (RV),RV,ADB 30 65,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 ADB,Net Valuation Premiums (NP),NP,ADB 30 65,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 GPO,Premiums (PR),PR,L10 GPO OL,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,L10 GPO,Death Benefits (DB),DB,L10ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L10 GPO,Reserve Factors (RV),RV,ZERO LIFE,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L10 GPO,Net Valuation Premiums (NP),NP,L10 GPO OL,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 JPO,Premiums (PR),PR,L10 JPO OL,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,L10 JPO,Death Benefits (DB),DB,L10ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L10 JPO,Reserve Factors (RV),RV,ZERO LIFE,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L10 JPO,Net Valuation Premiums (NP),NP,L10 GPO OL,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 SDT,Premiums (PR),PR,L10 SDT OL,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,L10 SDT,Death Benefits (DB),DB,L10 SDT OL,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L10 SDT,Reserve Factors (RV),RV,L10 SDT,dark_green,264,0,NP|RV,,AGREE,found RT=264 PA=0
+Non-ISWL,L10 SDT,Net Valuation Premiums (NP),NP,L10 SDT,dark_green,6468,0,NP|RV,,AGREE,found RT=6468 PA=0
+Non-ISWL,L10 CDT,Premiums (PR),PR,L10 CDT OL,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,L10 CDT,Reserve Factors (RV),RV,L10 CDT,dark_green,6,0,NP|RV,,AGREE,found RT=6 PA=0
+Non-ISWL,L10 CDT,Net Valuation Premiums (NP),NP,L10 CDT,dark_green,144,0,NP|RV,,AGREE,found RT=144 PA=0
+Non-ISWL,L10 SPSWP,Premiums (PR),PR,L10 SPSWP,dark_green,0,117,,PR,AGREE,found RT=0 PA=117
+Non-ISWL,L10 SPSWP,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L10 SPSWP,Reserve Factors (RV),RV,WPAD 34 4,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 SPSWP,Net Valuation Premiums (NP),NP,WPAD 34 4,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 WP CDT,Premiums (PR),PR,L10 WP CDT,dark_green,0,117,,PR,AGREE,found RT=0 PA=117
+Non-ISWL,L10 WP CDT,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L10 WP CDT,Reserve Factors (RV),RV,WPAD 34 4,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 WP CDT,Net Valuation Premiums (NP),NP,WPAD 34 4,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,DISCHO2475,Premiums (PR),PR,DISCHO2475,peach,10,0,PR,,DISAGREE,marked no-LP-rates but found RT=10 PA=0
+Non-ISWL,DISCHO2475,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,670 GL85-8,Premiums (PR),PR,GL LP85,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,670 GL85-8,Cash Values (CV),CV,670 GL85-8,dark_green,9121,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=9121 PA=0
+Non-ISWL,670 GL85-8,Dividends (DV),DV,670 GL85-8,dark_green,7126,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=7126 PA=0
+Non-ISWL,670 GL85-8,Reserve Factors (RV),RV,670 GL85-8,dark_green,9230,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=9230 PA=0
+Non-ISWL,670 GL85-8,Net Valuation Premiums (NP),NP,670 GL85-8,dark_green,6988,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=6988 PA=0
+Non-ISWL,670 GL85-8,Non-Forfeiture Factors (NF),NF,670 GL85-8,dark_green,7171,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=7171 PA=0
+Non-ISWL,L01 10Y LT,Premiums (PR),PR,L01 10Y LT,dark_green,0,924,,PR,AGREE,found RT=0 PA=924
+Non-ISWL,L01 10Y LT,Reserve Factors (RV),RV,L01 10Y,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L01 10Y LT,Net Valuation Premiums (NP),NP,L01 10Y,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L14,Premiums (PR),PR,L14,dark_green,0,268,CV|NF|NP|RV,PR|RD,AGREE,found RT=0 PA=268
+Non-ISWL,L14,Cash Values (CV),CV,L14,dark_green,2836,0,CV|NF|NP|RV,PR|RD,AGREE,found RT=2836 PA=0
+Non-ISWL,L14,Reserve Factors (RV),RV,L14,dark_green,2874,0,CV|NF|NP|RV,PR|RD,AGREE,found RT=2874 PA=0
+Non-ISWL,L14,Net Valuation Premiums (NP),NP,L14,dark_green,2886,0,CV|NF|NP|RV,PR|RD,AGREE,found RT=2886 PA=0
+Non-ISWL,L14,Non-Forfeiture Factors (NF),NF,L14,dark_green,2870,0,CV|NF|NP|RV,PR|RD,AGREE,found RT=2870 PA=0
+Non-ISWL,DISCHO29,Premiums (PR),PR,DISCHO29,peach,10,0,PR,,DISAGREE,marked no-LP-rates but found RT=10 PA=0
+Non-ISWL,DISCHO29,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,SAL ML,Premiums (PR),PR,SAL ML,dark_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,SAL MULTPL,Premiums (PR),PR,SAL MULTPL,dark_green,0,66,,PR,AGREE,found RT=0 PA=66
+Non-ISWL,SAL MULTPL,Reserve Factors (RV),RV,SAL OL,dark_green,4750,0,CV|RV,NF|NP|PR,AGREE,found RT=4750 PA=0
+Non-ISWL,SAL MULTPL,Net Valuation Premiums (NP),NP,SAL OL,dark_green,0,76,CV|RV,NF|NP|PR,AGREE,found RT=0 PA=76
+Non-ISWL,SAL ADB,Premiums (PR),PR,SAL ADB,dark_green,0,234,,PR,AGREE,found RT=0 PA=234
+Non-ISWL,SAL ADB,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,667 ART,Premiums (PR),PR,667 ART,dark_green,0,738,,NP|PR,AGREE,found RT=0 PA=738
+Non-ISWL,667 ART,Reserve Factors (RV),RV,667 ART,red,0,0,,NP|PR,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,667 ART,Net Valuation Premiums (NP),NP,667 ART,dark_green,0,288,,NP|PR,AGREE,found RT=0 PA=288
+Non-ISWL,1595,Premiums (PR),PR,1595,dark_green,0,84,,PR,AGREE,found RT=0 PA=84
+Non-ISWL,1595,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,1596 667,Premiums (PR),PR,1596 667,dark_green,0,99,,PR,AGREE,found RT=0 PA=99
+Non-ISWL,670 GL85-M,Premiums (PR),PR,GL LP85,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,670 GL85-M,Cash Values (CV),CV,670 GL85-8,dark_green,9121,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=9121 PA=0
+Non-ISWL,670 GL85-M,Dividends (DV),DV,670 GL85-8,dark_green,7126,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=7126 PA=0
+Non-ISWL,670 GL85-M,Reserve Factors (RV),RV,670 GL85-8,dark_green,9230,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=9230 PA=0
+Non-ISWL,670 GL85-M,Net Valuation Premiums (NP),NP,670 GL85-8,dark_green,6988,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=6988 PA=0
+Non-ISWL,670 GL85-M,Non-Forfeiture Factors (NF),NF,670 GL85-8,dark_green,7171,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=7171 PA=0
+Non-ISWL,L10 OLD,Premiums (PR),PR,L10 PRE97,dark_green,0,1832,CV|NF,PR|RD,AGREE,found RT=0 PA=1832
+Non-ISWL,L10 OLD,Cash Values (CV),CV,L10 PRE97,dark_green,29263,0,CV|NF,PR|RD,AGREE,found RT=29263 PA=0
+Non-ISWL,L10 OLD,Reserve Factors (RV),RV,L10 LP95,dark_green,28908,0,CV|NF|NN|NP|PN|RV,PR,AGREE,found RT=28908 PA=0
+Non-ISWL,L10 OLD,Net Valuation Premiums (NP),NP,L10 LP95,dark_green,27606,0,CV|NF|NN|NP|PN|RV,PR,AGREE,found RT=27606 PA=0
+Non-ISWL,L10 OLD,Non-Forfeiture Factors (NF),NF,L10 PRE97,dark_green,27219,0,CV|NF,PR|RD,AGREE,found RT=27219 PA=0
+Non-ISWL,L10 WP OLD,Premiums (PR),PR,L10 WP OLD,dark_green,0,222,,PR,AGREE,found RT=0 PA=222
+Non-ISWL,L10 WP OLD,Death Benefits (DB),DB,L10ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L10 WP OLD,Reserve Factors (RV),RV,WPAD 34 4,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 WP OLD,Net Valuation Premiums (NP),NP,WPAD 34 4,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,DISCHO247C,Premiums (PR),PR,DISCHO247C,peach,10,0,PR,,DISAGREE,marked no-LP-rates but found RT=10 PA=0
+Non-ISWL,DISCHO247C,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L10 SR OLD,Premiums (PR),PR,L10SR OLD,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,L10 SR OLD,Cash Values (CV),CV,L10 PRE97,dark_green,29263,0,CV|NF,PR|RD,AGREE,found RT=29263 PA=0
+Non-ISWL,L10 SR OLD,Reserve Factors (RV),RV,L10 LP95SR,dark_green,9202,0,NN|NP|PN|RV,PR,AGREE,found RT=9202 PA=0
+Non-ISWL,L10 SR OLD,Net Valuation Premiums (NP),NP,L10 LP95SR,dark_green,9202,0,NN|NP|PN|RV,PR,AGREE,found RT=9202 PA=0
+Non-ISWL,L10 LP95SR,Premiums (PR),PR,L10 LP95SR,dark_green,0,172,NN|NP|PN|RV,PR,AGREE,found RT=0 PA=172
+Non-ISWL,L10 LP95SR,Cash Values (CV),CV,L10 LP95,dark_green,29599,0,CV|NF|NN|NP|PN|RV,PR,AGREE,found RT=29599 PA=0
+Non-ISWL,L10 LP95SR,Reserve Factors (RV),RV,L10SR 95,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 LP95SR,Net Valuation Premiums (NP),NP,L10SR 95,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L10 LP95SR,Non-Forfeiture Factors (NF),NF,L10 LP95,dark_green,27090,0,CV|NF|NN|NP|PN|RV,PR,AGREE,found RT=27090 PA=0
+Non-ISWL,960 OL,Premiums (PR),PR,960 OL,dark_green,0,142,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=0 PA=142
+Non-ISWL,960 OL,Cash Values (CV),CV,960 OL,dark_green,4564,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=4564 PA=0
+Non-ISWL,960 OL,Dividends (DV),DV,960 OL,dark_green,2785,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=2785 PA=0
+Non-ISWL,960 OL,Reserve Factors (RV),RV,960 OL,dark_green,9475,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=9475 PA=0
+Non-ISWL,960 OL,Net Valuation Premiums (NP),NP,960 OL,dark_green,9835,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=9835 PA=0
+Non-ISWL,0823 960OL,Premiums (PR),PR,0823 960OL,dark_green,0,82,,PR,AGREE,found RT=0 PA=82
+Non-ISWL,0823 960OL,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0823 960OL,Reserve Factors (RV),RV,WPAD061 2,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0823 960OL,Net Valuation Premiums (NP),NP,WPAD061 2,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0824 P DIS,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0824 P DTH,Premiums (PR),PR,0824 P DTH,dark_green,0,11,,PR,AGREE,found RT=0 PA=11
+Non-ISWL,0824 P DTH,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0824 P DTH,Reserve Factors (RV),RV,ZERO LIFE,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0824 P DTH,Net Valuation Premiums (NP),NP,0824 P DTH,red,0,0,,PR,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,960 PO,Premiums (PR),PR,960 PO,dark_green,0,142,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=0 PA=142
+Non-ISWL,960 PO,Cash Values (CV),CV,960 PO,dark_green,9274,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=9274 PA=0
+Non-ISWL,960 PO,Dividends (DV),DV,960 PO,dark_green,6448,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=6448 PA=0
+Non-ISWL,960 PO,Reserve Factors (RV),RV,960 PO,dark_green,9443,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=9443 PA=0
+Non-ISWL,960 PO,Net Valuation Premiums (NP),NP,960 PO,dark_green,9443,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=9443 PA=0
+Non-ISWL,0823 960PO,Premiums (PR),PR,WP 960PO,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,0823 960PO,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0823 960PO,Reserve Factors (RV),RV,WPAD061 2,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0823 960PO,Net Valuation Premiums (NP),NP,WPAD061 2,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0822 960PO,Premiums (PR),PR,0822 960PO,dark_green,0,52,,PR,AGREE,found RT=0 PA=52
+Non-ISWL,0822 960PO,Reserve Factors (RV),RV,ADB 25 65,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0822 960PO,Net Valuation Premiums (NP),NP,ADB 25 65,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L17 1,Premiums (PR),PR,L17,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,L17 1,Cash Values (CV),CV,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 1,Reserve Factors (RV),RV,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 1,Net Valuation Premiums (NP),NP,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 1 JPO,Premiums (PR),PR,L17,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,L17 1 JPO,Cash Values (CV),CV,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 1 JPO,Reserve Factors (RV),RV,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 1 JPO,Net Valuation Premiums (NP),NP,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 2+,Premiums (PR),PR,L17 2+,dark_green,0,76,,PR,AGREE,found RT=0 PA=76
+Non-ISWL,L17 2+,Cash Values (CV),CV,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 2+,Reserve Factors (RV),RV,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 2+,Net Valuation Premiums (NP),NP,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 2+ JPO,Premiums (PR),PR,L17 2+,dark_green,0,76,,PR,AGREE,found RT=0 PA=76
+Non-ISWL,L17 2+ JPO,Cash Values (CV),CV,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 2+ JPO,Reserve Factors (RV),RV,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L17 2+ JPO,Net Valuation Premiums (NP),NP,L17,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,8286 GI 1,Premiums (PR),PR,8286 GI,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,8286 GI 1,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,8286 GI 2+,Premiums (PR),PR,8286 GI 2+,purple,0,19,,PR,DISAGREE,marked AA-needed but PA has 19 rows for ['PR']
+Non-ISWL,8286 GI 2+,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L05,Premiums (PR),PR,L05 10 Y LT,dark_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L05,Reserve Factors (RV),RV,L05 10Y,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L05,Net Valuation Premiums (NP),NP,L05 10Y,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,8115,Premiums (PR),PR,8115,dark_green,0,168,,PR,AGREE,found RT=0 PA=168
+Non-ISWL,8115,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,1596,Premiums (PR),PR,1596,dark_green,0,51,,PR,AGREE,found RT=0 PA=51
+Non-ISWL,1596,Reserve Factors (RV),RV,ADB 25 69,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,1596,Net Valuation Premiums (NP),NP,ADB 25 69,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,960 LP65,Premiums (PR),PR,960 LP65,dark_green,0,112,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=0 PA=112
+Non-ISWL,960 LP65,Cash Values (CV),CV,960 LP65,dark_green,4615,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=4615 PA=0
+Non-ISWL,960 LP65,Dividends (DV),DV,960 LP65,dark_green,2123,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=2123 PA=0
+Non-ISWL,960 LP65,Reserve Factors (RV),RV,960 LP65,dark_green,9230,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=9230 PA=0
+Non-ISWL,960 LP65,Net Valuation Premiums (NP),NP,960 LP65,dark_green,4230,0,CV|DV|NN|NP|PN|RV,PR,AGREE,found RT=4230 PA=0
+Non-ISWL,0823 960LP,Premiums (PR),PR,0823 960LP,dark_green,0,82,,PR,AGREE,found RT=0 PA=82
+Non-ISWL,0823 960LP,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0823 960LP,Reserve Factors (RV),RV,WPAD061 1,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0823 960LP,Net Valuation Premiums (NP),NP,WPAD061 1,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0822 960,Premiums (PR),PR,0822 960 PO,dark_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0822 960,Reserve Factors (RV),RV,ADB 25 5,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0822 960,Net Valuation Premiums (NP),NP,ADB 25 5,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,826,Premiums (PR),PR,826,dark_green,0,32,CV|NP|RV,PR,AGREE,found RT=0 PA=32
+Non-ISWL,0823 960SP,Premiums (PR),PR,0823 960SP,dark_green,0,32,,PR,AGREE,found RT=0 PA=32
+Non-ISWL,0823 960SP,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0823 960SP,Reserve Factors (RV),RV,WPAD061 2,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0823 960SP,Net Valuation Premiums (NP),NP,WPAD061 2,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,828,Premiums (PR),PR,828,dark_green,0,19,NP|RV,PR,AGREE,found RT=0 PA=19
+Non-ISWL,828,Reserve Factors (RV),RV,828,dark_green,1,0,NP|RV,PR,AGREE,found RT=1 PA=0
+Non-ISWL,828,Net Valuation Premiums (NP),NP,828,dark_green,99,0,NP|RV,PR,AGREE,found RT=99 PA=0
+Non-ISWL,0823 960CH,Premiums (PR),PR,0823 960CH,dark_green,0,19,,PR,AGREE,found RT=0 PA=19
+Non-ISWL,0823 960CH,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0823 960CH,Reserve Factors (RV),RV,WPAD061 2,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0823 960CH,Net Valuation Premiums (NP),NP,WPAD061 2,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,863,Premiums (PR),PR,863,dark_green,0,112,DB|NP|RV,PR,AGREE,found RT=0 PA=112
+Non-ISWL,863,Death Benefits (DB),DB,863,dark_green,1230,0,DB|NP|RV,PR,AGREE,found RT=1230 PA=0
+Non-ISWL,863,Reserve Factors (RV),RV,863,dark_green,1692,0,DB|NP|RV,PR,AGREE,found RT=1692 PA=0
+Non-ISWL,863,Net Valuation Premiums (NP),NP,863,dark_green,2100,0,DB|NP|RV,PR,AGREE,found RT=2100 PA=0
+Non-ISWL,621 END85,Premiums (PR),PR,620 END85,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,621 END85,Cash Values (CV),CV,621 END85,dark_green,2165,0,CV|DV|NN|NP|PN|RV,,AGREE,found RT=2165 PA=0
+Non-ISWL,621 END85,Dividends (DV),DV,621 END85,dark_green,2098,0,CV|DV|NN|NP|PN|RV,,AGREE,found RT=2098 PA=0
+Non-ISWL,621 END85,Reserve Factors (RV),RV,621 END85,dark_green,4370,0,CV|DV|NN|NP|PN|RV,,AGREE,found RT=4370 PA=0
+Non-ISWL,621 END85,Net Valuation Premiums (NP),NP,621 END85,dark_green,4370,0,CV|DV|NN|NP|PN|RV,,AGREE,found RT=4370 PA=0
+Non-ISWL,0822 620,Premiums (PR),PR,0822 620,dark_green,0,117,,PR,AGREE,found RT=0 PA=117
+Non-ISWL,0823 620,Premiums (PR),PR,0823 620,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,0823 620,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,L07 5Y LT,Premiums (PR),PR,L07 5Y LT,dark_green,0,1020,,PR,AGREE,found RT=0 PA=1020
+Non-ISWL,L07 5Y LT,Reserve Factors (RV),RV,L07 5Y,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L07 5Y LT,Net Valuation Premiums (NP),NP,L07 5Y,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,10827 CSI5,Premiums (PR),PR,10827 CSI5,dark_green,0,60,CV|DB|NN|NP|PN|RV,PR,AGREE,found RT=0 PA=60
+Non-ISWL,10827 CSI5,Cash Values (CV),CV,10827 CSI5,dark_green,2370,0,CV|DB|NN|NP|PN|RV,PR,AGREE,found RT=2370 PA=0
+Non-ISWL,10827 CSI5,Death Benefits (DB),DB,10827 CSI5,dark_green,1185,0,CV|DB|NN|NP|PN|RV,PR,AGREE,found RT=1185 PA=0
+Non-ISWL,10827 CSI5,Reserve Factors (RV),RV,10827 CSI5,dark_green,2370,0,CV|DB|NN|NP|PN|RV,PR,AGREE,found RT=2370 PA=0
+Non-ISWL,10827 CSI5,Net Valuation Premiums (NP),NP,10827 CSI5,dark_green,2370,0,CV|DB|NN|NP|PN|RV,PR,AGREE,found RT=2370 PA=0
+Non-ISWL,SAL OL,Premiums (PR),PR,SAL OL,dark_green,0,135,CV|RV,NF|NP|PR,AGREE,found RT=0 PA=135
+Non-ISWL,SAL OL,Cash Values (CV),CV,SAL OL,dark_green,4750,0,CV|RV,NF|NP|PR,AGREE,found RT=4750 PA=0
+Non-ISWL,SAL OL,Reserve Factors (RV),RV,SAL OL,dark_green,4750,0,CV|RV,NF|NP|PR,AGREE,found RT=4750 PA=0
+Non-ISWL,SAL OL,Net Valuation Premiums (NP),NP,SAL OL,dark_green,0,76,CV|RV,NF|NP|PR,AGREE,found RT=0 PA=76
+Non-ISWL,SAL OL,Non-Forfeiture Factors (NF),NF,SAL OL,dark_green,0,76,CV|RV,NF|NP|PR,AGREE,found RT=0 PA=76
+Non-ISWL,L15,Premiums (PR),PR,L15,dark_green,0,82,CV|NF|NP|RV,PR|RD|YP,AGREE,found RT=0 PA=82
+Non-ISWL,L15,Cash Values (CV),CV,L15,dark_green,2872,0,CV|NF|NP|RV,PR|RD|YP,AGREE,found RT=2872 PA=0
+Non-ISWL,L15,Reserve Factors (RV),RV,L15,dark_green,2886,0,CV|NF|NP|RV,PR|RD|YP,AGREE,found RT=2886 PA=0
+Non-ISWL,L15,Net Valuation Premiums (NP),NP,L15,dark_green,2886,0,CV|NF|NP|RV,PR|RD|YP,AGREE,found RT=2886 PA=0
+Non-ISWL,L15,Non-Forfeiture Factors (NF),NF,L15,dark_green,2870,0,CV|NF|NP|RV,PR|RD|YP,AGREE,found RT=2870 PA=0
+Non-ISWL,10827 CSI7,Premiums (PR),PR,10827 CSI7,dark_green,0,60,CV|DB|NP|RV,PR,AGREE,found RT=0 PA=60
+Non-ISWL,10827 CSI7,Cash Values (CV),CV,10827 CSI7,dark_green,2370,0,CV|DB|NP|RV,PR,AGREE,found RT=2370 PA=0
+Non-ISWL,10827 CSI7,Death Benefits (DB),DB,10827 CSI7,dark_green,1185,0,CV|DB|NP|RV,PR,AGREE,found RT=1185 PA=0
+Non-ISWL,10827 CSI7,Reserve Factors (RV),RV,10827 CSI7,dark_green,2370,0,CV|DB|NP|RV,PR,AGREE,found RT=2370 PA=0
+Non-ISWL,10827 CSI7,Net Valuation Premiums (NP),NP,10827 CSI7,dark_green,2370,0,CV|DB|NP|RV,PR,AGREE,found RT=2370 PA=0
+Non-ISWL,619 DT,Premiums (PR),PR,619 DT,dark_green,0,60,NN|NP|PN|RV,DB|PR,AGREE,found RT=0 PA=60
+Non-ISWL,619 DT,Death Benefits (DB),DB,619 DT,dark_green,0,66,NN|NP|PN|RV,DB|PR,AGREE,found RT=0 PA=66
+Non-ISWL,619 DT,Reserve Factors (RV),RV,619 DT,dark_green,122,0,NN|NP|PN|RV,DB|PR,AGREE,found RT=122 PA=0
+Non-ISWL,619 DT,Net Valuation Premiums (NP),NP,619 DT,dark_green,4148,0,NN|NP|PN|RV,DB|PR,AGREE,found RT=4148 PA=0
+Non-ISWL,619 DT SP,Premiums (PR),PR,619 DT SP,dark_green,0,60,NP|RV,DB|PR,AGREE,found RT=0 PA=60
+Non-ISWL,619 DT SP,Death Benefits (DB),DB,619 DT SP,dark_green,0,66,NP|RV,DB|PR,AGREE,found RT=0 PA=66
+Non-ISWL,619 DT SP,Reserve Factors (RV),RV,619 DT SP,dark_green,90,0,NP|RV,DB|PR,AGREE,found RT=90 PA=0
+Non-ISWL,619 DT SP,Net Valuation Premiums (NP),NP,619 DT SP,dark_green,4320,0,NP|RV,DB|PR,AGREE,found RT=4320 PA=0
+Non-ISWL,619 DT CH,Premiums (PR),PR,619 DT CH,dark_green,0,23,,DB|PR,AGREE,found RT=0 PA=23
+Non-ISWL,619 DT CH,Death Benefits (DB),DB,619 DT CH,dark_green,0,23,,DB|PR,AGREE,found RT=0 PA=23
+Non-ISWL,DISCHO25,Premiums (PR),PR,DISCHO25,peach,117,0,PR,,DISAGREE,marked no-LP-rates but found RT=117 PA=0
+Non-ISWL,DISCHO25,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,991 PWL,Premiums (PR),PR,991 PWL,dark_green,0,61,CV|DV|NP|RV,PR,AGREE,found RT=0 PA=61
+Non-ISWL,991 PWL,Cash Values (CV),CV,991 PWL,dark_green,6398,0,CV|DV|NP|RV,PR,AGREE,found RT=6398 PA=0
+Non-ISWL,991 PWL,Dividends (DV),DV,991 PWL,dark_green,2830,0,CV|DV|NP|RV,PR,AGREE,found RT=2830 PA=0
+Non-ISWL,991 PWL,Reserve Factors (RV),RV,991 PWL,dark_green,6440,0,CV|DV|NP|RV,PR,AGREE,found RT=6440 PA=0
+Non-ISWL,991 PWL,Net Valuation Premiums (NP),NP,991 PWL,dark_green,6440,0,CV|DV|NP|RV,PR,AGREE,found RT=6440 PA=0
+Non-ISWL,666 WL,Premiums (PR),PR,666 WL,dark_green,0,86,CV|NN|NP|PN|RV,PR,AGREE,found RT=0 PA=86
+Non-ISWL,666 WL,Cash Values (CV),CV,666 WL,dark_green,4895,0,CV|NN|NP|PN|RV,PR,AGREE,found RT=4895 PA=0
+Non-ISWL,666 WL,Reserve Factors (RV),RV,666 WL,dark_green,9890,0,CV|NN|NP|PN|RV,PR,AGREE,found RT=9890 PA=0
+Non-ISWL,666 WL,Net Valuation Premiums (NP),NP,666 WL,dark_green,9890,0,CV|NN|NP|PN|RV,PR,AGREE,found RT=9890 PA=0
+Non-ISWL,897 666,Premiums (PR),PR,666 WL,dark_green,0,86,CV|NN|NP|PN|RV,PR,AGREE,found RT=0 PA=86
+Non-ISWL,897 666,Cash Values (CV),CV,666 WL,dark_green,4895,0,CV|NN|NP|PN|RV,PR,AGREE,found RT=4895 PA=0
+Non-ISWL,897 666,Reserve Factors (RV),RV,666 WL,dark_green,9890,0,CV|NN|NP|PN|RV,PR,AGREE,found RT=9890 PA=0
+Non-ISWL,897 666,Net Valuation Premiums (NP),NP,666 WL,dark_green,9890,0,CV|NN|NP|PN|RV,PR,AGREE,found RT=9890 PA=0
+Non-ISWL,10827 CSI3,Premiums (PR),PR,10827 CSI3,dark_green,0,60,CV|DB|NN|NP|RV,PR,AGREE,found RT=0 PA=60
+Non-ISWL,10827 CSI3,Cash Values (CV),CV,10827 CSI3,dark_green,2370,0,CV|DB|NN|NP|RV,PR,AGREE,found RT=2370 PA=0
+Non-ISWL,10827 CSI3,Death Benefits (DB),DB,10827 CSI3,dark_green,1185,0,CV|DB|NN|NP|RV,PR,AGREE,found RT=1185 PA=0
+Non-ISWL,10827 CSI3,Reserve Factors (RV),RV,10827 CSI3,dark_green,2370,0,CV|DB|NN|NP|RV,PR,AGREE,found RT=2370 PA=0
+Non-ISWL,10827 CSI3,Net Valuation Premiums (NP),NP,10827 CSI3,dark_green,2370,0,CV|DB|NN|NP|RV,PR,AGREE,found RT=2370 PA=0
+Non-ISWL,10827 MN5K,Premiums (PR),PR,10827 CSI5,dark_green,0,60,CV|DB|NN|NP|PN|RV,PR,AGREE,found RT=0 PA=60
+Non-ISWL,10827 MN5K,Cash Values (CV),CV,10827 MN5K,dark_green,2370,0,CV|DB|NP|RV,,AGREE,found RT=2370 PA=0
+Non-ISWL,10827 MN5K,Death Benefits (DB),DB,10827 MN5K,dark_green,1185,0,CV|DB|NP|RV,,AGREE,found RT=1185 PA=0
+Non-ISWL,10827 MN5K,Reserve Factors (RV),RV,10827 MN5K,dark_green,2370,0,CV|DB|NP|RV,,AGREE,found RT=2370 PA=0
+Non-ISWL,10827 MN5K,Net Valuation Premiums (NP),NP,10827 MN5K,dark_green,2370,0,CV|DB|NP|RV,,AGREE,found RT=2370 PA=0
+Non-ISWL,622 END85,Cash Values (CV),CV,622 END85,dark_green,3656,0,CV|DV|NP|RV,,AGREE,found RT=3656 PA=0
+Non-ISWL,622 END85,Dividends (DV),DV,622 END85,dark_green,1220,0,CV|DV|NP|RV,,AGREE,found RT=1220 PA=0
+Non-ISWL,622 END85,Reserve Factors (RV),RV,622 END85,dark_green,6710,0,CV|DV|NP|RV,,AGREE,found RT=6710 PA=0
+Non-ISWL,622 END85,Net Valuation Premiums (NP),NP,622 END85,dark_green,2440,0,CV|DV|NP|RV,,AGREE,found RT=2440 PA=0
+Non-ISWL,665 STME95,Premiums (PR),PR,665 STME95,yellow,117,0,CV|DB|DV|NP|PR|RV,RD,RESEARCH,RT=117 PA=0 any_cov=True
+Non-ISWL,665 STME95,Cash Values (CV),CV,665 STME95,dark_green,3479,0,CV|DB|DV|NP|PR|RV,RD,AGREE,found RT=3479 PA=0
+Non-ISWL,665 STME95,Dividends (DV),DV,665 STME95,dark_green,1800,0,CV|DB|DV|NP|PR|RV,RD,AGREE,found RT=1800 PA=0
+Non-ISWL,665 STME95,Death Benefits (DB),DB,665 STME95,dark_green,5100,0,CV|DB|DV|NP|PR|RV,RD,AGREE,found RT=5100 PA=0
+Non-ISWL,665 STME95,Reserve Factors (RV),RV,665 STME95,dark_green,7140,0,CV|DB|DV|NP|PR|RV,RD,AGREE,found RT=7140 PA=0
+Non-ISWL,665 STME95,Net Valuation Premiums (NP),NP,665 STME95,dark_green,7140,0,CV|DB|DV|NP|PR|RV,RD,AGREE,found RT=7140 PA=0
+Non-ISWL,0823 665,Premiums (PR),PR,0823 665,dark_green,0,72,,PR,AGREE,found RT=0 PA=72
+Non-ISWL,0823 665,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0823 665,Reserve Factors (RV),RV,WP AD 02,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0823 665,Net Valuation Premiums (NP),NP,WP AD 02,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0822 665,Premiums (PR),PR,0822 665,dark_green,0,36,,PR,AGREE,found RT=0 PA=36
+Non-ISWL,0822 665,Reserve Factors (RV),RV,ADB 25 66,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0822 665,Net Valuation Premiums (NP),NP,ADB 25 66,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,896 DAR,Premiums (PR),PR,896 DAR,dark_green,0,117,CV|DV|NP|RV,NP|PR,AGREE,found RT=0 PA=117
+Non-ISWL,896 DAR,Cash Values (CV),CV,896 DAR,dark_green,2040,0,CV|DV|NP|RV,NP|PR,AGREE,found RT=2040 PA=0
+Non-ISWL,896 DAR,Dividends (DV),DV,896 DAR,dark_green,2040,0,CV|DV|NP|RV,NP|PR,AGREE,found RT=2040 PA=0
+Non-ISWL,896 DAR,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,896 DAR,Reserve Factors (RV),RV,896 DAR,dark_green,41,0,CV|DV|NP|RV,NP|PR,AGREE,found RT=41 PA=0
+Non-ISWL,896 DAR,Net Valuation Premiums (NP),NP,896 DAR,dark_green,78,3,CV|DV|NP|RV,NP|PR,AGREE,found RT=78 PA=3
+Non-ISWL,0823 896,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0823 896,Reserve Factors (RV),RV,WP AD 02,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0823 896,Net Valuation Premiums (NP),NP,WP AD 02,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,980 END65,Premiums (PR),PR,980 END65,dark_green,0,112,CV|DV|NN|NP|PN|RV,PR|RD,AGREE,found RT=0 PA=112
+Non-ISWL,980 END65,Cash Values (CV),CV,980 END65,dark_green,4143,0,CV|DV|NN|NP|PN|RV,PR|RD,AGREE,found RT=4143 PA=0
+Non-ISWL,980 END65,Dividends (DV),DV,980 END65,dark_green,3716,0,CV|DV|NN|NP|PN|RV,PR|RD,AGREE,found RT=3716 PA=0
+Non-ISWL,980 END65,Reserve Factors (RV),RV,980 END65,dark_green,4200,0,CV|DV|NN|NP|PN|RV,PR|RD,AGREE,found RT=4200 PA=0
+Non-ISWL,980 END65,Net Valuation Premiums (NP),NP,980 END65,dark_green,4200,0,CV|DV|NN|NP|PN|RV,PR|RD,AGREE,found RT=4200 PA=0
+Non-ISWL,L16,Premiums (PR),PR,L16,dark_green,0,42,CV|DB|NF|NP|RV,PR,AGREE,found RT=0 PA=42
+Non-ISWL,L16,Cash Values (CV),CV,L16,dark_green,1682,0,CV|DB|NF|NP|RV,PR,AGREE,found RT=1682 PA=0
+Non-ISWL,L16,Death Benefits (DB),DB,L16,dark_green,1680,0,CV|DB|NF|NP|RV,PR,AGREE,found RT=1680 PA=0
+Non-ISWL,L16,Reserve Factors (RV),RV,L16,dark_green,1690,0,CV|DB|NF|NP|RV,PR,AGREE,found RT=1690 PA=0
+Non-ISWL,L16,Net Valuation Premiums (NP),NP,L16,dark_green,1690,0,CV|DB|NF|NP|RV,PR,AGREE,found RT=1690 PA=0
+Non-ISWL,L16,Non-Forfeiture Factors (NF),NF,L16,dark_green,1680,0,CV|DB|NF|NP|RV,PR,AGREE,found RT=1680 PA=0
+Non-ISWL,L16POLFEE,Death Benefits (DB),DB,L16POLFEE,dark_green,5,0,DB,,AGREE,found RT=5 PA=0
+Non-ISWL,619 SPS PU,Death Benefits (DB),DB,619 DT SP,yellow,0,66,NP|RV,DB|PR,RESEARCH,RT=0 PA=66 any_cov=True
+Non-ISWL,619 SPS PU,Reserve Factors (RV),RV,619 SPS PU,dark_green,3724,94,NP|RV,RV,AGREE,found RT=3724 PA=94
+Non-ISWL,619 SPS PU,Net Valuation Premiums (NP),NP,619 SPS PU,dark_green,4260,0,NP|RV,RV,AGREE,found RT=4260 PA=0
+Non-ISWL,647 FLP,Premiums (PR),PR,647 FLP,dark_green,0,117,NP|RV,DB|PR,AGREE,found RT=0 PA=117
+Non-ISWL,647 FLP,Death Benefits (DB),DB,647 FLP,dark_green,0,49,NP|RV,DB|PR,AGREE,found RT=0 PA=49
+Non-ISWL,647 FLP,Reserve Factors (RV),RV,647 FLP,dark_green,2186,0,NP|RV,DB|PR,AGREE,found RT=2186 PA=0
+Non-ISWL,647 FLP,Net Valuation Premiums (NP),NP,647 FLP,dark_green,2450,0,NP|RV,DB|PR,AGREE,found RT=2450 PA=0
+Non-ISWL,647 FLP SP,Death Benefits (DB),DB,647 FLP SP,dark_green,0,49,,DB,AGREE,found RT=0 PA=49
+Non-ISWL,670 GL858,Premiums (PR),PR,GL LP85,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,670 GL858,Cash Values (CV),CV,670 GL85-8,dark_green,9121,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=9121 PA=0
+Non-ISWL,670 GL858,Dividends (DV),DV,670 GL85-8,dark_green,7126,0,CV|DV|NF|NN|NP|PN|RV,,AGREE,found RT=7126 PA=0
+Non-ISWL,670 GL858,Reserve Factors (RV),RV,670 GL8588,peach,0,0,CV,,AGREE,absent from both extracts
+Non-ISWL,670 GL858,Net Valuation Premiums (NP),NP,670 GL8588,peach,0,0,CV,,AGREE,absent from both extracts
+Non-ISWL,960 LP85-M,Premiums (PR),PR,960 LP85-8,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+Non-ISWL,960 LP85-M,Cash Values (CV),CV,960 LP85-8,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,960 LP85-M,Dividends (DV),DV,960 LP85-8,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,960 LP85-M,Reserve Factors (RV),RV,960 LP85-8,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,960 LP85-M,Net Valuation Premiums (NP),NP,960 LP85-8,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0823 96085,Premiums (PR),PR,0823 96085,dark_green,0,82,,PR,AGREE,found RT=0 PA=82
+Non-ISWL,0823 96085,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,0823 96085,Reserve Factors (RV),RV,WPAD061 2,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,0823 96085,Net Valuation Premiums (NP),NP,WPAD061 2,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,L01 10Y MA,Premiums (PR),PR,L01 10Y MA,dark_green,9720,0,NN|NP|PN|PR|RV,,AGREE,found RT=9720 PA=0
+Non-ISWL,L01 10Y MA,Reserve Factors (RV),RV,L01 10Y MA,dark_green,2,0,NN|NP|PN|PR|RV,,AGREE,found RT=2 PA=0
+Non-ISWL,L01 10Y MA,Net Valuation Premiums (NP),NP,L01 10Y MA,dark_green,134,0,NN|NP|PN|PR|RV,,AGREE,found RT=134 PA=0
+Non-ISWL,8115 L01,Premiums (PR),PR,8115 L01,dark_green,0,168,,PR,AGREE,found RT=0 PA=168
+Non-ISWL,8115 L01,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+Non-ISWL,8115 L01,Reserve Factors (RV),RV,WP AD 24,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,8115 L01,Net Valuation Premiums (NP),NP,WP AD 24,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,1596 L01,Premiums (PR),PR,1596,dark_green,0,51,,PR,AGREE,found RT=0 PA=51
+Non-ISWL,1596 L01,Reserve Factors (RV),RV,ADB 25 68,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,1596 L01,Net Valuation Premiums (NP),NP,ADB 25 68,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+Non-ISWL,DISCH070,Premiums (PR),PR,DISCHO70,peach,3,0,PR,,DISAGREE,marked no-LP-rates but found RT=3 PA=0
+Non-ISWL,DISCH070,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,659 CEN II,Cash Values (CV),CV,659 CEN II,dark_green,9678,0,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=9678 PA=0
+ISWL,659 CEN II,Net Valuation Premiums (NP),NP,659 CEN II,dark_green,19780,0,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=19780 PA=0
+ISWL,659 CEN II,Reserve Factors (RV),RV,659 CEN II,dark_green,19780,0,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=19780 PA=0
+ISWL,659 CEN II,Non-Forfeiture Factors (NF),NF,659 CEN II,dark_green,0,172,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=172
+ISWL,659 CEN II,Guar COI Rates (U5),U5,659 CEN II,dark_green,0,200,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=200
+ISWL,659 CEN II,Curr COI Rates (U6),U6,659 CEN II,dark_green,0,400,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=400
+ISWL,1576 659,Premiums (PR),PR,1576 659,dark_green,0,164,,PR,AGREE,found RT=0 PA=164
+ISWL,1576 659,Net Valuation Premiums (NP),NP,WP AA 20,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+ISWL,1576 659,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,1576 659,Reserve Factors (RV),RV,WP AA 20,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+ISWL,1577 ADB,Premiums (PR),PR,1577 ADB,dark_green,0,46,,PR,AGREE,found RT=0 PA=46
+ISWL,1578 FTR,Premiums (PR),PR,1578 FTR,dark_green,0,41,NP|RV,DB|PR,AGREE,found RT=0 PA=41
+ISWL,1578 FTR,Net Valuation Premiums (NP),NP,1578 FTR,dark_green,2551,0,NP|RV,DB|PR,AGREE,found RT=2551 PA=0
+ISWL,1578 FTR,Death Benefits (DB),DB,1578 FTR,dark_green,0,48,NP|RV,DB|PR,AGREE,found RT=0 PA=48
+ISWL,1578 FTR,Reserve Factors (RV),RV,1578 FTR,dark_green,101,0,NP|RV,DB|PR,AGREE,found RT=101 PA=0
+ISWL,1578 CTR,Premiums (PR),PR,1578 CTR,dark_green,0,117,,PR,AGREE,found RT=0 PA=117
+ISWL,1578FTR WP,Premiums (PR),PR,1578FTR WP,dark_green,0,117,,PR,AGREE,found RT=0 PA=117
+ISWL,1578FTR WP,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,1578CTR WP,Premiums (PR),PR,1578CTR WP,dark_green,0,117,,PR,AGREE,found RT=0 PA=117
+ISWL,1578CTR WP,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,1579 GPO,Premiums (PR),PR,1579 GPO,dark_green,0,41,,PR,AGREE,found RT=0 PA=41
+ISWL,1579 GPO,Net Valuation Premiums (NP),NP,1579 GPO,peach,0,0,,PR,AGREE,absent from both extracts
+ISWL,1579 GPO,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,1579 GPO,Reserve Factors (RV),RV,ZERO LIFE,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,1580 JPO,Premiums (PR),PR,1580 JPO,dark_green,0,22,,PR,AGREE,found RT=0 PA=22
+ISWL,1580 JPO,Net Valuation Premiums (NP),NP,1580 JPO,peach,0,0,,PR,AGREE,absent from both extracts
+ISWL,1580 JPO,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,1580 JPO,Reserve Factors (RV),RV,ZERO LIFE,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,8042 STR,Premiums (PR),PR,8042 STR,dark_green,0,38,NP|RV,DB|PR,AGREE,found RT=0 PA=38
+ISWL,8042 STR,Net Valuation Premiums (NP),NP,8042 STR,dark_green,2156,0,NP|RV,DB|PR,AGREE,found RT=2156 PA=0
+ISWL,8042 STR,Death Benefits (DB),DB,8042 STR,dark_green,0,48,NP|RV,DB|PR,AGREE,found RT=0 PA=48
+ISWL,8042 STR,Reserve Factors (RV),RV,8042 STR,dark_green,88,0,NP|RV,DB|PR,AGREE,found RT=88 PA=0
+ISWL,8043 CTR,Premiums (PR),PR,8043 CTR,dark_green,0,117,NP|RV,PR,AGREE,found RT=0 PA=117
+ISWL,8043 CTR,Net Valuation Premiums (NP),NP,8043 CTR,dark_green,48,0,NP|RV,PR,AGREE,found RT=48 PA=0
+ISWL,8043 CTR,Reserve Factors (RV),RV,8043 CTR,dark_green,2,0,NP|RV,PR,AGREE,found RT=2 PA=0
+ISWL,8042STR WP,Premiums (PR),PR,8042STR WP,dark_green,0,117,,PR,AGREE,found RT=0 PA=117
+ISWL,8042STR WP,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,8043CTR WP,Premiums (PR),PR,8043CTR WP,dark_green,0,117,,PR,AGREE,found RT=0 PA=117
+ISWL,8043CTR WP,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,8046 JPO,Premiums (PR),PR,8046 JPO,dark_green,0,22,,PR,AGREE,found RT=0 PA=22
+ISWL,8046 JPO,Net Valuation Premiums (NP),NP,8046 JPO,peach,0,0,,PR,AGREE,absent from both extracts
+ISWL,8046 JPO,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,8046 JPO,Reserve Factors (RV),RV,ZERO LIFE,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,DISCHO20 B,Premiums (PR),PR,DISCHO20 B,light_green,10,0,PR,,AGREE,found RT=10 PA=0
+ISWL,DISCHO20 B,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,DISCHO80,Premiums (PR),PR,DISCHO80,light_green,10,0,PR,,AGREE,found RT=10 PA=0
+ISWL,DISCHO80,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,DISCHO90,Premiums (PR),PR,DISCHO90,light_green,117,0,PR,,AGREE,found RT=117 PA=0
+ISWL,DISCHO90,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,658 CEN I,Cash Values (CV),CV,658 CEN I,dark_green,18124,0,CV|NP|RV,BP|NC|NF|RD|U6,AGREE,found RT=18124 PA=0
+ISWL,658 CEN I,Net Valuation Premiums (NP),NP,658 CEN I,dark_green,19000,0,CV|NP|RV,BP|NC|NF|RD|U6,AGREE,found RT=19000 PA=0
+ISWL,658 CEN I,Reserve Factors (RV),RV,658 CEN I,dark_green,19000,0,CV|NP|RV,BP|NC|NF|RD|U6,AGREE,found RT=19000 PA=0
+ISWL,658 CEN I,Non-Forfeiture Factors (NF),NF,658 CEN I,dark_green,0,260,CV|NP|RV,BP|NC|NF|RD|U6,AGREE,found RT=0 PA=260
+ISWL,658 CEN I,Guar COI Rates (U5),U5,659 CEN II,dark_green,0,200,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=200
+ISWL,658 CEN I,Curr COI Rates (U6),U6,658 CEN I,dark_green,0,400,CV|NP|RV,BP|NC|NF|RD|U6,AGREE,found RT=0 PA=400
+ISWL,1576 658,Premiums (PR),PR,1576 658,dark_green,0,164,,PR,AGREE,found RT=0 PA=164
+ISWL,1576 658,Net Valuation Premiums (NP),NP,WP AA 20,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+ISWL,1576 658,Death Benefits (DB),DB,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,1576 658,Reserve Factors (RV),RV,WP AA 20,red,0,0,,,AGREE,missing from RT (PA=0) as expected for New Era duration request
+ISWL,659 CEN SR,Cash Values (CV),CV,659 CEN SR,dark_green,9678,0,CV|NP|RV,BP,AGREE,found RT=9678 PA=0
+ISWL,659 CEN SR,Net Valuation Premiums (NP),NP,659 CEN SR,dark_green,9890,0,CV|NP|RV,BP,AGREE,found RT=9890 PA=0
+ISWL,659 CEN SR,Reserve Factors (RV),RV,659 CEN SR,dark_green,9890,0,CV|NP|RV,BP,AGREE,found RT=9890 PA=0
+ISWL,659 CEN SR,Non-Forfeiture Factors (NF),NF,659 CEN II,dark_green,0,172,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=172
+ISWL,659 CEN SR,Guar COI Rates (U5),U5,659 CEN II,dark_green,0,200,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=200
+ISWL,659 CEN SR,Curr COI Rates (U6),U6,659 CEN II,dark_green,0,400,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=400
+ISWL,668 SPWL,Cash Values (CV),CV,668 SPWL,dark_green,0,202,SL,BP|CV|NP|RV|U5,AGREE,found RT=0 PA=202
+ISWL,668 SPWL,Net Valuation Premiums (NP),NP,668 SPWL,dark_green,0,117,SL,BP|CV|NP|RV|U5,AGREE,found RT=0 PA=117
+ISWL,668 SPWL,Reserve Factors (RV),RV,668 SPWL,dark_green,0,117,SL,BP|CV|NP|RV|U5,AGREE,found RT=0 PA=117
+ISWL,668 SPWL,Guar COI Rates (U5),U5,668 SPWL,dark_green,0,217,SL,BP|CV|NP|RV|U5,AGREE,found RT=0 PA=217
+ISWL,668 SPWL,Curr COI Rates (U6),U6,ZERO,light_green,0,0,,,DISAGREE,marked received but ZERO rows in both extracts
+ISWL,658 CEN SD,Cash Values (CV),CV,658 CEN SD,dark_green,9113,0,CV|NP|RV,BP,AGREE,found RT=9113 PA=0
+ISWL,658 CEN SD,Net Valuation Premiums (NP),NP,658 CEN SD,dark_green,9496,0,CV|NP|RV,BP,AGREE,found RT=9496 PA=0
+ISWL,658 CEN SD,Reserve Factors (RV),RV,658 CEN SD,dark_green,9496,0,CV|NP|RV,BP,AGREE,found RT=9496 PA=0
+ISWL,658 CEN SD,Non-Forfeiture Factors (NF),NF,658 CEN I,dark_green,0,260,CV|NP|RV,BP|NC|NF|RD|U6,AGREE,found RT=0 PA=260
+ISWL,658 CEN SD,Guar COI Rates (U5),U5,659 CEN II,dark_green,0,200,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=200
+ISWL,658 CEN SD,Curr COI Rates (U6),U6,658 CEN I,dark_green,0,400,CV|NP|RV,BP|NC|NF|RD|U6,AGREE,found RT=0 PA=400
+ISWL,659 CEN SD,Cash Values (CV),CV,659 CEN SD,dark_green,9288,0,CV|NP|RV,BP,AGREE,found RT=9288 PA=0
+ISWL,659 CEN SD,Net Valuation Premiums (NP),NP,659 CEN SD,dark_green,9496,0,CV|NP|RV,BP,AGREE,found RT=9496 PA=0
+ISWL,659 CEN SD,Reserve Factors (RV),RV,659 CEN SD,dark_green,9496,0,CV|NP|RV,BP,AGREE,found RT=9496 PA=0
+ISWL,659 CEN SD,Non-Forfeiture Factors (NF),NF,659 CEN II,dark_green,0,172,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=172
+ISWL,659 CEN SD,Guar COI Rates (U5),U5,659 CEN II,dark_green,0,200,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=200
+ISWL,659 CEN SD,Curr COI Rates (U6),U6,659 CEN II,dark_green,0,400,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=400
+ISWL,659 SR GD,Cash Values (CV),CV,659 SR GD,dark_green,9700,0,CV|DB|NP|RV,,AGREE,found RT=9700 PA=0
+ISWL,659 SR GD,Net Valuation Premiums (NP),NP,659 SR GD,dark_green,2340,0,CV|DB|NP|RV,,AGREE,found RT=2340 PA=0
+ISWL,659 SR GD,Reserve Factors (RV),RV,659 SR GD,dark_green,2340,0,CV|DB|NP|RV,,AGREE,found RT=2340 PA=0
+ISWL,659 SR GD,Non-Forfeiture Factors (NF),NF,659 SR GD,purple,0,0,CV|DB|NP|RV,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+ISWL,659 SR GD,Guar COI Rates (U5),U5,659 CEN II,dark_green,0,200,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=200
+ISWL,659 SR GD,Curr COI Rates (U6),U6,659 CEN II,dark_green,0,400,CV|NP|RV|SL|TP|TX|UF,BP|NC|NF|U5|U6,AGREE,found RT=0 PA=400
+ISWL,679 CEN SD,Cash Values (CV),CV,679 CEN SD,dark_green,4350,0,CV,BP|NC,AGREE,found RT=4350 PA=0
+ISWL,679 CEN SD,Net Valuation Premiums (NP),NP,659 CEN SD,dark_green,9496,0,CV|NP|RV,BP,AGREE,found RT=9496 PA=0
+ISWL,679 CEN SD,Reserve Factors (RV),RV,659 CEN SD,dark_green,9496,0,CV|NP|RV,BP,AGREE,found RT=9496 PA=0
+ISWL,679 CEN SD,Non-Forfeiture Factors (NF),NF,678 CEN SD,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+ISWL,679 CEN SD,Guar COI Rates (U5),U5,678 CEN SD,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request
+ISWL,679 CEN SD,Curr COI Rates (U6),U6,678 CEN SD,purple,0,0,,,AGREE,missing from PA (and RT=0) as expected for New Era AA request

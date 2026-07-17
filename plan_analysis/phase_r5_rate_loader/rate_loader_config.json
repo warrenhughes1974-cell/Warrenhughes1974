@@ -1,13 +1,20 @@
 {
   "_comment": "R5 rate-loader config — ISWL Phase 1 (QUIKCVS) paths. External Source files need not be in Git.",
-  "source_rate_extract": "plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv",
-  "paagerat_pr_extract": "plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv",
+  "source_rate_extract": "QLA_Migration/Source/Rate_Table_Extract_Txt.txt",
+  "paagerat_pr_extract": "QLA_Migration/Source/PAAGERAT_AttainedAge_Rates_Extract_20260714.csv",
   "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
   "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
   "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",
   "cso_mortality_crosswalk": "plan_analysis/source_data/rates/CSO_Mortiality_Crosswalk.csv",
   "psegt_csv": "QLA_Migration/Source/PSEGT_Segment_Extract_20260629.csv",
-  "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260530.csv",
+  "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260714.csv",
+  "issue42_pdage_missfill": {
+    "_note": "Issue #42 — append PDAGE age/duration rows missing from Rate_Table; segment-resolve via PCOVRSGT. Prefer 20260714 package.",
+    "enabled": true,
+    "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260714.csv",
+    "staging_merged_csv": "QLA_Migration/Staging/rate_table_pdage_missfill_merged.csv",
+    "approved_types": ["NP", "RV", "CV", "DB", "DV", "NF", "NN", "PN"]
+  },
   "iswl_phase1": {
     "_note": "Validation-only; does not filter global rate emit.",
     "quikcvs_vargp": "2"
@@ -29,6 +36,15 @@
     "quikgcoi_enabled": true,
     "gcoi_type_code": "U5",
     "gcoi_mplan_allowlist": ["1679CS"]
+  },
+  "wave2_db": {
+    "_note": "Wave 2 QUIKDBS — PAAGERAT TYPE=DB, VARDB=3 attained-age scalar (Option B).",
+    "quikdbs_enabled": true,
+    "db_type_code": "DB",
+    "db_mplan_allowlist": [
+      "130JEB", "1970JB", "542STR", "578STR", "719CDT",
+      "7619DT", "7619PU", "7647FP", "7647SP", "7690DT"
+    ]
   },
   "pdint_extract": "QLA_Migration/Source/PDINT_DeclaredInterestRates_Extract_20260629.csv",
   "pdinttbl_extract": "QLA_Migration/Source/PDINTTBL_DeclaredInterestRates_Extract_20260629.csv",
@@ -57,6 +73,22 @@
     "iss_state_default": "00",
     "schg_max_duration": 20,
     "schg_populated_duration": 14
+  },
+  "issue40_cv_inheritance": {
+    "_note": "Issue #40 — emit inherited CV rows under issuing plans via PCOVRSGT manifest.",
+    "enabled": true,
+    "fleet_audit_csv": "Issue_Log_Items/Issue_40/Issue_40_Fleet_CV_Inheritance_Audit.csv"
+  },
+  "non_cv_rate_inheritance": {
+    "_note": "First-pass inherited non-CV rates (NP/RV/DV/DB) from approved manifest.",
+    "enabled": true,
+    "manifest_csv": "Issue_Log_Items/Issue_Rates_Inheritance_Validation/non_cv_inheritance_analysis/approved_first_pass_scope.csv",
+    "approved_types": ["NP", "RV", "DV", "DB"]
+  },
+  "shared_rate_candidates": {
+    "_note": "Rate-completeness shared/inherited candidates from master inventory; confirmed target tables only.",
+    "enabled": true,
+    "candidate_csv": "Issue_Log_Items/Issue_Rates_Inheritance_Validation/master_rate_completeness/approved_shared_rate_candidates.csv"
   },
   "segmentation_defaults": {
     "effdate": "19000101",

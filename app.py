@@ -1,10 +1,16 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.95
+# Version:     v57.97
 # Date:        2026-07-17
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.95 — Issue #77: omit NOT APPLICABLE member/key (0/00) when real codes exist
+# Change Note: v57.97 — Wire rate loader to LifePRO 20260714 PDAGE/PAAGERAT package (Issue #42
+#              miss-fill path + plan_source_paths prefer 20260714; key/seg defaults unchanged).
+#              v57.96 — Policy-book alignment: BF_LST→3 translation; quikmstr MBILLTO 0/blank→MPAIDTO,
+#              MORIGBILL/MORIGMODE default to final bill form/mode, MISSCLASS=00 / MBFCY=0 / MACHCNT=0
+#              rulebook defaults; quikridr MRRULE=A / MANNSTAT=0 / MCOMMID=CNVT / blank MUWCLASS=00
+#              defaults + blank MSAVE* mirror final MAGE/MUNIT/MVPU/MPREM/MPHSTAT.
+#              v57.95 — Issue #77: omit NOT APPLICABLE member/key (0/00) when real codes exist
 #              (EX pattern; e.g. no Gender 0 beside F/M).
 #              v57.94 — Issue #77: rate-key default stubs (GP/DB/CV/TV/DV), Plan Values Options
 #              recompute from keys, QuikPlSt.MLOANINT default 0.00; no factor invent.
@@ -374,7 +380,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.95"
+APP_VERSION = "v57.97"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -4946,6 +4952,36 @@ class QLAdminEnterpriseIntegrationSuite:
                     getattr(self, "_issue72_mnfopt_force_count", 0) + 1
                 )
 
+    def _apply_quikmstr_v5796_defaults(self, row_data):
+        """v57.96: MBILLTO 0/blank -> MPAIDTO; MORIGBILL/MORIGMODE default to final bill form/mode."""
+        billto = str(row_data.get("MBILLTO", "")).strip()
+        if billto in ("", "0"):
+            paidto = str(row_data.get("MPAIDTO", "")).strip()
+            if paidto and paidto != "0":
+                row_data["MBILLTO"] = paidto
+                self._v5796_mbillto_fix_count = (
+                    getattr(self, "_v5796_mbillto_fix_count", 0) + 1
+                )
+        if not str(row_data.get("MORIGBILL", "")).strip():
+            row_data["MORIGBILL"] = str(row_data.get("MBILLFRM", "")).strip()
+        if not str(row_data.get("MORIGMODE", "")).strip():
+            row_data["MORIGMODE"] = str(row_data.get("MMODE", "")).strip()
+
+    def _apply_quikridr_v5796_defaults(self, row_data):
+        """v57.96: blank MSAVE* mirror final live fields; MRRULE default A (post-translation,
+        because a rulebook default would hit the bare A→22 status translation)."""
+        for save_f, live_f in (
+            ("MSAVEAGE", "MAGE"),
+            ("MSAVEUNIT", "MUNIT"),
+            ("MSAVEVPU", "MVPU"),
+            ("MSAVEPREM", "MPREM"),
+            ("MSAVESTAT", "MPHSTAT"),
+        ):
+            if not str(row_data.get(save_f, "")).strip():
+                row_data[save_f] = str(row_data.get(live_f, "")).strip()
+        if not str(row_data.get("MRRULE", "")).strip():
+            row_data["MRRULE"] = "A"
+
     def _apply_issue76_eti_rpu_phase1_payup_mlastann(self, row_data, qm_status, qm_paidto):
         """Issue #76: ETI/RPU phase-1 pay-up = paid-to; duration = run-year − pay-up year."""
         st = self.normalize(qm_status)
@@ -7255,12 +7291,17 @@ class QLAdminEnterpriseIntegrationSuite:
                                     row_data, _qm_st, _qm_pd,
                                 )
                             apply_quikridr_decimal_emit(row_data)
+                            # v57.96: blank MSAVE* mirror final live fields; MRRULE default A
+                            self._apply_quikridr_v5796_defaults(row_data)
                         # Issue #72: ETI/RPU status → matching MNFOPT (after final MSTATUS)
                         if t_id.lower() == "quikmstr":
                             self._apply_issue72_mnfopt_status_force(row_data)
                         # Issue #45: bank-draft missing account → blank MBANKNO + exception (MBILLFRM unchanged)
                         if t_id.lower() == "quikmstr":
                             self._apply_issue45_bank_draft_gate(row_data, src_row, bank_draft_exceptions)
+                        # v57.96: MBILLTO 0 → MPAIDTO; MORIGBILL/MORIGMODE copies
+                        if t_id.lower() == "quikmstr":
+                            self._apply_quikmstr_v5796_defaults(row_data)
                         output.append([row_data[h] for h in schema])
                         if i % 1000 == 0: self.progress["value"] = (i/len(source))*100; self.root.update_idletasks()
 
@@ -7273,6 +7314,8 @@ class QLAdminEnterpriseIntegrationSuite:
                                 quikridr_mphdob_fix_count += 1
                             self._apply_quikridr_mlastann(pua_row, {}, quikridr_valuation_date)
                             apply_quikridr_decimal_emit(pua_row)
+                            # v57.96: blank MSAVE* mirror final live fields (after PUA inheritance)
+                            self._apply_quikridr_v5796_defaults(pua_row)
                             output.append([pua_row[h] for h in schema])
                     if t_id.lower() == "quikridr" and quikridr_mphdob_fix_count:
                         self.log(f"QUIKRIDR MPHDOB: corrected {quikridr_mphdob_fix_count} invalid DOB row(s)")
@@ -7293,6 +7336,11 @@ class QLAdminEnterpriseIntegrationSuite:
                         if _i72:
                             self.log(
                                 f"Issue #72: forced MNFOPT from ETI/RPU status on {_i72} polic(ies)"
+                            )
+                        _v5796 = getattr(self, "_v5796_mbillto_fix_count", 0)
+                        if _v5796:
+                            self.log(
+                                f"v57.96: MBILLTO 0/blank replaced with MPAIDTO on {_v5796} polic(ies)"
                             )
                         _i49 = getattr(self, "_issue49_mstatus_override_count", 0)
                         if _i49:
