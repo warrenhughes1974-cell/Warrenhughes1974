@@ -95,6 +95,7 @@
 | **#72** | NFO must match ETI/RPU status (44→2, 45→3) | **Ready for Validation** · **v57.91** | **v57.91** | Post-map force MNFOPT from final MSTATUS 44/45; 277 policies; validator PASS; `Test_Validation/quikmstr.csv`. |
 | **#74** | Var DB Code (`quikplan.VARDB`) `4` → `0` only | **CLOSED ✓** | — | **Resolution:** Rulebook VARDB `4`→`0` (121 plans); structure `1`/`2`/`3` unchanged (20). Val+Reg PASS. `Test_Validation/quikplan.csv`. |
 | **#75** | Bank Acct / `MBANKNO` QLA validation | **Ready for Regression** · **v57.92** | **v57.92** | Val PASS: 0 invalid MBANKNO; 1074 intentional changes; Test_Validation/quikmstr.csv. Next: Regression Agent. |
+| **#77** | Fleet rate setup validation (PVO + default keys vs loaded rates / EX guide) | **CLOSED ✓** | **v57.95** | Resolution: Rate setup now ensures every plan with loaded rates has GP/DB/CV/TV/DV keys and correct Plan Values Options checkboxes, using NOT APPLICABLE defaults only when no real codes exist, without inventing factor values. |
 | **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
 | **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
 | **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |
@@ -151,6 +152,8 @@
 **#74 detail:** `Issue_Log_Items/Issue_74/` · **CLOSED 2026-07-15** · `Issue_74_Resolution_Summary.md` · rulebook-only · 121×`4`→`0` / 20 keep · `Test_Validation/quikplan.csv`
 
 **#75 detail:** `Issue_Log_Items/Issue_75/` · **Ready for Regression** · **v57.92** · `Issue_75_Validation_Report.md` PASS · `Test_Validation/quikmstr.csv`
+
+**#77 detail:** `Issue_Log_Items/Issue_77/` · **CLOSED v57.95** · `Issue_77_Resolution_Summary.md` · UAT: reload `Test_Validation/quikplan.csv` + `rates/QuikPl*`
 
 **#76 detail:** `Issue_Log_Items/Issue_76/` · **CLOSED 2026-07-15** · **v57.93** · `Issue_76_Resolution_Summary.md` · 400 ETI/RPU phase-1 adjusted · `Test_Validation/quikridr.csv` · UAT: Rebuild CV on `010407670C`
 

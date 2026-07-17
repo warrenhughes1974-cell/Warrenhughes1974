@@ -42,6 +42,7 @@ class PipelineResult:
         self.key_rows = {}
         self.member_rows = {}
         self.member_placeholders = collections.Counter()
+        self.default_key_stubs = []  # Issue #77: (plan, key_table) stubs added
         self.deps = []
         self.issues = []
         self.summary = collections.Counter()
@@ -276,8 +277,16 @@ def run(config_path, repo_root):
                 res.key_rows[kt].append(r); existing.add(sig)
         res.deps.extend(dep)
 
+    # Issue #77: default key stub for each GP/DB/CV/TV/DV family missing rates
+    rated_plans = K.rated_plans_from_grids(res.grids)
+    res.default_key_stubs = K.ensure_default_key_stubs(
+        res.key_rows, rated_plans, assumptions=assumptions, effdate=config.effdate,
+    )
+
     # member / dimension tables (codes derived from validated segmentation tuples)
     res.member_rows, res.member_placeholders = MB.build_member_rows(res.grids, config.effdate)
+    # Issue #77: member codes for stub keys (e.g. real F/M preferred over NA 0)
+    MB.ensure_members_for_keys(res.member_rows, res.key_rows, effdate=config.effdate)
 
     res.issues, res.summary = V.validate(res.grids, res.factor_rows, res.fmt_issues,
                                          res.key_rows, res.deps, res.authoritative_plans, config)

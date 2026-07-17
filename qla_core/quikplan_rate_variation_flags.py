@@ -246,8 +246,39 @@ def stats_to_analysis_rows(merged: dict[tuple[str, str], SegmentationStats]) -> 
     return rows
 
 
+def ensure_default_key_stub_stats(
+    merged: dict[tuple[str, str], SegmentationStats],
+) -> dict[tuple[str, str], SegmentationStats]:
+    """
+    Issue #77: mirror rate-key default stubs in segmentation stats so Plan Values
+    Options treat every GP/DB/CV/TV/DV family as present for plans that have rates.
+    """
+    out: dict[tuple[str, str], SegmentationStats] = defaultdict(SegmentationStats)
+    for key, st in merged.items():
+        out[key].merge(st)
+    plans = {plan for (plan, _sfx) in out if plan}
+    for plan in plans:
+        for sfx in FLAG_SUFFIXES:
+            key = (plan, sfx)
+            st = out[key]
+            if st.row_count > 0:
+                continue
+            _ingest_row(st, "0", "00", "00", "0000", "00")
+            st.sources.add("DEFAULT_KEY_STUB")
+            if st.row_count == 0:
+                st.row_count = 1
+    return dict(out)
+
+
 def derive_plan_flags(merged: dict[tuple[str, str], SegmentationStats]) -> dict[str, dict]:
-    """Build quikplan variation flag values per PLAN."""
+    """
+    Build quikplan variation flag values per PLAN.
+
+    Issue #77 rule (locked):
+      - GD / UW: Y when that family has more than one distinct value
+      - BD: Y when the family has any key/rate presence (including default stub)
+      - ST: STVARYGP=Y when GP family present; other ST* only if multiple state/country
+    """
     by_plan: dict[str, dict[str, str]] = defaultdict(lambda: {f: "N" for f in VARY_FIELD_NAMES})
     reasons: dict[str, list[str]] = defaultdict(list)
 
@@ -261,10 +292,13 @@ def derive_plan_flags(merged: dict[tuple[str, str], SegmentationStats]) -> dict[
         if len(st.uwclasses) > 1:
             flags[f"UWVARY{sfx}"] = "Y"
             reasons[plan].append(f"UWVARY{sfx}")
-        if len(st.bands) > 1:
-            flags[f"BDVARY{sfx}"] = "Y"
-            reasons[plan].append(f"BDVARY{sfx}")
-        if len(st.state_country) > 1:
+        # Band participates in key even when only BAND=00 (Issue #77)
+        flags[f"BDVARY{sfx}"] = "Y"
+        reasons[plan].append(f"BDVARY{sfx}")
+        if sfx == "GP":
+            flags["STVARYGP"] = "Y"
+            reasons[plan].append("STVARYGP")
+        elif len(st.state_country) > 1:
             flags[f"STVARY{sfx}"] = "Y"
             reasons[plan].append(f"STVARY{sfx}")
 
@@ -282,6 +316,46 @@ def derive_plan_flags(merged: dict[tuple[str, str], SegmentationStats]) -> dict[
     return updates
 
 
+def scan_emitted_key_csvs(csv_dir: str) -> dict[tuple[str, str], SegmentationStats]:
+    """Issue #77: segmentation from emitted QuikPl*.csv under Output/rates (or similar)."""
+    out: dict[tuple[str, str], SegmentationStats] = defaultdict(SegmentationStats)
+    if not csv_dir or not os.path.isdir(csv_dir):
+        return out
+    table_suffix = {
+        "QuikPlGp": "GP",
+        "QuikPlDb": "DB",
+        "QuikPlCv": "CV",
+        "QuikPlTv": "TV",
+        "QuikPlDv": "DV",
+    }
+    for table, sfx in table_suffix.items():
+        path = os.path.join(csv_dir, f"{table}.csv")
+        if not os.path.isfile(path):
+            # case-insensitive fallback
+            match = None
+            for name in os.listdir(csv_dir):
+                if name.lower() == f"{table}.csv".lower():
+                    match = os.path.join(csv_dir, name)
+                    break
+            path = match or path
+        if not path or not os.path.isfile(path):
+            continue
+        with open(path, encoding="utf-8-sig", errors="replace", newline="") as f:
+            for r in csv.DictReader(f):
+                plan = (r.get("PLAN") or "").strip()
+                if not plan or " " in plan:
+                    continue
+                gender = (r.get("GENDER") or "").strip()
+                uwclass = (r.get("UWCLASS") or "").strip()
+                band = (r.get("BAND") or "").strip()
+                isscntry = (r.get("ISSCNTRY") or "").strip() or "0000"
+                issuest = (r.get("ISSUEST") or "").strip() or "00"
+                key = (plan, sfx)
+                out[key].sources.add(f"EmittedCSV:{table}")
+                _ingest_row(out[key], gender or None, uwclass or None, band or None, isscntry, issuest)
+    return out
+
+
 def analyze_rate_segmentation(
     rate_table_path: str | None = None,
     paagerat_path: str | None = None,
@@ -289,6 +363,7 @@ def analyze_rate_segmentation(
     pcovr_path: str | None = None,
     crosswalk_path: str | None = None,
     emitted_dbf_dir: str | None = None,
+    emitted_csv_dir: str | None = None,
 ) -> tuple[list[dict], dict[str, dict]]:
     rate_table_path = rate_table_path or PSP.rate_table_extract()
     paagerat_path = paagerat_path or PSP.paagerat_extract()
@@ -305,7 +380,9 @@ def analyze_rate_segmentation(
         scan_rate_table(rate_table_path, cov2plan),
         scan_paagerat(paagerat_path, resolver),
         scan_emitted_key_dbfs(emitted_dbf_dir or ""),
+        scan_emitted_key_csvs(emitted_csv_dir or ""),
     )
+    merged = ensure_default_key_stub_stats(merged)
     return stats_to_analysis_rows(merged), derive_plan_flags(merged)
 
 
@@ -519,6 +596,7 @@ class RateVariationEnrichmentConfig:
     pcovr_csv: str = ""
     plan_form_crosswalk: str = ""
     emitted_dbf_dir: str = ""
+    emitted_csv_dir: str = ""  # Issue #77 — prefer Output/rates QuikPl*.csv
     integration_audit_dir: str = ""
 
     @classmethod
@@ -534,6 +612,7 @@ class RateVariationEnrichmentConfig:
             pcovr_csv=str(d.get("pcovr_csv", "")),
             plan_form_crosswalk=str(d.get("plan_form_crosswalk", "")),
             emitted_dbf_dir=str(d.get("emitted_dbf_dir", "")),
+            emitted_csv_dir=str(d.get("emitted_csv_dir", "")),
             integration_audit_dir=str(d.get("integration_audit_dir", "")),
         )
 
@@ -555,6 +634,7 @@ class RateVariationEnrichmentConfig:
         default_emit = os.path.join(
             repo_root, "plan_analysis", "phase_r5_rate_loader", "emitted_dbf",
         )
+        default_csv = os.path.join(repo_root, "QLA_Migration", "Output", "rates")
         default_audit = os.path.join(
             repo_root, "plan_analysis", "phase_r7b_quikplan_rate_variation_integration",
         )
@@ -567,21 +647,23 @@ class RateVariationEnrichmentConfig:
                 cfg.apply_rate_variation_flags = False
             elif env_apply:
                 cfg.apply_rate_variation_flags = apply
-            return cls._resolve_paths(repo_root, cfg, default_emit, default_audit)
+            return cls._resolve_paths(repo_root, cfg, default_emit, default_csv, default_audit)
 
         cfg = cls.from_dict({
             "APPLY_RATE_VARIATION_FLAGS": apply,
             "emitted_dbf_dir": default_emit,
+            "emitted_csv_dir": default_csv,
             "integration_audit_dir": default_audit,
             **paths,
         })
-        return cls._resolve_paths(repo_root, cfg, default_emit, default_audit)
+        return cls._resolve_paths(repo_root, cfg, default_emit, default_csv, default_audit)
 
     @staticmethod
     def _resolve_paths(
         repo_root: str,
         cfg: RateVariationEnrichmentConfig,
         default_emit: str,
+        default_csv: str,
         default_audit: str,
     ) -> RateVariationEnrichmentConfig:
         def rp(p: str, fallback: str = "") -> str:
@@ -595,6 +677,7 @@ class RateVariationEnrichmentConfig:
         cfg.pcovr_csv = rp(cfg.pcovr_csv) or PSP.pcovr_csv()
         cfg.plan_form_crosswalk = rp(cfg.plan_form_crosswalk) or PSP.policy_form_crosswalk()
         cfg.emitted_dbf_dir = rp(cfg.emitted_dbf_dir, default_emit)
+        cfg.emitted_csv_dir = rp(cfg.emitted_csv_dir, default_csv)
         cfg.integration_audit_dir = rp(cfg.integration_audit_dir, default_audit)
         return cfg
 
@@ -687,16 +770,17 @@ def run_integration_validation(
             planvalopt_ok = False
     add("PLANVALOPT_CONSISTENCY", planvalopt_ok, f"plans_checked={len(updates)}")
 
-    stvary_y = [
+    # Issue #77: STVARYGP is expected Y when GP keys/rates exist; other ST* only if multi-state
+    stvary_non_gp = [
         f"{u.get('PLAN')}.{col}"
         for u in updates.values()
         for col in VARY_FIELD_NAMES
-        if col.startswith("STVARY") and u.get(col) == "Y"
+        if col.startswith("STVARY") and col != "STVARYGP" and u.get(col) == "Y"
     ]
     add(
-        "STVARY_REMAINS_N_UNLESS_STATE_VARIATION",
-        len(stvary_y) == 0,
-        "none" if not stvary_y else ";".join(stvary_y[:10]),
+        "STVARY_NON_GP_ONLY_WHEN_MULTI_STATE",
+        len(stvary_non_gp) == 0,
+        "none" if not stvary_non_gp else ";".join(stvary_non_gp[:10]),
     )
 
     deferred_in_schema = [c for c in DEFERRED_ACTUARIAL_ASSUMPTIONS if c in schema]
@@ -768,10 +852,19 @@ def enrich_quikplan_rows(
         pcovr_path=config.pcovr_csv,
         crosswalk_path=config.plan_form_crosswalk,
         emitted_dbf_dir=config.emitted_dbf_dir if os.path.isdir(config.emitted_dbf_dir) else None,
+        emitted_csv_dir=config.emitted_csv_dir if os.path.isdir(config.emitted_csv_dir or "") else None,
     )
     quikplan_plans = {(r.get("PLAN") or "").strip() for r in original if r.get("PLAN")}
     applicable = {p: u for p, u in all_updates.items() if p in quikplan_plans}
     enriched = apply_flag_updates_to_quikplan_rows(original, applicable)
+    # Issue #77: PLANVALOPT alphabet Y/N only (strip invalid e.g. F)
+    for row in enriched:
+        plan = (row.get("PLAN") or "").strip()
+        pvo = (row.get("PLANVALOPT") or "").strip()
+        if plan in applicable:
+            continue
+        if pvo not in ("Y", "N", ""):
+            row["PLANVALOPT"] = "N"
     diffs = compute_field_diffs(original, enriched, applicable)
     checks = run_integration_validation(original, enriched, applicable)
     blockers = sum(1 for c in checks if c["STATUS"] == "FAIL")

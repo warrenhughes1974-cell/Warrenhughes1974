@@ -1,10 +1,14 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.93
-# Date:        2026-07-15
+# Version:     v57.95
+# Date:        2026-07-17
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.93 — Issue #76: quikridr phase-1 MPAYUP←MPAIDTO + MLASTANN=sys year−payup
+# Change Note: v57.95 — Issue #77: omit NOT APPLICABLE member/key (0/00) when real codes exist
+#              (EX pattern; e.g. no Gender 0 beside F/M).
+#              v57.94 — Issue #77: rate-key default stubs (GP/DB/CV/TV/DV), Plan Values Options
+#              recompute from keys, QuikPlSt.MLOANINT default 0.00; no factor invent.
+#              v57.93 — Issue #76: quikridr phase-1 MPAYUP←MPAIDTO + MLASTANN=sys year−payup
 #              year when quikmstr MSTATUS 44/45 (ETI/RPU CV anniversary dates); #60 PUA untouched.
 #              v57.92 — Issue #75: quikmstr.MBANKNO QLA-safe emit — 9-digit ABA only, digits-only
 #              account, single slash; strip punct; blank + exception when unrecoverable (#45 gate).
@@ -370,7 +374,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.93"
+APP_VERSION = "v57.95"
 
 
 class QLAdminEnterpriseIntegrationSuite:
