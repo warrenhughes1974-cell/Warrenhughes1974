@@ -120,6 +120,9 @@ None.
 
 | Item | Value |
 |------|-------|
-| Commit | *(filled after commit)* |
-| Branch | *(filled after push)* |
+| Commit | `ca8221b9f66fadf8cc2d6168f40fa09c04175a4f` |
+| Branch | `issue-34-pr7-quikisrr` |
+| Remote | `origin/issue-34-pr7-quikisrr` |
 | Message | `Close Issue #77: fleet rate setup PVO + default keys (v57.95)` |
+
+**Network note:** `QLA_Migration/Output/` is gitignored — after pull, run GENERATE RATE TABLES or `python QLA_Migration/_apply_issue77_rate_setup.py`, then load `Output/Test_Validation/`.
