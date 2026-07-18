@@ -163,8 +163,9 @@ None.
 
 | Item | Value |
 |------|-------|
-| Commit | *(recorded after commit)* |
+| Commit | `61a40c073c00cd4bce05f3d1e835e5f707e225c9` |
 | Branch | `issue-34-pr7-quikisrr` |
+| Remote | `origin/issue-34-pr7-quikisrr` |
 | Message | `Close Issue #80: CSO Valuation Setup exact assumptions (v58.01)` |
 
 **Network note:** After pull, run **GENERATE RATE TABLES** (or `rate_loader_gui_runner.py --emit-csv`) and full batch at v58.01. Load `Output/Test_Validation/` for partial UAT.
