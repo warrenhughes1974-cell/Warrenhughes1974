@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.04
+# Version:     v58.05
 # Date:        2026-07-18
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.04 — Replace legacy data_governance audit with QLAdmin Data Governance
+# Change Note: v58.05 — UI: Governance Data Folder picker (CSV or DBF region) for on-demand
+#              QLAdmin Data Governance; post-batch still audits Output.
+#              v58.04 — Replace legacy data_governance audit with QLAdmin Data Governance
 #              framework (DG-QUIKCOMP-001/002/003); outputs under Reports/data_governance/.
 #              v58.03 — Issue #85: unique quikclms claim identity — merge same-CLAIMNUM
 #              duplicates; re-phase distinct claims (Policy-book pattern); re-attach quikclmp
@@ -416,7 +418,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.04"
+APP_VERSION = "v58.05"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -528,6 +530,8 @@ class QLAdminEnterpriseIntegrationSuite:
         mig_cfg = os.path.join(base_dir, "QLA_Migration", "Configs", "Sync_Rulebook_quikplan.csv")
         default_rule = mig_cfg if os.path.isfile(mig_cfg) else ""
         default_rel = os.path.join(mig_out, "quikclid.csv") if os.path.isfile(os.path.join(mig_out, "quikclid.csv")) else ""
+        env_gov = os.environ.get("QLA_GOVERNANCE_DATA_DIR", "").strip()
+        default_gov = env_gov if env_gov and os.path.isdir(env_gov) else default_out
 
         self.path_vars = {
             "Rule": [tk.StringVar(value=default_rule), "file", "Field Mapping (Rulebook):"],
@@ -535,7 +539,12 @@ class QLAdminEnterpriseIntegrationSuite:
             "Trans": [tk.StringVar(value=default_trans), "file", "Value Translation (CSV):"],
             "CW": [tk.StringVar(value=default_cw), "file", "ID Crosswalk (CSV):"],
             "Rel": [tk.StringVar(value=default_rel), "file", "Relational File (quikclid):"],
-            "Out": [tk.StringVar(value=default_out), "folder", "Output Directory:"]
+            "Out": [tk.StringVar(value=default_out), "folder", "Output Directory:"],
+            "GovData": [
+                tk.StringVar(value=default_gov),
+                "folder",
+                "Governance Data Folder (CSV or DBF):",
+            ],
         }
 
         self.path_display_vars = {}
@@ -5372,7 +5381,15 @@ class QLAdminEnterpriseIntegrationSuite:
             self.log("DATA GOVERNANCE: skipped (QLA_SKIP_GOVERNANCE_AUDIT=1)")
             return {"status": "SKIPPED", "failed": 0, "errors": 0, "total": 0}
         try:
-            summary = self._execute_governance_audit(open_report=False, show_dialog=False)
+            # Post-batch always audits the conversion Output folder (CSV emit).
+            out_dir = ""
+            if hasattr(self, "path_vars"):
+                out_dir = self.path_vars["Out"][0].get().strip()
+            if not out_dir or not os.path.isdir(out_dir):
+                out_dir = self._migration_output_dir()
+            summary = self._execute_governance_audit(
+                open_report=False, show_dialog=False, data_dir=out_dir,
+            )
             if error_log and (summary.get("failed") or summary.get("errors")):
                 error_log.write_warnings([
                     ("WARN", "governance", "data_governance",
@@ -5421,13 +5438,46 @@ class QLAdminEnterpriseIntegrationSuite:
         except Exception:
             pass
 
-    def _execute_governance_audit(self, open_report=True, show_dialog=True, with_ui_progress=False):
+    def _resolve_governance_data_dir(self, explicit=None):
+        """Resolve folder of Quik*.dbf / Quik*.csv tables for an on-demand governance run."""
+        candidates = []
+        if explicit:
+            candidates.append(str(explicit).strip())
+        if hasattr(self, "path_vars") and "GovData" in self.path_vars:
+            candidates.append(self.path_vars["GovData"][0].get().strip())
+        env_gov = os.environ.get("QLA_GOVERNANCE_DATA_DIR", "").strip()
+        if env_gov:
+            candidates.append(env_gov)
+        if hasattr(self, "path_vars") and "Out" in self.path_vars:
+            candidates.append(self.path_vars["Out"][0].get().strip())
+        candidates.append(self._migration_output_dir())
+        for path in candidates:
+            if path and os.path.isdir(path):
+                return os.path.normpath(path)
+        return ""
+
+    def _prompt_governance_data_folder(self):
+        """Ask user to pick a CSV/DBF data region; store on GovData path field."""
+        path = filedialog.askdirectory(
+            title="Select Governance Data Folder (Quik*.csv or Quik*.dbf)",
+        )
+        if not path:
+            return ""
+        path = os.path.normpath(path)
+        if hasattr(self, "path_vars") and "GovData" in self.path_vars:
+            self.path_vars["GovData"][0].set(path)
+            self._ui_sync_path_display("GovData")
+        return path
+
+    def _execute_governance_audit(
+        self, open_report=True, show_dialog=True, with_ui_progress=False, data_dir=None,
+    ):
         """Shared QLAdmin Data Governance runner for UI and post-batch. Returns summary dict."""
-        out_dir = self.path_vars["Out"][0].get().strip() if hasattr(self, "path_vars") else ""
-        if not out_dir or not os.path.isdir(out_dir):
-            out_dir = self._migration_output_dir()
-        if not os.path.isdir(out_dir):
-            raise FileNotFoundError(f"Output folder not found: {out_dir}")
+        data_region = self._resolve_governance_data_dir(data_dir)
+        if not data_region:
+            raise FileNotFoundError(
+                "Governance data folder not found. Browse to a folder of Quik*.csv or Quik*.dbf files."
+            )
 
         repo = self._repo_root()
         if repo not in sys.path:
@@ -5438,10 +5488,11 @@ class QLAdminEnterpriseIntegrationSuite:
         os.makedirs(report_dir, exist_ok=True)
 
         self.log("DATA GOVERNANCE: starting QLAdmin Data Governance (read-only)...")
+        self.log(f"  Data folder: {data_region}")
         if with_ui_progress:
             self.update_run_progress(1, detail="Preparing QLAdmin Data Governance")
         report = run_data_governance(
-            data_dir=out_dir,
+            data_dir=data_region,
             output_dir=report_dir,
             write_reports=True,
             progress_callback=self._governance_ui_progress if with_ui_progress else None,
@@ -5532,6 +5583,15 @@ class QLAdminEnterpriseIntegrationSuite:
         if self.is_running:
             messagebox.showwarning("Governance Audit", "A conversion or batch job is already running.")
             return
+        data_region = self._resolve_governance_data_dir()
+        if not data_region:
+            data_region = self._prompt_governance_data_folder()
+            if not data_region:
+                messagebox.showwarning(
+                    "Governance Audit",
+                    "Select a Governance Data Folder containing Quik*.csv or Quik*.dbf files.",
+                )
+                return
         self.is_running = True
         self.start_time = time.time()
         threading.Thread(target=self.update_timer, daemon=True).start()

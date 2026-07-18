@@ -13,6 +13,16 @@ Incremental framework for QLAdmin table governance checks against **any** data r
 | 5 — QuikDate Processing Date Integrity | `DG-QUIKDATE` | 001–006 |
 | 6 — Plan Value Reference Integrity | `DG-PLANVALUES` | 001–008 |
 
+## Run from the converter UI
+
+1. Set **Governance Data Folder (CSV or DBF)** to a folder of `Quik*.csv` and/or `Quik*.dbf` files (Browse).
+2. Click **GOVERNANCE AUDIT** / **RUN DATA GOVERNANCE AUDIT**.
+3. Reports open from `QLA_Migration/Reports/data_governance/<run_id>/` (`1_What_Was_Checked.html`).
+
+DBF is preferred when both formats exist for the same table. Post-batch governance still audits **Output Directory**.
+
+Optional default: set env `QLA_GOVERNANCE_DATA_DIR` before launching the UI.
+
 ## Run against any data region
 
 ```bash
