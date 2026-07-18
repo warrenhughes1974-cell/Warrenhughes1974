@@ -211,8 +211,28 @@ def attach_conformance_metrics(result: GovernanceRunResult):
 
 def write_governance_outputs(result: GovernanceRunResult, paths: GovernancePaths) -> None:
     os.makedirs(paths.output_dir, exist_ok=True)
+    os.makedirs(paths.internal_dir, exist_ok=True)
     accuracy = attach_conformance_metrics(result)
 
+    # User-facing reports at run folder root
+    from data_governance.reporting.simplified_reports import (
+        build_business_summary,
+        write_items_needing_attention_csv,
+        write_what_was_checked_html,
+    )
+
+    biz = build_business_summary(result)
+    result.business_overall_result = biz.overall_result
+    result.checks_incomplete_count = biz.checks_incomplete
+    if biz.warning and biz.warning not in result.report_warnings:
+        result.report_warnings.append(biz.warning)
+
+    write_what_was_checked_html(result, paths.what_was_checked_html)
+    write_items_needing_attention_csv(result, paths.items_needing_attention_csv)
+    result.what_was_checked_path = paths.what_was_checked_html
+    result.items_needing_attention_path = paths.items_needing_attention_csv
+
+    # Technical artifacts retained under internal/ for troubleshooting
     _write_results_csv(result, paths.results_csv, accuracy)
     _write_findings_csv(result, paths.findings_csv)
     _write_summary_csv(result, paths.summary_csv, accuracy)

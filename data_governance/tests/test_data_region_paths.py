@@ -111,6 +111,8 @@ def test_output_only_in_selected_location(tmp_path):
     region_files = {p.name for p in region.iterdir()}
     assert "data_governance_findings.csv" not in region_files
     assert "data_governance_results.csv" not in region_files
+    assert "1_What_Was_Checked.html" not in region_files
+    assert "2_Items_Needing_Attention.csv" not in region_files
 
 
 def test_two_region_runs_produce_separate_folders(tmp_path):

@@ -223,6 +223,10 @@ class GovernanceRunResult:
     failed_count: int = 0
     error_count: int = 0
     overall_status: str = OVERALL_NOT_RUN
+    # User-facing reports
+    what_was_checked_path: str = ""
+    items_needing_attention_path: str = ""
+    # Internal technical paths (under internal/)
     results_csv_path: str = ""
     findings_csv_path: str = ""
     summary_csv_path: str = ""
@@ -232,10 +236,16 @@ class GovernanceRunResult:
     run_log_path: str = ""
     source_opened_read_only: bool = True
     source_files_modified: bool = False
+    # Selection scope for Report 1
+    review_scope: str = "all"  # all | item | rule
+    selected_governance_item_id: str = ""
+    selected_rule_id: str = ""
     # Reporting metrics (attached after finalize / during report write)
     data_conformance_accuracy_percent: float | None = None
     data_conformance_accuracy_display: str = ""
     report_warnings: list[str] = field(default_factory=list)
+    business_overall_result: str = ""
+    checks_incomplete_count: int = 0
 
     def finalize(self) -> None:
         self.records_evaluated = sum(r.records_evaluated for r in self.rule_results)
@@ -285,12 +295,19 @@ class GovernanceRunResult:
             "overall_status": self.overall_status,
             "source_opened_read_only": self.source_opened_read_only,
             "source_files_modified": self.source_files_modified,
+            "what_was_checked_path": self.what_was_checked_path,
+            "items_needing_attention_path": self.items_needing_attention_path,
             "results_csv_path": self.results_csv_path,
             "findings_csv_path": self.findings_csv_path,
             "summary_csv_path": self.summary_csv_path,
             "report_md_path": self.report_md_path,
             "validation_guide_path": self.validation_guide_path,
             "validation_manifest_path": self.validation_manifest_path,
+            "review_scope": self.review_scope,
+            "selected_governance_item_id": self.selected_governance_item_id,
+            "selected_rule_id": self.selected_rule_id,
+            "business_overall_result": self.business_overall_result,
+            "checks_incomplete_count": self.checks_incomplete_count,
             "Validation_Guide_File": (
                 os.path.basename(self.validation_guide_path)
                 if self.validation_guide_path

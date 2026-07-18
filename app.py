@@ -5449,60 +5449,57 @@ class QLAdminEnterpriseIntegrationSuite:
         self._last_governance_report = report
         failed = int(report.failed_count or 0)
         errors = int(report.error_count or 0)
-        total_findings = len(report.findings or [])
-        results_csv = getattr(report, "results_csv_path", "") or os.path.join(
-            report_dir, "data_governance_results.csv"
-        )
-        md_path = report.report_md_path or os.path.join(report_dir, "data_governance_report.md")
-        findings_csv = report.findings_csv_path or os.path.join(
-            report_dir, "data_governance_findings.csv"
-        )
-        summary_csv = report.summary_csv_path or os.path.join(
-            report_dir, "data_governance_summary.csv"
-        )
+        incomplete = int(getattr(report, "checks_incomplete_count", 0) or 0)
+        business_result = getattr(report, "business_overall_result", "") or report.overall_status
+        what_checked = getattr(report, "what_was_checked_path", "") or ""
+        items_csv = getattr(report, "items_needing_attention_path", "") or ""
+        run_folder = getattr(report, "output_dir", "") or report_dir
 
         self.log("DATA GOVERNANCE COMPLETE:")
+        self.log(f"  Overall result: {business_result}")
         self.log(
-            f"  Status: {report.overall_status} | "
-            f"Evaluated={report.records_evaluated} Passed={report.passed_count} "
-            f"Failed={failed} Errors={errors} Findings={total_findings}"
+            f"  Records checked={report.records_evaluated} "
+            f"Passed={report.passed_count} Problems={failed} "
+            f"Incomplete checks={incomplete}"
         )
-        self.log(f"  Rules: {', '.join(report.rules_executed)}")
-        self.log(f"  Results CSV: {results_csv}")
-        self.log(f"  Findings CSV: {findings_csv}")
-        self.log(f"  Summary CSV:  {summary_csv}")
+        self.log(f"  What Was Checked: {what_checked}")
+        self.log(f"  Items Needing Attention: {items_csv}")
 
         summary = {
             "status": report.overall_status,
+            "business_result": business_result,
             "failed": failed,
             "errors": errors,
             "passed": int(report.passed_count or 0),
-            "total": total_findings,
-            "critical": failed,  # Item 1 rules are Critical severity
+            "total": failed + incomplete,
+            "critical": failed,
             "high": 0,
-            "report_dir": report_dir,
-            "results_csv_path": results_csv,
-            "report_md_path": md_path,
-            "findings_csv_path": findings_csv,
-            "summary_csv_path": summary_csv,
-            "clean": report.overall_status == "PASS",
+            "report_dir": run_folder,
+            "what_was_checked_path": what_checked,
+            "items_needing_attention_path": items_csv,
+            "results_csv_path": getattr(report, "results_csv_path", ""),
+            "report_md_path": getattr(report, "report_md_path", ""),
+            "findings_csv_path": getattr(report, "findings_csv_path", ""),
+            "summary_csv_path": getattr(report, "summary_csv_path", ""),
+            "clean": business_result == "Passed",
         }
 
         if show_dialog:
             msg = (
-                f"Overall status: {report.overall_status}\n"
-                f"Failed: {failed}  Errors: {errors}\n"
-                f"Findings: {total_findings}\n\n"
-                f"Open this CSV:\n{results_csv}"
+                f"Overall result: {business_result}\n"
+                f"Problems found: {failed}\n"
+                f"Checks that could not be completed: {incomplete}\n\n"
+                f"What Was Checked:\n{what_checked}\n\n"
+                f"Items Needing Attention:\n{items_csv}"
             )
-            if report.overall_status == "PASS":
-                messagebox.showinfo("QLAdmin Data Governance", f"Pass — no findings.\n\n{msg}")
+            if business_result == "Passed":
+                messagebox.showinfo("QLAdmin Data Governance", f"Passed.\n\n{msg}")
             else:
                 messagebox.showwarning("QLAdmin Data Governance", msg)
 
-        if open_report and os.path.isfile(results_csv):
+        if open_report and what_checked and os.path.isfile(what_checked):
             try:
-                os.startfile(results_csv)  # noqa: S606
+                os.startfile(what_checked)  # noqa: S606
             except OSError:
                 pass
 

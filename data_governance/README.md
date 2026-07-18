@@ -43,19 +43,22 @@ python -m data_governance run --input "D:\QLAdmin\ClientA\Data" --output "D:\Gov
 python -m data_governance run --input "D:\QLAdmin\ClientA\Data" --output "D:\Governance\ClientA" --rule DG-PLANVALUES-001
 ```
 
-Each run writes an isolated folder:
+Each run writes an isolated folder with two user-facing reports:
 
 ```text
 <output>/
   <run_id>/
-    data_governance_results.csv
-    data_governance_summary.csv
-    data_governance_findings.csv
-    data_governance_report.md          (starts with Executive Summary + Data Conformance Accuracy)
-    data_governance_validation_guide.md
-    data_governance_validation_manifest.json
-    data_governance_run.json
-    data_governance.log
+    1_What_Was_Checked.html            (business summary — open this first)
+    2_Items_Needing_Attention.csv      (data problems + incomplete checks only)
+    internal/                          (optional technical files for support)
+      data_governance_results.csv
+      data_governance_findings.csv
+      data_governance_summary.csv
+      data_governance_report.md
+      data_governance_validation_guide.md
+      data_governance_validation_manifest.json
+      data_governance_run.json
+      data_governance.log
 ```
 
 Source DBF files are opened **read-only** and are never modified.

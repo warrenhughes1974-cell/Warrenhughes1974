@@ -90,35 +90,22 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     print("QLAdmin Data Governance")
-    print(f"  Run ID:            {result.run_id}")
-    print(f"  Timestamp:         {result.run_timestamp}")
-    print(f"  Data region:       {result.data_dir}")
-    print(f"  Output base:       {result.output_base}")
     print(f"  Run folder:        {result.output_dir}")
-    print(f"  Rules executed:    {', '.join(result.rules_executed) or '(none)'}")
-    print(f"  Records evaluated: {result.records_evaluated}")
-    print(f"  Passed:            {result.passed_count}")
-    print(f"  Failed:            {result.failed_count}")
-    print(f"  Errors:            {result.error_count}")
+    print(f"  Data folder:       {result.data_dir}")
+    print(f"  Overall result:    {result.business_overall_result or result.overall_status}")
+    print(f"  Records checked:   {result.records_evaluated}")
+    print(f"  Records passed:    {result.passed_count}")
+    print(f"  Problems found:    {result.failed_count}")
+    print(f"  Incomplete checks: {result.checks_incomplete_count}")
     if result.data_conformance_accuracy_display:
-        print(f"  Conformance:       {result.data_conformance_accuracy_display}")
-    print(f"  Overall status:    {result.overall_status}")
-    print(f"  Source read-only:  {result.source_opened_read_only}")
+        print(f"  Percentage passed: {result.data_conformance_accuracy_display}")
     print(f"  Source modified:   {result.source_files_modified}")
-    if result.results_csv_path:
-        print(f"  Results CSV:       {result.results_csv_path}")
-    if result.findings_csv_path:
-        print(f"  Findings CSV:      {result.findings_csv_path}")
-    if result.summary_csv_path:
-        print(f"  Summary CSV:       {result.summary_csv_path}")
-    if result.report_md_path:
-        print(f"  Report:            {result.report_md_path}")
-    if result.validation_guide_path:
-        print(f"  Validation guide:  {result.validation_guide_path}")
-    if result.validation_manifest_path:
-        print(f"  Validation JSON:   {result.validation_manifest_path}")
+    if result.what_was_checked_path:
+        print(f"  What Was Checked:  {result.what_was_checked_path}")
+    if result.items_needing_attention_path:
+        print(f"  Items Needing Attention: {result.items_needing_attention_path}")
     if result.run_log_path:
-        print(f"  Log:               {result.run_log_path}")
+        print(f"  Internal log:      {result.run_log_path}")
 
     if result.overall_status == "ERROR":
         return 2

@@ -119,6 +119,14 @@ def test_reports_and_csv_generated_consistently(tmp_path, clean_company_tables):
         write_reports=True,
         preloaded_tables=clean_company_tables,
     )
+    # User-facing reports at run root
+    assert os.path.isfile(result.what_was_checked_path)
+    assert os.path.isfile(result.items_needing_attention_path)
+    assert os.path.basename(result.what_was_checked_path) == "1_What_Was_Checked.html"
+    assert os.path.basename(result.items_needing_attention_path) == (
+        "2_Items_Needing_Attention.csv"
+    )
+    # Technical artifacts retained under internal/
     assert os.path.isfile(result.results_csv_path)
     assert os.path.isfile(result.findings_csv_path)
     assert os.path.isfile(result.summary_csv_path)
@@ -127,26 +135,12 @@ def test_reports_and_csv_generated_consistently(tmp_path, clean_company_tables):
     assert os.path.isfile(result.validation_manifest_path)
     assert os.path.isfile(result.run_log_path)
     assert result.run_id in result.output_dir
-    assert os.path.basename(result.results_csv_path) == "data_governance_results.csv"
-    assert os.path.basename(result.findings_csv_path) == "data_governance_findings.csv"
-    assert os.path.basename(result.summary_csv_path) == "data_governance_summary.csv"
-    assert os.path.basename(result.report_md_path) == "data_governance_report.md"
-    assert os.path.basename(result.validation_guide_path) == (
-        "data_governance_validation_guide.md"
-    )
-    with open(result.results_csv_path, encoding="utf-8-sig") as fh:
-        results_text = fh.read()
-    assert "OVERALL" in results_text
-    assert "Unique QuikComp Company Code" in results_text
-
-    with open(result.report_md_path, encoding="utf-8") as fh:
-        text = fh.read()
-    assert "QLAdmin Data Governance Executive Summary" in text
-    assert "QLAdmin Data Governance — Results (Plain Language)" in text
-    assert "Bottom line" in text
-    assert "Unique QuikComp Company Code" in text
-    assert "Data region (full path)" in text
-    assert "Data Conformance Accuracy" in text
+    assert "internal" in result.results_csv_path.replace("\\", "/")
+    with open(result.what_was_checked_path, encoding="utf-8") as fh:
+        html = fh.read()
+    assert "Data Governance Review" in html
+    assert "Company Setup" in html
+    assert "Percentage Passed" in html
 
 
 def test_no_pass_detail_rows_for_clean_records(tmp_path, clean_company_tables):

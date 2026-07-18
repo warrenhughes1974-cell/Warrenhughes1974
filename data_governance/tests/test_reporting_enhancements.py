@@ -162,9 +162,11 @@ def test_validation_companion_created(tmp_path, clean_company_tables):
     # Unregistered fake rule must not appear
     assert "DG-FAKE-999" not in guide
     # Metadata includes guide path
-    meta = json.load(open(result.output_dir + "/data_governance_run.json", encoding="utf-8"))
+    run_json = os.path.join(result.output_dir, "internal", "data_governance_run.json")
+    meta = json.load(open(run_json, encoding="utf-8"))
     assert meta["validation_guide_path"] == result.validation_guide_path
     assert meta["Validation_Guide_File"] == "data_governance_validation_guide.md"
+    assert meta.get("what_was_checked_path") == result.what_was_checked_path
 
 
 def test_validation_guide_explains_error_rules(tmp_path):

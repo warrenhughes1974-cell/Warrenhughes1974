@@ -5,7 +5,12 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 
-# Standard output filenames (written under each isolated run folder)
+# User-facing reports (run folder root)
+WHAT_WAS_CHECKED_HTML = "1_What_Was_Checked.html"
+ITEMS_NEEDING_ATTENTION_CSV = "2_Items_Needing_Attention.csv"
+
+# Internal technical artifacts (under run folder / internal/)
+INTERNAL_SUBDIR = "internal"
 RESULTS_CSV_NAME = "data_governance_results.csv"
 FINDINGS_CSV_NAME = "data_governance_findings.csv"
 SUMMARY_CSV_NAME = "data_governance_summary.csv"
@@ -98,36 +103,48 @@ class GovernancePaths:
     output_dir: str  # run-specific folder: <output_base>/<run_id>/
 
     @property
+    def what_was_checked_html(self) -> str:
+        return os.path.join(self.output_dir, WHAT_WAS_CHECKED_HTML)
+
+    @property
+    def items_needing_attention_csv(self) -> str:
+        return os.path.join(self.output_dir, ITEMS_NEEDING_ATTENTION_CSV)
+
+    @property
+    def internal_dir(self) -> str:
+        return os.path.join(self.output_dir, INTERNAL_SUBDIR)
+
+    @property
     def results_csv(self) -> str:
-        return os.path.join(self.output_dir, RESULTS_CSV_NAME)
+        return os.path.join(self.internal_dir, RESULTS_CSV_NAME)
 
     @property
     def findings_csv(self) -> str:
-        return os.path.join(self.output_dir, FINDINGS_CSV_NAME)
+        return os.path.join(self.internal_dir, FINDINGS_CSV_NAME)
 
     @property
     def summary_csv(self) -> str:
-        return os.path.join(self.output_dir, SUMMARY_CSV_NAME)
+        return os.path.join(self.internal_dir, SUMMARY_CSV_NAME)
 
     @property
     def report_md(self) -> str:
-        return os.path.join(self.output_dir, REPORT_MD_NAME)
+        return os.path.join(self.internal_dir, REPORT_MD_NAME)
 
     @property
     def validation_guide(self) -> str:
-        return os.path.join(self.output_dir, VALIDATION_GUIDE_NAME)
+        return os.path.join(self.internal_dir, VALIDATION_GUIDE_NAME)
 
     @property
     def validation_manifest(self) -> str:
-        return os.path.join(self.output_dir, VALIDATION_MANIFEST_NAME)
+        return os.path.join(self.internal_dir, VALIDATION_MANIFEST_NAME)
 
     @property
     def run_summary_json(self) -> str:
-        return os.path.join(self.output_dir, RUN_SUMMARY_JSON_NAME)
+        return os.path.join(self.internal_dir, RUN_SUMMARY_JSON_NAME)
 
     @property
     def run_log(self) -> str:
-        return os.path.join(self.output_dir, RUN_LOG_NAME)
+        return os.path.join(self.internal_dir, RUN_LOG_NAME)
 
 
 def default_output_base(repo_root: str | None = None) -> str:

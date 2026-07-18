@@ -144,6 +144,12 @@ def run_data_governance(
     output_base = resolve_output_base(output_arg)
     run_folder = os.path.join(output_base, run_id) if isolate_run_folder else output_base
 
+    if rule_id:
+        scope = "rule"
+    elif governance_item_id:
+        scope = "item"
+    else:
+        scope = "all"
     result = GovernanceRunResult(
         run_id=run_id,
         run_timestamp=run_timestamp,
@@ -152,10 +158,14 @@ def run_data_governance(
         output_base=output_base,
         source_opened_read_only=True,
         source_files_modified=False,
+        review_scope=scope,
+        selected_governance_item_id=(governance_item_id or "").strip().upper(),
+        selected_rule_id=(rule_id or "").strip().upper(),
     )
     log.write(f"Data region: {resolved_data}")
     log.write(f"Output base: {output_base}")
     log.write(f"Run folder: {run_folder}")
+    log.write(f"Review scope: {scope}")
     log.write("Source DBF files will be opened read-only; source files are never modified")
 
     def _progress(event: str, **kwargs: Any) -> None:
@@ -348,16 +358,20 @@ def run_data_governance(
         os.makedirs(run_folder, exist_ok=True)
         paths = GovernancePaths(resolved_data, run_folder)
         write_governance_outputs(result, paths)
+        if result.what_was_checked_path:
+            log.write(f"What Was Checked: {result.what_was_checked_path}")
+        if result.items_needing_attention_path:
+            log.write(f"Items Needing Attention: {result.items_needing_attention_path}")
+        if result.business_overall_result:
+            log.write(f"Business result: {result.business_overall_result}")
         if result.data_conformance_accuracy_display:
             log.write(
-                f"Data Conformance Accuracy: {result.data_conformance_accuracy_display}"
+                f"Percentage passed (completed checks): "
+                f"{result.data_conformance_accuracy_display}"
             )
         for warning in result.report_warnings:
             log.write(f"WARNING: {warning}")
-        if result.validation_guide_path:
-            log.write(f"Validation guide: {result.validation_guide_path}")
-        if result.validation_manifest_path:
-            log.write(f"Validation manifest: {result.validation_manifest_path}")
+        log.write(f"Internal technical folder: {paths.internal_dir}")
         log.save(paths.run_log)
         result.run_log_path = paths.run_log
 
