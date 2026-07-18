@@ -23,8 +23,10 @@ from qla_core import shared_rate_candidate_loader as SCL
 from qla_core import paagerat_pr_loader as PA
 from qla_core import paagerat_bp_loader as BP
 from qla_core import paagerat_ul_coi_loader as COI
+from qla_core import paagerat_db_loader as DB
 from qla_core import quikuint_loader as UINT
 from qla_core import quikissc_loader as ISSC
+from qla_core import pdage_missfill as PDM
 
 KEY_FIELDS = ("PLAN", "GENDER", "UWCLASS", "BAND", "ISSCNTRY", "ISSUEST", "EFFDATE")
 
@@ -63,6 +65,10 @@ class PipelineResult:
         self.paagerat_gcoi_plans = frozenset()
         self.paagerat_gcoi_enabled = False
         self.paagerat_gcoi_mplan_allowlist = []
+        self.paagerat_db_status = collections.Counter()
+        self.paagerat_db_plans = frozenset()
+        self.paagerat_db_enabled = False
+        self.paagerat_db_mplan_allowlist = []
         self.quikuint_rows = []
         self.quikuint_status = collections.Counter()
         self.quikuint_enabled = False
@@ -75,6 +81,9 @@ class PipelineResult:
         self.non_cv_inheritance_status = collections.Counter()
         self.shared_rate_manifest = []
         self.shared_rate_status = collections.Counter()
+        self.pdage_missfill_status = collections.Counter()
+        self.pdage_missfill_enabled = False
+        self.pdage_merge_summary = {}
 
     @property
     def blocker_count(self):
@@ -85,16 +94,29 @@ class PipelineResult:
         return self.blocker_count == 0
 
 
-def load_assumptions(path, cso_path=None):
-    # CSO Mortality Crosswalk is authoritative for CV assumptions (MORT/ETIMORT/
-    # NFOINT/INTMETHCV) when delivered; otherwise fall back to the static mapping.
+def load_assumptions(path, cso_path=None, valuation_setup_path=None):
+    # CSO Mortality Crosswalk is fallback for CV assumptions when a plan is not on
+    # Valuation_Setup (Issue #80). Valuation_Setup wins for its 51 non-PUA plans.
+    fallback = K.AssumptionProvider()
     if cso_path and os.path.exists(cso_path):
         from qla_core.cso_mortality_crosswalk import load_cso_mortality_crosswalk
-        return K.CSOAssumptionProvider(load_cso_mortality_crosswalk(cso_path))
-    if not path or not os.path.exists(path):
-        return K.AssumptionProvider()
-    with open(path, encoding="utf-8") as f:
-        return K.AssumptionProvider.from_rows(list(csv.DictReader(f)))
+        fallback = K.CSOAssumptionProvider(load_cso_mortality_crosswalk(cso_path))
+    elif path and os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            fallback = K.AssumptionProvider.from_rows(list(csv.DictReader(f)))
+
+    if valuation_setup_path and os.path.exists(valuation_setup_path):
+        from qla_core.cso_valuation_setup import (
+            CompositeAssumptionProvider,
+            ValuationSetupAssumptionProvider,
+            load_valuation_setup,
+        )
+        vs = load_valuation_setup(valuation_setup_path)
+        if vs.plans_loaded:
+            return CompositeAssumptionProvider(
+                ValuationSetupAssumptionProvider(vs), fallback=fallback,
+            )
+    return fallback
 
 
 def _resolve_path(repo_root, rel_or_abs):
@@ -105,20 +127,50 @@ def _resolve_path(repo_root, rel_or_abs):
 
 def run(config_path, repo_root):
     cfg = json.load(open(config_path, encoding="utf-8"))
-    src = _resolve_path(repo_root, cfg["source_rate_extract"])
+    base_rt = _resolve_path(repo_root, cfg["source_rate_extract"])
+    pdage_cfg = cfg.get("issue42_pdage_missfill") or {}
+    pdage_path = _resolve_path(repo_root, pdage_cfg.get("pdage_extract", ""))
     xlsx = _resolve_path(repo_root, cfg["plan_form_crosswalk"])
     config = L.LoaderConfig.from_dict(cfg.get("segmentation_defaults"))
+    cov2plan_pre, _ = L.load_plan_crosswalk(xlsx)
+    psgt_path_pre = _resolve_path(repo_root, cfg.get("pcovrsgt_csv", ""))
+    pcovr_path_pre = _resolve_path(repo_root, cfg.get("pcovr_csv", ""))
+    merge_resolver = None
+    if os.path.isfile(psgt_path_pre) and os.path.isfile(pcovr_path_pre):
+        merge_resolver = SR.SegmentResolver.from_files(psgt_path_pre, pcovr_path_pre, cov2plan_pre)
+    src = base_rt
+    pdage_merge_summary = {}
+    if pdage_cfg.get("enabled", False) and pdage_path and os.path.isfile(pdage_path) and os.path.isfile(base_rt):
+        staging_rel = pdage_cfg.get(
+            "staging_merged_csv",
+            os.path.join("QLA_Migration", "Staging", "rate_table_pdage_missfill_merged.csv"),
+        )
+        staging_path = _resolve_path(repo_root, staging_rel)
+        pdage_merge_summary = PDM.merge_pdage_missfill_to_staging(
+            base_rt,
+            pdage_path,
+            staging_path,
+            approved_types=pdage_cfg.get("approved_types"),
+            segment_resolver=merge_resolver,
+        )
+        src = pdage_merge_summary["staging_path"]
     cso_cfg = cfg.get("cso_mortality_crosswalk",
                       os.path.join("plan_analysis", "source_data", "rates", "CSO_Mortiality_Crosswalk.csv"))
+    vs_cfg = cfg.get(
+        "cso_valuation_setup",
+        os.path.join("plan_analysis", "source_data", "rates", "CSO_Valuation_Setup.csv"),
+    )
     assumptions = load_assumptions(
         _resolve_path(repo_root, cfg.get("assumption_mapping_csv", "")),
         _resolve_path(repo_root, cso_cfg),
+        _resolve_path(repo_root, vs_cfg),
     )
 
     res = PipelineResult()
     cov2plan, res.plan2desc = L.load_plan_crosswalk(xlsx)
     res.authoritative_plans = set(cov2plan.values())
     cv_fnz = L.load_cv_slice_fnz(src)
+    rt_key_index = PDM.rate_table_key_index(base_rt)
     res.paagerat_vargp3_plans = PA.load_paagerat_vargp3_plan_set_from_config(repo_root, cfg)
     res.paagerat_bp_plans = BP.load_paagerat_bp_plan_set_from_config(repo_root, cfg)
     res.paagerat_bp_enabled = bool(cfg.get("iswl_phase2", {}).get("quikgps_enabled", False))
@@ -132,6 +184,10 @@ def run(config_path, repo_root):
     res.paagerat_gcoi_enabled = bool(cfg.get("iswl_phase4", {}).get("quikgcoi_enabled", False))
     if res.paagerat_gcoi_enabled:
         res.paagerat_gcoi_mplan_allowlist = sorted(COI.iswl_gcoi_mplan_allowlist(cfg))
+    res.paagerat_db_plans = DB.load_paagerat_db_plan_set_from_config(repo_root, cfg)
+    res.paagerat_db_enabled = bool(cfg.get("wave2_db", {}).get("quikdbs_enabled", False))
+    if res.paagerat_db_enabled:
+        res.paagerat_db_mplan_allowlist = sorted(DB.wave2_db_mplan_allowlist(cfg))
     res.quikuint_enabled = bool(cfg.get("iswl_phase5", {}).get("quikuint_enabled", False))
     res.quikissc_enabled = bool(cfg.get("iswl_phase6", {}).get("quikissc_enabled", False))
     pr_suppress = PA._iswl_bp_suppress_plans(cfg)
@@ -145,6 +201,15 @@ def run(config_path, repo_root):
             res.age_cap[(t["plan"], t["type_code"], t["original_age"], t["age"])] += 1
 
     psgt_path = _resolve_path(repo_root, cfg.get("pcovrsgt_csv", ""))
+    pcovr_path = _resolve_path(repo_root, cfg.get("pcovr_csv", ""))
+    segment_resolver = None
+    if os.path.isfile(psgt_path) and os.path.isfile(pcovr_path):
+        segment_resolver = SR.SegmentResolver.from_files(psgt_path, pcovr_path, cov2plan)
+
+    pdage_approved_types = pdage_cfg.get("approved_types")
+    res.pdage_missfill_enabled = bool(pdage_cfg.get("enabled", False))
+    res.pdage_merge_summary = pdage_merge_summary
+
     inh_cfg = cfg.get("issue40_cv_inheritance") or {}
     if inh_cfg.get("enabled", True):
         audit_csv = _resolve_path(
@@ -195,7 +260,10 @@ def run(config_path, repo_root):
             res.shared_rate_manifest = SCL.build_shared_manifest(candidate_csv)
 
     def stream():
-        for t in L.transform_source(src, cov2plan, config, cv_fnz=cv_fnz):
+        for t in L.transform_source(
+            src, cov2plan, config, cv_fnz=cv_fnz,
+            segment_resolver=segment_resolver, rt_key_index=rt_key_index,
+        ):
             _track(t)
             yield t
 
@@ -218,9 +286,8 @@ def run(config_path, repo_root):
             yield t
 
         pa_path = _resolve_path(repo_root, cfg.get("paagerat_pr_extract", ""))
-        pcovr_path = _resolve_path(repo_root, cfg.get("pcovr_csv", ""))
-        if pa_path and os.path.isfile(pa_path) and os.path.isfile(psgt_path) and os.path.isfile(pcovr_path):
-            resolver = SR.SegmentResolver.from_files(psgt_path, pcovr_path, cov2plan)
+        if pa_path and os.path.isfile(pa_path) and segment_resolver is not None:
+            resolver = segment_resolver
             for t in PA.transform_paagerat_pr(pa_path, resolver, config, plan_exclude=pr_suppress):
                 st = t["status"]
                 res.paagerat_status[st] += 1
@@ -250,6 +317,13 @@ def run(config_path, repo_root):
                 for t in COI.transform_paagerat_u5(pa_path, resolver, config, plan_allowlist=gcoi_allow):
                     st = t["status"]
                     res.paagerat_gcoi_status[st] += 1
+                    _track(t)
+                    yield t
+            if cfg.get("wave2_db", {}).get("quikdbs_enabled", False):
+                db_allow = DB.wave2_db_mplan_allowlist(cfg)
+                for t in DB.transform_paagerat_db(pa_path, resolver, config, plan_allowlist=db_allow):
+                    st = t["status"]
+                    res.paagerat_db_status[st] += 1
                     _track(t)
                     yield t
             for t in SCL.transform_paagerat_shared(pa_path, res.shared_rate_manifest, config):
@@ -285,7 +359,7 @@ def run(config_path, repo_root):
 
     # member / dimension tables (codes derived from validated segmentation tuples)
     res.member_rows, res.member_placeholders = MB.build_member_rows(res.grids, config.effdate)
-    # Issue #77: member codes for stub keys (e.g. real F/M preferred over NA 0)
+    # Issue #77: member codes for stub keys (e.g. GENDER=0 / UW=00)
     MB.ensure_members_for_keys(res.member_rows, res.key_rows, effdate=config.effdate)
 
     res.issues, res.summary = V.validate(res.grids, res.factor_rows, res.fmt_issues,
@@ -388,6 +462,13 @@ def build_summary(res, phase, source, extra=None):
             "row_status": dict(res.paagerat_gcoi_status),
             "mplan_allowlist": res.paagerat_gcoi_mplan_allowlist,
         },
+        "paagerat_db": {
+            "enabled": res.paagerat_db_enabled,
+            "db_plan_count": len(res.paagerat_db_plans),
+            "row_status": dict(res.paagerat_db_status),
+            "mplan_allowlist": res.paagerat_db_mplan_allowlist,
+            "grid_mode": "VARDB=3 attained-age (SEQ->AGE, CNTL=00/DB0)",
+        },
         "quikuint": {
             "enabled": res.quikuint_enabled,
             "row_count": len(res.quikuint_rows),
@@ -416,6 +497,11 @@ def build_summary(res, phase, source, extra=None):
             "row_status": dict(res.shared_rate_status),
             "issuing_plans": sorted({e["issuing_plan"] for e in res.shared_rate_manifest}),
             "rate_types": sorted({e["rate_type"] for e in res.shared_rate_manifest}),
+        },
+        "issue42_pdage_missfill": {
+            "enabled": res.pdage_missfill_enabled,
+            "merge": res.pdage_merge_summary,
+            "row_status": dict(res.pdage_missfill_status),
         },
     }
     if extra:

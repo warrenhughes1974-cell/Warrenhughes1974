@@ -96,6 +96,9 @@
 | **#74** | Var DB Code (`quikplan.VARDB`) `4` → `0` only | **CLOSED ✓** | — | **Resolution:** Rulebook VARDB `4`→`0` (121 plans); structure `1`/`2`/`3` unchanged (20). Val+Reg PASS. `Test_Validation/quikplan.csv`. |
 | **#75** | Bank Acct / `MBANKNO` QLA validation | **Ready for Regression** · **v57.92** | **v57.92** | Val PASS: 0 invalid MBANKNO; 1074 intentional changes; Test_Validation/quikmstr.csv. Next: Regression Agent. |
 | **#77** | Fleet rate setup validation (PVO + default keys vs loaded rates / EX guide) | **CLOSED ✓** | **v57.95** | Resolution: Rate setup now ensures every plan with loaded rates has GP/DB/CV/TV/DV keys and correct Plan Values Options checkboxes, using NOT APPLICABLE defaults only when no real codes exist, without inventing factor values. |
+| **#80** | CSO Valuation Setup → exact QuikPlCv / QuikPlTv assumptions | **Closed** (v58.01) | **Resolution:** CSO Valuation_Setup is now the authoritative source for cash-value and reserve assumption codes on 51 non-PUA plans, writing exact QuikPlCv, QuikPlTv, and quikplan NFOINT/INTMETHCV values with blank workbook cells left blank. | G5+G6 PASS; UAT: Test_Validation quikplan + QuikPlCv/Tv. Follow-ups: #81, #82. |
+| **#81** | Valuation Setup PUA rows missing QLA Plan codes | **Intake** (parked) | — | Four rows: `622 PUA`, `675 61 PUA`, `675 AD PUA`, `991 PUA`. Split from #80. |
+| **#82** | Valuation Setup PUA QuikPl* keys vs #60 (no PA in quikplan) | **Intake** (parked) | — | Whether to write QuikPlCv/Tv for PUA plan codes without adding PA to quikplan. Split from #80. |
 | **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
 | **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
 | **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |
@@ -114,6 +117,12 @@
 **#40 detail:** `Issue_Log_Items/Issue_40/` · G5 PASS — `cv_inheritance_loader` + 100% source parity on 10 plans · `QuikCvs.csv` 38,047 rows · client UAT pending on `17085M` sample policies
 
 **#41 detail:** `Issue_Log_Items/Issue_41/` · QuikCvs endpoint follow-up to Issue #37 · `1960PO` M/26 source-vs-QLA proof PASS · `QuikCvs.csv` regenerated with 26,495 rows · next: client UAT reload + resolve unrelated `QuikUint` full-emit blocker
+
+**#80 detail:** `Issue_Log_Items/Issue_80/` · **CLOSED v58.01** · `Issue_80_Resolution_Summary.md` · UAT: Test_Validation · parked: #81, #82
+
+**#81 detail:** `Issue_Log_Items/Issue_81/` · Intake parked · four Valuation_Setup PUA rows missing QLA Plan
+
+**#82 detail:** `Issue_Log_Items/Issue_82/` · Intake parked · PUA QuikPlCv/Tv keys vs #60 SD-60-1
 
 **#42 detail:** `Issue_Log_Items/Issue_42/` · **CLOSED** · **v57.97** (refresh 2026-07-17) · Resolution: PDAGE miss-fill + segment resolve → QuikNps/Tvs · wired to 20260714 extracts · full `Output/rates/` + `Test_Validation/rates/` · QuikUint waived (PDINTTBL missing) · L17/LP85-8 CV now in source · residual `0824 P DTH` / `L10 GPO OL` NP
 
@@ -156,6 +165,10 @@
 **#77 detail:** `Issue_Log_Items/Issue_77/` · **CLOSED v57.95** · `Issue_77_Resolution_Summary.md` · UAT: reload `Test_Validation/quikplan.csv` + `rates/QuikPl*`
 
 **#76 detail:** `Issue_Log_Items/Issue_76/` · **CLOSED 2026-07-15** · **v57.93** · `Issue_76_Resolution_Summary.md` · 400 ETI/RPU phase-1 adjusted · `Test_Validation/quikridr.csv` · UAT: Rebuild CV on `010407670C`
+
+**#78 detail:** `Issue_Log_Items/Issue_78/` · **Implemented v57.98 — Awaiting Validation** · 729 policies / +932 `quikclmp` rows · `Issue_78_Implementation_Notes.md` · UAT: reload `Test_Validation/quikclmp.csv`
+
+**#79 detail:** `Issue_Log_Items/Issue_79/` · **Implemented v57.99 — Awaiting Validation** · 1,769 CLAIMSTAT remapped (death→2, surrender→99) · `Issue_79_Implementation_Notes.md` · UAT: reload `Test_Validation/quikclms.csv`
 
 **#59 detail:** `Issue_Log_Items/Issue_59/` · **CLOSED 2026-07-14** · **v57.84** · Resolution: seven-policy scoped MSTATUS fix (6×54→22; 010521213C→50). `Issue_59_Resolution_Summary.md`. Client UAT pending Eric.
 

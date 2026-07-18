@@ -1,10 +1,21 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v57.97
+# Version:     v58.01
 # Date:        2026-07-17
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v57.97 — Wire rate loader to LifePRO 20260714 PDAGE/PAAGERAT package (Issue #42
+# Change Note: v58.01 — Issue #80 validation fixes: QuikPlTv MORT blank rule; QA to Reports/; Test_Validation
+#              publish cleanup; strengthened validator (package purity, schema, PUA isolation).
+#              v58.00 — Issue #80: CSO Valuation_Setup authority for 51 non-PUA plans — QuikPlCv/Tv
+#              via rate_pipeline CompositeAssumptionProvider; quikplan NFOINT/INTMETHCV overlay after
+#              CSO crosswalk (Valuation_Setup wins); blank workbook cells emit blank.
+#              v57.99 — Issue #79: remap quikclms.CLAIMSTAT to Policy-book conventions
+#              (death→2 Paid in Full, surrender/partial/disbursement→99, maturity→98;
+#              close false Pending); ORIGSTTUS and quikclmp unchanged; audit in Reports/.
+#              v57.98 — Issue #78: recover missing quikclmp rows for claim policies with zero
+#              payments when PACTG live payout exists; Tier 1/2/3 PE/B1/estate payee fallback;
+#              append-only + Reports/issue78_quikclmp_recovery_audit.csv; quikclms unchanged.
+#              v57.97 — Wire rate loader to LifePRO 20260714 PDAGE/PAAGERAT package (Issue #42
 #              miss-fill path + plan_source_paths prefer 20260714; key/seg defaults unchanged).
 #              v57.96 — Policy-book alignment: BF_LST→3 translation; quikmstr MBILLTO 0/blank→MPAIDTO,
 #              MORIGBILL/MORIGMODE default to final bill form/mode, MISSCLASS=00 / MBFCY=0 / MACHCNT=0
@@ -162,6 +173,11 @@ from qla_core.cso_mortality_crosswalk import (
     iswl_mdepint_percent,
     load_cso_mortality_crosswalk,
 )
+from qla_core.cso_valuation_setup import (
+    apply_quikplan_valuation_setup,
+    default_valuation_setup_path,
+    load_valuation_setup,
+)
 from qla_core.quikplan_source_loader import load_quikplan_source_csv
 from qla_core.variation_classification import (
     VariationClassificationConfig,
@@ -230,6 +246,14 @@ from qla_core.claims_emit_enhancements import (
     build_plan_metadata_lookup,
     validate_claims_emit_enhancements,
     write_claims_emit_enhancement_validation,
+)
+from qla_core.issue78_quikclmp_recovery import (
+    recover_missing_quikclmp_payments,
+    write_recovery_audit,
+)
+from qla_core.issue79_claimstat_remap import (
+    remap_quikclms_claimstat,
+    write_remap_audit,
 )
 
 # --- Phase 18A–20: Claims orchestration, UAT handoff/emit/batch/DBF, MPOLICY validation ---
@@ -380,7 +404,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v57.97"
+APP_VERSION = "v58.01"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -1376,6 +1400,141 @@ class QLAdminEnterpriseIntegrationSuite:
         if i19.get("details"):
             for detail in i19["details"]:
                 self.log(f"    payee override: {detail.get('policy_number')} -> {detail.get('new_payee')}")
+
+    def _apply_issue78_quikclmp_recovery(self, output_dir):
+        """Issue #78: append quikclmp rows for zero-payment claim policies with PACTG payouts."""
+        clms_path = os.path.normpath(os.path.join(output_dir, "quikclms.csv"))
+        clmp_path = os.path.normpath(os.path.join(output_dir, "quikclmp.csv"))
+        result = {
+            "applied": False,
+            "policies_recovered": 0,
+            "rows_added": 0,
+            "audit_path": "",
+            "reason": "",
+        }
+        if not os.path.isfile(clms_path) or not os.path.isfile(clmp_path):
+            result["reason"] = "missing_quikclms_or_quikclmp"
+            return result
+
+        pactg_path = self._resolve_claims_pactg_path()
+        rel_path = self._resolve_claims_prelsa_path()
+        cw_path = os.path.join(self._migration_mapping_dir(), "Master_Crosswalk.csv")
+        if not os.path.isfile(pactg_path):
+            result["reason"] = "missing_pactg"
+            return result
+        if not os.path.isfile(rel_path):
+            result["reason"] = "missing_relationship_extract"
+            return result
+
+        try:
+            clms_df = pd.read_csv(clms_path, dtype=str).fillna("")
+            clmp_before = pd.read_csv(clmp_path, dtype=str).fillna("")
+            before_count = len(clmp_before)
+            clmp_after, audit_df = recover_missing_quikclmp_payments(
+                clms_df,
+                clmp_before,
+                pactg_path,
+                rel_path,
+                cw_path,
+                format_mpolicy=self._format_qladmin_mpolicy,
+            )
+            added = len(clmp_after) - before_count
+            if added <= 0:
+                result["reason"] = "no_recoverable_rows"
+                return result
+
+            tmp_path = clmp_path + ".tmp"
+            clmp_after.to_csv(tmp_path, index=False, encoding="utf-8")
+            os.replace(tmp_path, clmp_path)
+            audit_path = write_recovery_audit(audit_df, self._reports_dir())
+            result.update(
+                {
+                    "applied": True,
+                    "policies_recovered": len(audit_df),
+                    "rows_added": added,
+                    "audit_path": audit_path,
+                    "tier_counts": audit_df["tier"].value_counts().to_dict() if not audit_df.empty else {},
+                }
+            )
+            return result
+        except Exception as exc:
+            result["reason"] = f"error:{exc}"
+            return result
+
+    def _log_issue78_recovery_summary(self, recovery_result):
+        if not recovery_result:
+            return
+        self.log("ISSUE #78 QUIKCLMP RECOVERY (post-emit):")
+        if not recovery_result.get("applied"):
+            self.log(f"  Skipped: {recovery_result.get('reason', 'unknown')}")
+            return
+        self.log(
+            f"  Recovered policies={recovery_result.get('policies_recovered', 0)} "
+            f"rows_added={recovery_result.get('rows_added', 0)}"
+        )
+        tiers = recovery_result.get("tier_counts") or {}
+        if tiers:
+            self.log(f"  Tier counts: {tiers}")
+        if recovery_result.get("audit_path"):
+            self.log(f"  Audit: {recovery_result['audit_path']}")
+
+    def _apply_issue79_claimstat_remap(self, output_dir):
+        """Issue #79: align quikclms.CLAIMSTAT to Policy-book conventions (SD-79)."""
+        clms_path = os.path.normpath(os.path.join(output_dir, "quikclms.csv"))
+        clmp_path = os.path.normpath(os.path.join(output_dir, "quikclmp.csv"))
+        result = {
+            "applied": False,
+            "rows_changed": 0,
+            "audit_path": "",
+            "reason": "",
+            "after_counts": {},
+        }
+        if not os.path.isfile(clms_path):
+            result["reason"] = "missing_quikclms"
+            return result
+        try:
+            clms_df = pd.read_csv(clms_path, dtype=str).fillna("")
+            clmp_df = (
+                pd.read_csv(clmp_path, dtype=str).fillna("")
+                if os.path.isfile(clmp_path)
+                else pd.DataFrame()
+            )
+            clms_after, audit_df = remap_quikclms_claimstat(clms_df, clmp_df)
+            changed = len(audit_df)
+            if changed <= 0:
+                result["reason"] = "no_remap_needed"
+                return result
+            tmp_path = clms_path + ".tmp"
+            clms_after.to_csv(tmp_path, index=False, encoding="utf-8")
+            os.replace(tmp_path, clms_path)
+            audit_path = write_remap_audit(audit_df, self._reports_dir())
+            after_counts = clms_after["CLAIMSTAT"].astype(str).str.strip().value_counts().to_dict()
+            result.update(
+                {
+                    "applied": True,
+                    "rows_changed": changed,
+                    "audit_path": audit_path,
+                    "after_counts": after_counts,
+                }
+            )
+            return result
+        except Exception as exc:
+            result["reason"] = f"error:{exc}"
+            return result
+
+    def _log_issue79_remap_summary(self, remap_result):
+        if not remap_result:
+            return
+        self.log("ISSUE #79 CLAIMSTAT REMAP (post-emit):")
+        if not remap_result.get("applied"):
+            self.log(f"  Skipped: {remap_result.get('reason', 'unknown')}")
+            return
+        self.log(f"  Rows changed={remap_result.get('rows_changed', 0)}")
+        counts = remap_result.get("after_counts") or {}
+        if counts:
+            self.log(f"  After CLAIMSTAT counts: {counts}")
+        if remap_result.get("audit_path"):
+            self.log(f"  Audit: {remap_result['audit_path']}")
 
     def _load_claims_orchestration_rules(self):
         rules_path = os.path.join(self._claims_analysis_root(), "config", "app_claims_uat_orchestration_rules.json")
@@ -4429,6 +4588,21 @@ class QLAdminEnterpriseIntegrationSuite:
                 )
                 emit_result["client_overlays"] = overlay_result
                 self._log_client_claim_overlay_summary(overlay_result)
+                recovery_result = self._apply_issue78_quikclmp_recovery(
+                    emit_result.get("output_dir") or self._resolve_output_base_dir()
+                )
+                emit_result["issue78_recovery"] = recovery_result
+                self._log_issue78_recovery_summary(recovery_result)
+                if recovery_result.get("applied") and emit_result.get("emitted", {}).get("quikclmp"):
+                    emit_result["emitted"]["quikclmp"]["row_count"] = (
+                        int(emit_result["emitted"]["quikclmp"].get("row_count", 0))
+                        + int(recovery_result.get("rows_added", 0))
+                    )
+                remap_result = self._apply_issue79_claimstat_remap(
+                    emit_result.get("output_dir") or self._resolve_output_base_dir()
+                )
+                emit_result["issue79_remap"] = remap_result
+                self._log_issue79_remap_summary(remap_result)
         else:
             self.log("  UAT emit skipped (RUN_MODE != UAT or QLA_CLAIMS_UAT_EMIT=0).")
 
@@ -6604,6 +6778,28 @@ class QLAdminEnterpriseIntegrationSuite:
                         self.log(f"CSO crosswalk QA: {cso_qa_path}")
                     else:
                         self.log(f"CSO crosswalk not found at {cso_path}; quikplan CV assumptions left as-is.")
+
+                    vs_path = default_valuation_setup_path(self._app_base_dir())
+                    vs_resolver = load_valuation_setup(vs_path)
+                    if vs_resolver.plans_loaded:
+                        vs_qa = apply_quikplan_valuation_setup(qdf, vs_resolver, log=self.log)
+                        vs_qa_path = os.path.normpath(
+                            os.path.join(self._app_base_dir(), "QLA_Migration", "Reports",
+                                         "cso_valuation_setup_quikplan_qa.csv")
+                        )
+                        os.makedirs(os.path.dirname(vs_qa_path), exist_ok=True)
+                        with open(vs_qa_path, "w", newline="", encoding="utf-8") as f:
+                            w = csv.writer(f)
+                            w.writerow(["METRIC", "VALUE"])
+                            for k in ("plans_loaded", "cells_updated", "cells_overwritten"):
+                                w.writerow([k, vs_qa.get(k, "")])
+                            w.writerow([])
+                            w.writerow(["PLAN", "FIELD", "OLD_VALUE", "NEW_VALUE"])
+                            for d in vs_qa.get("diffs", []):
+                                w.writerow([d["PLAN"], d["FIELD"], d["OLD"], d["NEW"]])
+                        self.log(f"CSO Valuation Setup QA: {vs_qa_path}")
+                    else:
+                        self.log(f"CSO Valuation Setup not found at {vs_path}; skipped quikplan overlay.")
 
                     qdf = apply_ploan_loanint_enrichment(
                         qdf,

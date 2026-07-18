@@ -6,6 +6,7 @@
   "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
   "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",
   "cso_mortality_crosswalk": "plan_analysis/source_data/rates/CSO_Mortiality_Crosswalk.csv",
+  "cso_valuation_setup": "plan_analysis/source_data/rates/CSO_Valuation_Setup.csv",
   "psegt_csv": "QLA_Migration/Source/PSEGT_Segment_Extract_20260629.csv",
   "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260714.csv",
   "issue42_pdage_missfill": {

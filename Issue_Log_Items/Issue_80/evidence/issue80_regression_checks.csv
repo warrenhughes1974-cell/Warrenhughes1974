@@ -1,0 +1,28 @@
+CHECK,RESULT,DETAIL
+official_validator,PASS,"  values, schema, package purity, PUA isolation, and Test_Validation parity OK"
+authority_plan_count,PASS,count=51
+pua_not_in_authority,PASS,leaked=[]
+candidate_cells,PASS,ok=1248 bad=0
+no_invented_keys,PASS,plans=[]
+noncandidate_quikplan_targets,PASS,plans=90 target_drift=0 sample=[]
+noncandidate_unrelated_cols,PASS,"other_drift=4 sample=[""943CWP.FORM:'NA'->''"", ""9CTRWP.FORM:'NA'->''"", ""9FTRWP.FORM:'NA'->''"", ""9STRWP.FORM:'NA'->''""] (informational)"
+candidate_intentional_quikplan_updates,PASS,cells_updated_from_archive=36
+anchors,PASS,bad=[]
+factor_QuikGps,PASS,current=11983 archive=11947 shrink=False
+factor_QuikDbs,PASS,current=2513 archive=1380 shrink=False
+factor_QuikCvs,PASS,current=38407 archive=25717 shrink=False
+factor_QuikTvs,PASS,current=53818 archive=26097 shrink=False
+factor_QuikDvs,PASS,current=6736 archive=3978 shrink=False
+factor_QuikNps,PASS,current=52647 archive=26650 shrink=False
+policy_table_quikmstr,PASS,rows=5084 (fleet context; not #80 touch list)
+policy_table_quikridr,PASS,rows=6936 (fleet context; not #80 touch list)
+policy_table_quikclid,PASS,rows=34290 (fleet context; not #80 touch list)
+policy_table_quikclnt,PASS,rows=13532 (fleet context; not #80 touch list)
+issue25_mpolicy_len_sample200,PASS,bad=0 sample=[]
+issue26_mprem_spot,PASS,bad=[]
+test_validation_purity,PASS,"found=['manifest.txt', 'quikplan.csv', 'rates/QuikPlCv.csv', 'rates/QuikPlTv.csv']"
+parity_quikplan.csv,PASS,sha=1b33a1453cb2
+parity_QuikPlCv.csv,PASS,sha=3ea069531f91
+parity_QuikPlTv.csv,PASS,sha=d6e8b5cf6708
+version_app.py,PASS,expect v58.01
+version_QLA_Migration/app.py,PASS,expect v58.01
