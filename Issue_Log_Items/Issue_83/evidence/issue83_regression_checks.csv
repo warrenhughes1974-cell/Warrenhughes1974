@@ -1,0 +1,35 @@
+CHECK,RESULT,DETAIL
+issue83_validator,PASS,"  fleet F/M companion keys, anchor, PVO, version, and parity OK"
+issue77_validator,PASS,  no NA member beside real Gender/UW codes
+apply_does_not_emit_factors,PASS,factor_names_mentioned=False
+factor_no_shrink_QuikGps,PASS,archive=11947 current=11983
+factor_no_shrink_QuikDbs,PASS,archive=1380 current=2513
+factor_no_shrink_QuikCvs,PASS,archive=25717 current=38407
+factor_no_shrink_QuikTvs,PASS,archive=26097 current=53818
+factor_no_shrink_QuikDvs,PASS,archive=3978 current=6736
+factor_no_shrink_QuikNps,PASS,archive=26650 current=52647
+factor_fingerprint_QuikGps,PASS,rows=11983 sha256=7fdfaa6bf71e2904
+factor_fingerprint_QuikDbs,PASS,rows=2513 sha256=58a35e6a367111e7
+factor_fingerprint_QuikCvs,PASS,rows=38407 sha256=38f5c85847136d0a
+factor_fingerprint_QuikTvs,PASS,rows=53818 sha256=13722b3a0cba5e3f
+factor_fingerprint_QuikDvs,PASS,rows=6736 sha256=6f6dc2fbac52eac0
+factor_fingerprint_QuikNps,PASS,rows=52647 sha256=2039d99d914bac0a
+key_no_shrink_QuikPlGp,PASS,archive=201 current=281 delta=80
+key_no_shrink_QuikPlDb,PASS,archive=12 current=209 delta=197
+key_no_shrink_QuikPlCv,PASS,archive=70 current=229 delta=159
+key_no_shrink_QuikPlTv,PASS,archive=112 current=279 delta=167
+key_no_shrink_QuikPlDv,PASS,archive=20 current=209 delta=189
+non_candidate_fm_keys_preserved,PASS,drift=0 sample=[]
+candidate_existing_fm_keys_preserved,PASS,missing=0 sample=[]
+companion_gaps_zero,PASS,gaps=0
+band_00_on_fm_keys,PASS,bad=0 sample=[]
+anchor_221END_has_FM,PASS,"genders=['F', 'M']"
+anchor_221END_F_values_N,PASS,factors=['M']
+anchor_221END_M_values_Y,PASS,factors=['M']
+anchor_221END_assumptions_match_sibling,PASS,F vs M QuikPlCv assumptions
+issue25_mpolicy_width_sample200,PASS,bad=0
+issue26_mprem_spot,PASS,miss=[]
+test_validation_parity,PASS,bad=[]
+version_app.py,PASS,expect v58.02
+version_QLA_Migration/app.py,PASS,expect v58.02
+apply_scope_keys_members_quikplan_only,PASS,apply script scope

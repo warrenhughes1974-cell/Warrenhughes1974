@@ -122,6 +122,7 @@ def build_key_rows(table, grid, assumptions=None):
 # EX_Rate_Tables: use NOT APPLICABLE (0/00) only when no real codes exist — never
 # both (e.g. do not keep Gender 0 when F/M already exist).
 FAMILY_KEY_TABLES = ("QuikPlGp", "QuikPlDb", "QuikPlCv", "QuikPlTv", "QuikPlDv")
+REAL_GENDERS = frozenset(("F", "M"))
 DEFAULT_KEY_GENDER = "0"
 DEFAULT_KEY_UWCLASS = "00"
 DEFAULT_KEY_BAND = "00"
@@ -277,3 +278,87 @@ def rated_plans_from_grids(grids):
             if plan:
                 plans.add(plan)
     return plans
+
+
+def _plans_with_fm_members(member_rows):
+    """Plans whose QuikPlGd declares both Female and Male members."""
+    by = collections.defaultdict(set)
+    for r in member_rows.get("QuikPlGd") or []:
+        plan = (r.get("PLAN") or "").strip()
+        code = (r.get("GDCODE") or "").strip()
+        if plan and code in REAL_GENDERS:
+            by[plan].add(code)
+    return {p for p, codes in by.items() if REAL_GENDERS.issubset(codes)}
+
+
+def _key_signature(row):
+    return (
+        (row.get("PLAN") or "").strip(),
+        (row.get("GENDER") or "").strip(),
+        (row.get("UWCLASS") or "").strip(),
+        (row.get("BAND") or "").strip(),
+        ((row.get("ISSCNTRY") or "").strip() or DEFAULT_KEY_ISSCNTRY),
+        ((row.get("ISSUEST") or "").strip() or DEFAULT_KEY_ISSUEST),
+        (row.get("EFFDATE") or "").strip() or S.STANDARD_EFFDATE,
+    )
+
+
+def _clone_gender_companion_key(template, key_table, gender, assumptions):
+    """Copy non-gender segmentation from sibling key; refresh assumption fields."""
+    plan = (template.get("PLAN") or "").strip()
+    uwclass = (template.get("UWCLASS") or "").strip()
+    row = {
+        "PLAN": plan,
+        "GENDER": gender,
+        "UWCLASS": uwclass,
+        "BAND": (template.get("BAND") or "").strip(),
+        "ISSCNTRY": (template.get("ISSCNTRY") or "").strip() or DEFAULT_KEY_ISSCNTRY,
+        "ISSUEST": (template.get("ISSUEST") or "").strip() or DEFAULT_KEY_ISSUEST,
+        "EFFDATE": (template.get("EFFDATE") or "").strip() or S.STANDARD_EFFDATE,
+    }
+    for fld in S.assumption_field_names(key_table):
+        val = assumptions.get(plan, key_table, fld, gender=gender, uwclass=uwclass)
+        if not (val or "").strip():
+            val = template.get(fld) or ""
+        row[fld] = val
+    return row
+
+
+def ensure_gender_companion_keys(key_rows, member_rows, assumptions=None):
+    """
+    Issue #83: when QuikPlGd declares F and M, and a GP/DB/CV/TV/DV family already
+    has at least one F/M key, emit missing companion gender keys.
+    Does not invent factor grid values (QLAdmin Values=N).
+    Returns list of (plan, key_table, gender) added.
+    """
+    assumptions = assumptions or AssumptionProvider()
+    fm_plans = _plans_with_fm_members(member_rows)
+    added = []
+    for kt in FAMILY_KEY_TABLES:
+        rows = key_rows.setdefault(kt, [])
+        by_plan = collections.defaultdict(list)
+        for r in rows:
+            plan = (r.get("PLAN") or "").strip()
+            if plan not in fm_plans:
+                continue
+            gender = (r.get("GENDER") or "").strip()
+            if gender in REAL_GENDERS:
+                by_plan[plan].append(r)
+        existing_sigs = {_key_signature(r) for r in rows}
+        for plan in sorted(by_plan):
+            templates = by_plan[plan]
+            if not templates:
+                continue
+            have = {(r.get("GENDER") or "").strip() for r in templates}
+            template = sorted(templates, key=lambda r: (r.get("GENDER") or ""))[0]
+            for gender in sorted(REAL_GENDERS):
+                if gender in have:
+                    continue
+                new_row = _clone_gender_companion_key(template, kt, gender, assumptions)
+                sig = _key_signature(new_row)
+                if sig in existing_sigs:
+                    continue
+                rows.append(new_row)
+                existing_sigs.add(sig)
+                added.append((plan, kt, gender))
+    return added

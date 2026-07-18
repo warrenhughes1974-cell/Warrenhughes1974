@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.01
+# Version:     v58.02
 # Date:        2026-07-17
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v58.01 — Issue #80 validation fixes: QuikPlTv MORT blank rule; QA to Reports/; Test_Validation
+# Change Note: v58.02 — Issue #83: fleet gender companion rate keys (F/M) when QuikPlGd declares
+#              both members and a family already has one sex key; no factor invent (Values=N).
+#              v58.01 — Issue #80 validation fixes: QuikPlTv MORT blank rule; QA to Reports/; Test_Validation
 #              publish cleanup; strengthened validator (package purity, schema, PUA isolation).
 #              v58.00 — Issue #80: CSO Valuation_Setup authority for 51 non-PUA plans — QuikPlCv/Tv
 #              via rate_pipeline CompositeAssumptionProvider; quikplan NFOINT/INTMETHCV overlay after
@@ -404,7 +406,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.01"
+APP_VERSION = "v58.02"
 
 
 class QLAdminEnterpriseIntegrationSuite:

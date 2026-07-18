@@ -45,6 +45,7 @@ class PipelineResult:
         self.member_rows = {}
         self.member_placeholders = collections.Counter()
         self.default_key_stubs = []  # Issue #77: (plan, key_table) stubs added
+        self.gender_companion_keys = []  # Issue #83: (plan, key_table, gender) companions added
         self.deps = []
         self.issues = []
         self.summary = collections.Counter()
@@ -359,6 +360,10 @@ def run(config_path, repo_root):
 
     # member / dimension tables (codes derived from validated segmentation tuples)
     res.member_rows, res.member_placeholders = MB.build_member_rows(res.grids, config.effdate)
+    # Issue #83: F/M companion keys when plan declares both genders (Values=N if no factors)
+    res.gender_companion_keys = K.ensure_gender_companion_keys(
+        res.key_rows, res.member_rows, assumptions=assumptions,
+    )
     # Issue #77: member codes for stub keys (e.g. GENDER=0 / UW=00)
     MB.ensure_members_for_keys(res.member_rows, res.key_rows, effdate=config.effdate)
 
