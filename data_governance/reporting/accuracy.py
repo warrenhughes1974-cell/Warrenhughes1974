@@ -48,16 +48,20 @@ def calculate_conformance_accuracy(
     records_reviewed: int,
     looked_fine: int,
     problems_found: int,
+    warnings_found: int = 0,
 ) -> ConformanceAccuracy:
     """Compute Data Conformance Accuracy from existing evaluation totals.
 
-    Formula: Looked_Fine / Records_Reviewed * 100 when counts reconcile and
-    Records_Reviewed > 0. Does not change the meaning of the input counts.
+    Counts reconcile when reviewed == passed + problems + warnings.
+    Percentage Passed (approved reporting): passed / (passed + problems);
+    warnings are displayed separately and do not reduce the percentage.
     """
     reviewed = int(records_reviewed)
     fine = int(looked_fine)
     problems = int(problems_found)
-    reconciles = reviewed == fine + problems
+    warnings = int(warnings_found or 0)
+    reconciles = reviewed == fine + problems + warnings
+    denominator = fine + problems
 
     if reviewed == 0:
         return ConformanceAccuracy(
@@ -81,7 +85,20 @@ def calculate_conformance_accuracy(
             warning=RECONCILE_WARNING,
         )
 
-    raw = (fine / reviewed) * 100.0
+    if denominator == 0:
+        # Only warnings (or empty completed fail/pass bucket) — warnings do not
+        # reduce percentage; treat as 100% when counts reconcile.
+        return ConformanceAccuracy(
+            records_reviewed=reviewed,
+            looked_fine=fine,
+            problems_found=problems,
+            percent_raw=100.0 if warnings > 0 else None,
+            percent_display="100.00%" if warnings > 0 else ACCURACY_UNAVAILABLE_ZERO,
+            reconciles=True,
+            warning="",
+        )
+
+    raw = (fine / denominator) * 100.0
     display = f"{raw:.2f}%"
     return ConformanceAccuracy(
         records_reviewed=reviewed,

@@ -12,6 +12,7 @@ Incremental framework for QLAdmin table governance checks against **any** data r
 | 4 — QuikList Group Billing Integrity | `DG-QUIKLIST` | 001–009 |
 | 5 — QuikDate Processing Date Integrity | `DG-QUIKDATE` | 001–006 |
 | 6 — Plan Value Reference Integrity | `DG-PLANVALUES` | 001–008 |
+| 7 — Plan Setup | `DG-QUIKPLAN` | 001–033 |
 
 ## Run from the converter UI
 
@@ -50,6 +51,7 @@ python -m data_governance run --input "D:\QLAdmin\ClientA\Data" --output "D:\Gov
 
 # Plan-value reference integrity item / rules
 python -m data_governance run --input "D:\QLAdmin\ClientA\Data" --output "D:\Governance\ClientA" --item DG-PLANVALUES
+python -m data_governance run --input "D:\QLAdmin\ClientA\Data" --output "D:\Governance\ClientA" --item DG-QUIKPLAN
 python -m data_governance run --input "D:\QLAdmin\ClientA\Data" --output "D:\Governance\ClientA" --rule DG-PLANVALUES-001
 ```
 

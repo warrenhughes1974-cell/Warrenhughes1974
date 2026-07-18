@@ -127,3 +127,23 @@ Open `data_governance_results.csv` from the new run folder. Source DBFs remain r
 - Band reference: QuikPlBd.BDCODE (QuikPlVd not present in inspected region).
 - ISSUEST: `00` or approved 50-state + DC list; EFFDATE: 1900-01-01 through run date + 12 calendar months.
 - Runner does not hard-stop the item when one source/reference table is missing.
+
+## 2026-07-18 enhancement — DG-QUIKPLAN (Item 7)
+
+- Schema verified from CSO QuikPlan and related DBFs — see `docs/QuikPlan_Schema_Verification.md`.
+- Rules `DG-QUIKPLAN-001` … `033` under `rules/plan_setup_integrity/`.
+- Physical field aliases: PAYRS→PAYYRS, MAXUNITS→MAXUNIT, ROUNDING→RRULE; Commission Setup = QuikComm (QUIKCOMM.DBF).
+- MYGA / UL / single-premium classification from optional `config/plan_classification.csv` (no invented classifiers).
+- Warnings (`STATUS_WARN`) for INITVAL non-default (015), missing traditional/annuity tables (027/028), out-of-range dates (033).
+- Report 1 Plan Setup subsections via `RuleDescription.subsection`; Warnings Found counted separately from Problems Found.
+- Runner treats `DG-QUIKPLAN` like `DG-PLANVALUES` for missing optional supporting tables.
+
+### Assumptions documented
+
+1. INSYRS and INSAGE are the insurance-period pair; plans beginning with 5 may have both payment/insurance pairs zero.
+2. “Plan begins with less than 9” means first character 0–8 (traditional value-table warnings).
+3. Company codes validated against QuikComp (rule 032), not QuikPlan.
+4. DEFICIENCY must be N when first character is A–Z or 9.
+5. INITVAL defaults to 1000 unless `INITVAL_EXCEPTION=Y` in classification CSV.
+6. LOAGE Age 1 = plan-level LOAGE 0 with LOAGE < HIAGE on the QuikPlan row.
+7. Out-of-range dates are governance warnings only; source DBFs are never modified.

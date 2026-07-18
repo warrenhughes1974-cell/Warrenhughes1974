@@ -38,6 +38,26 @@ TABLE_QUIKPLAN = "QuikPlan"
 TABLE_QUIKPLGD = "QuikPlGd"
 TABLE_QUIKPLUW = "QuikPlUw"
 TABLE_QUIKPLBD = "QuikPlBd"  # verified band table (QuikPlVd not present in CSO)
+TABLE_QUIKCOMM = "QuikComm"
+TABLE_QUIKGPS = "QuikGps"
+TABLE_QUIKDBS = "QuikDbs"
+TABLE_QUIKCVS = "QuikCvs"
+TABLE_QUIKTVS = "QuikTvs"
+TABLE_QUIKNPS = "QuikNps"
+TABLE_QUIKAINT = "QuikAint"
+TABLE_QUIKAING = "QuikAing"
+TABLE_QUIKAEXP = "QuikAexp"
+TABLE_QUIKAINF = "QuikAinf"
+TABLE_QUIKUINT = "QuikUint"
+TABLE_QUIKNFF = "QuikNff"
+TABLE_QUIKPLST = "QuikPlSt"
+TABLE_QUIKPLNB = "QuikPlNb"
+TABLE_QUIKISSC = "QuikIssc"
+
+# Verified QuikPlan physical aliases (business name → physical field)
+QUIKPLAN_PAYYRS_FIELD = "PAYYRS"  # business PAYRS
+QUIKPLAN_MAXUNIT_FIELD = "MAXUNIT"  # business MAXUNITS
+QUIKPLAN_RRULE_FIELD = "RRULE"  # business ROUNDING
 
 # File stem candidates (case-insensitive match in data region)
 TABLE_FILE_STEMS = {
@@ -58,6 +78,21 @@ TABLE_FILE_STEMS = {
     TABLE_QUIKPLGD: ("quikplgd",),
     TABLE_QUIKPLUW: ("quikpluw",),
     TABLE_QUIKPLBD: ("quikplbd",),
+    TABLE_QUIKCOMM: ("quikcomm",),
+    TABLE_QUIKGPS: ("quikgps",),
+    TABLE_QUIKDBS: ("quikdbs",),
+    TABLE_QUIKCVS: ("quikcvs",),
+    TABLE_QUIKTVS: ("quiktvs",),
+    TABLE_QUIKNPS: ("quiknps",),
+    TABLE_QUIKAINT: ("quikaint",),
+    TABLE_QUIKAING: ("quikaing",),
+    TABLE_QUIKAEXP: ("quikaexp",),
+    TABLE_QUIKAINF: ("quikainf",),
+    TABLE_QUIKUINT: ("quikuint",),
+    TABLE_QUIKNFF: ("quiknff",),
+    TABLE_QUIKPLST: ("quikplst",),
+    TABLE_QUIKPLNB: ("quikplnb",),
+    TABLE_QUIKISSC: ("quikissc",),
 }
 
 # Plan-value source tables evaluated by DG-PLANVALUES

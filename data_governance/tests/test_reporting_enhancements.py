@@ -63,6 +63,15 @@ def test_accuracy_non_reconciling():
     assert acc.warning == RECONCILE_WARNING
 
 
+def test_accuracy_warnings_excluded_from_percentage():
+    acc = calculate_conformance_accuracy(
+        records_reviewed=100, looked_fine=90, problems_found=5, warnings_found=5
+    )
+    assert acc.reconciles
+    assert abs(acc.percent_raw - (90 / 95 * 100.0)) < 1e-9
+    assert acc.percent_display == "94.74%"
+
+
 def test_error_not_run_do_not_create_false_problem_counts(tmp_path):
     # Missing QuikAgts/QuikActg/QuikList → ERROR with 0 evaluated problems
     tables = {

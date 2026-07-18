@@ -497,6 +497,29 @@ Primary package: `data_governance`
 
 ---
 
+## Item 7 — Plan Setup (`DG-QUIKPLAN`)
+
+Rules `DG-QUIKPLAN-001` … `033` validate QuikPlan configuration, related setup references, supporting rate/value tables, and conversion date warnings.
+
+| Rule | Summary | Severity |
+|------|---------|----------|
+| 001–006 | Plan code format, PAR, BASIS, LOANINTX | Critical |
+| 007, 012, 029 | MYGA / single-premium / UL (classification CSV) | Error |
+| 008–014 | Ages, RENEW, payment/insurance periods | Critical / Error |
+| 015 | INITVAL default 1000 (warn if unexplained) | Advisory |
+| 016–024 | Commission ID, units, defaults, logicals | Critical / Error |
+| 025–026 | Gross premium / death benefit supporting tables | Critical |
+| 027–028 | Traditional / annuity supporting tables (warnings) | Advisory |
+| 030 | MEDS plan flags | Critical |
+| 031–032 | Cross-table plan and company references | Critical |
+| 033 | Out-of-range conversion dates (warnings) | Advisory |
+
+Verified physical mappings: PAYYRS, MAXUNIT, RRULE, QuikComm (QUIKCOMM.DBF). See `docs/QuikPlan_Schema_Verification.md`.
+
+Optional classification: `config/plan_classification.csv` (`PLAN,IS_MYGA,IS_UL,IS_SINGLE_PREMIUM,INITVAL_EXCEPTION`).
+
+---
+
 ## How to add a future governance item
 
 1. Add metadata in `catalog/governance_items.py`.

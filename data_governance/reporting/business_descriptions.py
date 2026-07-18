@@ -28,6 +28,21 @@ FRIENDLY_TABLE_NAMES: dict[str, str] = {
     "QuikPlGp": "Guaranteed Premiums",
     "QuikPlDb": "Death Benefits",
     "QuikPlDv": "Dividends",
+    "QuikComm": "Commission Setup",
+    "QuikGps": "Gross Premium Setup",
+    "QuikDbs": "Death Benefit Setup",
+    "QuikCvs": "Cash Value Setup",
+    "QuikTvs": "Terminal Reserve Setup",
+    "QuikNps": "Net Premium Setup",
+    "QuikAint": "Annuity Interest Setup",
+    "QuikAing": "Annuity Guarantee Setup",
+    "QuikAexp": "Annuity Expense Setup",
+    "QuikAinf": "Annuity Information Setup",
+    "QuikUint": "Universal Life Interest Setup",
+    "QuikNff": "Nonforfeiture Factor Setup",
+    "QuikPlSt": "State Setup",
+    "QuikPlNb": "New Business Setup",
+    "QuikIssc": "Issue Charge Setup",
 }
 
 
@@ -48,6 +63,7 @@ class RuleDescription:
     # How to pick Record column: company_code | policy_number | group_number |
     # agent_number | company_plan | record_number | plan | plan_detail | key_value
     record_strategy: str
+    subsection: str = ""
     # Short problem builders use failure_category / message when needed
     problem_default: str = ""
 
@@ -100,6 +116,15 @@ AREA_DESCRIPTIONS: dict[str, AreaDescription] = {
             "Plans, mortality tables, classes, bands, states, and effective dates are valid"
         ),
         sort_order=6,
+    ),
+    "DG-QUIKPLAN": AreaDescription(
+        item_id="DG-QUIKPLAN",
+        area_name="Plan Setup",
+        summary_what_checked=(
+            "Plan codes, settings, payment and insurance periods, related setup "
+            "references, and supporting rate and value records are valid"
+        ),
+        sort_order=7,
     ),
 }
 
@@ -346,6 +371,339 @@ RULE_DESCRIPTIONS: dict[str, RuleDescription] = {
         required_value="A date within the approved range",
         record_strategy="plan_detail",
         problem_default="The effective date is outside the approved date range.",
+    ),
+    "DG-QUIKPLAN-001": RuleDescription(
+        rule_id="DG-QUIKPLAN-001",
+        area_name="Plan Setup",
+        check_description="Every plan code contains exactly six characters.",
+        required_value="A six-character plan code",
+        record_strategy="plan",
+        subsection="Plan Code and Basic Setup",
+        problem_default="The plan code does not contain exactly six characters.",
+    ),
+    "DG-QUIKPLAN-002": RuleDescription(
+        rule_id="DG-QUIKPLAN-002",
+        area_name="Plan Setup",
+        check_description=(
+            "Plan codes contain only letters and numbers with no spaces or special characters."
+        ),
+        required_value="Six letters or numbers with no spaces or special characters",
+        record_strategy="plan",
+        subsection="Plan Code and Basic Setup",
+        problem_default="The plan code contains a space or special character.",
+    ),
+    "DG-QUIKPLAN-003": RuleDescription(
+        rule_id="DG-QUIKPLAN-003",
+        area_name="Plan Setup",
+        check_description=(
+            "Plan codes do not end with suffixes reserved for paid-up additions."
+        ),
+        required_value="A plan code that does not end in PA, XP, XF, or XS",
+        record_strategy="plan",
+        subsection="Plan Code and Basic Setup",
+        problem_default=(
+            "The plan code ends with a suffix reserved for paid-up additions."
+        ),
+    ),
+    "DG-QUIKPLAN-004": RuleDescription(
+        rule_id="DG-QUIKPLAN-004",
+        area_name="Plan Setup",
+        check_description="The participating-plan setting is 0 or 1.",
+        required_value="0 or 1",
+        record_strategy="plan",
+        subsection="Plan Code and Basic Setup",
+        problem_default="The participating-plan setting is invalid.",
+    ),
+    "DG-QUIKPLAN-005": RuleDescription(
+        rule_id="DG-QUIKPLAN-005",
+        area_name="Plan Setup",
+        check_description=(
+            "Annuity plans use a valid annuity basis and non-annuity plans leave the basis blank."
+        ),
+        required_value="NONQ, QUAL, NQIA, QLIA, or TXBL for annuity plans; blank for others",
+        record_strategy="plan",
+        subsection="Plan Code and Basic Setup",
+        problem_default="The annuity basis does not match the plan type.",
+    ),
+    "DG-QUIKPLAN-006": RuleDescription(
+        rule_id="DG-QUIKPLAN-006",
+        area_name="Plan Setup",
+        check_description="The loan interest option is A or R.",
+        required_value="A or R",
+        record_strategy="plan",
+        subsection="Plan Code and Basic Setup",
+        problem_default="The loan interest option is invalid.",
+    ),
+    "DG-QUIKPLAN-007": RuleDescription(
+        rule_id="DG-QUIKPLAN-007",
+        area_name="Plan Setup",
+        check_description="MYGA plans have a deposit interest value greater than zero.",
+        required_value="A value greater than zero",
+        record_strategy="plan",
+        subsection="Plan-Type Rules",
+        problem_default=(
+            "This MYGA plan does not have a deposit interest value greater than zero."
+        ),
+    ),
+    "DG-QUIKPLAN-008": RuleDescription(
+        rule_id="DG-QUIKPLAN-008",
+        area_name="Plan Setup",
+        check_description=(
+            "The low age is zero for the Age 1 row and is less than the high age."
+        ),
+        required_value="A low age below the high age, with zero used for the Age 1 row",
+        record_strategy="plan",
+        subsection="Payment, Insurance, and Age Rules",
+        problem_default="The low age is not valid for this plan.",
+    ),
+    "DG-QUIKPLAN-009": RuleDescription(
+        rule_id="DG-QUIKPLAN-009",
+        area_name="Plan Setup",
+        check_description="The renewal setting matches the plan type.",
+        required_value="N for most plans; N or Y for plans beginning with 5",
+        record_strategy="plan",
+        subsection="Payment, Insurance, and Age Rules",
+        problem_default="The renewal setting is invalid for this plan.",
+    ),
+    "DG-QUIKPLAN-010": RuleDescription(
+        rule_id="DG-QUIKPLAN-010",
+        area_name="Plan Setup",
+        check_description=(
+            "Payment years and payment age are not both zero for applicable plans."
+        ),
+        required_value="At least one value greater than zero",
+        record_strategy="plan",
+        subsection="Payment, Insurance, and Age Rules",
+        problem_default="Both the payment years and payment age are zero.",
+    ),
+    "DG-QUIKPLAN-011": RuleDescription(
+        rule_id="DG-QUIKPLAN-011",
+        area_name="Plan Setup",
+        check_description=(
+            "Insurance years and insurance age are not both zero for applicable plans."
+        ),
+        required_value="At least one value greater than zero",
+        record_strategy="plan",
+        subsection="Payment, Insurance, and Age Rules",
+        problem_default="Both the insurance years and insurance age are zero.",
+    ),
+    "DG-QUIKPLAN-012": RuleDescription(
+        rule_id="DG-QUIKPLAN-012",
+        area_name="Plan Setup",
+        check_description="Single-premium plans use the required payment settings.",
+        required_value="Single-premium settings",
+        record_strategy="plan",
+        subsection="Plan-Type Rules",
+        problem_default="A single-premium plan does not use the required payment settings.",
+    ),
+    "DG-QUIKPLAN-013": RuleDescription(
+        rule_id="DG-QUIKPLAN-013",
+        area_name="Plan Setup",
+        check_description="Payment age does not exceed 125.",
+        required_value="125 or less",
+        record_strategy="plan",
+        subsection="Payment, Insurance, and Age Rules",
+        problem_default="The payment age is greater than 125.",
+    ),
+    "DG-QUIKPLAN-014": RuleDescription(
+        rule_id="DG-QUIKPLAN-014",
+        area_name="Plan Setup",
+        check_description="Insurance age does not exceed 125.",
+        required_value="125 or less",
+        record_strategy="plan",
+        subsection="Payment, Insurance, and Age Rules",
+        problem_default="The insurance age is greater than 125.",
+    ),
+    "DG-QUIKPLAN-015": RuleDescription(
+        rule_id="DG-QUIKPLAN-015",
+        area_name="Plan Setup",
+        check_description="The initial value uses the approved default.",
+        required_value="1000 unless an approved transformation applies",
+        record_strategy="plan",
+        subsection="Related Setup References",
+        problem_default="The initial value differs from the expected default of 1000.",
+    ),
+    "DG-QUIKPLAN-016": RuleDescription(
+        rule_id="DG-QUIKPLAN-016",
+        area_name="Plan Setup",
+        check_description=(
+            "Commission IDs exist in Commission Setup when populated."
+        ),
+        required_value="A valid commission ID or blank",
+        record_strategy="plan_detail",
+        subsection="Related Setup References",
+        problem_default="The commission ID was not found in Commission Setup.",
+    ),
+    "DG-QUIKPLAN-017": RuleDescription(
+        rule_id="DG-QUIKPLAN-017",
+        area_name="Plan Setup",
+        check_description="Maximum units are not less than minimum units.",
+        required_value="A value greater than or equal to the minimum units",
+        record_strategy="plan",
+        subsection="Related Setup References",
+        problem_default="The maximum units are less than the minimum units.",
+    ),
+    "DG-QUIKPLAN-018": RuleDescription(
+        rule_id="DG-QUIKPLAN-018",
+        area_name="Plan Setup",
+        check_description="The rounding rule is set to B.",
+        required_value="B",
+        record_strategy="plan",
+        subsection="Related Setup References",
+        problem_default="The rounding rule is not set to B.",
+    ),
+    "DG-QUIKPLAN-019": RuleDescription(
+        rule_id="DG-QUIKPLAN-019",
+        area_name="Plan Setup",
+        check_description="The automatic nonforfeiture setting is set to 0.",
+        required_value="0",
+        record_strategy="plan",
+        subsection="Related Setup References",
+        problem_default="The automatic nonforfeiture setting is not set to 0.",
+    ),
+    "DG-QUIKPLAN-020": RuleDescription(
+        rule_id="DG-QUIKPLAN-020",
+        area_name="Plan Setup",
+        check_description=(
+            "The deficiency setting is N for alphabetic and 9-series plans."
+        ),
+        required_value="N",
+        record_strategy="plan",
+        subsection="Plan-Type Rules",
+        problem_default="The deficiency setting must be N for this plan.",
+    ),
+    "DG-QUIKPLAN-021": RuleDescription(
+        rule_id="DG-QUIKPLAN-021",
+        area_name="Plan Setup",
+        check_description=(
+            "The new-business status contains a valid yes-or-no value."
+        ),
+        required_value="A valid yes-or-no value",
+        record_strategy="plan",
+        subsection="Related Setup References",
+        problem_default="The new-business status is not a valid yes-or-no value.",
+    ),
+    "DG-QUIKPLAN-022": RuleDescription(
+        rule_id="DG-QUIKPLAN-022",
+        area_name="Plan Setup",
+        check_description="Closed plans do not have the plan-value option enabled.",
+        required_value="Plan-value option turned off",
+        record_strategy="plan",
+        subsection="Related Setup References",
+        problem_default=(
+            "This plan is closed to new business, but the plan-value option is still enabled."
+        ),
+    ),
+    "DG-QUIKPLAN-023": RuleDescription(
+        rule_id="DG-QUIKPLAN-023",
+        area_name="Plan Setup",
+        check_description="The lapse setting is set to 0.",
+        required_value="0",
+        record_strategy="plan",
+        subsection="Related Setup References",
+        problem_default="The lapse setting is not set to 0.",
+    ),
+    "DG-QUIKPLAN-024": RuleDescription(
+        rule_id="DG-QUIKPLAN-024",
+        area_name="Plan Setup",
+        check_description="The NAIC line-of-business setting is set to N.",
+        required_value="N",
+        record_strategy="plan",
+        subsection="Related Setup References",
+        problem_default="The NAIC line-of-business setting is not set to N.",
+    ),
+    "DG-QUIKPLAN-025": RuleDescription(
+        rule_id="DG-QUIKPLAN-025",
+        area_name="Plan Setup",
+        check_description=(
+            "Plans that use variable gross premium setup have the required supporting records."
+        ),
+        required_value="A supporting record for the plan",
+        record_strategy="plan_detail",
+        subsection="Supporting Rate and Value Tables",
+        problem_default="The plan was not found in a required gross premium table.",
+    ),
+    "DG-QUIKPLAN-026": RuleDescription(
+        rule_id="DG-QUIKPLAN-026",
+        area_name="Plan Setup",
+        check_description=(
+            "Plans that use variable death-benefit setup have the required supporting records."
+        ),
+        required_value="A supporting record for the plan",
+        record_strategy="plan_detail",
+        subsection="Supporting Rate and Value Tables",
+        problem_default="The plan was not found in a required death-benefit table.",
+    ),
+    "DG-QUIKPLAN-027": RuleDescription(
+        rule_id="DG-QUIKPLAN-027",
+        area_name="Plan Setup",
+        check_description=(
+            "Traditional plans have the expected value and reserve tables."
+        ),
+        required_value="A supporting record for the plan",
+        record_strategy="plan_detail",
+        subsection="Supporting Rate and Value Tables",
+        problem_default="The plan does not have a required value or reserve record.",
+    ),
+    "DG-QUIKPLAN-028": RuleDescription(
+        rule_id="DG-QUIKPLAN-028",
+        area_name="Plan Setup",
+        check_description="Annuity plans have the expected annuity setup records.",
+        required_value="A supporting record for the plan",
+        record_strategy="plan_detail",
+        subsection="Supporting Rate and Value Tables",
+        problem_default="The annuity plan does not have a required annuity setup record.",
+    ),
+    "DG-QUIKPLAN-029": RuleDescription(
+        rule_id="DG-QUIKPLAN-029",
+        area_name="Plan Setup",
+        check_description="Universal Life plans have a Universal Life interest record.",
+        required_value="A Universal Life interest record",
+        record_strategy="plan_detail",
+        subsection="Plan-Type Rules",
+        problem_default=(
+            "The Universal Life plan was not found in Universal Life Interest Setup."
+        ),
+    ),
+    "DG-QUIKPLAN-030": RuleDescription(
+        rule_id="DG-QUIKPLAN-030",
+        area_name="Plan Setup",
+        check_description="MEDS plan flags match the plan type.",
+        required_value="Enabled for MEDS plans and disabled for other plans",
+        record_strategy="plan",
+        subsection="Plan-Type Rules",
+        problem_default="The MEDS plan flags do not match the plan type.",
+    ),
+    "DG-QUIKPLAN-031": RuleDescription(
+        rule_id="DG-QUIKPLAN-031",
+        area_name="Plan Setup",
+        check_description=(
+            "Every plan code used in approved rate and key tables exists in Plan Setup."
+        ),
+        required_value="A plan defined in Plan Setup",
+        record_strategy="plan_detail",
+        subsection="Supporting Rate and Value Tables",
+        problem_default="The plan code was not found in Plan Setup.",
+    ),
+    "DG-QUIKPLAN-032": RuleDescription(
+        rule_id="DG-QUIKPLAN-032",
+        area_name="Plan Setup",
+        check_description=(
+            "Company codes used in approved tables exist in Company Setup."
+        ),
+        required_value="A valid company code",
+        record_strategy="company_code",
+        subsection="Supporting Rate and Value Tables",
+        problem_default="The company code was not found in Company Setup.",
+    ),
+    "DG-QUIKPLAN-033": RuleDescription(
+        rule_id="DG-QUIKPLAN-033",
+        area_name="Plan Setup",
+        check_description="Conversion dates fall within the approved date range.",
+        required_value="A date from January 1, 1900 through the calculated maximum date",
+        record_strategy="plan",
+        subsection="Conversion Date Warnings",
+        problem_default="The date is outside the approved conversion date range.",
     ),
 }
 

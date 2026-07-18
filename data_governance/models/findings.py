@@ -106,6 +106,7 @@ class RuleExecutionResult:
     records_evaluated: int = 0
     passed_count: int = 0
     failed_count: int = 0
+    warn_count: int = 0
     error_count: int = 0
     findings: list[GovernanceFinding] = field(default_factory=list)
     error_message: str = ""
@@ -125,6 +126,7 @@ class RuleExecutionResult:
             "records_evaluated": str(self.records_evaluated),
             "passed_count": str(self.passed_count),
             "failed_count": str(self.failed_count),
+            "warn_count": str(self.warn_count),
             "error_count": str(self.error_count),
             "error_message": self.error_message,
             "records_shorter_than_4": str(self.summary_metrics.get("records_shorter_than_4", "")),
@@ -221,6 +223,7 @@ class GovernanceRunResult:
     records_evaluated: int = 0
     passed_count: int = 0
     failed_count: int = 0
+    warn_count: int = 0
     error_count: int = 0
     overall_status: str = OVERALL_NOT_RUN
     # User-facing reports
@@ -251,6 +254,7 @@ class GovernanceRunResult:
         self.records_evaluated = sum(r.records_evaluated for r in self.rule_results)
         self.passed_count = sum(r.passed_count for r in self.rule_results)
         self.failed_count = sum(r.failed_count for r in self.rule_results)
+        self.warn_count = sum(r.warn_count for r in self.rule_results)
         self.error_count = sum(r.error_count for r in self.rule_results)
         self.findings = [f for r in self.rule_results for f in r.findings]
         self.rules_executed = [r.rule_id for r in self.rule_results]
@@ -286,6 +290,7 @@ class GovernanceRunResult:
             "records_evaluated": self.records_evaluated,
             "passed_count": self.passed_count,
             "failed_count": self.failed_count,
+            "warn_count": self.warn_count,
             "error_count": self.error_count,
             "Records_Reviewed": self.records_evaluated,
             "Looked_Fine": self.passed_count,

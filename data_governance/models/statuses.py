@@ -4,6 +4,7 @@ from __future__ import annotations
 
 STATUS_PASS = "PASS"
 STATUS_FAIL = "FAIL"
+STATUS_WARN = "WARN"
 STATUS_ERROR = "ERROR"
 STATUS_NOT_RUN = "NOT_RUN"
 

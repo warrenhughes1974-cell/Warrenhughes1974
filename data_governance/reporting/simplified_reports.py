@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from data_governance.models.findings import GovernanceFinding, GovernanceRunResult
-from data_governance.models.statuses import STATUS_ERROR, STATUS_FAIL, STATUS_NOT_RUN, STATUS_PASS
+from data_governance.models.statuses import STATUS_ERROR, STATUS_FAIL, STATUS_NOT_RUN, STATUS_PASS, STATUS_WARN
 from data_governance.reporting.business_descriptions import (
     AREA_DESCRIPTIONS,
     FRIENDLY_TABLE_NAMES,
@@ -21,10 +21,11 @@ from data_governance.reporting.business_descriptions import (
 from data_governance.reporting.executive_summary import format_business_datetime
 
 TYPE_DATA_PROBLEM = "Data Problem"
+TYPE_WARNING = "Warning"
 TYPE_COULD_NOT = "Could Not Be Checked"
 TYPE_INFORMATION = "Information"
 
-_TYPE_SORT = {TYPE_DATA_PROBLEM: 0, TYPE_COULD_NOT: 1, TYPE_INFORMATION: 2}
+_TYPE_SORT = {TYPE_DATA_PROBLEM: 0, TYPE_WARNING: 1, TYPE_COULD_NOT: 2, TYPE_INFORMATION: 3}
 
 _TECHNICAL_PATTERNS = (
     re.compile(r"Traceback \(most recent call last\)", re.I),
@@ -43,6 +44,7 @@ class BusinessSummary:
     records_checked: int
     records_passed: int
     problems_found: int
+    warnings_found: int
     checks_incomplete: int
     reconciles: bool
     warning: str
@@ -74,7 +76,8 @@ def build_business_summary(result: GovernanceRunResult) -> BusinessSummary:
     records_checked = int(result.records_evaluated or 0)
     records_passed = int(result.passed_count or 0)
     problems_found = int(result.failed_count or 0)
-    reconciles = records_checked == records_passed + problems_found
+    warnings_found = int(result.warn_count or 0)
+    reconciles = records_checked == records_passed + problems_found + warnings_found
     warning = ""
     if not reconciles:
         warning = (
@@ -90,9 +93,10 @@ def build_business_summary(result: GovernanceRunResult) -> BusinessSummary:
 
     if records_checked == 0:
         pct_display = "Not Available"
-        pct_raw = None
+    elif records_passed + problems_found == 0:
+        pct_display = "Not Available"
     else:
-        pct_raw = (records_passed / records_checked) * 100.0
+        pct_raw = (records_passed / (records_passed + problems_found)) * 100.0
         pct_display = f"{pct_raw:.2f}%"
 
     has_problems = problems_found > 0
@@ -120,6 +124,7 @@ def build_business_summary(result: GovernanceRunResult) -> BusinessSummary:
         records_checked=records_checked,
         records_passed=records_passed,
         problems_found=problems_found,
+        warnings_found=warnings_found,
         checks_incomplete=incomplete,
         reconciles=reconciles,
         warning=warning,
@@ -466,6 +471,36 @@ def build_attention_rows(result: GovernanceRunResult) -> list[AttentionRow]:
             )
             continue
 
+        if finding.status == STATUS_WARN:
+            problem = _plain_problem(finding, rule_desc)
+            record = _record_label(finding, rule_desc.record_strategy)
+            table = friendly_table_name(finding.source_table) or finding.source_table or "Blank"
+            current = _current_value(finding)
+            required = _required_value_text(finding, rule_desc)
+            dedupe_key = (
+                finding.rule_id,
+                finding.source_table,
+                finding.source_record_id,
+                problem,
+                current,
+            )
+            if dedupe_key in seen_data:
+                continue
+            seen_data.add(dedupe_key)
+            rows.append(
+                AttentionRow(
+                    area=rule_desc.area_name,
+                    table=table,
+                    record=record,
+                    problem=problem,
+                    current_value=current,
+                    required_value=required,
+                    type=TYPE_WARNING,
+                    reference=finding.rule_id,
+                )
+            )
+            continue
+
         if finding.status != STATUS_FAIL:
             continue
 
@@ -577,11 +612,15 @@ def write_items_needing_attention_csv(result: GovernanceRunResult, path: str) ->
     return rows
 
 
-def _area_result_label(*, problems: int, incomplete_rules: int) -> str:
+def _area_result_label(*, problems: int, warnings: int, incomplete_rules: int) -> str:
     if problems > 0 and incomplete_rules > 0:
         return "Needs Attention (Incomplete)"
     if problems > 0:
         return "Needs Attention"
+    if warnings > 0 and incomplete_rules > 0:
+        return "Passed with Warnings (Incomplete)"
+    if warnings > 0:
+        return "Passed with Warnings"
     if incomplete_rules > 0:
         return "Incomplete"
     return "Passed"
@@ -617,13 +656,45 @@ def write_what_was_checked_html(result: GovernanceRunResult, path: str) -> Busin
         area = get_area(item_id)
         rules = [r for r in result.rule_results if r.governance_item_id == item_id]
         problems = sum(r.failed_count for r in rules)
+        warnings = sum(r.warn_count for r in rules)
         incomplete_n = sum(1 for r in rules if r.status in (STATUS_ERROR, STATUS_NOT_RUN))
-        result_label = _area_result_label(problems=problems, incomplete_rules=incomplete_n)
-        # Prefer summary from area; bullets from rule descriptions
-        bullets = []
-        for r in rules:
-            desc = get_rule_description(r.rule_id, business_name=r.business_name)
-            bullets.append(desc.check_description)
+        result_label = _area_result_label(
+            problems=problems, warnings=warnings, incomplete_rules=incomplete_n
+        )
+        if item_id == "DG-QUIKPLAN":
+            subsection_order = [
+                "Plan Code and Basic Setup",
+                "Plan-Type Rules",
+                "Payment, Insurance, and Age Rules",
+                "Related Setup References",
+                "Supporting Rate and Value Tables",
+                "Conversion Date Warnings",
+            ]
+            grouped: dict[str, list[str]] = {name: [] for name in subsection_order}
+            for r in rules:
+                desc = get_rule_description(r.rule_id, business_name=r.business_name)
+                subsection = getattr(desc, "subsection", "") or "Plan Setup"
+                if subsection not in grouped:
+                    grouped[subsection] = []
+                grouped[subsection].append(desc.check_description)
+            bullet_html = "<p>We checked that:</p>\n"
+            for subsection in subsection_order:
+                items = grouped.get(subsection) or []
+                if not items:
+                    continue
+                bullet_html += f"<h4>{html.escape(subsection)}</h4>\n<ul>\n"
+                bullet_html += "".join(f"<li>{html.escape(b)}</li>" for b in items)
+                bullet_html += "</ul>\n"
+        else:
+            bullets = []
+            for r in rules:
+                desc = get_rule_description(r.rule_id, business_name=r.business_name)
+                bullets.append(desc.check_description)
+            bullet_html = (
+                "<p>We checked that:</p>\n<ul>\n"
+                + "".join(f"<li>{html.escape(b)}</li>" for b in bullets)
+                + "\n</ul>\n"
+            )
         table_rows.append(
             "<tr>"
             f"<td>{html.escape(area.area_name)}</td>"
@@ -637,12 +708,15 @@ def write_what_was_checked_html(result: GovernanceRunResult, path: str) -> Busin
             incomplete_note = (
                 f"<p><strong>Checks that could not be completed:</strong> {incomplete_n}</p>"
             )
-        bullet_html = "".join(f"<li>{html.escape(b)}</li>" for b in bullets)
+        warnings_note = ""
+        if warnings:
+            warnings_note = f"<p><strong>Warnings Found:</strong> {warnings:,}</p>\n"
         sections.append(
             f"<h3>{html.escape(area.area_name)}</h3>\n"
-            f"<p>We checked that:</p>\n<ul>\n{bullet_html}\n</ul>\n"
+            f"{bullet_html}"
             f"<p><strong>Result:</strong> {html.escape(result_label)}</p>\n"
             f"<p><strong>Problems Found:</strong> {problems:,}</p>\n"
+            f"{warnings_note}"
             f"{incomplete_note}"
         )
 
@@ -687,6 +761,7 @@ th {{ background: #f3f3f3; font-family: Arial, Helvetica, sans-serif; }}
 <dt>Records Checked</dt><dd>{summary.records_checked:,}</dd>
 <dt>Records Passed</dt><dd>{summary.records_passed:,}</dd>
 <dt>Problems Found</dt><dd>{summary.problems_found:,}</dd>
+<dt>Warnings Found</dt><dd>{summary.warnings_found:,}</dd>
 <dt>Checks That Could Not Be Completed</dt><dd>{summary.checks_incomplete:,}</dd>
 <dt>Review Scope</dt><dd>{html.escape(summary.review_scope)}</dd>
 <dt>Run Date</dt><dd>{html.escape(format_business_datetime(result.run_timestamp))}</dd>

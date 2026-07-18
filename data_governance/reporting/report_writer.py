@@ -202,6 +202,7 @@ def attach_conformance_metrics(result: GovernanceRunResult):
         records_reviewed=result.records_evaluated,
         looked_fine=result.passed_count,
         problems_found=result.failed_count,
+        warnings_found=int(getattr(result, "warn_count", 0) or 0),
     )
     result.data_conformance_accuracy_percent = accuracy.percent_raw
     result.data_conformance_accuracy_display = accuracy.percent_display
