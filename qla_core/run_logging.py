@@ -58,11 +58,11 @@ STAGE_PLANS = {
         (5, "Writing rate CSV outputs", 100),
     ],
     "governance_audit": [
-        (1, "Initializing governance audit", 5),
-        (2, "Loading conversion outputs", 20),
+        (1, "Initializing QLAdmin Data Governance", 5),
+        (2, "Loading QuikComp / QuikAgts / QuikMstr", 20),
         (3, "Running governance rule checks", 55),
         (4, "Writing governance reports", 90),
-        (5, "Finalizing audit summary", 100),
+        (5, "Finalizing governance summary", 100),
     ],
 }
 

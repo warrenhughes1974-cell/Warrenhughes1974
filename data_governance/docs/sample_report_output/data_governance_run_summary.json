@@ -1,0 +1,19 @@
+{
+  "run_id": "DG-20260718_094013",
+  "run_timestamp": "2026-07-18 09:40:13",
+  "data_dir": "c:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\data_governance\\docs\\sample_report_output",
+  "output_dir": "c:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\data_governance\\docs\\sample_report_output",
+  "rules_executed": [
+    "DG-QUIKCOMP-001",
+    "DG-QUIKCOMP-002",
+    "DG-QUIKCOMP-003"
+  ],
+  "records_evaluated": 12,
+  "passed_count": 3,
+  "failed_count": 9,
+  "error_count": 0,
+  "overall_status": "FAIL",
+  "findings_csv_path": "",
+  "summary_csv_path": "",
+  "report_md_path": ""
+}

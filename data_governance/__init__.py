@@ -1,29 +1,19 @@
-"""Data Governance Audit Module — LifePRO to QLA.
+"""QLAdmin Data Governance framework.
 
-Pure audit and reporting engine. Does not block, halt, or modify data.
+Incremental, testable post-load governance checks for QLAdmin tables.
+First governance item: DG-QUIKCOMP — QuikComp Company Code Integrity.
 """
 
-from data_governance.governance_engine import run_governance, load_conversion_data
-from data_governance.governance_report import write_governance_reports
-from data_governance.governance_config import (
-    AuditFinding,
-    GovernanceReport,
-    CRITICAL,
-    HIGH,
-    ADVISORY,
-    INFO,
-    make_finding,
+from data_governance.execution.runner import run_data_governance
+from data_governance.models.findings import (
+    GovernanceFinding,
+    GovernanceRunResult,
+    RuleExecutionResult,
 )
 
 __all__ = [
-    "run_governance",
-    "load_conversion_data",
-    "write_governance_reports",
-    "AuditFinding",
-    "GovernanceReport",
-    "CRITICAL",
-    "HIGH",
-    "ADVISORY",
-    "INFO",
-    "make_finding",
+    "run_data_governance",
+    "GovernanceFinding",
+    "GovernanceRunResult",
+    "RuleExecutionResult",
 ]

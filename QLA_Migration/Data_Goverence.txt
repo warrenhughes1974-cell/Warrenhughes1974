@@ -128,7 +128,7 @@ COMMID- VALIDATE THIS EXIST IN QUIKCOM, OKAY ITS EMPTY
 
 MAXUNITS- SHOLD BE > OR = TO THE MINUTIT
 
-ROUNDING FULE DEFALUT TO A
+ROUNDING RULE DEFAULT TO B
 
 AUTONFO DEFAULT TO 0
 
@@ -213,6 +213,9 @@ MRELATION- IF OWNR, OWNC, PAYR, PRIM , ASGN, BENP, BENC PHASE NEEDS TO BE ZERO. 
 
 Look at validations for quikridr MPLAN add logic PUA's and rateups.
 
+
+
+Brought in bad information for claims.  Claims amounts not relying on.  The file says infinity on most of them.  If there is an override field we brought in the override field.  this is quikclms and quikclmp (the closest to that in andesa is the pay bene details.  list an amount that was paid to each beneficiary on a claim.  Dont know if this was an adtional amount paid.  All claims have this delayed claim int field.  This amount in this field it is different in the main claim table.  This was brought in as a courtsy do not relay on these amounts.  
 
 
 

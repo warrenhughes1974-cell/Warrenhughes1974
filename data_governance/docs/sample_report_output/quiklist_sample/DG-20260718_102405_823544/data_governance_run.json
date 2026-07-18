@@ -1,0 +1,31 @@
+{
+  "run_id": "DG-20260718_102405_823544",
+  "run_timestamp": "2026-07-18 10:24:05",
+  "data_region_path": "c:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\data_governance\\docs\\sample_report_output\\quiklist_sample",
+  "data_dir": "c:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\data_governance\\docs\\sample_report_output\\quiklist_sample",
+  "output_base": "c:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\data_governance\\docs\\sample_report_output\\quiklist_sample",
+  "output_dir": "c:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\data_governance\\docs\\sample_report_output\\quiklist_sample\\DG-20260718_102405_823544",
+  "rules_executed": [
+    "DG-QUIKLIST-001",
+    "DG-QUIKLIST-002",
+    "DG-QUIKLIST-003",
+    "DG-QUIKLIST-004",
+    "DG-QUIKLIST-005",
+    "DG-QUIKLIST-006",
+    "DG-QUIKLIST-007",
+    "DG-QUIKLIST-008",
+    "DG-QUIKLIST-009"
+  ],
+  "records_evaluated": 18,
+  "passed_count": 7,
+  "failed_count": 11,
+  "error_count": 0,
+  "overall_status": "FAIL",
+  "source_opened_read_only": true,
+  "source_files_modified": false,
+  "results_csv_path": "",
+  "findings_csv_path": "",
+  "summary_csv_path": "",
+  "report_md_path": "",
+  "run_log_path": ""
+}

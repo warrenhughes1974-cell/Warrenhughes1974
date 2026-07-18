@@ -1,10 +1,16 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.02
-# Date:        2026-07-17
+# Version:     v58.04
+# Date:        2026-07-18
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.02 — Issue #83: fleet gender companion rate keys (F/M) when QuikPlGd declares
+# Change Note: v58.04 — Replace legacy data_governance audit with QLAdmin Data Governance
+#              framework (DG-QUIKCOMP-001/002/003); outputs under Reports/data_governance/.
+#              v58.03 — Issue #85: unique quikclms claim identity — merge same-CLAIMNUM
+#              duplicates; re-phase distinct claims (Policy-book pattern); re-attach quikclmp
+#              phases (D4); CLAIMSTAT/#78 invent unchanged; audits in Reports/.
+#              Dev model override: Cursor Grok 4.5 (user one-time override 2026-07-17).
+#              v58.02 — Issue #83: fleet gender companion rate keys (F/M) when QuikPlGd declares
 #              both members and a family already has one sex key; no factor invent (Values=N).
 #              v58.01 — Issue #80 validation fixes: QuikPlTv MORT blank rule; QA to Reports/; Test_Validation
 #              publish cleanup; strengthened validator (package purity, schema, PUA isolation).
@@ -257,6 +263,10 @@ from qla_core.issue79_claimstat_remap import (
     remap_quikclms_claimstat,
     write_remap_audit,
 )
+from qla_core.issue85_claim_header_structure import (
+    apply_issue85_header_structure,
+    write_structure_audits,
+)
 
 # --- Phase 18A–20: Claims orchestration, UAT handoff/emit/batch/DBF, MPOLICY validation ---
 VALID_RUN_MODES = ("UAT", "PRODUCTION", "DISABLED")
@@ -406,7 +416,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.02"
+APP_VERSION = "v58.04"
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -719,12 +729,15 @@ class QLAdminEnterpriseIntegrationSuite:
         report = getattr(self, "_last_governance_report", None)
         if report is None:
             return "Not yet audited"
-        by = getattr(report, "by_severity", None) or {}
-        if getattr(report, "clean", False):
-            return "Governance CLEAN"
+        status = getattr(report, "overall_status", None)
+        failed = int(getattr(report, "failed_count", 0) or 0)
+        errors = int(getattr(report, "error_count", 0) or 0)
+        findings = len(getattr(report, "findings", None) or [])
+        if status == "PASS" and findings == 0:
+            return "Governance PASS"
         return (
-            f"Governance findings: {getattr(report, 'total_findings', 0)} "
-            f"(C={by.get('Critical', 0)} H={by.get('High', 0)})"
+            f"Governance {status or 'DONE'}: findings={findings} "
+            f"(fail={failed} err={errors})"
         )
 
     def _ui_format_timestamp(self, ts):
@@ -1537,6 +1550,98 @@ class QLAdminEnterpriseIntegrationSuite:
             self.log(f"  After CLAIMSTAT counts: {counts}")
         if remap_result.get("audit_path"):
             self.log(f"  Audit: {remap_result['audit_path']}")
+
+    def _apply_issue85_claim_header_structure(self, output_dir):
+        """Issue #85: merge/re-phase quikclms headers; re-attach quikclmp phases (D1–D4)."""
+        clms_path = os.path.normpath(os.path.join(output_dir, "quikclms.csv"))
+        clmp_path = os.path.normpath(os.path.join(output_dir, "quikclmp.csv"))
+        result = {
+            "applied": False,
+            "headers_before": 0,
+            "headers_after": 0,
+            "merge_drops": 0,
+            "rephase_moves": 0,
+            "payee_exceptions": 0,
+            "audit_paths": {},
+            "reason": "",
+        }
+        if not os.path.isfile(clms_path):
+            result["reason"] = "missing_quikclms"
+            return result
+        try:
+            clms_df = pd.read_csv(clms_path, dtype=str).fillna("")
+            clmp_df = (
+                pd.read_csv(clmp_path, dtype=str).fillna("")
+                if os.path.isfile(clmp_path)
+                else pd.DataFrame()
+            )
+            before_n = len(clms_df)
+            clms_after, clmp_after, merge_audit, rephase_payee_audit = apply_issue85_header_structure(
+                clms_df, clmp_df
+            )
+            merge_drops = len(merge_audit)
+            rephase_moves = int(
+                (rephase_payee_audit.get("action") == "REPHASE").sum()
+                if len(rephase_payee_audit) and "action" in rephase_payee_audit.columns
+                else 0
+            )
+            if len(rephase_payee_audit) and "exception" in rephase_payee_audit.columns:
+                payee_exceptions = int((rephase_payee_audit["exception"] == "Y").sum())
+            else:
+                payee_exceptions = 0
+            if merge_drops <= 0 and rephase_moves <= 0:
+                payee_moves = int(
+                    (rephase_payee_audit.get("action") == "PAYEE_REPHASE").sum()
+                    if len(rephase_payee_audit) and "action" in rephase_payee_audit.columns
+                    else 0
+                )
+                if payee_moves <= 0 and payee_exceptions <= 0:
+                    result["reason"] = "no_structure_change"
+                    result["headers_before"] = before_n
+                    result["headers_after"] = before_n
+                    return result
+
+            tmp_clms = clms_path + ".tmp"
+            clms_after.to_csv(tmp_clms, index=False, encoding="utf-8")
+            os.replace(tmp_clms, clms_path)
+            if os.path.isfile(clmp_path) and not clmp_after.empty:
+                tmp_clmp = clmp_path + ".tmp"
+                clmp_after.to_csv(tmp_clmp, index=False, encoding="utf-8")
+                os.replace(tmp_clmp, clmp_path)
+            audit_paths = write_structure_audits(merge_audit, rephase_payee_audit, self._reports_dir())
+            result.update(
+                {
+                    "applied": True,
+                    "headers_before": before_n,
+                    "headers_after": len(clms_after),
+                    "merge_drops": merge_drops,
+                    "rephase_moves": rephase_moves,
+                    "payee_exceptions": payee_exceptions,
+                    "audit_paths": audit_paths,
+                }
+            )
+            return result
+        except Exception as exc:
+            result["reason"] = f"error:{exc}"
+            return result
+
+    def _log_issue85_structure_summary(self, structure_result):
+        if not structure_result:
+            return
+        self.log("ISSUE #85 CLAIM HEADER STRUCTURE (post-emit):")
+        if not structure_result.get("applied"):
+            self.log(f"  Skipped: {structure_result.get('reason', 'unknown')}")
+            return
+        self.log(
+            f"  Headers {structure_result.get('headers_before', 0)} -> "
+            f"{structure_result.get('headers_after', 0)} "
+            f"(merge_drops={structure_result.get('merge_drops', 0)}, "
+            f"rephase={structure_result.get('rephase_moves', 0)}, "
+            f"payee_exceptions={structure_result.get('payee_exceptions', 0)})"
+        )
+        paths = structure_result.get("audit_paths") or {}
+        for key, path in paths.items():
+            self.log(f"  Audit[{key}]: {path}")
 
     def _load_claims_orchestration_rules(self):
         rules_path = os.path.join(self._claims_analysis_root(), "config", "app_claims_uat_orchestration_rules.json")
@@ -4605,6 +4710,15 @@ class QLAdminEnterpriseIntegrationSuite:
                 )
                 emit_result["issue79_remap"] = remap_result
                 self._log_issue79_remap_summary(remap_result)
+                structure_result = self._apply_issue85_claim_header_structure(
+                    emit_result.get("output_dir") or self._resolve_output_base_dir()
+                )
+                emit_result["issue85_structure"] = structure_result
+                self._log_issue85_structure_summary(structure_result)
+                if structure_result.get("applied") and emit_result.get("emitted", {}).get("quikclms"):
+                    emit_result["emitted"]["quikclms"]["row_count"] = int(
+                        structure_result.get("headers_after", 0)
+                    )
         else:
             self.log("  UAT emit skipped (RUN_MODE != UAT or QLA_CLAIMS_UAT_EMIT=0).")
 
@@ -5253,35 +5367,34 @@ class QLAdminEnterpriseIntegrationSuite:
         self._ui_record_run_timestamp("Failed")
 
     def _run_post_conversion_governance(self, error_log=None):
-        """Run Data Governance Audit after full batch (report-only; never blocks emit)."""
+        """Run QLAdmin Data Governance after full batch (report-only; never blocks emit)."""
         if os.environ.get("QLA_SKIP_GOVERNANCE_AUDIT", "").strip() == "1":
-            self.log("DATA GOVERNANCE AUDIT: skipped (QLA_SKIP_GOVERNANCE_AUDIT=1)")
-            return {"status": "SKIPPED", "critical": 0, "high": 0, "total": 0}
+            self.log("DATA GOVERNANCE: skipped (QLA_SKIP_GOVERNANCE_AUDIT=1)")
+            return {"status": "SKIPPED", "failed": 0, "errors": 0, "total": 0}
         try:
-            summary = self._execute_governance_audit(open_html=False, show_dialog=False)
-            if error_log and summary.get("critical"):
+            summary = self._execute_governance_audit(open_report=False, show_dialog=False)
+            if error_log and (summary.get("failed") or summary.get("errors")):
                 error_log.write_warnings([
                     ("WARN", "governance", "data_governance",
-                     f"Critical findings={summary.get('critical')} High={summary.get('high')} "
-                     f"see {summary.get('report_dir', 'Reports/governance')}"),
+                     f"Failed={summary.get('failed')} Errors={summary.get('errors')} "
+                     f"see {summary.get('report_dir', 'Reports/data_governance')}"),
                 ])
             return summary
         except Exception as exc:
-            self.log(f"DATA GOVERNANCE AUDIT: non-fatal failure — {exc}")
+            self.log(f"DATA GOVERNANCE: non-fatal failure — {exc}")
             if error_log:
                 error_log.write_warnings([("WARN", "governance", "data_governance", str(exc))])
-            return {"status": "ERROR", "critical": 0, "high": 0, "total": 0, "error": str(exc)}
+            return {"status": "ERROR", "failed": 0, "errors": 0, "total": 0, "error": str(exc)}
 
     def _governance_ui_progress(self, event, **kwargs):
-        """Drive progress bar / stage detail during an on-demand governance audit."""
+        """Drive progress bar / stage detail during an on-demand governance run."""
         try:
             if event == "load":
-                self.update_run_progress(2, detail="Loading quik*.csv outputs")
+                self.update_run_progress(2, detail="Loading QuikComp / QuikAgts / QuikMstr")
             elif event == "check":
                 idx = int(kwargs.get("index", 0))
                 total = max(int(kwargs.get("total", 1)), 1)
-                name = str(kwargs.get("name") or "check")
-                # Interpolate bar between stage-2 (20%) and stage-4 (90%)
+                name = str(kwargs.get("name") or "rule")
                 pct = 20 + int(70 * ((idx + 1) / total))
                 plan = self._progress_plan or RL.stage_plan("governance_audit")
                 stage_total = len(plan)
@@ -5291,25 +5404,25 @@ class QLAdminEnterpriseIntegrationSuite:
                 )
                 if hasattr(self, "lbl_stage_detail"):
                     self.lbl_stage_detail.config(
-                        text=f"Check {idx + 1}/{total}: {name}"
+                        text=f"Rule {idx + 1}/{total}: {name}"
                     )
                 if hasattr(self, "root"):
                     self.root.update_idletasks()
             elif event == "report":
-                self.update_run_progress(4, detail="Writing HTML / CSV / log reports")
+                self.update_run_progress(4, detail="Writing governance CSV / markdown reports")
             elif event == "done":
                 self.update_run_progress(
                     5,
                     detail=(
-                        f"Findings={kwargs.get('total_findings', '?')} "
-                        f"clean={kwargs.get('clean', '?')}"
+                        f"Status={kwargs.get('overall_status', '?')} "
+                        f"findings={kwargs.get('total_findings', '?')}"
                     ),
                 )
         except Exception:
             pass
 
-    def _execute_governance_audit(self, open_html=True, show_dialog=True, with_ui_progress=False):
-        """Shared governance runner for UI button and post-batch. Returns summary dict."""
+    def _execute_governance_audit(self, open_report=True, show_dialog=True, with_ui_progress=False):
+        """Shared QLAdmin Data Governance runner for UI and post-batch. Returns summary dict."""
         out_dir = self.path_vars["Out"][0].get().strip() if hasattr(self, "path_vars") else ""
         if not out_dir or not os.path.isdir(out_dir):
             out_dir = self._migration_output_dir()
@@ -5319,94 +5432,77 @@ class QLAdminEnterpriseIntegrationSuite:
         repo = self._repo_root()
         if repo not in sys.path:
             sys.path.insert(0, repo)
-        from data_governance import run_governance
+        from data_governance import run_data_governance
 
-        source_dir = self._migration_source_dir()
-        report_dir = os.path.normpath(os.path.join(self._reports_dir(), "governance"))
+        report_dir = os.path.normpath(os.path.join(self._reports_dir(), "data_governance"))
         os.makedirs(report_dir, exist_ok=True)
 
-        cw_path = ""
-        if hasattr(self, "path_vars") and "CW" in self.path_vars:
-            cw_path = self.path_vars["CW"][0].get().strip()
-        if not cw_path or not os.path.isfile(cw_path):
-            for candidate in (
-                os.path.join(self._migration_root(), "Mapping", "Master_Crosswalk.csv"),
-                os.path.join(repo, "Master_Crosswalk.csv"),
-            ):
-                if os.path.isfile(candidate):
-                    cw_path = candidate
-                    break
-
-        required = []
-        raw = os.environ.get("QLA_GOV_REQUIRED_SOURCE_FILES", "").strip()
-        if raw:
-            required = [x.strip() for x in raw.split(";") if x.strip()]
-
-        stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.log("DATA GOVERNANCE AUDIT: starting (read-only; all checks run)...")
+        self.log("DATA GOVERNANCE: starting QLAdmin Data Governance (read-only)...")
         if with_ui_progress:
-            self.update_run_progress(1, detail="Preparing Data Governance Audit")
-        report = run_governance({
-            "conversion_id": f"UI-{stamp}",
-            "conversion_source": "LifePRO",
-            "conversion_target": "QLA",
-            "output_dir": out_dir,
-            "report_dir": report_dir,
-            "source_dir": source_dir if os.path.isdir(source_dir) else "",
-            "required_source_files": required,
-            "crosswalk_path": cw_path if cw_path and os.path.isfile(cw_path) else "",
-            "app_table_version": APP_VERSION,
-            "write_reports": True,
-            "progress_callback": self._governance_ui_progress if with_ui_progress else None,
-        })
-        self._last_governance_report = report
-        by = report.by_severity or {}
-        critical = by.get("Critical", 0)
-        high = by.get("High", 0)
-        html_path = os.path.join(report_dir, "governance_audit.html")
-        csv_path = os.path.join(report_dir, "governance_audit.csv")
-        log_path = os.path.join(report_dir, "governance_audit.log")
-
-        self.log("DATA GOVERNANCE AUDIT COMPLETE:")
-        self.log(
-            f"  Findings: {report.total_findings} | "
-            f"Critical={critical} High={high} "
-            f"Advisory={by.get('Advisory', 0)} Info={by.get('Info', 0)}"
+            self.update_run_progress(1, detail="Preparing QLAdmin Data Governance")
+        report = run_data_governance(
+            data_dir=out_dir,
+            output_dir=report_dir,
+            write_reports=True,
+            progress_callback=self._governance_ui_progress if with_ui_progress else None,
         )
-        self.log(f"  Clean run: {'YES' if report.clean else 'NO'}")
-        self.log(f"  HTML: {html_path}")
-        self.log(f"  CSV:  {csv_path}")
-        self.log(f"  Log:  {log_path}")
+        self._last_governance_report = report
+        failed = int(report.failed_count or 0)
+        errors = int(report.error_count or 0)
+        total_findings = len(report.findings or [])
+        results_csv = getattr(report, "results_csv_path", "") or os.path.join(
+            report_dir, "data_governance_results.csv"
+        )
+        md_path = report.report_md_path or os.path.join(report_dir, "data_governance_report.md")
+        findings_csv = report.findings_csv_path or os.path.join(
+            report_dir, "data_governance_findings.csv"
+        )
+        summary_csv = report.summary_csv_path or os.path.join(
+            report_dir, "data_governance_summary.csv"
+        )
+
+        self.log("DATA GOVERNANCE COMPLETE:")
+        self.log(
+            f"  Status: {report.overall_status} | "
+            f"Evaluated={report.records_evaluated} Passed={report.passed_count} "
+            f"Failed={failed} Errors={errors} Findings={total_findings}"
+        )
+        self.log(f"  Rules: {', '.join(report.rules_executed)}")
+        self.log(f"  Results CSV: {results_csv}")
+        self.log(f"  Findings CSV: {findings_csv}")
+        self.log(f"  Summary CSV:  {summary_csv}")
 
         summary = {
-            "status": "CLEAN" if report.clean else "FINDINGS",
-            "critical": critical,
-            "high": high,
-            "advisory": by.get("Advisory", 0),
-            "info": by.get("Info", 0),
-            "total": report.total_findings,
+            "status": report.overall_status,
+            "failed": failed,
+            "errors": errors,
+            "passed": int(report.passed_count or 0),
+            "total": total_findings,
+            "critical": failed,  # Item 1 rules are Critical severity
+            "high": 0,
             "report_dir": report_dir,
-            "html_path": html_path,
-            "csv_path": csv_path,
-            "log_path": log_path,
-            "clean": report.clean,
+            "results_csv_path": results_csv,
+            "report_md_path": md_path,
+            "findings_csv_path": findings_csv,
+            "summary_csv_path": summary_csv,
+            "clean": report.overall_status == "PASS",
         }
 
         if show_dialog:
             msg = (
-                f"Findings: {report.total_findings}\n"
-                f"Critical: {critical}  High: {high}\n"
-                f"Advisory: {by.get('Advisory', 0)}  Info: {by.get('Info', 0)}\n\n"
-                f"Reports:\n{report_dir}"
+                f"Overall status: {report.overall_status}\n"
+                f"Failed: {failed}  Errors: {errors}\n"
+                f"Findings: {total_findings}\n\n"
+                f"Open this CSV:\n{results_csv}"
             )
-            if report.clean:
-                messagebox.showinfo("Data Governance Audit", f"Clean run — no findings.\n\n{msg}")
+            if report.overall_status == "PASS":
+                messagebox.showinfo("QLAdmin Data Governance", f"Pass — no findings.\n\n{msg}")
             else:
-                messagebox.showwarning("Data Governance Audit", msg)
+                messagebox.showwarning("QLAdmin Data Governance", msg)
 
-        if open_html and os.path.isfile(html_path):
+        if open_report and os.path.isfile(results_csv):
             try:
-                os.startfile(html_path)  # noqa: S606
+                os.startfile(results_csv)  # noqa: S606
             except OSError:
                 pass
 
@@ -5445,26 +5541,28 @@ class QLAdminEnterpriseIntegrationSuite:
         threading.Thread(target=self._run_governance_audit_ui, daemon=True).start()
 
     def _run_governance_audit_ui(self):
-        """On-demand Data Governance Audit — report-only; never blocks or modifies data."""
+        """On-demand QLAdmin Data Governance — report-only; never blocks or modifies data."""
         try:
             self.start_run_progress("governance_audit")
-            self.update_run_progress(1, detail="Preparing Data Governance Audit")
+            self.update_run_progress(1, detail="Preparing QLAdmin Data Governance")
             summary = self._execute_governance_audit(
-                open_html=True, show_dialog=True, with_ui_progress=True,
+                open_report=True, show_dialog=True, with_ui_progress=True,
             )
             status = summary.get("status", "DONE")
             detail = (
-                f"Complete — Critical={summary.get('critical', 0)} "
-                f"High={summary.get('high', 0)} Total={summary.get('total', 0)}"
+                f"Complete — Status={status} "
+                f"Failed={summary.get('failed', 0)} "
+                f"Errors={summary.get('errors', 0)} "
+                f"Findings={summary.get('total', 0)}"
             )
-            if status == "CLEAN":
-                self.complete_run_progress("Complete — Data Governance Audit clean (no findings)")
+            if status == "PASS":
+                self.complete_run_progress("Complete — QLAdmin Data Governance PASS (no findings)")
             else:
                 self.complete_run_progress(detail)
         except Exception as exc:
-            self.log(f"DATA GOVERNANCE AUDIT ERROR: {exc}")
-            self.fail_run_progress("Data Governance Audit", str(exc))
-            messagebox.showerror("Data Governance Audit", str(exc))
+            self.log(f"DATA GOVERNANCE ERROR: {exc}")
+            self.fail_run_progress("QLAdmin Data Governance", str(exc))
+            messagebox.showerror("QLAdmin Data Governance", str(exc))
         finally:
             self.is_running = False
             # Leave final elapsed time visible (timer thread stops when is_running is False).
@@ -7733,18 +7831,19 @@ class QLAdminEnterpriseIntegrationSuite:
                 vr = self._last_governance_summary or {}
                 if vr.get("status"):
                     self._ui_record_governance_timestamp()
-                if vr.get("status") == "CLEAN":
-                    val_note = "\n\nData governance audit: CLEAN (see QLA_Migration/Reports/governance/)"
-                elif vr.get("status") == "FINDINGS":
+                if vr.get("status") == "PASS":
+                    val_note = "\n\nData governance: PASS (see QLA_Migration/Reports/data_governance/)"
+                elif vr.get("status") in ("FAIL", "FINDINGS"):
                     val_note = (
-                        f"\n\nData governance audit: {vr.get('total', 0)} finding(s) — "
-                        f"Critical={vr.get('critical', 0)}, High={vr.get('high', 0)}.\n"
-                        f"Report: {vr.get('report_dir', 'Reports/governance')}"
+                        f"\n\nData governance: {vr.get('total', 0)} finding(s) — "
+                        f"Failed={vr.get('failed', vr.get('critical', 0))}, "
+                        f"Errors={vr.get('errors', 0)}.\n"
+                        f"Report: {vr.get('report_dir', 'Reports/data_governance')}"
                     )
                 elif vr.get("status") == "SKIPPED":
-                    val_note = "\n\nData governance audit: skipped."
+                    val_note = "\n\nData governance: skipped."
                 elif vr.get("status") == "ERROR":
-                    val_note = f"\n\nData governance audit: error — {vr.get('error', 'see log')}"
+                    val_note = f"\n\nData governance: error — {vr.get('error', 'see log')}"
 
             if is_batch and batch_claims_result and batch_claims_result.get("emit_result"):
                 emit_info = batch_claims_result["emit_result"]

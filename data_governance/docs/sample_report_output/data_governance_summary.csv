@@ -1,0 +1,4 @@
+run_id,run_timestamp,governance_item_id,rule_id,rule_name,business_name,severity,status,records_evaluated,passed_count,failed_count,error_count,error_message
+DG-20260718_094013,2026-07-18 09:40:13,DG-QUIKCOMP,DG-QUIKCOMP-001,Unique Company Code,Unique QuikComp Company Code,Critical,FAIL,4,1,3,0,
+DG-20260718_094013,2026-07-18 09:40:13,DG-QUIKCOMP,DG-QUIKCOMP-002,Agent Company Code Must Exist,Agent Company Code Must Exist in QuikComp,Critical,FAIL,4,1,3,0,
+DG-20260718_094013,2026-07-18 09:40:13,DG-QUIKCOMP,DG-QUIKCOMP-003,Policy Company Code Must Exist,Policy Number Company Code Must Exist in QuikComp,Critical,FAIL,4,1,3,0,

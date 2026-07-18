@@ -1,0 +1,10 @@
+[2026-07-18 09:53:44] QLAdmin Data Governance run starting
+[2026-07-18 09:53:44] Run ID: DG-20260718_095344_068734
+[2026-07-18 09:53:44] Data region: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\sample_report_output
+[2026-07-18 09:53:44] Output base: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\sample_report_output
+[2026-07-18 09:53:44] Run folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\sample_report_output\DG-20260718_095344_068734
+[2026-07-18 09:53:44] Source DBF files will be opened read-only; source files are never modified
+[2026-07-18 09:53:44] Executing DG-QUIKMSTR-001 — Policy Number Must Contain 9 to 11 Characters
+[2026-07-18 09:53:44] Finished DG-QUIKMSTR-001: status=FAIL passed=1 failed=4 errors=0
+[2026-07-18 09:53:44] Overall status: FAIL
+[2026-07-18 09:53:44] Source files modified: No

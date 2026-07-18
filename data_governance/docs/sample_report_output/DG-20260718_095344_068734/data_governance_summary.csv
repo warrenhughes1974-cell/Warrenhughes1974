@@ -1,0 +1,2 @@
+run_id,run_timestamp,governance_item_id,rule_id,rule_name,business_name,severity,status,records_evaluated,passed_count,failed_count,error_count,error_message,records_shorter_than_9,records_longer_than_11,blank_policy_numbers,null_policy_numbers
+DG-20260718_095344_068734,2026-07-18 09:53:44,DG-QUIKMSTR,DG-QUIKMSTR-001,Validate QuikMstr Policy Number Length,Policy Number Must Contain 9 to 11 Characters,Critical,FAIL,5,1,4,0,,1,1,1,1

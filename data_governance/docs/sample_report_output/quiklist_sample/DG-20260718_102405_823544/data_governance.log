@@ -1,0 +1,26 @@
+[2026-07-18 10:24:05] QLAdmin Data Governance run starting
+[2026-07-18 10:24:05] Run ID: DG-20260718_102405_823544
+[2026-07-18 10:24:05] Data region: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\sample_report_output\quiklist_sample
+[2026-07-18 10:24:05] Output base: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\sample_report_output\quiklist_sample
+[2026-07-18 10:24:05] Run folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\sample_report_output\quiklist_sample\DG-20260718_102405_823544
+[2026-07-18 10:24:05] Source DBF files will be opened read-only; source files are never modified
+[2026-07-18 10:24:05] Executing DG-QUIKLIST-001 — Group Number Must Be Unique
+[2026-07-18 10:24:05] Finished DG-QUIKLIST-001: status=FAIL passed=0 failed=2 errors=0
+[2026-07-18 10:24:05] Executing DG-QUIKLIST-002 — QuikList Company Code Must Exist in QuikComp
+[2026-07-18 10:24:05] Finished DG-QUIKLIST-002: status=FAIL passed=0 failed=2 errors=0
+[2026-07-18 10:24:05] Executing DG-QUIKLIST-003 — Group Billing Name Must Be Populated
+[2026-07-18 10:24:05] Finished DG-QUIKLIST-003: status=FAIL passed=1 failed=1 errors=0
+[2026-07-18 10:24:05] Executing DG-QUIKLIST-004 — Group Bill Sort Must Default to N
+[2026-07-18 10:24:05] Finished DG-QUIKLIST-004: status=FAIL passed=1 failed=1 errors=0
+[2026-07-18 10:24:05] Executing DG-QUIKLIST-005 — Life Lapse Days Must Default to Zero
+[2026-07-18 10:24:05] Finished DG-QUIKLIST-005: status=FAIL passed=1 failed=1 errors=0
+[2026-07-18 10:24:05] Executing DG-QUIKLIST-006 — Health and Accident Lapse Days Must Default to Zero
+[2026-07-18 10:24:05] Finished DG-QUIKLIST-006: status=FAIL passed=1 failed=1 errors=0
+[2026-07-18 10:24:05] Executing DG-QUIKLIST-007 — Group Status Must Default to Active
+[2026-07-18 10:24:05] Finished DG-QUIKLIST-007: status=FAIL passed=1 failed=1 errors=0
+[2026-07-18 10:24:05] Executing DG-QUIKLIST-008 — Group Bill Day Must Default to Zero
+[2026-07-18 10:24:05] Finished DG-QUIKLIST-008: status=FAIL passed=1 failed=1 errors=0
+[2026-07-18 10:24:05] Executing DG-QUIKLIST-009 — Group Bill Mode Must Default to Zero
+[2026-07-18 10:24:05] Finished DG-QUIKLIST-009: status=FAIL passed=1 failed=1 errors=0
+[2026-07-18 10:24:05] Overall status: FAIL
+[2026-07-18 10:24:05] Source files modified: No

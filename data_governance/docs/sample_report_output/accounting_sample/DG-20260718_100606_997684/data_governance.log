@@ -1,0 +1,12 @@
+[2026-07-18 10:06:06] QLAdmin Data Governance run starting
+[2026-07-18 10:06:06] Run ID: DG-20260718_100606_997684
+[2026-07-18 10:06:06] Data region: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\sample_report_output
+[2026-07-18 10:06:06] Output base: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\sample_report_output\accounting_sample
+[2026-07-18 10:06:06] Run folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\sample_report_output\accounting_sample\DG-20260718_100606_997684
+[2026-07-18 10:06:06] Source DBF files will be opened read-only; source files are never modified
+[2026-07-18 10:06:07] Executing DG-QUIKACTG-001 — Company and Account Number Combination Must Be Unique
+[2026-07-18 10:06:07] Finished DG-QUIKACTG-001: status=FAIL passed=2 failed=2 errors=0
+[2026-07-18 10:06:07] Executing DG-QUIKACTG-002 — QuikActg Company Code Must Exist in QuikComp
+[2026-07-18 10:06:07] Finished DG-QUIKACTG-002: status=FAIL passed=3 failed=1 errors=0
+[2026-07-18 10:06:07] Overall status: FAIL
+[2026-07-18 10:06:07] Source files modified: No

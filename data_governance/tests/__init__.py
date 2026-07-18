@@ -1,1 +1,1 @@
-# Placeholder so pytest discovers the package
+# Tests for QLAdmin Data Governance
