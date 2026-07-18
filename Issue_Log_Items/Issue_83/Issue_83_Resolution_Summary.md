@@ -153,9 +153,9 @@ None.
 
 | Item | Value |
 |------|-------|
-| Commit | *(recorded after commit)* |
+| Commit | `0637bf05b7077e5517da600653794064847e708c` |
 | Branch | `issue-34-pr7-quikisrr` |
-| Message | `Close Issue #83: fleet gender companion rate keys (v58.02)` |
+| Remote | *(not pushed — run `git push -u origin HEAD` for network rollout)* |
 
 **Network note:** `QLA_Migration/Output/` is gitignored. After pull:
 
@@ -186,4 +186,5 @@ Then load `Output/Test_Validation/` for partial UAT.
 - [x] Validation PASS
 - [x] Regression PASS
 - [x] Closure — Resolution summary published
+- [x] Git commit (G7) — `0637bf05b7077e5517da600653794064847e708c`
 - [ ] Git push (pending explicit user request)
