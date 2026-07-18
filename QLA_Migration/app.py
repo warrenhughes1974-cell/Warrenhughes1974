@@ -1,10 +1,16 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.05
+# Version:     v58.09
 # Date:        2026-07-18
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v58.05 — UI: Governance Data Folder picker (CSV or DBF region) for on-demand
+# Change Note: v58.09 — UI theme: QuikForge red/white brand palette (QLAdmin-aligned accents).
+#              v58.08 — UI brand: QuikForge — "Forge. Validate. Deliver." (source-agnostic).
+#              v58.07 — DG-R-003: emit quikdate.csv on batch with prior-month-end PAC/DIR/REIN
+#              bill dates + ACH defaults (shared prior_month_end from data_governance).
+#              v58.06 — UI: web-style Operator Console (all run actions + KPI tiles); remove
+#              redundant bottom Run Controls; Single Table + Rate Tables promoted to dashboard.
+#              v58.05 — UI: Governance Data Folder picker (CSV or DBF region) for on-demand
 #              QLAdmin Data Governance; post-batch still audits Output.
 #              v58.04 — Replace legacy data_governance audit with QLAdmin Data Governance
 #              framework (DG-QUIKCOMP-001/002/003); outputs under Reports/data_governance/.
@@ -207,6 +213,7 @@ from qla_core.reinsurance_converter import convert_reinsurance_phase1, load_deri
 from qla_core import rate_emit as RE
 from qla_core.quikmemo_converter import convert_quikmemo_from_pnote_pense
 from qla_core.quikmemo_dbf_generator import write_quikmemo_dbf
+from qla_core.quikdate_converter import emit_quikdate_csv
 from qla_core.modal_premium_factors import (
     apply_modal_factors_to_quikplan as apply_issue21j_modal_factors,
     apply_modal_policy_fees_to_quikridr,
@@ -418,28 +425,41 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.05"
+APP_VERSION = "v58.09"
+APP_BRAND = "QuikForge"
+APP_TAGLINE = "Forge. Validate. Deliver."
 
 
 class QLAdminEnterpriseIntegrationSuite:
     def __init__(self, root):
         self.root = root
-        self.root.title(f"QLAdmin Enterprise Data Integration Suite {APP_VERSION}")
-        self.root.geometry("1100x1180")
-        
-        self.bg_main = "#F1F5F9"
+        self.root.title(f"{APP_BRAND} — {APP_TAGLINE}  {APP_VERSION}")
+        self.root.geometry("1200x980")
+        self.root.minsize(1080, 820)
+
+        # QuikForge / QLAdmin-aligned red + white theme
+        self.bg_main = "#F5F5F5"
         self.bg_card = "#FFFFFF"
-        self.ui_strip_bg = "#E2E8F0"
-        self.ui_strip_border = "#CBD5E1"
-        self.ui_status_ok = "#059669"
+        self.bg_nav = "#B91C1C"
+        self.bg_nav_muted = "#FECACA"
+        self.brand_red = "#B91C1C"
+        self.brand_red_dark = "#7F1D1D"
+        self.brand_red_deep = "#450A0A"
+        self.ui_strip_bg = "#FFF8F8"
+        self.ui_strip_border = "#E5E7EB"
+        self.ui_status_ok = "#15803D"
         self.ui_status_warn = "#D97706"
-        self.ui_status_err = "#DC2626"
-        self.ui_status_muted = "#64748B"
-        self.accent = "#0F172A"
-        self.btn_action = "#2563EB"
-        self.btn_batch = "#059669"
-        self.btn_backup = "#6366F1"
-        self.text_color = "#334155"
+        self.ui_status_err = "#B91C1C"
+        self.ui_status_muted = "#6B7280"
+        self.accent = "#7F1D1D"
+        self.btn_action = "#DC2626"
+        self.btn_batch = "#B91C1C"
+        self.btn_backup = "#991B1B"
+        self.btn_product = "#9F1239"
+        self.btn_rates = "#7F1D1D"
+        self.btn_gov = "#450A0A"
+        self.btn_secondary = "#6B7280"
+        self.text_color = "#374151"
         self.root.configure(bg=self.bg_main)
 
         self.TABLE_SCHEMAS = {
@@ -479,15 +499,15 @@ class QLAdminEnterpriseIntegrationSuite:
         self.setup_ui()
 
     def setup_ui(self):
-        header = tk.Frame(self.root, bg=self.bg_main)
-        header.pack(fill="x", pady=(15, 10))
-        tk.Label(header, text=f"ENTERPRISE DATA INTEGRATION SUITE {APP_VERSION}", font=("Segoe UI", 20, "bold"), bg=self.bg_main, fg=self.accent).pack()
-        tk.Label(header, text="LifePRO → QLAdmin Conversion Platform", font=("Segoe UI", 11), bg=self.bg_main, fg=self.text_color).pack()
-
+        self._setup_top_nav()
         self._setup_uat_status_banner()
 
-        card = tk.LabelFrame(self.root, text=" System Configuration ", bg=self.bg_card, fg=self.accent, padx=20, pady=15, font=("Segoe UI", 10, "bold"))
-        card.pack(padx=30, fill="x", pady=5)
+        card = tk.LabelFrame(
+            self.root, text=" System Configuration ", bg=self.bg_card, fg=self.accent,
+            padx=20, pady=14, font=("Segoe UI", 10, "bold"),
+            highlightbackground=self.ui_strip_border, highlightthickness=1, bd=0, labelanchor="nw",
+        )
+        card.pack(padx=24, fill="x", pady=(0, 8))
 
         base_dir = self._repo_root()
         parent_dir = os.path.dirname(os.path.abspath(__file__))
@@ -553,63 +573,90 @@ class QLAdminEnterpriseIntegrationSuite:
             var, mode, label_text = settings
             disp = tk.StringVar(value=self._ui_short_path(var.get()))
             self.path_display_vars[key] = disp
-            tk.Label(card, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(row=i, column=0, sticky="w", pady=4)
-            entry = tk.Entry(card, textvariable=disp, width=72, bg="#F8FAFC", fg=self.accent, borderwidth=1, relief="solid")
-            entry.grid(row=i, column=1, padx=15, sticky="ew")
+            tk.Label(card, text=label_text, bg=self.bg_card, fg=self.text_color, font=("Segoe UI", 9, "bold")).grid(row=i, column=0, sticky="w", pady=3)
+            entry = tk.Entry(card, textvariable=disp, width=72, bg=self.ui_strip_bg, fg=self.accent, borderwidth=1, relief="solid")
+            entry.grid(row=i, column=1, padx=12, sticky="ew")
             self._path_entries[key] = entry
             self._ui_attach_tooltip(entry, lambda k=key: self.path_vars[k][0].get())
-            tk.Button(card, text="Browse", width=10, command=lambda v=var, m=mode, k=key: self.browse(v, m, k)).grid(row=i, column=2)
+            self._ui_action_button(
+                card, "Browse", self.btn_secondary, lambda v=var, m=mode, k=key: self.browse(v, m, k),
+                width=10, pady=4,
+            ).grid(row=i, column=2)
         card.grid_columnconfigure(1, weight=1)
 
-        controls = tk.Frame(self.root, bg=self.bg_main)
-        controls.pack(pady=10, fill="x", padx=30)
-        tk.Label(controls, text="Conversion Target:", bg=self.bg_main, fg=self.text_color, font=("Segoe UI", 9, "bold")).pack(side="left", padx=(0, 6))
+        context = tk.Frame(
+            self.root, bg=self.bg_card, padx=16, pady=10,
+            highlightbackground=self.ui_strip_border, highlightthickness=1,
+        )
+        context.pack(padx=24, fill="x", pady=(0, 8))
+        tk.Label(
+            context, text="Conversion Target", bg=self.bg_card, fg=self.ui_status_muted,
+            font=("Segoe UI", 8, "bold"),
+        ).pack(side="left", padx=(0, 8))
         self.table_var = tk.StringVar()
-        self.table_dropdown = ttk.Combobox(controls, textvariable=self.table_var, values=[k for k in self.TABLE_SCHEMAS.keys() if k.startswith("quik")], width=45, state="readonly")
-        self.table_dropdown.pack(side="left", padx=6)
+        self.table_dropdown = ttk.Combobox(
+            context, textvariable=self.table_var,
+            values=[k for k in self.TABLE_SCHEMAS.keys() if k.startswith("quik")],
+            width=42, state="readonly",
+        )
+        self.table_dropdown.pack(side="left", padx=(0, 12))
         self.table_dropdown.bind("<<ComboboxSelected>>", self.on_table_select)
-        tk.Button(controls, text="FULL PROJECT BACKUP", bg=self.btn_backup, fg="white", width=24, command=self.create_snapshot).pack(side="right", padx=10)
+        tk.Label(
+            context, text="Used by Single Table Conversion", bg=self.bg_card,
+            fg=self.ui_status_muted, font=("Segoe UI", 8),
+        ).pack(side="left")
+        self._ui_action_button(
+            context, "FULL PROJECT BACKUP", self.btn_backup, self.create_snapshot, width=22,
+        ).pack(side="right")
 
-        self.lbl_timer = tk.Label(self.root, text="Elapsed: 00:00:00", bg=self.bg_main, fg=self.accent, font=("Consolas", 10, "bold"))
-        self.lbl_timer.pack()
-        self.progress = ttk.Progressbar(self.root, orient="horizontal", length=1040, mode="determinate")
-        self.progress.pack(pady=(10, 2))
+        progress_card = tk.Frame(
+            self.root, bg=self.bg_card, padx=16, pady=12,
+            highlightbackground=self.ui_strip_border, highlightthickness=1,
+        )
+        progress_card.pack(padx=24, fill="x", pady=(0, 8))
+        progress_header = tk.Frame(progress_card, bg=self.bg_card)
+        progress_header.pack(fill="x")
+        tk.Label(
+            progress_header, text="Run Progress", bg=self.bg_card, fg=self.accent,
+            font=("Segoe UI", 10, "bold"),
+        ).pack(side="left")
+        self.lbl_timer = tk.Label(
+            progress_header, text="Elapsed: 00:00:00", bg=self.bg_card, fg=self.accent,
+            font=("Consolas", 10, "bold"),
+        )
+        self.lbl_timer.pack(side="right")
+        self.progress = ttk.Progressbar(progress_card, orient="horizontal", mode="determinate")
+        self.progress.pack(fill="x", pady=(8, 6))
         self.stage_color_idle = self.text_color
-        self.stage_color_success = self.btn_batch
-        self.stage_color_error = "#DC2626"
-        self.lbl_stage = tk.Label(self.root, text="Stage 0 — Ready", bg=self.bg_main, fg=self.stage_color_idle, font=("Segoe UI", 10, "bold"))
-        self.lbl_stage.pack(pady=(0, 0))
-        self.lbl_stage_detail = tk.Label(self.root, text="", bg=self.bg_main, fg=self.text_color, font=("Segoe UI", 9))
-        self.lbl_stage_detail.pack(pady=(0, 8))
+        self.stage_color_success = self.ui_status_ok
+        self.stage_color_error = self.ui_status_err
+        self.lbl_stage = tk.Label(
+            progress_card, text="Stage 0 — Ready", bg=self.bg_card, fg=self.stage_color_idle,
+            font=("Segoe UI", 10, "bold"), anchor="w",
+        )
+        self.lbl_stage.pack(fill="x")
+        self.lbl_stage_detail = tk.Label(
+            progress_card, text="", bg=self.bg_card, fg=self.text_color,
+            font=("Segoe UI", 9), anchor="w",
+        )
+        self.lbl_stage_detail.pack(fill="x", pady=(0, 2))
         self._progress_plan = None
         self._run_start_time = None
-
-        run_controls = tk.LabelFrame(self.root, text=" Run Controls ", bg=self.bg_main, fg=self.accent, font=("Segoe UI", 10, "bold"), padx=12, pady=10)
-        run_controls.pack(padx=30, fill="x", pady=(0, 6))
-        btn_frame = tk.Frame(run_controls, bg=self.bg_main)
-        btn_frame.pack(fill="x")
-        btn_specs = [
-            ("RUN PRODUCT SETUP CONVERSION", "#7C3AED", self.start_product_setup_from_ui),
-            ("RUN SINGLE TABLE CONVERSION", self.btn_action, lambda: self.start_thread(False)),
-            ("EXECUTE FULL BATCH MIGRATION", self.btn_batch, lambda: self.start_thread(True)),
-            ("GENERATE RATE TABLES", "#0D9488", self.start_rate_loader_thread),
-            ("RUN DATA GOVERNANCE AUDIT", "#1D4ED8", self.start_governance_audit_thread),
-        ]
-        for idx, (label, color, cmd) in enumerate(btn_specs):
-            row, col = divmod(idx, 3)
-            tk.Button(
-                btn_frame, text=label, bg=color, fg="white", width=30, height=2,
-                font=("Segoe UI", 9, "bold"), command=cmd,
-            ).grid(row=row, column=col, padx=8, pady=4, sticky="ew")
-            btn_frame.grid_columnconfigure(col, weight=1)
 
         self._setup_product_setup_panel()
         self._setup_rate_loader_panel()
         self._setup_diagnostics_panel()
 
-        log_frame = tk.LabelFrame(self.root, text=" Activity Log ", bg=self.bg_main, fg=self.accent, font=("Segoe UI", 10, "bold"), padx=8, pady=6)
-        log_frame.pack(padx=30, pady=(6, 10), fill="both", expand=True)
-        self.console = scrolledtext.ScrolledText(log_frame, height=14, bg="#F8FAFC", fg="#1E293B", font=("Consolas", 9))
+        log_frame = tk.LabelFrame(
+            self.root, text=" Activity Log ", bg=self.bg_card, fg=self.accent,
+            padx=8, pady=6, font=("Segoe UI", 10, "bold"),
+            highlightbackground=self.ui_strip_border, highlightthickness=1, bd=0, labelanchor="nw",
+        )
+        log_frame.pack(padx=24, pady=(0, 12), fill="both", expand=True)
+        self.console = scrolledtext.ScrolledText(
+            log_frame, height=12, bg=self.ui_strip_bg, fg="#1E293B",
+            font=("Consolas", 9), relief="flat", borderwidth=0,
+        )
         self.console.pack(fill="both", expand=True)
         self._refresh_governance_visibility()
         self._refresh_product_setup_visibility()
@@ -695,7 +742,7 @@ class QLAdminEnterpriseIntegrationSuite:
     def _ui_project_label(self):
         cfg = self.CLAIMS_ORCHESTRATION
         go_live = cfg.get("go_live_target", "2026-09-01")
-        return f"LifePRO → QLAdmin  |  ISWL UAT  |  Go-Live {go_live}"
+        return f"{APP_BRAND}  |  Enterprise Conversion  |  Go-Live {go_live}"
 
     def _ui_source_package_status(self):
         src = ""
@@ -2527,55 +2574,113 @@ class QLAdminEnterpriseIntegrationSuite:
         self._log_claims_uat_dbf_summary(dbf_result)
         return dbf_result
 
-    def _setup_uat_status_banner(self):
-        self.gov_banner_frame = tk.LabelFrame(
-            self.root, text=" Operator Dashboard ", bg=self.bg_card, fg=self.accent,
-            padx=16, pady=12, font=("Segoe UI", 10, "bold"),
+    def _ui_action_button(self, parent, text, color, command, width=16, pady=7):
+        """Flat web-style action button (tkinter approximation of a SaaS toolbar control)."""
+        return tk.Button(
+            parent,
+            text=text,
+            bg=color,
+            fg="white",
+            activebackground=color,
+            activeforeground="white",
+            disabledforeground="#CBD5E1",
+            relief="flat",
+            borderwidth=0,
+            padx=10,
+            pady=pady,
+            font=("Segoe UI", 9, "bold"),
+            cursor="hand2",
+            width=width,
+            command=command,
         )
-        self.gov_banner_frame.pack(fill="x", padx=30, pady=(0, 8))
+
+    def _ui_section_label(self, parent, text):
+        return tk.Label(
+            parent, text=text.upper(), bg=self.bg_card, fg=self.brand_red,
+            font=("Segoe UI", 8, "bold"), anchor="w",
+        )
+
+    def _ui_kpi_tile(self, parent, title, var, column):
+        shell = tk.Frame(
+            parent, bg=self.bg_card,
+            highlightbackground=self.ui_strip_border, highlightthickness=1,
+        )
+        shell.grid(row=0, column=column, sticky="nsew", padx=(0 if column == 0 else 8, 0))
+        parent.grid_columnconfigure(column, weight=1, uniform="kpi")
+        tk.Frame(shell, bg=self.brand_red, height=3).pack(fill="x")
+        tile = tk.Frame(shell, bg=self.ui_strip_bg, padx=12, pady=10)
+        tile.pack(fill="both", expand=True)
+        tk.Label(
+            tile, text=title.upper(), bg=self.ui_strip_bg, fg=self.brand_red,
+            font=("Segoe UI", 8, "bold"), anchor="w",
+        ).pack(fill="x")
+        value_lbl = tk.Label(
+            tile, textvariable=var, bg=self.ui_strip_bg, fg=self.brand_red_deep,
+            font=("Segoe UI", 10, "bold"), anchor="w", wraplength=220, justify="left",
+        )
+        value_lbl.pack(fill="x", pady=(6, 0))
+        return value_lbl
+
+    def _setup_top_nav(self):
+        nav = tk.Frame(self.root, bg=self.bg_nav, height=56)
+        nav.pack(fill="x")
+        nav.pack_propagate(False)
+        inner = tk.Frame(nav, bg=self.bg_nav)
+        inner.pack(fill="both", expand=True, padx=24, pady=10)
+        left = tk.Frame(inner, bg=self.bg_nav)
+        left.pack(side="left", fill="y")
+        tk.Label(
+            left, text=APP_BRAND, bg=self.bg_nav, fg="#FFFFFF",
+            font=("Segoe UI", 14, "bold"),
+        ).pack(side="left")
+        tk.Label(
+            left, text=f"  ·  {APP_TAGLINE}",
+            bg=self.bg_nav, fg="#FFFFFF", font=("Segoe UI", 10),
+        ).pack(side="left", padx=(4, 0))
+        right = tk.Frame(inner, bg=self.bg_nav)
+        right.pack(side="right")
+        tk.Label(
+            right, text=APP_VERSION, bg=self.bg_nav, fg="#FFFFFF",
+            font=("Segoe UI", 10, "bold"),
+        ).pack(side="right")
+        tk.Label(
+            right, text="Enterprise Conversion  ", bg=self.bg_nav, fg=self.bg_nav_muted,
+            font=("Segoe UI", 9),
+        ).pack(side="right")
+        tk.Frame(self.root, bg=self.brand_red_dark, height=3).pack(fill="x")
+
+    def _setup_uat_status_banner(self):
+        self.gov_banner_frame = tk.Frame(
+            self.root, bg=self.bg_card, padx=18, pady=14,
+            highlightbackground=self.ui_strip_border, highlightthickness=1,
+        )
+        self.gov_banner_frame.pack(fill="x", padx=24, pady=(14, 8))
 
         title_row = tk.Frame(self.gov_banner_frame, bg=self.bg_card)
         title_row.pack(fill="x")
         tk.Label(
-            title_row, text="QLAdmin Enterprise Data Integration Suite",
-            bg=self.bg_card, fg=self.accent, font=("Segoe UI", 11, "bold"), anchor="w",
+            title_row, text="Operator Console",
+            bg=self.bg_card, fg=self.brand_red, font=("Segoe UI", 12, "bold"), anchor="w",
         ).pack(side="left")
-        tk.Label(
-            title_row, text=APP_VERSION, bg=self.bg_card, fg=self.ui_status_muted,
-            font=("Segoe UI", 10), anchor="e",
-        ).pack(side="right")
-
         self.dash_project_var = tk.StringVar(value=self._ui_project_label())
         tk.Label(
-            self.gov_banner_frame, textvariable=self.dash_project_var, bg=self.bg_card,
-            fg=self.text_color, font=("Segoe UI", 9), anchor="w",
-        ).pack(fill="x", pady=(2, 8))
+            title_row, textvariable=self.dash_project_var, bg=self.bg_card,
+            fg=self.ui_status_muted, font=("Segoe UI", 9), anchor="e",
+        ).pack(side="right")
 
-        kpi = tk.Frame(self.gov_banner_frame, bg="#F8FAFC", padx=12, pady=10,
-                       highlightbackground=self.ui_strip_border, highlightthickness=1)
-        kpi.pack(fill="x")
-        self.dash_source_var = tk.StringVar(value="Source: —")
-        self.dash_output_var = tk.StringVar(value="Output: —")
-        self.dash_validation_var = tk.StringVar(value="Governance: —")
+        kpi = tk.Frame(self.gov_banner_frame, bg=self.bg_card)
+        kpi.pack(fill="x", pady=(12, 0))
+        self.dash_source_var = tk.StringVar(value="—")
+        self.dash_output_var = tk.StringVar(value="—")
+        self.dash_validation_var = tk.StringVar(value="—")
         self.dash_run_state_var = tk.StringVar(value="Ready")
-        kpi_fields = [
-            ("Source Package", self.dash_source_var),
-            ("Output Readiness", self.dash_output_var),
-            ("Governance Status", self.dash_validation_var),
-            ("Run State", self.dash_run_state_var),
-        ]
-        for idx, (label_text, var) in enumerate(kpi_fields):
-            row, col = divmod(idx, 2)
-            tk.Label(kpi, text=f"{label_text}:", bg="#F8FAFC", fg=self.ui_status_muted,
-                     font=("Segoe UI", 9)).grid(row=row, column=col * 2, sticky="w", padx=(0, 6), pady=2)
-            value_lbl = tk.Label(kpi, textvariable=var, bg="#F8FAFC", fg=self.accent,
-                                 font=("Segoe UI", 9, "bold"), anchor="w")
-            value_lbl.grid(row=row, column=col * 2 + 1, sticky="w", padx=(0, 24), pady=2)
-            if label_text == "Run State":
-                self.dash_run_state_badge = value_lbl
+        self._ui_kpi_tile(kpi, "Source Package", self.dash_source_var, 0)
+        self._ui_kpi_tile(kpi, "Output Readiness", self.dash_output_var, 1)
+        self._ui_kpi_tile(kpi, "Governance Status", self.dash_validation_var, 2)
+        self.dash_run_state_badge = self._ui_kpi_tile(kpi, "Run State", self.dash_run_state_var, 3)
 
         meta = tk.Frame(self.gov_banner_frame, bg=self.bg_card)
-        meta.pack(fill="x", pady=(8, 0))
+        meta.pack(fill="x", pady=(10, 0))
         self.dash_last_run_var = tk.StringVar(value="—")
         self.dash_last_validation_var = tk.StringVar(value="—")
         self.env_status_var = tk.StringVar(value=f"Environment: {self.RUN_MODE}")
@@ -2586,44 +2691,53 @@ class QLAdminEnterpriseIntegrationSuite:
             self.dash_last_run_var, self.dash_last_validation_var,
             self.env_status_var, self.readiness_status_var,
         )):
-            prefix = ("Last Run:", "Last Governance:", "", "")[idx]
+            prefix = ("Last Run", "Last Governance", "", "")[idx]
             if prefix:
-                tk.Label(meta, text=prefix, bg=self.bg_card, fg=self.ui_status_muted,
-                         font=("Segoe UI", 8)).grid(row=0, column=idx * 2, sticky="w", padx=(0, 4))
-                tk.Label(meta, textvariable=var, bg=self.bg_card, fg=self.accent,
-                         font=("Segoe UI", 8, "bold")).grid(row=0, column=idx * 2 + 1, sticky="w", padx=(0, 16))
+                tk.Label(
+                    meta, text=f"{prefix}:", bg=self.bg_card, fg=self.ui_status_muted,
+                    font=("Segoe UI", 8),
+                ).grid(row=0, column=idx * 2, sticky="w", padx=(0, 4))
+                tk.Label(
+                    meta, textvariable=var, bg=self.bg_card, fg=self.accent,
+                    font=("Segoe UI", 8, "bold"),
+                ).grid(row=0, column=idx * 2 + 1, sticky="w", padx=(0, 18))
             else:
-                tk.Label(meta, textvariable=var, bg=self.bg_card, fg=self.text_color,
-                         font=("Segoe UI", 8)).grid(row=0, column=idx * 2, sticky="w", padx=(0, 16))
+                tk.Label(
+                    meta, textvariable=var, bg=self.bg_card, fg=self.text_color,
+                    font=("Segoe UI", 8),
+                ).grid(row=0, column=idx * 2, sticky="w", padx=(0, 18))
 
-        actions = tk.Frame(self.gov_banner_frame, bg=self.bg_card)
-        actions.pack(fill="x", pady=(10, 0))
-        tk.Button(
-            actions, text="RUN PRODUCT SETUP", bg="#7C3AED", fg="white", width=18, height=1,
-            font=("Segoe UI", 9, "bold"), command=self.start_product_setup_from_ui,
+        divider = tk.Frame(self.gov_banner_frame, bg=self.brand_red, height=2)
+        divider.pack(fill="x", pady=(12, 10))
+
+        self._ui_section_label(self.gov_banner_frame, "Operations").pack(fill="x")
+        ops = tk.Frame(self.gov_banner_frame, bg=self.bg_card)
+        ops.pack(fill="x", pady=(6, 0))
+        primary_actions = [
+            ("Product Setup", self.btn_product, self.start_product_setup_from_ui),
+            ("Full Batch", self.btn_batch, lambda: self.start_thread(True)),
+            ("Single Table", self.btn_action, lambda: self.start_thread(False)),
+            ("Rate Tables", self.btn_rates, self.start_rate_loader_thread),
+            ("Governance Audit", self.btn_gov, self.start_governance_audit_thread),
+        ]
+        for text, color, cmd in primary_actions:
+            self._ui_action_button(ops, text, color, cmd, width=16).pack(side="left", padx=(0, 8))
+
+        self._ui_section_label(self.gov_banner_frame, "Workspace").pack(fill="x", pady=(12, 0))
+        workspace = tk.Frame(self.gov_banner_frame, bg=self.bg_card)
+        workspace.pack(fill="x", pady=(6, 0))
+        self._ui_action_button(
+            workspace, "Open Output", self.btn_action, self._ui_open_output_folder, width=14, pady=5,
         ).pack(side="left", padx=(0, 8))
-        tk.Button(
-            actions, text="RUN FULL BATCH", bg=self.btn_batch, fg="white", width=18, height=1,
-            font=("Segoe UI", 9, "bold"), command=lambda: self.start_thread(True),
-        ).pack(side="left", padx=(0, 8))
-        tk.Button(
-            actions, text="GOVERNANCE AUDIT", bg="#1D4ED8", fg="white", width=18, height=1,
-            font=("Segoe UI", 9, "bold"), command=self.start_governance_audit_thread,
-        ).pack(side="left", padx=(0, 8))
-        tk.Button(
-            actions, text="OPEN OUTPUT", bg=self.btn_action, fg="white", width=16, height=1,
-            font=("Segoe UI", 9, "bold"), command=self._ui_open_output_folder,
-        ).pack(side="left", padx=(0, 8))
-        tk.Button(
-            actions, text="OPEN REPORTS", bg="#475569", fg="white", width=16, height=1,
-            font=("Segoe UI", 9, "bold"), command=self._ui_open_reports_folder,
-        ).pack(side="left", padx=(0, 8))
+        self._ui_action_button(
+            workspace, "Open Reports", self.btn_secondary, self._ui_open_reports_folder, width=14, pady=5,
+        ).pack(side="left")
 
         self.gov_alert_badge = tk.Label(
             self.gov_banner_frame, text="", bg=self.bg_card,
             fg=self.ui_status_muted, font=("Segoe UI", 8), anchor="w",
         )
-        self.gov_alert_badge.pack(fill="x", pady=(8, 0))
+        self.gov_alert_badge.pack(fill="x", pady=(10, 0))
 
     def _setup_diagnostics_panel(self):
         panel = tk.LabelFrame(
@@ -2634,8 +2748,9 @@ class QLAdminEnterpriseIntegrationSuite:
             padx=16,
             pady=8,
             font=("Segoe UI", 10, "bold"),
+            highlightbackground=self.ui_strip_border, highlightthickness=1, bd=0, labelanchor="nw",
         )
-        panel.pack(padx=30, fill="x", pady=(0, 6))
+        panel.pack(padx=24, fill="x", pady=(0, 8))
 
         header = tk.Frame(panel, bg=self.bg_card)
         header.pack(fill="x")
@@ -2890,8 +3005,9 @@ class QLAdminEnterpriseIntegrationSuite:
             padx=16,
             pady=10,
             font=("Segoe UI", 10, "bold"),
+            highlightbackground=self.ui_strip_border, highlightthickness=1, bd=0, labelanchor="nw",
         )
-        panel.pack(padx=30, fill="x", pady=(0, 6))
+        panel.pack(padx=24, fill="x", pady=(0, 8))
 
         summary = tk.Frame(panel, bg="#F8FAFC", padx=12, pady=10, highlightbackground="#E2E8F0", highlightthickness=1)
         summary.pack(fill="x")
@@ -2944,7 +3060,7 @@ class QLAdminEnterpriseIntegrationSuite:
         actions.pack(fill="x", pady=(8, 0))
         tk.Label(
             actions,
-            text="Use RUN PRODUCT SETUP CONVERSION in Run Controls (or Operator Dashboard) to convert quikplan.",
+            text="Use Product Setup in the Operator Console to convert quikplan.",
             bg=self.bg_card, fg=self.ui_status_muted, font=("Segoe UI", 8),
         ).pack(side="left")
 
@@ -3196,8 +3312,9 @@ class QLAdminEnterpriseIntegrationSuite:
             padx=16,
             pady=10,
             font=("Segoe UI", 10, "bold"),
+            highlightbackground=self.ui_strip_border, highlightthickness=1, bd=0, labelanchor="nw",
         )
-        panel.pack(padx=30, fill="x", pady=(0, 6))
+        panel.pack(padx=24, fill="x", pady=(0, 8))
 
         summary = tk.Frame(panel, bg="#F8FAFC", padx=12, pady=10, highlightbackground="#E2E8F0", highlightthickness=1)
         summary.pack(fill="x")
@@ -5652,7 +5769,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.console.delete(1.0, tk.END)
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
-            self.log(f"Initializing Migration Engine {APP_VERSION} (LifePRO → QLAdmin Conversion Platform)...")
+            self.log(f"Initializing {APP_BRAND} {APP_VERSION} — {APP_TAGLINE}")
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -7855,6 +7972,20 @@ class QLAdminEnterpriseIntegrationSuite:
                         self.log("Issue #21G: skipped — PPBEN/PPBENTYP extracts not found for staging report")
                 except Exception as e:
                     self.log(f"Warning: Issue #21G premium/basis staging failed - {e}")
+            # ---------------------------------------------------------------------------------------
+
+            # --- DG-R-003: QuikDate governance defaults (prior-month-end bill dates + ACH) ---
+            if is_batch:
+                try:
+                    out_dir = self.path_vars["Out"][0].get()
+                    qd_info = emit_quikdate_csv(out_dir)
+                    self.log(
+                        f"Success: quikdate.csv - {qd_info.get('row_count', 1)} record "
+                        f"(PAC/DIR/REIN={qd_info.get('prior_month_end')}; "
+                        f"ACHFILEID={qd_info.get('ACHFILEID')}; ACHFILEID2={qd_info.get('ACHFILEID2')})."
+                    )
+                except Exception as e:
+                    self.log(f"Warning: QuikDate governance emit failed - {e}")
             # ---------------------------------------------------------------------------------------
 
             current_stage = "Running claims / payment outputs"

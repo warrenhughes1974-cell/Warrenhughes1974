@@ -1,4 +1,5 @@
-# LifePRO → QLAdmin Conversion — Operator Run Guide (v57.8)
+# QuikForge — Operator Run Guide  
+**Forge. Validate. Deliver.**
 
 Plain-language steps for running the conversion application from start to finish.
 
@@ -81,10 +82,9 @@ You can run Step 3 manually, or have Step 2 do it automatically (see checkbox be
 
 **Where (always visible — no scroll required):**
 
-- **Operator Dashboard** → purple **RUN PRODUCT SETUP**, or
-- **Run Controls** → purple **RUN PRODUCT SETUP CONVERSION**
+- **Operator Console** → purple **Product Setup**
 
-Options (Emit / Isolate / Block, etc.) remain in the **Product Setup** panel below Run Controls if you need to change them.
+Options (Emit / Isolate / Block, etc.) remain in the **Product Setup** panel below the console if you need to change them.
 
 **Before you click:**
 
@@ -92,7 +92,7 @@ Options (Emit / Isolate / Block, etc.) remain in the **Product Setup** panel bel
 2. Leave **Isolate from batch** checked — batch will use this file instead of rebuilding quikplan.
 3. Leave **Block emit on ERROR** checked for production-quality runs (stops bad data from being written).
 
-**Click:** **RUN PRODUCT SETUP** (dashboard) or **RUN PRODUCT SETUP CONVERSION** (Run Controls)
+**Click:** **Product Setup** (Operator Console)
 
 **Watch:**
 
@@ -121,7 +121,7 @@ Options (Emit / Isolate / Block, etc.) remain in the **Product Setup** panel bel
 
 **Purpose:** Convert the main LifePRO tables — clients, policies, riders, accounting, etc.
 
-**Where:** **Run Controls** section (near the progress bar)
+**Where:** **Operator Console** → green **Full Batch**
 
 **Before you click:**
 
@@ -131,7 +131,7 @@ Options (Emit / Isolate / Block, etc.) remain in the **Product Setup** panel bel
    - Check **Include in full batch migration**
    - Check **Emit append-ready CSV tables**
 
-**Click:** **EXECUTE FULL BATCH MIGRATION** (green button)
+**Click:** **Full Batch** (Operator Console)
 
 **What it does:**
 
@@ -166,7 +166,7 @@ Options (Emit / Isolate / Block, etc.) remain in the **Product Setup** panel bel
 
 **Skip this step if** you already ran batch with **Include in full batch migration** checked and rates succeeded.
 
-**Where:** **Rate Table Generation (Phase R5)** section, or **Run Controls** → **GENERATE RATE TABLES** (teal)
+**Where:** **Operator Console** → teal **Rate Tables**, or the button inside **Rate Table Generation**
 
 **Before you click:**
 
@@ -174,7 +174,7 @@ Options (Emit / Isolate / Block, etc.) remain in the **Product Setup** panel bel
 2. **Emit sandbox DBF tables** — only if you need DBF prototypes (optional)
 3. **Include in full batch migration** — only matters when running batch, not for this standalone button
 
-**Click:** **GENERATE RATE TABLES**
+**Click:** **Rate Tables**
 
 **Success looks like:**
 
@@ -192,12 +192,13 @@ Options (Emit / Isolate / Block, etc.) remain in the **Product Setup** panel bel
 
 ## Quick reference — which button when?
 
-| Button | When to use |
+| Button (Operator Console) | When to use |
 |--------|-------------|
-| **RUN PRODUCT SETUP CONVERSION** | First — creates `quikplan.csv` |
-| **EXECUTE FULL BATCH MIGRATION** | Second — all main policy/client/rider tables |
-| **GENERATE RATE TABLES** | Third — rate CSVs (unless included in batch) |
-| **RUN SINGLE TABLE CONVERSION** | Testing one table only — pick from dropdown first |
+| **Product Setup** | First — creates `quikplan.csv` |
+| **Full Batch** | Second — all main policy/client/rider tables |
+| **Rate Tables** | Third — rate CSVs (unless included in batch) |
+| **Single Table** | Testing one table only — pick Conversion Target first |
+| **Governance Audit** | On-demand data governance against Governance Data Folder |
 | **FULL PROJECT BACKUP** | Before a big run — creates a snapshot zip |
 
 ---
@@ -267,17 +268,17 @@ CHECK PATHS
 STEP 1 — PRODUCT SETUP
   [x] Emit to Output
   [x] Isolate from batch
-  Click: RUN PRODUCT SETUP CONVERSION
+  Click: Product Setup (Operator Console)
   Wait for: quikplan.csv in Output
 
 STEP 2 — FULL BATCH
-  Click: EXECUTE FULL BATCH MIGRATION
+  Click: Full Batch (Operator Console)
   Optional: [x] Include rate generation in batch
   Wait for: CSVs in Output
 
 STEP 3 — RATE TABLES (if not in batch)
   [x] Emit append-ready CSV tables
-  Click: GENERATE RATE TABLES
+  Click: Rate Tables (Operator Console)
   Wait for: CSVs in Output\rates\
 
 DONE
@@ -365,4 +366,4 @@ The checkboxes in the UI are usually enough.
 
 ---
 
-*Document version: v57.50 — LifePRO → QLAdmin Enterprise Data Integration Suite*
+*Document version: v58.09 — QuikForge · Forge. Validate. Deliver.*
