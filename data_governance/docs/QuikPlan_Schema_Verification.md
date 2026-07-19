@@ -11,7 +11,7 @@ Verified against CSO data region (`Q:\CSO\CSO_Test_6_30_2025`).
 | BASIS | BASIS | C(4) | Case-sensitive annuity codes |
 | LOANINTX | LOANINTX | C(1) | A or R |
 | DEPINT | DEPINT | N(6).2 | MYGA deposit interest |
-| LOAGE / HIAGE | LOAGE / HIAGE | N(2) / N(3) | Plan-level issue age range (Age 1 row) |
+| LOAGE / HIAGE | LOAGE / HIAGE | N(2) / N(3) | Plan-level issue age range (QLAdmin Issue Ages) |
 | RENEW | RENEW | C(1) | N default; Y allowed for plans starting with 5 |
 | PAYRS | **PAYYRS** | N(3) | Payment years |
 | PAYAGE | PAYAGE | N(3) | Payment age |
@@ -28,8 +28,8 @@ Verified against CSO data region (`Q:\CSO\CSO_Test_6_30_2025`).
 | BACTIVE | BACTIVE | L(1) | New-business status |
 | PLANVALOPT | PLANVALOPT | L(1) | Plan value option |
 | MLAPSE | MLAPSE | N(3) | Default 0 |
-| MNAICLOB | MNAICLOB | C(6) | Default N |
-| VARGP / VARDB | same | C(1) | Variable GP/DB flags |
+| MNAICLOB | MNAICLOB | C(6) | Default NAPLAN |
+| VARGP / VARDB | same | C(1) | Variable GP/DB flags (VARDB: 0=level/INITVAL, 1–3=varying tables, 4=not on file) |
 | PLANTYPE | PLANTYPE | C(3) | MEDS plan type |
 | HCOMMIP / HRIGPKEY | same | L(1) | MEDS commission / rating-key flags |
 
@@ -45,6 +45,6 @@ Verified against CSO data region (`Q:\CSO\CSO_Test_6_30_2025`).
 
 `BACTIVE`, `PLANVALOPT`, `HCOMMIP`, `HRIGPKEY` stored as DBF Logical — Python `True` / `False` / `None` via dbfread.
 
-## LOAGE Age 1
+## LOAGE / HIAGE (Issue Ages)
 
-QuikPlan stores one LOAGE/HIAGE pair per plan representing the plan-level minimum issue age (Age 1 row): LOAGE must be 0 and LOAGE < HIAGE.
+QuikPlan stores one LOAGE/HIAGE pair per plan (QLAdmin Issue Ages — lowest/highest age for which the plan may be issued). Governance rule DG-QUIKPLAN-008 requires readable numerics and LOAGE < HIAGE. LOAGE is **not** required to be 0 (DG-R-007).

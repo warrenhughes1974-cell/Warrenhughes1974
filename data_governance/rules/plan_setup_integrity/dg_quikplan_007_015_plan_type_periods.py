@@ -137,30 +137,10 @@ def run_dg_quikplan_008(store, *, run_id, run_timestamp):
                     status=STATUS_FAIL,
                     failure_category="UNREADABLE_VALUE",
                     original_value=f"{lo_disp}/{hi_disp}",
-                    expected_condition="Low age 0 with low age below high age",
+                    expected_condition="Readable low age below high age",
                 )
             )
             continue
-        failed = False
-        if lo_dec != 0:
-            result.findings.append(
-                make_plan_finding(
-                    rule=rule,
-                    run_id=run_id,
-                    run_timestamp=run_timestamp,
-                    data_region_path=store.data_dir,
-                    record_id=idx,
-                    plan=plan,
-                    plan_original=orig,
-                    source_field="LOAGE",
-                    message="The low age for the Age 1 row must be zero.",
-                    status=STATUS_FAIL,
-                    failure_category="LOAGE_NOT_ZERO",
-                    original_value=lo_disp,
-                    expected_condition="0",
-                )
-            )
-            failed = True
         if lo_dec >= hi_dec:
             result.findings.append(
                 make_plan_finding(
@@ -179,9 +159,8 @@ def run_dg_quikplan_008(store, *, run_id, run_timestamp):
                     expected_condition="Low age below high age",
                 )
             )
-            failed = True
-        if not failed:
-            result.passed_count += 1
+            continue
+        result.passed_count += 1
     return finalize_rule_result(result)
 
 

@@ -1,0 +1,57 @@
+{
+  "item": "DG-R-005",
+  "preflight": {
+    "timestamp_utc": "2026-07-19T00:13:42.198525+00:00",
+    "data_path": "Q:\\CSO\\CSO_Test_6_30_2026",
+    "quikplan_path": "Q:\\CSO\\CSO_Test_6_30_2026\\quikplan.dbf",
+    "row_count": 142,
+    "meds_count": 0,
+    "non_meds_count": 142,
+    "plantype_counts": {
+      "(blank)": 142
+    },
+    "hcommip_decoded": {
+      "None": 142
+    },
+    "hrigpkey_decoded": {
+      "None": 142
+    },
+    "hcommip_raw_bytes": {
+      " ": 1,
+      "?": 141
+    },
+    "hrigpkey_raw_bytes": {
+      " ": 1,
+      "?": 141
+    },
+    "field_names_has_targets": {
+      "HCOMMIP": true,
+      "HRIGPKEY": true,
+      "PLANTYPE": true
+    }
+  },
+  "backup_dir": "Q:\\CSO\\CSO_Test_6_30_2026_backup_DG-R-005_20260718",
+  "backed_up_files": [
+    "quikplan.dbf",
+    "QUIKPLAN.ntx"
+  ],
+  "apply": {
+    "path": "Q:\\CSO\\CSO_Test_6_30_2026\\quikplan.dbf",
+    "non_meds_set_false": 142,
+    "meds_set_true": 0
+  },
+  "post_verify": {
+    "row_count": 142,
+    "decode_false_false_non_meds": 142,
+    "bad_rows": [],
+    "bad_count": 0,
+    "hcommip_raw_bytes_after": {
+      "F": 142
+    },
+    "hrigpkey_raw_bytes_after": {
+      "F": 142
+    }
+  },
+  "wpa_writes": 0,
+  "rule_changed": false
+}

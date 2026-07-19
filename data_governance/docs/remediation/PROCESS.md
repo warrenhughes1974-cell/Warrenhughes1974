@@ -42,6 +42,7 @@ data_governance/docs/remediation/
   TRACKER.md
   PROMPT_TEMPLATE.md
   BASELINE_FINDINGS.md
+  CONVERSION_SYSTEM_DEFAULTS.md   # rulebook/emit defaults (prevent reintroduction)
   items/
     DG-R-00N_<slug>/
       01_examine.md
@@ -60,5 +61,6 @@ Do not start item N+1 until item N is `CLOSED` or `DEFERRED`.
 
 - Rule catalog: `data_governance/docs/RULE_CATALOG.md`
 - Business defaults: `QLA_Migration/Data_Goverence.txt`
+- Conversion system defaults: `CONVERSION_SYSTEM_DEFAULTS.md` (rulebook/emit — prefer preventing reintroduction over DBF-only patches)
 - Framework overview: `data_governance/README.md`
 - Enterprise edit rules: `AGENTS.md` (surgical changes only; governance rules themselves are not rewritten to silence findings)

@@ -70,8 +70,8 @@ MAX_ISSUE_AMT1,MAXUNIT,99,PCOMP,COVERAGE_ID,TO_UNITS
 DESCRIPTION,PLANNAME,,,,
 ,HRENEW,,,,
 ,HLOB,,,,
-,HCOMMIP,,,,
-,HRIGPKEY,,,,
+,HCOMMIP,F,,,DG-R-005 system default F unless source maps True/T/Y/1 (MEDS both True)
+,HRIGPKEY,F,,,DG-R-005 system default F unless source maps True/T/Y/1 (MEDS both True)
 ,SIMPLEINT,,,,
 ,MLAPSE,0,,,
 ,MNOTE10,,,,

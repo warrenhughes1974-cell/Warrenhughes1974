@@ -1,0 +1,126 @@
+{
+  "applied_at_utc": "2026-07-19T00:49:02.313093+00:00",
+  "data": "Q:\\CSO\\CSO_Test_6_30_2026",
+  "backup": "Q:\\CSO\\CSO_Test_6_30_2026_backup_DG-R-008_20260718",
+  "preflight": {
+    "QuikPlan": {
+      "rows": 142,
+      "blank": 1
+    },
+    "QuikPlGp": {
+      "rows": 282,
+      "blank": 1
+    },
+    "QuikPlDb": {
+      "rows": 210,
+      "blank": 1
+    },
+    "QuikPlCv": {
+      "rows": 230,
+      "blank": 1
+    },
+    "QuikPlTv": {
+      "rows": 280,
+      "blank": 1
+    },
+    "QuikPlDv": {
+      "rows": 210,
+      "blank": 1
+    },
+    "QuikPlGd": {
+      "rows": 211,
+      "blank": 1
+    },
+    "QuikPlUw": {
+      "rows": 185,
+      "blank": 1
+    },
+    "QuikPlBd": {
+      "rows": 127,
+      "blank": 1
+    }
+  },
+  "results": [
+    {
+      "table": "QuikPlan",
+      "before": 142,
+      "blank_before": 1,
+      "deleted": 1,
+      "after": 141,
+      "blank_after": 0,
+      "skipped": false
+    },
+    {
+      "table": "QuikPlGp",
+      "before": 282,
+      "blank_before": 1,
+      "deleted": 1,
+      "after": 281,
+      "blank_after": 0,
+      "skipped": false
+    },
+    {
+      "table": "QuikPlDb",
+      "before": 210,
+      "blank_before": 1,
+      "deleted": 1,
+      "after": 209,
+      "blank_after": 0,
+      "skipped": false
+    },
+    {
+      "table": "QuikPlCv",
+      "before": 230,
+      "blank_before": 1,
+      "deleted": 1,
+      "after": 229,
+      "blank_after": 0,
+      "skipped": false
+    },
+    {
+      "table": "QuikPlTv",
+      "before": 280,
+      "blank_before": 1,
+      "deleted": 1,
+      "after": 279,
+      "blank_after": 0,
+      "skipped": false
+    },
+    {
+      "table": "QuikPlDv",
+      "before": 210,
+      "blank_before": 1,
+      "deleted": 1,
+      "after": 209,
+      "blank_after": 0,
+      "skipped": false
+    },
+    {
+      "table": "QuikPlGd",
+      "before": 211,
+      "blank_before": 1,
+      "deleted": 1,
+      "after": 210,
+      "blank_after": 0,
+      "skipped": false
+    },
+    {
+      "table": "QuikPlUw",
+      "before": 185,
+      "blank_before": 1,
+      "deleted": 1,
+      "after": 184,
+      "blank_after": 0,
+      "skipped": false
+    },
+    {
+      "table": "QuikPlBd",
+      "before": 127,
+      "blank_before": 1,
+      "deleted": 1,
+      "after": 126,
+      "blank_after": 0,
+      "skipped": false
+    }
+  ]
+}

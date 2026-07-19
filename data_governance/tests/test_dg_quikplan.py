@@ -73,7 +73,7 @@ def _valid_plan(**overrides):
         "BACTIVE": True,
         "PLANVALOPT": False,
         "MLAPSE": 0,
-        "MNAICLOB": "N",
+        "MNAICLOB": "NAPLAN",
         "VARGP": "4",
         "VARDB": "4",
         "PLANTYPE": "",
@@ -214,10 +214,13 @@ def test_ages_renew_payment_insurance(tmp_path, monkeypatch):
     assert (
         _run(_base_tables(), tmp_path, rule_id="DG-QUIKPLAN-008").rule_results[0].status == STATUS_PASS
     )
-    bad_age = _base_tables(QuikPlan=[_valid_plan(LOAGE=1)])
-    assert _run(bad_age, tmp_path, rule_id="DG-QUIKPLAN-008").rule_results[0].status == STATUS_FAIL
+    # DG-R-007: non-zero LOAGE is valid when LOAGE < HIAGE (real min issue age)
+    nonzero_ok = _base_tables(QuikPlan=[_valid_plan(LOAGE=15, HIAGE=55)])
+    assert _run(nonzero_ok, tmp_path, rule_id="DG-QUIKPLAN-008").rule_results[0].status == STATUS_PASS
     eq_age = _base_tables(QuikPlan=[_valid_plan(LOAGE=0, HIAGE=0)])
     assert _run(eq_age, tmp_path, rule_id="DG-QUIKPLAN-008").rule_results[0].status == STATUS_FAIL
+    inverted = _base_tables(QuikPlan=[_valid_plan(LOAGE=55, HIAGE=15)])
+    assert _run(inverted, tmp_path, rule_id="DG-QUIKPLAN-008").rule_results[0].status == STATUS_FAIL
 
     five_plan = _base_tables(QuikPlan=[_valid_plan(PLAN="512345", RENEW="Y")])
     assert _run(five_plan, tmp_path, rule_id="DG-QUIKPLAN-009").rule_results[0].status == STATUS_PASS
@@ -286,12 +289,68 @@ def test_defaults_and_deficiency(tmp_path, monkeypatch):
     assert _run(skip, tmp_path, rule_id="DG-QUIKPLAN-020").rule_results[0].records_evaluated == 0
 
 
+def test_annuity_supporting_tables_aing_or_ainf(tmp_path, monkeypatch):
+    """DG-R-012 / DG-QUIKPLAN-028: QuikAing or QuikAinf satisfies the pair."""
+    _patch_run_id(monkeypatch)
+    base = {
+        "QuikPlan": [_valid_plan(PLAN="A12345")],
+        "QuikComm": [{"COMMID": "C001"}],
+        "QuikComp": [{"MCOMP": "A"}],
+        "QuikAint": [{"MPLAN": "A12345"}],
+        "QuikAexp": [{"MPLAN": "A12345"}],
+        "QuikAing": [],
+        "QuikAinf": [],
+    }
+    # Neither Aing nor Ainf → WARN
+    neither = _run(base, tmp_path, rule_id="DG-QUIKPLAN-028")
+    assert neither.rule_results[0].warn_count >= 1
+
+    # Aing only (empty Ainf) → no Aing/Ainf warning
+    aing_only = dict(base)
+    aing_only["QuikAing"] = [{"MPLAN": "A12345"}]
+    ok_aing = _run(aing_only, tmp_path, rule_id="DG-QUIKPLAN-028")
+    assert ok_aing.rule_results[0].status == STATUS_PASS
+    assert ok_aing.rule_results[0].warn_count == 0
+
+    # Ainf only (empty Aing) → same
+    ainf_only = dict(base)
+    ainf_only["QuikAinf"] = [{"MPLAN": "A12345"}]
+    ok_ainf = _run(ainf_only, tmp_path, rule_id="DG-QUIKPLAN-028")
+    assert ok_ainf.rule_results[0].status == STATUS_PASS
+    assert ok_ainf.rule_results[0].warn_count == 0
+
+
+def test_death_benefit_supporting_tables_vardb(tmp_path, monkeypatch):
+    """DG-R-010 / DG-QUIKPLAN-026: tables required only for VARDB 1/2/3."""
+    _patch_run_id(monkeypatch)
+    # Level (0) and not-on-file (4): no QuikDbs/QuikPlDb needed
+    for vd in ("0", "4"):
+        level = _base_tables(QuikPlan=[_valid_plan(VARDB=vd)])
+        r = _run(level, tmp_path, rule_id="DG-QUIKPLAN-026")
+        assert r.rule_results[0].status == STATUS_PASS
+        assert r.rule_results[0].records_evaluated == 0
+
+    # Varying with empty supporting tables → FAIL (plan not found)
+    missing = _base_tables(
+        QuikPlan=[_valid_plan(VARDB="1")],
+        QuikDbs=[],
+        QuikPlDb=[],
+    )
+    fail = _run(missing, tmp_path, rule_id="DG-QUIKPLAN-026")
+    assert fail.rule_results[0].status == STATUS_FAIL
+
+    # Varying with both tables → PASS
+    ok = _base_tables(
+        QuikPlan=[_valid_plan(VARDB="2")],
+        QuikDbs=[{"PLAN": "123456"}],
+        QuikPlDb=[{"PLAN": "123456"}],
+    )
+    assert _run(ok, tmp_path, rule_id="DG-QUIKPLAN-026").rule_results[0].status == STATUS_PASS
+
+
 def test_logical_meds_and_cross_tables(tmp_path, monkeypatch):
     _patch_run_id(monkeypatch)
-    closed = _base_tables(QuikPlan=[_valid_plan(BACTIVE=False, PLANVALOPT=False)])
-    assert _run(closed, tmp_path, rule_id="DG-QUIKPLAN-022").rule_results[0].status == STATUS_PASS
-    bad_closed = _base_tables(QuikPlan=[_valid_plan(BACTIVE=False, PLANVALOPT=True)])
-    assert _run(bad_closed, tmp_path, rule_id="DG-QUIKPLAN-022").rule_results[0].status == STATUS_FAIL
+    # DG-QUIKPLAN-022 retired (DG-R-006): PLANVALOPT not constrained by BACTIVE
 
     meds = _base_tables(QuikPlan=[_valid_plan(PLANTYPE="MEDS", HCOMMIP=True, HRIGPKEY=True)])
     assert _run(meds, tmp_path, rule_id="DG-QUIKPLAN-030").rule_results[0].status == STATUS_PASS

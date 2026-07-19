@@ -33,6 +33,7 @@ def _run_simple_reference(
     label: str,
     run_id: str,
     run_timestamp: str,
+    allow_blank: bool = False,
 ) -> RuleExecutionResult:
     result = RuleExecutionResult(
         governance_item_id=rule.governance_item_id,
@@ -43,7 +44,7 @@ def _run_simple_reference(
         status="PASS",
     )
     table_stats: dict[str, TableStats] = {}
-    valid_refs = missing = ambiguous = blank = null = 0
+    valid_refs = missing = ambiguous = blank = null = skipped_blank = 0
 
     # Always record per-source availability even when the reference table is missing
     for table, skip in iter_applicable_source_tables(store, required_field=required_field):
@@ -91,6 +92,12 @@ def _run_simple_reference(
             ctx = row_context(table, idx, row)
             raw = field_value(row, source_field)
             norm, orig, is_null = normalize_code(raw, uppercase=False)
+
+            # DG-R-011: MORT/ETIMORT blank/null are optional (populated-only reference check).
+            if allow_blank and (is_null or norm == ""):
+                skipped_blank += 1
+                continue
+
             stats.reviewed += 1
             result.records_evaluated += 1
 
@@ -207,11 +214,13 @@ def _run_simple_reference(
             "ambiguous_references": ambiguous,
             "blank_values": blank,
             "null_values": null,
+            "skipped_blank_or_null": skipped_blank,
         },
     )
 
 
 def run_dg_planvalues_001(store, *, run_id, run_timestamp):
+    # DG-R-011: blank/null MORT skipped; only populated codes must exist in QuikQxs.
     return _run_simple_reference(
         store,
         rule=RULE_DG_PLANVALUES_001,
@@ -222,10 +231,12 @@ def run_dg_planvalues_001(store, *, run_id, run_timestamp):
         label="mortality table",
         run_id=run_id,
         run_timestamp=run_timestamp,
+        allow_blank=True,
     )
 
 
 def run_dg_planvalues_002(store, *, run_id, run_timestamp):
+    # DG-R-011: blank/null ETIMORT skipped; only populated codes must exist in QuikQxs.
     return _run_simple_reference(
         store,
         rule=RULE_DG_PLANVALUES_002,
@@ -236,6 +247,7 @@ def run_dg_planvalues_002(store, *, run_id, run_timestamp):
         label="ETI mortality table",
         run_id=run_id,
         run_timestamp=run_timestamp,
+        allow_blank=True,
     )
 
 

@@ -11,6 +11,10 @@ from data_governance.catalog.governance_items import (
     RULE_DG_QUIKPLAN_030,
 )
 from data_governance.config.settings import (
+    TABLE_QUIKAEXP,
+    TABLE_QUIKAINF,
+    TABLE_QUIKAING,
+    TABLE_QUIKAINT,
     TABLE_QUIKDBS,
     TABLE_QUIKGPS,
     TABLE_QUIKPLAN,
@@ -35,7 +39,6 @@ from data_governance.rules.plan_setup_integrity.common import (
     traditional_plan,
 )
 from data_governance.rules.plan_setup_integrity.inventories import (
-    ANNUITY_SUPPORT_TABLES,
     TRADITIONAL_VALUE_TABLES,
 )
 from data_governance.rules.plan_setup_integrity.plan_classification import is_ul, load_plan_classification
@@ -65,8 +68,18 @@ def _require_quikplan(store, rule, *, run_id, run_timestamp):
 
 
 def _var_not_four(value) -> bool:
+    """True when flag is present and not 4 (legacy VARGP / pre-DG-R-010 VARDB gate)."""
     norm, _, is_null = normalize_character_casefold(value)
     return not is_null and norm != "4"
+
+
+def _var_is_varying_schedule(value) -> bool:
+    """True when VARDB is 1, 2, or 3 (varying death benefit — needs QuikDbs/QuikPlDb).
+
+    VARDB 0 = level (INITVAL); 4 = not on file. DG-R-010 / DG-QUIKPLAN-026.
+    """
+    norm, _, is_null = normalize_character_casefold(value)
+    return not is_null and norm in {"1", "2", "3"}
 
 
 def _paired_support_rule(
@@ -80,6 +93,7 @@ def _paired_support_rule(
     label_b: str,
     run_id,
     run_timestamp,
+    flag_predicate=_var_not_four,
 ):
     missing = _require_quikplan(store, rule, run_id=run_id, run_timestamp=run_timestamp)
     if missing:
@@ -87,7 +101,7 @@ def _paired_support_rule(
     applicable: list[tuple[int, dict, str, str]] = []
     for idx, row in iterate_quikplan_rows(store):
         plan, orig, _ = plan_from_row(row)
-        if not _var_not_four(field_value(row, flag_field)):
+        if not flag_predicate(field_value(row, flag_field)):
             continue
         applicable.append((idx, row, plan, orig))
     result = _base(rule)
@@ -158,6 +172,7 @@ def run_dg_quikplan_025(store, *, run_id, run_timestamp):
 
 
 def run_dg_quikplan_026(store, *, run_id, run_timestamp):
+    # DG-R-010: require tables only for varying schedules (VARDB 1/2/3), not level (0) or not-on-file (4).
     return _paired_support_rule(
         store,
         rule=RULE_DG_QUIKPLAN_026,
@@ -168,6 +183,7 @@ def run_dg_quikplan_026(store, *, run_id, run_timestamp):
         label_b="Death Benefit Plan Values",
         run_id=run_id,
         run_timestamp=run_timestamp,
+        flag_predicate=_var_is_varying_schedule,
     )
 
 
@@ -230,6 +246,7 @@ def run_dg_quikplan_027(store, *, run_id, run_timestamp):
 
 
 def run_dg_quikplan_028(store, *, run_id, run_timestamp):
+    """DG-R-012: require QuikAint + QuikAexp; QuikAing OR QuikAinf (not both)."""
     rule = RULE_DG_QUIKPLAN_028
     missing = _require_quikplan(store, rule, run_id=run_id, run_timestamp=run_timestamp)
     if missing:
@@ -243,8 +260,12 @@ def run_dg_quikplan_028(store, *, run_id, run_timestamp):
     if not applicable:
         return finalize_rule_result(result)
 
+    required = (
+        (TABLE_QUIKAINT, "Annuity Interest Setup"),
+        (TABLE_QUIKAEXP, "Annuity Expense Setup"),
+    )
     table_indexes: dict[str, object] = {}
-    for table, _label in ANNUITY_SUPPORT_TABLES:
+    for table, _label in required:
         loaded = store.get(table)
         if loaded is None:
             return missing_table_result(
@@ -255,8 +276,22 @@ def run_dg_quikplan_028(store, *, run_id, run_timestamp):
                 table_name=table,
             )
         table_indexes[table] = build_single_field_index(loaded.rows, "MPLAN")
+
+    aing = store.get(TABLE_QUIKAING)
+    ainf = store.get(TABLE_QUIKAINF)
+    if aing is None and ainf is None:
+        return missing_table_result(
+            rule=rule,
+            run_id=run_id,
+            run_timestamp=run_timestamp,
+            data_region_path=store.data_dir,
+            table_name=TABLE_QUIKAING,
+        )
+    index_aing = build_single_field_index(aing.rows if aing else [], "MPLAN")
+    index_ainf = build_single_field_index(ainf.rows if ainf else [], "MPLAN")
+
     for idx, row, plan in applicable:
-        for table, label in ANNUITY_SUPPORT_TABLES:
+        for table, label in required:
             result.records_evaluated += 1
             if table_indexes[table].exists(plan):
                 result.passed_count += 1
@@ -284,6 +319,37 @@ def run_dg_quikplan_028(store, *, run_id, run_timestamp):
                     actual_condition="Missing",
                 )
             )
+        # DG-R-012: Aing and Ainf are interchangeable (Data_Goverence.txt / WPA).
+        result.records_evaluated += 1
+        if index_aing.exists(plan) or index_ainf.exists(plan):
+            result.passed_count += 1
+            continue
+        result.findings.append(
+            make_finding(
+                run_id=run_id,
+                run_timestamp=run_timestamp,
+                governance_item_id=rule.governance_item_id,
+                rule_id=rule.rule_id,
+                rule_name=rule.technical_name,
+                business_name=rule.business_name,
+                description=rule.purpose,
+                severity=rule.severity,
+                status=STATUS_WARN,
+                source_table=TABLE_QUIKAING if aing is not None else TABLE_QUIKAINF,
+                source_field="MPLAN",
+                source_record_id=str(idx),
+                key_value=plan,
+                message=(
+                    f"Annuity plan {plan} does not have an Annuity Guarantee Setup "
+                    "(QuikAing) or Annuity Information Setup (QuikAinf) record."
+                ),
+                data_region_path=store.data_dir,
+                plan=plan,
+                failure_category="MISSING_ANNUITY_TABLE",
+                expected_condition="A QuikAing or QuikAinf record",
+                actual_condition="Missing",
+            )
+        )
     return finalize_rule_result(result)
 
 

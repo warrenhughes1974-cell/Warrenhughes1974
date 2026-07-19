@@ -1,4 +1,7 @@
-"""DG-QUIKPLAN-016 through 024 — defaults and related setup references."""
+"""DG-QUIKPLAN-016 through 024 — defaults and related setup references.
+
+DG-QUIKPLAN-022 retired 2026-07-18 (DG-R-006).
+"""
 
 from __future__ import annotations
 
@@ -9,7 +12,6 @@ from data_governance.catalog.governance_items import (
     RULE_DG_QUIKPLAN_019,
     RULE_DG_QUIKPLAN_020,
     RULE_DG_QUIKPLAN_021,
-    RULE_DG_QUIKPLAN_022,
     RULE_DG_QUIKPLAN_023,
     RULE_DG_QUIKPLAN_024,
 )
@@ -298,42 +300,6 @@ def run_dg_quikplan_021(store, *, run_id, run_timestamp):
     return finalize_rule_result(result)
 
 
-def run_dg_quikplan_022(store, *, run_id, run_timestamp):
-    rule = RULE_DG_QUIKPLAN_022
-    missing = _require_quikplan(store, rule, run_id=run_id, run_timestamp=run_timestamp)
-    if missing:
-        return missing
-    result = _base(rule)
-    for idx, row in iterate_quikplan_rows(store):
-        plan, orig, _ = plan_from_row(row)
-        bactive, _, _ = decode_logical(field_value(row, "BACTIVE"))
-        pval, _, _ = decode_logical(field_value(row, "PLANVALOPT"))
-        result.records_evaluated += 1
-        if bactive is False and pval is True:
-            result.findings.append(
-                make_plan_finding(
-                    rule=rule,
-                    run_id=run_id,
-                    run_timestamp=run_timestamp,
-                    data_region_path=store.data_dir,
-                    record_id=idx,
-                    plan=plan,
-                    plan_original=orig,
-                    source_field="PLANVALOPT",
-                    message=(
-                        "This plan is closed to new business, but the plan-value option "
-                        "is still enabled."
-                    ),
-                    status=STATUS_FAIL,
-                    failure_category="PLANVALOPT_WHEN_CLOSED",
-                    expected_condition="Plan-value option turned off when closed to new business",
-                )
-            )
-            continue
-        result.passed_count += 1
-    return finalize_rule_result(result)
-
-
 def run_dg_quikplan_023(store, *, run_id, run_timestamp):
     rule = RULE_DG_QUIKPLAN_023
     missing = _require_quikplan(store, rule, run_id=run_id, run_timestamp=run_timestamp)
@@ -377,7 +343,7 @@ def run_dg_quikplan_024(store, *, run_id, run_timestamp):
         plan, orig, _ = plan_from_row(row)
         norm, orig_val, is_null = normalize_character_casefold(field_value(row, "MNAICLOB"))
         result.records_evaluated += 1
-        if is_null or norm != "N":
+        if is_null or norm != "NAPLAN":
             result.findings.append(
                 make_plan_finding(
                     rule=rule,
@@ -388,12 +354,12 @@ def run_dg_quikplan_024(store, *, run_id, run_timestamp):
                     plan=plan,
                     plan_original=orig,
                     source_field="MNAICLOB",
-                    message="The NAIC line-of-business setting is not set to N.",
+                    message="The NAIC line-of-business setting is not set to NAPLAN.",
                     status=STATUS_FAIL,
                     failure_category="INVALID_DEFAULT",
                     original_value=orig_val,
                     normalized_value=norm or "",
-                    expected_condition="N",
+                    expected_condition="NAPLAN",
                 )
             )
             continue

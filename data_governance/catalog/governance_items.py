@@ -545,21 +545,19 @@ RULE_DG_PLANVALUES_001 = RuleDefinition(
     business_name="Mortality Table Must Exist in QuikQxs",
     purpose=(
         "Ensure every populated normalized MORT value on applicable plan-value tables "
-        "exists exactly once in QuikQxs."
+        "exists exactly once in QuikQxs. Blank and null MORT are skipped (DG-R-011)."
     ),
     source_tables=_PLANVALUE_SOURCES + ("QuikQxs",),
     source_fields=("MORT", "QuikQxs.MORT"),
     business_rule=(
         "Source field MORT C(2) on QuikPlCv and QuikPlTv (verified). After trim-only "
         "normalization preserving leading zeros, each nonblank MORT must match exactly "
-        "one QuikQxs.MORT. Null and blank fail. Other plan-value tables without MORT "
-        "are NOT_RUN for this rule. Does not confirm actuarial appropriateness."
+        "one QuikQxs.MORT. Null and blank are skipped (optional). Other plan-value tables "
+        "without MORT are NOT_RUN for this rule. Does not confirm actuarial appropriateness."
     ),
     severity="Critical",
     failure_conditions=(
-        "MORT is null.",
-        "MORT is blank.",
-        "MORT does not exist in QuikQxs.",
+        "MORT is populated and does not exist in QuikQxs.",
         "The matching QuikQxs.MORT key is duplicated.",
     ),
 )
@@ -570,19 +568,18 @@ RULE_DG_PLANVALUES_002 = RuleDefinition(
     technical_name="Validate Plan Value ETI Mortality Table Reference",
     business_name="ETI Mortality Table Must Exist in QuikQxs",
     purpose=(
-        "Ensure every populated normalized ETIMORT value exists exactly once in QuikQxs."
+        "Ensure every populated normalized ETIMORT value exists exactly once in QuikQxs. "
+        "Blank and null ETIMORT are skipped (DG-R-011)."
     ),
     source_tables=_PLANVALUE_SOURCES + ("QuikQxs",),
     source_fields=("ETIMORT", "QuikQxs.MORT"),
     business_rule=(
         "Source field ETIMORT C(2) on QuikPlCv only (verified). Same QuikQxs.MORT key "
-        "as MORT. Null and blank fail. Tables without ETIMORT are NOT_RUN."
+        "as MORT. Null and blank are skipped (optional). Tables without ETIMORT are NOT_RUN."
     ),
     severity="Critical",
     failure_conditions=(
-        "ETIMORT is null.",
-        "ETIMORT is blank.",
-        "ETIMORT does not exist in QuikQxs.",
+        "ETIMORT is populated and does not exist in QuikQxs.",
         "The matching QuikQxs.MORT key is duplicated.",
     ),
 )
@@ -758,7 +755,6 @@ from data_governance.catalog.governance_items_quikplan import (  # noqa: E402
     RULE_DG_QUIKPLAN_019,
     RULE_DG_QUIKPLAN_020,
     RULE_DG_QUIKPLAN_021,
-    RULE_DG_QUIKPLAN_022,
     RULE_DG_QUIKPLAN_023,
     RULE_DG_QUIKPLAN_024,
     RULE_DG_QUIKPLAN_025,

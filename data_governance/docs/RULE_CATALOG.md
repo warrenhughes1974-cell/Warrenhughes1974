@@ -413,7 +413,7 @@ Primary package: `data_governance`
 
 | Field | Value |
 |-------|--------|
-| Purpose | Populated MORT exists exactly once in QuikQxs |
+| Purpose | Populated MORT exists exactly once in QuikQxs; blank/null skipped (DG-R-011) |
 | Source field | MORT |
 | Reference | QuikQxs.MORT |
 | Severity | Critical |
@@ -424,7 +424,7 @@ Primary package: `data_governance`
 
 | Field | Value |
 |-------|--------|
-| Purpose | Populated ETIMORT exists exactly once in QuikQxs |
+| Purpose | Populated ETIMORT exists exactly once in QuikQxs; blank/null skipped (DG-R-011) |
 | Source field | ETIMORT (QuikPlCv) |
 | Reference | QuikQxs.MORT |
 | Severity | Critical |
@@ -499,17 +499,19 @@ Primary package: `data_governance`
 
 ## Item 7 — Plan Setup (`DG-QUIKPLAN`)
 
-Rules `DG-QUIKPLAN-001` … `033` validate QuikPlan configuration, related setup references, supporting rate/value tables, and conversion date warnings.
+Rules `DG-QUIKPLAN-001` … `033` validate QuikPlan configuration, related setup references, supporting rate/value tables, and conversion date warnings. **`DG-QUIKPLAN-022` retired 2026-07-18 (DG-R-006)** — PLANVALOPT/PVO is not constrained by BACTIVE.
 
 | Rule | Summary | Severity |
 |------|---------|----------|
 | 001–006 | Plan code format, PAR, BASIS, LOANINTX | Critical |
 | 007, 012, 029 | MYGA / single-premium / UL (classification CSV) | Error |
-| 008–014 | Ages, RENEW, payment/insurance periods | Critical / Error |
+| 008–014 | Ages (008: LOAGE < HIAGE; LOAGE need not be 0), RENEW, payment/insurance periods | Critical / Error |
 | 015 | INITVAL default 1000 (warn if unexplained) | Advisory |
-| 016–024 | Commission ID, units, defaults, logicals | Critical / Error |
-| 025–026 | Gross premium / death benefit supporting tables | Critical |
-| 027–028 | Traditional / annuity supporting tables (warnings) | Advisory |
+| 016–021, 023–024 | Commission ID, units, defaults, logicals (024: MNAICLOB = NAPLAN; 022 retired) | Critical / Error |
+| 025 | Gross premium supporting tables when VARGP ≠ 4 | Critical |
+| 026 | Death benefit supporting tables when VARDB ∈ {1,2,3} (level 0 / not-on-file 4 skip; DG-R-010) | Critical |
+| 027 | Traditional value tables (0–8) — advisory audit; gaps expected (DG-R-012 accept) | Advisory |
+| 028 | Annuity: QuikAint + QuikAexp + (QuikAing or QuikAinf); DG-R-012 | Advisory |
 | 030 | MEDS plan flags | Critical |
 | 031–032 | Cross-table plan and company references | Critical |
 | 033 | Out-of-range conversion dates (warnings) | Advisory |

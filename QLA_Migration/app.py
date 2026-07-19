@@ -52,6 +52,7 @@
 #              v57.88 — Chris UAT: quikclnt MTAXIDTYPE default S (SKIP_TRANSLATION; was 55 via S→55);
 #              right-justify MCLIENTID and linked client IDs to C(11), including rel_map MPRIMID/MRIDRID;
 #              quikridr MBAND default 00.
+#              v58.10 — DG-R-009: single-premium quikplan payment settings (PAYYRS=1, PAYAGE/SEMI/QTRL/MTHD/MTHB=0) via Configs/single_premium_plans.csv.
 #              v57.87 — quikplan: SEX_BASIS B → blank SEX; SKIP_TRANSLATION on RENEW/CALCADV/BACTIVE/LOANINTX
 #              so defaults N/A are not flipped by bare Master_Value_Translation (N→T, A→22).
 #              v57.86 — QLA_VALUATION_DATE=YYYYMMDD overrides QUIKRIDR.MLASTANN valuation date
@@ -181,6 +182,7 @@ from qla_core.quikplan_converter import (
     convert_quikplan_to_output,
     prepare_quikplan_source,
     apply_rate_variation_flag_enrichment,
+    apply_single_premium_payment_settings,
     apply_ploan_loanint_enrichment,
 )
 from qla_core.cso_mortality_crosswalk import (
@@ -425,7 +427,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.09"
+APP_VERSION = "v58.10"
 APP_BRAND = "QuikForge"
 APP_TAGLINE = "Forge. Validate. Deliver."
 
@@ -7021,6 +7023,7 @@ class QLAdminEnterpriseIntegrationSuite:
                     )
                     qdf = pd.DataFrame(output, columns=schema)
                     qdf = apply_rate_variation_flag_enrichment(qdf, self._app_base_dir())
+                    qdf = apply_single_premium_payment_settings(qdf, self._app_base_dir(), log=self.log)
                     current_stage = "Applying rulebooks and crosswalks"
                     self.update_run_progress(4, detail="plan/rate enrichments + CSO assumptions")
                     self.log(f"Rate variation flags applied (R7B): {int((qdf['PLANVALOPT'] == 'Y').sum())} plans PLANVALOPT=Y")

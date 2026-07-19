@@ -307,7 +307,10 @@ RULE_DESCRIPTIONS: dict[str, RuleDescription] = {
     "DG-PLANVALUES-001": RuleDescription(
         rule_id="DG-PLANVALUES-001",
         area_name="Plan Values",
-        check_description="The mortality table exists in Mortality Table Setup.",
+        check_description=(
+            "When a mortality table is entered, it exists in Mortality Table Setup. "
+            "Blank mortality tables are allowed."
+        ),
         required_value="A mortality table defined in Mortality Table Setup",
         record_strategy="plan_detail",
         problem_default="The mortality table was not found in Mortality Table Setup.",
@@ -315,7 +318,10 @@ RULE_DESCRIPTIONS: dict[str, RuleDescription] = {
     "DG-PLANVALUES-002": RuleDescription(
         rule_id="DG-PLANVALUES-002",
         area_name="Plan Values",
-        check_description="The ETI mortality table exists in Mortality Table Setup.",
+        check_description=(
+            "When an ETI mortality table is entered, it exists in Mortality Table Setup. "
+            "Blank ETI mortality tables are allowed."
+        ),
         required_value="A mortality table defined in Mortality Table Setup",
         record_strategy="plan_detail",
         problem_default="The ETI mortality table was not found in Mortality Table Setup.",
@@ -449,12 +455,12 @@ RULE_DESCRIPTIONS: dict[str, RuleDescription] = {
         rule_id="DG-QUIKPLAN-008",
         area_name="Plan Setup",
         check_description=(
-            "The low age is zero for the Age 1 row and is less than the high age."
+            "The plan issue-age range is readable and the low age is less than the high age."
         ),
-        required_value="A low age below the high age, with zero used for the Age 1 row",
+        required_value="A readable low age below the high age (low age may be greater than zero)",
         record_strategy="plan",
         subsection="Payment, Insurance, and Age Rules",
-        problem_default="The low age is not valid for this plan.",
+        problem_default="The issue-age range is not valid for this plan.",
     ),
     "DG-QUIKPLAN-009": RuleDescription(
         rule_id="DG-QUIKPLAN-009",
@@ -583,17 +589,6 @@ RULE_DESCRIPTIONS: dict[str, RuleDescription] = {
         subsection="Related Setup References",
         problem_default="The new-business status is not a valid yes-or-no value.",
     ),
-    "DG-QUIKPLAN-022": RuleDescription(
-        rule_id="DG-QUIKPLAN-022",
-        area_name="Plan Setup",
-        check_description="Closed plans do not have the plan-value option enabled.",
-        required_value="Plan-value option turned off",
-        record_strategy="plan",
-        subsection="Related Setup References",
-        problem_default=(
-            "This plan is closed to new business, but the plan-value option is still enabled."
-        ),
-    ),
     "DG-QUIKPLAN-023": RuleDescription(
         rule_id="DG-QUIKPLAN-023",
         area_name="Plan Setup",
@@ -606,11 +601,11 @@ RULE_DESCRIPTIONS: dict[str, RuleDescription] = {
     "DG-QUIKPLAN-024": RuleDescription(
         rule_id="DG-QUIKPLAN-024",
         area_name="Plan Setup",
-        check_description="The NAIC line-of-business setting is set to N.",
-        required_value="N",
+        check_description="The NAIC line-of-business setting is set to NAPLAN.",
+        required_value="NAPLAN",
         record_strategy="plan",
         subsection="Related Setup References",
-        problem_default="The NAIC line-of-business setting is not set to N.",
+        problem_default="The NAIC line-of-business setting is not set to NAPLAN.",
     ),
     "DG-QUIKPLAN-025": RuleDescription(
         rule_id="DG-QUIKPLAN-025",
@@ -627,7 +622,8 @@ RULE_DESCRIPTIONS: dict[str, RuleDescription] = {
         rule_id="DG-QUIKPLAN-026",
         area_name="Plan Setup",
         check_description=(
-            "Plans that use variable death-benefit setup have the required supporting records."
+            "Plans with varying death-benefit schedules (VARDB 1, 2, or 3) have the "
+            "required supporting records. Level (VARDB 0) and not-on-file (VARDB 4) skip."
         ),
         required_value="A supporting record for the plan",
         record_strategy="plan_detail",
@@ -648,7 +644,10 @@ RULE_DESCRIPTIONS: dict[str, RuleDescription] = {
     "DG-QUIKPLAN-028": RuleDescription(
         rule_id="DG-QUIKPLAN-028",
         area_name="Plan Setup",
-        check_description="Annuity plans have the expected annuity setup records.",
+        check_description=(
+            "Annuity plans have interest and expense setup, plus guarantee or "
+            "information setup (QuikAing or QuikAinf)."
+        ),
         required_value="A supporting record for the plan",
         record_strategy="plan_detail",
         subsection="Supporting Rate and Value Tables",

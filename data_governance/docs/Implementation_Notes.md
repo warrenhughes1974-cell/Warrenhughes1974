@@ -123,6 +123,7 @@ Open `data_governance_results.csv` from the new run folder. Source DBFs remain r
 - Rules `DG-PLANVALUES-001` … `008` under `rules/plan_value_integrity/`.
 - Source tables evaluated independently: QuikPlCv, QuikPlTv, QuikPlGp, QuikPlDb, QuikPlDv.
 - MORT on Cv/Tv → QuikQxs.MORT; ETIMORT on Cv only → QuikQxs.MORT; PLAN → QuikPlan.PLAN.
+- DG-R-011: blank/null MORT and ETIMORT are skipped (001/002); only populated codes must exist in QuikQxs.
 - GENDER / UWCLASS / BAND use approved defaults (`0` / `00` / `00`) or composite plan+code lookups.
 - Band reference: QuikPlBd.BDCODE (QuikPlVd not present in inspected region).
 - ISSUEST: `00` or approved 50-state + DC list; EFFDATE: 1900-01-01 through run date + 12 calendar months.
@@ -135,6 +136,7 @@ Open `data_governance_results.csv` from the new run folder. Source DBFs remain r
 - Physical field aliases: PAYRS→PAYYRS, MAXUNITS→MAXUNIT, ROUNDING→RRULE; Commission Setup = QuikComm (QUIKCOMM.DBF).
 - MYGA / UL / single-premium classification from optional `config/plan_classification.csv` (no invented classifiers).
 - Warnings (`STATUS_WARN`) for INITVAL non-default (015), missing traditional/annuity tables (027/028), out-of-range dates (033).
+- DG-R-012: 028 requires QuikAint + QuikAexp + (QuikAing or QuikAinf); 027 kept as written advisory audit.
 - Report 1 Plan Setup subsections via `RuleDescription.subsection`; Warnings Found counted separately from Problems Found.
 - Runner treats `DG-QUIKPLAN` like `DG-PLANVALUES` for missing optional supporting tables.
 
@@ -145,5 +147,6 @@ Open `data_governance_results.csv` from the new run folder. Source DBFs remain r
 3. Company codes validated against QuikComp (rule 032), not QuikPlan.
 4. DEFICIENCY must be N when first character is A–Z or 9.
 5. INITVAL defaults to 1000 unless `INITVAL_EXCEPTION=Y` in classification CSV.
-6. LOAGE Age 1 = plan-level LOAGE 0 with LOAGE < HIAGE on the QuikPlan row.
+6. LOAGE/HIAGE = plan-level issue ages; readable and LOAGE < HIAGE (LOAGE need not be 0; DG-R-007).
 7. Out-of-range dates are governance warnings only; source DBFs are never modified.
+8. VARDB supporting tables (026): require QuikDbs/QuikPlDb only when VARDB is 1, 2, or 3; level (0) and not-on-file (4) skip (DG-R-010).

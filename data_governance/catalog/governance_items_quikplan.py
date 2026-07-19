@@ -221,18 +221,22 @@ RULE_DG_QUIKPLAN_008 = RuleDefinition(
     rule_id="DG-QUIKPLAN-008",
     governance_item_id="DG-QUIKPLAN",
     technical_name="Validate Low and High Age",
-    business_name="Low Age Must Be Valid",
-    purpose="Ensure the low age is zero for the Age 1 row and is less than the high age.",
+    business_name="Issue Age Range Must Be Valid",
+    purpose=(
+        "Ensure plan issue ages (LOAGE/HIAGE) are readable and the low age is "
+        "less than the high age. LOAGE may be any valid minimum issue age "
+        "(DG-R-007: former Age-1 must-be-zero requirement removed)."
+    ),
     source_tables=("QuikPlan",),
     source_fields=("LOAGE", "HIAGE"),
     business_rule=(
-        "Source LOAGE and HIAGE. LOAGE must equal 0 for the Age 1 row. LOAGE must be "
-        "less than HIAGE. Unreadable values fail."
+        "Source LOAGE and HIAGE (QLAdmin Issue Ages — lowest and highest age "
+        "for which the plan may be issued). Both must be readable numerics. "
+        "LOAGE must be less than HIAGE. LOAGE is not required to be zero."
     ),
     severity="Critical",
     failure_conditions=(
         "LOAGE or HIAGE is null, blank, or unreadable.",
-        "LOAGE is not zero.",
         "LOAGE is greater than or equal to HIAGE.",
     ),
 )
@@ -485,22 +489,8 @@ RULE_DG_QUIKPLAN_021 = RuleDefinition(
     ),
 )
 
-RULE_DG_QUIKPLAN_022 = RuleDefinition(
-    rule_id="DG-QUIKPLAN-022",
-    governance_item_id="DG-QUIKPLAN",
-    technical_name="Validate Plan Value Option When Closed",
-    business_name="Closed Plans Cannot Use Plan Value Option",
-    purpose="Ensure closed plans do not have the plan-value option enabled.",
-    source_tables=("QuikPlan",),
-    source_fields=("BACTIVE", "PLANVALOPT"),
-    business_rule=(
-        "When BACTIVE is false, PLANVALOPT must also be false."
-    ),
-    severity="Critical",
-    failure_conditions=(
-        "BACTIVE is false and PLANVALOPT is true.",
-    ),
-)
+# DG-QUIKPLAN-022 retired 2026-07-18 (DG-R-006): PLANVALOPT is the QLAdmin PVO /
+# rate-file lookup switch and is not constrained by BACTIVE (closed-to-new-business).
 
 RULE_DG_QUIKPLAN_023 = RuleDefinition(
     rule_id="DG-QUIKPLAN-023",
@@ -523,16 +513,16 @@ RULE_DG_QUIKPLAN_024 = RuleDefinition(
     rule_id="DG-QUIKPLAN-024",
     governance_item_id="DG-QUIKPLAN",
     technical_name="Validate MNAICLOB Default",
-    business_name="MNAICLOB Must Default to N",
+    business_name="MNAICLOB Must Default to NAPLAN",
     purpose="Ensure the NAIC line-of-business setting uses the approved default.",
     source_tables=("QuikPlan",),
     source_fields=("MNAICLOB",),
     business_rule=(
-        "Source MNAICLOB. Required value is N after casefold normalization."
+        "Source MNAICLOB. Required value is NAPLAN after casefold normalization."
     ),
     severity="Error",
     failure_conditions=(
-        "MNAICLOB is blank, null, or not N.",
+        "MNAICLOB is blank, null, or not NAPLAN.",
     ),
 )
 
@@ -565,19 +555,20 @@ RULE_DG_QUIKPLAN_026 = RuleDefinition(
     technical_name="Validate Death Benefit Supporting Tables",
     business_name="Death Benefit Supporting Tables Must Exist",
     purpose=(
-        "Ensure plans that use variable death-benefit setup have required supporting "
-        "records."
+        "Ensure plans with varying death-benefit schedules (VARDB 1/2/3) have required "
+        "supporting records. Level (VARDB 0 / INITVAL) and not-on-file (VARDB 4) skip."
     ),
     source_tables=("QuikPlan", "QuikDbs", "QuikPlDb"),
     source_fields=("PLAN", "VARDB"),
     business_rule=(
-        "When VARDB is not 4, the plan must exist in both QuikDbs and QuikPlDb. "
+        "When VARDB is 1, 2, or 3, the plan must exist in both QuikDbs and QuikPlDb. "
+        "VARDB 0 (level) and VARDB 4 (not on file) do not require those tables. "
         "When a supporting table is missing, one Could Not Be Checked item is reported."
     ),
     severity="Critical",
     failure_conditions=(
-        "VARDB is not 4 and the plan is missing from QuikDbs.",
-        "VARDB is not 4 and the plan is missing from QuikPlDb.",
+        "VARDB is 1, 2, or 3 and the plan is missing from QuikDbs.",
+        "VARDB is 1, 2, or 3 and the plan is missing from QuikPlDb.",
         "A required supporting table is not available.",
     ),
 )
@@ -609,16 +600,21 @@ RULE_DG_QUIKPLAN_028 = RuleDefinition(
     governance_item_id="DG-QUIKPLAN",
     technical_name="Validate Annuity Supporting Tables",
     business_name="Annuity Plans Should Have Required Annuity Tables",
-    purpose="Warn when annuity plans are missing expected annuity setup records.",
+    purpose=(
+        "Warn when annuity plans are missing expected annuity setup records. "
+        "QuikAing and QuikAinf are interchangeable (DG-R-012)."
+    ),
     source_tables=("QuikPlan",) + _ANNUITY_SUPPORT_TABLES,
     source_fields=("PLAN", "MPLAN"),
     business_rule=(
-        "Annuity plans begin with A. Issue a warning when the plan is missing from "
-        "QuikAint, QuikAing, QuikAexp, or QuikAinf."
+        "Annuity plans begin with A. Warn when missing QuikAint or QuikAexp, or when "
+        "missing both QuikAing and QuikAinf (either one satisfies the guarantee/"
+        "information pair)."
     ),
     severity="Advisory",
     failure_conditions=(
-        "An annuity plan is missing from an expected annuity setup table.",
+        "An annuity plan is missing QuikAint or QuikAexp.",
+        "An annuity plan has neither QuikAing nor QuikAinf.",
         "A required supporting table is not available.",
     ),
 )
@@ -758,7 +754,6 @@ ALL_QUIKPLAN_RULES = (
     RULE_DG_QUIKPLAN_019,
     RULE_DG_QUIKPLAN_020,
     RULE_DG_QUIKPLAN_021,
-    RULE_DG_QUIKPLAN_022,
     RULE_DG_QUIKPLAN_023,
     RULE_DG_QUIKPLAN_024,
     RULE_DG_QUIKPLAN_025,

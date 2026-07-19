@@ -1,0 +1,73 @@
+{
+  "applied_at_utc": "2026-07-19T01:00:17.091306+00:00",
+  "data": "Q:\\CSO\\CSO_Test_6_30_2026",
+  "backup": "Q:\\CSO\\CSO_Test_6_30_2026_backup_DG-R-009_20260718",
+  "updated": [
+    {
+      "PLAN": "1668SP",
+      "before": [
+        0,
+        0
+      ],
+      "after": [
+        1,
+        0
+      ]
+    },
+    {
+      "PLAN": "10L171",
+      "before": [
+        0,
+        0
+      ],
+      "after": [
+        1,
+        0
+      ]
+    },
+    {
+      "PLAN": "117JPO",
+      "before": [
+        0,
+        0
+      ],
+      "after": [
+        1,
+        0
+      ]
+    },
+    {
+      "PLAN": "10L172",
+      "before": [
+        0,
+        0
+      ],
+      "after": [
+        1,
+        0
+      ]
+    },
+    {
+      "PLAN": "17MJPO",
+      "before": [
+        0,
+        0
+      ],
+      "after": [
+        1,
+        0
+      ]
+    },
+    {
+      "PLAN": "1L17SP",
+      "before": [
+        0,
+        0
+      ],
+      "after": [
+        1,
+        0
+      ]
+    }
+  ]
+}

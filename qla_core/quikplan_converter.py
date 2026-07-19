@@ -133,6 +133,8 @@ def _map_field_value(
     elif note == "ROUTE_INS_AGE":
         c_type = str(src_row.get("BENEFIT_CEASE_TYPE", "")).strip().upper()
         val = val if c_type == "A" else "0"
+    elif note == "SEX_BASIS_BOTH_BLANK" and val.upper() == "B":
+        val = ""
 
     if any(k in t_f for k in ["AGE", "DUR", "YRS"]) and "VAL" not in t_f and "VPU" not in t_f and "PREM" not in t_f:
         if val.isdigit() and len(val) == 1:
@@ -183,6 +185,51 @@ def apply_variation_recommendations(
     return out
 
 
+# Option B: when DB structure is known (policy-year / issue+duration / attained-age),
+# override rulebook VARDB=0 with the structure code. Does not change VARGP.
+_STRUCTURE_VARDB_CODES = frozenset({"1", "2", "3"})
+
+
+def apply_vardb_structure_overrides(
+    row_data: dict,
+    recommendations: dict[str, dict] | None,
+) -> dict:
+    """Set VARDB from structure classification when Recommended_VARDB is 1, 2, or 3."""
+    if not recommendations:
+        return row_data
+    plan = normalize(row_data.get("PLAN", ""))
+    rec = recommendations.get(plan)
+    if not rec:
+        return row_data
+    vd = str(rec.get("Recommended_VARDB") or "").strip()
+    if vd not in _STRUCTURE_VARDB_CODES:
+        return row_data
+    out = dict(row_data)
+    out["VARDB"] = vd
+    return out
+
+
+def apply_vardb_structure_overrides_df(
+    df: pd.DataFrame,
+    recommendations: dict[str, dict] | None,
+) -> pd.DataFrame:
+    """Apply Option B VARDB overrides across a quikplan DataFrame."""
+    if df is None or df.empty or not recommendations or "PLAN" not in df.columns:
+        return df
+    if "VARDB" not in df.columns:
+        return df
+    out = df.copy()
+    for idx in out.index:
+        plan = normalize(out.at[idx, "PLAN"])
+        rec = recommendations.get(plan)
+        if not rec:
+            continue
+        vd = str(rec.get("Recommended_VARDB") or "").strip()
+        if vd in _STRUCTURE_VARDB_CODES:
+            out.at[idx, "VARDB"] = vd
+    return out
+
+
 def convert_quikplan_row(
     src_row: pd.Series,
     source: pd.DataFrame,
@@ -208,9 +255,10 @@ def convert_quikplan_row(
     if overlay_config is not None:
         row_data = apply_crosswalk_overlay(row_data, coverage_id, overlay_config)
 
-    return apply_variation_recommendations(
+    row_data = apply_variation_recommendations(
         row_data, variation_recommendations, auto_apply_variation_codes,
     )
+    return apply_vardb_structure_overrides(row_data, variation_recommendations)
 
 
 def convert_quikplan_to_output(
@@ -325,13 +373,99 @@ def run_quikplan_conversion(
         source, rules, lookups, trans_map, cw_map, schema, overlay_config, crosswalk_authority,
         variation_recommendations, auto_apply,
     )
+    # Option B: VARDB 1/2/3 from DB structure even when full AUTO_APPLY is off
+    df = apply_vardb_structure_overrides_df(df, variation_recommendations)
     df = apply_rate_variation_flag_enrichment(df)
+    df = apply_single_premium_payment_settings(df)
     df = apply_cso_cv_assumptions(df)
     repo_root = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
     df = apply_ploan_loanint_enrichment(df, repo_root=repo_root, crosswalk_path=cw_path or None)
     df, modal_stats = apply_issue21j_modal_factors(df, repo_root=repo_root)
     try:
         df.attrs["issue21j_modal_stats"] = modal_stats
+    except Exception:
+        pass
+    return df
+
+
+def default_single_premium_plans_path(repo_root: str) -> str:
+    return os.path.normpath(
+        os.path.join(repo_root, "QLA_Migration", "Configs", "single_premium_plans.csv")
+    )
+
+
+def load_single_premium_plans(repo_root: str) -> set[str]:
+    """Load confirmed single-premium PLAN codes (DG-R-009).
+
+    Primary: QLA_Migration/Configs/single_premium_plans.csv (PLAN column).
+    Also merges data_governance/config/plan_classification.csv rows with
+    IS_SINGLE_PREMIUM = Y when that file is present.
+    """
+    plans: set[str] = set()
+    primary = default_single_premium_plans_path(repo_root)
+    if os.path.isfile(primary):
+        try:
+            cfg = pd.read_csv(primary, dtype=str)
+            if "PLAN" in cfg.columns:
+                for raw in cfg["PLAN"].fillna(""):
+                    plan = normalize(raw)
+                    if plan:
+                        plans.add(plan)
+        except Exception:
+            pass
+    class_path = os.path.normpath(
+        os.path.join(repo_root, "data_governance", "config", "plan_classification.csv")
+    )
+    if os.path.isfile(class_path):
+        try:
+            cfg = pd.read_csv(class_path, dtype=str)
+            if "PLAN" in cfg.columns and "IS_SINGLE_PREMIUM" in cfg.columns:
+                for _, row in cfg.iterrows():
+                    flag = str(row.get("IS_SINGLE_PREMIUM", "") or "").strip().upper()
+                    if flag in ("Y", "YES", "1", "TRUE", "T"):
+                        plan = normalize(row.get("PLAN", ""))
+                        if plan:
+                            plans.add(plan)
+        except Exception:
+            pass
+    return plans
+
+
+def apply_single_premium_payment_settings(
+    df: pd.DataFrame,
+    repo_root: str | None = None,
+    log=None,
+) -> pd.DataFrame:
+    """Force single-premium payment settings on confirmed plans (DG-R-009).
+
+    Sets PAYYRS=1, PAYAGE=0, and SEMI/QTRL/MTHD/MTHB=0.
+    No-op when config is empty or PLAN column is missing.
+    """
+    if df is None or df.empty or "PLAN" not in df.columns:
+        return df
+    repo_root = repo_root or os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
+    plans = load_single_premium_plans(repo_root)
+    if not plans:
+        return df
+    updated = 0
+    for idx in df.index:
+        plan = normalize(df.at[idx, "PLAN"])
+        if plan not in plans:
+            continue
+        df.at[idx, "PAYYRS"] = "1"
+        if "PAYAGE" in df.columns:
+            df.at[idx, "PAYAGE"] = "0"
+        for col in ("SEMI", "QTRL", "MTHD", "MTHB"):
+            if col in df.columns:
+                df.at[idx, col] = "0"
+        updated += 1
+    if log is not None and updated:
+        try:
+            log(f"Single-premium payment settings (DG-R-009): {updated} plans PAYYRS=1")
+        except Exception:
+            pass
+    try:
+        df.attrs["single_premium_payment_updated"] = updated
     except Exception:
         pass
     return df
@@ -476,6 +610,19 @@ def build_ploan_loanint_by_quikplan(
     return out
 
 
+def _normalize_quikplan_loanintx(df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Issue #70: force LOANINTX to A when missing/invalid (valid values: A or R only)."""
+    if df is None or df.empty or "LOANINTX" not in df.columns:
+        return df, 0
+    fixed = 0
+    for i in df.index:
+        cur_x = str(df.at[i, "LOANINTX"] or "").strip().upper()
+        if cur_x not in ("A", "R"):
+            df.at[i, "LOANINTX"] = "A"
+            fixed += 1
+    return df, fixed
+
+
 def apply_ploan_loanint_enrichment(
     df: pd.DataFrame,
     repo_root: str | None = None,
@@ -488,7 +635,8 @@ def apply_ploan_loanint_enrichment(
 
     Rulebook defaults LOANINT to 0.00 with no LifePRO source — Product Setup never saw
     loan rates. QuikLoan already maps PLOAN→MLOANINT; this lifts the same authority onto
-    the plan catalog. LOANINTX is set to A when missing/invalid (Issue #32 Advance default).
+    the plan catalog. LOANINTX is set to A when missing/invalid (Issue #70 interim default
+    pending CSO Advance/Arrears guidance; Issue #32 Advance fallback).
     Blank-safe: plans with no PLOAN evidence keep existing LOANINT.
     """
     if df is None or df.empty or "PLAN" not in df.columns or "LOANINT" not in df.columns:
@@ -499,6 +647,9 @@ def apply_ploan_loanint_enrichment(
     if not path:
         if log:
             log("PLOAN loan-int enrichment: no PLOAN extract found; LOANINT left as-is.")
+        df, intx_fixed = _normalize_quikplan_loanintx(df)
+        if log and intx_fixed:
+            log(f"LOANINTX normalized to A on {intx_fixed} plans (Issue #70).")
         return df
 
     if not crosswalk_path:
@@ -513,16 +664,21 @@ def apply_ploan_loanint_enrichment(
     except Exception as exc:
         if log:
             log(f"PLOAN loan-int enrichment failed: {exc}")
+        df, intx_fixed = _normalize_quikplan_loanintx(df)
+        if log and intx_fixed:
+            log(f"LOANINTX normalized to A on {intx_fixed} plans (Issue #70).")
         return df
 
     if not rate_by_plan:
         if log:
             log(f"PLOAN loan-int enrichment: no plan rates derived from {path}")
+        df, intx_fixed = _normalize_quikplan_loanintx(df)
+        if log and intx_fixed:
+            log(f"LOANINTX normalized to A on {intx_fixed} plans (Issue #70).")
         return df
 
     placeholder = {"", "0", "0.0", "0.00", "0.000", "0.0000"}
     updated = 0
-    intx_fixed = 0
     for i in df.index:
         plan = normalize(df.at[i, "PLAN"]).upper()
         if not plan or plan not in rate_by_plan:
@@ -532,11 +688,10 @@ def apply_ploan_loanint_enrichment(
         if cur in placeholder or cur != new_rate:
             df.at[i, "LOANINT"] = new_rate
             updated += 1
-        if "LOANINTX" in df.columns:
-            cur_x = str(df.at[i, "LOANINTX"] or "").strip().upper()
-            if cur_x not in ("A", "R"):
-                df.at[i, "LOANINTX"] = "A"
-                intx_fixed += 1
+
+    # Issue #70: LOANINTX must be A or R on every plan (not only PLOAN-matched).
+    # Interim default A pending CSO Advance/Arrears guidance.
+    df, intx_fixed = _normalize_quikplan_loanintx(df)
 
     qa = {
         "ploan_path": path,

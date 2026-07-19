@@ -36,7 +36,6 @@ from data_governance.catalog.governance_items import (
     RULE_DG_QUIKPLAN_019,
     RULE_DG_QUIKPLAN_020,
     RULE_DG_QUIKPLAN_021,
-    RULE_DG_QUIKPLAN_022,
     RULE_DG_QUIKPLAN_023,
     RULE_DG_QUIKPLAN_024,
     RULE_DG_QUIKPLAN_025,
@@ -188,7 +187,6 @@ def _build_registry() -> dict[str, RegisteredRule]:
         run_dg_quikplan_019,
         run_dg_quikplan_020,
         run_dg_quikplan_021,
-        run_dg_quikplan_022,
         run_dg_quikplan_023,
         run_dg_quikplan_024,
     )
@@ -257,7 +255,6 @@ def _build_registry() -> dict[str, RegisteredRule]:
         RegisteredRule(RULE_DG_QUIKPLAN_019, run_dg_quikplan_019),
         RegisteredRule(RULE_DG_QUIKPLAN_020, run_dg_quikplan_020),
         RegisteredRule(RULE_DG_QUIKPLAN_021, run_dg_quikplan_021),
-        RegisteredRule(RULE_DG_QUIKPLAN_022, run_dg_quikplan_022),
         RegisteredRule(RULE_DG_QUIKPLAN_023, run_dg_quikplan_023),
         RegisteredRule(RULE_DG_QUIKPLAN_024, run_dg_quikplan_024),
         RegisteredRule(RULE_DG_QUIKPLAN_025, run_dg_quikplan_025),

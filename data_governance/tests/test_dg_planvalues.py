@@ -71,18 +71,17 @@ def test_mort_pass_fail_blank_null_ambiguous_padding(tmp_path):
     bad = {**_base_refs(), "QuikPlCv": [_pv_row(MORT="ZZ")]}
     assert _run(bad, tmp_path, rule_id="DG-PLANVALUES-001").rule_results[0].status == STATUS_FAIL
 
-    assert (
-        _run({**_base_refs(), "QuikPlCv": [_pv_row(MORT="")]}, tmp_path, rule_id="DG-PLANVALUES-001")
-        .rule_results[0]
-        .status
-        == STATUS_FAIL
+    # DG-R-011: blank/null MORT skipped (not FAIL)
+    blank_r = _run(
+        {**_base_refs(), "QuikPlCv": [_pv_row(MORT="")]}, tmp_path, rule_id="DG-PLANVALUES-001"
     )
-    assert (
-        _run({**_base_refs(), "QuikPlCv": [_pv_row(MORT=None)]}, tmp_path, rule_id="DG-PLANVALUES-001")
-        .rule_results[0]
-        .status
-        == STATUS_FAIL
+    assert blank_r.rule_results[0].status == STATUS_PASS
+    assert blank_r.rule_results[0].records_evaluated == 0
+    null_r = _run(
+        {**_base_refs(), "QuikPlCv": [_pv_row(MORT=None)]}, tmp_path, rule_id="DG-PLANVALUES-001"
     )
+    assert null_r.rule_results[0].status == STATUS_PASS
+    assert null_r.rule_results[0].records_evaluated == 0
 
     amb = {
         **_base_refs(),
@@ -107,6 +106,12 @@ def test_etimort_and_plan_rules(tmp_path):
     )
     assert fail_e.rule_results[0].status == STATUS_FAIL
     assert "ETI mortality" in fail_e.findings[0].message
+    # DG-R-011: blank ETIMORT skipped
+    blank_e = _run(
+        {**refs, "QuikPlCv": [_pv_row(ETIMORT="")]}, tmp_path, rule_id="DG-PLANVALUES-002"
+    )
+    assert blank_e.rule_results[0].status == STATUS_PASS
+    assert blank_e.rule_results[0].records_evaluated == 0
 
     tables = {
         **refs,
