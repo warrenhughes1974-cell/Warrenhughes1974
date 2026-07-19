@@ -1,0 +1,2 @@
+Issue	Title	Status	Priority	Owner	Stage	Notes
+84	quikclms money-field decomposition (Policy-book parity)	Track A Implemented v58.12 — Awaiting Validation	High	Conversion	G5 pending	Track A: claim-key MPAID/PDDATE backfill after #85. Track B deferred. Audit Reports/issue84_money_field_audit.csv.

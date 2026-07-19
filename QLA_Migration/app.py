@@ -1,10 +1,14 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.09
-# Date:        2026-07-18
+# Version:     v58.12
+# Date:        2026-07-19
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v58.09 — UI theme: QuikForge red/white brand palette (QLAdmin-aligned accents).
+# Change Note: v58.12 — Issue #84 Track A: backfill quikclms MPAID/PDDATE from claim-keyed payees.
+#              v58.11 — Policy Data Governance: MBILLDAY from MISSDT; clear MBENPID/MBENCID;
+#              non-INSD QuikClid MPHASE→0; MLANGUAGE default E; transform audit CSV.
+#              v58.10 — DG-R-009 single-premium PAYYRS/PAYAGE + modal zeros.
+#              v58.09 — UI theme: QuikForge red/white brand palette (QLAdmin-aligned accents).
 #              v58.08 — UI brand: QuikForge — "Forge. Validate. Deliver." (source-agnostic).
 #              v58.07 — DG-R-003: emit quikdate.csv on batch with prior-month-end PAC/DIR/REIN
 #              bill dates + ACH defaults (shared prior_month_end from data_governance).
@@ -279,6 +283,10 @@ from qla_core.issue85_claim_header_structure import (
     apply_issue85_header_structure,
     write_structure_audits,
 )
+from qla_core.issue84_track_a_header_backfill import (
+    backfill_quikclms_headers_from_payees,
+    write_money_field_audit,
+)
 # --- Phase 18A–20: Claims orchestration, UAT handoff/emit/batch/DBF, MPOLICY validation ---
 VALID_RUN_MODES = ("UAT", "PRODUCTION", "DISABLED")
 DEFAULT_RUN_MODE = "UAT"
@@ -427,7 +435,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.10"
+APP_VERSION = "v58.12"
 APP_BRAND = "QuikForge"
 APP_TAGLINE = "Forge. Validate. Deliver."
 
@@ -1701,6 +1709,54 @@ class QLAdminEnterpriseIntegrationSuite:
         paths = structure_result.get("audit_paths") or {}
         for key, path in paths.items():
             self.log(f"  Audit[{key}]: {path}")
+
+    def _apply_issue84_track_a_header_backfill(self, output_dir):
+        """Issue #84 Track A: backfill header MPAID/PDDATE from claim-keyed quikclmp payees."""
+        clms_path = os.path.normpath(os.path.join(output_dir, "quikclms.csv"))
+        clmp_path = os.path.normpath(os.path.join(output_dir, "quikclmp.csv"))
+        result = {
+            "applied": False,
+            "rows_changed": 0,
+            "audit_path": "",
+            "reason": "",
+        }
+        if not os.path.isfile(clms_path) or not os.path.isfile(clmp_path):
+            result["reason"] = "missing_quikclms_or_quikclmp"
+            return result
+        try:
+            clms_df = pd.read_csv(clms_path, dtype=str).fillna("")
+            clmp_df = pd.read_csv(clmp_path, dtype=str).fillna("")
+            clms_after, audit_df = backfill_quikclms_headers_from_payees(clms_df, clmp_df)
+            changed = len(audit_df)
+            if changed <= 0:
+                result["reason"] = "no_backfill_needed"
+                return result
+            tmp_path = clms_path + ".tmp"
+            clms_after.to_csv(tmp_path, index=False, encoding="utf-8")
+            os.replace(tmp_path, clms_path)
+            audit_path = write_money_field_audit(audit_df, self._reports_dir())
+            result.update(
+                {
+                    "applied": True,
+                    "rows_changed": changed,
+                    "audit_path": audit_path,
+                }
+            )
+            return result
+        except Exception as exc:
+            result["reason"] = f"error:{exc}"
+            return result
+
+    def _log_issue84_track_a_summary(self, track_a_result):
+        if not track_a_result:
+            return
+        self.log("ISSUE #84 TRACK A — HEADER MPAID/PDDATE BACKFILL (post-emit):")
+        if not track_a_result.get("applied"):
+            self.log(f"  Skipped: {track_a_result.get('reason', 'unknown')}")
+            return
+        self.log(f"  Headers backfilled={track_a_result.get('rows_changed', 0)}")
+        if track_a_result.get("audit_path"):
+            self.log(f"  Audit: {track_a_result['audit_path']}")
 
     def _load_claims_orchestration_rules(self):
         rules_path = os.path.join(self._claims_analysis_root(), "config", "app_claims_uat_orchestration_rules.json")
@@ -4848,6 +4904,11 @@ class QLAdminEnterpriseIntegrationSuite:
                     emit_result["emitted"]["quikclms"]["row_count"] = int(
                         structure_result.get("headers_after", 0)
                     )
+                track_a_result = self._apply_issue84_track_a_header_backfill(
+                    emit_result.get("output_dir") or self._resolve_output_base_dir()
+                )
+                emit_result["issue84_track_a"] = track_a_result
+                self._log_issue84_track_a_summary(track_a_result)
         else:
             self.log("  UAT emit skipped (RUN_MODE != UAT or QLA_CLAIMS_UAT_EMIT=0).")
 
@@ -5772,6 +5833,8 @@ class QLAdminEnterpriseIntegrationSuite:
             self.start_run_progress("full_batch" if is_batch else "single_table")
             self.update_run_progress(1, detail="Preparing conversion run")
             self.log(f"Initializing {APP_BRAND} {APP_VERSION} — {APP_TAGLINE}")
+            from qla_core.policy_data_transforms import reset_policy_transform_audit
+            reset_policy_transform_audit()
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
@@ -7243,23 +7306,36 @@ class QLAdminEnterpriseIntegrationSuite:
                                         val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
                                 # -----------------------------------------
 
-                                # --- Issue #47: MBILLDAY zero → day of PAID_TO_DATE (preserve #21B non-zero) ---
+                                # --- DG-QUIKMSTR-011: MBILLDAY blank/0 → day of issue date (MISSDT) ---
                                 if t_id.lower() == "quikmstr" and t_f == "MBILLDAY":
+                                    from qla_core.policy_data_transforms import (
+                                        apply_mbillday_from_issue_date,
+                                        record_policy_transform,
+                                    )
                                     bill_day = self.normalize(val)
-                                    if bill_day.endswith(".0"):
-                                        bill_day = bill_day[:-2]
-                                    if bill_day in ["", "0", "0.0", "00"]:
-                                        paid_raw = src_row.get("PAID_TO_DATE", "")
-                                        if not paid_raw:
-                                            paid_raw = row_data.get("MPAIDTO", "")
-                                        day_val = self.normalize(self.extract_day(paid_raw))
-                                        if day_val.endswith(".0"):
-                                            day_val = day_val[:-2]
-                                        if day_val and day_val not in ["0", "00"]:
-                                            try:
-                                                val = str(int(day_val))
-                                            except (ValueError, TypeError):
-                                                val = day_val
+                                    issue_raw = (
+                                        src_row.get("ISSUE_DATE")
+                                        or src_row.get("ISSUE_DT")
+                                        or row_data.get("MISSDT")
+                                        or src_row.get("MISSDT")
+                                        or ""
+                                    )
+                                    new_day, changed = apply_mbillday_from_issue_date(
+                                        bill_day, issue_raw
+                                    )
+                                    if changed:
+                                        record_policy_transform(
+                                            table="QuikMstr",
+                                            record_id=self.normalize(
+                                                row_data.get("MPOLICY", "")
+                                            ),
+                                            field="MBILLDAY",
+                                            original=bill_day,
+                                            converted=new_day,
+                                            reason="Derived from issue date",
+                                            rule_id="DG-QUIKMSTR-011",
+                                        )
+                                        val = new_day
                                 # -----------------------------------------------------------------
     
                                 if t_f in ['MNFOPT', 'MDIVOPT'] and val in ["", "0", "0.0"] and t_id.lower() == "quikmstr":
@@ -7520,12 +7596,44 @@ class QLAdminEnterpriseIntegrationSuite:
                                         val = "1"
                                         
                                 if t_id.lower() == "quikclid" and actual_h == "MPHASE":
-                                    normalized_phase = self.normalize(val)
-                                    if not normalized_phase or normalized_phase == "0":
-                                        val = "1"
+                                    # Phase finalized after MRELATION is known (below).
+                                    pass
                                 # ---------------------------------
     
                                 row_data[actual_h] = val
+
+                        # --- Policy Data Governance: QuikClid phase by relationship ---
+                        if t_id.lower() == "quikclid":
+                            from qla_core.policy_data_transforms import (
+                                apply_quikclid_phase_for_relation,
+                                record_policy_transform,
+                            )
+                            _rel = self.normalize(row_data.get("MRELATION", ""))
+                            _ph_orig = self.normalize(row_data.get("MPHASE", ""))
+                            _ph_new, _ph_chg, _ph_rule = apply_quikclid_phase_for_relation(
+                                _ph_orig, _rel
+                            )
+                            if _ph_chg or row_data.get("MPHASE") != _ph_new:
+                                if _ph_chg:
+                                    record_policy_transform(
+                                        table="QuikClid",
+                                        record_id=(
+                                            f"{self.normalize(row_data.get('MPOLICY', ''))} / "
+                                            f"{self.normalize(row_data.get('MCLIENTID', ''))} / "
+                                            f"{_rel}"
+                                        ),
+                                        field="MPHASE",
+                                        original=_ph_orig,
+                                        converted=_ph_new,
+                                        reason=(
+                                            "Policy-level relationship uses phase zero"
+                                            if _rel.upper() != "INSD"
+                                            else "Insured blank phase defaulted to base phase 1"
+                                        ),
+                                        rule_id=_ph_rule,
+                                    )
+                                row_data["MPHASE"] = _ph_new
+                        # ---------------------------------------------------------------
     
                         tp = self.normalize(row_data.get('MPOLICY', ''))
                         tphase = self.normalize(row_data.get('MPHASE', ''))
@@ -7542,9 +7650,77 @@ class QLAdminEnterpriseIntegrationSuite:
                             if "1" in rel_map[tp]:
                                 p_rel = rel_map[tp]["1"]
                                 # Includes raw LifePRO source codes alongside standard QLAdmin roles
-                                for r, f in {'IN':'MPRIMID', 'INSD':'MPRIMID', 'PO':'MOWNRID', 'OWNR':'MOWNRID', 'PA':'MPAYRID', 'PAYR':'MPAYRID', 'ASGN':'MASGNID', 'B1':'MBENPID', 'BENP':'MBENPID', 'B2':'MBENCID', 'BENC':'MBENCID'}.items():
+                                # Beneficiaries stay on QuikClid only (DG-QUIKMSTR-021/022).
+                                for r, f in {'IN':'MPRIMID', 'INSD':'MPRIMID', 'PO':'MOWNRID', 'OWNR':'MOWNRID', 'PA':'MPAYRID', 'PAYR':'MPAYRID', 'ASGN':'MASGNID'}.items():
                                     if r in p_rel and f in row_data: 
                                         row_data[f] = format_qladmin_mclientid(cw_map.get(p_rel[r], p_rel[r]))
+                            # Force blank beneficiary IDs on Policy Master
+                            from qla_core.policy_data_transforms import record_policy_transform
+                            for _bf in ("MBENPID", "MBENCID"):
+                                if _bf in row_data:
+                                    _borig = self.normalize(row_data.get(_bf, ""))
+                                    if _borig:
+                                        record_policy_transform(
+                                            table="QuikMstr",
+                                            record_id=tp,
+                                            field=_bf,
+                                            original=_borig,
+                                            converted="",
+                                            reason="Beneficiary relationships are stored separately",
+                                            rule_id=(
+                                                "DG-QUIKMSTR-021"
+                                                if _bf == "MBENPID"
+                                                else "DG-QUIKMSTR-022"
+                                            ),
+                                        )
+                                    row_data[_bf] = ""
+                        elif t_id.lower() == "quikmstr":
+                            for _bf in ("MBENPID", "MBENCID"):
+                                if _bf in row_data:
+                                    row_data[_bf] = ""
+
+                        # --- Policy Data Governance: uppercase state/sex codes ---
+                        if t_id.lower() == "quikmstr" and "MISSUEST" in row_data:
+                            from qla_core.policy_data_transforms import (
+                                record_policy_transform,
+                                uppercase_alpha_field,
+                            )
+                            _st_orig = self.normalize(row_data.get("MISSUEST", ""))
+                            _st_new, _st_chg = uppercase_alpha_field(_st_orig)
+                            if _st_chg:
+                                record_policy_transform(
+                                    table="QuikMstr",
+                                    record_id=tp,
+                                    field="MISSUEST",
+                                    original=_st_orig,
+                                    converted=_st_new,
+                                    reason="Uppercased issue state",
+                                    rule_id="DG-QUIKMSTR-014",
+                                )
+                                row_data["MISSUEST"] = _st_new
+                        if t_id.lower() == "quikclnt":
+                            from qla_core.policy_data_transforms import (
+                                record_policy_transform,
+                                uppercase_alpha_field,
+                            )
+                            _cid = self.normalize(row_data.get("MCLIENTID", ""))
+                            for _fld, _rule in (("MSEX", "DG-QUIKCLNT-007"), ("MSTATE", "DG-QUIKCLNT-005")):
+                                if _fld not in row_data:
+                                    continue
+                                _o = self.normalize(row_data.get(_fld, ""))
+                                _n, _c = uppercase_alpha_field(_o)
+                                if _c:
+                                    record_policy_transform(
+                                        table="QuikClnt",
+                                        record_id=_cid,
+                                        field=_fld,
+                                        original=_o,
+                                        converted=_n,
+                                        reason=f"Uppercased {_fld}",
+                                        rule_id=_rule,
+                                    )
+                                    row_data[_fld] = _n
+                        # ---------------------------------------------------------------
                             
                         if t_id.lower() == "quikridr" and 'MRIDRID' in row_data and tp in rel_map:
                             rel_id = None
@@ -7989,6 +8165,20 @@ class QLAdminEnterpriseIntegrationSuite:
                     )
                 except Exception as e:
                     self.log(f"Warning: QuikDate governance emit failed - {e}")
+            # ---------------------------------------------------------------------------------------
+
+            # --- Policy Data Governance: internal transformation audit (Reports only) ---
+            try:
+                from qla_core.policy_data_transforms import write_policy_transform_audit
+                _pda_path = write_policy_transform_audit(
+                    os.path.normpath(
+                        os.path.join(self._app_base_dir(), "QLA_Migration", "Reports")
+                    )
+                )
+                if _pda_path:
+                    self.log(f"Policy data transformation audit → {_pda_path}")
+            except Exception as e:
+                self.log(f"Warning: policy data transformation audit failed - {e}")
             # ---------------------------------------------------------------------------------------
 
             current_stage = "Running claims / payment outputs"

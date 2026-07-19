@@ -254,7 +254,14 @@ def run_data_governance(
         if (
             missing
             and preloaded_tables is None
-            and definition.governance_item_id not in ("DG-PLANVALUES", "DG-QUIKPLAN")
+            and definition.governance_item_id
+            not in (
+                "DG-PLANVALUES",
+                "DG-QUIKPLAN",
+                "DG-QUIKMSTR",
+                "DG-QUIKCLNT",
+                "DG-QUIKCLID",
+            )
         ):
             msg = (
                 f"Required table(s) not found in data region '{resolved_data}': "
@@ -292,7 +299,13 @@ def run_data_governance(
             )
             result.rule_results.append(rule_result)
             continue
-        if missing and definition.governance_item_id in ("DG-PLANVALUES", "DG-QUIKPLAN"):
+        if missing and definition.governance_item_id in (
+            "DG-PLANVALUES",
+            "DG-QUIKPLAN",
+            "DG-QUIKMSTR",
+            "DG-QUIKCLNT",
+            "DG-QUIKCLID",
+        ):
             log.write(
                 f"Note: {definition.rule_id} continuing with unavailable table(s): "
                 + ", ".join(missing)

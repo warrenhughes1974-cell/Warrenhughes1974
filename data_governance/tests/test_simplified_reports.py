@@ -59,12 +59,17 @@ def test_html_executive_summary_and_areas(tmp_path, clean_company_tables):
     assert "Company Setup" in html
     assert "Group Billing" in html
     assert "Plan Values" in html
+    assert "Policy Master" in html
+    assert "Client Setup" in html
+    assert "Policy Relationships" in html
     assert "All Active Governance Checks" in html
     # No pass-per-record dump
     assert "source_record_id" not in html
     assert "Traceback" not in html
     summary = build_business_summary(result)
-    assert summary.records_checked == summary.records_passed + summary.problems_found
+    assert summary.records_checked == (
+        summary.records_passed + summary.problems_found + summary.warnings_found
+    )
     assert summary.overall_result == "Passed"
     assert summary.percentage_passed_display.endswith("%")
 
@@ -120,10 +125,52 @@ def test_data_problems_plain_english(tmp_path):
 
 
 def test_incomplete_review_wording_and_coverage(tmp_path):
+    issue = date(2020, 6, 15)
     tables = {
         "QuikComp": [{"MCOMP": "A"}],
         "QuikAgts": [{"MAGENT": "1", "MAGTNAME": "A", "MCOMP": "A"}],
-        "QuikMstr": [{"MPOLICY": "123456789A"}],
+        "QuikMstr": [
+            {
+                "MPOLICY": "123456789A",
+                "MSTATUS": "22",
+                "MSTATDATE": issue,
+                "MISSDT": issue,
+                "MPAIDTO": issue,
+                "MBILLTO": issue,
+                "MAPPDATE": issue,
+                "MNFOPT": "0",
+                "MBILLFRM": "1",
+                "MBILLDAY": 15,
+                "MMODE": "12",
+                "MISSUEST": "TX",
+                "MBENPID": "",
+                "MBENCID": "",
+                "MISSCNTRY": "0000",
+                "MISSCLASS": "00",
+            }
+        ],
+        "QuikClnt": [
+            {
+                "MCLIENTID": "C001",
+                "MTYPE": "I",
+                "MTAXIDTYPE": "S",
+                "MLNAME": "Smith",
+                "MFNAME": "John",
+                "MADDR1": "1 Main",
+                "MSEX": "M",
+                "MLANGUAGE": "E",
+                "MDOB": date(1980, 1, 1),
+            }
+        ],
+        "QuikRidr": [{"MPOLICY": "123456789A", "MPHASE": 1}],
+        "QuikClid": [
+            {
+                "MCLIENTID": "C001",
+                "MPOLICY": "123456789A",
+                "MRELATION": "INSD",
+                "MPHASE": 1,
+            }
+        ],
         "QuikActg": [{"MCOMP": "A", "MPLAN": "P1"}],
         # QuikList / QuikDate / plan values missing → incomplete
     }

@@ -105,32 +105,34 @@ RULE_DG_QUIKCOMP_003 = RuleDefinition(
 GOVERNANCE_ITEM_QUIKMSTR = GovernanceItem(
     item_id="DG-QUIKMSTR",
     item_number=2,
-    name="QuikMstr Policy Number Integrity",
+    name="Policy Master",
     description=(
-        "Ensure policy numbers stored in QuikMstr meet required format rules, "
-        "starting with acceptable character length."
+        "Validate policy master records for unique policy numbers, status and dates, "
+        "billing setup, client references, approved defaults, and forced blank "
+        "beneficiary IDs."
     ),
 )
 
 RULE_DG_QUIKMSTR_001 = RuleDefinition(
     rule_id="DG-QUIKMSTR-001",
     governance_item_id="DG-QUIKMSTR",
-    technical_name="Validate QuikMstr Policy Number Length",
-    business_name="Policy Number Must Contain 4 to 11 Characters",
-    purpose="Ensure every policy number stored in QuikMstr contains an acceptable number of characters.",
+    technical_name="Validate Policy Number Unique And Length",
+    business_name="Policy Number Must Be Unique And Valid Length",
+    purpose=(
+        "Ensure every policy number is unique in Policy Master and contains between "
+        "4 and 11 characters after trim."
+    ),
     source_tables=("QuikMstr",),
     source_fields=("MPOLICY",),
     business_rule=(
-        "After safely handling nulls and removing only leading/trailing DBF padding, "
-        "MPOLICY must contain between 4 and 11 characters (inclusive). Internal spaces "
-        "are retained and counted. Policy numbers are never corrected by this rule."
+        "After removing DBF padding, MPOLICY must be nonblank, length 4–11 inclusive, "
+        "and appear only once. Duplicates fail. Policy numbers are never renamed."
     ),
     severity="Critical",
     failure_conditions=(
-        "MPOLICY is null.",
-        "MPOLICY is blank after DBF padding is removed.",
-        "Normalized policy number contains fewer than 4 characters.",
-        "Normalized policy number contains more than 11 characters.",
+        "MPOLICY is null or blank.",
+        "Normalized policy number length is outside 4–11.",
+        "The same policy number appears more than once.",
     ),
 )
 
@@ -767,6 +769,52 @@ from data_governance.catalog.governance_items_quikplan import (  # noqa: E402
     RULE_DG_QUIKPLAN_032,
     RULE_DG_QUIKPLAN_033,
 )
+from data_governance.catalog.governance_items_policy_data import (  # noqa: E402
+    ALL_POLICY_MSTR_RULES,
+    ALL_QUIKCLID_RULES,
+    ALL_QUIKCLNT_RULES,
+    GOVERNANCE_ITEM_QUIKCLID,
+    GOVERNANCE_ITEM_QUIKCLNT,
+    RULE_DG_QUIKCLID_001,
+    RULE_DG_QUIKCLID_002,
+    RULE_DG_QUIKCLID_003,
+    RULE_DG_QUIKCLID_004,
+    RULE_DG_QUIKCLID_005,
+    RULE_DG_QUIKCLID_006,
+    RULE_DG_QUIKCLNT_001,
+    RULE_DG_QUIKCLNT_002,
+    RULE_DG_QUIKCLNT_003,
+    RULE_DG_QUIKCLNT_004,
+    RULE_DG_QUIKCLNT_005,
+    RULE_DG_QUIKCLNT_006,
+    RULE_DG_QUIKCLNT_007,
+    RULE_DG_QUIKCLNT_008,
+    RULE_DG_QUIKMSTR_002,
+    RULE_DG_QUIKMSTR_003,
+    RULE_DG_QUIKMSTR_004,
+    RULE_DG_QUIKMSTR_005,
+    RULE_DG_QUIKMSTR_006,
+    RULE_DG_QUIKMSTR_007,
+    RULE_DG_QUIKMSTR_008,
+    RULE_DG_QUIKMSTR_009,
+    RULE_DG_QUIKMSTR_010,
+    RULE_DG_QUIKMSTR_011,
+    RULE_DG_QUIKMSTR_012,
+    RULE_DG_QUIKMSTR_013,
+    RULE_DG_QUIKMSTR_014,
+    RULE_DG_QUIKMSTR_015,
+    RULE_DG_QUIKMSTR_016,
+    RULE_DG_QUIKMSTR_017,
+    RULE_DG_QUIKMSTR_018,
+    RULE_DG_QUIKMSTR_019,
+    RULE_DG_QUIKMSTR_020,
+    RULE_DG_QUIKMSTR_021,
+    RULE_DG_QUIKMSTR_022,
+    RULE_DG_QUIKMSTR_023,
+    RULE_DG_QUIKMSTR_024,
+    RULE_DG_QUIKMSTR_025,
+    RULE_DG_QUIKMSTR_026,
+)
 
 ALL_GOVERNANCE_ITEMS = (
     GOVERNANCE_ITEM_QUIKCOMP,
@@ -776,12 +824,15 @@ ALL_GOVERNANCE_ITEMS = (
     GOVERNANCE_ITEM_QUIKDATE,
     GOVERNANCE_ITEM_PLANVALUES,
     GOVERNANCE_ITEM_QUIKPLAN,
+    GOVERNANCE_ITEM_QUIKCLNT,
+    GOVERNANCE_ITEM_QUIKCLID,
 )
 ALL_RULE_DEFINITIONS = (
     RULE_DG_QUIKCOMP_001,
     RULE_DG_QUIKCOMP_002,
     RULE_DG_QUIKCOMP_003,
     RULE_DG_QUIKMSTR_001,
+    *ALL_POLICY_MSTR_RULES,
     RULE_DG_QUIKACTG_001,
     RULE_DG_QUIKACTG_002,
     RULE_DG_QUIKLIST_001,
@@ -808,4 +859,6 @@ ALL_RULE_DEFINITIONS = (
     RULE_DG_PLANVALUES_007,
     RULE_DG_PLANVALUES_008,
     *ALL_QUIKPLAN_RULES,
+    *ALL_QUIKCLNT_RULES,
+    *ALL_QUIKCLID_RULES,
 )

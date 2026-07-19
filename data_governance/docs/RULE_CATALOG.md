@@ -71,35 +71,47 @@ Primary package: `data_governance`
 
 ---
 
-## Data Governance Item 2 — QuikMstr Policy Number Integrity
+## Data Governance Item 2 — Policy Master (`DG-QUIKMSTR`)
 
 | Field | Value |
 |-------|--------|
 | Governance item ID | `DG-QUIKMSTR` |
 | Item number | 2 |
-| Name | QuikMstr Policy Number Integrity |
-| Purpose | Ensure policy numbers stored in QuikMstr meet required format rules, starting with acceptable character length. |
+| Name | Policy Master |
+| Purpose | Validate QuikMstr policy identity, status/dates, billing, client references, and approved safe defaults. |
+| Package | `rules/policy_master_integrity/` |
+| Schema | `docs/Policy_Data_Schema_Verification.md` |
+| Code authorities | `config/policy_code_authorities.csv` |
 | Implementation status | Active |
 
-### DG-QUIKMSTR-001 — Policy Number Must Contain 4 to 11 Characters
+| Rule | Summary | Severity / notes |
+|------|---------|------------------|
+| 001 | MPOLICY unique + length 4–11 | Critical |
+| 002 | MSTATUS required + authority | Critical |
+| 003–004 | MSTATDATE / MISSDT required + date range | Critical |
+| 005–007 | MPAIDTO / MBILLTO vs MISSDT and each other | Error |
+| 008 | Blank MNFOPT expect 0; invalid fail; nonzero preserved | Error |
+| 009 | MDIVOPT — deferred stub (no findings) | Deferred |
+| 010–013 | MBILLFRM / MBILLDAY / bank-draft / MMODE | Critical / Error |
+| 014 | MISSUEST required + US states | Error |
+| 015 | Blank MGROUP OK; else in QuikList | Error |
+| 016–020 | Populated client ID refs → QuikClnt | Error |
+| 021–022 | MBENPID / MBENCID must be blank | Error |
+| 023 | MAPPDATE ≤ MISSDT when both set | Error |
+| 024 | Blank MISSCNTRY → expect 0000 | Error |
+| 025 | MRESSTATE — deferred stub (no findings) | Deferred |
+| 026 | Blank MISSCLASS → expect 00 | Error |
+
+### DG-QUIKMSTR-001 — Policy Number Must Be Unique And Valid Length
 
 | Field | Value |
 |-------|--------|
-| Governance item number | 2 |
 | Rule ID | `DG-QUIKMSTR-001` |
-| Business name | Policy Number Must Contain 4 to 11 Characters |
-| Technical name | Validate QuikMstr Policy Number Length |
-| Purpose | Ensure every policy number stored in QuikMstr contains an acceptable number of characters. |
-| Source table | QuikMstr |
+| Business name | Policy Number Must Be Unique And Valid Length |
 | Source field | MPOLICY |
-| Normalization | Handle nulls; convert to text; remove only leading/trailing DBF padding; preserve internal characters/spaces; length = len(normalized). Do not correct values. |
-| Minimum length | 4 |
-| Maximum length | 11 |
-| Valid lengths | 4 through 11 inclusive |
-| Severity | Critical |
-| Failure conditions | Null MPOLICY; blank after trim; length &lt; 4; length &gt; 11 |
-| Output fields | data_region_path, original_policy_number, normalized_policy_number, policy_number_length, min_permitted_length, max_permitted_length, message, run_id, run_timestamp |
-| Test coverage | 4–11 pass; 3/12 fail; blank/null fail; leading/trailing pad; internal spaces retained; original unchanged; length in finding; continue after one invalid |
+| Normalization | Trim-only DBF padding; preserve internal characters |
+| Minimum / maximum length | 4 / 11 |
+| Failure conditions | Blank/null; length out of range; duplicate normalized MPOLICY |
 | Implementation status | Implemented |
 
 ---
@@ -519,6 +531,53 @@ Rules `DG-QUIKPLAN-001` … `033` validate QuikPlan configuration, related setup
 Verified physical mappings: PAYYRS, MAXUNIT, RRULE, QuikComm (QUIKCOMM.DBF). See `docs/QuikPlan_Schema_Verification.md`.
 
 Optional classification: `config/plan_classification.csv` (`PLAN,IS_MYGA,IS_UL,IS_SINGLE_PREMIUM,INITVAL_EXCEPTION`).
+
+---
+
+## Item 8 — Client Setup (`DG-QUIKCLNT`)
+
+| Field | Value |
+|-------|--------|
+| Governance item ID | `DG-QUIKCLNT` |
+| Item number | 8 |
+| Name | Client Setup |
+| Primary table | QuikClnt |
+| Package | `rules/client_setup_integrity/` |
+| Implementation status | Active |
+
+| Rule | Summary | Severity / notes |
+|------|---------|------------------|
+| 001 | Unique MCLIENTID | Critical |
+| 002 | Blank MTYPE → expect I; validate populated | Error |
+| 003 | Blank MTAXIDTYPE → expect S | Error |
+| 004 | Individual (MTYPE=I): MLNAME required | Error |
+| 005 | All name/address blank → WARN | Advisory |
+| 006 | MDOB valid / ≤ run / ≥ 1900; individual blank → WARN | Error / Advisory |
+| 007 | Individual MSEX in {M,F}; uppercase normalize in conversion | Error |
+| 008 | Blank MLANGUAGE → expect E | Error |
+
+---
+
+## Item 9 — Policy Relationships (`DG-QUIKCLID`)
+
+| Field | Value |
+|-------|--------|
+| Governance item ID | `DG-QUIKCLID` |
+| Item number | 9 |
+| Name | Policy Relationships |
+| Primary table | QuikClid (4 fields: MCLIENTID, MPOLICY, MPHASE, MRELATION — **no MRIDRID**) |
+| Related | QuikMstr, QuikClnt, QuikRidr |
+| Package | `rules/policy_relationship_integrity/` |
+| Implementation status | Active |
+
+| Rule | Summary | Severity / notes |
+|------|---------|------------------|
+| 001 | MCLIENTID required + in QuikClnt | Critical |
+| 002 | MPOLICY required + in QuikMstr | Critical |
+| 003 | MPHASE ≠ 0 ⇒ (MPOLICY, MPHASE) in QuikRidr | Error |
+| 004 | Non-INSD ⇒ MPHASE must be 0 | Error |
+| 005 | INSD: match QuikRidr on (MPOLICY, MPHASE) only | Error / Requires Review |
+| 006 | MRELATION in authority list | Error |
 
 ---
 

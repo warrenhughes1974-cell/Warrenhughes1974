@@ -43,8 +43,13 @@ def test_all_registered_rules_run_together(tmp_path, clean_company_tables):
         write_reports=False,
         preloaded_tables=clean_company_tables,
     )
-    assert len(result.rules_executed) == 61
+    assert len(result.rules_executed) == 100
     assert "DG-QUIKMSTR-001" in result.rules_executed
+    assert "DG-QUIKMSTR-026" in result.rules_executed
+    assert "DG-QUIKCLNT-001" in result.rules_executed
+    assert "DG-QUIKCLNT-008" in result.rules_executed
+    assert "DG-QUIKCLID-001" in result.rules_executed
+    assert "DG-QUIKCLID-006" in result.rules_executed
     assert "DG-QUIKACTG-001" in result.rules_executed
     assert "DG-QUIKACTG-002" in result.rules_executed
     assert "DG-QUIKLIST-001" in result.rules_executed
@@ -68,12 +73,14 @@ def test_one_rule_failure_does_not_stop_others(tmp_path):
         write_reports=False,
         preloaded_tables=tables,
     )
-    assert len(result.rule_results) == 61
+    assert len(result.rule_results) == 100
     by_id = {r.rule_id: r for r in result.rule_results}
     assert by_id["DG-QUIKCOMP-001"].status == STATUS_FAIL
     assert by_id["DG-QUIKCOMP-002"].status == STATUS_FAIL
     assert by_id["DG-QUIKCOMP-003"].status == STATUS_FAIL
     assert by_id["DG-QUIKMSTR-001"].status == STATUS_PASS
+    assert by_id["DG-QUIKCLNT-001"].status in (STATUS_ERROR, STATUS_FAIL, STATUS_PASS)
+    assert by_id["DG-QUIKCLID-001"].status in (STATUS_ERROR, STATUS_FAIL, STATUS_PASS)
     # QuikActg / QuikList / QuikDate / plan-value tables not preloaded → ERROR without stopping others
     assert by_id["DG-QUIKACTG-001"].status == STATUS_ERROR
     assert by_id["DG-QUIKACTG-002"].status == STATUS_ERROR

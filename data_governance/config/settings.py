@@ -24,6 +24,9 @@ RUN_LOG_NAME = "data_governance.log"
 TABLE_QUIKCOMP = "QuikComp"
 TABLE_QUIKAGTS = "QuikAgts"
 TABLE_QUIKMSTR = "QuikMstr"
+TABLE_QUIKCLNT = "QuikClnt"
+TABLE_QUIKCLID = "QuikClid"
+TABLE_QUIKRIDR = "QuikRidr"
 TABLE_QUIKACTG = "QuikActg"
 TABLE_QUIKCHRT = "QuikChrt"
 TABLE_QUIKLIST = "QuikList"
@@ -64,6 +67,9 @@ TABLE_FILE_STEMS = {
     TABLE_QUIKCOMP: ("quikcomp",),
     TABLE_QUIKAGTS: ("quikagts",),
     TABLE_QUIKMSTR: ("quikmstr",),
+    TABLE_QUIKCLNT: ("quikclnt",),
+    TABLE_QUIKCLID: ("quikclid",),
+    TABLE_QUIKRIDR: ("quikridr",),
     TABLE_QUIKACTG: ("quikactg",),
     TABLE_QUIKCHRT: ("quikchrt",),
     TABLE_QUIKLIST: ("quiklist",),

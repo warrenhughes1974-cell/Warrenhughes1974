@@ -6,7 +6,7 @@ ISSUE_DATE ,MISSDT,,Mapped from ISSUE_DATE
 PAID_TO_DATE,MPAIDTO,,Mapped from PAID_TO_DATE
 BILLED_TO_DATE,MBILLTO,,Mapped from BILLED_TO_DATE
 BILLING_FORM,MBILLFRM,,Mapped from BILLING_FORM
-POLICY_BILL_DAY,MBILLDAY,,Mapped from POLICY_BILL_DAY (Issue 21B); zero/blank falls back to day of PAID_TO_DATE (Issue 47)
+POLICY_BILL_DAY,MBILLDAY,,Mapped from POLICY_BILL_DAY (Issue 21B); zero/blank falls back to day of MISSDT/issue date (DG-QUIKMSTR-011; supersedes Issue 47 PAID_TO fallback)
 BILLING_MODE,MMODE,,Mapped from BILLING_MODE
 MODE_PREMIUM,MMODEPREM,,Mapped from MODE_PREMIUM
 ISSUE_STATE,MISSUEST,,Mapped from ISSUE_STATE
@@ -19,3 +19,6 @@ MMSMBI,MMSMBI,,Mapped from MMSMBI
 NFO_OPT,MNFOPT,0,
 ,MDIVOPT,0,Pulled from PPBENTYP Extract Cache
 ,MBANKNO,,
+,MISSCLASS,00,Default issue class 00 (v57.96 reference-book convention)
+,MBFCY,0,Default beneficiary category 0 (v57.96)
+,MACHCNT,0,Default ACH count 0 (v57.96)

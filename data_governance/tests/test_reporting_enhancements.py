@@ -89,7 +89,9 @@ def test_error_not_run_do_not_create_false_problem_counts(tmp_path):
     assert by_id["DG-QUIKCOMP-002"].status == STATUS_ERROR
     assert by_id["DG-QUIKCOMP-002"].records_evaluated == 0
     assert by_id["DG-QUIKCOMP-002"].failed_count == 0
-    assert result.records_evaluated == result.passed_count + result.failed_count
+    assert result.records_evaluated == (
+        result.passed_count + result.failed_count + result.warn_count
+    )
     assert result.data_conformance_accuracy_display.endswith("%")
 
 

@@ -150,3 +150,20 @@ Open `data_governance_results.csv` from the new run folder. Source DBFs remain r
 6. LOAGE/HIAGE = plan-level issue ages; readable and LOAGE < HIAGE (LOAGE need not be 0; DG-R-007).
 7. Out-of-range dates are governance warnings only; source DBFs are never modified.
 8. VARDB supporting tables (026): require QuikDbs/QuikPlDb only when VARDB is 1, 2, or 3; level (0) and not-on-file (4) skip (DG-R-010).
+
+## 2026-07-19 enhancement — Policy Data Governance (QuikMstr / QuikClnt / QuikClid)
+
+- Schema verified from CSO — see `docs/Policy_Data_Schema_Verification.md`.
+- Expanded item 2 `DG-QUIKMSTR` to **Policy Master** (`rules/policy_master_integrity/`); 001 = unique + length 4–11.
+- New items: `DG-QUIKCLNT` (8), `DG-QUIKCLID` (9).
+- Code authorities: `config/policy_code_authorities.csv` + `policy_code_authority.py`.
+- **Deferred (no findings):** DG-QUIKMSTR-009 MDIVOPT; DG-QUIKMSTR-025 MRESSTATE.
+- Conversion-only safe transforms (`qla_core/policy_data_transforms.py`, app.py v58.11):
+  - **MBILLDAY** blank/0 → day of **MISSDT** / issue date (supersedes Issue #47 PAID_TO fallback).
+  - **MBENPID / MBENCID** forced blank on QuikMstr (beneficiaries stay on QuikClid).
+  - Non-INSD QuikClid **MPHASE → 0**; INSD blank/0 → 1.
+  - MLANGUAGE default `E`; MISSUEST / MSEX / MSTATE uppercase when populated.
+  - Internal audit: `QLA_Migration/Reports/policy_data_transformation_audit.csv` (not user-facing Report 2).
+- Hard rule: governance never writes source DBFs; defaults only on blank/null (or forced-blank fields).
+- QuikClid has **no MRIDRID**; INSD phase match uses `(MPOLICY, MPHASE)` against QuikRidr only.
+- Runner treats DG-QUIKMSTR / CLNT / CLID like QuikPlan for optional supporting tables (single Could Not Be Checked when reference table missing).

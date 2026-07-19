@@ -19,6 +19,14 @@
 | DG-R-007 | QuikPlan LOAGE | Source `MIN_ISSUE_AGE` (default `0` if empty) | **Do not force LOAGE=0** over real min issue age. Rule 008 only requires LOAGE &lt; HIAGE |
 | DG-R-008 | QuikPlan / QuikPl* PLAN | Never emit blank PLAN | Current `quikplan.csv` emit already skips blanks; do not load blank-PLAN shells into DBF |
 | DG-R-009 | QuikPlan single-premium pay | PAYYRS=1; PAYAGE/SEMI/QTRL/MTHD/MTHB=0 | Confirmed plans in `QLA_Migration/Configs/single_premium_plans.csv`; applied after ROUTE_PAY_* (v58.10) |
+| Policy Data | QuikMstr MNFOPT | `0` when blank | Sync_Rulebook; nonzero preserved |
+| Policy Data | QuikMstr MISSCNTRY | `0000` when blank | Sync_Rulebook / DG-QUIKMSTR-024 |
+| Policy Data | QuikMstr MISSCLASS | `00` when blank | Sync_Rulebook / DG-QUIKMSTR-026 |
+| Policy Data | QuikMstr MBILLDAY | Day of MISSDT when blank/0 | `policy_data_transforms` (v58.11; supersedes Issue #47 PAID_TO) |
+| Policy Data | QuikMstr MBENPID / MBENCID | Forced blank | Conversion clears; beneficiaries on QuikClid |
+| Policy Data | QuikClnt MLANGUAGE | `E` when blank | Sync_Rulebook_quikclnt / DG-QUIKCLNT-008 |
+| Policy Data | QuikClnt MTYPE / MTAXIDTYPE | `I` / `S` when blank | Existing rulebook defaults |
+| Policy Data | QuikClid MPHASE | `0` for non-INSD; INSD blank/0 → `1` | `apply_quikclid_phase_for_relation` |
 
 ## Rulebook mechanics (QuikPlan)
 
@@ -33,5 +41,9 @@ So `HCOMMIP`/`HRIGPKEY` = `F` means: default False unless a future source mappin
 ## Related files
 
 - `QLA_Migration/Configs/Sync_Rulebook_quikplan.csv`
+- `QLA_Migration/Configs/Sync_Rulebook_quikmstr.csv`
+- `QLA_Migration/Configs/Sync_Rulebook_quikclnt.csv`
+- `qla_core/policy_data_transforms.py`
+- `QLA_Migration/Reports/policy_data_transformation_audit.csv` (runtime audit)
 - `QLA_Migration/Data_Goverence.txt`
 - Per-item folders under `data_governance/docs/remediation/items/`
