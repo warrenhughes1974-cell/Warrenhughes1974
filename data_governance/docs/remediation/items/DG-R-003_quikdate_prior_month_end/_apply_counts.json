@@ -1,0 +1,73 @@
+{
+  "item": "DG-R-003",
+  "preflight": {
+    "timestamp_utc": "2026-07-18T23:51:01.564095+00:00",
+    "data_path": "Q:\\CSO\\CSO_Test_6_30_2026",
+    "quikdate_path": "Q:\\CSO\\CSO_Test_6_30_2026\\QUIKDATE.dbf",
+    "quikdate_row_count": 1,
+    "field_names": [
+      "PROCDATE",
+      "ESC_DATE",
+      "ANNDATE",
+      "DIRBILL",
+      "PDUEDAYS",
+      "PACBILL",
+      "GRPBILL",
+      "APLBILL",
+      "LOANBILL",
+      "REINBILL",
+      "CPNBILL",
+      "VERSION",
+      "UPDATENUM",
+      "CCBILL",
+      "ACHFILEID",
+      "ACHFILEID2"
+    ],
+    "before": {
+      "PACBILL": "2004-12-05",
+      "DIRBILL": "2004-12-19",
+      "REINBILL": "None",
+      "ACHFILEID": 0,
+      "ACHFILEID2": "A",
+      "ESC_DATE": "None",
+      "PROCDATE": "2026-07-18",
+      "GRPBILL": "2004-12-31",
+      "APLBILL": "2004-11-30",
+      "LOANBILL": "2004-11-30",
+      "CCBILL": "2011-02-24",
+      "VERSION": "     5.318",
+      "UPDATENUM": 359
+    }
+  },
+  "backup_dir": "Q:\\CSO\\CSO_Test_6_30_2026_backup_DG-R-003_20260718",
+  "backed_up_files": [
+    "QUIKDATE.dbf"
+  ],
+  "apply": {
+    "path": "Q:\\CSO\\CSO_Test_6_30_2026\\QUIKDATE.dbf",
+    "updated_fields": [
+      "PACBILL",
+      "DIRBILL",
+      "REINBILL"
+    ],
+    "target": "2026-06-30"
+  },
+  "post_verify": {
+    "quikdate_row_count": 1,
+    "after": {
+      "PACBILL": "2026-06-30",
+      "DIRBILL": "2026-06-30",
+      "REINBILL": "2026-06-30",
+      "ACHFILEID": "0",
+      "ACHFILEID2": "A",
+      "ESC_DATE": "None",
+      "PROCDATE": "2026-07-18",
+      "GRPBILL": "2004-12-31",
+      "APLBILL": "2004-11-30",
+      "LOANBILL": "2004-11-30",
+      "CCBILL": "2011-02-24",
+      "VERSION": "     5.318",
+      "UPDATENUM": "359"
+    }
+  }
+}

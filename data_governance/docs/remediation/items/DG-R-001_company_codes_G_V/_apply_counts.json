@@ -1,0 +1,44 @@
+{
+  "item": "DG-R-001",
+  "data_region": "Q:\\CSO\\CSO_Test_6_30_2025",
+  "backup": "Q:\\CSO\\CSO_Test_6_30_2025_backup_DG-R-001_20260718",
+  "preflight": {
+    "quikcomp_distinct": {"C": 1},
+    "quiklist_delete_count": 3,
+    "quiklist_delete": [
+      {"MGROUP": "TEST1", "MCOMP": "G"},
+      {"MGROUP": "GTEST01", "MCOMP": "V"},
+      {"MGROUP": "TERMG", "MCOMP": "G"}
+    ],
+    "quikchrt_gv": {"G": 37, "V": 34},
+    "quikagts_gv_total": 0,
+    "quikactg_gv_total": 0,
+    "quikmstr_lastchar_G": 0,
+    "quikmstr_lastchar_V": 0
+  },
+  "applied": {
+    "quiklist_deleted": 3,
+    "quiklist_rows_after": 0,
+    "quikchrt_remapped": {"G": 37, "V": 34, "total": 71},
+    "quikchrt_already_C": 22,
+    "quikagts_remapped": 0,
+    "quikactg_remapped": 0,
+    "quikcomp_inserts": 0
+  },
+  "post": {
+    "quiklist_rows": 0,
+    "quikchrt_mcomp": {"C": 93},
+    "quikagts_unchanged_vs_backup": true,
+    "quikactg_unchanged_vs_backup": true,
+    "quikcomp_unchanged_vs_backup": true
+  },
+  "validation": {
+    "DG-QUIKLIST-002": "Passed",
+    "DG-QUIKPLAN-032": "Passed"
+  },
+  "residuals": [
+    "quikgrpimp.dbf has 3 rows MGROUP=TERMG (out of scope)",
+    "NTX indexes may need QLAdmin reindex"
+  ],
+  "proposed_tracker_status": "CLOSED"
+}

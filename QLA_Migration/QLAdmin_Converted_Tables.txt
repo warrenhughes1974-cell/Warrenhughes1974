@@ -36,11 +36,11 @@ Agent / Commission Domain:- waitng for client
   quikcgbk   - Chargeback
   quikcpol   - Commission-on-policy rates
 
-Group / System Control:- not needed
+Group / System Control:- not needed (except quikdate governance emit)
   quiklist   - List / lookup
   quikgspc   - Group spec
   quikcomp   - Company record (Loyal American Life)
-  quikdate   - System control dates
+  quikdate   - System control dates (emitted on batch for DG-R-003 / DG-QUIKDATE defaults)
 
 Rate Tables: all done
   quiknps    - Net premium / scale rates
