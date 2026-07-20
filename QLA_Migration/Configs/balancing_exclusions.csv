@@ -1,0 +1,11 @@
+CONTROL_ID,EXCLUSION_TYPE,REASON,NOTES
+BAL-C02,UV_FV_SL_FILTER,"Non-coverage benefit rows (fund / unit values / substandard) are intentionally left out of QLAdmin Riders",Plain-English for UV/FV/SL filter
+BAL-C03,CLNT_DEDUPE,"Client counts can differ slightly because QLAdmin builds one client record per person after name/address cleanup",Relationship Name/Address extract vs Clients
+BAL-C04,CLID_DEDUPE,"Relationship counts are lower in QLAdmin because duplicate person-to-policy links are removed",Relationship Name/Address extract vs Policy Relationships
+BAL-C05,BENF_FILTER,"Not every beneficiary-type name/address row becomes a QLAdmin beneficiary (extra conversion filters apply)",Relationship Name/Address extract vs Beneficiaries
+BAL-C06,PRMH_POST_FILTER,"Premium-history row counts can differ after conversion premium adjustments and cleanup",Accounting extract vs Premium History
+BAL-C07,ZERO_BALANCE_HOLD,"Only the latest active loan with a balance is loaded; paid-off and history rows are held out",Loan extract vs Loans
+BAL-C07,LOAN_HISTORY,"LifePRO keeps many loan history rows per policy; QLAdmin keeps the current loan",Loan extract vs Loans
+BAL-D01,FACE_ROUNDING,"Face totals can differ by a few dollars from rounding across thousands of coverages",Investigate only if variance is large
+BAL-D03,ISSUE21F,"QLAdmin premium-history dollars include conversion premium adjustments that are not in the raw accounting sum",Known conversion adjustment
+BAL-I01,NON_PRODUCT,"A small number of administrative / non-product policy rows are intentionally not loaded to QLAdmin",Non-convertible benefit structures

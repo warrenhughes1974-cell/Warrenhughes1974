@@ -64,6 +64,14 @@ STAGE_PLANS = {
         (4, "Writing governance reports", 90),
         (5, "Finalizing governance summary", 100),
     ],
+    "balancing": [
+        (1, "Resolving LifePRO source extracts", 10),
+        (2, "Reading QLAdmin output tables", 25),
+        (3, "Computing count controls", 45),
+        (4, "Computing dollar and loan controls", 70),
+        (5, "Checking policy inventory", 85),
+        (6, "Writing Balancing reports", 100),
+    ],
 }
 
 

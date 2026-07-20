@@ -102,6 +102,8 @@
 | **#83** | Fleet gender companion rate keys (F/M; Values=N) | **CLOSED ✓** | **v58.02** | **Resolution:** Rate setup now emits missing Female/Male companion keys fleet-wide when a plan declares both gender members but a GP/DB/CV/TV/DV family only had one sex key, without inventing factor values (QLAdmin Values=N on companions with no factors). Val+Reg PASS; UAT pending (`221END` anchor). |
 | **#84** | `quikclms` money-field decomposition (Policy-book parity) | **Track A Implemented v58.12 — Awaiting Validation** | **v58.12** | Track A: claim-key MPAID/PDDATE backfill after #85. Track B deferred. Out of scope: CLAIMSTAT (#79), new payees (#78). |
 | **#85** | Duplicate claim headers (same policy + phase) | **Implemented v58.03 — Awaiting Validation** | **v58.03** | Merge 177 dups; rephase 3,034; payee re-attach 3,115 (15 exceptions). Headers 5,624→5,447; 0 dup pol+phase. Dev on Grok 4.5 (override). |
+| **#86** | QuikDate full rebuild (prior-month-end + screenshot defaults) | **Implemented v58.13 — Awaiting Validation** | **v58.13** | Full single-row quikdate emit: PME on all date fields (ESC blank); PDUEDAYS=31, VERSION=5.318, UPDATENUM=359, ACH 0+A. Not crosswalk. Validator PASS 2026-07-19. |
+| **#87** | QuikForge Balancing (source↔QLAdmin recon report) | **G5+G6 PASS — Ready for Client UAT** | **v58.14** | Balancing UI button + `qla_core/balancing.py`; reports → `Balancing/`. Val+Reg PASS 2026-07-19. BAL-D07 MSPLIT finding for client review. |
 | **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
 | **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
 | **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |
@@ -176,6 +178,8 @@
 **#84 detail:** `Issue_Log_Items/Issue_84/` · **Track A Implemented v58.12 — Awaiting Validation** · Claim-key MPAID/PDDATE backfill after #78/#79/#85 · Audit `Reports/issue84_money_field_audit.csv` · Track B (PACTG components + 898-policy recon) deferred · `Issue_84_Implementation_Notes.md`
 
 **#85 detail:** `Issue_Log_Items/Issue_85/` · **Implemented v58.03 — Awaiting Validation** · G5 PASS · Dev Grok 4.5 override · 5,624→5,447 headers; 177 merges; 3,034 rephase; 6,151 payees unchanged · UAT: `Test_Validation/quikclms.csv` + `quikclmp.csv` · `Issue_85_Implementation_Notes.md`
+
+**#87 detail:** `Issue_Log_Items/Issue_87/` · **G5+G6 PASS — Ready for Client UAT** · v58.14 · Val+Reg 2026-07-19 · Next: Closure Agent or client UAT (Balancing button)
 
 **#59 detail:** `Issue_Log_Items/Issue_59/` · **CLOSED 2026-07-14** · **v57.84** · Resolution: seven-policy scoped MSTATUS fix (6×54→22; 010521213C→50). `Issue_59_Resolution_Summary.md`. Client UAT pending Eric.
 

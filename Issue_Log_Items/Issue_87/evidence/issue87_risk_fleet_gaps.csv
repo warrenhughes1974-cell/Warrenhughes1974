@@ -1,0 +1,11 @@
+CONTROL,SOURCE_METRIC,SOURCE_VALUE,QLA_METRIC,QLA_VALUE,VARIANCE,EXPECTED_STATUS_IF_MIRRORED,NOTES
+BAL-C01,PPOLC_rows,5084,quikmstr_rows,5084,0,PASS,Exact match midyear batch
+BAL-C02_raw,PPBEN_all_rows,11699,quikridr_rows,6936,-4763,EXPLAINED_if_filtered,Do not compare raw PPBEN to ridr
+BAL-C02_filtered,PPBEN_OTHER_not_UV_FV_SL,6935,quikridr_rows,6936,1,PASS_or_EXPLAINED,UV=2348 FV=2348 SL=68; OTHER≈ridr
+BAL-C06_raw,PACTG_all_rows,404451,quikprmh_rows,201572,-202879,EXPLAINED_if_filtered,Must filter CREDIT 110
+BAL-C06_filtered,PACTG_CREDIT_110,206863,quikprmh_rows,201572,-5291,EXPLAINED_or_investigate,Residual after CREDIT 110; mirror remaining prmh exclusions
+BAL-C07_raw,PLOAN_all_rows,94152,quikloan_rows,365,-93787,EXPLAINED,Latest non-zero emit only
+BAL-C08_filtered,PACTG_CREDIT_or_DEBIT_516,31,quikdvpr_rows,28,-3,PASS_or_EXPLAINED,Near match
+BAL-D02_count_proxy,PPOLC_rows,5084,quikmstr_rows,5084,0,PASS,Dollar sum TBD at Dev; count grain matches
+BAL-I01,PPOLC_policies,5084,quikmstr_policies,5084,0,PASS,Inventory expected tight
+CONVERSION_ROWS_CHANGED_BY_ISSUE87,n/a,0,n/a,0,0,N/A,Read-only reporting feature

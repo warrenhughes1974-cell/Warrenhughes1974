@@ -1,10 +1,18 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.12
+# Version:     v58.18
 # Date:        2026-07-19
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v58.12 — Issue #84 Track A: backfill quikclms MPAID/PDDATE from claim-keyed payees.
+# Change Note: v58.18 — QUIKConvert branding + rotating header taglines (UI only).
+#              v58.17 — Issue #87: Balancing progress bar uses a real 6-stage plan (was stuck on Stage 1).
+#              v58.16 — Issue #87: plain-English Balancing report wording (no RNA/PPOLC jargon).
+#              v58.15 — Issue #87: Balancing reports match Data Governance style (HTML executive
+#              summary + Items Needing Attention CSV per run folder).
+#              v58.14 — Issue #87: QuikForge Balancing button — read-only Source↔Output reconciliation
+#              report under QLA_Migration/Balancing/ (PASS/EXPLAINED/FAIL controls).
+#              v58.13 — Issue #86: full QuikDate rebuild (PME on all date fields; screenshot defaults).
+#              v58.12 — Issue #84 Track A: backfill quikclms MPAID/PDDATE from claim-keyed payees.
 #              v58.11 — Policy Data Governance: MBILLDAY from MISSDT; clear MBENPID/MBENCID;
 #              non-INSD QuikClid MPHASE→0; MLANGUAGE default E; transform audit CSV.
 #              v58.10 — DG-R-009 single-premium PAYYRS/PAYAGE + modal zeros.
@@ -182,6 +190,12 @@ from qla_core.schema_constants import (
     QUIKBENH_SCHEMA,
 )
 from qla_core import run_logging as RL
+from qla_core.quikconvert_tagline import (
+    APP_PRIMARY_TAGLINE,
+    QUIKCONVERT_TAGLINES,
+    TAGLINE_ROTATION_INTERVAL_MS,
+    TaglineRotator,
+)
 from qla_core.quikplan_converter import (
     convert_quikplan_to_output,
     prepare_quikplan_source,
@@ -435,9 +449,9 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.12"
-APP_BRAND = "QuikForge"
-APP_TAGLINE = "Forge. Validate. Deliver."
+APP_VERSION = "v58.18"
+APP_BRAND = "QUIKConvert"
+APP_TAGLINE = APP_PRIMARY_TAGLINE
 
 
 class QLAdminEnterpriseIntegrationSuite:
@@ -446,8 +460,9 @@ class QLAdminEnterpriseIntegrationSuite:
         self.root.title(f"{APP_BRAND} — {APP_TAGLINE}  {APP_VERSION}")
         self.root.geometry("1200x980")
         self.root.minsize(1080, 820)
+        self._tagline_rotator = None
 
-        # QuikForge / QLAdmin-aligned red + white theme
+        # QUIKConvert / QLAdmin-aligned red + white theme
         self.bg_main = "#F5F5F5"
         self.bg_card = "#FFFFFF"
         self.bg_nav = "#B91C1C"
@@ -468,6 +483,7 @@ class QLAdminEnterpriseIntegrationSuite:
         self.btn_product = "#9F1239"
         self.btn_rates = "#7F1D1D"
         self.btn_gov = "#450A0A"
+        self.btn_balancing = "#15803D"
         self.btn_secondary = "#6B7280"
         self.text_color = "#374151"
         self.root.configure(bg=self.bg_main)
@@ -2680,32 +2696,68 @@ class QLAdminEnterpriseIntegrationSuite:
         return value_lbl
 
     def _setup_top_nav(self):
-        nav = tk.Frame(self.root, bg=self.bg_nav, height=56)
+        nav = tk.Frame(self.root, bg=self.bg_nav, height=72)
         nav.pack(fill="x")
         nav.pack_propagate(False)
         inner = tk.Frame(nav, bg=self.bg_nav)
-        inner.pack(fill="both", expand=True, padx=24, pady=10)
+        inner.pack(fill="both", expand=True, padx=24, pady=8)
         left = tk.Frame(inner, bg=self.bg_nav)
         left.pack(side="left", fill="y")
         tk.Label(
             left, text=APP_BRAND, bg=self.bg_nav, fg="#FFFFFF",
-            font=("Segoe UI", 14, "bold"),
-        ).pack(side="left")
-        tk.Label(
-            left, text=f"  ·  {APP_TAGLINE}",
-            bg=self.bg_nav, fg="#FFFFFF", font=("Segoe UI", 10),
-        ).pack(side="left", padx=(4, 0))
+            font=("Segoe UI", 16, "bold"),
+        ).pack(anchor="w")
+        # Fixed-height tagline slot so rotation never shifts the layout.
+        tagline_slot = tk.Frame(left, bg=self.bg_nav, height=22)
+        tagline_slot.pack(anchor="w", fill="x", pady=(2, 0))
+        tagline_slot.pack_propagate(False)
+        self._tagline_label = tk.Label(
+            tagline_slot,
+            text=APP_TAGLINE,
+            bg=self.bg_nav,
+            fg="#FFFFFF",
+            font=("Segoe UI", 9),
+            anchor="w",
+            justify="left",
+            wraplength=720,
+        )
+        self._tagline_label.pack(fill="both", expand=True)
+        # Decorative / non-urgent: screen readers should not treat rotations as alerts.
+        try:
+            self._tagline_label.configure(takefocus=0)
+        except Exception:
+            pass
         right = tk.Frame(inner, bg=self.bg_nav)
-        right.pack(side="right")
+        right.pack(side="right", anchor="n")
         tk.Label(
-            right, text=APP_VERSION, bg=self.bg_nav, fg="#FFFFFF",
+            right,
+            text=f"{APP_BRAND} | Version {APP_VERSION}",
+            bg=self.bg_nav,
+            fg="#FFFFFF",
             font=("Segoe UI", 10, "bold"),
         ).pack(side="right")
-        tk.Label(
-            right, text="Enterprise Conversion  ", bg=self.bg_nav, fg=self.bg_nav_muted,
-            font=("Segoe UI", 9),
-        ).pack(side="right")
         tk.Frame(self.root, bg=self.brand_red_dark, height=3).pack(fill="x")
+        if self._tagline_rotator is not None:
+            self._tagline_rotator.close()
+        self._tagline_rotator = TaglineRotator(
+            self.root,
+            self._tagline_label,
+            taglines=QUIKCONVERT_TAGLINES,
+            interval_ms=TAGLINE_ROTATION_INTERVAL_MS,
+            fg_active="#FFFFFF",
+            fg_muted=self.bg_nav_muted,
+            bg=self.bg_nav,
+        )
+        try:
+            self.root.protocol("WM_DELETE_WINDOW", self._on_app_close)
+        except Exception:
+            pass
+
+    def _on_app_close(self):
+        if self._tagline_rotator is not None:
+            self._tagline_rotator.close()
+            self._tagline_rotator = None
+        self.root.destroy()
 
     def _setup_uat_status_banner(self):
         self.gov_banner_frame = tk.Frame(
@@ -2777,6 +2829,7 @@ class QLAdminEnterpriseIntegrationSuite:
             ("Single Table", self.btn_action, lambda: self.start_thread(False)),
             ("Rate Tables", self.btn_rates, self.start_rate_loader_thread),
             ("Governance Audit", self.btn_gov, self.start_governance_audit_thread),
+            ("Balancing", self.btn_balancing, self.start_balancing_thread),
         ]
         for text, color, cmd in primary_actions:
             self._ui_action_button(ops, text, color, cmd, width=16).pack(side="left", padx=(0, 8))
@@ -5805,6 +5858,159 @@ class QLAdminEnterpriseIntegrationSuite:
             self.is_running = False
             # Leave final elapsed time visible (timer thread stops when is_running is False).
 
+    def _balancing_dir(self):
+        return os.path.normpath(os.path.join(self._migration_root(), "Balancing"))
+
+    def _resolve_balancing_source_dir(self):
+        candidates = []
+        if hasattr(self, "path_vars") and "Src" in self.path_vars:
+            src_file = self.path_vars["Src"][0].get().strip()
+            if src_file:
+                candidates.append(os.path.dirname(src_file))
+        candidates.append(self._migration_source_dir())
+        for path in candidates:
+            if path and os.path.isdir(path):
+                return os.path.normpath(path)
+        return ""
+
+    def _resolve_balancing_output_dir(self):
+        if hasattr(self, "path_vars") and "Out" in self.path_vars:
+            out = self.path_vars["Out"][0].get().strip()
+            if out and os.path.isdir(out):
+                return os.path.normpath(out)
+        return self._migration_output_dir()
+
+    def _execute_balancing(self, open_report=True, show_dialog=True, with_ui_progress=False):
+        """Shared Source ↔ QLAdmin balancing runner for UI. Returns summary dict."""
+        src_dir = self._resolve_balancing_source_dir()
+        out_dir = self._resolve_balancing_output_dir()
+        if not src_dir:
+            raise FileNotFoundError(
+                "Source folder not found. Set Source Data File path or use QLA_Migration/Source."
+            )
+        if not out_dir or not os.path.isdir(out_dir):
+            raise FileNotFoundError("Output folder not found. Run conversion or set Output path.")
+
+        repo = self._repo_root()
+        if repo not in sys.path:
+            sys.path.insert(0, repo)
+        from qla_core.balancing import run_balancing
+
+        balancing_dir = self._balancing_dir()
+        crosswalk = os.path.join(self._migration_mapping_dir(), "Master_Crosswalk.csv")
+        exclusions = os.path.join(self._migration_configs_dir(), "balancing_exclusions.csv")
+
+        self.log("BALANCING: starting Source ↔ QLAdmin reconciliation (read-only)...")
+        self.log(f"  Source folder: {src_dir}")
+        self.log(f"  Output folder: {out_dir}")
+
+        def _progress(msg, stage=None):
+            self.log(f"  {msg}")
+            if with_ui_progress:
+                if stage is not None:
+                    self.update_run_progress(int(stage), detail=str(msg)[:80])
+                elif hasattr(self, "lbl_stage_detail"):
+                    self.lbl_stage_detail.config(text=str(msg)[:80])
+                if hasattr(self, "root"):
+                    try:
+                        self.root.after(0, self.root.update_idletasks)
+                    except Exception:
+                        pass
+
+        if with_ui_progress:
+            self.update_run_progress(1, detail="Starting Balancing review")
+
+        summary = run_balancing(
+            src_dir=src_dir,
+            out_dir=out_dir,
+            balancing_dir=balancing_dir,
+            crosswalk_path=crosswalk,
+            exclusions_path=exclusions,
+            progress_callback=_progress,
+        )
+
+        self.log("BALANCING COMPLETE:")
+        self.log(f"  Overall: {summary.get('overall_result') or summary.get('overall_status')}")
+        self.log(
+            f"  PASS={summary.get('pass_count')} "
+            f"EXPLAINED={summary.get('explained_count')} "
+            f"FAIL={summary.get('fail_count')}"
+        )
+        what_checked = summary.get("what_was_checked_path") or summary.get("report_path")
+        attention = summary.get("attention_csv_path") or ""
+        run_folder = summary.get("run_folder") or balancing_dir
+        self.log(f"  What Was Checked: {what_checked}")
+        self.log(f"  Items Needing Attention: {attention}")
+
+        if show_dialog:
+            msg = (
+                f"Overall result: {summary.get('overall_result') or summary.get('overall_status')}\n"
+                f"Problems found (FAIL): {summary.get('fail_count')}\n"
+                f"Explained variances: {summary.get('explained_count')}\n\n"
+                f"What Was Checked:\n{what_checked}\n\n"
+                f"Items Needing Attention:\n{attention}"
+            )
+            if summary.get("overall_status") == "PASS":
+                messagebox.showinfo("QUIKConvert Balancing", msg)
+            else:
+                messagebox.showwarning("QUIKConvert Balancing", msg)
+
+        if open_report and what_checked and os.path.isfile(what_checked):
+            try:
+                os.startfile(what_checked)  # noqa: S606
+            except OSError:
+                pass
+        if open_report and run_folder and os.path.isdir(run_folder):
+            try:
+                os.startfile(run_folder)  # noqa: S606
+            except OSError:
+                pass
+
+        return summary
+
+    def start_balancing_thread(self):
+        if self.is_running:
+            messagebox.showwarning("Balancing", "A conversion or batch job is already running.")
+            return
+        if not self._resolve_balancing_source_dir():
+            messagebox.showwarning(
+                "Balancing",
+                "Source folder not found. Set Source Data File path in System Configuration.",
+            )
+            return
+        out_dir = self._resolve_balancing_output_dir()
+        if not out_dir or not os.path.isdir(out_dir):
+            messagebox.showwarning(
+                "Balancing",
+                "Output folder not found. Run conversion or set Output path.",
+            )
+            return
+        self.is_running = True
+        self.start_time = time.time()
+        threading.Thread(target=self.update_timer, daemon=True).start()
+        threading.Thread(target=self._run_balancing_ui, daemon=True).start()
+
+    def _run_balancing_ui(self):
+        """On-demand Source ↔ QLAdmin balancing — report-only; never modifies conversion data."""
+        try:
+            self.start_run_progress("balancing")
+            self.update_run_progress(1, detail="Preparing Source ↔ QLAdmin Balancing")
+            summary = self._execute_balancing(
+                open_report=True, show_dialog=True, with_ui_progress=True,
+            )
+            status = summary.get("overall_status", "DONE")
+            fail_n = summary.get("fail_count", 0)
+            if status == "PASS":
+                self.complete_run_progress("Complete — QUIKConvert Balancing PASS")
+            else:
+                self.complete_run_progress(f"Complete — Balancing {status} (FAIL={fail_n})")
+        except Exception as exc:
+            self.log(f"BALANCING ERROR: {exc}")
+            self.fail_run_progress("QUIKConvert Balancing", str(exc))
+            messagebox.showerror("QUIKConvert Balancing", str(exc))
+        finally:
+            self.is_running = False
+
     def update_progress(self, stage_percent, stage_message, state="running"):
         """Cosmetic staged progress feedback. Updates the progress bar (when a percent
         is supplied) and the adjacent stage label. Never touches conversion data and is
@@ -8153,14 +8359,15 @@ class QLAdminEnterpriseIntegrationSuite:
                     self.log(f"Warning: Issue #21G premium/basis staging failed - {e}")
             # ---------------------------------------------------------------------------------------
 
-            # --- DG-R-003: QuikDate governance defaults (prior-month-end bill dates + ACH) ---
+            # --- Issue #86 / DG-R-003: QuikDate full rebuild (PME dates + screenshot defaults) ---
             if is_batch:
                 try:
                     out_dir = self.path_vars["Out"][0].get()
                     qd_info = emit_quikdate_csv(out_dir)
                     self.log(
                         f"Success: quikdate.csv - {qd_info.get('row_count', 1)} record "
-                        f"(PAC/DIR/REIN={qd_info.get('prior_month_end')}; "
+                        f"(full rebuild; PME={qd_info.get('prior_month_end')}; "
+                        f"VERSION={qd_info.get('VERSION')}; "
                         f"ACHFILEID={qd_info.get('ACHFILEID')}; ACHFILEID2={qd_info.get('ACHFILEID2')})."
                     )
                 except Exception as e:

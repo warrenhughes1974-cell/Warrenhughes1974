@@ -1,0 +1,2 @@
+ID	Status	Short Name	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned	Date Resolved	Notes
+87	G5+G6 PASS — Ready for Client UAT	QuikForge Balancing (source↔QLAdmin recon)	New Balancing UI button + qla_core/balancing.py: fleet counts, dollar control totals, policy inventory (PASS/EXPLAINED/FAIL). Reports to QLA_Migration/Balancing/ + static Balancing_Methodology.md. Read-only; no rulebook/conversion changes.	2026-07-19	Go	Warren	Conversion		v58.14. Val+Reg PASS 2026-07-19. BAL-D07 MSPLIT finding for client review. Next: Closure or client UAT.
