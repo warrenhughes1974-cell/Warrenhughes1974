@@ -1,0 +1,17 @@
+{
+  "QuikCoi.csv": 792,
+  "QuikGcoi.csv": 198,
+  "QuikGps.csv": 11983,
+  "QuikCvs.csv": 38407,
+  "QuikIssc.csv": 8,
+  "QuikUint.csv": 32,
+  "QuikIssc_plans": ["1658C1", "1658CS", "1659C2", "1659CR", "1659CS", "1659SR", "1669SR", "1679CS"],
+  "QuikUint_tiers": [
+    ["19800101", "11.0000"],
+    ["19890101", "9.0000"],
+    ["19990101", "5.0000"],
+    ["20020101", "4.5000"]
+  ],
+  "pipeline_blockers": 0,
+  "emit_status": "SUCCESS"
+}

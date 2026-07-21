@@ -1,12 +1,12 @@
 {
   "_comment": "Externalized R5 rate-loader configuration. Business/actuarial maintained. Copy to rate_loader_config.json and complete before emit.",
-  "source_rate_extract": "plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv",
-  "paagerat_pr_extract": "plan_analysis/source_data/rates/PAAGERAT_AttainedAge_Rates_Extract_20260428.csv",
+  "source_rate_extract": "QLA_Migration/Source/Rate_Table_Extract_Txt.txt",
+  "paagerat_pr_extract": "QLA_Migration/Source/PAAGERAT_AttainedAge_Rates_Extract_20260630.csv",
   "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
   "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
   "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",
   "cso_mortality_crosswalk": "plan_analysis/source_data/rates/CSO_Mortiality_Crosswalk.csv",
-  "psegt_csv": "QLA_Migration/Source/PSEGT_Segment_Extract_20260629.csv",
+  "psegt_csv": "QLA_Migration/Source/PSEGT_Segment_Extract_20260630.csv",
   "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260530.csv",
   "iswl_phase1": {
     "_note": "Validation-only; does not filter global rate emit.",
@@ -30,8 +30,17 @@
     "gcoi_type_code": "U5",
     "gcoi_mplan_allowlist": ["1679CS"]
   },
-  "pdint_extract": "QLA_Migration/Source/PDINT_DeclaredInterestRates_Extract_20260629.csv",
-  "pdinttbl_extract": "QLA_Migration/Source/PDINTTBL_DeclaredInterestRates_Extract_20260629.csv",
+  "wave2_db": {
+    "_note": "Wave 2 QUIKDBS — PAAGERAT TYPE=DB, VARDB=3 attained-age scalar (Option B).",
+    "quikdbs_enabled": true,
+    "db_type_code": "DB",
+    "db_mplan_allowlist": [
+      "130JEB", "1970JB", "542STR", "578STR", "719CDT",
+      "7619DT", "7619PU", "7647FP", "7647SP", "7690DT"
+    ]
+  },
+  "pdint_extract": "QLA_Migration/Source/PDINT_DeclaredInterestRates_Extract_20260630.csv",
+  "pdinttbl_extract": "QLA_Migration/Source/PDINTTBL_DeclaredInterestRates_Extract_20260630.csv",
   "iswl_phase5": {
     "_note": "ISWL QUIKUINT — PDINT CENII/A1 union_merge historical tiers → QuikUint.",
     "quikuint_enabled": true,

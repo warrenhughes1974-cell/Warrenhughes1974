@@ -1,0 +1,14 @@
+ID,Topic,Sujitha_Email_Ref,Status,Answer_Summary,Owner,Next_Step
+OBQ-1,COI QX0-only / CNTL=00 layout,Q1,ANSWERED,By design: PAAGERAT U6 attained-age scalar (SEQ->AGE; rate->QX0; CNTL=00; VARGP=3),Warren,Reply to Sujitha confirming setup
+OBQ-2,Surrender charges have no age values,Q3,ANSWERED,By design: LifePRO SL schedule is duration-only; SME-approved single AGE=0 all-age row,Warren,Reply to Sujitha
+OBQ-3,Surrender charges have no female rows,Q3,ANSWERED,Source SL schedule is unisex (M-only rows); same values apply to both genders,Sujitha,Confirm QLAdmin resolves F policies against M key or needs explicit F row
+OBQ-4,No surrender data for 1659CR/1659SR/1669SR,Q3,CLOSED_ISSUE_88,All 8 plans share hub schedule; QuikIssc restored to 8 rows,Issue_88,Redeliver QuikIssc+QuikUint to Sujitha
+OBQ-5,Monthly expense per $1000 set to 0.00,Intro,ANSWERED,Correct: no U1/U2/U3 segments for ISWL; locked decision = $25 fee + 3.5% premium load only,Warren,Reply to Sujitha confirming 0.00
+OBQ-6,COI factor basis per $1000 like PFSA,Q1,OPEN,Loader passes VALUE_INFO unscaled; unit basis of LifePRO U6/U5 unconfirmed in repo,Actuarial/SME,Confirm U6/U5 unit basis vs QLAdmin QUIKCOI expectation
+OBQ-7,COI factors for other 6 ISWL plans,Q1/Q2,OPEN,U6 rates exist only for 658 CEN I / 659 CEN II / 678 CEN SD; allowlist frozen to 1658CS+1679CS,SME/Client,Decide: hub replication vs client rates vs confirmed absent
+OBQ-8,Guaranteed COI for other plans,Q2,OPEN,U5 rates only for 659 CEN II / 678 CEN SD / 668 SPWL(non-ISWL); only 1679CS emitted,SME/Client,Same decision as OBQ-7 + confirm QLAdmin behavior when GCOI absent
+OBQ-9,GLP_LEVEL/GLP_SINGLE/GLP_7PAY source,Q4,OPEN,LifePRO fields exist (PPBENTYP BF_*) but all zero in CSO extracts; conversion emits no quikspec; blank GLP disables GLPCheck,Client+QLAdmin+Actuarial,Confirm 7702 applicability; identify source or accept blank
+OBQ-10,Credited interest rate on loan balance = 0.00,Intro,OPEN,LN segment payload undecoded; PLOAN rate is charged not credited; LOANINT=0.00 open item #11,Warren/Client,Decode LN segment or obtain rate from client
+D1,Batch CSV emit drops QuikIssc/QuikUint rows,Internal,CLOSED_ISSUE_88,qla_core/rate_emit.py CSV branch now writes QuikIssc/QuikUint,Issue_88,Closed 2026-07-21; QuikIssc=8
+D2,Stale PDINT/PDINTTBL config paths (20260629),Internal,CLOSED_ISSUE_88,Config repointed to *_20260630.csv; QuikUint=32,Issue_88,Closed 2026-07-21
+D3,COI coverage-to-plan resolution vs 7/13 refresh,Internal,OPEN,678 CEN SD U6/U5 rows added 7/13 (4x duplicate copies per SEQ); 1679CS emit mixes 678 CEN SD + hub rows,Validation,Re-run iswl_quikcoi/gcoi_reconcile against 20260714 extract

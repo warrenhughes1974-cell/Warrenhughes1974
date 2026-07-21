@@ -15,6 +15,7 @@ from qla_core import rate_dbf_schema as S
 from qla_core import rate_dbf_writer as W
 from qla_core import rate_pipeline as P
 from qla_core import quikaint_closed_riders as QAINT
+from qla_core.rate_member_setup import build_quikuwpo_rows
 
 # Blockers that must not prevent CV / factor / key / member CSV emit.
 PARTIAL_EMIT_BLOCKERS = frozenset({"V-UINT-PDINT", "V-ISSC-RATE", "V-ISSC-SL"})
@@ -111,6 +112,10 @@ def _write_dbf_tables(res, emit_dir, manifest):
         path = os.path.join(emit_dir, "QuikIssc.dbf")
         n = W.write_quikissc_table(path, res.quikissc_rows, overwrite=True)
         manifest.append({"kind": "surrender", "table": "QuikIssc", "format": "dbf", "path": path, "rows": n})
+    uwpo_rows = build_quikuwpo_rows(res.member_rows, key_rows=res.key_rows)
+    path = os.path.join(emit_dir, "QuikUwpo.dbf")
+    n = W.write_quikuwpo_table(path, uwpo_rows, overwrite=True)
+    manifest.append({"kind": "uw_class", "table": "QuikUwpo", "format": "dbf", "path": path, "rows": n})
     qaint_entry = QAINT.emit_issue51_quikaint(emit_dir, overwrite=True, emit_csv=False, emit_dbf=True)
     manifest.append(qaint_entry)
 
@@ -207,12 +212,34 @@ def run_rate_emit(
             )
             manifest.extend(csv_manifest)
             emitted_csv = True
+            uwpo_rows = build_quikuwpo_rows(res.member_rows, key_rows=res.key_rows)
+            uwpo_path = os.path.join(csv_dir, "QuikUwpo.csv")
+            uwpo_n = W.write_quikuwpo_csv(uwpo_path, uwpo_rows, overwrite=True)
+            manifest.append({
+                "kind": "uw_class", "table": "QuikUwpo", "path": uwpo_path, "rows": uwpo_n,
+            })
+            messages.append(f"Issue A A10 QuikUwpo: {uwpo_n} UW class code(s)")
             qaint_entry = QAINT.emit_issue51_quikaint(csv_dir, overwrite=True)
             manifest.append(qaint_entry)
             messages.append(
                 f"Issue #51 QuikAint stubs: {qaint_entry['rows']} row(s) "
                 f"({', '.join(QAINT.CLOSED_RIDER_MPLANS)})"
             )
+            # Issue #88 — batch CSV path must write QuikUint/QuikIssc (DBF branch already does).
+            if res.quikuint_rows:
+                uint_path = os.path.join(csv_dir, "QuikUint.csv")
+                uint_n = W.write_quikuint_csv(uint_path, res.quikuint_rows, overwrite=True)
+                manifest.append({
+                    "kind": "interest", "table": "QuikUint", "path": uint_path, "rows": uint_n,
+                })
+                messages.append(f"Issue #88 QuikUint: {uint_n} row(s)")
+            if res.quikissc_rows:
+                issc_path = os.path.join(csv_dir, "QuikIssc.csv")
+                issc_n = W.write_quikissc_csv(issc_path, res.quikissc_rows, overwrite=True)
+                manifest.append({
+                    "kind": "surrender", "table": "QuikIssc", "path": issc_path, "rows": issc_n,
+                })
+                messages.append(f"Issue #88 QuikIssc: {issc_n} row(s)")
             csv_manifest_path = _write_csv_manifest(csv_dir, manifest)
             if partial and not gate_ok:
                 messages.append(

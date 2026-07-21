@@ -1,0 +1,131 @@
+{
+  "checks": [
+    {
+      "id": "V-ISSC-rows",
+      "pass": true,
+      "detail": "n=8"
+    },
+    {
+      "id": "V-ISSC-plans",
+      "pass": true,
+      "detail": "['1658C1', '1658CS', '1659C2', '1659CR', '1659CS', '1659SR', '1669SR', '1679CS']"
+    },
+    {
+      "id": "V-ISSC-age0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "V-ISSC-schg",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "V-ISSC-tail-blank",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "V-ISSC-gender-M",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "V-ISSC-senior-plans",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "V-UINT-rows",
+      "pass": true,
+      "detail": "n=32"
+    },
+    {
+      "id": "V-UINT-8x4",
+      "pass": true,
+      "detail": "{'1658C1': 4, '1658CS': 4, '1659C2': 4, '1659CR': 4, '1659CS': 4, '1659SR': 4, '1669SR': 4, '1679CS': 4}"
+    },
+    {
+      "id": "V-UINT-tiers",
+      "pass": true,
+      "detail": "[('19800101', '11.0000', '11.0000'), ('19890101', '9.0000', '9.0000'), ('19990101', '5.0000', '5.0000'), ('20020101', '4.5000', '4.5000')]"
+    },
+    {
+      "id": "REG-QuikCoi.csv",
+      "pass": true,
+      "detail": "792 vs pre 792"
+    },
+    {
+      "id": "REG-QuikGcoi.csv",
+      "pass": true,
+      "detail": "198 vs pre 198"
+    },
+    {
+      "id": "REG-QuikGps.csv",
+      "pass": true,
+      "detail": "11983 vs pre 11983"
+    },
+    {
+      "id": "REG-QuikCvs.csv",
+      "pass": true,
+      "detail": "38407 vs pre 38407"
+    },
+    {
+      "id": "TV-Issc",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "TV-Uint",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "MAN-Issc-8",
+      "pass": true,
+      "detail": "{'KIND': 'surrender', 'TABLE': 'QuikIssc', 'FILENAME': 'QuikIssc.csv', 'ROWS': '8', 'NOTES': 'DBF column order preserved; append-ready for QLAdmin'}"
+    },
+    {
+      "id": "MAN-Uint-32",
+      "pass": true,
+      "detail": "{'KIND': 'interest', 'TABLE': 'QuikUint', 'FILENAME': 'QuikUint.csv', 'ROWS': '32', 'NOTES': 'DBF column order preserved; append-ready for QLAdmin'}"
+    },
+    {
+      "id": "NO-BLOCKERS",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "id": "CFG-pdint-20260630",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "CFG-pdinttbl-20260630",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "CFG-psegt-20260630",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "CFG-exists-pdint_extract",
+      "pass": true,
+      "detail": "PDINT_DeclaredInterestRates_Extract_20260630.csv"
+    },
+    {
+      "id": "CFG-exists-pdinttbl_extract",
+      "pass": true,
+      "detail": "PDINTTBL_DeclaredInterestRates_Extract_20260630.csv"
+    },
+    {
+      "id": "CFG-exists-psegt_csv",
+      "pass": true,
+      "detail": "PSEGT_Segment_Extract_20260630.csv"
+    }
+  ],
+  "fail_count": 0,
+  "verdict": "PASS"
+}
