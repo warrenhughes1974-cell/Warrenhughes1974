@@ -1,0 +1,4 @@
+Issue	Title	Status	Priority	Owner	Stage	Notes
+
+79	Align quikclms.CLAIMSTAT to Policy-book conventions	Implemented v57.99 — Awaiting Validation	High	Conversion	G5 PASS	1769 headers remapped; after 2=1290 / 99=4334 / 1=0 / 3=0; quikclmp unchanged (6151); UAT Test_Validation/quikclms.csv
+

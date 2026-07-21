@@ -95,6 +95,14 @@ TABLE_SOURCE_SPECS = {
         "required": True,
         "converts_to": "quikactg",
     },
+    "quikbenh": {
+        "lifepro_table": "PACTG",
+        "lifepro_label": "Accounting Transactions",
+        "lifepro_patterns": [r"^PACTG[_ ]Accounting[_ ]Extract.*\.csv$"],
+        "legacy_names": ["PACTG_Accounting_Extract20260427.csv"],
+        "required": False,
+        "converts_to": "quikbenh",
+    },
     "quikloan": {
         "lifepro_table": "PLOAN",
         "lifepro_label": "Loan Information",

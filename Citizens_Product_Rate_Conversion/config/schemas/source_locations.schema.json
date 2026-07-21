@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SourceLocationsConfig",
+  "type": "object",
+  "required": [
+    "source_original_root",
+    "archive_root",
+    "quarantine_root",
+    "working_mappings_root",
+    "approved_mappings_root",
+    "manifests_root"
+  ],
+  "properties": {
+    "source_original_root": { "type": "string", "minLength": 1 },
+    "source_supplemental_root": { "type": "string" },
+    "source_actuarial_root": { "type": "string" },
+    "source_product_documents_root": { "type": "string" },
+    "source_extracts_root": { "type": "string" },
+    "source_inventory_root": { "type": "string" },
+    "archive_root": { "type": "string", "minLength": 1 },
+    "quarantine_root": { "type": "string", "minLength": 1 },
+    "working_mappings_root": { "type": "string", "minLength": 1 },
+    "approved_mappings_root": { "type": "string", "minLength": 1 },
+    "manifests_root": { "type": "string", "minLength": 1 },
+    "reserve_dbf": { "type": "string" },
+    "plans_dbf": { "type": "string" },
+    "plan_crosswalk": { "type": "string" },
+    "rate_requirements_catalog": { "type": "string" },
+    "rate_key_assumptions": { "type": "string" },
+    "reserve_staging_root": { "type": "string" },
+    "plans_staging": { "type": "string" }
+  }
+}

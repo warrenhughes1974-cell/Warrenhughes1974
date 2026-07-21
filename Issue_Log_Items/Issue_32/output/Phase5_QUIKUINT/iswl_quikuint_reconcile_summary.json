@@ -11,7 +11,7 @@
   "v_uint_07_percent_literal": true,
   "v_uint_08_no_loan": true,
   "v_uint_09_unique_index": true,
-  "v_uint_10_phase1_4_regression": true,
+  "v_uint_10_phase1_4_regression": false,
   "psegt_a1_gate": {
     "pass": true,
     "count": 8
@@ -65,13 +65,16 @@
     "schedule_ok": true,
     "loan_columns_absent": true
   },
-  "regression_ok": true,
-  "regression_notes": [],
+  "regression_ok": false,
+  "regression_notes": [
+    "QuikCvs row count changed",
+    "QuikGps row count changed"
+  ],
   "phase1_4_notes": [
-    "Phase1: PASS",
-    "Phase2: PASS",
-    "Phase3: PASS",
-    "Phase4: PASS"
+    "Phase1: FAIL (exit 1)",
+    "Phase2: FAIL (exit 1)",
+    "Phase3: FAIL (exit 1)",
+    "Phase4: FAIL (exit 1)"
   ],
   "quikuint_csv": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikUint.csv"
 }

@@ -1,0 +1,17 @@
+[2026-07-18 13:56:37] QLAdmin Data Governance run starting
+[2026-07-18 13:56:37] Run ID: DG-20260718_135637_781516
+[2026-07-18 13:56:37] Data region: Q:\CSO\CSO_Test_6_30_2025
+[2026-07-18 13:56:37] Output base: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-001_company_codes_G_V\validation_out\DG-QUIKLIST-002
+[2026-07-18 13:56:37] Run folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-001_company_codes_G_V\validation_out\DG-QUIKLIST-002\DG-20260718_135637_781516
+[2026-07-18 13:56:37] Review scope: rule
+[2026-07-18 13:56:37] Source DBF files will be opened read-only; source files are never modified
+[2026-07-18 13:56:37] Executing DG-QUIKLIST-002 — QuikList Company Code Must Exist in QuikComp
+[2026-07-18 13:56:37] Finished DG-QUIKLIST-002: status=PASS passed=0 failed=0 errors=0
+[2026-07-18 13:56:37] Overall status: PASS
+[2026-07-18 13:56:37] Source files modified: No
+[2026-07-18 13:56:37] Evaluation totals: reviewed=0 looked_fine=0 problems=0
+[2026-07-18 13:56:37] What Was Checked: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-001_company_codes_G_V\validation_out\DG-QUIKLIST-002\DG-20260718_135637_781516\1_What_Was_Checked.html
+[2026-07-18 13:56:37] Items Needing Attention: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-001_company_codes_G_V\validation_out\DG-QUIKLIST-002\DG-20260718_135637_781516\2_Items_Needing_Attention.csv
+[2026-07-18 13:56:37] Business result: Passed
+[2026-07-18 13:56:37] Percentage passed (completed checks): Not Available — No records were evaluated
+[2026-07-18 13:56:37] Internal technical folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-001_company_codes_G_V\validation_out\DG-QUIKLIST-002\DG-20260718_135637_781516\internal

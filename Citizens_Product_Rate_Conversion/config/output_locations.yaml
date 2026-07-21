@@ -1,0 +1,14 @@
+# Writable runtime paths (relative to project root)
+staging_root: staging
+normalized_plans_root: staging/normalized_plans
+normalized_rates_root: staging/normalized_rates
+rejected_rows_root: staging/rejected_rows
+intermediate_root: staging/intermediate
+validation_root: validation
+reports_root: reports
+output_root: output
+draft_rates_root: output/csv/draft_pre_migration
+release_rates_root: output/rates
+release_packages_root: output/release_packages
+run_workspace_root: staging/intermediate/runs
+log_root: reports/runs/logs

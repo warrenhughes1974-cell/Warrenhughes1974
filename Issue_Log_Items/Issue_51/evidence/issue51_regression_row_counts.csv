@@ -1,0 +1,13 @@
+table,rows,notes
+quikmstr,5083,policy tables untouched by #51
+quikridr,6934,policy tables untouched by #51
+quikplan,141,policy tables untouched by #51
+quikprmh,209470,policy tables untouched by #51
+quikclid,34449,policy tables untouched by #51
+quikclnt,13597,policy tables untouched by #51
+quikdvdp,5083,policy tables untouched by #51
+quikmemo,337882,policy tables untouched by #51
+rates/QuikAint,2,intentional +2
+rates/QuikUint,0,unchanged expected
+rates/QuikCvs,38047,unchanged expected
+rates/QuikGps,17137,unchanged expected

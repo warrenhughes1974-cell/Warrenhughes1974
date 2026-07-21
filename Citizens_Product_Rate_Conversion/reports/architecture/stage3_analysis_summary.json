@@ -1,0 +1,26 @@
+{
+  "timestamp_utc": "2026-07-12T15:02:57Z",
+  "baseline_pass": true,
+  "tech_assets": 34,
+  "tech_active": 19,
+  "tech_historical": 15,
+  "unsafe_scripts": 8,
+  "qla_import_rows": 7,
+  "qla_files": 4,
+  "path_findings": 259,
+  "plan_universe_rows": 341,
+  "plan_tracker": 308,
+  "plan_dbf": 301,
+  "plan_crosswalk": 157,
+  "plan_reserve": 138,
+  "entry_points": 16,
+  "entry_blocked": 15,
+  "plan_status": {
+    "DBF_ONLY": 16,
+    "SOURCE_ONLY": 15,
+    "MATCHED": 285,
+    "TRACKER_ONLY": 23,
+    "CROSSWALK_ONLY": 2
+  },
+  "qla_mention_files": 27
+}

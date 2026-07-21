@@ -1,0 +1,14 @@
+metric,value
+path_wiring_md5_match,True
+path_wiring_row_delta,0
+rt_plan_type_keys,160
+paa_plan_type_keys,111
+collision_plan_type_keys,2
+collision_by_type,"{'RV': 1, 'NP': 1}"
+rt_rows_on_collision_keys,3802
+paa_rows_on_collision_keys,97
+secondary_only_plan_type_keys,158
+secondary_only_rt_rows,816013
+paa_only_plan_type_keys,109
+iswl_bp_collision_keys,0
+unmapped_rt_pr_note,see secondary CSV for DISCHO/L01

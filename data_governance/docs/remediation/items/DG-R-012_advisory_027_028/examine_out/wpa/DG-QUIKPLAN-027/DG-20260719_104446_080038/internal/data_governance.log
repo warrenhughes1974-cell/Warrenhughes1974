@@ -1,0 +1,17 @@
+[2026-07-19 10:44:46] QLAdmin Data Governance run starting
+[2026-07-19 10:44:46] Run ID: DG-20260719_104446_080038
+[2026-07-19 10:44:46] Data region: Q:\WPA\WPA_GABIE
+[2026-07-19 10:44:46] Output base: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\examine_out\wpa\DG-QUIKPLAN-027
+[2026-07-19 10:44:46] Run folder: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\examine_out\wpa\DG-QUIKPLAN-027\DG-20260719_104446_080038
+[2026-07-19 10:44:46] Review scope: rule
+[2026-07-19 10:44:46] Source DBF files will be opened read-only; source files are never modified
+[2026-07-19 10:45:25] Executing DG-QUIKPLAN-027 — Traditional Plans Should Have Required Value Tables
+[2026-07-19 10:45:32] Finished DG-QUIKPLAN-027: status=PASS passed=2146 failed=0 errors=0
+[2026-07-19 10:45:32] Overall status: PASS
+[2026-07-19 10:45:32] Source files modified: No
+[2026-07-19 10:45:32] Evaluation totals: reviewed=3045 looked_fine=2146 problems=0
+[2026-07-19 10:45:32] What Was Checked: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\examine_out\wpa\DG-QUIKPLAN-027\DG-20260719_104446_080038\1_What_Was_Checked.html
+[2026-07-19 10:45:32] Items Needing Attention: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\examine_out\wpa\DG-QUIKPLAN-027\DG-20260719_104446_080038\2_Items_Needing_Attention.csv
+[2026-07-19 10:45:32] Business result: Passed
+[2026-07-19 10:45:32] Percentage passed (completed checks): 100.00%
+[2026-07-19 10:45:32] Internal technical folder: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\examine_out\wpa\DG-QUIKPLAN-027\DG-20260719_104446_080038\internal

@@ -1,0 +1,26 @@
+RATE_TYPE_CODE,SOURCE_IDENTIFIED,SOURCE_AUTHORITY_STATUS,EXISTING_EXTRACTION,EXISTING_NORMALIZATION,EXISTING_MAPPING,EXISTING_CONVERSION,EXISTING_VALIDATION,EXISTING_DRAFT_OUTPUT,KNOWN_MISSING_DATA,KNOWN_BLOCKERS,RECOMMENDED_NEXT_ISSUE
+GROSS_PREMIUM,Access + PDF pilot,PENDING_REVIEW,Y,Y,N,N,Y,N,Partial,Source authority undecided,CIT-DATA-001
+CASH_VALUE,cifi0007.DBF RL_CASHVAL,PENDING_REVIEW,Y,Y,Y,Y,Y,Y,Partial,OBQ-1/OBQ-2; engine pin; path retarget,CIT-RATE-001
+NET_PREMIUM,cifi0007.DBF RL_NETPREM,PENDING_REVIEW,Y,Y,Y,Y,Y,Y,Partial,OBQ-1/OBQ-2; engine pin; path retarget,CIT-RATE-001
+TERM_RESERVE,cifi0007.DBF terminal reserve,PENDING_REVIEW,Y,Y,Y,Y,Y,Y,Partial,OBQ-1/OBQ-2; engine pin; path retarget,CIT-RATE-001
+MEAN_RESERVE,cifi0007.DBF mean fields,UNKNOWN,Y,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+PAID_UP,cifi0007.DBF PUP,PENDING_REVIEW,Y,Y,Y,Y,Y,Y,Partial,OBQ-1/OBQ-2; engine pin; path retarget,CIT-RATE-001
+EXTENDED_TERM,green sheets / OBQ,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+DIVIDEND,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+DIVIDEND_INTEREST,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+LOAN_INTEREST,cifi0004.dbf IR1-IR8,PENDING_REVIEW,Y,N,N,N,N,N,Partial,Source authority undecided,CIT-DATA-001
+CREDITED_INTEREST,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+GUARANTEED_INTEREST,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+CURRENT_INTEREST,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+COST_OF_INSURANCE,requirements catalog,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+EXPENSE_CHARGE,requirements catalog,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+POLICY_FEE,cifi0004.dbf,PENDING_REVIEW,Y,N,N,N,N,N,Partial,Source authority undecided,CIT-DATA-001
+PREMIUM_LOAD,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+SURRENDER_CHARGE,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+MODAL_FACTOR,requirements catalog,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+RIDER_PREMIUM,Access rider CSVs,UNKNOWN,Y,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+GUIDELINE_PREMIUM,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+SEVEN_PAY,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+TARGET_PREMIUM,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+SETTLEMENT_FACTOR,N,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001
+OTHER,requirements catalog Other,UNKNOWN,N,N,N,N,N,N,Y,Source authority undecided,CIT-DATA-001

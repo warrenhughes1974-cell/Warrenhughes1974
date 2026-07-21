@@ -1,0 +1,30 @@
+DATA_DOMAIN,PROPOSED_PRIMARY_SOURCE,PROPOSED_SECONDARY_SOURCE,VALIDATION_SOURCE,CONFLICTING_SOURCES,MISSING_AUTHORITY,RECOMMENDED_PRECEDENCE,CONFIDENCE,REQUIRED_APPROVAL,BLOCKED_CONVERSION_AREAS
+Plan universe,Plans DBF (SA-001) PROPOSED,Tracker (SA-002) SUPPORTING,Access catalog SUPPORTING,308 vs 301,N,DBF for existence; tracker for requirements coverage; union for review queue,MEDIUM,CIT-DEC-001,Plan manifest / scope
+Plan code,Plans DBF pl_plan,Tracker cfic_plan_code,Crosswalk CFIC Plan,Format/alias variants,N,Prefer DBF code when present; keep tracker-only as review,MEDIUM,CIT-DEC-001,All mapping
+Plan name/description,Plans DBF pl_desc,Tracker product_family,Product catalog,Many blank DBF desc,N,Family from tracker/catalog until names filled,LOW,CIT-DEC-001,Reporting
+Product family,Rate requirements catalog,Tracker,Access product catalog,Naming inconsistency,N,Catalog/tracker working,MEDIUM,CIT-DEC-001,Rate applicability
+Base vs rider,Rate requirements Product Form,Tracker product_form,Plan code heuristics,Misclassified riders,N,Catalog first,MEDIUM,CIT-DEC-006,Scope counts
+Participating status,UNKNOWN,,,No authoritative field identified,Y,Requires actuarial/client,LOW,CIT-DEC-016,Dividend rates
+Interest-sensitive status,UNKNOWN,,,No authoritative field identified,Y,Requires actuarial/client,LOW,CIT-DEC-015,Interest rates
+Issue-date range,UNKNOWN / partial DBF,,,Missing,Y,Requires client,LOW,CIT-DEC-007,Effective dating
+State / sex / smoker / band,Plan code suffixes + crosswalk grouping,Reserve member dims in draft,Access sex/smoker cols,Encoding not formally documented,N,Document encoding; keep codes distinct,MEDIUM,CIT-DEC-005,Rate members
+Rate requirements,Requirements catalog + tracker,,,Not Reviewed / TBD gaps,N,Working until client confirms,MEDIUM,CIT-DEC-008,Rate manifest
+Gross premiums,Access extracts + rate sheet PDFs,Requirements catalog,PDF pilot,No DBF gross grid,N,PROPOSED Access primary; PDF supporting,MEDIUM,CIT-DEC-009,QuikGps
+Cash values,Reserve DBF cifi0007,CV ZIP PDFs supporting,Access illustration checkpoints validation,OBQ-1 basis,N,PROPOSED DBF primary,HIGH,CIT-DEC-010,QuikCvs
+Net premiums,Reserve DBF,Access validation,,Basis open,N,PROPOSED DBF primary,HIGH,CIT-DEC-011,QuikNps related
+Terminal reserves,Reserve DBF,Draft QuikTvs,,OBQ-2 keys,N,PROPOSED DBF primary,HIGH,CIT-DEC-012,QuikTvs
+Mean reserves,Reserve DBF fields (candidate),,,Mapping undecided,N,Actuarial review,LOW,CIT-DEC-012,Optional Quik
+Paid-up insurance,Reserve DBF PUP,Access PaidUp* validation,CV PDFs,,N,PROPOSED DBF primary,HIGH,CIT-DEC-013,QuikNps
+Extended-term insurance,UNKNOWN / green sheets candidate,OBQ historical,,No confirmed load path,Y,Actuarial,LOW,CIT-DEC-014,ETI
+Dividends / div interest,UNKNOWN,Requirements catalog indicators,,Mostly Not indicated,Y,Client/actuarial,LOW,CIT-DEC-016,QuikDvs
+Loan interest,Plans DBF IR1–IR8,Requirements catalog,,Not emitted,N,PROPOSED plans DBF,MEDIUM,CIT-DEC-015,Loan IR
+Guaranteed/current/credited interest,UNKNOWN,Requirements Interest Crediting,,Sparse,Y,Actuarial,LOW,CIT-DEC-015,Interest
+COI / expenses / loads / surrender / modal,Requirements catalog only,,,Sources unidentified,N,Actuarial/client,LOW,CIT-DEC-017,UL/expense
+Policy fees,Plans DBF fee fields,Requirements,,,N,PROPOSED plans DBF,MEDIUM,CIT-DEC-017,Fees
+Rider premiums,Access rider tables + catalog,PDF/docs,,Not plan-coded in Access,N,PROPOSED Access+catalog,MEDIUM,CIT-DEC-006,Rider rates
+Guideline/MEC/target/settlement,UNKNOWN,,,No source,Y,Client,LOW,CIT-DEC-017,Advanced premiums
+QLAdmin destination mapping,Working crosswalk,Tracker ql_plan,Draft keys,Incomplete 156 vs 308,N,Working only until CIT-DEC-004,MEDIUM,CIT-DEC-004,All emit
+Validation authority,Access checkpoints + issue evidence,Draft outputs NOT authority,,P7MN only strong,N,Validation-only sources,MEDIUM,CIT-DEC-018,UAT
+Client UAT authority,NONE YET,,,No sign-off,N,Future client package,LOW,CIT-DEC-020,Release
+Draft Quik evidentiary status,NOT_AUTHORITATIVE,SA-010,,Useful regression only,N,Historical draft,HIGH,CIT-DEC-018,Regression
+Historical SourceData,HISTORICAL_ONLY,SA-012,,Unconfirmed,N,Archive,HIGH,CIT-DEC-019,None until reviewed

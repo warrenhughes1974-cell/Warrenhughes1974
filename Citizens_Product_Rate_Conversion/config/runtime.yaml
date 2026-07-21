@@ -1,0 +1,18 @@
+# Safe defaults — conversion disabled until explicitly configured and gated
+dry_run: true
+validation_only: true
+write_output: false
+allow_source_write: false
+fail_on_rejected_row: true
+fail_on_duplicate_key: true
+fail_on_missing_mapping: true
+fail_on_missing_rate_source: true
+fail_on_unknown_source_authority: true
+require_approved_mapping: true
+require_authoritative_source: true
+preserve_intermediate_files: true
+overwrite_existing_output: false
+run_id: null
+selected_plan_codes: []
+selected_rate_types: []
+enabled_modules: []

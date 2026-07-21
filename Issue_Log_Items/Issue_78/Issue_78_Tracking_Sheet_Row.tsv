@@ -1,0 +1,2 @@
+Issue	Title	Status	Priority	Owner	Stage	Notes
+78	Recover missing quikclmp claim payments with approved payee fallback	Conditional Go — Ready for Development	High	Conversion	G3 PASS	729 policies / 932 rows / $7.37M; Tier 641/85/3; 48 Tier2 PRIMARY_PE_ALL audited; headers unchanged; next: Approved for Development (Composer 2.5) → v57.98

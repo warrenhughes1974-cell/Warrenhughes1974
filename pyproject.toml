@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qla-enterprise-conversion-engine"
+version = "0.1.0"
+description = "Enterprise Conversion Engine (qla_core) — reusable LifePRO to QLAdmin conversion library"
+readme = "qla_core/README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary — license unresolved; internal use only" }
+authors = [{ name = "Enterprise Conversion Engineering" }]
+keywords = ["insurance", "conversion", "qladmin", "lifepro", "rates"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dbf = ["dbf>=0.99.0"]
+crosswalk = ["openpyxl>=3.1.0"]
+converters = ["pandas>=2.0.0", "numpy>=1.24.0"]
+dev = ["build>=1.0", "pytest>=8.0"]
+all = ["dbf>=0.99.0", "openpyxl>=3.1.0", "pandas>=2.0.0", "numpy>=1.24.0"]
+
+[project.urls]
+Documentation = "docs/packaging/PUBLIC_API_CONTRACT.md"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["qla_core*"]
+
+[tool.setuptools.package-data]
+qla_core = ["README.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/engine_packaging"]
+pythonpath = ["."]

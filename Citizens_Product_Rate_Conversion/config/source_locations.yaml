@@ -1,0 +1,21 @@
+# Read-only and controlled source paths (relative to project root)
+source_original_root: source/original
+source_supplemental_root: source/supplemental
+source_actuarial_root: source/actuarial
+source_product_documents_root: source/product_documents
+source_extracts_root: source/extracts
+source_inventory_root: source/inventory
+archive_root: archive
+quarantine_root: quarantine
+working_mappings_root: mappings/working
+approved_mappings_root: mappings/approved
+manifests_root: manifests
+
+# Key authoritative file paths (relative)
+reserve_dbf: source/original/dbf/cifi0007.DBF
+plans_dbf: source/original/dbf/cifi0004.dbf
+plan_crosswalk: mappings/working/plans/Citizens_Plan_Crosswalk.xlsx
+rate_requirements_catalog: mappings/working/rate_types/Citizens_Plan_Rate_Requirements_Catalog.xlsx
+rate_key_assumptions: mappings/working/business_inputs/cfic_rate_key_assumptions.csv
+reserve_staging_root: staging/normalized_rates/reserve/staging
+plans_staging: staging/normalized_plans/staging/plans_master.csv

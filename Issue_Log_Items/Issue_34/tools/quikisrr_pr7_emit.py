@@ -125,7 +125,14 @@ def emit_package(dry_run: bool = False) -> dict:
         clmp_out = clmp_existing + result.clmp_rows
         write_csv_rows(clms_path, clms_fields, clms_out)
         write_csv_rows(clmp_path, clmp_fields, clmp_out)
-        write_csv_rows(benh_path, QUIKBENH_FIELDS, result.benh_rows)
+        # Preserve Issue #54 loan history (MBENTYP 10/11/12) — only replace type-8 (ISRR) rows.
+        _, benh_existing = read_csv_rows(benh_path)
+        benh_keep = [
+            r for r in benh_existing
+            if str(r.get("MBENTYP", "")).strip() not in ("8", "8.0")
+        ]
+        benh_out = benh_keep + result.benh_rows
+        write_csv_rows(benh_path, QUIKBENH_FIELDS, benh_out)
         write_csv_rows(isrr_path, QUIKISRR_FIELDS, result.isrr_rows)
 
         _, clms_after_existing = read_csv_rows(clms_path)
@@ -139,7 +146,12 @@ def emit_package(dry_run: bool = False) -> dict:
         summary["outputs"] = {
             "quikclms.csv": {"rows": len(clms_out), "appended": len(result.clms_rows)},
             "quikclmp.csv": {"rows": len(clmp_out), "appended": len(result.clmp_rows)},
-            "quikbenh.csv": {"rows": len(result.benh_rows), "mode": "append_merge_new_file"},
+            "quikbenh.csv": {
+                "rows": len(benh_out),
+                "preserved_non_type8": len(benh_keep),
+                "type8_isrr": len(result.benh_rows),
+                "mode": "merge_preserve_loan_history",
+            },
             "QuikIsrr.csv": {"rows": len(result.isrr_rows), "miswl": "omitted"},
         }
 

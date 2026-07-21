@@ -1,0 +1,14 @@
+metric,value,notes
+quikplan_A_star_plans,2,"A60MIR,A96DAR"
+quikridr_rows_target_plans,6,all MPHSTAT=56 expected
+quikridr_active_mphstat_ne_56,0,
+quikridr_terminated_mphstat_56,6,
+output_rates_has_QuikAint,N,QuikCoi.csv;QuikCvs.csv;QuikDbs.csv;QuikDvs.csv;QuikGcoi.csv;QuikGps.csv;QuikIssc.csv;QuikNff.csv;QuikNps.csv;QuikPlBd.csv;QuikPlCv.csv;QuikPlDb.csv;QuikPlDv.csv;QuikPlGd.csv;QuikPlGp.csv;QuikPlNb.csv;QuikPlSt.csv;QuikPlTv.csv;QuikPlUw.csv;QuikTvs.csv;QuikUint.csv;rate_csv_manifest.csv
+pfsa_quikaint_contains_A60MIR,N,pfsa_mplan_count=29
+pfsa_quikaint_contains_A96DAR,N,
+quikuint_rows_total,0,ISWL-only path; not fix for A-prefix riders
+quikuint_rows_target_plans,0,
+ppben_863_896dar_rows,6,
+ppben_nonzero_fv_guar_rate,0,LifePRO authority for stub rate
+ppben_rate_dist_A60MIR,2,FV_GUAR_RATE=.00
+ppben_rate_dist_A96DAR,4,FV_GUAR_RATE=.00

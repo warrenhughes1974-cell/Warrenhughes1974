@@ -1,0 +1,18 @@
+relative_path,file_size,sha256,lifecycle_classification,active_or_historical,qla_core_import,sys_path_manipulation,cfic_rates_reference,absolute_path_reference,proposed_issue,proposed_change_reason
+conversion/orchestration/configuration.py,19524,fd6a5966fe54bdc308fa2568eb3ca81a530489aab5600d94ad7a9a75203ae6dc,ACTIVE,ACTIVE,Y,N,N,N,CIT-ARCH-001,Stage 4B centralized configuration and engine boundary
+conversion/orchestration/citizens_paths.py,2887,0d7b8a9dff50c8e41f30e06739d20d80d917ed7be6d6e5975881817cd0948f4b,ACTIVE,ACTIVE,N,N,N,N,CIT-ARCH-001,Stage 4B centralized configuration and engine boundary
+conversion/orchestration/legacy_cfic_paths.py,1195,9daac1cf9c177664475eb349033572587e73e09660ed7bdfb6ed921862a3fdc5,ACTIVE,ACTIVE,N,N,N,N,CIT-ARCH-001,Stage 4B centralized configuration and engine boundary
+conversion/orchestration/engine_import.py,2231,424f0ec85fadbc8ce32c0f911fc4105ccdca5288bded9b15d372889b33a387c8,ACTIVE,ACTIVE,Y,N,N,N,"CIT-ARCH-001,CIT-ENGINE-001",Stage 4B centralized configuration and engine boundary
+conversion/orchestration/cfic_reserve_build.py,6486,0bb215b53dbd7b7114b1ad382fad4113d21230cc75938d97c5bd60d3fad773f4,ACTIVE,ACTIVE,N,N,N,N,"CIT-ARCH-001,CIT-ENGINE-001",Stage 4B centralized configuration and engine boundary
+conversion/orchestration/cfic_rate_publish.py,5652,f064e4186d0a31c6f1e0277572c1cd814a7adfcfaa0deff863f9824d28e23f81,ACTIVE,ACTIVE,N,N,N,N,"CIT-ARCH-001,CIT-ENGINE-001",Stage 4B centralized configuration and engine boundary
+conversion/orchestration/package_cfic_rates.py,6582,7f0d1960c2c087257defe175f4cc4d17db122e631c47e90ee0ff7469faf8aa3f,ACTIVE,ACTIVE,N,N,N,N,"CIT-ARCH-001,CIT-ENGINE-001",Stage 4B centralized configuration and engine boundary
+conversion/orchestration/build_cfic_assumption_template.py,1830,2e0a0bdc0c2b5968a513ada49e637d9a3728b2f4e21ac5fd58d0fb8b1947e12b,ACTIVE,ACTIVE,N,N,N,N,"CIT-ARCH-001,CIT-ENGINE-001",Stage 4B centralized configuration and engine boundary
+config/citizens.yaml,227,4990a171324c83307f5bf6879ad2b9d3703f95b16242f5de24ef7e208c1842cc,ACTIVE,ACTIVE,N,N,N,N,CIT-ARCH-001,Stage 4B centralized configuration and engine boundary
+config/engine_version.yaml,881,efb4f5b37531f3341e16d44c9172bf3def00f4b5b1e989433bd8bcf3150726f8,ACTIVE,ACTIVE,Y,N,N,N,CIT-ARCH-001,Stage 4B centralized configuration and engine boundary
+config/source_locations.yaml,1018,faa1dfa224c430d4c0f5fb5e41976a66cee2614d95b304dbcaabcd4bc1825722,ACTIVE,ACTIVE,N,N,N,N,CIT-ARCH-001,Stage 4B centralized configuration and engine boundary
+config/output_locations.yaml,539,8ed71de37386797cf713a8bb41f2b815728e33740cce5f93a0629e652e34447f,ACTIVE,ACTIVE,N,N,N,N,CIT-ARCH-001,Stage 4B centralized configuration and engine boundary
+config/runtime.yaml,550,5f46b694d77a9362a0c75796aa1e939dc941d96fb99da0cc6dab6de64371ed93,ACTIVE,ACTIVE,N,N,N,N,CIT-ARCH-001,Stage 4B centralized configuration and engine boundary
+config/logging.yaml,150,9cc5210b47c11af6e929c544afae6c6638128d6e121c9be49e2d69a097af1fa5,ACTIVE,ACTIVE,N,N,N,N,CIT-ARCH-001,Stage 4B centralized configuration and engine boundary
+README.md,4824,69d3bc8e06676d4cbe9014228988cf4bedb00111c2bc5bce9b841a605ae999f2,ACTIVE,ACTIVE,Y,N,Y,Y,"CIT-ARCH-001,CIT-ENGINE-001",Stage 4B centralized configuration and engine boundary
+PROJECT_STATUS.md,3211,90fa1e097ec97780e73fc323c058d2e3bdec54b4d7d7919540889a9b9109c40b,ACTIVE,ACTIVE,Y,N,Y,N,"CIT-ARCH-001,CIT-ENGINE-001",Stage 4B centralized configuration and engine boundary
+CHANGELOG.md,2452,a081bfe29dd22f8437ca0c3423ed39bb1d63af0be1cb6fb02d199baa92d4f62a,ACTIVE,ACTIVE,Y,N,N,N,"CIT-ARCH-001,CIT-ENGINE-001",Stage 4B centralized configuration and engine boundary

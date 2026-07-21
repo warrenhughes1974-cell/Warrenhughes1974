@@ -1,0 +1,9 @@
+# Placeholder only — do not use until client-approved release process exists
+environment: production
+runtime:
+  dry_run: true
+  validation_only: true
+  write_output: false
+  require_approved_mapping: true
+  require_authoritative_source: true
+notes: Production overrides require explicit authorization and approved mappings.

@@ -1,0 +1,9 @@
+SCRIPT_PATH,UNSAFE_BEHAVIORS,SEVERITY,SAFE_TO_RUN_NOW,RECOMMENDED_ACTION
+conversion/orchestration/package_cfic_rates.py,Assumes CFIC_Rates layout; sys.path to monorepo; writes Output/rates; mixes extract/validate/publish,HIGH,N,Refactor under CIT-ARCH-001 + CIT-ENGINE-001 before any run
+conversion/orchestration/cfic_reserve_build.py,Hardcodes REPO_ROOT/CFIC_Rates; imports qla_core via sys.path,HIGH,N,Engine pin + path config
+conversion/orchestration/cfic_rate_publish.py,Publishes Quik CSVs without Stage gates; qla_core dependency,HIGH,N,Gate behind validation + run_manifest
+conversion/orchestration/legacy_cfic_paths.py,Points to obsolete CFIC folder names relative to script parent,HIGH,N,Replace with config/source_locations.yaml
+conversion/orchestration/build_cfic_assumption_template.py,Hardcoded Output and Issue_Log paths,MEDIUM,N,Retarget after path config
+archive/legacy_cfic_rates/issues/CFIC_Issue_01/scripts/extract_cfic_green_sheets.py,Uses OCR as rate source; pilot FAIL; not authoritative when DBF exists,HIGH,N,DO_NOT_EXECUTE as source authority
+archive/legacy_cfic_rates/issues/CFIC_Issue_02/scripts/emit_cfic_pdf_rates.py,Emit without approved mapping; qla_core; archived paths,HIGH,N,HISTORICAL_ONLY until gross-premium issue gated
+tools/reporting/_build_rate_load_tracker.py,parents[1] path assumes old tree; may write discovery trackers incorrectly,MEDIUM,N,REFACTOR_LATER

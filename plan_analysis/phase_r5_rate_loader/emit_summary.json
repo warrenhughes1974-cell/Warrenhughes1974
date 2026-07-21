@@ -86,44 +86,44 @@
   },
   "factor_rows_by_family": {
     "CASH_VALUE": {
-      "factor_rows": 26031,
-      "distinct_keys": 26031,
+      "factor_rows": 26495,
+      "distinct_keys": 26495,
       "distinct_plans": 36
-    },
-    "NET_PREMIUM": {
-      "factor_rows": 26650,
-      "distinct_keys": 26650,
-      "distinct_plans": 47
     },
     "GROSS_PREMIUM": {
       "factor_rows": 12567,
       "distinct_keys": 12567,
       "distinct_plans": 88
     },
-    "TERMINAL_RESERVE": {
-      "factor_rows": 26097,
-      "distinct_keys": 26097,
-      "distinct_plans": 49
-    },
     "DIVIDEND": {
       "factor_rows": 3978,
       "distinct_keys": 3978,
       "distinct_plans": 15
     },
-    "GUARANTEED_COI": {
-      "factor_rows": 198,
-      "distinct_keys": 198,
-      "distinct_plans": 1
+    "TERMINAL_RESERVE": {
+      "factor_rows": 26097,
+      "distinct_keys": 26097,
+      "distinct_plans": 49
+    },
+    "DEATH_BENEFIT": {
+      "factor_rows": 1380,
+      "distinct_keys": 1380,
+      "distinct_plans": 10
     },
     "CURRENT_COI": {
       "factor_rows": 792,
       "distinct_keys": 792,
       "distinct_plans": 2
     },
-    "DEATH_BENEFIT": {
-      "factor_rows": 1380,
-      "distinct_keys": 1380,
-      "distinct_plans": 10
+    "GUARANTEED_COI": {
+      "factor_rows": 198,
+      "distinct_keys": 198,
+      "distinct_plans": 1
+    },
+    "NET_PREMIUM": {
+      "factor_rows": 26650,
+      "distinct_keys": 26650,
+      "distinct_plans": 47
     }
   },
   "key_tables": {
@@ -154,24 +154,26 @@
     "rule": "AGE>99 -> 99 (QLAdmin AGE is C2); audited, non-blocking. Capped cells colliding with genuine AGE 99 data yield to the genuine value (retained), capped value dropped + audited."
   },
   "validation": {
-    "total_issues": 710,
+    "total_issues": 711,
     "by_severity": {
-      "WARNING": 710
+      "WARNING": 710,
+      "BLOCKER": 1
     },
     "by_id": {
       "V10": 260,
       "V15": 116,
       "AGE_CAPPED_TO_99": 312,
-      "AGE_CAP_COLLISION_RESOLVED": 22
+      "AGE_CAP_COLLISION_RESOLVED": 22,
+      "V-UINT-PDINT": 1
     },
-    "blocker_count": 0
+    "blocker_count": 1
   },
   "format_observations": {
     "does_not_fit": 0,
     "precision_reduced": 260
   },
   "assumption_dependencies_deferred": 116,
-  "emit_ready": true,
+  "emit_ready": false,
   "paagerat_pr": {
     "vargp3_plan_count": 77,
     "row_status": {
@@ -220,13 +222,11 @@
   },
   "quikuint": {
     "enabled": true,
-    "row_count": 32,
+    "row_count": 0,
     "status": {
-      "UNION_MERGE": 4,
-      "ROWS_EMITTED": 32,
-      "MPLANS": 8
+      "BLOCKER_NO_PDINTTBL": 1
     },
-    "distinct_mplans": 8
+    "distinct_mplans": 0
   },
   "quikissc": {
     "enabled": true,
@@ -240,15 +240,15 @@
   },
   "gate": {
     "rule": "BLOCKER_COUNT == 0",
-    "blocker_count": 0,
-    "passed": true
+    "blocker_count": 1,
+    "passed": false
   },
   "emitted_dbf": false,
-  "emitted_csv": true,
+  "emitted_csv": false,
   "emit_dir": null,
-  "csv_dir": "QLA_Migration\\Output\\rates",
-  "tables_written": 22,
-  "csv_tables_written": 22,
-  "total_rows_written": 98827,
+  "csv_dir": null,
+  "tables_written": 0,
+  "csv_tables_written": 0,
+  "total_rows_written": 0,
   "note": "CSV outputs use confirmed DBF field order for QLAdmin append. EFFDATE/ISSCNTRY/ISSUEST + actuarial assumptions remain configurable placeholders; isolated rollback-safe output, source DBFs untouched."
 }

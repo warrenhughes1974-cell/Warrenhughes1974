@@ -15,12 +15,25 @@ def test_build_row_prior_month_end_july_2026():
     row = build_quikdate_governance_row(date(2026, 7, 18))
     expected = format_qla_date(prior_month_end(date(2026, 7, 18)))
     assert expected == "20260630"
-    assert row["PACBILL"] == expected
-    assert row["DIRBILL"] == expected
-    assert row["REINBILL"] == expected
+    for field in (
+        "PROCDATE",
+        "ANNDATE",
+        "DIRBILL",
+        "PACBILL",
+        "GRPBILL",
+        "APLBILL",
+        "LOANBILL",
+        "REINBILL",
+        "CPNBILL",
+        "CCBILL",
+    ):
+        assert row[field] == expected
     assert row["ACHFILEID"] == 0
     assert row["ACHFILEID2"] == "A"
     assert row["ESC_DATE"] == ""
+    assert row["PDUEDAYS"] == 31
+    assert row["VERSION"] == "5.318"
+    assert row["UPDATENUM"] == 359
     assert list(row.keys()) == QUIKDATE_SCHEMA
 
 

@@ -28,6 +28,34 @@ def format_qladmin_mpolicy(val) -> str:
     return core.rjust(10)
 
 
+# LifePRO NAME_ID is Character(11), right-justified with leading spaces.
+QLADMIN_MCLIENTID_WIDTH = 11
+CLIENT_ID_TARGET_FIELDS = frozenset({
+    "MCLIENTID",
+    "MPRIMID",
+    "MOWNRID",
+    "MPAYRID",
+    "MASGNID",
+    "MBENPID",
+    "MBENCID",
+    "MCID",
+    "MOWNCID",
+    "MRIDRID",
+})
+
+
+def format_qladmin_mclientid(val, width: int = QLADMIN_MCLIENTID_WIDTH) -> str:
+    """Fixed-width QLAdmin client ID: left-pad with spaces (right-justified)."""
+    if pd.isna(val) or str(val).strip().lower() in ["nan", "none", ""]:
+        return ""
+    core = normalize(val)
+    if not core:
+        return ""
+    if len(core) >= width:
+        return core
+    return core.rjust(width)
+
+
 def extract_day(date_str) -> str:
     d = re.sub(r"[^0-9/]", "", str(date_str))
     if len(d) == 8:

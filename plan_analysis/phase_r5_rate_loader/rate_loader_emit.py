@@ -20,6 +20,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from qla_core import rate_pipeline as P
 from qla_core import rate_dbf_schema as S
 from qla_core import rate_dbf_writer as W
+from qla_core import quikaint_closed_riders as QAINT
+from qla_core.rate_member_setup import build_quikuwpo_rows
 
 HERE = os.path.dirname(__file__)
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
@@ -56,6 +58,19 @@ def _write_dbf_manifest(res, manifest):
         n = W.write_quikissc_table(path, res.quikissc_rows, overwrite=True)
         manifest.append({"kind": "surrender", "table": "QuikIssc", "format": "dbf",
                          "path": os.path.relpath(path, ROOT), "rows": n})
+    uwpo_rows = build_quikuwpo_rows(res.member_rows, key_rows=res.key_rows)
+    path = os.path.join(EMIT_DIR, "QuikUwpo.dbf")
+    n = W.write_quikuwpo_table(path, uwpo_rows, overwrite=True)
+    manifest.append({"kind": "uw_class", "table": "QuikUwpo", "format": "dbf",
+                     "path": os.path.relpath(path, ROOT), "rows": n})
+    qaint_entry = QAINT.emit_issue51_quikaint(EMIT_DIR, overwrite=True, emit_csv=False, emit_dbf=True)
+    manifest.append({
+        "kind": qaint_entry["kind"],
+        "table": qaint_entry["table"],
+        "format": "dbf",
+        "path": os.path.relpath(qaint_entry["path"], ROOT),
+        "rows": qaint_entry["rows"],
+    })
 
 
 def _write_csv_manifest(res, csv_dir, manifest):
@@ -84,6 +99,19 @@ def _write_csv_manifest(res, csv_dir, manifest):
         n = W.write_quikissc_csv(path, res.quikissc_rows, overwrite=True)
         manifest.append({"kind": "surrender", "table": "QuikIssc", "format": "csv",
                          "path": os.path.relpath(path, ROOT), "rows": n})
+    uwpo_rows = build_quikuwpo_rows(res.member_rows, key_rows=res.key_rows)
+    path = os.path.join(csv_dir, "QuikUwpo.csv")
+    n = W.write_quikuwpo_csv(path, uwpo_rows, overwrite=True)
+    manifest.append({"kind": "uw_class", "table": "QuikUwpo", "format": "csv",
+                     "path": os.path.relpath(path, ROOT), "rows": n})
+    qaint_entry = QAINT.emit_issue51_quikaint(csv_dir, overwrite=True)
+    manifest.append({
+        "kind": qaint_entry["kind"],
+        "table": qaint_entry["table"],
+        "format": "csv",
+        "path": os.path.relpath(qaint_entry["path"], ROOT),
+        "rows": qaint_entry["rows"],
+    })
 
 
 def main():

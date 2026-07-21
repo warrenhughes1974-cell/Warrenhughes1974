@@ -1,0 +1,17 @@
+QLA Table,QLA Field / Item,What QLAdmin Needs,Source We Have,Status,What Is Missing / Ask
+QuikPlCv,MORT,Mortality table code (2-char) by gender/UW class,CSO Mortality Crosswalk (mort_code_default + gender/UW columns) - 45 of 51 plans,HAVE,Term plans with no CV assumptions (667 ART / L01 / L05 / L07 / 619 DT family) intentionally blank - confirm no CV needed
+QuikPlCv,ETIMORT,ETI mortality table code (2-char),CSO Mortality Crosswalk (eti_code_*),PARTIAL,Blank where LifePRO had no ETI table (L17 / 668 SPWL / SAL / 621-622 END / PUAs) - confirm blank is correct or supply table
+QuikPlCv,NFOINT,NFO interest code (1-char),CSO Mortality Crosswalk (nfo_interest_code: A/C/F/G/2/4),PARTIAL,13 plans say 'Computed on CRVM' with NO code (960 PO / 960 OL / 960 LP65 / 960 LP85-M / 961 ME65 / 980 END65 / 970 JEB / 670 GL* / 665 STME95 / 666 WL); 991 PWL graded 3.5%/2.5%. Need issue-year NFO rate schedule from actuarial
+QuikPlCv,INTMETHCV,Interest method code (1-char),CSO Mortality Crosswalk - all rows loaded as 0 (Curtate) default,HAVE (default),Confirm no product requires 1-Continuous
+QuikPlTv,MORT,Reserve mortality table code (2-char),Assumed same as QuikPlCv MORT from CSO Crosswalk,PARTIAL,Confirm reserve mortality = nonforfeiture mortality per plan (not stated in any extract)
+QuikPlTv,RSVINT,Reserve interest rate code (1-char),None - no LifePRO field or crosswalk column,MISSING,Need reserve valuation interest per plan (varies by issue year for CRVM plans) from CSO actuarial
+QuikPlTv,RSVMETH,Reserve method code (1-char),None - crosswalk text implies CRVM but no code delivered,MISSING,Need QLA reserve method code per plan (CRVM / net level / etc.) from CSO actuarial
+QuikPlTv,INTMETHTV,TV interest method code (1-char),None,MISSING,Need per plan (curtate vs continuous) from CSO actuarial
+QuikPlTv,STOREMEANS,Mean vs terminal factors flag (T/F),None - new PDAGE RV grids do not say terminal or mean,MISSING,One-line answer from actuarial: are delivered RV grids terminal or mean reserves?
+QuikPlTv,CALCMIDS,Calculate mid-terminal reserves flag (T/F),None,MISSING,Business decision from CSO actuarial
+QuikCvs,CV factor grids,Cash values per plan/age/duration,PDAGE CV (36 coverages) + PAAGERAT CV (15 PUA/SPWL products) - 20260713 zip,HAVE,Verify coverage list vs full plan universe during load
+QuikTvs,RV factor grids (reserves),Terminal/mean reserve values,PDAGE RV (100575 rows / 69 coverages) + PAAGERAT RV (5 PUAs + 668 SPWL) - NEW in 20260713 zip,HAVE,Pending STOREMEANS answer above
+QuikTvs,NP factor grids (net premiums),Net premiums per plan,PDAGE NP (97347 rows / 66 coverages) - NEW in 20260713 zip,HAVE,None
+QuikNff,NF factor grids,Nonforfeiture factors,PDAGE NF (7 coverages: L10/L14/L15/L16 + 670 GL85-8) + PAAGERAT NF (658 CEN I / 659 CEN II / 678 CEN SD / SAL OL),PARTIAL,Confirm whether remaining plans need NF factors or are computed
+QuikCvs/QuikTvs (Issue #56 PUAs),PUA reserve grids,RV rows for every PUA plan,PAAGERAT RV present for 670 PUA / 960 65 PUA / 960 LP PUA / 970 PUA / 991 PUA + 668 SPWL,PARTIAL,No RV rows for 960 PO PUA (Eric pilot) / 960 OL PUA / 621-622 PUA / 665 PUA / 675* PUA / 961 PUA / 980 PUA - request from CSO
+QuikUint,Declared/guaranteed interest,UL/ISWL interest rate table,PDINTTBL extract missing from Source (Issue #42 waiver),MISSING,CSO to restore PDINT/PDINTTBL extracts; ISWL 4.50% guarantee evidence only (PPBEN FV_GUAR_RATE / CSO crosswalk)

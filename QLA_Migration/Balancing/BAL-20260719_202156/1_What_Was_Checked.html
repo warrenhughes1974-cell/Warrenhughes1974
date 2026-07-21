@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>QuikForge Balancing Review</title>
+<style>
+body { font-family: Georgia, "Times New Roman", serif; color: #222; margin: 2rem; line-height: 1.45; }
+h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 600; }
+h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+h2 { font-size: 1.25rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 0.25rem; }
+h3 { font-size: 1.05rem; margin-top: 1.5rem; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+th, td { border: 1px solid #bbb; padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; }
+th { background: #f3f3f3; font-family: Arial, Helvetica, sans-serif; }
+.summary dt { font-family: Arial, Helvetica, sans-serif; font-weight: 600; margin-top: 0.6rem; }
+.summary dd { margin: 0.15rem 0 0 0; }
+.pass { color: #15803D; }
+.fail { color: #B91C1C; }
+.explained { color: #A16207; }
+@media print { body { margin: 0.75in; } }
+</style>
+</head>
+<body>
+<h1>QuikForge Balancing Review</h1>
+<p>This review compares the LifePRO source files to the QLAdmin conversion output.
+Nothing was changed — this report only shows whether the counts and dollars match.</p>
+<p><strong>Quick terms:</strong>
+<em>LifePRO</em> = source system extracts;
+<em>QLAdmin</em> = converted load files;
+<em>Names &amp; Addresses</em> = the LifePRO file of people, roles, and beneficiaries
+(sometimes called the Relationship Name/Address extract).</p>
+<h2>Executive Summary</h2>
+<dl class="summary">
+<dt>Overall Result</dt><dd class="fail">Some Items Need Attention (with Explained Variances)</dd>
+<dt>Controls Passed</dt><dd>9 of 17 (90.00% of completed PASS/FAIL)</dd>
+<dt>Problems Found (FAIL)</dt><dd>1</dd>
+<dt>Explained Variances</dt><dd>7</dd>
+<dt>Review Scope</dt><dd>All Active Balancing Controls (Counts, Dollars, Inventory)</dd>
+<dt>Run Date</dt><dd>2026-07-19 20:21:56</dd>
+<dt>Run ID</dt><dd>BAL-20260719_202156</dd>
+</dl>
+<h2>What We Checked</h2>
+<table>
+<thead><tr><th>Area</th><th>What We Checked</th><th>Result</th><th>Problems Found</th></tr></thead>
+<tbody>
+<tr><td>Counts</td><td>How many policies, people, coverages, premiums, loans, and dividends moved over</td><td>Passed with Explained Variances</td><td>0</td></tr><tr><td>Dollars</td><td>Whether money totals match (face amount, premiums, loans, dividends, beneficiary shares)</td><td>Needs Attention (with Explained)</td><td>1</td></tr><tr><td>Inventory</td><td>Whether every policy made it across — and no extra policies were invented</td><td>Passed with Explained Variances</td><td>0</td></tr>
+</tbody>
+</table>
+<h2>Area Details</h2>
+<h3>Counts</h3>
+<p>We checked that:</p>
+<ul>
+<li>Number of policies in the LifePRO policy master vs QLAdmin Policy Master (<strong>EXPLAINED</strong>: A small number of administrative / non-product policy rows are intentionally not loaded to QLAdmin)</li><li>Number of coverages and riders (after dropping non-coverage rows) vs QLAdmin Riders (<strong>PASS</strong>)</li><li>Number of unique people (names/addresses) vs QLAdmin Clients (<strong>EXPLAINED</strong>: Client counts can differ slightly because QLAdmin builds one client record per person after name/address cleanup)</li><li>Number of person-to-policy relationships vs QLAdmin Policy Relationships (<strong>EXPLAINED</strong>: Relationship counts are lower in QLAdmin because duplicate person-to-policy links are removed)</li><li>Number of beneficiary designations vs QLAdmin Beneficiaries (<strong>EXPLAINED</strong>: Not every beneficiary-type name/address row becomes a QLAdmin beneficiary (extra conversion filters apply))</li><li>Number of premium-history transactions vs QLAdmin Premium History (<strong>EXPLAINED</strong>: Premium-history row counts can differ after conversion premium adjustments and cleanup)</li><li>Number of active policy loans vs QLAdmin Loans (<strong>PASS</strong>)</li><li>Number of dividend transactions vs QLAdmin Dividend History (<strong>PASS</strong>)</li>
+</ul>
+<p><strong>Result:</strong> Passed with Explained Variances</p>
+<p><strong>Problems Found:</strong> 0</p>
+<h3>Dollars</h3>
+<p>We checked that:</p>
+<ul>
+<li>Total face amount (coverage amount) vs QLAdmin Riders (<strong>PASS</strong>)</li><li>Total modal (billed) premium vs QLAdmin Policy Master (<strong>PASS</strong>)</li><li>Total premium-history dollars vs QLAdmin Premium History (<strong>EXPLAINED</strong>: QLAdmin premium-history dollars include conversion premium adjustments that are not in the raw accounting sum)</li><li>Total outstanding loan balances vs QLAdmin Loans (<strong>PASS</strong>)</li><li>Total accumulated dividends on deposit vs QLAdmin Dividend Deposit (<strong>PASS</strong>)</li><li>Total dividend transaction dollars vs QLAdmin Dividend History (<strong>PASS</strong>)</li><li>Beneficiary share percents on each policy add up to 100% (<strong>FAIL</strong>: 1,410 policies have beneficiary share percents that do not add up to 100%. Review the detail list under internal/.)</li>
+</ul>
+<p><strong>Result:</strong> Needs Attention (with Explained)</p>
+<p><strong>Problems Found:</strong> 1</p>
+<h3>Inventory</h3>
+<p>We checked that:</p>
+<ul>
+<li>Every LifePRO policy appears in QLAdmin Policy Master (<strong>EXPLAINED</strong>: A small number of administrative / non-product policy rows are intentionally not loaded to QLAdmin)</li><li>QLAdmin Policy Master has no policies that were not in LifePRO (<strong>PASS</strong>)</li>
+</ul>
+<p><strong>Result:</strong> Passed with Explained Variances</p>
+<p><strong>Problems Found:</strong> 0</p>
+
+<h2>What To Do Next</h2>
+<ol><li>Open <strong>2_Items_Needing_Attention.csv</strong> for FAIL and EXPLAINED rows.</li><li>Review each <strong>Data Problem</strong> with the conversion owner.</li><li>Policy-level detail (when present) is under <code>internal/</code>.</li><li>Re-run Balancing after corrections.</li></ol>
+<p>Plain-English control definitions: <code>Balancing_Methodology.md</code> in the Balancing folder.
+Technical control totals: <code>internal/balancing_control_totals.csv</code>.</p>
+</body>
+</html>

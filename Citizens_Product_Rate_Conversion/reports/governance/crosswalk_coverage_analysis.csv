@@ -1,0 +1,157 @@
+SOURCE_PLAN_CODE,IN_TRACKER,IN_PLAN_DBF,QLPLAN,GROUPED_WITH,COVERAGE_INTERPRETATION,NOTES
+010G,Y,Y,10010G,010G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+011G,Y,Y,10011G,011G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+012G,Y,Y,10012G,012G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+013G,Y,Y,10013G,013G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+014G,Y,Y,10014G,014G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+051G,Y,Y,9051G,051G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+052G,Y,Y,9052G,052G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+053G,Y,Y,9053G,053G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+054G,Y,Y,9054G,054G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+057G,Y,Y,9057G,057G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+100,Y,Y,100100,100,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+100V,N,Y,,100V,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+1015,Y,Y,101015,1015,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+101G,Y,Y,10101G,101G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+101M,Y,Y,10101M,101M,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+101X,Y,Y,10101X,101X,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+165,Y,Y,100165,165,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+3ALF,Y,Y,103ALF,3ALF,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+3ALM,Y,Y,103ALM,3ALM,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+3PFN,Y,Y,"103PFN,103PFS, 103PMN, 103PMS","3PFN,3PFS,3PMN,3PMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+3PFS,Y,Y,"103PFN,103PFS, 103PMN, 103PMS","3PFN,3PFS,3PMN,3PMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+3PMN,Y,Y,"103PFN,103PFS, 103PMN, 103PMS","3PFN,3PFS,3PMN,3PMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+3PMS,Y,Y,"103PFN,103PFS, 103PMN, 103PMS","3PFN,3PFS,3PMN,3PMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+3R2G,Y,Y,103R2G,3R2G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+3RWG,Y,Y,103RWG,3RWG,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+3X1F,Y,Y,103X1F,"3X1F,3X5M",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+3X5M,Y,Y,103X1F,"3X1F,3X5M",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+8021,Y,Y,108021,8021,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+8022,Y,Y,108022,8022,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+8023,Y,Y,108023,8023,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+8024,Y,Y,108024,8024,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+8025,Y,Y,108025,8025,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+802C,Y,Y,10802C,802C,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+802G,Y,Y,10802G,802G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+802K,Y,Y,10802K,802K,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+802L,Y,Y,10802L,802L,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+802M,Y,Y,10802M,802M,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+802S,Y,Y,10802S,802S,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+802W,Y,Y,10802W,802W,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+802X,Y,Y,10802X,802X,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+802Z,Y,Y,10802Z,802Z,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+803E,Y,Y,10803E,803E,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+803H,Y,Y,10803H,803H,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+803K,Y,Y,10803K,803K,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+803N,Y,Y,0803N,803N,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+9FMN,N,N,109FMN/019PMN,"9FMN,9PMN",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+9PFN,Y,Y,"109PFN, 9PFS","9PFN,9PFS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+9PFS,Y,Y,"109PFN, 9PFS","9PFN,9PFS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+9PMN,Y,Y,109PMN,9PMN,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+9R2G,Y,Y,"109R2G, 9RWG","9R2G,9RWG",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+9RWG,Y,Y,"109R2G, 9RWG","9R2G,9RWG",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+ABFN,Y,Y,"10ABFN, 10ABFS, 10ABMN, 10ADMS","ABFN,ABFS,ABMN,ABMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+ABFS,Y,Y,"10ABFN, 10ABFS, 10ABMN, 10ADMS","ABFN,ABFS,ABMN,ABMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+ABMN,Y,Y,"10ABFN, 10ABFS, 10ABMN, 10ADMS","ABFN,ABFS,ABMN,ABMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+ABMS,Y,Y,"10ABFN, 10ABFS, 10ABMN, 10ADMS","ABFN,ABFS,ABMN,ABMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+ALP2,Y,Y,"10ALP2, ALPS","ALP2,ALPS,ALP6",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+ALP6,Y,Y,"10ALP2, ALPS","ALP2,ALPS,ALP6",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+ALPF,Y,Y,"10ALPF, ALPM","ALPF,ALPM",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+ALPM,Y,Y,"10ALPF, ALPM","ALPF,ALPM",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+ALPS,Y,Y,"10ALP2, ALPS","ALP2,ALPS,ALP6",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+CFA3,Y,Y,A0CFA3,CFA3,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+CP05,Y,Y,10CP05,"CP05,CP10,CP20",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+CP10,Y,Y,10CP05,"CP05,CP10,CP20",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+CP20,Y,Y,10CP05,"CP05,CP10,CP20",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+CPSP,Y,Y,10CPSP,CPSP,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+CTR,Y,Y,500CTR,CTR,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+CW58,Y,Y,10CW58,CW58,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+CW80,Y,Y,10CW80,CW80,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+DPFN,Y,Y,"10DPFN, 10DPMN, 10DPMS","DPFN,DPMN,DPMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+DPMN,Y,Y,"10DPFN, 10DPMN, 10DPMS","DPFN,DPMN,DPMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+DPMS,Y,Y,"10DPFN, 10DPMN, 10DPMS","DPFN,DPMN,DPMS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+DR2G,Y,Y,"10DR2G, 10DRWG","DR2G,DRWG",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+DRWG,Y,Y,"10DR2G, 10DRWG","DR2G,DRWG",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+F65,Y,Y,100F65,F65,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FDAA,Y,Y,A0FDAA,FDAA,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FDAB,Y,Y,A0FDAB,FDAB,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FDAC,Y,Y,A0FDAC,FDAC,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FDAD,Y,Y,A0FDAD,FDAD,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FDAP,Y,Y,A0FDAP,FDAP,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FDAS,Y,Y,A0FDAS,FDAS,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FF14,Y,Y,A0FF14,FF14,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FF55,Y,Y,A0FF55,FF55,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FFAA,Y,Y,A0FFAA,FFAA,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FFAB,Y,Y,A0FFAB,FFAB,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FFAC,Y,Y,A0FFAC,FFAC,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FFAD,Y,Y,A0FFAD,FFAD,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FFAP,Y,Y,A0FFAP,FFAP,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FFAS,Y,Y,A0FFAS,FFAS,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FS4,Y,Y,100FS4,FS4,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FW5,Y,Y,"100FW5, 10FW5C","FW5,FW5C",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+FW5C,Y,Y,"100FW5, 10FW5C","FW5,FW5C",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+GDB,Y,Y,100GDB,GDB,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+HPFN,Y,Y,10HPFN,HPFN,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+HPFS,Y,Y,10HPFS,HPFS,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+HPMN,Y,Y,10HPMN,HPMN,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+HPMS,Y,Y,10HPMS,HPMS,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+HR2G,Y,Y,10HR2G,HR2G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+HRWG,Y,Y,10HRWG,HRWG,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+LPI6,Y,Y,"10LPI6,10LPIS","LPI6,LPIS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+LPIS,Y,Y,"10LPI6,10LPIS","LPI6,LPIS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P7FN,Y,Y,"10P7FN, 10P7FS, 10P7MN, 10P7MS","P7FN,P7FS,P7MN,P7MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P7FS,Y,Y,"10P7FN, 10P7FS, 10P7MN, 10P7MS","P7FN,P7FS,P7MN,P7MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P7MN,Y,Y,"10P7FN, 10P7FS, 10P7MN, 10P7MS","P7FN,P7FS,P7MN,P7MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P7MS,Y,Y,"10P7FN, 10P7FS, 10P7MN, 10P7MS","P7FN,P7FS,P7MN,P7MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P8FJ,Y,Y,"10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS","P8FJ,P8FN,P8FS,P8MJ,P8MN,P8MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P8FN,Y,Y,"10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS","P8FJ,P8FN,P8FS,P8MJ,P8MN,P8MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P8FS,Y,Y,"10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS","P8FJ,P8FN,P8FS,P8MJ,P8MN,P8MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P8MJ,Y,Y,"10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS","P8FJ,P8FN,P8FS,P8MJ,P8MN,P8MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P8MN,Y,Y,"10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS","P8FJ,P8FN,P8FS,P8MJ,P8MN,P8MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P8MS,Y,Y,"10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS","P8FJ,P8FN,P8FS,P8MJ,P8MN,P8MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P9FJ,Y,Y,"10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS","P9FJ,P9FN,P9FS,P9MJ,P9MN,P9MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P9FN,Y,Y,"10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS","P9FJ,P9FN,P9FS,P9MJ,P9MN,P9MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P9FS,Y,Y,"10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS","P9FJ,P9FN,P9FS,P9MJ,P9MN,P9MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P9MJ,Y,Y,"10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS","P9FJ,P9FN,P9FS,P9MJ,P9MN,P9MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P9MN,Y,Y,"10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS","P9FJ,P9FN,P9FS,P9MJ,P9MN,P9MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+P9MS,Y,Y,"10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS","P9FJ,P9FN,P9FS,P9MJ,P9MN,P9MS",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+PLP,Y,Y,"100PLP, 10PLP6","PLP,PLP6",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+PLP6,Y,Y,"100PLP, 10PLP6","PLP,PLP6",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+Q1FN,Y,Y,"10Q1FN, 10Q1MN, 10Q1MS, 10Q2FN, 10Q2MN, 10Q3FN, 10Q3MN, ","Q1FN,Q1MN,Q1MS,Q2FN,Q2MN,Q3FN,Q3MN",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+Q1MN,Y,Y,"10Q1FN, 10Q1MN, 10Q1MS, 10Q2FN, 10Q2MN, 10Q3FN, 10Q3MN, ","Q1FN,Q1MN,Q1MS,Q2FN,Q2MN,Q3FN,Q3MN",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+Q1MS,Y,Y,"10Q1FN, 10Q1MN, 10Q1MS, 10Q2FN, 10Q2MN, 10Q3FN, 10Q3MN, ","Q1FN,Q1MN,Q1MS,Q2FN,Q2MN,Q3FN,Q3MN",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+Q2FN,Y,Y,"10Q1FN, 10Q1MN, 10Q1MS, 10Q2FN, 10Q2MN, 10Q3FN, 10Q3MN, ","Q1FN,Q1MN,Q1MS,Q2FN,Q2MN,Q3FN,Q3MN",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+Q2MN,Y,Y,"10Q1FN, 10Q1MN, 10Q1MS, 10Q2FN, 10Q2MN, 10Q3FN, 10Q3MN, ","Q1FN,Q1MN,Q1MS,Q2FN,Q2MN,Q3FN,Q3MN",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+Q3FN,Y,Y,"10Q1FN, 10Q1MN, 10Q1MS, 10Q2FN, 10Q2MN, 10Q3FN, 10Q3MN, ","Q1FN,Q1MN,Q1MS,Q2FN,Q2MN,Q3FN,Q3MN",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+Q3MN,Y,Y,"10Q1FN, 10Q1MN, 10Q1MS, 10Q2FN, 10Q2MN, 10Q3FN, 10Q3MN, ","Q1FN,Q1MN,Q1MS,Q2FN,Q2MN,Q3FN,Q3MN",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+QLFN,Y,Y,"10QLFN, 10QLMN","QLFN,QLMN",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+QLMN,Y,Y,"10QLFN, 10QLMN","QLFN,QLMN",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+R28,Y,Y,"100R28, 10R28A, 10R28G","R28,R28A,R28G",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+R28A,Y,Y,"100R28, 10R28A, 10R28G","R28,R28A,R28G",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+R28G,Y,Y,"100R28, 10R28A, 10R28G","R28,R28A,R28G",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+R29G,Y,Y,10R29G,R29G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+R68,Y,Y,"100R68, 10R68G","R68,R68G",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+R68G,Y,Y,"100R68, 10R68G","R68,R68G",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RE1,Y,Y,100RE1,RE1,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RE2,Y,Y,100RE2,RE2,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RJ,Y,Y,1000RJ,RJ,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RS5,Y,Y,100RS5,RS5,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RW,Y,Y,"1000RW, 100RWC","RW,RWC",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RW1,Y,Y,100RW1,RW1,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RW18,Y,Y,10RW18,RW18,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RW2,Y,Y,100RW2,RW2,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RW28,Y,Y,10RW28,RW28,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RW8,Y,Y,"100RW8, 10RW8A, 10RW8G","RW8,RW8A,RW8G",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RW8A,Y,Y,"100RW8, 10RW8A, 10RW8G","RW8,RW8A,RW8G",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RW8G,Y,Y,"100RW8, 10RW8A, 10RW8G","RW8,RW8A,RW8G",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RW9G,Y,Y,10RW9G,RW9G,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+RWC,Y,Y,"1000RW, 100RWC","RW,RWC",WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+TAFA,Y,Y,10TAFA,TAFA,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+X18F,Y,Y,10X18F,X18F,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+X18M,Y,Y,10X18M,X18M,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+X58F,Y,Y,10X58F,X58F,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+X58M,Y,Y,10X58M,X58M,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+XR1F,Y,Y,10XR1F,XR1F,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+XR1M,Y,Y, 10XR1M,XR1M,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+XR5F,Y,Y,10XR5F,XR5F,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common
+XR5M,Y,Y,10XR5M,XR5M,WORKING_PARTIAL_MAP — not full universe,Crosswalk is incomplete subset; grouped sex/smoker codes common

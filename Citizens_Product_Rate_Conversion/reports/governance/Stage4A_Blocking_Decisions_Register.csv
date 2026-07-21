@@ -1,0 +1,21 @@
+DECISION_ID,SUBJECT,BLOCKS_LEVEL,BLOCKS_PROJECT_CONFIGURATION,BLOCKS_ENGINE_INTEGRATION,BLOCKS_PLAN_MANIFEST_FINALIZATION,BLOCKS_RATE_MANIFEST_POPULATION,BLOCKS_RATE_EXTRACTION,BLOCKS_RATE_CONVERSION,BLOCKS_VALIDATION,BLOCKS_UAT,BLOCKS_RELEASE,NOTES
+CIT-DEC-001,Plan-universe source,BLOCKS_BEFORE_CONVERSION,N,N,Y,Y,N,Y,Y,Y,Y,Union vs 301 vs 308 must be settled before claiming completion; config/engine OK
+CIT-DEC-002,Tracker-only plans,BLOCKS_BEFORE_CONVERSION,N,N,Y,Y,PARTIAL,PARTIAL,Y,Y,Y,Blocks those plans only until classified
+CIT-DEC-003,DBF-only plans,BLOCKS_BEFORE_CONVERSION,N,N,Y,Y,PARTIAL,PARTIAL,Y,Y,Y,May be admin/out-of-scope
+CIT-DEC-004,Crosswalk completeness,BLOCKS_BEFORE_CONVERSION,N,N,N,Y,N,Y,Y,Y,Y,Does NOT block CIT-ARCH-001/ENGINE-001
+CIT-DEC-005,Alias/sex-smoker handling,BLOCKS_BEFORE_CONVERSION,N,N,N,Y,N,Y,Y,Y,Y,Design members carefully; no auto-merge
+CIT-DEC-006,Rider treatment,BLOCKS_BEFORE_CONVERSION,N,N,Y,Y,PARTIAL,PARTIAL,Y,Y,Y,Scope counts
+CIT-DEC-007,Active/historical,BLOCKS_BEFORE_UAT,N,N,N,N,N,N,N,Y,Y,Nonblocking for config
+CIT-DEC-008,Plan-count reporting,NONBLOCKING,N,N,N,N,N,N,N,N,N,Reporting standard
+CIT-DEC-009,Gross premium authority,BLOCKS_BEFORE_CONVERSION,N,N,N,Y,Y,Y,Y,Y,Y,Reserve wave can proceed without GP
+CIT-DEC-010,Cash value authority,BLOCKS_BEFORE_CONVERSION,N,N,N,Y,Y,Y,Y,Y,Y,Actuarial confirm + OBQ-1
+CIT-DEC-011,Net premium authority,BLOCKS_BEFORE_CONVERSION,N,N,N,Y,Y,Y,Y,Y,Y,
+CIT-DEC-012,Reserve authority,BLOCKS_BEFORE_CONVERSION,N,N,N,Y,Y,Y,Y,Y,Y,Mean reserve mapping open
+CIT-DEC-013,Paid-up authority,BLOCKS_BEFORE_CONVERSION,N,N,N,Y,Y,Y,Y,Y,Y,
+CIT-DEC-014,ETI authority,BLOCKS_BEFORE_CONVERSION,N,N,N,PARTIAL,Y,Y,Y,Y,Y,Can defer from v1
+CIT-DEC-015,Interest authority,BLOCKS_BEFORE_CONVERSION,N,N,N,PARTIAL,PARTIAL,PARTIAL,Y,Y,Y,Loan IR candidate exists
+CIT-DEC-016,Dividend authority,BLOCKS_BEFORE_CONVERSION,N,N,N,PARTIAL,Y,Y,Y,Y,Y,Defer if N/A
+CIT-DEC-017,Expense/COI/modal/guideline,BLOCKS_BEFORE_CONVERSION,N,N,N,PARTIAL,Y,Y,Y,Y,Y,
+CIT-DEC-018,Draft output status,NONBLOCKING,N,N,N,N,N,N,N,N,N,Already NOT_AUTHORITATIVE
+CIT-DEC-019,SourceData historical,NONBLOCKING,N,N,N,N,N,N,N,N,N,Archive only
+CIT-DEC-020,Approval process,BLOCKS_BEFORE_DEVELOPMENT,N,N,N,N,N,N,N,Y,Y,Process gate for promotions; Stage 4B allowed if neutral

@@ -1,0 +1,12 @@
+database_file,table_name,csv_file,row_count,column_count,status,columns,notes
+CFIProposalMakerRev2.mdb,AgentName,AgentName.csv,1,2,n/a,"Pick,AgentName",Default agent name only
+CFIProposalMakerRev2.mdb,FiveYearTerm,FiveYearTerm.csv,100,9,Active,"K10,K25,K50,K100,K250,K500,WOP,Age,Sex",5-year term base rates
+CFIProposalMakerRev2.mdb,FiveYearTermRider,FiveYearTermRider.csv,50,8,Active,"K10,K25,K50,K100,K250,K500,WOP,Age",5-year term rider rates (no Sex)
+CFIProposalMakerRev2.mdb,TenYearTerm,TenYearTerm.csv,100,9,Active,"K10,K25,K50,K100,K250,K500,WOP,Age,Sex",10-year term base rates
+CFIProposalMakerRev2.mdb,TenYearTermRider,TenYearTermRider.csv,50,8,Active,"K10,K25,K50,K100,K250,K500,WOP,Age",10-year term rider rates (no Sex)
+CFIProposalMakerRev2.mdb,LPI,LPI.csv,56,4,Active,"SP,Pay20Life,PdUp65,Age",Likely ALP product (forms say ALP)
+CFIProposalMakerRev2.mdb,PermaLife7AdultBefore,PermaLife7AdultBefore.csv,212,12,Active,"RateUnder100K,RateOver100K,CashValueIn10,CashValueIn20,CashValueAt65,PaidUpIn10,PaidUpIn20,PaidUpAt65,WOP,Age,Sex,Smoker",Active - table name says Before but business confirmed active
+CFIProposalMakerRev2.mdb,PermaLife7JuvenileBefore,PermaLife7JuvenileBefore.csv,36,10,Active,"RateUnder100K,RateOver100K,CashValueIn10,CashValueIn20,CashValueAt65,PaidUpIn10,PaidUpIn20,PaidUpAt65,Age,Sex",Active - table name says Before but business confirmed active
+CFIProposalMakerRev2.mdb,PermaLife8Adult,PermaLife8Adult.csv,212,12,Active,"RateUnder100K,RateOver100K,CashValueIn10,CashValueIn20,CashValueAt65,PaidUpIn10,PaidUpIn20,PaidUpAt65,WOP,Age,Sex,Smoker",PermaLife 8 adult
+CFIProposalMakerRev2.mdb,PermaLife8Juvenile,PermaLife8Juvenile.csv,36,10,Active,"RateUnder100K,RateOver100K,CashValueIn10,CashValueIn20,CashValueAt65,PaidUpIn10,PaidUpIn20,PaidUpAt65,Age,Sex",PermaLife 8 juvenile
+CFIProposalMakerRev2.mdb,Quest,Quest.csv,76,24,Active,"WL,PdUp65,Pay20,WLCashValueIn10,WLCashValueIn20,WLCashValueAt65,WLPaidUpIn10,WLPaidUpIn20,WLPaidUpAt65,PdUp65CashValueIn10,PdUp65CashValueIn20,PdUp65CashValueAt65,PdUp65PaidUpIn10,PdUp65PaidUpIn20,PdUp65PaidUpAt65,Pay20CashValueIn10,Pay20CashValueIn20,Pay20CashValueAt65,Pay20PaidUpIn10,Pay20PaidUpIn20,Pay20PaidUpAt65,MaleWOP,FemaleWOP,Age",Quest multi-plan (WL / PdUp65 / Pay20)

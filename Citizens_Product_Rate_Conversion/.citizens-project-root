@@ -1,0 +1,4 @@
+project: Citizens Product and Rate Conversion
+client_code: CITIZENS
+marker_version: 1
+description: Stable repository root marker for configuration discovery

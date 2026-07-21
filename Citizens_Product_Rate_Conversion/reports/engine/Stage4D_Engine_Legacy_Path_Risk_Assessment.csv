@@ -1,0 +1,4 @@
+MODULE,SYMBOL,REFERENCE,REFERENCE_TYPE,IMPORT_TIME_EFFECT,CITIZENS_CALL_PATH,RUNTIME_RISK,REQUIRES_ENGINE_FIX,BLOCKS_CITIZENS,RECOMMENDED_ENGINE_ISSUE,NOTES
+rate_factor_loader,load_plan_crosswalk,openpyxl lazy import,FUNCTION_ONLY,N,N,LOW,N,N,ENG-ARCH-002,Only when crosswalk path passed
+plan_source_paths,_QLA_SOURCE,QLA_Migration path constant,MODULE_CONSTANT,N,N,LOW,N,N,ENG-ARCH-002,Not in Citizens-required import chain
+rate_key_setup,CSOAssumptionProvider,CSO adapter class name,CLASS_DEFINITION,N,N,NONE,N,N,,Optional adapter; Citizens uses AssumptionProvider

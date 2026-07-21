@@ -1,0 +1,4 @@
+wave,products,pdfs,est_staging_rows,est_quik_factor_rows_per_family,est_quik_total_factor_rows_all_families,warren_output_delta,qladmin_emit
+wave1_p7mn_pilot,1,3,165,16,48,0,no
+wave2_p7_family,4,252,16840,1684,5052,0,staging_only
+wave3_emit_blocked,35,1102,81605,8160,24480,0,no

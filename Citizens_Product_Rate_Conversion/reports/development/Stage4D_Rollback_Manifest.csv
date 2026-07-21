@@ -1,0 +1,14 @@
+file,created_or_modified,prechange_sha256,postchange_sha256,issue,change_purpose,rollback_action
+config/engine_version.yaml,modified,PRECHANGE,POSTCHANGE,CIT-ENGINE-001,PIN engine pin,Restore from stage4d prechange manifest
+config/engine_artifact.yaml,created,NEW,POSTCHANGE,CIT-ENGINE-001,Artifact reference,Delete file
+pyproject.toml,modified,PRECHANGE,POSTCHANGE,CIT-ENGINE-001,Declare engine dependency,Remove engine line
+requirements-lock.txt,created,NEW,POSTCHANGE,CIT-ENGINE-001,Lock evidence,Delete file
+tools/engine/check_engine_compatibility.py,modified,PRECHANGE,POSTCHANGE,CIT-ENGINE-001,Symbol/API checks,Restore prior
+conversion/orchestration/configuration.py,modified,PRECHANGE,POSTCHANGE,CIT-ENGINE-001,Symbol dict parsing,Restore prior
+tests/integration/engine/test_stage4d_installed_engine.py,created,NEW,POSTCHANGE,CIT-ENGINE-001,Integration tests,Delete file
+issues/development/CIT-ENGINE-001.md,modified,PRECHANGE,POSTCHANGE,CIT-ENGINE-001,Close issue,Restore BLOCKED status
+README.md,modified,PRECHANGE,POSTCHANGE,CIT-ENGINE-001,Document pin,Restore prior
+PROJECT_STATUS.md,modified,PRECHANGE,POSTCHANGE,CIT-ENGINE-001,Stage 4D status,Restore prior
+CHANGELOG.md,modified,PRECHANGE,POSTCHANGE,CIT-ENGINE-001,Stage 4D entry,Restore prior
+docs/architecture/ENTERPRISE_ENGINE_API_CONTRACT.md,modified,PRECHANGE,POSTCHANGE,CIT-ENGINE-001,PINNED status,Restore prior
+.venv/packages,environment,N/A,N/A,CIT-ENGINE-001,Install wheel,pip uninstall qla-enterprise-conversion-engine==0.1.0

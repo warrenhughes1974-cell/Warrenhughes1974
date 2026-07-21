@@ -1,6 +1,8 @@
-"""QuikDate governance defaults emit (DG-R-003 / DG-QUIKDATE-001..006).
+"""QuikDate governance defaults emit (DG-R-003 / Issue #86 / DG-QUIKDATE-001..006).
 
-Writes a single-row quikdate.csv with prior-month-end bill dates and ACH defaults.
+Writes a single-row quikdate.csv — full system-control rebuild:
+- Date fields (except ESC_DATE) = prior_month_end(conversion_run_date)
+- Non-date fields = locked screenshot defaults (Issue #86 D1-A/D2-A/D3-A)
 Uses the same prior_month_end definition as data_governance (shared import).
 """
 
@@ -34,6 +36,27 @@ QUIKDATE_SCHEMA = [
     "ACHFILEID2",
 ]
 
+# Issue #86 — screenshot / Data_Goverence non-date defaults (not crosswalk-sourced).
+QUIKDATE_PME_DATE_FIELDS = frozenset(
+    {
+        "PROCDATE",
+        "ANNDATE",
+        "DIRBILL",
+        "PACBILL",
+        "GRPBILL",
+        "APLBILL",
+        "LOANBILL",
+        "REINBILL",
+        "CPNBILL",
+        "CCBILL",
+    }
+)
+QUIKDATE_DEFAULT_PDUEDAYS = 31
+QUIKDATE_DEFAULT_VERSION = "5.318"
+QUIKDATE_DEFAULT_UPDATENUM = 359
+QUIKDATE_DEFAULT_ACHFILEID = 0
+QUIKDATE_DEFAULT_ACHFILEID2 = "A"
+
 
 def format_qla_date(value: date | None) -> str:
     """QLA CSV date format used by other converters (YYYYMMDD)."""
@@ -43,22 +66,23 @@ def format_qla_date(value: date | None) -> str:
 
 
 def build_quikdate_governance_row(conversion_run_date: date | None = None) -> dict[str, Any]:
-    """Build one QuikDate row satisfying DG-QUIKDATE-001..006.
+    """Build one QuikDate row — full rebuild per Issue #86 locked defaults.
 
-    PACBILL/DIRBILL/REINBILL = prior_month_end(conversion_run_date).
-    ACHFILEID=0, ACHFILEID2=A, ESC_DATE blank.
-    Other schema fields left blank (no invented business values).
+    All date fields except ESC_DATE = prior_month_end(conversion_run_date).
+    ESC_DATE blank; PDUEDAYS/VERSION/UPDATENUM/ACH* = screenshot defaults.
+    Satisfies DG-QUIKDATE-001..006.
     """
     run_date = conversion_run_date or date.today()
-    pme = prior_month_end(run_date)
-    pme_s = format_qla_date(pme)
-    row = {field: "" for field in QUIKDATE_SCHEMA}
-    row["PACBILL"] = pme_s
-    row["DIRBILL"] = pme_s
-    row["REINBILL"] = pme_s
-    row["ACHFILEID"] = 0
-    row["ACHFILEID2"] = "A"
+    pme_s = format_qla_date(prior_month_end(run_date))
+    row: dict[str, Any] = {field: "" for field in QUIKDATE_SCHEMA}
+    for field in QUIKDATE_PME_DATE_FIELDS:
+        row[field] = pme_s
     row["ESC_DATE"] = ""
+    row["PDUEDAYS"] = QUIKDATE_DEFAULT_PDUEDAYS
+    row["VERSION"] = QUIKDATE_DEFAULT_VERSION
+    row["UPDATENUM"] = QUIKDATE_DEFAULT_UPDATENUM
+    row["ACHFILEID"] = QUIKDATE_DEFAULT_ACHFILEID
+    row["ACHFILEID2"] = QUIKDATE_DEFAULT_ACHFILEID2
     return row
 
 
@@ -81,6 +105,10 @@ def emit_quikdate_csv(
         "PACBILL": row["PACBILL"],
         "DIRBILL": row["DIRBILL"],
         "REINBILL": row["REINBILL"],
+        "PROCDATE": row["PROCDATE"],
+        "PDUEDAYS": row["PDUEDAYS"],
+        "VERSION": row["VERSION"],
+        "UPDATENUM": row["UPDATENUM"],
         "ACHFILEID": row["ACHFILEID"],
         "ACHFILEID2": row["ACHFILEID2"],
         "ESC_DATE": row["ESC_DATE"],

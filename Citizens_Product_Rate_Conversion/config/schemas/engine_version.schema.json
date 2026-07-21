@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EngineVersionConfig",
+  "type": "object",
+  "required": [
+    "import_name",
+    "strict_version_check",
+    "allow_unpinned_engine",
+    "required_modules",
+    "status"
+  ],
+  "properties": {
+    "distribution_name": { "type": ["string", "null"] },
+    "import_name": { "type": "string", "minLength": 1 },
+    "exact_version": { "type": ["string", "null"] },
+    "api_compatibility_version": { "type": ["string", "integer", "null"] },
+    "source_type": { "type": ["string", "null"] },
+    "source_location": { "type": ["string", "null"] },
+    "package_sha256": { "type": ["string", "null"] },
+    "engine_commit": { "type": ["string", "null"] },
+    "strict_version_check": { "type": "boolean" },
+    "allow_unpinned_engine": { "type": "boolean", "const": false },
+    "required_modules": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "required_symbols": {
+      "oneOf": [
+        { "type": "array" },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PINNED",
+        "DISCOVERED_NOT_PINNED",
+        "PACKAGING_REQUIRED",
+        "INSTALLATION_REQUIRED",
+        "VERSION_MISMATCH",
+        "BLOCKED",
+        "UNKNOWN"
+      ]
+    },
+    "notes": { "type": ["string", "null"] }
+  }
+}

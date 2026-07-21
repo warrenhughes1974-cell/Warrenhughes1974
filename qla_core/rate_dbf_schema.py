@@ -149,6 +149,18 @@ def quikissc_fields():
     return list(_MEMBER_TABLE_FIELDS["QuikIssc"])
 
 
+# Issue A A10 — QuikUwpo master UW-class dropdown (Help §7.230). Not plan-keyed.
+_QUIKUWPO_FIELDS = [
+    ("UWCODE", "C", 2, 0),
+    ("UWDESCR", "C", 20, 0),
+]
+
+
+def quikuwpo_fields():
+    """QuikUwpo underwriting class codes — QLAdmin Help §7.230."""
+    return list(_QUIKUWPO_FIELDS)
+
+
 def assumption_field_names(key_table):
     return [f[0] for f in _KEY_ASSUMPTIONS.get(key_table, [])]
 

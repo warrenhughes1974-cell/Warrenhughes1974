@@ -1,0 +1,33 @@
+---
+description: On every conversion run, execute Issue A QuikPlan/PVO checklist (internal)
+alwaysApply: true
+---
+
+# Issue A — Conversion Checklist (mandatory)
+
+**Track:** Internal only (not client-facing).  
+**Canonical list:** `Issue_Log_Items/Issue_A/Issue_A_Conversion_Checklist.md`
+
+## When this applies
+
+Whenever the user asks to **run a conversion**, **full batch**, **re-emit**, **EXECUTE FULL BATCH**, production/UAT package rebuild, or equivalent QuikPlan/rate load generation:
+
+1. Read `Issue_Log_Items/Issue_A/Issue_A_Conversion_Checklist.md`.
+2. After the conversion Output is produced (or against the Output under test), evaluate **every OPEN** check (A1–A10 and any later IDs).
+3. Append a dated **Run log** to that checklist file with PASS / FAIL / BLOCKED / N/A per ID.
+4. In the user reply, summarize failures with example plan codes. Do not call the conversion clean if any OPEN check FAILs unless the user explicitly waives.
+
+## Check themes (do not drop)
+
+- Single prem: Prem Years = 1; S/Q/M mode factors = 0.00
+- Calc Dfcy / deficiency reserves per CSO for non-indeterminate-prem plans
+- Default PVO keys even when no rates (TESTRD pattern)
+- No blank-PLAN QuikPl* orphans; basis rules; category checkboxes match keys
+- VarGP matches GP/PVO rates
+- Annuity: PAR=0, VarDB=0, int/schg, PVO defaults including gender 0
+- Supp `9*`: supp type populated, PAR=0
+- QuikUwpo: one row per distinct plan UWCODE (no dupes); dropdown source for UW class
+
+## Updates
+
+When new internal plan-setup defects are found, **add** a new row to the checklist (A11+). Never remove history; mark CLOSED when fixed.

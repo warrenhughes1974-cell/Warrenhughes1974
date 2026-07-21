@@ -1,0 +1,16 @@
+
+Structure for table:             C:\CIFIVFP\CIFIANU1.DBF
+Number of data records:       153993  
+Date of last update:          04/09/24
+ Code Page:                   437     
+                Field        Field Name   Type        Width Dec  
+                    1        COMPANY_     Numeric         2      
+                    2        OFFICE       Numeric         2      
+                    3        PAY_ID       Numeric         7      
+                    4        POLICY_NO    Character      10      
+                    5        PL_PLAN      Character       4      
+                    6        INS_MP       Numeric        10   2  
+                    7        BATCH_DATE   Date            8      
+                    8        TRANS_ID     Numeric         1      
+                    9        DEL_CODE     Character       1      
+                             ** Total **                 46

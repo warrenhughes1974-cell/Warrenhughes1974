@@ -56,17 +56,21 @@ Sample `5L0110` QuikPlTv keys after emit: F/M × SM/PR, `BAND=00`, `ISSCNTRY=000
 
 ---
 
-## Source gap residual (unchanged / not invented)
+## Source gap residual — **CLOSED by Eric 2026-07-20**
 
 | Coverage | Type | Status |
 |----------|------|--------|
-| `0824 P DTH` | NP | Still absent (PR only in PAAGERAT) |
-| `L10 GPO OL` | NP | Still absent (PR only in PAAGERAT) |
+| `0824 P DTH` | NP | **N/A — SME confirmed** (not a load defect) |
+| `L10 GPO OL` | NP | **N/A — SME confirmed** (not a load defect) |
 
-Evidence: `evidence_20260714_rate_gap_scan.csv`, `evidence_20260714_rate_gap_summary.json`.
+**Eric (2026-07-20):** NP rates for these coverages are **not applicable**. Per `PPBEN_PolicyBenefit_Extract`, attached policies have **Status Code = T** and **Status Reason = EX**.
+
+Evidence: `evidence_20260714_rate_gap_scan.csv`, `evidence_20260714_rate_gap_summary.json`; Eric email archived in tracking notes below.
 
 ---
 
 ## Paste-ready resolution addendum
 
-**Addendum 2026-07-17 (v57.97):** Loader wired to PDAGE/PAAGERAT 20260714; rate package re-emitted. L01 10Y→5L0110 NP/RV and L10 LP9595 path remain loaded; L17 CV and 960 LP85-8 CV now present in source miss-fill. Keys use approved seg defaults (EFFDATE 19000101 / ISSCNTRY 0000 / BAND 00 per #71) + Issue #77 default family stubs. Residual: no NP for 0824 P DTH / L10 GPO OL.
+**Addendum 2026-07-17 (v57.97):** Loader wired to PDAGE/PAAGERAT 20260714; rate package re-emitted. L01 10Y→5L0110 NP/RV and L10 LP9595 path remain loaded; L17 CV and 960 LP85-8 CV now present in source miss-fill. Keys use approved seg defaults (EFFDATE 19000101 / ISSCNTRY 0000 / BAND 00 per #71) + Issue #77 default family stubs.
+
+**Addendum 2026-07-20 (Eric):** Residual NP gaps for `0824 P DTH` and `L10 GPO OL` closed as **not applicable** — PPBEN Status T / Reason EX. No QuikNps invent / load required.

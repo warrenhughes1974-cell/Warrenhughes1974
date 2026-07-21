@@ -1,0 +1,15 @@
+# Controlled Enterprise Engine artifact reference (Stage 4D)
+distribution_name: qla-enterprise-conversion-engine
+import_name: qla_core
+exact_version: "0.1.0"
+api_compatibility_version: 1
+artifact_type: wheel
+artifact_filename: qla_enterprise_conversion_engine-0.1.0-py3-none-any.whl
+artifact_source_path: C:/Users/warren/Documents/GitHub/Warrenhughes1974/dist/qla_enterprise_conversion_engine-0.1.0-py3-none-any.whl
+artifact_sha256: 320165544a8fc63d882508fb478ae77b911c2d6e4de5647a7408414b299ff674
+release_manifest_path: C:/Users/warren/Documents/GitHub/Warrenhughes1974/reports/packaging/ENG-PKG-001_Release_Manifest.json
+installation_status: INSTALLED
+last_verified_utc: "2026-07-12T15:37:25Z"
+notes: >
+  Initial installation from Stage 4C local controlled wheel. Migrate to internal
+  artifact repository when available. Do not commit wheel binary to Citizens source tree.

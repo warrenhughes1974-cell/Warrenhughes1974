@@ -1,0 +1,29 @@
+Issue #48 — Intake source identity check
+Date: 2026-07-10
+
+Secondary (client-named):
+  QLA_Migration/Source/Rate_Table_Extract_Txt.txt
+  size_bytes=94834824
+  md5=4f53014d280c0b980e788cb2d3866a36
+  data_rows=1128984
+  unique_coverages=65
+  unique_cov_type_keys=212
+
+Existing primary Rate_Table twin:
+  plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv
+  size_bytes=94834824
+  md5=4f53014d280c0b980e788cb2d3866a36
+  data_rows=1128984
+  unique_coverages=65
+  unique_cov_type_keys=212
+
+Conclusion: files are byte-identical. Secondary delivery does not add new rate rows
+beyond the Rate_Table extract already in the repo. Issue #48 is about fallback
+precedence / Source-path wiring relative to PAAGERAT, not new CSO content.
+
+PAAGERAT (for contrast):
+  QLA_Migration/Source/PAAGERAT_AttainedAge_Rates_Extract_20260630.csv
+  data_rows=24424
+  unique_coverages=99
+  unique_cov_type_keys=148
+  schema=attained-age (SEX,BAND,UWCLS,RECORD_SEQ,SEQ,VALUE_INFO,...)

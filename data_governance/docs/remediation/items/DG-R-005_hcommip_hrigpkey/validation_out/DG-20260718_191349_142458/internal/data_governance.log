@@ -1,0 +1,17 @@
+[2026-07-18 19:13:49] QLAdmin Data Governance run starting
+[2026-07-18 19:13:49] Run ID: DG-20260718_191349_142458
+[2026-07-18 19:13:49] Data region: Q:\CSO\CSO_Test_6_30_2026
+[2026-07-18 19:13:49] Output base: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-005_hcommip_hrigpkey\validation_out
+[2026-07-18 19:13:49] Run folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-005_hcommip_hrigpkey\validation_out\DG-20260718_191349_142458
+[2026-07-18 19:13:49] Review scope: rule
+[2026-07-18 19:13:49] Source DBF files will be opened read-only; source files are never modified
+[2026-07-18 19:13:49] Executing DG-QUIKPLAN-030 — MEDS Plan Flags Must Match the Plan Type
+[2026-07-18 19:13:49] Finished DG-QUIKPLAN-030: status=PASS passed=142 failed=0 errors=0
+[2026-07-18 19:13:49] Overall status: PASS
+[2026-07-18 19:13:49] Source files modified: No
+[2026-07-18 19:13:49] Evaluation totals: reviewed=142 looked_fine=142 problems=0
+[2026-07-18 19:13:49] What Was Checked: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-005_hcommip_hrigpkey\validation_out\DG-20260718_191349_142458\1_What_Was_Checked.html
+[2026-07-18 19:13:49] Items Needing Attention: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-005_hcommip_hrigpkey\validation_out\DG-20260718_191349_142458\2_Items_Needing_Attention.csv
+[2026-07-18 19:13:49] Business result: Passed
+[2026-07-18 19:13:49] Percentage passed (completed checks): 100.00%
+[2026-07-18 19:13:49] Internal technical folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-005_hcommip_hrigpkey\validation_out\DG-20260718_191349_142458\internal

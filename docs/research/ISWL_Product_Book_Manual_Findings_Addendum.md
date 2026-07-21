@@ -1,7 +1,7 @@
 # ISWL Product Book Manual Findings Addendum
 
 **Date:** 2026-06-28  
-**Authority:** LifePRO Product Book manual reference (`Product.pdf` — Product Usage / segment definitions)  
+**Authority:** LifePRO Product Book manual (`docs/Product (1).pdf` — Product Usage / segment definitions)  
 **Baseline documents:**  
 - `docs/research/ISWL_LifePRO_to_QLAdmin_Master_Reference.md`  
 - `docs/research/ISWL_Implementation_Gap_Report.md`  
@@ -9,7 +9,7 @@
 
 **Purpose:** Add LifePRO Product Book manual findings to the ISWL conversion research baseline and revise prior source-data assumptions where the manual contradicts or clarifies extract-based inferences.
 
-**Note on manual access:** Segment definitions below follow the LifePRO Product Book (`Product.pdf`) as supplied for this research pass. The PDF is not stored in the repo; PDDIC extracts did **not** provide an equivalent TYPE_CODE dictionary. Manual definitions supersede prior **inferred** TYPE_CODE meanings until SME confirms CSO’s ISWL setup matches the book.
+**Note on manual access:** Segment definitions below follow the LifePRO Product Book (`docs/Product (1).pdf`, Version 14). PDDIC extracts did **not** provide an equivalent TYPE_CODE dictionary. Manual definitions supersede prior **inferred** TYPE_CODE meanings until SME confirms CSO’s ISWL setup matches the book.
 
 **May ZIP segment-trace caveat:** The May 20260530 extract includes `PPRDF`, `PCOMP`, `PCOVR`, `PCOVRSGT`, rate files (`PAAGE`, `PAAGERAT`, `PDAGE`, `PRBEN*`), but **did not include** `PSEGT` or `PDINT`/`PDINTTBL` as separate files. **Update 2026-06-29:** Client supplied `PSEGT`, `PDINT`, and `PDINTTBL` in `QLA_Migration/Source/` — segment trace is now authoritative for PSEGT-mapped codes. See Issue #31 follow-up report.
 

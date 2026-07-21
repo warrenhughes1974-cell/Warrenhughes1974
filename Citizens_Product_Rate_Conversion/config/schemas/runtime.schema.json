@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RuntimeConfig",
+  "type": "object",
+  "required": [
+    "dry_run",
+    "validation_only",
+    "write_output",
+    "allow_source_write",
+    "require_approved_mapping",
+    "require_authoritative_source",
+    "overwrite_existing_output"
+  ],
+  "properties": {
+    "dry_run": { "type": "boolean" },
+    "validation_only": { "type": "boolean" },
+    "write_output": { "type": "boolean" },
+    "allow_source_write": { "type": "boolean" },
+    "fail_on_rejected_row": { "type": "boolean" },
+    "fail_on_duplicate_key": { "type": "boolean" },
+    "fail_on_missing_mapping": { "type": "boolean" },
+    "fail_on_missing_rate_source": { "type": "boolean" },
+    "fail_on_unknown_source_authority": { "type": "boolean" },
+    "require_approved_mapping": { "type": "boolean" },
+    "require_authoritative_source": { "type": "boolean" },
+    "preserve_intermediate_files": { "type": "boolean" },
+    "overwrite_existing_output": { "type": "boolean" },
+    "run_id": { "type": ["string", "null"] },
+    "selected_plan_codes": { "type": "array", "items": { "type": "string" } },
+    "selected_rate_types": { "type": "array", "items": { "type": "string" } },
+    "enabled_modules": { "type": "array", "items": { "type": "string" } }
+  }
+}

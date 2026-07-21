@@ -1,0 +1,5 @@
+tracker_id,source_received,source_received_date,source_file_location,extract_status,extract_complete_date,load_package_ready,qladmin_loaded,qladmin_load_date,loaded_by,validated_in_qladmin,validation_date,notes,last_updated
+P7MN|Cash / Surrender Values,Y,2026-07-08,CFIC_Rates/CFIC_Cash_Values/P7MN_CV.zip,In Progress,,N,N,,,N,,CFIC Issue #01 pilot — age 18 staging only; validation FAIL pending OCR fix,2026-07-11
+P7MN|Net Premium,Y,2026-07-08,CFIC_Rates/CFIC_Cash_Values/P7MN_CV.zip,In Progress,,N,N,,,N,,Same green-sheet source as CV; paid-up column,2026-07-11
+P7MN|Reserve / Valuation,Y,2026-07-08,CFIC_Rates/CFIC_Cash_Values/P7MN_CV.zip,In Progress,,N,N,,,N,,Terminal reserve from green sheets,2026-07-11
+P7MN|Other Required Factors,Y,2026-07-08,CFIC_Rates/CFIC_Cash_Values/P7MN_CV.zip,Not Started,,N,N,,,N,,ETI/NFO columns — mapping TBD (OBQ-3),2026-07-11

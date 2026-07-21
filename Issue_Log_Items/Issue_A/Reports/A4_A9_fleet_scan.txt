@@ -1,0 +1,11 @@
+A4 blank PLAN rows: 0
+
+A7 VARGP=4 with QuikPlGp keys: 126/141
+
+A8 A-prefix plans: 2
+  A60MIR: PAR=0 VARDB=0 VARGP=4 PLANVALOPT=N
+  A96DAR: PAR=0 VARDB=0 VARGP=4 PLANVALOPT=N
+
+A9 prefix-9: 56 PAR=1: 0
+
+A6 STVARYGP mismatch vs GP keys: 2

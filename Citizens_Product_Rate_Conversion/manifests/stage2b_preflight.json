@@ -1,0 +1,11 @@
+{
+  "stage": "2B",
+  "timestamp_utc": "2026-07-12T14:56:36Z",
+  "source_root": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\CFIC_Rates",
+  "destination_root": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Citizens_Product_Rate_Conversion",
+  "inventory_rows": 503,
+  "copy_approved_all_no": true,
+  "stage2a_post_snapshot_exists": true,
+  "available_disk_bytes": 22064689152,
+  "preflight_result": "PASS"
+}

@@ -1,5 +1,12 @@
 """QuikPlan output schema — field order must match app.py TABLE_SCHEMAS and QLA emit."""
 
+QUIKBENH_SCHEMA = [
+    "MPOLICY",
+    "MBENTYP",
+    "MDATE",
+    "MBEN",
+]
+
 QUIKLOAN_SCHEMA = [
     "MPOLICY",
     "MLOANPRIN",

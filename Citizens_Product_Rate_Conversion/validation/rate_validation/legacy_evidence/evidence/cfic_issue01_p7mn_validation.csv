@@ -1,0 +1,5 @@
+issue_age,duration,field,expected,extracted,delta,match,confidence
+18,10,cash_value,21,0890,869.0000,FAIL,0.0370
+18,20,cash_value,84,77057,76973.0000,FAIL,0.1417
+18,10,paid_up,197,3,194.0000,FAIL,0.0370
+18,20,paid_up,514,0,514.0000,FAIL,0.1417

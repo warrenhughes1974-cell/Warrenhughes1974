@@ -1,0 +1,20 @@
+Issue #54 QuikBenh loan history emit @ 20260719_144614
+pactg_rows_read: 389663
+bm_rows: 35542
+emit_passed: 35046
+emit_exceptions: 0
+reversed_excluded: 495
+excluded_0451_only: 1
+seed_emit: 556
+seed_skip_no_prior: 87
+seed_skip_zero_prior: 13
+seed_skip_dedupe: 0
+credit_side_as_12: 10548
+debit_side_increase: 16909
+existing_rows: 39112
+existing_preserved_rows: 3510
+existing_type8_rows: 3510
+merged_rows: 39112
+policy_count: 656
+by_pactg_code: {'0412': 24027, '0413': 7623, '0411': 3396}
+by_mbentyp: {'11': 13479, '12': 18171, '10': 3952}

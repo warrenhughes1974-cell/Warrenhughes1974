@@ -3,7 +3,7 @@ POLICY_NUMBER,MPOLICY,,
 BENEFIT_SEQ,MPHASE,,Phase sequence
 STATUS_CODE,MPHSTAT,,
 ,MLASTANN,,
-,MANNSTAT,,
+,MANNSTAT,0,Default anniversary status 0 (v57.96 reference-book convention)
 DATE_OF_BIRTH,MPHDOB,,
 SEX_CODE,MSEX,,
 PLAN_CODE,MPLAN,,
@@ -19,8 +19,8 @@ ANN_PREM_PER_UNIT,MPREM,,Issue 26: annual premium per unit; engine fallback to M
 ,MQTRLFEE,,
 ,MMTHDFEE,,
 ,MMTHBFEE,,
-,MRRULE,,
-,MCOMMID,,
+,MRRULE,,v57.96: default A set post-map in engine (rulebook default would hit bare A-to-22 translation)
+,MCOMMID,CNVT,Default commission ID CNVT converted business (v57.96)
 ,MCV0,,Issue 21E: UL only — engine loads PPBEN.FV_BALANCE2 on phase-1; traditional left blank (QuikCvs compute)
 ,MCV1,,
 ,MCV2,,
@@ -30,7 +30,7 @@ ANN_PREM_PER_UNIT,MPREM,,Issue 26: annual premium per unit; engine fallback to M
 ,MSAVEPREM,,
 NAME_ID,MRIDRID,,Injected by Engine
 ,MSSN,,
-UNDERWRITING_CLASS,MUWCLASS,,
+UNDERWRITING_CLASS,MUWCLASS,00,Blank UW class defaults 00 (v57.96; SAL plans)
 ,MBAND,00,QLAdmin default band 00 (NOT APPLICABLE); Chris 2026-07-14 — do not default to 01
 ,MSAVESTAT,,
 ,MCOMMPREM,,

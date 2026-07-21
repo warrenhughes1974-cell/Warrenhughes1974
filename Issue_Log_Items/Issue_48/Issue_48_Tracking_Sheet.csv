@@ -1,0 +1,2 @@
+ID,Status,Short Name,Description,Date Raised,Priority (Go-No Go),Issue Owner,Assigned,Date Resolved,Notes
+48,Validation PASS / Ready for Regression,Secondary Rate File (PAAGERAT fallback),"G5 PASS. Path wiring validated; 0 new Rate_Table content vs twin; 0 PAAGERAT key delta vs prior extract. 158 RT-only shared keys were already Rate_Table-sourced before #48 — not newly added.",2026-07-10,Go,Warren,Warren,,G0-G5 complete. Next: Regression. Report: Issue_48_Validation_Report.md

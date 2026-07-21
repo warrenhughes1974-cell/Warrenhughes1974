@@ -1,0 +1,38 @@
+cv_product,crosswalk_status,cfic_plan_group,ql_plan,lob
+1015,exact,1015,101015,Individual Life – Whole Life
+101G,exact,101G,10101G,Individual Life – Whole Life
+101M,exact,101M,10101M,Individual Life – Whole Life
+802M,exact,802M,10802M,Individual Life – Whole Life
+802W,exact,802W,10802W,Individual Life – Whole Life
+ABFN,exact,"ABFN, ABFS, ABMN, ABMS","10ABFN, 10ABFS, 10ABMN, 10ADMS",Individual Life – Whole Life
+ABFS,exact,"ABFN, ABFS, ABMN, ABMS","10ABFN, 10ABFS, 10ABMN, 10ADMS",Individual Life – Whole Life
+ABMN,exact,"ABFN, ABFS, ABMN, ABMS","10ABFN, 10ABFS, 10ABMN, 10ADMS",Individual Life – Whole Life
+ABMS,exact,"ABFN, ABFS, ABMN, ABMS","10ABFN, 10ABFS, 10ABMN, 10ADMS",Individual Life – Whole Life
+ALP2,exact,"ALP2, ALPS, ALP6","10ALP2, ALPS",Individual Life – Whole Life
+ALP6,exact,"ALP2, ALPS, ALP6","10ALP2, ALPS",Individual Life – Whole Life
+GDB,exact,GDB,100GDB,Individual Life – Whole Life
+P7FN,exact,"P7FN, P7FS, P7MN, P7MS","10P7FN, 10P7FS, 10P7MN, 10P7MS",Individual Life – Whole Life
+P7FS,exact,"P7FN, P7FS, P7MN, P7MS","10P7FN, 10P7FS, 10P7MN, 10P7MS",Individual Life – Whole Life
+P7MN,exact,"P7FN, P7FS, P7MN, P7MS","10P7FN, 10P7FS, 10P7MN, 10P7MS",Individual Life – Whole Life
+P7MS,exact,"P7FN, P7FS, P7MN, P7MS","10P7FN, 10P7FS, 10P7MN, 10P7MS",Individual Life – Whole Life
+P8FJ,exact,"P8FJ, P8FN, P8FS, P8MJ, P8MN, P8MS","10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS",Individual Life – Whole Life
+P8FN,exact,"P8FJ, P8FN, P8FS, P8MJ, P8MN, P8MS","10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS",Individual Life – Whole Life
+P8FS,exact,"P8FJ, P8FN, P8FS, P8MJ, P8MN, P8MS","10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS",Individual Life – Whole Life
+P8MJ,exact,"P8FJ, P8FN, P8FS, P8MJ, P8MN, P8MS","10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS",Individual Life – Whole Life
+P8MN,exact,"P8FJ, P8FN, P8FS, P8MJ, P8MN, P8MS","10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS",Individual Life – Whole Life
+P8MS,exact,"P8FJ, P8FN, P8FS, P8MJ, P8MN, P8MS","10P8FJ, 10P8FN, 10P8FS, 10P8MJ, 10P8MN, 10P8MS",Individual Life – Whole Life
+P9FJ,exact,"P9FJ, P9FN, P9FS, P9MJ, P9MN, P9MS","10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS",Individual Life – Whole Life
+P9FN,exact,"P9FJ, P9FN, P9FS, P9MJ, P9MN, P9MS","10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS",Individual Life – Whole Life
+P9FS,exact,"P9FJ, P9FN, P9FS, P9MJ, P9MN, P9MS","10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS",Individual Life – Whole Life
+P9MJ,exact,"P9FJ, P9FN, P9FS, P9MJ, P9MN, P9MS","10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS",Individual Life – Whole Life
+P9MN,exact,"P9FJ, P9FN, P9FS, P9MJ, P9MN, P9MS","10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS",Individual Life – Whole Life
+P9MS,exact,"P9FJ, P9FN, P9FS, P9MJ, P9MN, P9MS","10P9FJ, 10P9FN, 10P9FS, 10P9MJ, 10P9MN, 10P9MS",Individual Life – Whole Life
+PLP,exact,"PLP, PLP6","100PLP, 10PLP6",Individual Life – Whole Life / Limited-Pay
+PLP6,exact,"PLP, PLP6","100PLP, 10PLP6",Individual Life – Whole Life / Limited-Pay
+R28G,exact,"R28, R28A, R28G","100R28, 10R28A, 10R28G",Individual Life – Whole Life
+R29G,exact,R29G,10R29G,Individual Life – Whole Life
+R68G,exact,"R68, R68G","100R68, 10R68G",Individual Life – Whole Life
+R69G,missing,,,
+RW8,exact,"RW8, RW8A, RW8G","100RW8, 10RW8A, 10RW8G",Individual Life – Whole Life
+RW9G,exact,RW9G,10RW9G,Individual Life – Whole Life
+Table of Days,missing,,,

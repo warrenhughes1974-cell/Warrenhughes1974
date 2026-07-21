@@ -16,7 +16,7 @@
 | 21D | Interest Crediting Rate | QLAdmin shows a different interest crediting rate than the client expects. **Example:** QLAdmin policy 010713704C shows Dividend Accum Int Rate = **4.00%**; client expects **4.50%**. | 2 | High | **DECIDED ✓** (v57.36) | Conversion |
 | 21E | Cash Value | Cash values in QLAdmin do not match LifePRO fund/policy values — some show **$0**, others show a wrong non-zero amount. **Example:** UL policy 010713704C — LifePRO Fund Value ≈ **$45,551.94**; QLAdmin Cash Value = **$0.00**. | 2 | High | **DECIDED ✓** (v57.63 UL load; traditional via QuikCvs) | Conversion |
 | 21F | Premium History | Premium payment history in QLAdmin is truncated — only recent payments appear, not the full LifePRO accounting history. **Remedy:** Conversion Adjustment `quikprmh` row (non-ISWL) @ 12/31/2017. | 3 | Med | **CLOSED ✓** (v57.73) | Conversion |
-| 21G | Total Premium / Cost Basis | LifePRO carries Total Premiums Paid and Tax/Cost Basis, but QLAdmin does not show equivalent totals. **Example:** Policy 010448806C — LifePRO shows Premiums Paid = **$6,552.00** and Tax Basis = **$2,483.97**. | 2 | Med | **DECIDED ✓** (staged report v57.63) | Conversion |
+| 21G | Total Premium / Cost Basis | LifePRO carries Total Premiums Paid and Tax/Cost Basis, but QLAdmin does not show equivalent totals. **Example:** Policy 010448806C — LifePRO shows Premiums Paid = **$6,552.00** and Tax Basis = **$2,483.97**. | 2 | Med | **CLOSED ✓** (not required in QL — New Era) | Conversion + Client |
 | 21H | Banking Information | Bank routing (ABA) and account information is wrong or missing in QLAdmin. **Example:** Policy 010713704C — LifePRO shows Checking Actual Draft, ABA **104000016**, account **47374579**, First National Bank of Omaha; QLAdmin showed **8-digit ABA 10400001** in the **"Credit Card ID"** field (wrong field + truncated routing). **ABA fix applied:** full 9-digit routing recovered from PPCOM (1,712 of 1,996 banked policies). **Still open:** which QLAdmin field should hold the bank account, and bank-name mapping. | 3 | High | **IMPLEMENTED (ABA) ✓** / AWAITING CLIENT (target field) | Conversion + Client |
 | 21I | Beneficiary Information | Beneficiary name, type, relationship, or split percentage is wrong or defaulted in QLAdmin. **Example:** Policy 010818663C — QLAdmin shows beneficiary type **"Unknown"** at **100%**, then lists the correct name (PROCTOR, JACKI) separately. Client also reported duplicate "Beneficiary 1" rows on 010391876C. | 2 | Med-High | **DECIDED ✓** (type/split fixed v57.29; MRELATION=1000 intentional) | Conversion |
 | 21J | Modal Premium Factors | Modal premium amounts (monthly, quarterly, draft) do not match LifePRO — QLAdmin appears to use generic factors instead of product-specific ones. **Example:** Policy 010713704C — QLAdmin Annl **$1,095.44** / Mthly **$91.29** / Draft **$43.91**; monthly looks like Annl÷12 rather than the product's actual modal factor. | 2 | Med | **CLOSED ✓** | **Released v57.46** — per-plan factors + PAC GL85 overrides + fleet memos |
@@ -43,7 +43,7 @@
 | **21D** | **DECIDED ✓** | **ISWL = 4.50% / non-ISWL = 4.00%** (v57.36 MDEPINT allowlist). See `Issue_21_Open_Items_Official_Decisions.md`. |
 | **21E** | **DECIDED ✓** | **Traditional = compute via QuikCvs; UL = load FV_BALANCE2 → MCV0** (v57.63). Traditional CV quality still depends on rate tables (#40/#41). |
 | **21F** | **CLOSED ✓** | **Resolution:** Non-ISWL Conversion Adjustment `quikprmh` row @ 12/31/2017 when LifePRO Base+PUA+SU+SL > history; ISWL excluded; negatives exception-only (v57.73). UAT: `Test_Validation/quikprmh.csv` + Reports. |
-| **21G** | **DECIDED ✓** | **Source locked** (Premium Paid Fields workbook). Totals staged to `Reports/issue21g_premium_basis_totals.csv` until QLAdmin target field named. |
+| **21G** | **CLOSED ✓** | **Resolution:** QLAdmin has no programmed cost basis / taxable-gain field for life policies and does not compute or withhold taxable gains on life surrenders; conversion will not load LifePRO Premiums Paid or Tax Basis into a QLAdmin master field — use premium history and/or the staged report for any manual estimate outside QL. |
 | **21H** | IMPLEMENTED (ABA) ✓ / AWAITING CLIENT | **ABA (done):** verify 9-digit routing on banked policies (e.g., 010713704C = **104000016/47374579**). **Still need answer:** **Should checking/savings draft accounts appear in the Bill Acct / bank-account field instead of "Credit Card ID"?** What is the rule for classifying account type (Checking Actual Draft vs credit card)? How should bank name (e.g., First National Bank of Omaha) be mapped? Review **342 ambiguous accounts** in `reconciliation/issue21h_ambiguous_accounts.csv`. |
 | **21I** | **DECIDED ✓** | **Type + split mandatory and already correct (v57.29).** `MRELATION=1000` intentional — RNA has no kinship field for B1/B2. |
 | **21K** | AWAITING CLIENT (New Era) | **Does QUIKRIDR.MUNIT support 5 decimal places on DBF load, or is it truncated to 3?** If truncated, how should PUA face amounts with cents (e.g., $5,752.96) be carried — via a different field, rounding rule, or QLAdmin configuration change? |
@@ -55,9 +55,9 @@
 
 | Status | Count | Items |
 |---|:---:|---|
-| CLOSED | 4 | 21A, 21F, 21J, 21L |
+| CLOSED | 5 | 21A, 21F, 21G, 21J, 21L |
 | RELEASED (full-batch validated) | 4 | 21B, 21C, 21H (ABA), 21M |
-| DECIDED (21D/E/G/I) | 4 | 21D, 21E, 21G, 21I — see Official Decisions (v57.63) |
+| DECIDED (21D/E/I) | 3 | 21D, 21E, 21I — see Official Decisions (v57.63) |
 | AWAITING CLIENT | 2 | 21K (New Era), + 21H target-field |
 
 ### Changes applied (v57.34 release)

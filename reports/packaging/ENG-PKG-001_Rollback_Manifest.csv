@@ -1,0 +1,14 @@
+relative_path,prechange_sha256,postchange_sha256,change_purpose,restoration_method
+pyproject.toml,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+qla_core/__init__.py,d3f1bcdf9e5734f8bdc298517fb5180d9ddea109da0565b8818d6bf30be64abb,c7d5465d1161417f5b9fee09c0611b715c5d000e1f2da6f44a00b87d2a2fc49e,ENG-PKG-001 version metadata,git show HEAD:qla_core/__init__.py
+qla_core/README.md,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+qla_core/CHANGELOG.md,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+docs/packaging/VERSIONING_STANDARD.md,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+docs/packaging/PUBLIC_API_CONTRACT.md,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+docs/packaging/RELEASE_NOTES_0.1.0.md,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+docs/packaging/DISTRIBUTION_AND_RELEASE_PROCESS.md,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+tests/engine_packaging/test_eng_pkg_001_contract.py,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+tools/packaging/eng_pkg_001_prechange_baseline.py,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+tools/packaging/eng_pkg_001_legacy_scan.py,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+tools/packaging/eng_pkg_001_build_release.py,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file
+tools/packaging/eng_pkg_001_rollback_manifest.py,NEW_FILE,BUILD_ARTIFACT,ENG-PKG-001 packaging,Delete file

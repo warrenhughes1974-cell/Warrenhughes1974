@@ -1,0 +1,17 @@
+[2026-07-19 10:35:00] QLAdmin Data Governance run starting
+[2026-07-19 10:35:00] Run ID: DG-20260719_103500_405139
+[2026-07-19 10:35:00] Data region: Q:\CSO\CSO_Test_6_30_2026
+[2026-07-19 10:35:00] Output base: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-010_death_benefit_setup\validation_out
+[2026-07-19 10:35:00] Run folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-010_death_benefit_setup\validation_out\DG-20260719_103500_405139
+[2026-07-19 10:35:00] Review scope: rule
+[2026-07-19 10:35:00] Source DBF files will be opened read-only; source files are never modified
+[2026-07-19 10:35:00] Executing DG-QUIKPLAN-026 — Death Benefit Supporting Tables Must Exist
+[2026-07-19 10:35:00] Finished DG-QUIKPLAN-026: status=PASS passed=40 failed=0 errors=0
+[2026-07-19 10:35:00] Overall status: PASS
+[2026-07-19 10:35:00] Source files modified: No
+[2026-07-19 10:35:00] Evaluation totals: reviewed=40 looked_fine=40 problems=0
+[2026-07-19 10:35:00] What Was Checked: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-010_death_benefit_setup\validation_out\DG-20260719_103500_405139\1_What_Was_Checked.html
+[2026-07-19 10:35:00] Items Needing Attention: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-010_death_benefit_setup\validation_out\DG-20260719_103500_405139\2_Items_Needing_Attention.csv
+[2026-07-19 10:35:00] Business result: Passed
+[2026-07-19 10:35:00] Percentage passed (completed checks): 100.00%
+[2026-07-19 10:35:00] Internal technical folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-010_death_benefit_setup\validation_out\DG-20260719_103500_405139\internal

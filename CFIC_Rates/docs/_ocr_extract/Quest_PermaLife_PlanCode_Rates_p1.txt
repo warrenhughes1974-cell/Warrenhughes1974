@@ -1,0 +1,14 @@
+RW8 WIIOLE LIFE CASH PLAN-payable to & named beneficiary: Premium payable whole life: RWSG 80 CSO reserve. Cash surrender; loan and extended term available. Loan interest 8%
+RWSA same as above for policies issued January 2006 through December 2009 (reserve factor adjustment)
+R28 ORDINARY CASH POLICY-payable to a named beneficiary. Premium payable 20 years; R2SG 80 CSO Reserve: Cash surrender, loan and extended term available. Loan interest 8%. R2SA same aS above for policies issued January 2006 through December 2009 (reserve factor adjustment)
+R29 ORDINARY CASH POLICY-payable t0 a named beneficiary Premium payable 20 years. R29G 2001 CSO Reserve. Cash surrender; loan and extended term available. Loan interest 8%.
+R68 ORDINARY CASH POLICY-payable t0 a named beneficiary. Premium payable to age 65. R68G 80 CSO Reserve. Cash surrender; loan and extended term available: Loan interest 8%
+R68A same aS above policies issued January 2006 through December 2009 (reserve factor adjustment)
+R69 ORDINARY CASH POLICY-payable to a named beneficiary. Premium payable to age 65. R69G 2001 CSO Reserve. Cash surrender; loan and extended term available. Loan interest 8%
+HRZG ORDINARY CASH POLICY-payable to a named beneficiary. Premium payable 20 years 2017 CSO Reserve. Cash surrender; loan and extended term available. Loan interest 8%
+HR6G ORDINARY CASH POLICY-payable to a named beneficiary. Premium payable to age 65. 2017 CSO Reserve. Cash surrender; loan and extended term available. Loan interest 8%
+HRWG WHOLE LIFE CASH PLAN-payable to a named beneficiary. Premium payable whole life. 2017 CSO reserve: Cash surrender; loan and extended term available. Loan interest 8%/_
+HPFN WHOLE LIFE CASH POLICY-payable t0 a named beneficiary. Premium payable whole life. HPFS Cash surrender; loan and extended term available: Loan interest 8%.  2017 CSO Reserve: HPMN FN- FEMALE NON-SMOKER MN MALE NON-SMOKER HPMS FS- FEMALE SMOKER MS MALE SMOKER
+PZFN WHOLE LIFE CASH POLICY-payable to & named beneficiary: Premium payable whole life. P7FS Cash surrender; loan and extended term available: Loan interest 8%. 80 CSO Reserve. PZMN FN- FEMALE NON-SMOKER MN MALE NON-SMOKER PZMS FS - FEMALE SMOKER MS MALE SMOKER
+PSFN WHOLE LIFE CASH POLICY_ ~payable to a named beneficiary. Premium payable whole life. PSFS Cash surrender; loan and extended term available: Loan interest &%. 80 CSO Reserve. PSFJ FN- FEMALE NON-SMOKER MN MALE NON-SMOKER PSMN FS- FEMALE SMOKER MS MALE SMOKER PSMS FJ-FEMALE JUVENILE (0-17) MJ- MALE JUVENILE (0-17) PSMJ
+P9FN WHOLE LIFE CASH POLICY-payable t0 a named beneficiary. Premium payable whole life. POFS Cash surrender, loan and extended term available: Loan interest g%. 2001 CSO Reserve. POFJ FN- FEMALE NON-SMOKER MN MALE NON-SMOKER POMN FS- FEMALE SMOKER MS MALE SMOKER P9MS FJ-FEMALE JUVENILE (0-17) MJ- MALE JUVENILE (0-17) POMJ

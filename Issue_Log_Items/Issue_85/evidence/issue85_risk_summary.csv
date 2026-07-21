@@ -1,0 +1,15 @@
+metric,value
+headers_before,5624
+headers_after,5447
+merge_losers_dropped,177
+merge_groups,150
+rephase_moves,3034
+dup_pol_ph_rows_before,3770
+dup_pol_ph_groups_before,716
+dup_pol_ph_rows_after,0
+nonunique_pol_ph_after_groups,0
+policy_balance_before,1352
+policy_unbalanced_before,898
+policy_balance_after_merge_only,1352
+policy_unbalanced_after_merge_only,898
+quikclmp_rows_unchanged,6151

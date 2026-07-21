@@ -4,7 +4,7 @@ Issue #21 open-item decision helpers (21E UL fund value, 21G premium/basis stagi
 Official decisions (2026-07-09):
   21D — ISWL MDEPINT=4.50 / non-ISWL 4.00 (already implemented v57.36)
   21E — Traditional CV: compute via QuikCvs rates; UL: load FV_BALANCE2 -> quikridr.MCV0
-  21F — Accept ~2017 premium-history floor (source-side; no engine change)
+  21F — Conversion Adjustment quikprmh rows (v57.72); see issue21f_premium_adjustment.py
   21G — Source mapped; stage totals to Reports until QLAdmin target field named
   21I — Type/split correct; MRELATION=1000 is intentional (RNA has no kinship field)
 

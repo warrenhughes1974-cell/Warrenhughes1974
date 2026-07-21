@@ -385,6 +385,11 @@ def run_quikplan_conversion(
         df.attrs["issue21j_modal_stats"] = modal_stats
     except Exception:
         pass
+    # Issue A A1: #21J re-applies modal factors; SP zeros must win after overlay.
+    df = apply_single_premium_payment_settings(df, repo_root=repo_root)
+    from qla_core.issue_a_plan_setup import apply_issue_a_plan_setup
+
+    df = apply_issue_a_plan_setup(df, repo_root=repo_root)
     return df
 
 

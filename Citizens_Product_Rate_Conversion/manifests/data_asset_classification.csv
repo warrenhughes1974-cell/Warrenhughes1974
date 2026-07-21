@@ -1,0 +1,19 @@
+DATA_ASSET_SET,CLASSIFICATION,APPROVAL_STATUS,NOTES
+source/original/dbf/,AUTHORITATIVE_SOURCE,PENDING_REVIEW,FoxPro DBFs
+source/original/cash_values/,AUTHORITATIVE_SOURCE,PENDING_REVIEW,CV ZIP archives unextracted
+source/original/access/,AUTHORITATIVE_SOURCE,PENDING_REVIEW,Access MDB/ZIP
+source/extracts/access/,CONTROLLED_EXTRACT,PENDING_REVIEW,Access CSV exports
+source/product_documents/,AUTHORITATIVE_SOURCE,PENDING_REVIEW,Rate sheet PDFs
+mappings/working/,WORKING_MAPPING,working,Crosswalk + catalog + assumptions
+mappings/approved/,WORKING_MAPPING,empty,Empty — do not treat as approved
+staging/normalized_rates/reserve/,NORMALIZED_STAGING,working,Reserve grids
+staging/normalized_plans/,NORMALIZED_STAGING,working,Plans master extract
+output/csv/draft_pre_migration/,DRAFT_OUTPUT,historical,Draft Quik* — not production
+validation/,VALIDATION_EVIDENCE,working,Parity and issue evidence
+reports/audit/,VALIDATION_EVIDENCE,historical,Emit summaries
+archive/legacy_cfic_rates/SourceData_11-18-2024/,HISTORICAL_OUTPUT,HISTORICAL_PENDING_REVIEW,Legacy dump
+archive/legacy_cfic_rates/ocr_extract/,GENERATED_DISPOSABLE,historical,OCR text — not authority
+archive/legacy_cfic_rates/green_sheet_pilot/,HISTORICAL_OUTPUT,historical,OCR pilot FAIL
+quarantine/sensitive_review/,UNKNOWN,quarantined,PII / scope review
+quarantine/duplicate_review/,HISTORICAL_OUTPUT,quarantined,Duplicates for audit
+discovery/rates/,WORKING_MAPPING,working,Rate load trackers

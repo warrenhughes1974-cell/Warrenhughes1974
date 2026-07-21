@@ -116,7 +116,8 @@ None — `ST_A_` and `ST_S_DP` already existed.
 |-------|--------|
 | Validators PASS (G5 + G6) | **PASS** |
 | `app.py` version bumped | **v57.84** (both copies) |
-| Issue-scoped git commit | See git log after closure commit |
+| Issue-scoped git commit | `79d199dbc721bb4a10936ee60877bfc260e9b8f7` |
+| **`git push` to remote** | `origin/issue-34-pr7-quikisrr` |
 | Network batch note | Output gitignored — reload `Test_Validation` CSVs after pull; full batch optional (scoped interceptor) |
 
 ---

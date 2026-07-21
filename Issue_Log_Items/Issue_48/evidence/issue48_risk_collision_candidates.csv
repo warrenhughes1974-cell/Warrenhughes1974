@@ -1,0 +1,3 @@
+plan,type_code,target_table,rt_rows,paa_rows,rt_coverages,paa_segments,iswl_bp_plan,proposed_action
+7619PU,RV,QuikTvs,3724,94,619 SPS PU,619 SPS PU,N,SUPPRESS_RATE_TABLE_KEEP_PAAGERAT
+A96DAR,NP,QuikNps,78,3,896 DAR,896 DAR,N,SUPPRESS_RATE_TABLE_KEEP_PAAGERAT

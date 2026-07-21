@@ -1,0 +1,7 @@
+# CFIC Issue #01 — OCR extract dependencies (standalone; not Warren app.py)
+# Install once: pip install -r requirements-cfic-ocr.txt
+easyocr>=1.7.0
+opencv-python-headless>=4.8.0
+pymupdf>=1.23.0
+numpy>=1.24.0
+Pillow>=10.0.0

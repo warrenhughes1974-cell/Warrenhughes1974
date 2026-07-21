@@ -1,29 +1,52 @@
 {
-  "emit_date": "2026-07-02T17:38:36Z",
-  "dry_run": true,
+  "emit_date": "2026-07-19T19:51:11Z",
+  "dry_run": false,
   "candidate_population": {
-    "rows": 3623,
-    "policies": 636,
-    "gross_amount": 1217593.55,
-    "expected_rows": 3623,
-    "expected_policies": 636,
-    "expected_amount": 1217593.55
+    "rows": 3510,
+    "policies": 633,
+    "gross_amount": 1176980.55,
+    "expected_rows": 3657,
+    "expected_policies": 637,
+    "expected_amount": 1232602.53
   },
   "emitted": {
-    "rows": 3616,
-    "policies": 635,
-    "gross_amount": 1216073.15
+    "rows": 3510,
+    "policies": 633,
+    "gross_amount": 1176980.55
   },
   "exceptions": {
-    "payee_exception_rows": 7,
+    "payee_exception_rows": 0,
     "hold_rows": 3,
     "reversal_excluded_rows": 61
   },
   "existing_preserved": {
-    "quikclms_before_rows": 5730,
-    "quikclmp_before_rows": 5325,
-    "quikclms_before_hash": "715f505491e595de7d13c048d13ee0c1b69e5435ece542f9d8f995e71d00a5ab",
-    "quikclmp_before_hash": "d2663ce396661d96e21d5cf94598c7d9bfc3551759ca121287179aa19bce949b"
+    "quikclms_before_rows": 1937,
+    "quikclmp_before_rows": 2738,
+    "quikclms_before_hash": "50097ff1605a8f5f691238a34cdf8c8416d7dcab85cb5ea780e298031ba48565",
+    "quikclmp_before_hash": "82c96d47b25b8e756acae9fe9787ec63ce880940b3adb0bf71c06eadb03ad874",
+    "quikclms_after_prefix_hash": "50097ff1605a8f5f691238a34cdf8c8416d7dcab85cb5ea780e298031ba48565",
+    "quikclmp_after_prefix_hash": "82c96d47b25b8e756acae9fe9787ec63ce880940b3adb0bf71c06eadb03ad874",
+    "quikclms_prefix_unchanged": true,
+    "quikclmp_prefix_unchanged": true
   },
-  "outputs": {}
+  "outputs": {
+    "quikclms.csv": {
+      "rows": 5447,
+      "appended": 3510
+    },
+    "quikclmp.csv": {
+      "rows": 6248,
+      "appended": 3510
+    },
+    "quikbenh.csv": {
+      "rows": 39112,
+      "preserved_non_type8": 35602,
+      "type8_isrr": 3510,
+      "mode": "merge_preserve_loan_history"
+    },
+    "QuikIsrr.csv": {
+      "rows": 3510,
+      "miswl": "omitted"
+    }
+  }
 }

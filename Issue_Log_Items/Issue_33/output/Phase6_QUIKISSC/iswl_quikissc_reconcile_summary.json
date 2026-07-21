@@ -12,7 +12,7 @@
   "v_iss_c_08_schg15_20_blank": true,
   "v_iss_c_09_percent_literal": true,
   "v_iss_c_10_unique_index": true,
-  "v_iss_c_11_phase1_5_regression": true,
+  "v_iss_c_11_phase1_5_regression": false,
   "v_iss_c_12_quikissc_csv": true,
   "psegt_sl_gate": {
     "pass": true,
@@ -55,14 +55,17 @@
     "schg15_20_blank": true,
     "percent_literal": true
   },
-  "regression_ok": true,
-  "regression_notes": [],
+  "regression_ok": false,
+  "regression_notes": [
+    "QuikCvs row count changed",
+    "QuikGps row count changed"
+  ],
   "phase1_5_notes": [
-    "Phase1: PASS",
-    "Phase2: PASS",
-    "Phase3: PASS",
-    "Phase4: PASS",
-    "Phase5: PASS"
+    "Phase1: FAIL (exit 1)",
+    "Phase2: FAIL (exit 1)",
+    "Phase3: FAIL (exit 1)",
+    "Phase4: FAIL (exit 1)",
+    "Phase5: FAIL (exit 1)"
   ],
   "quikissc_csv": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\rates\\QuikIssc.csv"
 }

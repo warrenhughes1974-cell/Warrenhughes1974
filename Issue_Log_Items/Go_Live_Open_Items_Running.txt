@@ -1,0 +1,1170 @@
+================================================================================
+GO-LIVE / CUTOVER OPEN ITEMS — RUNNING DOCUMENT
+================================================================================
+Started: 2026-07-16
+Owner: Warren
+Purpose: Working list of go-live questions, recommendations, and Eric decisions.
+         Update in place as items are answered or closed. Append new items at end
+         of the OPEN ITEMS section (keep numbering).
+
+How to update:
+  - Change Status / Decision / Notes as we go
+  - Do not delete closed items — mark CLOSED and leave the history
+  - Add new items under OPEN ITEMS with the next number
+
+--------------------------------------------------------------------------------
+STATUS KEY
+--------------------------------------------------------------------------------
+OPEN              = needs work / recommendation
+ERIC DECISION     = waiting on Eric
+RECOMMENDED       = answer documented; awaiting client/Eric accept if needed
+CLOSED            = resolved
+
+================================================================================
+SUMMARY — PLAIN ENGLISH (2026-07-16)
+================================================================================
+Already done / not in scope anymore:
+  Group file cleaned; agents & commissions not converting (agents paid off);
+  Index/FIA turned off; demo junk cleaned out of leftover tables.
+
+--------------------------------------------------------------------------------
+A. WHAT WE WILL FIX IN THE CONVERSION
+    (some need Eric’s “yes / here’s the rule” first)
+--------------------------------------------------------------------------------
+  1. Do not load agent or commission files at go-live.
+  2. Do not leave conversion spreadsheet/CSV files sitting in the live
+     system folder that gets copied to the client.
+  3. Mark the two annuity riders as non-dividend (not “participating”)
+     once Eric agrees.
+  4. Fix how premium rate tables are “wired” to each plan. Right now every
+     plan says “no premium rate variation,” but most still have premium
+     rates attached — that mismatch has to be corrected. (Needs Eric’s
+     correct setting per product.)
+  5. Add the basic lookup rows every plan needs (gender / band / underwriting
+     class / state) for plans we are keeping. (Needs Eric: keep or drop
+     the 15 plans that have none today.)
+  6. Fill in “pay to age” or “pay for N years” on 8 plans that have neither.
+     (Needs Eric: what the correct ages/years should be.)
+  7. Turn off “participating / dividend” on term, ADB, and waiver plans that
+     are not really dividend products. (Needs Eric: confirm which ones.)
+  8. Mark true annual renewable term plans as renewable. (Needs Eric confirm.)
+  9. Fix “10-year level term” plans that are set up like “term to age 95”
+     instead of a 10-year term. (Needs Eric: what the correct setup is.)
+ 10. If Eric says gender should be “Not Applicable / 0,” update the plans
+     and rate lookups to match.
+ 11. If we are not doing group billing, clear leftover group numbers on
+     the few policies that still have them.
+ 12. Family policy / paid-up (RPU) coverage problems — wait for CSO answers,
+     then fix status, underwriting class, and rate lookups in conversion.
+ 13. Annuity interest / surrender tables — only add what Eric says we need.
+ 14. Accounting account numbers — only remap after the client’s chart of
+     accounts and event mapping exist. Conversion cannot invent their GLs.
+
+--------------------------------------------------------------------------------
+B. WHAT ERIC NEEDS TO ANSWER OR SET UP
+    (QLA config / product judgment — conversion cannot guess these)
+--------------------------------------------------------------------------------
+Company & go-live setup:
+  • Will they email from QLA? If yes, Internet/email settings must be filled in.
+  • Finish the Company File (more than name and address).
+  • Will they do bank drafts / EFT? If yes, Bank tab must be completed.
+  • Agree on a temporary “days before lapse” setting so past-due policies
+    don’t cancel on day 1, then lower it later.
+  • Turn Waiver of Premium system feature on or off?
+  • Is the empty plan at the bottom of the plan list a real bad record, or
+    just the screen?
+  • Provide their Chart of Accounts and tell us which account number goes
+    with each accounting event (premium, death, loan, etc.).
+
+Product / plan questions:
+  • For each product: how should premium rates be looked up? (The big
+    “wired wrong” item above.)
+  • Which plans really pay dividends? Which should be marked non-dividend?
+  • Should permanent life plans have loan interest rates filled in?
+  • Should coverage run “to age 100” or “for 100 years” — pick one style
+    per product family.
+  • Which products have changing/graded/decreasing death benefits, and are
+    those rate tables correct (especially graded plan 9L16PF)?
+  • Should Paid-Up Additions (PUA) plans stay in the plan file?
+  • What is “Modified Life,” and is it set up right?
+  • Is child’s term really supposed to go to age 60?
+  • Is pay/benefit age 103 on a couple of whole life plans correct?
+  • Is “credit life” a real in-force product here, and should it renew yearly?
+  • How should true 10-year level term be set up vs products that only have
+    “L10” in the name?
+  • Which family rider is the real one (778 vs 7647)?
+  • What field/value is “supplemental type” for rider plans?
+  • Which Juvenile Purchase Option plans are still used, and to what age?
+  • Are Home Office Discount plans still used?
+  • Should gender be “Not Applicable (0)” on plans and rate lookups?
+  • For the two annuity riders: annuity type, units/ages, projected-values
+    flag, is 0% interest OK, any surrender charges?
+
+Ask CSO (with Eric) about odd family / paid-up policies:
+  1. Should family decreasing term be one policy with several coverages, or
+     separate people on the policy?
+  2. Is it normal that spouse/child coverages show age 0 and the same person ID?
+  3. What underwriting class / rate keys should those family coverages use?
+  4. If the main coverage is Reduced Paid-Up, should the extra insured rider
+     still show as Active?
+  5. Which policies are the ones where phase 1 shows no benefits?
+
+================================================================================
+OPEN ITEMS
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ITEM 01 — Policies >60 days past due vs lapse days (cutover risk)
+Status:     RECOMMENDED
+Owner:      Warren / Client ops
+Decision:   (pending client accept of approach)
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+
+QUESTION
+  Should we check for policies more than 60 days past due before go-live, and
+  temporarily raise lapse days so those policies do not terminate on day 1?
+
+ANSWER / RECOMMENDATION
+  YES — run this check before go-live and temporarily raise lapse grace if any
+  premium-paying actives are past the configured lapse days.
+
+  Why:
+  - On first live cycle, QLA will compare paid-to / bill-to aging against the
+    plan/list lapse-day setting (QuikPlan MLAPSE / QuikList MLAPSEL).
+  - If a policy is already past that grace at cutover, it can lapse/terminate
+    on day 1 even though LifePRO was still carrying it as active.
+  - Safer pattern: set lapse days high enough to cover the worst in-force past-due
+    active case for cutover, go live, clean up collections / true lapses, then
+    pare lapse days back down to the contractual/business target.
+
+  Pre-go-live checklist:
+  1. Count Active (status 22) policies by days past MPAIDTO as of go-live date.
+  2. Note max days past due among those actives.
+  3. Compare max days to current MLAPSE / MLAPSEL.
+  4. If max > configured lapse days → temporarily raise lapse days (plan and/or
+     list, whichever drives processing for this book) above that max (add a
+     small buffer).
+  5. After live and cleanup, reduce lapse days to the permanent value.
+
+SPOT CHECK (Output quikmstr.csv as of 2026-07-16 analysis date)
+  Active status 22 population: 2,162
+  Past due >60 days (MPAIDTO): 1,715
+    61-90:     73
+    91-120:   115
+    121-180:  837
+    181-365:  675
+    366+:      15
+  Max observed past due (status 22): policy 010849882C, MPAIDTO 20190901 (~2,510 days)
+  Current quikplan MLAPSE: all 0 (141 plans) — with 0/short grace, day-1 lapse risk
+  is real for a large share of actives if batch lapse runs immediately.
+
+  Note: Exclude RPU/ETI/claim/etc. statuses from this aging check; paid-to can be
+  old on those for legitimate reasons and should not drive lapse-day sizing.
+
+ACTION
+  [ ] Confirm with client which status codes are lapse-eligible at go-live
+  [ ] Re-run aging as of actual go-live date (not analysis date)
+  [ ] Set temporary MLAPSE / MLAPSEL based on max eligible past-due + buffer
+  [ ] Document permanent target lapse days for post-live rollback
+  [ ] Calendar a post-live task to pare lapse days down
+
+--------------------------------------------------------------------------------
+ITEM 02 — Internet tab update if emailing
+Status:     ERIC DECISION
+Owner:      Eric
+Decision:   (pending)
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+
+QUESTION
+  If they are emailing (notices / bills / correspondence), does the Internet tab
+  need to be updated?
+
+NOTES FOR ERIC
+  - Confirm whether client will send email from QLA (or email-related batch).
+  - If yes: Internet tab settings must be configured before email traffic goes live
+    (SMTP / email server, from-address, any QLA Internet/email options used by
+    this licensee).
+  - If no email at go-live: can defer; document as post-live if they add email later.
+
+ACTION
+  [ ] Eric: confirm emailing at go-live Y/N
+  [ ] If Y: list exact Internet-tab fields to set and who configures them
+  [ ] If N: mark CLOSED with "deferred / not used at go-live"
+
+--------------------------------------------------------------------------------
+ITEM 03 — Company file: name/address only; Eric review/edit
+Status:     ERIC DECISION
+Owner:      Eric
+Decision:   (pending)
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+
+QUESTION
+  Company file currently has only name and address. Does Eric need to review and
+  edit/complete remaining company fields before go-live?
+
+NOTES FOR ERIC
+  - Converted company record is name + address only (minimal load).
+  - Review QuikComp / Company File for missing legal name, phone, FEIN, NAIC,
+    logos/letterhead fields, default options, and any other licensee-required
+    company setup used by bills, letters, or reports.
+  - Edit in QLA as needed; conversion will not invent those values.
+
+ACTION
+  [ ] Eric: open Company File and review populated vs blank fields
+  [ ] Eric: edit/complete anything required for go-live correspondence and ops
+  [ ] Note any fields that must stay blank vs must be filled before live
+
+--------------------------------------------------------------------------------
+ITEM 04 — Bank tab must be completed for EFT files
+Status:     ERIC DECISION
+Owner:      Eric
+Decision:   (pending)
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+
+QUESTION
+  Does the Bank tab need to be completed so EFT files can be produced?
+
+NOTES FOR ERIC
+  - Bank tab on Company (or related company/bank setup) is required for EFT
+    file generation (routing, account, bank name, file/format options, etc.).
+  - Confirm EFT is in scope at go-live (premium draft / disbursement).
+  - If EFT is in scope: complete Bank tab before first EFT cycle.
+  - If EFT is deferred: document that and leave Bank tab as post-live setup.
+
+ACTION
+  [ ] Eric: confirm EFT in scope at go-live Y/N
+  [ ] If Y: complete Bank tab (routing, account, bank info, EFT format options)
+  [ ] If N: mark CLOSED with "deferred / EFT not used at go-live"
+  [ ] Validate a test EFT file after Bank tab is populated (if in scope)
+
+--------------------------------------------------------------------------------
+ITEM 05 — Group file: clear test groups
+Status:     CLOSED (group file cleared)
+Owner:      Warren (package) / Warren (QLA UAT/demo cleanup)
+Decision:   Conversion Output has no QuikList/group file — clear for load.
+            UAT and demo Group File records already deleted (confirmed 2026-07-16).
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+
+QUESTION
+  There appear to be test group files that may need to be cleared out. Is the
+  group file clear?
+
+ANSWER / FINDING
+  YES.
+  - No quiklist.csv (QuikList / Group File) under QLA_Migration/Output or
+    elsewhere under QLA_Migration (searched 2026-07-16). Converter does not emit
+    a Group File.
+  - UAT and demo Group File records deleted by Warren (confirmed 2026-07-16).
+
+  RELATED CAUTION (policy master, not group file) — still open if needed later:
+  - 32 policies have non-blank quikmstr.MGROUP across 12 codes (most blank: 5,052).
+  - Codes seen: 07777L (10), 04498 (6), Z2583L (4), T8342L (2), 03494L (2),
+    05947L (2), 07132, 05624L, 02698, 09447, 04403, 04965 (1 each).
+  - If those groups are real and needed for group bill, QuikList rows must exist
+    in QLA. If test/orphan, blank MGROUP on those policies before final load.
+
+ACTION
+  [x] Confirm conversion Output has no quiklist.csv — DONE (none found)
+  [x] UAT/demo Group File cleared — DONE (Warren, 2026-07-16)
+  [ ] Optional follow-up: confirm whether the 12 MGROUP codes on 32 policies
+      are real or test (only if group bill is in scope)
+
+================================================================================
+QUIKPLAN BATCH (Items 06–31) — added 2026-07-16
+Source scan: QLA_Migration/Output/quikplan.csv (141 plans) + Output/rates/*
+================================================================================
+
+--------------------------------------------------------------------------------
+ITEM 06 — Blank / empty plan at bottom of QuikPlan
+Status:     NEEDS ERIC CONFIRM (UAT UI)
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Conversion quikplan.csv has 141 plans; 0 rows with blank PLAN. Last plan is
+  9WP646 (Waiver of Premium) — fully populated. No near-empty row in CSV.
+  Empty row at bottom of QLA browse is often a UI placeholder; if a true blank
+  plan exists in UAT DB it is from a prior load, not this CSV.
+ACTION
+  [ ] Eric: confirm whether UAT has a real blank PLAN record vs browse artifact
+  [ ] If real blank exists in DB: delete it before go-live
+
+--------------------------------------------------------------------------------
+ITEM 07 — Plans with no default PVO (PlGd / PlBd / PlUw / PlSt)
+Status:     CONFIRMED GAP
+Owner:      Conversion / Eric product setup
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  15 plans have NO PlGd/PlBd/PlUw/PlSt rows at all:
+    10L171, 10L172, 117JPO, 121PUA, 165PUA, 170PUA, 185PUA, 1970PA,
+    1OLPUA, 1POPUA, 7647CH, 94PDIS, 976658, 986JPO, 9ADB15
+  Also: no plan has GDCODE "0" (gender PVO uses M/F/J only). Band/State mostly
+  have default "00"; UW "00" exists on 58 plans only.
+RECOMMENDATION
+  Every plan that remains in QuikPlan should get at least default "0"/"00"
+  PVO rows (PlGd, PlBd, PlUw, PlSt) unless Eric deliberately excludes the plan.
+ACTION
+  [ ] Decide: add default PVO for the 15, or remove plans not used in-force
+  [ ] Align gender PVO with SEX/gender category decision (Item 29)
+
+--------------------------------------------------------------------------------
+ITEM 08 — Prem period: PAYAGE / PAYYRS both 0 (or both >0)
+Status:     CONFIRMED GAP
+Owner:      Eric / product
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Rule: one of PAYAGE or PAYYRS >0 (exception: renewable term may use both).
+  Both 0 (8 plans): 1668SP, 986JPO, 982JPO, 10L171, 117JPO, 10L172, 17MJPO, 1L17SP
+  Both >0: none in this file.
+  RENEW = N on all 141 plans (so renewable exception never applies today).
+ACTION
+  [ ] Populate PAYAGE or PAYYRS for the 8 (SPWL often PAYYRS=1; JPO per form)
+  [ ] Tie to renewable-term setup items (13, 16, 17)
+
+--------------------------------------------------------------------------------
+ITEM 09 — VARGP=4 but rates exist (systemic)
+Status:     CONFIRMED — SYSTEMIC
+Owner:      Conversion / Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  ALL 141 plans have VARGP=4. 109 of those also have QuikPlGp and/or QuikGps.
+  Rule stated: if VARGP=4 there should be no rates; if rates exist VARGP ≠ 4.
+  This is the largest QuikPlan structural defect in the package.
+  Note: variation auto-apply path exists in quikplan_converter but VARGP was not
+  corrected for this emit (all remain 4).
+ACTION
+  [ ] Eric/product: set correct VARGP per plan structure (age/duration/etc.)
+  [ ] Conversion follow-up: re-emit or post-fix VARGP to match rate grain
+  [ ] Re-validate every plan: VARGP vs presence of GPS/PlGp
+
+--------------------------------------------------------------------------------
+ITEM 10 — PAR=1 but no dividend rates
+Status:     CONFIRMED GAP
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  PAR=1 on 84 plans; only 17 have QuikPlDv/QuikDvs. 67 PAR=1 with no div rates
+  (includes many ADB/WP/term/PUA riders — likely should be PAR=0).
+ACTION
+  [ ] Eric: for each PAR=1 plan — either add div rates or set PAR=0
+  [ ] Priority: base participating life first; clear bogus PAR=1 on term/ADB/WP
+
+--------------------------------------------------------------------------------
+ITEM 11 — Loan info empty on life plans
+Status:     ERIC REVIEW
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  LOANINT: 0.00 on 114 plans; 7.40 on 16; 5.00 on 11. LOANINTX=A on all.
+  ~29 life-looking plans (WL/ISWL/endowment/PUA/JPO/graded) have LOANINT 0.00.
+  May be correct for riders/PUA/non-loanable; questionable for permanent life.
+ACTION
+  [ ] Eric: review loan tab for permanent life plans; populate where contract
+      allows policy loans; leave 0 only where intentionally non-loanable
+
+--------------------------------------------------------------------------------
+ITEM 12 — Benefit age 100 vs benefit years 100
+Status:     ERIC CONFIRM
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  INSAGE=100: 33 plans (many ISWL, CSI, ART, SPWL, LPU).
+  INSYRS=100: 22 plans (JEB, multi-insured WL, PUA, HO discount, some LPU).
+  These are alternate ways to express “to age 100” vs “100 years”.
+ACTION
+  [ ] Eric: confirm per plan family which convention is correct (age vs years)
+  [ ] Standardize so age and years are not mixed inconsistently within a family
+
+--------------------------------------------------------------------------------
+ITEM 13 — VarDB 2/3/etc with DB rates — variable DB products?
+Status:     PARTIAL FINDING + ERIC CONFIRM
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  20 plans have VARDB in {1,2,3}. In this Output, all 20 also have PlDb/Dbs
+  rows (has_db=True). So “VarDB set but no DB rates” is not true for current
+  CSV — but rates still need product review (graded DB, decreasing term, CSI).
+  Examples: CSI VARDB=2; decreasing term VARDB=3; 9L16PF VARDB=1; 1L16GD VARDB=2.
+ACTION
+  [ ] Eric: confirm which products are truly variable/graded/decreasing DB
+  [ ] Confirm DB rate shape/values (esp. 9L16PF Item 28)
+  [ ] Term + VARDB oddities also under Items 15/19
+
+--------------------------------------------------------------------------------
+ITEM 14 — PUA plans already in QuikPlan
+Status:     CONFIRMED (known design tension)
+Owner:      Eric / Conversion (Issues #56/#60)
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Catalog PUA plans present: 121PUA, 265PUA, 170PUA, 165PUA, 185PUA, 1OLPUA,
+  1POPUA, 261PUA, 1970PA, 280PUA. Most missing default PVO (Item 07).
+  Related: rider conversion often rewrites PUA MPLAN to synthetic *PA
+  (Chris: do not add PA plan file — Issue #60/#56 conflict).
+ACTION
+  [ ] Eric: confirm whether catalog PUA plans stay in QuikPlan for go-live
+  [ ] Align with #56/#60 decision (catalog vs synthetic *PA)
+
+--------------------------------------------------------------------------------
+ITEM 15 — No COMM IDs on plans
+Status:     CLOSED — aligned with no-agent / paid-off decision (Item 45)
+Owner:      Warren
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  COMMID blank on all 141 plans. CONVCOMM/HCOMMIP also blank.
+DECISION
+  No agent/commission data at go-live (Item 45 — agents being paid off).
+  Blank COMMID is intentional / acceptable for this cutover.
+ACTION
+  [x] Leave COMMID blank — intentional
+  [x] No commission go-live setup required for agents
+
+--------------------------------------------------------------------------------
+ITEM 16 — What is “Modified Life”?
+Status:     ERIC / PRODUCT EXPLAIN
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Plans: 1SALML “MODIFIED LIFE”; 1SALMI “MULTIPLE INSUREDS SAL MODIFIED LIFE”;
+  also 2961ME / 261PUA “MODIFIED ENDOWMENT AT 65” (different — ME endowment).
+  1SALML: PAYYRS/INSYRS=100, PAR=1, VARGP=4, LOANINT=0, PRODUCT=70.
+ACTION
+  [ ] Eric: define product intent for 1SALML / 1SALMI (SAL modified life)
+  [ ] Confirm setup (prem/benefit period, par, rates) matches the form
+
+--------------------------------------------------------------------------------
+ITEM 17 — Child’s term: prem/benefit to age 60 — correct?
+Status:     ERIC CONFIRM
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  528CTR “CHILD'S TERM INSURANCE”: PAYAGE=60, INSAGE=60, PAR=1, RENEW=N.
+  Other child terms differ (578CTR/543CTR age 25; 5CDT10 age 25; 719CDT age 23).
+ACTION
+  [ ] Eric: confirm 528CTR to age 60 vs should be child expiry (~18/21/25)
+
+--------------------------------------------------------------------------------
+ITEM 18 — Prem age 103
+Status:     ERIC CONFIRM
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  PAYAGE=103 and INSAGE=103 on: 1960PO, 1991PL.
+  (Also PAYYRS/INSYRS=116 on 9DIS25 home-office discount — separate oddity.)
+ACTION
+  [ ] Eric: confirm age 103 is contractual (vs should be 100/101)
+  [ ] Review 9DIS25 years=116
+
+--------------------------------------------------------------------------------
+ITEM 19 — “Annual renewable term” in description but not set up as renewable
+Status:     CONFIRMED GAP
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  5646AT, 5667AT — DESCR “ANNUAL RENEWABLE TERM”; RENEW=N; HRENEW blank.
+  All 141 plans have RENEW=N.
+ACTION
+  [ ] Eric: set RENEW (and HRENEW if used) for true ART plans
+  [ ] Align PAYAGE/PAYYRS/INSYRS with ART rules (Item 08)
+
+--------------------------------------------------------------------------------
+ITEM 20 — Term plans with PAR=1
+Status:     CONFIRMED — LOOKS WRONG
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Term DESCR + PAR=1 includes: decreasing terms 719*/7619*/7647*, ART 5646AT/
+  5667AT, 528CTR, and level terms 5L0110/5L01MA/5L0510/5L075Y.
+  None of these have dividend rates (Item 10).
+RECOMMENDATION
+  Unless forms are participating term (unusual), set PAR=0.
+ACTION
+  [ ] Eric: confirm; expect PAR=0 on term unless proven participating
+
+--------------------------------------------------------------------------------
+ITEM 21 — Term plans with VarDB codes
+Status:     ERIC CONFIRM
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Term + VARDB>0: 578STR, 7619DT, 719CDT, 7619PU, 7647FP, 7647SP, 7686S3,
+  7690DT, 542STR (mostly VARDB=3 decreasing pattern; 7686S3 VARDB=1).
+  DB rate rows exist for these in current Output.
+ACTION
+  [ ] Eric: confirm VARDB=3 is intended for decreasing schedule products
+  [ ] Level term should generally be VARDB=0 unless proven otherwise
+
+--------------------------------------------------------------------------------
+ITEM 22 — “Credit life” + ART not set up as renewable
+Status:     ERIC CONFIRM
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  57ATCR “ART PREFERRED CREDIT LIFE”: PAR=1, RENEW=N, PAYAGE/INSAGE=100,
+  VARGP=4, VARDB=0. Only credit-life DESCR in file.
+ACTION
+  [ ] Eric: confirm credit life is valid in-force product for this book
+  [ ] If ART: set renewable flags; fix PAR if non-par; fix VARGP/rates
+
+--------------------------------------------------------------------------------
+ITEM 23 — L10 / “Ten year level term” setup looks incorrect
+Status:     CONFIRMED — NEEDS CORRECTION
+Owner:      Eric / Conversion
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Level term examples:
+    5L0110 / 5L01MA “TEN YEAR LEVEL TERM TO AGE 95”: PAYAGE/INSAGE=95,
+      PAYYRS/INSYRS=0, RENEW=N, PAR=1 — reads as term-to-95, not 10-year level.
+    5L0510 “TEN YEAR TERM TO AGE 85”: ages 85 / years 0
+    5L075Y “FIVE YEAR TERM TO AGE 85”: ages 85
+  L10 life family (1L1095, 1L10SR, 1L10OD, 1L10PR, 1L10SO) is LPU95 life, not
+  a 10-year term rider — naming “L10” is product series, not “level 10-yr term”.
+  Rider-ish L10: 5CDT10, 7SDT10, 9JPO10, 9ADB10, 9WPL10, etc.
+ACTION
+  [ ] Eric: separate true 10-year level term setup (PAYYRS=10 or renew pattern)
+      from L10 product-series life plans
+  [ ] Fix 5L01* / 5L05* / 5L07* prem/benefit periods and PAR
+
+--------------------------------------------------------------------------------
+ITEM 24 — Decreasing term plans with PAR=1
+Status:     CONFIRMED — LOOKS WRONG
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  PAR=1 on: 7619DT, 719CDT, 719SDT, 7619PU, 7647FP, 7647CH, 7647SP
+  (7686S3 / 7687J3 / 7SDT10 already PAR=0).
+ACTION
+  [ ] Eric: set PAR=0 unless participating decreasing term is intentional
+
+--------------------------------------------------------------------------------
+ITEM 25 — Family term rider as decreasing with prefix “7”
+Status:     ERIC CONFIRM
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  778FTR “FAMILY TERM RIDER”: prefix 7, but VARDB=0, PAR=0, ages 65 — not
+  flagged decreasing in VARDB.
+  7647FP “FAMILY LIFE DECREASING TERM”: prefix 7, VARDB=3, PAR=1, ages 69.
+ACTION
+  [ ] Eric: confirm which family rider is correct form (778FTR vs 7647FP family)
+  [ ] Confirm prefix-7 decreasing convention is intentional
+
+--------------------------------------------------------------------------------
+ITEM 26 — Supp riders (prefix 9) need supp type populated
+Status:     CONFIRMED GAP + ERIC
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  56 plans with PLAN starting “9”. PLANTYPE blank on all 56 (and all 141).
+  PRODUCT is populated (03, 10, 12, CF, 07, 08, 13, …) — may or may not be the
+  QLA “supp type” field Eric means.
+ACTION
+  [ ] Eric: identify exact QuikPlan field for “supp type”
+  [ ] Populate for all prefix-9 (and other) supplemental riders before live
+
+--------------------------------------------------------------------------------
+ITEM 27 — Enable WOP functionality?
+Status:     ERIC DECISION
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Many WP / disability waiver plans exist in QuikPlan (25+), e.g. 9OLDWP,
+  9665WP, 9WPL10, 9WP646, etc. System WOP feature flag is separate from plans.
+ACTION
+  [ ] Eric: confirm QLA WOP functionality must be enabled for go-live
+  [ ] If yes: enable + verify waiver plans/rates (see Item 31 / 9OLDWP)
+
+--------------------------------------------------------------------------------
+ITEM 28 — What is “Juvenile Future Purchase Option”?
+Status:     ANSWERED (definition) + ERIC CONFIRM setup
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+ANSWER
+  JPO / Juvenile Future Purchase Option = guaranteed future purchase / GIO-style
+  rider allowing purchase of additional life insurance at option ages without
+  full evidence (juvenile insured). Plans in file: 980JPO, 9JPO46, 986JPO,
+  982JPO, 9JPO10 (plus JPO-named SPWL 117JPO/17MJPO which look mis-described).
+ACTION
+  [ ] Eric: confirm which JPO plans are in-force and setup (PAYAGE often 40;
+      986/982 have PAYAGE=0 — Item 08)
+
+--------------------------------------------------------------------------------
+ITEM 29 — What is “Home Office Discount”?
+Status:     ANSWERED (definition) + ERIC CONFIRM
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+ANSWER
+  Home Office Discount plans (9DIS20/24/25/29/70/80/90, 9DS24B/C) are premium
+  discount / special-class discount riders or rate modifiers (percentages in
+  DESCR: 24.75%, 70/13%, etc.), typically home-office underwriting discounts—
+  not a separate base life product.
+ACTION
+  [ ] Eric: confirm still used in-force; if not, deactivate/remove
+  [ ] If used: confirm how QLA applies discount (rate vs factor) and PVO/rates
+
+--------------------------------------------------------------------------------
+ITEM 30 — Graded DB plan 9L16PF — review DB rates
+Status:     ERIC REVIEW
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  9L16PF “GRADED DEATH BENEFIT, WHOLE LIFE”: VARDB=1, VARGP=4, PAYYRS/INSYRS=2,
+  has PlDb + Dbs, no GPS. Sample DBS ages show DB0/DB1=144 then DB2=1.00 pattern
+  — needs actuarial/product review. Peer 1L16GD has richer graded schedule
+  (VARDB=2, has GPS+DBS). 1L15GD graded has no DB/GP rates at all.
+ACTION
+  [ ] Eric: review 9L16PF DB schedule vs form / LifePRO
+  [ ] Compare to 1L16GD; fix 1L15GD if in-force
+
+--------------------------------------------------------------------------------
+ITEM 31 — Gender category empty; GP lookup gender should be 0 / N/A
+Status:     RECOMMENDED + ERIC CONFIRM
+Owner:      Eric / Conversion
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  QuikPlan SEX: blank on 140 plans; only 7687J3 has SEX=J (joint).
+  Converter note (v57.87): SEX_BASIS B → blank SEX (intentional mapping).
+  GPS GENDER: only M (7896) / F (4087) — no gender 0.
+  User recommendation: gender category 0 / Not Applicable (not empty); GP
+  lookup gender probably 0 also when unisex / N/A.
+ACTION
+  [ ] Eric: confirm target SEX=0 vs blank vs M/F/J
+  [ ] Eric: confirm whether unisex/default GP keys should use GENDER=0
+  [ ] Conversion change only after Eric decision (touches plan + rate keys)
+
+--------------------------------------------------------------------------------
+ITEM 32 — PVO tabs vs VarDB/VarGP — many incorrect / 0.00 rates (e.g. 9OLDWP)
+Status:     CONFIRMED — BROAD REVIEW NEEDED
+Owner:      Eric (lead) + Conversion
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Systemic VARGP=4 (Item 09) already invalidates “PVO + variation” consistency.
+  Example 9OLDWP: has PlGd M/F, PlUw PR/SM/ST, PlGp keys, and 222 QuikGps rows
+  with non-zero GP0 values — but VARGP=4 (should not carry GP rates). User may
+  be seeing 0.00 on some UW/gender combinations or in UI tabs not backed by GPS.
+  Overall: every plan’s PVO tabs need review together with VARGP/VARDB.
+ACTION
+  [ ] Eric: plan-by-plan PVO review (start with in-force high-volume plans)
+  [ ] Fix VARGP/VARDB first, then reconcile Pl*/rate tables
+  [ ] Include Items 07–11, 13, 20–24, 30–31 in same pass
+
+================================================================================
+ANNUITY PLANS BATCH (Items 33–42) — added 2026-07-16
+Scope in QuikPlan: A-prefix annuity riders only —
+  A60MIR (MONTHLY INCOME RIDER, form 863) — 2 in-force ridr rows
+  A96DAR (DEPOSIT ANNUITY RIDER, form 896) — 4 in-force ridr rows
+Related: Issue #51 QuikAint 0% stubs already in Output/rates/QuikAint.csv
+================================================================================
+
+--------------------------------------------------------------------------------
+ITEM 33 — Annuity plans: PAR should be 0
+Status:     CONFIRMED — FIX NEEDED
+Owner:      Eric / Conversion
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Both A60MIR and A96DAR have PAR=1. Annuities/deposit riders should be PAR=0
+  (no dividend participation) unless product is proven participating.
+RECOMMENDATION
+  Set PAR=0 on A60MIR and A96DAR.
+ACTION
+  [ ] Eric confirm PAR=0
+  [ ] Update quikplan (conversion or manual) before go-live
+
+--------------------------------------------------------------------------------
+ITEM 34 — Confirm units, prem years, benefit years
+Status:     ERIC CONFIRM
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING (both A60MIR / A96DAR unless noted)
+  MINUNIT=0, MAXUNIT=99, INITVAL=1000.00
+  PAYAGE=65, PAYYRS=00
+  INSAGE=65, INSYRS=00
+  Modal factors present (ANNL=100, SEMI/QTRL/MTHD populated)
+ACTION
+  [ ] Eric: confirm unit scale (INITVAL 1000 / max 99) matches how QLA expects
+      MIR/DAR face or deposit units
+  [ ] Confirm prem/benefit to age 65 is correct vs years-based or other expiry
+
+--------------------------------------------------------------------------------
+ITEM 35 — Annuity type needs to be populated
+Status:     CONFIRMED GAP
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  PLANTYPE blank on both A-plans (and all 141 plans). PRODUCT=03 on both.
+  Conversion CSV has no separate “annuity type” field beyond PLANTYPE/PRODUCT;
+  QLA UI annuity-type control may map to PLANTYPE or a company/plan option.
+ACTION
+  [ ] Eric: identify exact QuikPlan field for annuity type
+  [ ] Populate for A60MIR / A96DAR (and any future A-plans)
+
+--------------------------------------------------------------------------------
+ITEM 36 — Are these billed? VARGP=4 but rates exist
+Status:     CONFIRMED INCONSISTENT
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Yes, they look billable / rate-backed today:
+    A60MIR: VARGP=4 but QuikPlGp=2 keys + QuikGps=112 rows (M/F)
+    A96DAR: VARGP=4 but QuikPlGp=1 key + QuikGps=99 rows (M only)
+  Modal load factors are populated (not zero).
+  Same systemic rule as Item 09: if GP rates exist, VARGP must not be 4;
+  if truly not billed / interest-only, remove GP rates and keep VARGP=4.
+  In-force: all MIR/DAR ridr rows are status 56 (terminated) per Issue #51 —
+  billing may be moot for current book, but plan setup still wrong for QLA.
+ACTION
+  [ ] Eric: decide billed vs interest-only for MIR/DAR
+  [ ] If billed: fix VARGP to match GPS grain; keep rates
+  [ ] If not billed: VARGP=4 and remove PlGp/Gps (or leave unused carefully)
+
+--------------------------------------------------------------------------------
+ITEM 37 — Annuity gender category should be 0 / N/A
+Status:     RECOMMENDED (same as Item 31)
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  SEX blank on both A-plans. PlGd has M/F for A60MIR and M only for A96DAR
+  (no gender 0).
+ACTION
+  [ ] Eric: set SEX=0 / Not Applicable on annuity plans if that is QLA standard
+  [ ] Align PlGd default to 0 if unisex (with Item 38)
+
+--------------------------------------------------------------------------------
+ITEM 38 — GP lookup gender should be 0 for annuities
+Status:     RECOMMENDED (same as Item 31)
+Owner:      Eric / Conversion
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  A60MIR GPS keyed M+F; A96DAR GPS keyed M only. No GENDER=0 keys.
+ACTION
+  [ ] Eric: confirm unisex/default GP keys should be GENDER=0
+  [ ] If yes: rebuild PlGp/Gps gender keys for A-plans (after VARGP decision)
+
+--------------------------------------------------------------------------------
+ITEM 39 — Index Funds tab shown / FIA enabled — must remove
+Status:     CLOSED
+Owner:      Warren / Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Conversion does not emit FIA/index-fund tables. Index Funds tab appearing in
+  QuikPlan is a QLA feature/license/plan-option enablement issue, not a CSV row.
+DECISION
+  Index / FIA already disabled (confirmed by Warren 2026-07-16).
+ACTION
+  [x] Disable FIA / Index Funds — DONE
+  [x] Confirmed disabled — 2026-07-16
+
+--------------------------------------------------------------------------------
+ITEM 40 — PVO code is “Y” on annuity plans
+Status:     CONFIRMED — LIKELY WRONG
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  Both A-plans: PLANVALOPT=Y and BACTIVE=N (inactive for new business).
+  Governance PLAN-017: when plan is inactive, PLANVALOPT should be false/N.
+  PVO tabs do exist (PlGd/PlBd/PlUw/PlSt present), so “Y” may have been set to
+  allow projected values — but it conflicts with BACTIVE=N.
+ACTION
+  [ ] Eric: set correct PLANVALOPT for closed MIR/DAR (likely N/F if inactive)
+  [ ] Confirm whether Projected Values still need PLANVALOPT=Y for status-56
+      riders (Issue #51 context)
+
+--------------------------------------------------------------------------------
+ITEM 41 — Annuity interest rates not loaded (credit / NFO / gtd min)
+Status:     PARTIAL — STUB ONLY
+Owner:      Eric / Conversion (Issue #51 follow-on)
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  QuikAint.csv exists with exactly 2 rows (Issue #51 crash-stop):
+    A60MIR / A96DAR @ MEFFDATE=19000101, MINTRATE=0.0000, MINTRATE1=0.0000
+  Missing from load package:
+    QuikAing (gtd min / issue-state rates) — not emitted
+    QuikAinf (annuity NFO rates) — not emitted
+    QuikUint — empty (ISWL path only; not for MIR/DAR)
+  Plan NFOINT/DEPINT on A-plans are blank or 0.00 — not a substitute schedule.
+  So: credit rate is stubbed at 0%; NFO and gtd-min tables are not loaded.
+ACTION
+  [ ] Eric: confirm 0% QuikAint stub is acceptable for closed MIR/DAR
+  [ ] Eric: authorize QuikAing / QuikAinf if real schedules required (or 0% stubs)
+  [ ] If historical guaranteed rates exist, provide schedule for conversion load
+
+--------------------------------------------------------------------------------
+ITEM 42 — Annuity surrender charges not populated
+Status:     ERIC REVIEW (may be OK)
+Owner:      Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+FINDING
+  QuikIssc.csv in Output/rates has 0 rows (empty file). No surrender-charge
+  schedules for A60MIR/A96DAR (or any plan) in the current package.
+  May be OK if MIR/DAR have no SC schedule / all status 56 closed.
+ACTION
+  [ ] Eric: confirm whether any surrender charge applies to MIR/DAR
+  [ ] If none: document as intentional blank / OK
+  [ ] If yes: provide schedule and load QuikIssc (or applicable annuity SC table)
+
+================================================================================
+COMMISSION / AGENT DEMO DATA (Items 43–44) — added 2026-07-16
+================================================================================
+
+--------------------------------------------------------------------------------
+ITEM 43 — Commission Rate Files look like demo-region data
+Status:     CLOSED (data removed)
+Owner:      Warren
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+QUESTION
+  Commission Rate Files all look like they are from the demo region — how?
+
+ANSWER / ROOT CAUSE
+  Not from the LifePRO→QLA conversion package. Current QLA_Migration/Output
+  does not emit commission rate tables (no quikcom / commission-rate CSVs in
+  Output or Output/rates). Plan COMMID is blank on all plans (Item 15).
+  Demo commission rates were already present in the UAT/QLA region (typical
+  when the region was built/cloned from demo, or leftover from earlier demo
+  loads) — not produced by this conversion run.
+
+DECISION
+  Demo commission rate data has been removed (confirmed Warren 2026-07-16).
+
+ACTION
+  [x] Remove demo commission rate data — DONE
+  [x] No client commission rates at go-live — agents paid off (Item 45); leave empty
+
+--------------------------------------------------------------------------------
+ITEM 44 — QuikAgtm contains demo-region data
+Status:     CLOSED (data removed)
+Owner:      Warren
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+QUESTION
+  QuikAgtm appears to have demo-region data — how?
+
+ANSWER / ROOT CAUSE
+  Same pattern as Item 43. Conversion Output has quikagts.csv (agent master)
+  but no quikagtm.csv (agent-on-policy / writing hierarchy). QuikAgtm demo
+  rows were in the UAT/QLA region from demo clone/prior loads, not from the
+  current conversion emit.
+
+DECISION
+  Demo QuikAgtm data has been removed (confirmed Warren 2026-07-16).
+
+ACTION
+  [x] Remove demo QuikAgtm data — DONE
+  [ ] Before go-live: load converted client agent-on-policy data only when
+      that table is in the approved load package (if/when emitted)
+
+--------------------------------------------------------------------------------
+ITEM 45 — Agents (QuikAgts): one value in all fields — supposed to be here?
+Status:     CLOSED — OUT OF SCOPE (no agent data at go-live)
+Owner:      Warren (business decision)
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+QUESTION
+  There are agent files; not sure if used. Look like one value was put in all
+  fields. Are these supposed to be here?
+
+ANSWER
+  Conversion CAN emit QuikAgts from LifePRO PAGNT (Output currently has 4,843
+  rows; 3,164 are numeric-stamped identity fields). That emit is client extract
+  data, not demo invent.
+
+BUSINESS DECISION (Warren 2026-07-16)
+  Agent data is NOT being brought over. Client is essentially paying agents off.
+  No QuikAgts / QuikAgtm / commission-agent load for go-live.
+  UAT agent data already removed.
+
+IMPLICATIONS
+  - Do not load quikagts.csv into QLA for go-live
+  - Aligns with Items 43–44 (demo commission/Agtm cleared) and Item 15 (COMMID
+    blank — commissions not in play)
+  - Converter may still produce quikagts.csv in Output; treat as unused artifact
+    for this cutover (do not hand to load package)
+
+ACTION
+  [x] UAT agent data removed — DONE
+  [x] Business decision: no agent data converted/loaded — DONE
+  [ ] Exclude quikagts (and any agent/commission tables) from go-live load checklist
+
+--------------------------------------------------------------------------------
+ITEM 46 — Help > About
+Status:     OPEN — DETAILS INCOMPLETE
+Owner:      TBD
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+NOTE
+  Placeholder only — message ended at “Help > About” with no question/finding.
+  Awaiting Warren’s full note.
+
+ACTION
+  [ ] Warren: complete the Help > About item text
+
+================================================================================
+ACCOUNTING (Item 47) — added 2026-07-16
+================================================================================
+
+--------------------------------------------------------------------------------
+ITEM 47 — Accounting: COA + event assignment (QuikActg / QuikChrt)
+Status:     OPEN — CLIENT CONFIG REQUIRED
+Owner:      Eric / Client accounting + Conversion support
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+QUESTION
+  Nothing looked populated in Accounting. Need at least their COA loaded, then
+  assign accounts to the proper accounting events.
+
+FILES REVIEWED (brought into repo / conversion package)
+
+  1) docs/QuikActg.dbf  (brought over — plan/event account CONFIG)
+     - 325 rows
+     - Company codes: K (324) + S (1) — NOT client company C
+     - Includes MASTER rows for K and S with many event columns filled
+     - Account format: dotted GL style (e.g. 1-400-2, 1-801-2, 1-657-7)
+     - 50 distinct account numbers referenced across event fields
+     - Useful as a TEMPLATE of QuikActg event fields / structure
+     - NOT loadable as-is for this client (wrong company, wrong plans, wrong GLs)
+
+  2) docs/QUIKRCOA.DBF  (brought over)
+     - 0 records — empty
+     - This is reinsurance COA allowances, NOT the chart of accounts
+
+  3) QLA_Migration/Configs/Sync_Rulebook_quikactg.csv
+     - Conversion rulebook mapping LifePRO PACTG txn codes → QuikActg fields
+     - Codes: 110 prem, 515–518/641 div, 411/412 loan, 1020 schg, 530 death,
+       567 claim, 1110/1111/1115 commission
+
+  4) QLA_Migration/Output/quikactg.csv  (conversion emit, company C)
+     - 87 plan rows, company C
+     - NO MASTER row
+     - Sparse event fill (many event columns blank on most plans)
+     - Prem 1st/renew filled on 74/87; death 47; loan/loanint partial; claim 0;
+       MDIVPUT 0; MCOMMSGL 0
+     - Account numbers are LifePRO-style (400103R, 2032, 7046, …) — 24 distinct
+     - ZERO overlap with account numbers in docs/QuikActg.dbf (K/S template)
+
+  5) QuikChrt (Chart of Accounts)
+     - NOT present in Output, docs, or Configs
+     - Governance requires quikactg accounts to validate against quikchrt by company
+
+WHAT IS NEEDED (go-live accounting minimum)
+
+  A. Chart of Accounts (QuikChrt) for company C
+     [ ] Obtain client COA (account number + description + company)
+     [ ] Load QuikChrt for company C before or with QuikActg
+     [ ] Every account used on QuikActg events must exist in QuikChrt
+
+  B. QuikActg event assignment for company C (client-owned config)
+     [ ] Create company C MASTER row (all caps MPLAN=MASTER) with default
+         accounts for each accounting event that will post
+     [ ] Assign plan-level overrides only where needed (or rely on MASTER)
+     [ ] Client/Eric must map THEIR GL accounts to QLA events, including at
+         least (as applicable for this book):
+           MACCTREC / MACCTPAY (cash)
+           MPREM1ST / MPREMREN / MPREMSGL
+           MSUSPENSE / MOVERSHRT
+           MDEATH / MCLAIM / MENDOW / MSURR / MSCHG
+           MLOAN / MLOANINT
+           MDIVCASH / MDIVPREM / MDIVACCM / MDIVPUA / MDIVPUT / MDVDPINT
+           MCOMM* (only if commissions in scope — currently OUT per Item 45)
+           MTAXWHELD / MCLEARING / others as used
+     [ ] Do NOT load docs/QuikActg.dbf (K/S) into client company C
+     [ ] Do NOT assume conversion quikactg.csv LifePRO account codes are the
+         final GL — they are PACTG-derived placeholders until client COA maps
+
+  C. Align conversion vs client config
+     [ ] Decide: (1) replace conversion quikactg with client-built QuikActg, or
+         (2) remap conversion accounts to client COA numbers
+     [ ] If commissions paid off (Item 45): leave MCOMM* blank intentionally
+     [ ] Validate: every QuikActg account ∈ QuikChrt; MASTER present; company=C
+
+DECISION / NOTES
+  - Brought QuikActg.dbf proves the CONFIG shape and event list, but it is
+    another licensee’s setup (K/S), not CSO/client.
+  - Blocking gap is still client COA (QuikChrt) + client event assignment.
+  - UAT previously looked empty because COA/events for company C were never
+    completed — conversion emit alone is incomplete for live accounting.
+
+ACTION
+  [ ] Eric/client: deliver QuikChrt (COA) for company C
+  [ ] Eric/client: complete QuikActg MASTER (+ plan rows as needed) using COA
+  [ ] Confirm whether conversion Output/quikactg.csv is discarded or remapped
+  [ ] Keep docs/QuikActg.dbf as reference template only (do not load to C)
+  [ ] Ignore empty QUIKRCOA unless reinsurance COA is later in scope
+
+================================================================================
+POLICIES BATCH (Items 48–50) — added 2026-07-16
+================================================================================
+
+--------------------------------------------------------------------------------
+ITEM 48 — Demo data left in non-overwritten QLA tables
+Status:     CLOSED (folders cleaned up)
+Owner:      Warren
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+QUESTION
+  Demo data appeared in QuikClid, QuikBllh, QuikIaindex, QuikAmva, QuikAprm,
+  QuikGrp, QuikGrpe, QuikGrph, QuikAgtb, QuikAgph, QuikAgth, QuikAgtc, QuikDocs
+  (and possibly others). Looked like conversion ran into a copy of the demo
+  region and tables not overwritten kept demo data.
+
+ROOT CAUSE
+  Same pattern as Items 43–45: UAT/QLA region was seeded from demo; conversion
+  only overwrites tables it emits. Untouched tables retain demo rows.
+
+DECISION
+  Folders cleaned up — first bullet resolved (Warren 2026-07-16).
+
+ACTION
+  [x] Clean demo leftovers from non-converted tables — DONE
+  [ ] Going forward: load into empty/clean company region, or wipe non-emit
+      tables before UAT so demo cannot linger
+
+--------------------------------------------------------------------------------
+ITEM 49 — Coverage / family product oddities (rate keys, dummy insureds, RPU)
+Status:     OPEN — ASK CSO (priority unresolved item)
+Owner:      Warren → CSO / Eric
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+QUESTION
+  Coverage records missing rate-key lookups (e.g. UW class). Converted data
+  looks odd — dummy “family” / insured records? Phase 1 has no benefits?
+  Phase 2+ CV mostly RPU? If truly RPU, rider should not be active.
+
+DATA FINDINGS (Output quikridr / clients / rates)
+
+  A) Family decreasing-term package (only 1 in-force base)
+     Policy 010499349C (master status 22):
+       Ph1 7647FP FAMILY LIFE DECREASING TERM — F age 18, UW=00, prem 52,
+           units 1, VPU 1000, MRIDRID 590708 (Cheryl Bush = INSD/OWNR/PAYR)
+       Ph2 7647SP SPOUSE — M age 00, UW=00, prem 0, VPU 3000, SAME MRIDRID
+       Ph3 7647CH CHILD — M age 00, UW=00, prem 0, VPU 1000, SAME MRIDRID
+     No separate spouse/child client links on phases 2–3 (clid only on phase 1).
+     Looks like LifePRO family product modeled as multi-phase coverages sharing
+     one insured id, with spouse/child ages zeroed — NOT true separate insureds.
+
+  B) Missing / weak rate keys
+     7647CH: NO PlUw / PlGd / PlGp / Gps / Dbs rows (plan in “missing PVO” list)
+     7647SP: has PlUw/PlDb/Dbs but NO Gps/PlGp
+     7647FP: UW key = 00 only; coverage MUWCLASS=00
+     Active ridr: 128 blank MUWCLASS; 272 MUWCLASS=00 (of 2,478 status 22)
+     Supports Eric note: rate-key lookups incomplete / odd for family setup.
+
+  C) Phase 2+ CV / RPU pattern
+     Phase2+ rows with CV-bearing plans are dominated by:
+       - PUA synthetic *PA (status 41) on active/terminated masters
+       - 1SALMI (Multiple Insureds SAL Modified Life) with QuikCvs
+     Specifically: 78 policies have phase1 MPHSTAT=45 (RPU) on 1SALML but
+     phase2 1SALMI still MPHSTAT=22 (Active). Master MSTATUS also 45.
+     Agree with Eric: if base is RPU, additional insured rider should not
+     remain Active 22 — status mapping / LifePRO multi-insured design issue.
+
+  D) “Phase 1 has no benefits”
+     On 010499349C phase 1 DOES have units/prem/VPU. May refer to a different
+     sample (e.g. RPU/SAL where phase1 benefit presentation differs) — confirm
+     with Eric which policy screen showed phase1 with no benefits.
+
+CSO QUESTIONS (send as-is)
+  1. How should Family Life Decreasing Term (7647FP/SP/CH) be represented in
+     QLAdmin — multi-phase on one insured, or separate insureds/clients?
+  2. Are spouse/child ages of 00 and shared MRIDRID intentional in LifePRO?
+  3. What UW class / rate keys should 7647* use (00 vs smoker/etc.)?
+  4. For SAL Modified Life (1SALML) + Multiple Insureds (1SALMI): when base is
+     RPU (45), should 1SALMI be RPU/inactive rather than Active 22?
+  5. Which policies show phase 1 with no benefits — please list examples.
+
+ACTION
+  [ ] Send CSO questions above (Warren)
+  [ ] Hold structural conversion changes on 7647* / 1SALMI status until CSO answers
+  [ ] After answers: scope issue(s) for rate keys + status rules
+  [ ] Cross-link Items 16 (Modified Life), 25 (family term), 07 (missing PVO)
+
+--------------------------------------------------------------------------------
+ITEM 50 — Conversion CSVs must not sit in QLA region data folder
+Status:     POLICY SET — verify/move if still present
+Owner:      Warren
+Updated:    2026-07-16
+--------------------------------------------------------------------------------
+QUESTION
+  Conversion CSVs for each table appear to be in the data folder; should not
+  be left there if that folder is copied to the client.
+
+FINDING
+  QLA region path checked: Desktop\Central_States\CSO\ (DBF data directory).
+  As of 2026-07-16: 0 quik*.csv in that region root (already clear of conversion
+  CSVs). Region still has many unrelated Group*.CSV / report CSVs + Quik*.dbf.
+
+POLICY
+  - Keep working conversion emits in QLA_Migration\Output\ only
+  - If CSVs are copied into the QLA region for DBF append/load, remove or move
+    them afterward to:
+      QLA_Migration\Archive\Conversion_CSV_Hold\
+  - Do not include conversion CSVs in client handoff packages
+
+ACTION
+  [x] Create hold folder + README — DONE
+      QLA_Migration\Archive\Conversion_CSV_Hold\
+  [x] Confirm CSO region currently has no quik*.csv — DONE (0 found)
+  [ ] If Eric/Warren still see CSVs in another data path: move them to Hold
+  [ ] Exclude conversion CSVs from any client copy script/checklist
+
+================================================================================
+CLOSED ITEMS
+================================================================================
+ITEM 05 — Group file cleared (conversion has no quiklist; UAT/demo Group File
+          deleted by Warren 2026-07-16). Optional MGROUP follow-up only if
+          group bill is in scope.
+ITEM 39 — Index / FIA disabled (confirmed Warren 2026-07-16).
+ITEM 43 — Demo commission rate files removed (2026-07-16). Not from conversion
+          Output; leftover/demo-region data in UAT.
+ITEM 44 — Demo QuikAgtm data removed (2026-07-16). Not from conversion Output;
+          leftover/demo-region data in UAT.
+ITEM 15 — COMMID blank intentional; no commission go-live (with Item 45).
+ITEM 45 — No agent data at go-live (Warren 2026-07-16): agents being paid off;
+          do not load QuikAgts/Agtm/commission agent tables. UAT agents removed.
+          Converter may still emit quikagts.csv — exclude from load package.
+ITEM 48 — Demo leftovers in non-overwritten tables cleaned (2026-07-16).
+
+
+================================================================================
+END OF RUNNING DOCUMENT
+================================================================================

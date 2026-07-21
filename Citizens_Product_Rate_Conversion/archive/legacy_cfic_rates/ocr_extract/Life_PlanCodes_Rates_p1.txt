@@ -1,0 +1,13 @@
+RW8 WHOLE LIFE CASH PLAN-payable to & named beneficiary. Premium payable whole life RWSG 80 CSO reserve. Cash surrender; loan and extended term available: Loan interest &%.
+RWSA same as above for policies issued January 2006 through December 2009 (reserve factor adjustment)
+R28 ORDINARY CASH POLICY-payable to & named beneficiary. Premium payable 20 years_ R2SG 80 CSO Reserve.  Cash surrender; loan and extended term available: Loan interest 8% R2SA same as above for policies issued January 2006 through December 2009 (reserve factor adjustment) RWI CASH FAMILY PLAN-covers single parents. Benefit payable to a named beneficiary. Premium payable whole life:  58 CSO reserve. Cash surrender; loan, and extended term available. Loan interest &%.
+RWIS CASH FAMILY PLAN-covers single parents. Benefit payable to a named beneficiary. Premium payable whole life. 80 CSO reserve  Cash surrender; loan and extended term available. Loan interest 8%_
+RW2
+CASH FAMILY PLAN-covers both parents.  Benefit payable to a named beneficiary. Premium payable on husband whole life, on wife until hers or husbands death: 58 CSO reserve Cash surrender; loan and extended term available. Loan interest &%.
+RW28 CASH FAMILY PLAN-covers both parents. Benefits payable t0 a named beneficiary Premium payable On husband whole life, O wife until hers or husbands death
+RW28 CASH FAMILY PLAN-covers both parents. Benefits payable to a named beneficiary. Premium payable on husband whole life, On wife until hers or husbands death: 80 CSO reserve. Cash surrender loan and extended term available. Loan interest 8%
+RI
+JOINT LIFE CASH POLICY-to a named beneficiary. Premium payable whole life. 58 CSO Reserve. Cash surrender, loan and extended term available. Loan interest 4.8%
+TSSF RENEWABLEICONVERTIBLE TERM-Cash policy payable to a named beneficiary. TSSM Premiums TSSF & TSSM payable $ years: TI8F & TISM payable 10 years_ No cash TISF surrender or loan values F=female rates, M-male rates . 80 CSO Reserve TI SM
+TRSF TRSM Same a8 above except it is issued as & rider attached to another type policy: Example: TRIF RW, PLP, LPI 80 CSO Reserve TRIM
+XSSF RENEWABLEICONVERTIBLE TERM- Cash policy payable to a named beneficary: XSSM Premiums XS8F & XSSM payable $ years; XISF & XI8M payable 10 years_ No cash XISF surrender or loan values. F-female rates; M-male rates. 2000 CSO Reserve. XLSM

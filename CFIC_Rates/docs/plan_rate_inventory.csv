@@ -1,0 +1,101 @@
+source_pdf,page,cfic_plan_code,ql_plan,in_plan_crosswalk,product_family,rate_types_in_pdf,segment,notes,source_path
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,1,P7FN,10P7FN,Y,PermaLife 7 Juvenile,Gross Premium;Cash Value;Paid-Up,Female Nonsmoker ages 0-17,Also HPFN (2017 CSO),CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,1,P7MN,10P7MN,Y,PermaLife 7 Juvenile,Gross Premium;Cash Value;Paid-Up,Male Nonsmoker ages 0-17,Also HPMN,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,2,P7FS,10P7FS,Y,PermaLife 7 Juvenile,Gross Premium;Cash Value;Paid-Up,Female Smoker ages 0-17,Also HPFS,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,2,P7MS,10P7MS,Y,PermaLife 7 Juvenile,Gross Premium;Cash Value;Paid-Up,Male Smoker ages 0-17,Also HPMS,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,3,P7FN,10P7FN,Y,PermaLife 7 Adult,Gross Premium;Cash Value;Paid-Up,Female Nonsmoker ages 18-70,Also HPFN,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,4,P7MN,10P7MN,Y,PermaLife 7 Adult,Gross Premium;Cash Value;Paid-Up,Male Nonsmoker ages 18-70,Also HPMN,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,5,P7FS,10P7FS,Y,PermaLife 7 Adult,Gross Premium;Cash Value;Paid-Up,Female Smoker ages 18-70,Also HPFS,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,5,P7MS,10P7MS,Y,PermaLife 7 Adult,Gross Premium;Cash Value;Paid-Up,Male Smoker ages 18-70,Also HPMS,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,6,HRWG,10HRWG,Y,Quest I,Gross Premium,Whole Life column ages 0-75,Maps from RW8G; HR 2017 CSO,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,6,HR2G,10HR2G,Y,Quest I,Gross Premium,Paid-up at 65 column ages 0-55,Maps from R28G,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,6,HR6G,,N,Quest I,Gross Premium,20-pay column ages 0-65,Maps from R68G,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,7,QIII,,N,Quest II & III,Gross Premium,Whole life ages 0-75,Graded death benefit plan,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,8,X58F,10X58F,Y,5-Year Term,Gross Premium,Female base ages 15-64,Renewable/convertible to 65,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,9,X58M,10X58M,Y,5-Year Term,Gross Premium,Male base ages 15-64,,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,10,X18M,10X18M,Y,10-Year Term,Gross Premium,Male base ages 15-64,,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,11,X18F,10X18F,Y,10-Year Term,Gross Premium,Female base ages 15-64,Verify page — likely female 10yr,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,12,XR1F,10XR1F,Y,10-Year Term Rider,Gross Premium,Female rider ages 15-64,Renewal only ages 56-64,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,12,XR1M,10XR1M,Y,10-Year Term Rider,Gross Premium,Male rider ages 15-64,,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,13,XR5F,10XR5F,Y,5-Year Term Rider,Gross Premium,Female rider ages 15-64,,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf,13,XR5M,10XR5M,Y,5-Year Term Rider,Gross Premium,Male rider ages 15-64,,CFIC_Rates/docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,RW8,100RW8,Y,Whole Life,Plan definition,80 CSO whole life cash plan,QL: 100RW8,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,RW8G,10RW8G,Y,Whole Life,Plan definition,80 CSO; CV/loan/ETI; 8% loan,QL: 10RW8G,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,RW8A,10RW8A,Y,Whole Life,Plan definition,2006-2009 issue reserve adjustment,QL: 10RW8A,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,R28,100R28,Y,20-Pay Life,Plan definition,Premium payable 20 years,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,R28G,10R28G,Y,20-Pay Life,Plan definition,80 CSO; CV/loan/ETI,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,R29G,10R29G,Y,20-Pay Life,Plan definition,2001 CSO,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,R68,100R68,Y,Pay to 65,Plan definition,Premium payable to age 65,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,R68G,10R68G,Y,Pay to 65,Plan definition,80 CSO,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,R69G,,N,Pay to 65,Plan definition,2001 CSO,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,HR2G,10HR2G,Y,Quest / 20-Pay,Plan definition,2017 CSO 20-pay,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,HR6G,,N,Quest / Pay to 65,Plan definition,2017 CSO pay to 65,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,HRWG,10HRWG,Y,Quest / Whole Life,Plan definition,2017 CSO whole life,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,HPFN,10HPFN,Y,PermaLife / HP 2017,Plan definition,Female nonsmoker whole life,QL: 10HPFN,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,HPFS,10HPFS,Y,PermaLife / HP 2017,Plan definition,Female smoker,QL: 10HPFS,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,HPMN,10HPMN,Y,PermaLife / HP 2017,Plan definition,Male nonsmoker,QL: 10HPMN,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,HPMS,10HPMS,Y,PermaLife / HP 2017,Plan definition,Male smoker,QL: 10HPMS,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P7FN,10P7FN,Y,PermaLife 7,Plan definition,Female nonsmoker; 80 CSO,QL: 10P7FN,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P7FS,10P7FS,Y,PermaLife 7,Plan definition,Female smoker,QL: 10P7FS,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P7MN,10P7MN,Y,PermaLife 7,Plan definition,Male nonsmoker,QL: 10P7MN,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P7MS,10P7MS,Y,PermaLife 7,Plan definition,Male smoker,QL: 10P7MS,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P8FN,10P8FN,Y,PermaLife 8,Plan definition,Female nonsmoker; 80 CSO,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P8FS,10P8FS,Y,PermaLife 8,Plan definition,Female smoker,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P8MN,10P8MN,Y,PermaLife 8,Plan definition,Male nonsmoker,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P8MS,10P8MS,Y,PermaLife 8,Plan definition,Male smoker,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P8FJ,10P8FJ,Y,PermaLife 8 Juvenile,Plan definition,Female juvenile 0-17,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P8MJ,10P8MJ,Y,PermaLife 8 Juvenile,Plan definition,Male juvenile 0-17,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P9FN,10P9FN,Y,PermaLife 9,Plan definition,Female nonsmoker; 2001 CSO,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P9FS,10P9FS,Y,PermaLife 9,Plan definition,Female smoker,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P9MN,10P9MN,Y,PermaLife 9,Plan definition,Male nonsmoker,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,1,P9MS,10P9MS,Y,PermaLife 9,Plan definition,Male smoker,,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Quest_PermaLife_PlanCode_Rates.pdf,2,HRWG,10HRWG,Y,Quest I,Gross Premium;Waiver,WL / PdUp65 / 20-pay / WP,Duplicate of CNB p6,CFIC_Rates/docs/Quest_PermaLife_PlanCode_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,RW8,100RW8,Y,Whole Life,Plan definition,Whole life cash plan,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,RW8G,10RW8G,Y,Whole Life,Plan definition,80 CSO,QL: 10RW8G,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,RW8A,10RW8A,Y,Whole Life,Plan definition,2006-2009 adjustment,QL: 10RW8A,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,R28,100R28,Y,20-Pay Life,Plan definition,,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,R28G,10R28G,Y,20-Pay Life,Plan definition,80 CSO,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,RW1,100RW1,Y,Family Whole Life,Plan definition,Single parent; 58 CSO,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,RW18,10RW18,Y,Family Whole Life,Plan definition,Single parent; 80 CSO,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,RW2,100RW2,Y,Family Whole Life,Plan definition,Both parents; 58 CSO,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,RW28,10RW28,Y,Family Whole Life,Plan definition,Both parents; 80 CSO,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,RJ,1000RJ,Y,Joint Life,Plan definition,58 CSO; 4.8% loan,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,T58F,,N,5-Year Term,Plan definition,Female; no CV/loan,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,T58M,,N,5-Year Term,Plan definition,Male,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,T18F,,N,10-Year Term,Plan definition,Female,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,T18M,,N,10-Year Term,Plan definition,Male,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,TR5F,,N,5-Year Term Rider,Plan definition,Female rider,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,TR5M,,N,5-Year Term Rider,Plan definition,Male rider,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,TR1F,,N,10-Year Term Rider,Plan definition,Female rider,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,TR1M,,N,10-Year Term Rider,Plan definition,Male rider,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,X58F,10X58F,Y,5-Year Term,Plan definition,Female; 2000 CSO,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,X58M,10X58M,Y,5-Year Term,Plan definition,Male; 2000 CSO,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,X18F,10X18F,Y,10-Year Term,Plan definition,Female; 2000 CSO,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,1,X18M,10X18M,Y,10-Year Term,Plan definition,Male; 2000 CSO,,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,2,RW8,100RW8,Y,Ordinary Life,Gross Premium;Cash Value;Paid-Up,Individual ages 0-65,Handwritten RW8 IND,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Life_PlanCodes_Rates.pdf,2,RW8G,10RW8G,Y,Ordinary Life,Gross Premium;Cash Value;Paid-Up,Family ages 0-65,Handwritten RW8G Family,CFIC_Rates/docs/Life_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q1FN,10Q1FN,Y,Term Life,Plan definition,10-year female nonsmoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q1FS,,N,Term Life,Plan definition,10-year female smoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q1MN,10Q1MN,Y,Term Life,Plan definition,10-year male nonsmoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q1MS,10Q1MS,Y,Term Life,Plan definition,10-year male smoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q2FN,10Q2FN,Y,Term Life,Plan definition,20-year female nonsmoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q2FS,,N,Term Life,Plan definition,20-year female smoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q2MN,10Q2MN,Y,Term Life,Plan definition,20-year male nonsmoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q2MS,,N,Term Life,Plan definition,20-year male smoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q3FN,10Q3FN,Y,Term Life,Plan definition,30-year female nonsmoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q3FS,,N,Term Life,Plan definition,30-year female smoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q3MN,10Q3MN,Y,Term Life,Plan definition,30-year male nonsmoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Term_PlanCodes_Rates.pdf,1,Q3MS,,N,Term Life,Plan definition,30-year male smoker,,CFIC_Rates/docs/Term_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,1,FW5,100FW5,Y,Merchandise/Service,Plan definition,58 CSO; pay to 100,No QL crosswalk,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,1,FW5C,10FW5C,Y,Merchandise/Service,Plan definition,,,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,1,F25,,N,Merchandise/Service,Plan definition,20-pay,,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,1,RW,1000RW,Y,Whole Life,Plan definition,58 CSO legacy,QL: 100RW8 family?,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,1,RWC,100RWC,Y,Whole Life,Plan definition,,,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,1,R2,,N,20-Pay Life,Plan definition,58 CSO,,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,1,R2G,,N,20-Pay Life,Plan definition,,,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,1,RJ,1000RJ,Y,Joint Life,Plan definition,4.8% loan,,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,1,RE1,100RE1,Y,Endowment 65,Plan definition,,,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,1,RE2,100RE2,Y,Youth Estate,Plan definition,,,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+Drummond_CFI_PlanCodes_Rates.pdf,2,ALL,,N,General,Present value factors,4.5% discount table,Not plan-specific rates,CFIC_Rates/docs/Drummond_CFI_PlanCodes_Rates.pdf
+BW_PlanCode_Rates.pdf,1,BW,,N,Burial / Merchandise,Gross Premium,Age-banded burial rates,Non-reserve; no CV/loan,CFIC_Rates/docs/BW_PlanCode_Rates.pdf
+BWB_971_PlanCode_Rates.pdf,1,971,,N,Burial / Merchandise,Gross Premium,Plan 971 modal factors,BWB office 10; no QL crosswalk,CFIC_Rates/docs/BWB_971_PlanCode_Rates.pdf

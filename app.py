@@ -1,10 +1,14 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.18
-# Date:        2026-07-19
+# Version:     v58.22
+# Date:        2026-07-20
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.18 — QUIKConvert branding + rotating header taglines (UI only).
+# Change Note: v58.22 — Issue A A10: emit QuikUwpo (UW class master) from distinct plan UW codes.
+#              v58.21 — Issue A A4/A6/A8/A9b internal QuikPlan setup fixes.
+#              v58.20 — Single Table quikplan: define out_dir before variation audit write.
+#              v58.19 — Issue A A1: single-prem SP modal zeros re-applied after #21J overlay (4 DESCR plans).
+#              v58.18 — QUIKConvert branding + rotating header taglines (UI only).
 #              v58.17 — Issue #87: Balancing progress bar uses a real 6-stage plan (was stuck on Stage 1).
 #              v58.16 — Issue #87: plain-English Balancing report wording (no RNA/PPOLC jargon).
 #              v58.15 — Issue #87: Balancing reports match Data Governance style (HTML executive
@@ -202,6 +206,7 @@ from qla_core.quikplan_converter import (
     apply_single_premium_payment_settings,
     apply_ploan_loanint_enrichment,
 )
+from qla_core.issue_a_plan_setup import apply_issue_a_plan_setup
 from qla_core.cso_mortality_crosswalk import (
     apply_quikplan_cv_assumptions,
     default_crosswalk_path,
@@ -449,7 +454,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.18"
+APP_VERSION = "v58.22"
 APP_BRAND = "QUIKConvert"
 APP_TAGLINE = APP_PRIMARY_TAGLINE
 
@@ -7276,6 +7281,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         continue
 
                 if t_id.lower() == "quikplan":
+                    out_dir = self.path_vars["Out"][0].get()
                     overlay_cfg = resolve_crosswalk_overlay_config()
                     cw_authority = load_crosswalk_authority(cw_path) if cw_path and os.path.exists(cw_path) else None
                     var_cfg = VariationClassificationConfig.from_env_and_defaults(self._app_base_dir())
@@ -7360,6 +7366,10 @@ class QLAdminEnterpriseIntegrationSuite:
                         f"(updated={modal_stats.get('plans_updated', 0)}, "
                         f"mapping={modal_stats.get('plans_in_mapping', 0)})"
                     )
+                    qdf = apply_single_premium_payment_settings(
+                        qdf, self._app_base_dir(), log=self.log
+                    )
+                    qdf = apply_issue_a_plan_setup(qdf, repo_root=self._app_base_dir(), log=self.log)
 
                     output = qdf[schema].values.tolist()
                     bank_draft_exceptions = None

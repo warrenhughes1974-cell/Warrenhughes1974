@@ -1,0 +1,17 @@
+[2026-07-19 10:45:33] QLAdmin Data Governance run starting
+[2026-07-19 10:45:33] Run ID: DG-20260719_104533_616431
+[2026-07-19 10:45:33] Data region: Q:\WPA\WPA_GABIE
+[2026-07-19 10:45:33] Output base: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\examine_out\wpa\DG-QUIKPLAN-028
+[2026-07-19 10:45:33] Run folder: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\examine_out\wpa\DG-QUIKPLAN-028\DG-20260719_104533_616431
+[2026-07-19 10:45:33] Review scope: rule
+[2026-07-19 10:45:33] Source DBF files will be opened read-only; source files are never modified
+[2026-07-19 10:45:34] Executing DG-QUIKPLAN-028 — Annuity Plans Should Have Required Annuity Tables
+[2026-07-19 10:45:34] Finished DG-QUIKPLAN-028: status=PASS passed=551 failed=0 errors=0
+[2026-07-19 10:45:34] Overall status: PASS
+[2026-07-19 10:45:34] Source files modified: No
+[2026-07-19 10:45:34] Evaluation totals: reviewed=772 looked_fine=551 problems=0
+[2026-07-19 10:45:34] What Was Checked: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\examine_out\wpa\DG-QUIKPLAN-028\DG-20260719_104533_616431\1_What_Was_Checked.html
+[2026-07-19 10:45:34] Items Needing Attention: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\examine_out\wpa\DG-QUIKPLAN-028\DG-20260719_104533_616431\2_Items_Needing_Attention.csv
+[2026-07-19 10:45:34] Business result: Passed
+[2026-07-19 10:45:34] Percentage passed (completed checks): 100.00%
+[2026-07-19 10:45:34] Internal technical folder: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\examine_out\wpa\DG-QUIKPLAN-028\DG-20260719_104533_616431\internal

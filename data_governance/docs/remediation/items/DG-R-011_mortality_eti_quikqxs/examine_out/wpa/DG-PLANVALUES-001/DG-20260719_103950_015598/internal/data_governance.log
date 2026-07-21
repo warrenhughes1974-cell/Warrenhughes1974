@@ -1,0 +1,17 @@
+[2026-07-19 10:39:50] QLAdmin Data Governance run starting
+[2026-07-19 10:39:50] Run ID: DG-20260719_103950_015598
+[2026-07-19 10:39:50] Data region: Q:\WPA\WPA_GABIE
+[2026-07-19 10:39:50] Output base: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-011_mortality_eti_quikqxs\examine_out\wpa\DG-PLANVALUES-001
+[2026-07-19 10:39:50] Run folder: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-011_mortality_eti_quikqxs\examine_out\wpa\DG-PLANVALUES-001\DG-20260719_103950_015598
+[2026-07-19 10:39:50] Review scope: rule
+[2026-07-19 10:39:50] Source DBF files will be opened read-only; source files are never modified
+[2026-07-19 10:39:50] Executing DG-PLANVALUES-001 — Mortality Table Must Exist in QuikQxs
+[2026-07-19 10:39:50] Finished DG-PLANVALUES-001: status=FAIL passed=1415 failed=16 errors=0
+[2026-07-19 10:39:50] Overall status: FAIL
+[2026-07-19 10:39:50] Source files modified: No
+[2026-07-19 10:39:50] Evaluation totals: reviewed=1431 looked_fine=1415 problems=16
+[2026-07-19 10:39:50] What Was Checked: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-011_mortality_eti_quikqxs\examine_out\wpa\DG-PLANVALUES-001\DG-20260719_103950_015598\1_What_Was_Checked.html
+[2026-07-19 10:39:50] Items Needing Attention: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-011_mortality_eti_quikqxs\examine_out\wpa\DG-PLANVALUES-001\DG-20260719_103950_015598\2_Items_Needing_Attention.csv
+[2026-07-19 10:39:50] Business result: Some Items Need Attention
+[2026-07-19 10:39:50] Percentage passed (completed checks): 98.88%
+[2026-07-19 10:39:50] Internal technical folder: C:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-011_mortality_eti_quikqxs\examine_out\wpa\DG-PLANVALUES-001\DG-20260719_103950_015598\internal

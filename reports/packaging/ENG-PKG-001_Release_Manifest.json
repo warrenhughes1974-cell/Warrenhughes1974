@@ -1,0 +1,31 @@
+{
+  "distribution_name": "qla-enterprise-conversion-engine",
+  "import_name": "qla_core",
+  "version": "0.1.0",
+  "api_compatibility_version": 1,
+  "repository_commit": "0ed59cdc472c10c0189d5328883460fdc5fb0189",
+  "build_timestamp": "2026-07-12T15:28:57Z",
+  "python_version": "3.14.4 (tags/v3.14.4:23116f9, Apr  7 2026, 14:10:54) [MSC v.1944 64 bit (AMD64)]",
+  "wheel_filename": "qla_enterprise_conversion_engine-0.1.0-py3-none-any.whl",
+  "wheel_sha256": "320165544a8fc63d882508fb478ae77b911c2d6e4de5647a7408414b299ff674",
+  "sdist_filename": "qla_enterprise_conversion_engine-0.1.0.tar.gz",
+  "sdist_sha256": "ca70a4bbc338f45aabaca6d6b8dcb2898bc8632c80705370096ac941831ba80c",
+  "required_modules": [
+    "rate_dbf_schema",
+    "rate_factor_loader",
+    "rate_key_setup",
+    "rate_member_setup",
+    "rate_dbf_writer"
+  ],
+  "required_symbols": [
+    "emit_all_rate_tables_csv",
+    "build_factor_grid",
+    "build_key_rows",
+    "build_member_rows"
+  ],
+  "source_tree_test_result": "PASS",
+  "installed_test_result": "PASS",
+  "clean_install_result": "PASS",
+  "wheel_file_count": 57,
+  "notes": "Initial controlled distribution; packaging-only release"
+}

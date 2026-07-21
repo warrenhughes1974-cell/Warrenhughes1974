@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OutputLocationsConfig",
+  "type": "object",
+  "required": [
+    "staging_root",
+    "validation_root",
+    "reports_root",
+    "output_root",
+    "log_root"
+  ],
+  "properties": {
+    "staging_root": { "type": "string", "minLength": 1 },
+    "normalized_plans_root": { "type": "string" },
+    "normalized_rates_root": { "type": "string" },
+    "rejected_rows_root": { "type": "string" },
+    "intermediate_root": { "type": "string" },
+    "validation_root": { "type": "string", "minLength": 1 },
+    "reports_root": { "type": "string", "minLength": 1 },
+    "output_root": { "type": "string", "minLength": 1 },
+    "draft_rates_root": { "type": "string" },
+    "release_rates_root": { "type": "string" },
+    "release_packages_root": { "type": "string" },
+    "run_workspace_root": { "type": "string" },
+    "log_root": { "type": "string", "minLength": 1 }
+  }
+}

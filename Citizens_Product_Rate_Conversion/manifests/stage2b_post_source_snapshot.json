@@ -1,0 +1,2049 @@
+{
+  "source_root": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\CFIC_Rates",
+  "scan_timestamp_utc": "2026-07-12T14:57:15Z",
+  "file_count": 503,
+  "directory_count": 181,
+  "total_bytes": 3209385809,
+  "extension_counts": {
+    ".csv": 180,
+    ".pdf": 96,
+    ".png": 73,
+    ".txt": 59,
+    ".py": 22,
+    ".zip": 22,
+    ".md": 19,
+    ".pt1": 10,
+    ".pyc": 7,
+    ".cpy": 4,
+    ".dbf": 3,
+    ".xlsx": 3,
+    ".mdb": 2,
+    "(no ext)": 1,
+    ".dat": 1,
+    ".json": 1
+  },
+  "file_index": {
+    "__pycache__/cfic_paths.cpython-314.pyc": {
+      "size": 1631,
+      "mtime_utc": "2026-07-12T03:04:16Z"
+    },
+    "CFIC_Cash_Values/802M_CV.zip": {
+      "size": 156726624,
+      "mtime_utc": "2025-10-22T12:46:54Z"
+    },
+    "CFIC_Cash_Values/802W_CV.zip": {
+      "size": 77054136,
+      "mtime_utc": "2025-10-22T12:46:55Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y700.png": {
+      "size": 10225,
+      "mtime_utc": "2026-07-11T22:19:23Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y710.png": {
+      "size": 10161,
+      "mtime_utc": "2026-07-11T22:19:23Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y720.png": {
+      "size": 10687,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y730.png": {
+      "size": 11250,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y740.png": {
+      "size": 10945,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y750.png": {
+      "size": 10592,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y760.png": {
+      "size": 10040,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y770.png": {
+      "size": 9777,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y780.png": {
+      "size": 10072,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y790.png": {
+      "size": 10470,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y800.png": {
+      "size": 10929,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y810.png": {
+      "size": 11074,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y820.png": {
+      "size": 11051,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y830.png": {
+      "size": 10388,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y840.png": {
+      "size": 10116,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y850.png": {
+      "size": 9565,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y860.png": {
+      "size": 9841,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y870.png": {
+      "size": 10566,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y880.png": {
+      "size": 10749,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/cash_y890.png": {
+      "size": 10765,
+      "mtime_utc": "2026-07-11T22:19:24Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/crop_test.png": {
+      "size": 3248343,
+      "mtime_utc": "2026-07-11T21:54:56Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/P7MN_18.pdf": {
+      "size": 3231572,
+      "mtime_utc": "2026-07-11T21:54:03Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/P7MN_18_p0.png": {
+      "size": 4177075,
+      "mtime_utc": "2026-07-11T21:54:03Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/P7MN_18_p1.png": {
+      "size": 3361386,
+      "mtime_utc": "2026-07-11T21:54:04Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/P7MN_30.pdf": {
+      "size": 3102502,
+      "mtime_utc": "2026-07-11T21:54:04Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/P7MN_30_p0.png": {
+      "size": 3564998,
+      "mtime_utc": "2026-07-11T21:54:05Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/P7MN_30_p1.png": {
+      "size": 3024274,
+      "mtime_utc": "2026-07-11T21:54:05Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/P7MN_50.pdf": {
+      "size": 2928355,
+      "mtime_utc": "2026-07-11T21:54:05Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/P7MN_50_p0.png": {
+      "size": 3526744,
+      "mtime_utc": "2026-07-11T21:54:06Z"
+    },
+    "CFIC_Cash_Values/_dev_p7mn/P7MN_50_p1.png": {
+      "size": 2678985,
+      "mtime_utc": "2026-07-11T21:54:07Z"
+    },
+    "CFIC_Cash_Values/_sample_pdfs/802M_Directions.pdf": {
+      "size": 260310,
+      "mtime_utc": "2025-09-15T19:15:56Z"
+    },
+    "CFIC_Cash_Values/_sample_pdfs/P7MN_18.pdf": {
+      "size": 3231572,
+      "mtime_utc": "2025-09-15T19:43:30Z"
+    },
+    "CFIC_Cash_Values/_sample_pdfs/P7MN_18_p0.png": {
+      "size": 2425299,
+      "mtime_utc": "2026-07-11T21:39:54Z"
+    },
+    "CFIC_Cash_Values/_sample_pdfs/P7MN_18_p0_header.png": {
+      "size": 1405680,
+      "mtime_utc": "2026-07-11T21:39:55Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/0.pdf": {
+      "size": 4694469,
+      "mtime_utc": "2025-09-15T19:51:06Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/01.pdf": {
+      "size": 4567539,
+      "mtime_utc": "2025-09-15T19:51:08Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/02.pdf": {
+      "size": 4869357,
+      "mtime_utc": "2025-09-15T19:51:12Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/03.pdf": {
+      "size": 4631010,
+      "mtime_utc": "2025-09-15T19:51:16Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/04.pdf": {
+      "size": 4826157,
+      "mtime_utc": "2025-09-15T19:51:18Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/05.pdf": {
+      "size": 4818141,
+      "mtime_utc": "2025-09-15T19:51:22Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/06.pdf": {
+      "size": 4929793,
+      "mtime_utc": "2025-09-15T19:51:26Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/07.pdf": {
+      "size": 4713570,
+      "mtime_utc": "2025-09-15T19:51:30Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/08.pdf": {
+      "size": 4729105,
+      "mtime_utc": "2025-09-15T19:51:32Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/09.pdf": {
+      "size": 4762307,
+      "mtime_utc": "2025-09-15T19:51:36Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/10.pdf": {
+      "size": 4826129,
+      "mtime_utc": "2025-09-15T19:51:40Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/11.pdf": {
+      "size": 4735343,
+      "mtime_utc": "2025-09-15T19:51:42Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/12.pdf": {
+      "size": 4903911,
+      "mtime_utc": "2025-09-15T19:51:46Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/13.pdf": {
+      "size": 4815739,
+      "mtime_utc": "2025-09-15T19:51:50Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/14.pdf": {
+      "size": 4944159,
+      "mtime_utc": "2025-09-15T19:51:54Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/15.pdf": {
+      "size": 4616365,
+      "mtime_utc": "2025-09-15T19:51:56Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/16.pdf": {
+      "size": 4850533,
+      "mtime_utc": "2025-09-15T19:52:00Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/17.pdf": {
+      "size": 4787985,
+      "mtime_utc": "2025-09-15T19:52:04Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/18.pdf": {
+      "size": 4878991,
+      "mtime_utc": "2025-09-15T19:52:06Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/19.pdf": {
+      "size": 3247413,
+      "mtime_utc": "2025-09-15T19:52:10Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/20.pdf": {
+      "size": 3223268,
+      "mtime_utc": "2025-09-15T19:52:12Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/21.pdf": {
+      "size": 3302095,
+      "mtime_utc": "2025-09-15T19:52:16Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/22.pdf": {
+      "size": 3274689,
+      "mtime_utc": "2025-09-15T19:52:18Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/23.pdf": {
+      "size": 3160795,
+      "mtime_utc": "2025-09-15T19:52:20Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/24.pdf": {
+      "size": 3375692,
+      "mtime_utc": "2025-09-15T19:52:24Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/25.pdf": {
+      "size": 3190065,
+      "mtime_utc": "2025-09-15T19:52:26Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/26.pdf": {
+      "size": 3266342,
+      "mtime_utc": "2025-09-15T19:52:28Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/27.pdf": {
+      "size": 3256210,
+      "mtime_utc": "2025-09-15T19:52:32Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/28.pdf": {
+      "size": 3345153,
+      "mtime_utc": "2025-09-15T19:52:34Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/29.pdf": {
+      "size": 3312901,
+      "mtime_utc": "2025-09-15T19:52:38Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/30.pdf": {
+      "size": 3365250,
+      "mtime_utc": "2025-09-15T19:52:40Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/31.pdf": {
+      "size": 3305795,
+      "mtime_utc": "2025-09-15T19:52:42Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/32.pdf": {
+      "size": 3157256,
+      "mtime_utc": "2025-09-15T19:52:46Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/33.pdf": {
+      "size": 3316277,
+      "mtime_utc": "2025-09-15T19:52:48Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/34.pdf": {
+      "size": 3132157,
+      "mtime_utc": "2025-09-15T19:52:52Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/35.pdf": {
+      "size": 3211912,
+      "mtime_utc": "2025-09-15T19:52:54Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/36.pdf": {
+      "size": 3148537,
+      "mtime_utc": "2025-09-15T19:52:56Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/37.pdf": {
+      "size": 3198962,
+      "mtime_utc": "2025-09-15T19:52:58Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/38.pdf": {
+      "size": 3160906,
+      "mtime_utc": "2025-09-15T19:53:00Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/39.pdf": {
+      "size": 3292393,
+      "mtime_utc": "2025-09-15T19:53:02Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/40.pdf": {
+      "size": 3308976,
+      "mtime_utc": "2025-09-15T19:53:04Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/41.pdf": {
+      "size": 3120693,
+      "mtime_utc": "2025-09-15T19:53:08Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/42.pdf": {
+      "size": 3197620,
+      "mtime_utc": "2025-09-15T19:53:10Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/43.pdf": {
+      "size": 3180000,
+      "mtime_utc": "2025-09-15T19:53:12Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/44.pdf": {
+      "size": 3190764,
+      "mtime_utc": "2025-09-15T19:53:16Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/45.pdf": {
+      "size": 3184330,
+      "mtime_utc": "2025-09-15T19:53:18Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/46.pdf": {
+      "size": 3260488,
+      "mtime_utc": "2025-09-15T19:53:22Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/47.pdf": {
+      "size": 3095444,
+      "mtime_utc": "2025-09-15T19:53:24Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/48.pdf": {
+      "size": 3174253,
+      "mtime_utc": "2025-09-15T19:53:28Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/49.pdf": {
+      "size": 3235748,
+      "mtime_utc": "2025-09-15T19:53:30Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/50.pdf": {
+      "size": 3070099,
+      "mtime_utc": "2025-09-15T19:53:34Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/51.pdf": {
+      "size": 3137165,
+      "mtime_utc": "2025-09-15T19:53:36Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/52.pdf": {
+      "size": 3118523,
+      "mtime_utc": "2025-09-15T19:53:38Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/53.pdf": {
+      "size": 3139697,
+      "mtime_utc": "2025-09-15T19:53:42Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/54.pdf": {
+      "size": 3131047,
+      "mtime_utc": "2025-09-15T19:53:44Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/55.pdf": {
+      "size": 3030489,
+      "mtime_utc": "2025-09-15T19:53:46Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/56.pdf": {
+      "size": 3125186,
+      "mtime_utc": "2025-09-15T19:53:50Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/57.pdf": {
+      "size": 3139607,
+      "mtime_utc": "2025-09-15T19:53:52Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/58.pdf": {
+      "size": 3180133,
+      "mtime_utc": "2025-09-15T19:53:56Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/59.pdf": {
+      "size": 1596683,
+      "mtime_utc": "2025-09-15T19:53:58Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/60.pdf": {
+      "size": 1583151,
+      "mtime_utc": "2025-09-15T19:54:00Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/61.pdf": {
+      "size": 1589648,
+      "mtime_utc": "2025-09-15T19:54:02Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/62.pdf": {
+      "size": 1570487,
+      "mtime_utc": "2025-09-15T19:54:04Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/63.pdf": {
+      "size": 1574084,
+      "mtime_utc": "2025-09-15T19:54:06Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/64.pdf": {
+      "size": 1668834,
+      "mtime_utc": "2025-09-15T19:54:10Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/65.pdf": {
+      "size": 1577724,
+      "mtime_utc": "2025-09-15T19:54:12Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/66.pdf": {
+      "size": 1654702,
+      "mtime_utc": "2025-09-15T19:54:14Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/67.pdf": {
+      "size": 1564480,
+      "mtime_utc": "2025-09-15T19:54:16Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/68.pdf": {
+      "size": 1562462,
+      "mtime_utc": "2025-09-15T19:54:18Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/69.pdf": {
+      "size": 1635009,
+      "mtime_utc": "2025-09-15T19:54:20Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/70.pdf": {
+      "size": 1643569,
+      "mtime_utc": "2025-09-15T19:54:24Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/71.pdf": {
+      "size": 1544396,
+      "mtime_utc": "2025-09-15T19:54:26Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/72.pdf": {
+      "size": 1634181,
+      "mtime_utc": "2025-09-15T19:54:28Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/73.pdf": {
+      "size": 1629583,
+      "mtime_utc": "2025-09-15T19:54:30Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/74.pdf": {
+      "size": 1623785,
+      "mtime_utc": "2025-09-15T19:54:32Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/75.pdf": {
+      "size": 1525690,
+      "mtime_utc": "2025-09-15T19:54:34Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/76.pdf": {
+      "size": 1533844,
+      "mtime_utc": "2025-09-15T19:54:38Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/77.pdf": {
+      "size": 1597594,
+      "mtime_utc": "2025-09-15T19:54:40Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/78.pdf": {
+      "size": 1611328,
+      "mtime_utc": "2025-09-15T19:54:42Z"
+    },
+    "CFIC_Cash_Values/_sample_PLP/PLP/79.pdf": {
+      "size": 1512147,
+      "mtime_utc": "2025-09-15T19:54:44Z"
+    },
+    "CFIC_Cash_Values/ABFN_CV.zip": {
+      "size": 170804111,
+      "mtime_utc": "2025-10-22T12:46:58Z"
+    },
+    "CFIC_Cash_Values/ABFS_CV.zip": {
+      "size": 227656627,
+      "mtime_utc": "2025-10-22T12:47:02Z"
+    },
+    "CFIC_Cash_Values/ABMN_CV.zip": {
+      "size": 171168193,
+      "mtime_utc": "2025-10-22T12:47:05Z"
+    },
+    "CFIC_Cash_Values/ABMS_CV.zip": {
+      "size": 228707250,
+      "mtime_utc": "2025-10-22T12:47:09Z"
+    },
+    "CFIC_Cash_Values/MultipleCashValueFiles.zip": {
+      "size": 278330287,
+      "mtime_utc": "2025-10-22T12:47:16Z"
+    },
+    "CFIC_Cash_Values/P7FN_CV.zip": {
+      "size": 140924178,
+      "mtime_utc": "2025-10-22T12:47:19Z"
+    },
+    "CFIC_Cash_Values/P7FS_CV.zip": {
+      "size": 197924925,
+      "mtime_utc": "2025-10-22T12:47:22Z"
+    },
+    "CFIC_Cash_Values/P7MN_CV.zip": {
+      "size": 138585368,
+      "mtime_utc": "2025-10-22T12:47:24Z"
+    },
+    "CFIC_Cash_Values/P7MS_CV.zip": {
+      "size": 198471450,
+      "mtime_utc": "2025-10-22T12:46:37Z"
+    },
+    "CFIC_Cash_Values/PLP6_CV.zip": {
+      "size": 87356407,
+      "mtime_utc": "2025-10-22T12:46:43Z"
+    },
+    "CFIC_Cash_Values/PLP_CV.zip": {
+      "size": 248861719,
+      "mtime_utc": "2025-10-22T12:46:41Z"
+    },
+    "CFIC_Cash_Values/R28G_CV.zip": {
+      "size": 115058169,
+      "mtime_utc": "2025-10-22T12:46:45Z"
+    },
+    "CFIC_Cash_Values/R68G_CV.zip": {
+      "size": 102441586,
+      "mtime_utc": "2025-10-22T12:46:47Z"
+    },
+    "CFIC_Cash_Values/RW8_CV.zip": {
+      "size": 238171788,
+      "mtime_utc": "2025-10-22T12:46:51Z"
+    },
+    "cfic_paths.py": {
+      "size": 1414,
+      "mtime_utc": "2026-07-12T03:03:57Z"
+    },
+    "CFIProposalMaker.zip": {
+      "size": 379100,
+      "mtime_utc": "2026-07-08T22:17:04Z"
+    },
+    "Citizens_Plan_Crosswak.xlsx": {
+      "size": 13012,
+      "mtime_utc": "2026-07-11T21:36:24Z"
+    },
+    "Citizens_Plan_Rate_Requirements_Catalog.xlsx": {
+      "size": 51247,
+      "mtime_utc": "2026-07-12T01:25:01Z"
+    },
+    "docs/_build_plan_rate_inventory.py": {
+      "size": 18484,
+      "mtime_utc": "2026-07-12T02:31:06Z"
+    },
+    "docs/_ocr_extract/BW_PlanCode_Rates_full.txt": {
+      "size": 862,
+      "mtime_utc": "2026-07-12T02:16:32Z"
+    },
+    "docs/_ocr_extract/BW_PlanCode_Rates_p1.png": {
+      "size": 25195,
+      "mtime_utc": "2026-07-12T02:15:21Z"
+    },
+    "docs/_ocr_extract/BW_PlanCode_Rates_p1.txt": {
+      "size": 102,
+      "mtime_utc": "2026-07-12T02:15:42Z"
+    },
+    "docs/_ocr_extract/BW_PlanCode_Rates_p2.png": {
+      "size": 274466,
+      "mtime_utc": "2026-07-12T02:15:42Z"
+    },
+    "docs/_ocr_extract/BW_PlanCode_Rates_p2.txt": {
+      "size": 756,
+      "mtime_utc": "2026-07-12T02:16:32Z"
+    },
+    "docs/_ocr_extract/BWB_971_PlanCode_Rates_full.txt": {
+      "size": 4440,
+      "mtime_utc": "2026-07-12T02:20:10Z"
+    },
+    "docs/_ocr_extract/BWB_971_PlanCode_Rates_p1.png": {
+      "size": 70720,
+      "mtime_utc": "2026-07-12T02:16:32Z"
+    },
+    "docs/_ocr_extract/BWB_971_PlanCode_Rates_p1.txt": {
+      "size": 374,
+      "mtime_utc": "2026-07-12T02:17:06Z"
+    },
+    "docs/_ocr_extract/BWB_971_PlanCode_Rates_p2.png": {
+      "size": 465338,
+      "mtime_utc": "2026-07-12T02:17:06Z"
+    },
+    "docs/_ocr_extract/BWB_971_PlanCode_Rates_p2.txt": {
+      "size": 2408,
+      "mtime_utc": "2026-07-12T02:18:49Z"
+    },
+    "docs/_ocr_extract/BWB_971_PlanCode_Rates_p3.png": {
+      "size": 282465,
+      "mtime_utc": "2026-07-12T02:18:50Z"
+    },
+    "docs/_ocr_extract/BWB_971_PlanCode_Rates_p3.txt": {
+      "size": 1650,
+      "mtime_utc": "2026-07-12T02:20:10Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_full.txt": {
+      "size": 24948,
+      "mtime_utc": "2026-07-12T02:40:42Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p1.png": {
+      "size": 2320641,
+      "mtime_utc": "2026-07-12T02:20:10Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p1.txt": {
+      "size": 2080,
+      "mtime_utc": "2026-07-12T02:21:50Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p10.png": {
+      "size": 448823,
+      "mtime_utc": "2026-07-12T02:34:04Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p10.txt": {
+      "size": 1801,
+      "mtime_utc": "2026-07-12T02:35:29Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p11.png": {
+      "size": 442236,
+      "mtime_utc": "2026-07-12T02:35:30Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p11.txt": {
+      "size": 1747,
+      "mtime_utc": "2026-07-12T02:37:15Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p12.png": {
+      "size": 378333,
+      "mtime_utc": "2026-07-12T02:37:16Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p12.txt": {
+      "size": 1767,
+      "mtime_utc": "2026-07-12T02:38:59Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p13.png": {
+      "size": 374903,
+      "mtime_utc": "2026-07-12T02:38:59Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p13.txt": {
+      "size": 1733,
+      "mtime_utc": "2026-07-12T02:40:42Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p2.png": {
+      "size": 1038312,
+      "mtime_utc": "2026-07-12T02:21:50Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p2.txt": {
+      "size": 2094,
+      "mtime_utc": "2026-07-12T02:23:35Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p3.png": {
+      "size": 796258,
+      "mtime_utc": "2026-07-12T02:23:35Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p3.txt": {
+      "size": 2381,
+      "mtime_utc": "2026-07-12T02:25:28Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p4.png": {
+      "size": 1735187,
+      "mtime_utc": "2026-07-12T02:25:29Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p4.txt": {
+      "size": 2316,
+      "mtime_utc": "2026-07-12T02:27:11Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p5.png": {
+      "size": 816527,
+      "mtime_utc": "2026-07-12T02:27:12Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p5.txt": {
+      "size": 2266,
+      "mtime_utc": "2026-07-12T02:28:55Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p6.png": {
+      "size": 922761,
+      "mtime_utc": "2026-07-12T02:28:56Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p6.txt": {
+      "size": 2056,
+      "mtime_utc": "2026-07-12T02:30:29Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p7.png": {
+      "size": 488582,
+      "mtime_utc": "2026-07-12T02:30:29Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p7.txt": {
+      "size": 1228,
+      "mtime_utc": "2026-07-12T02:31:32Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p8.png": {
+      "size": 448355,
+      "mtime_utc": "2026-07-12T02:31:32Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p8.txt": {
+      "size": 1638,
+      "mtime_utc": "2026-07-12T02:32:44Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p9.png": {
+      "size": 453584,
+      "mtime_utc": "2026-07-12T02:32:44Z"
+    },
+    "docs/_ocr_extract/CurrentNewBusiness_PlanCodes_Rates SheetsHold_p9.txt": {
+      "size": 1793,
+      "mtime_utc": "2026-07-12T02:34:04Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_full.txt": {
+      "size": 19870,
+      "mtime_utc": "2026-07-12T02:59:00Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p1.png": {
+      "size": 207983,
+      "mtime_utc": "2026-07-12T02:40:42Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p1.txt": {
+      "size": 1499,
+      "mtime_utc": "2026-07-12T02:41:42Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p10.png": {
+      "size": 589139,
+      "mtime_utc": "2026-07-12T02:56:36Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p10.txt": {
+      "size": 1531,
+      "mtime_utc": "2026-07-12T02:58:01Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p11.png": {
+      "size": 762460,
+      "mtime_utc": "2026-07-12T02:58:01Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p11.txt": {
+      "size": 801,
+      "mtime_utc": "2026-07-12T02:59:00Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p2.png": {
+      "size": 902272,
+      "mtime_utc": "2026-07-12T02:41:42Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p2.txt": {
+      "size": 2280,
+      "mtime_utc": "2026-07-12T02:43:37Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p3.png": {
+      "size": 2268996,
+      "mtime_utc": "2026-07-12T02:43:38Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p3.txt": {
+      "size": 2578,
+      "mtime_utc": "2026-07-12T02:45:59Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p4.png": {
+      "size": 1339128,
+      "mtime_utc": "2026-07-12T02:46:00Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p4.txt": {
+      "size": 1225,
+      "mtime_utc": "2026-07-12T02:47:29Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p5.png": {
+      "size": 974826,
+      "mtime_utc": "2026-07-12T02:47:30Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p5.txt": {
+      "size": 736,
+      "mtime_utc": "2026-07-12T02:48:39Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p6.png": {
+      "size": 806878,
+      "mtime_utc": "2026-07-12T02:48:39Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p6.txt": {
+      "size": 1103,
+      "mtime_utc": "2026-07-12T02:50:07Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p7.png": {
+      "size": 1243534,
+      "mtime_utc": "2026-07-12T02:50:08Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p7.txt": {
+      "size": 2046,
+      "mtime_utc": "2026-07-12T02:51:51Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p8.png": {
+      "size": 1634375,
+      "mtime_utc": "2026-07-12T02:51:52Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p8.txt": {
+      "size": 2366,
+      "mtime_utc": "2026-07-12T02:53:31Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p9.png": {
+      "size": 1202787,
+      "mtime_utc": "2026-07-12T02:53:31Z"
+    },
+    "docs/_ocr_extract/Drummond_CFI_PlanCodes_Rates_p9.txt": {
+      "size": 3665,
+      "mtime_utc": "2026-07-12T02:56:36Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_full.txt": {
+      "size": 13872,
+      "mtime_utc": "2026-07-12T03:10:01Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p1.png": {
+      "size": 325016,
+      "mtime_utc": "2026-07-12T02:59:00Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p1.txt": {
+      "size": 2377,
+      "mtime_utc": "2026-07-12T03:00:25Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p2.png": {
+      "size": 710162,
+      "mtime_utc": "2026-07-12T03:00:25Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p2.txt": {
+      "size": 1984,
+      "mtime_utc": "2026-07-12T03:01:53Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p3.png": {
+      "size": 692848,
+      "mtime_utc": "2026-07-12T03:01:54Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p3.txt": {
+      "size": 2259,
+      "mtime_utc": "2026-07-12T03:03:51Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p4.png": {
+      "size": 321201,
+      "mtime_utc": "2026-07-12T03:03:51Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p4.txt": {
+      "size": 1185,
+      "mtime_utc": "2026-07-12T03:05:04Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p5.png": {
+      "size": 554621,
+      "mtime_utc": "2026-07-12T03:05:04Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p5.txt": {
+      "size": 2491,
+      "mtime_utc": "2026-07-12T03:06:42Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p6.png": {
+      "size": 572050,
+      "mtime_utc": "2026-07-12T03:06:43Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p6.txt": {
+      "size": 1827,
+      "mtime_utc": "2026-07-12T03:08:23Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p7.png": {
+      "size": 544220,
+      "mtime_utc": "2026-07-12T03:08:23Z"
+    },
+    "docs/_ocr_extract/Life_PlanCodes_Rates_p7.txt": {
+      "size": 1725,
+      "mtime_utc": "2026-07-12T03:10:01Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_full.txt": {
+      "size": 13955,
+      "mtime_utc": "2026-07-12T03:20:28Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p1.png": {
+      "size": 406253,
+      "mtime_utc": "2026-07-12T03:10:02Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p1.txt": {
+      "size": 2864,
+      "mtime_utc": "2026-07-12T03:11:42Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p2.png": {
+      "size": 1031780,
+      "mtime_utc": "2026-07-12T03:11:43Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p2.txt": {
+      "size": 2057,
+      "mtime_utc": "2026-07-12T03:13:36Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p3.png": {
+      "size": 1711480,
+      "mtime_utc": "2026-07-12T03:13:36Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p3.txt": {
+      "size": 2243,
+      "mtime_utc": "2026-07-12T03:15:25Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p4.png": {
+      "size": 1226720,
+      "mtime_utc": "2026-07-12T03:15:26Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p4.txt": {
+      "size": 2561,
+      "mtime_utc": "2026-07-12T03:17:25Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p5.png": {
+      "size": 1048714,
+      "mtime_utc": "2026-07-12T03:17:25Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p5.txt": {
+      "size": 2105,
+      "mtime_utc": "2026-07-12T03:18:59Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p6.png": {
+      "size": 871032,
+      "mtime_utc": "2026-07-12T03:19:00Z"
+    },
+    "docs/_ocr_extract/Quest_PermaLife_PlanCode_Rates_p6.txt": {
+      "size": 2105,
+      "mtime_utc": "2026-07-12T03:20:28Z"
+    },
+    "docs/_ocr_extract/Term_PlanCodes_Rates_full.txt": {
+      "size": 1296,
+      "mtime_utc": "2026-07-12T03:21:45Z"
+    },
+    "docs/_ocr_extract/Term_PlanCodes_Rates_p1.png": {
+      "size": 105661,
+      "mtime_utc": "2026-07-12T03:20:28Z"
+    },
+    "docs/_ocr_extract/Term_PlanCodes_Rates_p1.txt": {
+      "size": 556,
+      "mtime_utc": "2026-07-12T03:20:57Z"
+    },
+    "docs/_ocr_extract/Term_PlanCodes_Rates_p2.png": {
+      "size": 2136216,
+      "mtime_utc": "2026-07-12T03:20:58Z"
+    },
+    "docs/_ocr_extract/Term_PlanCodes_Rates_p2.txt": {
+      "size": 736,
+      "mtime_utc": "2026-07-12T03:21:45Z"
+    },
+    "docs/access_app_walkthrough.md": {
+      "size": 3847,
+      "mtime_utc": "2026-07-11T14:03:55Z"
+    },
+    "docs/BW_PlanCode_Rates.pdf": {
+      "size": 39799,
+      "mtime_utc": "2025-10-22T12:47:09Z"
+    },
+    "docs/BWB_971_PlanCode_Rates.pdf": {
+      "size": 110785,
+      "mtime_utc": "2025-10-22T12:47:09Z"
+    },
+    "docs/cash_value_extraction_plan.md": {
+      "size": 15748,
+      "mtime_utc": "2026-07-11T21:43:32Z"
+    },
+    "docs/cifi0004.dbf": {
+      "size": 141484,
+      "mtime_utc": "2025-09-23T19:42:57Z"
+    },
+    "docs/cifi0007.DBF": {
+      "size": 33223660,
+      "mtime_utc": "2025-09-29T14:58:32Z"
+    },
+    "docs/cifianu1.dbf": {
+      "size": 7089060,
+      "mtime_utc": "2025-09-22T16:41:46Z"
+    },
+    "docs/CurrentNewBusiness_PlanCodes_Rates SheetsHold.pdf": {
+      "size": 1100200,
+      "mtime_utc": "2025-10-22T12:47:10Z"
+    },
+    "docs/Drummond_CFI_PlanCodes_Rates.pdf": {
+      "size": 1023562,
+      "mtime_utc": "2025-10-22T12:47:10Z"
+    },
+    "docs/Life_PlanCodes_Rates.pdf": {
+      "size": 511910,
+      "mtime_utc": "2025-10-22T12:47:11Z"
+    },
+    "docs/plan_rate_inventory.csv": {
+      "size": 15660,
+      "mtime_utc": "2026-07-12T02:31:14Z"
+    },
+    "docs/plan_rate_source_index.md": {
+      "size": 12877,
+      "mtime_utc": "2026-07-12T02:31:14Z"
+    },
+    "docs/product_catalog.md": {
+      "size": 2803,
+      "mtime_utc": "2026-07-11T14:03:55Z"
+    },
+    "docs/Quest_PermaLife_PlanCode_Rates.pdf": {
+      "size": 666066,
+      "mtime_utc": "2025-10-22T12:46:43Z"
+    },
+    "docs/target_platform.md": {
+      "size": 1541,
+      "mtime_utc": "2026-07-11T14:03:55Z"
+    },
+    "docs/Term_PlanCodes_Rates.pdf": {
+      "size": 265767,
+      "mtime_utc": "2025-10-22T12:46:51Z"
+    },
+    "extracted/AgentName.csv": {
+      "size": 32,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted/CFIProposalMakerRev2.mdb": {
+      "size": 1843200,
+      "mtime_utc": "2025-10-28T13:00:36Z"
+    },
+    "extracted/FiveYearTerm.csv": {
+      "size": 9299,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted/FiveYearTermRider.csv": {
+      "size": 4347,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted/LPI.csv": {
+      "size": 1465,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted/PermaLife7AdultBefore.csv": {
+      "size": 15074,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted/PermaLife7JuvenileBefore.csv": {
+      "size": 2059,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted/PermaLife8Adult.csv": {
+      "size": 19934,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted/PermaLife8Juvenile.csv": {
+      "size": 2962,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted/Quest.csv": {
+      "size": 9382,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted/table_inventory.csv": {
+      "size": 2257,
+      "mtime_utc": "2026-07-11T14:03:55Z"
+    },
+    "extracted/TenYearTerm.csv": {
+      "size": 9192,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted/TenYearTermRider.csv": {
+      "size": 4271,
+      "mtime_utc": "2026-07-08T22:28:04Z"
+    },
+    "extracted_green_sheets/staging/P7MN/18.csv": {
+      "size": 10988,
+      "mtime_utc": "2026-07-11T23:12:56Z"
+    },
+    "extracted_pdf_rates/staging/P7MN/P7MN_p4_M_NS.csv": {
+      "size": 7321,
+      "mtime_utc": "2026-07-12T02:50:29Z"
+    },
+    "extracted_plans/staging/plans_master.csv": {
+      "size": 31559,
+      "mtime_utc": "2026-07-12T03:13:24Z"
+    },
+    "extracted_reserve/staging/.822/reserve_grid.csv": {
+      "size": 229,
+      "mtime_utc": "2026-07-12T03:09:00Z"
+    },
+    "extracted_reserve/staging/0000/reserve_grid.csv": {
+      "size": 212,
+      "mtime_utc": "2026-07-12T03:13:19Z"
+    },
+    "extracted_reserve/staging/057/reserve_grid.csv": {
+      "size": 216,
+      "mtime_utc": "2026-07-12T03:13:19Z"
+    },
+    "extracted_reserve/staging/057F/reserve_grid.csv": {
+      "size": 215,
+      "mtime_utc": "2026-07-12T03:13:19Z"
+    },
+    "extracted_reserve/staging/057G/reserve_grid.csv": {
+      "size": 27876,
+      "mtime_utc": "2026-07-12T03:13:19Z"
+    },
+    "extracted_reserve/staging/10/reserve_grid.csv": {
+      "size": 215,
+      "mtime_utc": "2026-07-12T03:13:19Z"
+    },
+    "extracted_reserve/staging/101G/reserve_grid.csv": {
+      "size": 224,
+      "mtime_utc": "2026-07-12T03:13:19Z"
+    },
+    "extracted_reserve/staging/3PFN/reserve_grid.csv": {
+      "size": 421273,
+      "mtime_utc": "2026-07-12T03:13:19Z"
+    },
+    "extracted_reserve/staging/3PFS/reserve_grid.csv": {
+      "size": 279654,
+      "mtime_utc": "2026-07-12T03:13:19Z"
+    },
+    "extracted_reserve/staging/3PMN/reserve_grid.csv": {
+      "size": 421893,
+      "mtime_utc": "2026-07-12T03:13:19Z"
+    },
+    "extracted_reserve/staging/3PMS/reserve_grid.csv": {
+      "size": 280129,
+      "mtime_utc": "2026-07-12T03:13:19Z"
+    },
+    "extracted_reserve/staging/3R1F/reserve_grid.csv": {
+      "size": 259859,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/3R1M/reserve_grid.csv": {
+      "size": 260630,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/3R2G/reserve_grid.csv": {
+      "size": 145905,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/3R5F/reserve_grid.csv": {
+      "size": 247679,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/3R5M/reserve_grid.csv": {
+      "size": 248319,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/3R6G/reserve_grid.csv": {
+      "size": 192085,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/3RWG/reserve_grid.csv": {
+      "size": 452250,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/3X1F/reserve_grid.csv": {
+      "size": 259859,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/3X1M/reserve_grid.csv": {
+      "size": 260630,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/3X5F/reserve_grid.csv": {
+      "size": 247679,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/3X5M/reserve_grid.csv": {
+      "size": 248319,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/6/reserve_grid.csv": {
+      "size": 205,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/9PFN/reserve_grid.csv": {
+      "size": 415790,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/9PFS/reserve_grid.csv": {
+      "size": 417376,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/9PMN/reserve_grid.csv": {
+      "size": 416380,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/9PMS/reserve_grid.csv": {
+      "size": 417851,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/9R2G/reserve_grid.csv": {
+      "size": 396513,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/9R6G/reserve_grid.csv": {
+      "size": 362181,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/9RWG/reserve_grid.csv": {
+      "size": 429348,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/A6N/reserve_grid.csv": {
+      "size": 284,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/ABFN/reserve_grid.csv": {
+      "size": 289069,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/ABFS/reserve_grid.csv": {
+      "size": 408501,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/ABMN/reserve_grid.csv": {
+      "size": 289750,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/ABMS/reserve_grid.csv": {
+      "size": 409863,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/ALP2/reserve_grid.csv": {
+      "size": 152464,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/ALP6/reserve_grid.csv": {
+      "size": 115862,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/B1FN/reserve_grid.csv": {
+      "size": 37928,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/B1FS/reserve_grid.csv": {
+      "size": 33925,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/B1MN/reserve_grid.csv": {
+      "size": 38007,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/B1MS/reserve_grid.csv": {
+      "size": 33993,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/B2FN/reserve_grid.csv": {
+      "size": 51440,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/B2FS/reserve_grid.csv": {
+      "size": 51741,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/B2MN/reserve_grid.csv": {
+      "size": 51504,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/B2MS/reserve_grid.csv": {
+      "size": 51865,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/BA5N/reserve_grid.csv": {
+      "size": 218,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/BA6B/reserve_grid.csv": {
+      "size": 222,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/BA6N/reserve_grid.csv": {
+      "size": 106993,
+      "mtime_utc": "2026-07-12T03:13:20Z"
+    },
+    "extracted_reserve/staging/BLFN/reserve_grid.csv": {
+      "size": 311400,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/BLFS/reserve_grid.csv": {
+      "size": 312876,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/BLMN/reserve_grid.csv": {
+      "size": 311814,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/BLMS/reserve_grid.csv": {
+      "size": 313255,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/BS6N/reserve_grid.csv": {
+      "size": 211,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/CP05/reserve_grid.csv": {
+      "size": 432724,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/CP10/reserve_grid.csv": {
+      "size": 427170,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/CP20/reserve_grid.csv": {
+      "size": 422617,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/CPSP/reserve_grid.csv": {
+      "size": 440026,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DPFN/reserve_grid.csv": {
+      "size": 416368,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DPFS/reserve_grid.csv": {
+      "size": 417863,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DPMN/reserve_grid.csv": {
+      "size": 416930,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DPMS/reserve_grid.csv": {
+      "size": 418310,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DR2G/reserve_grid.csv": {
+      "size": 396933,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DR6G/reserve_grid.csv": {
+      "size": 362650,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DRWG/reserve_grid.csv": {
+      "size": 429870,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DX1F/reserve_grid.csv": {
+      "size": 102613,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DX1M/reserve_grid.csv": {
+      "size": 101926,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DX5F/reserve_grid.csv": {
+      "size": 105396,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/DX5M/reserve_grid.csv": {
+      "size": 104750,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/FW5/reserve_grid.csv": {
+      "size": 300,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/GDB/reserve_grid.csv": {
+      "size": 399925,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/HPFN/reserve_grid.csv": {
+      "size": 416451,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/HPFS/reserve_grid.csv": {
+      "size": 417916,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/HPMN/reserve_grid.csv": {
+      "size": 417005,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/HPMS/reserve_grid.csv": {
+      "size": 418362,
+      "mtime_utc": "2026-07-12T03:13:21Z"
+    },
+    "extracted_reserve/staging/HR2G/reserve_grid.csv": {
+      "size": 396973,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/HR6G/reserve_grid.csv": {
+      "size": 362692,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/HRWG/reserve_grid.csv": {
+      "size": 429908,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/IFF1/reserve_grid.csv": {
+      "size": 452014,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/IFF5/reserve_grid.csv": {
+      "size": 456253,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/IFFS/reserve_grid.csv": {
+      "size": 428083,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/LBR/reserve_grid.csv": {
+      "size": 209,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/LPI2/reserve_grid.csv": {
+      "size": 70532,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/LPI6/reserve_grid.csv": {
+      "size": 197812,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/LPIS/reserve_grid.csv": {
+      "size": 468817,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P7FN/reserve_grid.csv": {
+      "size": 416496,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P7FS/reserve_grid.csv": {
+      "size": 417119,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P7MN/reserve_grid.csv": {
+      "size": 417343,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P7MS/reserve_grid.csv": {
+      "size": 418393,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P8FJ/reserve_grid.csv": {
+      "size": 422177,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P8FN/reserve_grid.csv": {
+      "size": 421408,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P8FS/reserve_grid.csv": {
+      "size": 422177,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P8MJ/reserve_grid.csv": {
+      "size": 423406,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P8MN/reserve_grid.csv": {
+      "size": 422192,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P8MS/reserve_grid.csv": {
+      "size": 423406,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P9FJ/reserve_grid.csv": {
+      "size": 149685,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P9FN/reserve_grid.csv": {
+      "size": 420821,
+      "mtime_utc": "2026-07-12T03:13:22Z"
+    },
+    "extracted_reserve/staging/P9FS/reserve_grid.csv": {
+      "size": 422070,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/P9MJ/reserve_grid.csv": {
+      "size": 149803,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/P9MN/reserve_grid.csv": {
+      "size": 421515,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/P9MS/reserve_grid.csv": {
+      "size": 422631,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/PLP/reserve_grid.csv": {
+      "size": 87784,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/PLP6/reserve_grid.csv": {
+      "size": 180549,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q1FN/reserve_grid.csv": {
+      "size": 38081,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q1FS/reserve_grid.csv": {
+      "size": 34074,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q1MN/reserve_grid.csv": {
+      "size": 38210,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q1MS/reserve_grid.csv": {
+      "size": 34134,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q2FN/reserve_grid.csv": {
+      "size": 60142,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q2FS/reserve_grid.csv": {
+      "size": 51964,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q2MN/reserve_grid.csv": {
+      "size": 60257,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q2MS/reserve_grid.csv": {
+      "size": 52082,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q3FN/reserve_grid.csv": {
+      "size": 65617,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q3FS/reserve_grid.csv": {
+      "size": 53234,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q3MN/reserve_grid.csv": {
+      "size": 65720,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/Q3MS/reserve_grid.csv": {
+      "size": 53321,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/QLFN/reserve_grid.csv": {
+      "size": 312219,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/QLFS/reserve_grid.csv": {
+      "size": 313670,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/QLMN/reserve_grid.csv": {
+      "size": 312861,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/QLMS/reserve_grid.csv": {
+      "size": 314184,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/R28/reserve_grid.csv": {
+      "size": 79931,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/R28A/reserve_grid.csv": {
+      "size": 413583,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/R28G/reserve_grid.csv": {
+      "size": 82741,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/R29G/reserve_grid.csv": {
+      "size": 425262,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/R68/reserve_grid.csv": {
+      "size": 84848,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/R68G/reserve_grid.csv": {
+      "size": 82628,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/R69G/reserve_grid.csv": {
+      "size": 374265,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/RW18/reserve_grid.csv": {
+      "size": 93965,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/RW28/reserve_grid.csv": {
+      "size": 82114,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/RW8/reserve_grid.csv": {
+      "size": 79304,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/RW8A/reserve_grid.csv": {
+      "size": 414037,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/RW8G/reserve_grid.csv": {
+      "size": 82114,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/RW9G/reserve_grid.csv": {
+      "size": 421944,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/S28G/reserve_grid.csv": {
+      "size": 116461,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/SLPW/reserve_grid.csv": {
+      "size": 220,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/TAF/reserve_grid.csv": {
+      "size": 189,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/TAFA/reserve_grid.csv": {
+      "size": 29348,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/TAFB/reserve_grid.csv": {
+      "size": 54354,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/TAFC/reserve_grid.csv": {
+      "size": 75447,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "extracted_reserve/staging/TAFD/reserve_grid.csv": {
+      "size": 92398,
+      "mtime_utc": "2026-07-12T03:13:23Z"
+    },
+    "Issue_Log/CFIC_Issue_01/CFIC_Issue_01_Dependency_Gate.md": {
+      "size": 4730,
+      "mtime_utc": "2026-07-11T21:47:39Z"
+    },
+    "Issue_Log/CFIC_Issue_01/CFIC_Issue_01_Implementation_Notes.md": {
+      "size": 3110,
+      "mtime_utc": "2026-07-11T23:13:51Z"
+    },
+    "Issue_Log/CFIC_Issue_01/CFIC_Issue_01_Intake_Summary.md": {
+      "size": 5390,
+      "mtime_utc": "2026-07-11T21:47:11Z"
+    },
+    "Issue_Log/CFIC_Issue_01/CFIC_Issue_01_Open_Business_Questions.md": {
+      "size": 3712,
+      "mtime_utc": "2026-07-11T21:47:32Z"
+    },
+    "Issue_Log/CFIC_Issue_01/CFIC_Issue_01_Planning_Report.md": {
+      "size": 14892,
+      "mtime_utc": "2026-07-11T21:51:14Z"
+    },
+    "Issue_Log/CFIC_Issue_01/CFIC_Issue_01_Risk_Review_Report.md": {
+      "size": 12163,
+      "mtime_utc": "2026-07-11T21:51:16Z"
+    },
+    "Issue_Log/CFIC_Issue_01/CFIC_Issue_01_Scope_Decisions.md": {
+      "size": 1655,
+      "mtime_utc": "2026-07-11T21:51:14Z"
+    },
+    "Issue_Log/CFIC_Issue_01/CFIC_Issue_01_Tracking_Sheet.csv": {
+      "size": 441,
+      "mtime_utc": "2026-07-11T23:13:54Z"
+    },
+    "Issue_Log/CFIC_Issue_01/evidence/cfic_issue01_crosswalk_match.csv": {
+      "size": 3462,
+      "mtime_utc": "2026-07-11T21:46:49Z"
+    },
+    "Issue_Log/CFIC_Issue_01/evidence/cfic_issue01_p7mn_validation.csv": {
+      "size": 249,
+      "mtime_utc": "2026-07-11T23:13:51Z"
+    },
+    "Issue_Log/CFIC_Issue_01/evidence/cfic_issue01_pdf_inventory.csv": {
+      "size": 68588,
+      "mtime_utc": "2026-07-11T21:46:45Z"
+    },
+    "Issue_Log/CFIC_Issue_01/evidence/cfic_issue01_product_summary.csv": {
+      "size": 1880,
+      "mtime_utc": "2026-07-11T21:46:45Z"
+    },
+    "Issue_Log/CFIC_Issue_01/evidence/cfic_issue01_risk_impact_summary.csv": {
+      "size": 283,
+      "mtime_utc": "2026-07-11T21:49:28Z"
+    },
+    "Issue_Log/CFIC_Issue_01/evidence/cfic_issue01_risk_rollout_tiers.csv": {
+      "size": 1810,
+      "mtime_utc": "2026-07-11T21:49:28Z"
+    },
+    "Issue_Log/CFIC_Issue_01/requirements-cfic-ocr.txt": {
+      "size": 232,
+      "mtime_utc": "2026-07-11T23:13:47Z"
+    },
+    "Issue_Log/CFIC_Issue_01/scripts/__pycache__/cfic_green_sheet_template.cpython-314.pyc": {
+      "size": 2275,
+      "mtime_utc": "2026-07-11T22:55:06Z"
+    },
+    "Issue_Log/CFIC_Issue_01/scripts/cfic_green_sheet_template.py": {
+      "size": 1175,
+      "mtime_utc": "2026-07-11T22:54:36Z"
+    },
+    "Issue_Log/CFIC_Issue_01/scripts/extract_cfic_green_sheets.py": {
+      "size": 8543,
+      "mtime_utc": "2026-07-11T22:54:31Z"
+    },
+    "Issue_Log/CFIC_Issue_01/scripts/research_cfic_issue01_inventory.py": {
+      "size": 5164,
+      "mtime_utc": "2026-07-11T21:47:06Z"
+    },
+    "Issue_Log/CFIC_Issue_01/scripts/risk_review_cfic_issue01.py": {
+      "size": 4010,
+      "mtime_utc": "2026-07-11T21:49:33Z"
+    },
+    "Issue_Log/CFIC_Issue_01/scripts/validate_cfic_issue01_p7mn_pilot.py": {
+      "size": 3469,
+      "mtime_utc": "2026-07-11T22:42:03Z"
+    },
+    "Issue_Log/CFIC_Issue_02/CFIC_Issue_02_Implementation_Notes.md": {
+      "size": 2000,
+      "mtime_utc": "2026-07-12T02:42:06Z"
+    },
+    "Issue_Log/CFIC_Issue_02/evidence/cfic_issue02_pdf_validation.csv": {
+      "size": 17952,
+      "mtime_utc": "2026-07-12T02:50:39Z"
+    },
+    "Issue_Log/CFIC_Issue_02/requirements-cfic-pdf.txt": {
+      "size": 70,
+      "mtime_utc": "2026-07-12T02:42:04Z"
+    },
+    "Issue_Log/CFIC_Issue_02/scripts/__pycache__/cfic_permalife7_template.cpython-314.pyc": {
+      "size": 2299,
+      "mtime_utc": "2026-07-12T02:42:19Z"
+    },
+    "Issue_Log/CFIC_Issue_02/scripts/cfic_permalife7_template.py": {
+      "size": 2394,
+      "mtime_utc": "2026-07-12T02:41:50Z"
+    },
+    "Issue_Log/CFIC_Issue_02/scripts/emit_cfic_pdf_rates.py": {
+      "size": 3937,
+      "mtime_utc": "2026-07-12T02:42:11Z"
+    },
+    "Issue_Log/CFIC_Issue_02/scripts/extract_cfic_pdf_rates.py": {
+      "size": 6650,
+      "mtime_utc": "2026-07-12T02:50:46Z"
+    },
+    "Issue_Log/CFIC_Issue_02/scripts/validate_cfic_pdf_permalife7.py": {
+      "size": 3934,
+      "mtime_utc": "2026-07-12T02:42:11Z"
+    },
+    "Issue_Log/CFIC_Issue_03/business_inputs/cfic_rate_key_assumptions.csv": {
+      "size": 16204,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "Issue_Log/CFIC_Issue_03/CFIC_Issue_03_Implementation_Notes.md": {
+      "size": 3089,
+      "mtime_utc": "2026-07-12T03:03:02Z"
+    },
+    "Issue_Log/CFIC_Issue_03/evidence/cfic_issue03_p7mn_validation.csv": {
+      "size": 302,
+      "mtime_utc": "2026-07-12T03:04:16Z"
+    },
+    "Issue_Log/CFIC_Issue_03/scripts/__pycache__/cfic_crosswalk.cpython-314.pyc": {
+      "size": 5554,
+      "mtime_utc": "2026-07-12T03:08:46Z"
+    },
+    "Issue_Log/CFIC_Issue_03/scripts/__pycache__/cfic_dbf_reader.cpython-314.pyc": {
+      "size": 2356,
+      "mtime_utc": "2026-07-12T02:59:28Z"
+    },
+    "Issue_Log/CFIC_Issue_03/scripts/cfic_crosswalk.py": {
+      "size": 3357,
+      "mtime_utc": "2026-07-12T03:08:21Z"
+    },
+    "Issue_Log/CFIC_Issue_03/scripts/cfic_dbf_reader.py": {
+      "size": 1280,
+      "mtime_utc": "2026-07-12T02:58:50Z"
+    },
+    "Issue_Log/CFIC_Issue_03/scripts/emit_cfic_reserve_rates.py": {
+      "size": 973,
+      "mtime_utc": "2026-07-12T03:02:57Z"
+    },
+    "Issue_Log/CFIC_Issue_03/scripts/extract_cfic_plans_dbf.py": {
+      "size": 2528,
+      "mtime_utc": "2026-07-12T03:08:27Z"
+    },
+    "Issue_Log/CFIC_Issue_03/scripts/extract_cfic_reserve_dbf.py": {
+      "size": 5026,
+      "mtime_utc": "2026-07-12T03:12:57Z"
+    },
+    "Issue_Log/CFIC_Issue_03/scripts/validate_cfic_reserve_rates.py": {
+      "size": 4287,
+      "mtime_utc": "2026-07-12T02:59:09Z"
+    },
+    "Issue_Log/README.md": {
+      "size": 1615,
+      "mtime_utc": "2026-07-12T03:02:59Z"
+    },
+    "output/rates/QuikCvs.csv": {
+      "size": 3930963,
+      "mtime_utc": "2026-07-12T03:13:45Z"
+    },
+    "output/rates/QuikNps.csv": {
+      "size": 3819103,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "output/rates/QuikPlBd.csv": {
+      "size": 3980,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "output/rates/QuikPlCv.csv": {
+      "size": 4810,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "output/rates/QuikPlGd.csv": {
+      "size": 2727,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "output/rates/QuikPlNb.csv": {
+      "size": 3462,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "output/rates/QuikPlSt.csv": {
+      "size": 5594,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "output/rates/QuikPlTv.csv": {
+      "size": 5239,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "output/rates/QuikPlUw.csv": {
+      "size": 3075,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "output/rates/QuikTvs.csv": {
+      "size": 3488164,
+      "mtime_utc": "2026-07-12T03:13:46Z"
+    },
+    "output/README.md": {
+      "size": 1480,
+      "mtime_utc": "2026-07-12T03:02:51Z"
+    },
+    "README.md": {
+      "size": 1663,
+      "mtime_utc": "2026-07-12T03:03:00Z"
+    },
+    "Reports/emit_summary.json": {
+      "size": 3206,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "Reports/rate_csv_manifest.csv": {
+      "size": 7697,
+      "mtime_utc": "2026-07-12T03:13:48Z"
+    },
+    "Reports/reserve_grid_collisions.txt": {
+      "size": 112,
+      "mtime_utc": "2026-07-12T03:12:41Z"
+    },
+    "RUN_GUIDE.md": {
+      "size": 3521,
+      "mtime_utc": "2026-07-12T03:13:59Z"
+    },
+    "scripts/__pycache__/cfic_rate_publish.cpython-314.pyc": {
+      "size": 10295,
+      "mtime_utc": "2026-07-12T03:04:16Z"
+    },
+    "scripts/__pycache__/cfic_reserve_build.cpython-314.pyc": {
+      "size": 10794,
+      "mtime_utc": "2026-07-12T03:13:06Z"
+    },
+    "scripts/build_cfic_assumption_template.py": {
+      "size": 1935,
+      "mtime_utc": "2026-07-12T03:08:30Z"
+    },
+    "scripts/cfic_rate_publish.py": {
+      "size": 5739,
+      "mtime_utc": "2026-07-12T03:03:57Z"
+    },
+    "scripts/cfic_reserve_build.py": {
+      "size": 6760,
+      "mtime_utc": "2026-07-12T03:13:00Z"
+    },
+    "scripts/package_cfic_rates.py": {
+      "size": 6707,
+      "mtime_utc": "2026-07-12T03:08:37Z"
+    },
+    "source/CFIProposalMaker.zip": {
+      "size": 379100,
+      "mtime_utc": "2026-07-08T22:17:04Z"
+    },
+    "source/CFIProposalMakerRev2.mdb": {
+      "size": 1843200,
+      "mtime_utc": "2025-10-28T13:00:36Z"
+    },
+    "SourceData_11-18-2024/Agent.cpy": {
+      "size": 1566,
+      "mtime_utc": "2024-08-15T17:33:30Z"
+    },
+    "SourceData_11-18-2024/Agent.txt": {
+      "size": 960,
+      "mtime_utc": "2024-08-15T18:12:16Z"
+    },
+    "SourceData_11-18-2024/AnnPrem.txt": {
+      "size": 470,
+      "mtime_utc": "2024-08-15T18:22:10Z"
+    },
+    "SourceData_11-18-2024/AnnPrems,cpy": {
+      "size": 911,
+      "mtime_utc": "2024-08-15T17:50:18Z"
+    },
+    "SourceData_11-18-2024/APPRINT20230928.Zip": {
+      "size": 517919,
+      "mtime_utc": "2024-11-18T20:02:52Z"
+    },
+    "SourceData_11-18-2024/CFIdata.zip": {
+      "size": 4482,
+      "mtime_utc": "2024-08-15T20:51:35Z"
+    },
+    "SourceData_11-18-2024/CIFIINSU.pdf": {
+      "size": 11648,
+      "mtime_utc": "2024-06-08T21:07:02Z"
+    },
+    "SourceData_11-18-2024/CIFIPAYR.pdf": {
+      "size": 10886,
+      "mtime_utc": "2024-06-10T18:47:14Z"
+    },
+    "SourceData_11-18-2024/CIFIRIDR.pdf": {
+      "size": 10828,
+      "mtime_utc": "2024-06-08T21:17:34Z"
+    },
+    "SourceData_11-18-2024/CITIZENS.ZIP": {
+      "size": 38442,
+      "mtime_utc": "2024-06-14T18:45:50Z"
+    },
+    "SourceData_11-18-2024/DCI514.PT1": {
+      "size": 177146,
+      "mtime_utc": "2023-12-29T16:05:12Z"
+    },
+    "SourceData_11-18-2024/DCI524A.PT1": {
+      "size": 406401,
+      "mtime_utc": "2023-12-29T16:07:36Z"
+    },
+    "SourceData_11-18-2024/DCI524B.PT1": {
+      "size": 252038,
+      "mtime_utc": "2023-12-29T16:07:36Z"
+    },
+    "SourceData_11-18-2024/DCI524C.PT1": {
+      "size": 2896107,
+      "mtime_utc": "2023-12-29T16:07:36Z"
+    },
+    "SourceData_11-18-2024/DCI534.PT1": {
+      "size": 500,
+      "mtime_utc": "2023-12-29T16:05:56Z"
+    },
+    "SourceData_11-18-2024/DCI544.PT1": {
+      "size": 8452,
+      "mtime_utc": "2023-12-29T16:08:14Z"
+    },
+    "SourceData_11-18-2024/DCI554.PT1": {
+      "size": 3294908,
+      "mtime_utc": "2023-09-28T18:32:40Z"
+    },
+    "SourceData_11-18-2024/DCI564.PT1": {
+      "size": 250719,
+      "mtime_utc": "2023-09-28T18:32:50Z"
+    },
+    "SourceData_11-18-2024/DCI585D.PT1": {
+      "size": 175799,
+      "mtime_utc": "2023-12-29T16:07:52Z"
+    },
+    "SourceData_11-18-2024/DCI800.PT1": {
+      "size": 500,
+      "mtime_utc": "2023-12-29T16:08:16Z"
+    },
+    "SourceData_11-18-2024/DRPMASEY.DAT": {
+      "size": 942,
+      "mtime_utc": "2024-06-10T19:11:02Z"
+    },
+    "SourceData_11-18-2024/Office.cpy": {
+      "size": 642,
+      "mtime_utc": "2024-08-15T17:43:16Z"
+    },
+    "SourceData_11-18-2024/Office.txt": {
+      "size": 1410,
+      "mtime_utc": "2024-08-15T18:14:48Z"
+    },
+    "SourceData_11-18-2024/Plan.cpy": {
+      "size": 6391,
+      "mtime_utc": "2024-08-15T17:24:20Z"
+    },
+    "SourceData_11-18-2024/Plan.txt": {
+      "size": 4670,
+      "mtime_utc": "2024-08-15T18:06:18Z"
+    },
+    "SourceData_11-18-2024/PRINT.pdf": {
+      "size": 10717,
+      "mtime_utc": "2024-06-15T16:28:50Z"
+    },
+    "SourceData_11-18-2024/PRINT20231229.Zip": {
+      "size": 684412,
+      "mtime_utc": "2024-11-18T20:02:57Z"
+    },
+    "SourceData_11-18-2024/Rate.cpy": {
+      "size": 3029,
+      "mtime_utc": "2024-08-15T16:41:50Z"
+    },
+    "SourceData_11-18-2024/Rate.txt": {
+      "size": 910,
+      "mtime_utc": "2024-08-15T18:19:48Z"
+    },
+    "tracking/_build_rate_load_tracker.py": {
+      "size": 10493,
+      "mtime_utc": "2026-07-12T01:30:03Z"
+    },
+    "tracking/CFIC_Rate_Load_Status_Overrides.csv": {
+      "size": 871,
+      "mtime_utc": "2026-07-12T01:30:08Z"
+    },
+    "tracking/CFIC_Rate_Load_Summary.csv": {
+      "size": 178,
+      "mtime_utc": "2026-07-12T01:30:26Z"
+    },
+    "tracking/CFIC_Rate_Load_Tracker.csv": {
+      "size": 390517,
+      "mtime_utc": "2026-07-12T01:30:26Z"
+    },
+    "tracking/CFIC_Rate_Load_Tracker_Wave1.csv": {
+      "size": 192090,
+      "mtime_utc": "2026-07-12T01:30:26Z"
+    },
+    "tracking/README.md": {
+      "size": 5682,
+      "mtime_utc": "2026-07-12T01:30:16Z"
+    },
+    "validation/cfic_issue03_p7mn_validation.csv": {
+      "size": 302,
+      "mtime_utc": "2026-07-12T03:04:16Z"
+    },
+    "~$Citizens_Plan_Crosswak.xlsx": {
+      "size": 165,
+      "mtime_utc": "2026-07-11T21:38:12Z"
+    }
+  },
+  "comparison_to_stage2a_post": {
+    "file_count_delta": 0,
+    "directory_count_delta": 0,
+    "total_bytes_delta": 0,
+    "added_files": [],
+    "missing_files": [],
+    "modified_mtime_files": [],
+    "source_unchanged": true
+  },
+  "stage2b_source_integrity": "PASS"
+}

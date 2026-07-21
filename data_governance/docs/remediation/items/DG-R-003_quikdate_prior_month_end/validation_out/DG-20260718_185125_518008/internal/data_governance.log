@@ -1,0 +1,27 @@
+[2026-07-18 18:51:25] QLAdmin Data Governance run starting
+[2026-07-18 18:51:25] Run ID: DG-20260718_185125_518008
+[2026-07-18 18:51:25] Data region: Q:\CSO\CSO_Test_6_30_2026
+[2026-07-18 18:51:25] Output base: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-003_quikdate_prior_month_end\validation_out
+[2026-07-18 18:51:25] Run folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-003_quikdate_prior_month_end\validation_out\DG-20260718_185125_518008
+[2026-07-18 18:51:25] Review scope: item
+[2026-07-18 18:51:25] Source DBF files will be opened read-only; source files are never modified
+[2026-07-18 18:51:25] Executing DG-QUIKDATE-001 — PAC Bill Date Must Be Set to the Previous Month End
+[2026-07-18 18:51:25] Finished DG-QUIKDATE-001: status=PASS passed=1 failed=0 errors=0
+[2026-07-18 18:51:25] Executing DG-QUIKDATE-002 — Direct Bill Date Must Be Set to the Previous Month End
+[2026-07-18 18:51:25] Finished DG-QUIKDATE-002: status=PASS passed=1 failed=0 errors=0
+[2026-07-18 18:51:25] Executing DG-QUIKDATE-003 — Reinsurance Bill Date Must Be Set to the Previous Month End
+[2026-07-18 18:51:25] Finished DG-QUIKDATE-003: status=PASS passed=1 failed=0 errors=0
+[2026-07-18 18:51:25] Executing DG-QUIKDATE-004 — ACH File ID Must Default to Zero
+[2026-07-18 18:51:25] Finished DG-QUIKDATE-004: status=PASS passed=1 failed=0 errors=0
+[2026-07-18 18:51:25] Executing DG-QUIKDATE-005 — Secondary ACH File ID Must Default to A
+[2026-07-18 18:51:25] Finished DG-QUIKDATE-005: status=PASS passed=1 failed=0 errors=0
+[2026-07-18 18:51:25] Executing DG-QUIKDATE-006 — ESCDATE Must Be Blank
+[2026-07-18 18:51:25] Finished DG-QUIKDATE-006: status=PASS passed=1 failed=0 errors=0
+[2026-07-18 18:51:25] Overall status: PASS
+[2026-07-18 18:51:25] Source files modified: No
+[2026-07-18 18:51:25] Evaluation totals: reviewed=6 looked_fine=6 problems=0
+[2026-07-18 18:51:25] What Was Checked: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-003_quikdate_prior_month_end\validation_out\DG-20260718_185125_518008\1_What_Was_Checked.html
+[2026-07-18 18:51:25] Items Needing Attention: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-003_quikdate_prior_month_end\validation_out\DG-20260718_185125_518008\2_Items_Needing_Attention.csv
+[2026-07-18 18:51:25] Business result: Passed
+[2026-07-18 18:51:25] Percentage passed (completed checks): 100.00%
+[2026-07-18 18:51:25] Internal technical folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-003_quikdate_prior_month_end\validation_out\DG-20260718_185125_518008\internal

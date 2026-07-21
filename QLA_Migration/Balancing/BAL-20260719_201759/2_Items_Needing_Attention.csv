@@ -1,0 +1,9 @@
+﻿Area,Control,What We Checked,Source Value,QLAdmin Value,Variance,Problem / Explanation,Type,Reference
+Counts,BAL-C01,Number of policies in the LifePRO policy master vs QLAdmin Policy Master,5085,5084,1,A small number of administrative / non-product policy rows are intentionally not loaded to QLAdmin,Explained Variance,BAL-C01
+Counts,BAL-C03,Number of unique people (names/addresses) vs QLAdmin Clients,13473,13532,-59,Client counts can differ slightly because QLAdmin builds one client record per person after name/address cleanup,Explained Variance,BAL-C03
+Counts,BAL-C04,Number of person-to-policy relationships vs QLAdmin Policy Relationships,46437,32176,14261,Relationship counts are lower in QLAdmin because duplicate person-to-policy links are removed,Explained Variance,BAL-C04
+Counts,BAL-C05,Number of beneficiary designations vs QLAdmin Beneficiaries,7102,5852,1250,Not every beneficiary-type name/address row becomes a QLAdmin beneficiary (extra conversion filters apply),Explained Variance,BAL-C05
+Counts,BAL-C06,Number of premium-history transactions vs QLAdmin Premium History,198955,201572,-2617,Premium-history row counts can differ after conversion premium adjustments and cleanup,Explained Variance,BAL-C06
+Dollars,BAL-D03,Total premium-history dollars vs QLAdmin Premium History,8893310.60,29158488.80,-20265178.20,QLAdmin premium-history dollars include conversion premium adjustments that are not in the raw accounting sum,Explained Variance,BAL-D03
+Dollars,BAL-D07,Beneficiary share percents on each policy add up to 100%,1590,3000,-1410,"1,410 policies have beneficiary share percents that do not add up to 100%. Review the detail list under internal/.",Data Problem,BAL-D07
+Inventory,BAL-I01,Every LifePRO policy appears in QLAdmin Policy Master,5085,5084,1,A small number of administrative / non-product policy rows are intentionally not loaded to QLAdmin,Explained Variance,BAL-I01

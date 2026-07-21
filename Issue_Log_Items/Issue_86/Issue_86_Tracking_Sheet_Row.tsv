@@ -1,0 +1,2 @@
+ID	Status	Short Name	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned	Date Resolved	Notes
+86	Implemented v58.13 — Awaiting Validation	QuikDate full rebuild (PME dates + screenshot defaults)	Full single-row quikdate.csv rebuild: all date fields = prior month-end (ESC blank); non-dates = screenshot (31 / 5.318 / 359 / ACH 0+A). Extends DG-R-003. Constants in quikdate_converter — NOT crosswalk.	2026-07-19	Go	Warren	Conversion		v58.13. Validator + pytest PASS 2026-07-19. UAT: Test_Validation/quikdate.csv. Next: Validation Agent.

@@ -1,0 +1,2 @@
+Issue_ID,Title,Description,Priority,Severity,Status,Owner,Next_Action
+58,Premium Mode Amounts Incorrect,"v57.80: apply_modal_policy_fees_to_quikridr post-PAC. Eric 010367131C fees 2.7666/0.9396. Next: full batch + validate_issue58 + client UAT.",2,High,IMPLEMENTED v57.80 - Validation,Conversion,Run batch and Issue #58 validator

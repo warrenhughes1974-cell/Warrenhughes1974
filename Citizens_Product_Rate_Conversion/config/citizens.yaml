@@ -1,0 +1,6 @@
+# Citizens project identity — business-rule neutral (Stage 4B)
+client_code: CITIZENS
+project_name: Citizens Product and Rate Conversion
+project_version: "0.4.0-stage4b"
+configuration_version: "1.0.0"
+environment: local

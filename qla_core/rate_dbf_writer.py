@@ -14,7 +14,14 @@ import tempfile
 from qla_core import rate_dbf_schema as S
 
 
-def _emit(path, fields, rows, overwrite):
+def _rows_with_plan(rows, order, filter_blank_plan=False):
+    """Issue A A4 — drop blank-PLAN orphan rows from QuikPl* key/member emits."""
+    if not filter_blank_plan or "PLAN" not in order:
+        return rows
+    return [r for r in rows if (r.get("PLAN") or "").strip()]
+
+
+def _emit(path, fields, rows, overwrite, filter_blank_plan=False):
     import dbf
     spec = S.dbf_spec(fields)
     order = [f[0] for f in fields]
@@ -32,8 +39,9 @@ def _emit(path, fields, rows, overwrite):
     os.remove(tmp)  # let dbf create it
     table = dbf.Table(tmp, spec)
     table.open(mode=dbf.READ_WRITE)
+    emit_rows = _rows_with_plan(rows, order, filter_blank_plan=filter_blank_plan)
     try:
-        for row in rows:
+        for row in emit_rows:
             vals = []
             for name in order:
                 v = row.get(name, "")
@@ -49,7 +57,7 @@ def _emit(path, fields, rows, overwrite):
     finally:
         table.close()
     os.replace(tmp, path)  # atomic publish
-    return len(rows)
+    return len(emit_rows)
 
 
 def _to_date(v):
@@ -84,11 +92,17 @@ def write_factor_table(path, table, rows, overwrite=False):
 
 
 def write_key_table(path, key_table, rows, overwrite=False):
-    return _emit(path, S.key_table_fields(key_table), rows, overwrite)
+    return _emit(path, S.key_table_fields(key_table), rows, overwrite, filter_blank_plan=True)
 
 
 def write_member_table(path, member_table, rows, overwrite=False):
-    return _emit(path, S.member_table_fields(member_table), rows, overwrite)
+    return _emit(
+        path,
+        S.member_table_fields(member_table),
+        rows,
+        overwrite,
+        filter_blank_plan=member_table.startswith("QuikPl"),
+    )
 
 
 def _csv_cell(name, v, field_type):
@@ -104,12 +118,13 @@ def _csv_cell(name, v, field_type):
     return "" if v is None else str(v).strip()
 
 
-def write_table_csv(path, fields, rows, overwrite=False):
+def write_table_csv(path, fields, rows, overwrite=False, filter_blank_plan=False):
     """Write rate rows to CSV with DBF-matching column order (append-ready for QLAdmin)."""
     import csv
 
     order = [f[0] for f in fields]
     types = {f[0]: f[1] for f in fields}
+    emit_rows = _rows_with_plan(rows, order, filter_blank_plan=filter_blank_plan)
     target_dir = os.path.dirname(os.path.abspath(path))
     os.makedirs(target_dir, exist_ok=True)
     if os.path.exists(path) and not overwrite:
@@ -118,9 +133,9 @@ def write_table_csv(path, fields, rows, overwrite=False):
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=order, extrasaction="ignore")
         w.writeheader()
-        for row in rows:
+        for row in emit_rows:
             w.writerow({n: _csv_cell(n, row.get(n, ""), types[n]) for n in order})
-    return len(rows)
+    return len(emit_rows)
 
 
 def write_factor_table_csv(path, table, rows, overwrite=False):
@@ -128,11 +143,17 @@ def write_factor_table_csv(path, table, rows, overwrite=False):
 
 
 def write_key_table_csv(path, key_table, rows, overwrite=False):
-    return write_table_csv(path, S.key_table_fields(key_table), rows, overwrite)
+    return write_table_csv(path, S.key_table_fields(key_table), rows, overwrite, filter_blank_plan=True)
 
 
 def write_member_table_csv(path, member_table, rows, overwrite=False):
-    return write_table_csv(path, S.member_table_fields(member_table), rows, overwrite)
+    return write_table_csv(
+        path,
+        S.member_table_fields(member_table),
+        rows,
+        overwrite,
+        filter_blank_plan=member_table.startswith("QuikPl"),
+    )
 
 
 def write_quikuint_table(path, rows, overwrite=False):
@@ -143,12 +164,28 @@ def write_quikuint_csv(path, rows, overwrite=False):
     return write_table_csv(path, S.quikuint_fields(), rows, overwrite)
 
 
+def write_quikaint_table(path, rows, overwrite=False):
+    return _emit(path, S.quikaint_fields(), rows, overwrite)
+
+
+def write_quikaint_csv(path, rows, overwrite=False):
+    return write_table_csv(path, S.quikaint_fields(), rows, overwrite)
+
+
 def write_quikissc_table(path, rows, overwrite=False):
     return _emit(path, S.quikissc_fields(), rows, overwrite)
 
 
 def write_quikissc_csv(path, rows, overwrite=False):
     return write_table_csv(path, S.quikissc_fields(), rows, overwrite)
+
+
+def write_quikuwpo_table(path, rows, overwrite=False):
+    return _emit(path, S.quikuwpo_fields(), rows, overwrite)
+
+
+def write_quikuwpo_csv(path, rows, overwrite=False):
+    return write_table_csv(path, S.quikuwpo_fields(), rows, overwrite)
 
 
 def emit_all_rate_tables_csv(

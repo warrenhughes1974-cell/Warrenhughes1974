@@ -1,0 +1,17 @@
+[2026-07-19 10:48:52] QLAdmin Data Governance run starting
+[2026-07-19 10:48:52] Run ID: DG-20260719_104852_794048
+[2026-07-19 10:48:52] Data region: Q:\CSO\CSO_Test_6_30_2026
+[2026-07-19 10:48:52] Output base: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\validation_out
+[2026-07-19 10:48:52] Run folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\validation_out\DG-20260719_104852_794048
+[2026-07-19 10:48:52] Review scope: rule
+[2026-07-19 10:48:52] Source DBF files will be opened read-only; source files are never modified
+[2026-07-19 10:48:59] Executing DG-QUIKPLAN-027 — Traditional Plans Should Have Required Value Tables
+[2026-07-19 10:49:00] Finished DG-QUIKPLAN-027: status=PASS passed=317 failed=0 errors=0
+[2026-07-19 10:49:00] Overall status: PASS
+[2026-07-19 10:49:00] Source files modified: No
+[2026-07-19 10:49:00] Evaluation totals: reviewed=415 looked_fine=317 problems=0
+[2026-07-19 10:49:00] What Was Checked: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\validation_out\DG-20260719_104852_794048\1_What_Was_Checked.html
+[2026-07-19 10:49:00] Items Needing Attention: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\validation_out\DG-20260719_104852_794048\2_Items_Needing_Attention.csv
+[2026-07-19 10:49:00] Business result: Passed
+[2026-07-19 10:49:00] Percentage passed (completed checks): 100.00%
+[2026-07-19 10:49:00] Internal technical folder: c:\Users\warren\Documents\GitHub\Warrenhughes1974\data_governance\docs\remediation\items\DG-R-012_advisory_027_028\validation_out\DG-20260719_104852_794048\internal

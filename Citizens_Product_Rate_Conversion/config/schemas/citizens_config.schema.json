@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CitizensProjectConfig",
+  "type": "object",
+  "required": ["client_code", "project_name", "project_version", "configuration_version", "environment"],
+  "additionalProperties": false,
+  "properties": {
+    "client_code": { "type": "string", "const": "CITIZENS" },
+    "project_name": { "type": "string", "minLength": 1 },
+    "project_version": { "type": "string", "minLength": 1 },
+    "configuration_version": { "type": "string", "minLength": 1 },
+    "environment": {
+      "type": "string",
+      "enum": ["local", "validation", "production"]
+    }
+  }
+}

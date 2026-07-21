@@ -103,7 +103,7 @@ None.
 | Gap | Notes |
 |-----|-------|
 | `L17` CV, `960 LP85-8` CV | Absent from PDAGE — CSO still pursuing |
-| `0824 P DTH` NP, `L10 GPO OL` NP | Absent — agree with New Era |
+| `0824 P DTH` NP, `L10 GPO OL` NP | **CLOSED 2026-07-20** — Eric: NP not applicable (PPBEN Status **T** / Reason **EX**) |
 | L17 joint `SEX=1` rows | Unmappable encoding |
 | `667 ART 95` | No PCOVRSGT parent mapping |
 

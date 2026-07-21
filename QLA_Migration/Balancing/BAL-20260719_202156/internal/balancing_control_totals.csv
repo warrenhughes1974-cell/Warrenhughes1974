@@ -1,0 +1,18 @@
+CONTROL_ID,TIER,DESCRIPTION,SOURCE_VALUE,QLADMIN_VALUE,VARIANCE,VARIANCE_PCT,STATUS,EXPLANATION
+BAL-C01,Counts,Number of policies in the LifePRO policy master vs QLAdmin Policy Master,5085,5084,1,0.02%,EXPLAINED,A small number of administrative / non-product policy rows are intentionally not loaded to QLAdmin
+BAL-C02,Counts,Number of coverages and riders (after dropping non-coverage rows) vs QLAdmin Riders,6936,6936,0,0.00%,PASS,
+BAL-C03,Counts,Number of unique people (names/addresses) vs QLAdmin Clients,13473,13532,-59,-0.44%,EXPLAINED,Client counts can differ slightly because QLAdmin builds one client record per person after name/address cleanup
+BAL-C04,Counts,Number of person-to-policy relationships vs QLAdmin Policy Relationships,46437,32176,14261,30.71%,EXPLAINED,Relationship counts are lower in QLAdmin because duplicate person-to-policy links are removed
+BAL-C05,Counts,Number of beneficiary designations vs QLAdmin Beneficiaries,7102,5852,1250,17.60%,EXPLAINED,Not every beneficiary-type name/address row becomes a QLAdmin beneficiary (extra conversion filters apply)
+BAL-C06,Counts,Number of premium-history transactions vs QLAdmin Premium History,198955,201572,-2617,-1.32%,EXPLAINED,Premium-history row counts can differ after conversion premium adjustments and cleanup
+BAL-C07,Counts,Number of active policy loans vs QLAdmin Loans,365,365,0,0.00%,PASS,
+BAL-C08,Counts,Number of dividend transactions vs QLAdmin Dividend History,28,28,0,0.00%,PASS,
+BAL-D01,Dollars,Total face amount (coverage amount) vs QLAdmin Riders,152925888.49,152925886.92,1.57,0.00%,PASS,
+BAL-D02,Dollars,Total modal (billed) premium vs QLAdmin Policy Master,851370.91,851370.91,0,0.00%,PASS,
+BAL-D03,Dollars,Total premium-history dollars vs QLAdmin Premium History,8893310.60,29158488.80,-20265178.20,-227.87%,EXPLAINED,QLAdmin premium-history dollars include conversion premium adjustments that are not in the raw accounting sum
+BAL-D04,Dollars,Total outstanding loan balances vs QLAdmin Loans,1369431.73,1369431.73,0,0.00%,PASS,
+BAL-D05,Dollars,Total accumulated dividends on deposit vs QLAdmin Dividend Deposit,237332.65,237332.65,0,0.00%,PASS,
+BAL-D06,Dollars,Total dividend transaction dollars vs QLAdmin Dividend History,4341.43,4341.43,0,0.00%,PASS,
+BAL-D07,Dollars,Beneficiary share percents on each policy add up to 100%,1590,3000,-1410,-88.68%,FAIL,"1,410 policies have beneficiary share percents that do not add up to 100%. Review the detail list under internal/."
+BAL-I01,Inventory,Every LifePRO policy appears in QLAdmin Policy Master,5085,5084,1,0.02%,EXPLAINED,A small number of administrative / non-product policy rows are intentionally not loaded to QLAdmin
+BAL-I02,Inventory,QLAdmin Policy Master has no policies that were not in LifePRO,5084,5084,0,0.00%,PASS,

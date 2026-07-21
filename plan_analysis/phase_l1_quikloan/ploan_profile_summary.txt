@@ -1,41 +1,41 @@
 PLOAN Profile Summary (Issue #32 QuikLoan v1.2)
-Generated: 2026-06-29 16:23:11
+Generated: 2026-07-19 14:44:50
 
-total_raw_rows: 93858
-valid_data_rows: 93857
+total_raw_rows: 92327
+valid_data_rows: 92326
 excluded_placeholder_separator_rows: 1
-unique_policy_count: 913
-latest_non_zero_balance_count: 385
-latest_zero_balance_count: 528
-total_latest_LOAN_BALANCE_active_candidates: 1554200.67
+unique_policy_count: 905
+latest_non_zero_balance_count: 366
+latest_zero_balance_count: 539
+total_latest_LOAN_BALANCE_active_candidates: 1370053.51
 rows_per_policy_min: 2
 rows_per_policy_median: 45.0
-rows_per_policy_max: 871
+rows_per_policy_max: 855
 ACCRUAL_DATE_range: 2003-09-23 to 2218-01-11
 
 INTEREST_RATE distribution (latest row per policy):
-          .0740: 715
+          .0740: 707
           .0500: 198
 
 INTEREST_TYPE distribution (latest row per policy):
-  F            : 913
+  F            : 905
 
 INT_METHOD distribution (latest row per policy):
-  D         : 913
+  D         : 905
 
 STATUS_CODE distribution (latest row per policy):
-  H          : 576
-  A          : 240
-  R          : 97
+  H          : 533
+  A          : 281
+  R          : 91
 
 TYPE_CODE distribution (latest row per policy):
-  R        : 447
-           : 351
-  A        : 115
+  R        : 453
+           : 338
+  A        : 114
 missing_ACCRUAL_DATE_latest: 1
-missing_LAST_REPAY_DATE_latest: 118
-missing_CAPITALIZED_DATE_latest: 586
+missing_LAST_REPAY_DATE_latest: 113
+missing_CAPITALIZED_DATE_latest: 541
 missing_INTEREST_RATE_latest: 0
 
-Derivation rules: PLOAN-primary QuikLoan derivation (Issue #32 v1.2). QLAdmin calculates loan interest; MLOANACCR=0 at conversion.
+Derivation rules: PLOAN-primary QuikLoan derivation (Issue #32 v1.2 + Issue #44 Phase A only). QLAdmin calculates loan interest; MLOANACCR=0 at conversion. Issue #44 Phase A: LAST_CHG_TIME sorted as HHMMSS. Phase B (ETI/RPU status suppress) withdrawn 2026-07-09.
 PACTG: reconciliation-only; not used for QuikLoan balances in Phase L1.

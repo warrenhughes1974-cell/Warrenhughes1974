@@ -1,0 +1,1619 @@
+PRINTER FORMNAME=STD      LPF=068 PLPF=068 LPI=8 CONTROL=00 LOCNAME=PRT     
+JOBNAME=         COPIES=00000002 PRIORITY=3  STATE=READY CLASS=A          
+FCBNAME=                                          
+CARRIAGE CONTROL STOPS
+1       2       3       4       5       6       7       8       A       B       
+2       3       4       5       6       7       8       A       B       2       
+3       4       5       6       7       8       A       B       2       3       
+END OF PRINTER FORM.
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     00   AF00822    SOWELL MILDRED    09/07/78     3         207.00            .00            .00            .00          .00
+  01     00   AF00945    REYNOLDS IMOG     09/27/78     3         787.00            .00            .00            .00        15.94
+  01     00   AF01068    SMITH JIMMY L     10/20/78     3         607.00            .00            .00            .00          .00
+  01     00   AF02786    NORVILLE VALT     11/01/79     3       2,110.00            .00            .00            .00        43.56
+  01     00   AF02838    CARR MARY         11/08/79     3         867.00            .00            .00            .00        17.96
+  01     00   AF03395    THOMPSON GWEN     01/12/80     3       1,004.00            .00            .00            .00        20.73
+  01     00   AF03424    SARTIN C F        01/14/80     3         567.00            .00            .00            .00        11.43
+  01     00   AF03601    PEARSON ERMA      03/12/80     3       1,805.00            .00            .00            .00        31.98
+  01     00   AF03769    CAMPBELL JEWE     04/15/80     3       1,354.00       1,329.00            .00            .00        17.53
+  01     00   AF04994    TOWNSLEY EMMA     03/20/81     3       1,153.00            .00            .00            .00        21.25
+  01     00   AF05110    LAMPLEY AUBRY     05/01/81     3         599.00            .00            .00            .00        19.33
+  01     00   AF05801    THOMPSON LOLA     12/08/81     3       1,868.00            .00            .00            .00        31.88
+  01     00   AF06228    JORDAN BEATRI     04/17/82     3       1,639.00            .00            .00            .00        31.87
+  01     00   A002194    MARSHALL GENE     07/18/79     3         895.00            .00            .00            .00        50.00
+
+          * OFFICE TOTALS:   (POLICIES      14)                15,462.00       1,329.00            .00            .00       313.46
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     02   AF01259    MYERS FRANCES E   01/04/80     3         950.95            .00            .00            .00       950.95
+  01     02   A009112    FITZHUGH M CHAR   05/15/84     3       1,420.00            .00            .00            .00        48.75
+  01     02   A009377    SETTOON LEE ROY   08/14/84     3         720.00            .00            .00            .00        81.00
+  01     02   A013589    HARNESS FREDA T   08/11/87     3       2,135.00            .00            .00            .00        32.35
+  01     02   A014200    GRAY DOROTHY      02/02/88     3       3,315.00            .00            .00            .00        62.13
+  01     02   A015271    RAMSEY CICERO     01/11/89     3       2,945.00            .00            .00            .00        44.18
+  01     02   A015522    COBBS GENEVA      02/28/89     3       1,714.00            .00            .00            .00        24.73
+  01     02   A015974    FARMER DORA       07/10/89     2       2,245.00            .00            .00            .00        33.68
+  01     02   A016104    JONES DAISY       09/08/89     3       3,405.00            .00            .00            .00        51.07
+  01     02   A017238    GRIFFITH BOBBY    08/01/90     3       2,505.00            .00            .00            .00        37.58
+  01     02   A018500    WESTLAKE JOYCE    08/26/91     3       3,740.00            .00            .00            .00     3,740.00
+  01     02   A022554    SWEATT BARBARA    05/18/94     2       2,490.00            .00            .00            .00        37.35
+
+          * OFFICE TOTALS:   (POLICIES      12)                27,584.95            .00            .00            .00     5,143.77
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     03   A018156    MORGAN JAMES      05/29/91     3       4,220.00            .00            .00            .00        63.30
+  01     03   A020966    DURHAM JESSIE     05/06/93     3       1,790.00            .00            .00            .00        26.85
+  01     03   A021122    MORGAN JAMES      06/14/93     3         145.00            .00            .00            .00        95.00
+  01     03   A024406    MOREHART EUGENE   11/16/95     3       3,590.00            .00            .00            .00     3,590.00
+  01     03   A025382    JENDERS FLORENC   08/16/96     3       1,155.00            .00            .00            .00        55.55
+  01     03   A025815    BLACKLAW ALBERT   12/13/96     3       3,690.00            .00            .00            .00        55.35
+  01     03   A026469    EANS THOMAS       06/11/97     3         880.00            .00            .00            .00       880.00
+  01     03   A026636    PLAXCO WILLIAM    07/26/97     3       3,790.00            .00            .00            .00        56.85
+  01     03   A026901    DALRYMPLE LOIS    10/10/97     3       4,890.00            .00            .00            .00        73.33
+  01     03   A028816    DICK BILLY JO     03/10/99     3         895.00            .00            .00            .00        16.77
+  01     03   A029334    WITHERS HARVEY    06/22/99     3       3,640.00            .00            .00            .00        52.78
+  01     03   A029400    KNITTIG JOSEPH    07/12/99     3       5,285.00            .00            .00            .00        79.27
+  01     03   A040083    WILSON MARY D     12/15/99     3       4,440.00            .00            .00            .00        66.67
+  01     03   A040798    MCKEON ROBERT G   05/02/00     3       5,240.00            .00            .00            .00        55.37
+  01     03   A041103    BAKER JAMES E     07/18/00     2       6,790.00            .00            .00            .00     1,222.00
+  01     03   A041120    STOCKTON BILLYE   07/25/00     3         420.00            .00            .00            .00       105.00
+  01     03   A042328    EVANS MELVIA      04/25/01     3       4,340.00            .00            .00            .00        55.67
+  01     03   A042661    MORGAN PAUL E     07/18/01     3       5,690.00            .00            .00            .00        85.35
+  01     03   A044319    ONSTOTT HARRIET   11/04/02     3       2,782.20            .00            .00            .00       125.20
+  01     03   A046519    KING CH/MARGARE   08/23/04     2       6,188.70            .00            .00            .00        92.83
+  01     03   A046582    CASTLEBERRY MOL   09/16/04     3       5,424.30            .00            .00            .00        81.32
+  01     03   A046788    DERRICK HARVEY    11/23/04     3       4,245.25            .00            .00            .00     4,245.25
+  01     03   A047977    WINKLER RICHARD   10/03/05     3       5,096.00            .00            .00            .00        76.08
+  01     03   A049555    TIBBS JO ANN      09/22/06     3       3,831.00            .00            .00            .00        57.18
+  01     03   A049766    LOCKHART MARGAR   11/15/06     3       5,193.20            .00            .00            .00        77.90
+  01     03   A049770    ROBBINS MARY EL   11/20/06     3       6,045.30            .00            .00            .00        90.68
+  01     03   A049850    JESTICE SHIRLEY   11/30/06     3       7,217.70            .00            .00            .00       108.27
+  01     03   A051819    DUDLEY MARLIS J   05/05/08     3       2,390.00            .00            .00            .00        35.85
+  01     03   A051903    WORTHY PAUL       06/02/08     3       6,665.00            .00            .00            .00       105.53
+  01     03   A052459    MILLER LLOYD/VE   10/11/08     3       5,840.00            .00            .00            .00       100.74
+  01     03   A052685    MILLS PAUL/JOAN   12/11/08     2       4,135.00            .00            .00            .00        62.02
+  01     03   A052999    SANDERS WILLIAM   02/13/09     2      10,905.00       9,760.00            .00            .00       981.45
+  01     03   A054032    COLLINS MARGARE   12/08/09     3       1,695.00            .00            .00            .00        42.38
+  01     03   A054234    DUNCAN JERRY      01/28/10     2       6,105.00       4,666.51            .00            .00        91.57
+  01     03   A054235    DUNCAN REBECCA    01/28/10     2       5,980.00       4,573.40            .00            .00        89.70
+  01     03   A056189    PAGE ERVIN J      08/17/11     3       8,265.00            .00            .00            .00       123.95
+  01     03   A058822    JONES KERMIT R    01/19/14     3       1,705.50            .00            .00            .00        60.65
+  01     03   A060453    FARMER BILLIE J   08/11/15     3       2,540.00       2,385.48            .00            .00        51.86
+  01     03   A060803    BASS DIXIE FAYE   12/10/15     3       5,895.00            .00            .00            .00        98.25
+  01     03   A061005    GRABLE WELDON     02/04/16     3           1.00            .00            .00            .00         1.00
+  01     03   A061303    SANDERS GAYLE     05/09/16     3       6,995.00            .00            .00            .00       110.75
+  01     03   A061657    ACKLEY GOLDIE     09/08/16     2       2,546.25            .00            .00            .00     2,546.25
+  01     03   A062105    FOWLER ELIZABET   02/10/17     3       1,895.00            .00            .00            .00        38.67
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     03   A063909    KING PATRICIA     12/19/18     3       2,625.00            .00            .00            .00       196.67
+  01     03   A064741    KING TRAVIS/SAM   09/28/19     3       8,450.00            .00            .00            .00       133.75
+  01     03   A065600    SHAW MAXINE       09/21/20     3       7,165.00            .00            .00            .00       107.65
+  01     03   A066895    EVANS MELVIA L    03/03/22     3         649.90            .00            .00            .00       649.90
+  01     03   A067242    SHOPTAW BETTY     08/02/22     3       8,696.05            .00            .00            .00     8,696.05
+  01     03   A067430    BREWER HOWARD     10/26/22     3       4,910.00            .00            .00            .00       883.80
+  01     03   A067590    MOORE MICHAEL L   01/26/23     3       1,445.30            .00            .00            .00     1,445.30
+  01     03   A069698    DRAPER ELIZABET   03/09/23     3       8,580.00       7,722.00            .00            .00       128.70
+  01     03   A069755    HOEY GLADYS EVE   03/27/23     3      10,262.60            .00            .00            .00    10,262.20
+  01     03   A080007    HAWSEY MARGARET   07/25/23     3       1,251.79            .00            .00            .00     1,251.79
+
+          * OFFICE TOTALS:   (POLICIES      53)               234,507.04      29,107.39            .00            .00    39,886.25
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     04   AF06555    BROWN FRED H      08/05/82     2       2,855.00            .00            .00            .00        54.61
+  01     04   AF07260    ZEIGENBEIN CONS   03/03/83     3       2,290.00            .00            .00            .00        42.49
+  01     04   A008234    NEELY WILLIE      10/13/83     3       2,480.00            .00            .00            .00        82.50
+  01     04   A011616    TAYLOR SALLY J    02/17/86     3       3,380.00            .00            .00            .00       608.40
+  01     04   A015067    MCKOWN, NANCY     10/22/88     3       3,435.00            .00            .00            .00        51.50
+  01     04   A015470    KIDD AMELIA       02/20/89     3       2,625.00            .00            .00            .00       106.25
+  01     04   A016333    MCELYEA WAYN      11/14/89     3       2,620.00            .00            .00            .00        33.25
+  01     04   A016464    HALTER CHARLOTT   01/06/90     3       3,970.00            .00            .00            .00        59.55
+  01     04   A018479    LAMB BETTY        08/23/91     3       2,365.00            .00            .00            .00        35.47
+  01     04   A020452    BLACKWELL JOSEP   01/18/93     3       4,915.00            .00            .00            .00        73.58
+  01     04   A021222    ROE JEANIECE      06/30/93     2       3,990.00            .00            .00            .00     3,990.00
+  01     04   A021587    LAWRENCE REBA     09/27/93     3       3,040.00            .00            .00            .00        45.60
+  01     04   A022636    KELLEY ELIZABET   06/15/94     3       3,890.00            .00            .00            .00       700.00
+  01     04   A023828    GRAHAM JIMMIE     05/23/95     3       4,090.00            .00            .00            .00        61.33
+  01     04   A026649    BULLION JESSYE    08/07/97     3       4,685.00            .00            .00            .00       837.00
+  01     04   A028902    ATKINSON TRACY    03/23/99     2       3,490.00            .00            .00            .00        52.92
+  01     04   A029744    INGLE BETTY LEA   09/30/99     3       2,945.00            .00            .00            .00        44.25
+  01     04   A040028    SMITH PEGGY       11/30/99     3       3,370.00            .00            .00            .00       614.00
+  01     04   A041476    DAVIS LILLIAN L   10/30/00     3       5,145.00            .00            .00            .00       464.50
+  01     04   A042366    BEATY RAYMOND     05/07/01     3       2,990.00            .00            .00            .00       538.00
+  01     04   A044267    TOLLIVER CHARLE   10/10/02     2       4,846.10       3,343.83            .00            .00        72.69
+  01     04   A045163    ROBINSON RICHAR   07/19/03     3       6,170.25            .00            .00            .00     6,170.25
+  01     04   A045443    HALL DANNY L      10/01/03     3       5,826.10            .00            .00            .00       300.00
+  01     04   A046184    WILKERSON RUBY    05/28/04     3       5,963.00            .00            .00            .00        89.45
+  01     04   A048385    RAINS PAUL R      12/30/05     3       5,924.10            .00            .00            .00        83.33
+  01     04   A050030    CUNNINGHAM JOE    01/16/07     2       5,700.00            .00            .00            .00        84.00
+  01     04   A051555    STACKHOUSE PATS   02/13/08     3       6,085.00            .00            .00            .00        91.28
+  01     04   A051985    MCJUNKIN RATHA    06/19/08     3       5,115.00            .00            .00            .00        68.58
+  01     04   A053014    BRYANT ROSEMARY   02/19/09     3       8,934.75            .00            .00            .00     8,934.75
+  01     04   A053970    GRAVES NORMA      11/12/09     3       5,920.00            .00            .00            .00        73.67
+  01     04   A055324    PETERS CHRISTIN   12/11/10     3       4,233.00            .00            .00            .00     4,233.00
+  01     04   A058703    MILLER BOYD       12/19/13     3       5,762.00            .00            .00            .00     5,762.00
+  01     04   A059075    KENDRICK JIMMY    04/17/14     3       8,445.00            .00            .00            .00       126.67
+  01     04   A059330    JENKINS NINA CA   07/21/14     3       5,770.00            .00            .00            .00        86.17
+  01     04   A059859    SCESNIAK ELIZAB   02/02/15     3       3,613.00            .00            .00            .00     3,613.00
+  01     04   A060178    SMITH LESLIE      05/08/15     3       1,838.00            .00            .00            .00     1,838.00
+  01     04   A061667    GUNTER ELMER LE   09/22/16     3      10,070.00            .00            .00            .00       151.17
+  01     04   A061668    BRUCE REMMEL      09/21/16     3         214.00            .00            .00            .00       214.00
+  01     04   A062664    NOTTINGHAM SAMU   09/14/17     3       3,120.00            .00            .00            .00       109.17
+  01     04   A062938    THOMAS BETTY      12/27/17     3       9,065.00            .00            .00            .00     9,065.00
+  01     04   A063647    TYSON CAROLYN     09/07/18     3       2,319.00            .00            .00            .00     2,319.00
+  01     04   A063758    MONTE MARIANNE    10/15/18     3       2,323.00            .00            .00            .00     2,323.00
+  01     04   A063769    MONTE MARIANNE    10/23/18     3       3,327.00            .00            .00            .00     3,327.00
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     04   A063982    DOMBRASKI JR WI   01/16/19     3       7,855.00            .00            .00            .00       196.36
+  01     04   A065846    EUBANKS THOMAS    01/26/21     3       8,190.00       4,157.31            .00            .00       121.55
+  01     04   A066461    DAWSON MAX        09/24/21     3         960.00            .00            .00            .00       960.00
+  01     04   A067281    WEST CLIFFORD W   08/15/22     2       2,195.00         987.96            .00            .00        25.33
+  01     04   A067620    SOWLE FRANCES     02/07/23     3      10,941.60            .00            .00            .00    10,941.60
+  01     04   A069916    CANALES JOSE      06/15/23     3       1,916.24            .00            .00            .00     1,916.24
+
+          * OFFICE TOTALS:   (POLICIES      49)               221,211.14       8,489.10            .00            .00    71,791.46
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     06   A013253    MALVIN ELIZABET   05/05/87     3       1,000.00            .00            .00            .00        20.42
+  01     06   A014213    SANDERS MYRTLE    02/02/88     3       1,610.00            .00            .00            .00        40.28
+  01     06   A026978    FERGUSON LAVONN   10/23/97     3       5,485.00            .00            .00            .00        72.33
+  01     06   A051740    LYNN SHERRY       04/21/08     3       7,425.00            .00            .00            .00       111.38
+  01     06   A057460    HARRISON MARY L   10/22/12     3       1,770.00            .00            .00            .00        36.00
+  01     06   A064011    KING CARROLL      01/23/19     3       9,277.56            .00            .00            .00     9,277.56
+  01     06   A064320    MAYHUE CONNIE L   05/07/19     3       6,916.00            .00            .00            .00     6,916.00
+  01     06   A067079    FREYERMUTH JERR   05/19/22     3      13,035.00            .00            .00            .00       150.58
+  01     06   A067641    PEAERSON CHARLE   02/15/23     2      12,085.00      11,785.00            .00            .00       245.52
+
+          * OFFICE TOTALS:   (POLICIES       9)                58,603.56      11,785.00            .00            .00    16,870.07
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     07   A022717    CALDWELL JAMES    07/07/94     3       3,190.00            .00            .00            .00        47.85
+  01     07   A026209    CARROLL SYBIL     04/03/97     3         380.00            .00            .00            .00       380.00
+  01     07   A027983    SHEFFIELD GENEV   07/08/98     3       5,285.00            .00            .00            .00       755.00
+  01     07   A028950    MARTIN GEORGE/M   03/26/99     3       5,985.00            .00            .00            .00        89.75
+  01     07   A029770    PERRY LEWIS E     10/09/99     3       1,645.00            .00            .00            .00        24.68
+  01     07   A041177    CHEATHAM PATSY    08/14/00     3       6,670.00            .00            .00            .00       250.00
+  01     07   A043517    ELLARD MILDRED    03/13/02     3       3,670.20            .00            .00            .00        55.05
+  01     07   A044092    HOPPER MARY LOR   08/27/02     3      10,211.60            .00            .00            .00       459.53
+  01     07   A045436    HIRSCHEIDER SHA   10/27/03     3       1,171.10            .00            .00            .00     1,171.10
+  01     07   A046084    MIZELL MARY JO    04/26/04     3       6,526.50            .00            .00            .00     6,526.50
+  01     07   A046242    HERRICK ALTA MA   06/14/04     3       5,473.00            .00            .00            .00        82.10
+  01     07   A046703    TAYLOR MARVIN R   10/29/04     3       5,962.00            .00            .00            .00        90.00
+  01     07   A047210    LAWRENCE WILMA    03/16/05     3       6,453.30            .00            .00            .00        96.80
+  01     07   A047345    NASH ELVIN        04/18/05     3       5,495.00            .00            .00            .00        82.43
+  01     07   A047990    PITTMAN HETTIE    10/05/05     2       7,590.10            .00            .00            .00       113.84
+  01     07   A048687    RUSSELL RUBY P    02/21/06     3       4,037.60            .00            .00            .00     4,037.60
+  01     07   A048864    CASH PATSY S      03/28/06     3       8,017.40            .00            .00            .00       133.91
+  01     07   A049567    HARVEY MARSUE     09/26/06     3           1.00            .00            .00            .00         1.00
+  01     07   A049904    MOBBS GWENDOLYN   08/21/06     3           1.00            .00            .00            .00         1.00
+  01     07   A050359    MARSHALL GENEVA   04/10/07     3         695.00            .00            .00            .00       695.00
+  01     07   A050361    WALLS ELEANOR     04/13/07     3       7,786.10            .00            .00            .00       116.79
+  01     07   A051282    SAWYER BETTY F    12/18/07     3       1,465.00            .00            .00            .00       732.00
+  01     07   A051475    HILTON MELBA      01/17/08     3       2,736.00            .00            .00            .00     2,736.00
+  01     07   A051883    GROVES NANCY CH   05/21/08     3       7,105.00         112.50            .00            .00       112.50
+  01     07   A051913    MARINER LIN/DEL   05/28/08     3       7,865.00            .00            .00            .00     1,413.00
+  01     07   A053106    PERRYMAN LARRY    03/07/09     3       2,935.00            .00            .00            .00     2,935.00
+  01     07   A053951    CARUTHERS BETTY   11/04/09     3       4,935.00            .00            .00            .00        74.03
+  01     07   A054466    THOMAS FRANCES    04/02/10     3       3,075.00            .00            .00            .00       925.00
+  01     07   A055641    GROVES NANCY C    02/24/11     3         825.00            .00            .00            .00        25.00
+  01     07   A056245    PALMER SAU/BARB   09/07/11     3       5,110.00            .00            .00            .00        76.65
+  01     07   A058112    LAGRONE ROBERT    05/30/13     3         577.00            .00            .00            .00       577.00
+  01     07   A059030    QUICKEL JAMES     03/24/14     3       5,800.74            .00            .00            .00     5,800.74
+  01     07   A059958    ELEY REX          02/20/15     3      10,615.00            .00            .00            .00       158.60
+  01     07   A060280    SPEARS DONN/IDA   06/12/15     3       9,240.00            .00            .00            .00     9,240.00
+  01     07   A060372    BEALL,JR ALLEIN   07/13/15     3       7,808.00            .00            .00            .00     7,808.00
+  01     07   A060668    HANSON MARY ANN   10/20/15     3       6,470.00            .00            .00            .00     6,470.00
+  01     07   A061132    MILLSAPPS MARY    03/25/16     3           1.00            .00            .00            .00         1.00
+  01     07   A061813    BECKMAN MARGIE    10/25/16     3           1.00            .00            .00            .00         1.00
+  01     07   A061942    GATLIFF BONNIE    12/20/16     3       4,166.00            .00            .00            .00     4,166.00
+  01     07   A062254    TAYLOR G RHEA     04/07/17     3       8,840.00            .00            .00            .00       132.60
+  01     07   A062347    HEASTON WILLIAM   05/10/17     3       2,626.00            .00            .00            .00     2,626.00
+  01     07   A062370    SNOW LORA         05/19/17     3       8,175.00            .00            .00            .00       122.58
+  01     07   A063457    LAZENBY MARY      06/23/18     3      10,325.00            .00            .00            .00    10,325.00
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     07   A064227    MARTIN FRANCES    03/28/19     3      10,399.00            .00            .00            .00    10,399.00
+  01     07   A064245    DODGE LINNIE LO   04/02/19     3      10,585.00       3,810.42            .00            .00       158.78
+  01     07   A064290    CASSADAY CAROLY   04/17/19     2       2,795.00         294.00            .00            .00        42.00
+  01     07   A064342    TURLEY FRANK GO   05/15/19     3       1,935.00            .00            .00            .00     1,935.00
+  01     07   A064526    RUSSENBERGER JA   07/17/19     3       3,536.00            .00            .00            .00     3,536.00
+  01     07   A064717    TALBERT LONNIE    09/25/19     3       8,385.50       3,269.98            .00            .00       125.78
+  01     07   A065040    RAY DONNA         01/27/20     3       1,495.00            .00            .00            .00        37.38
+  01     07   A065288    BROWN BEATRICE    05/21/20     3      11,075.00            .00            .00            .00       167.92
+  01     07   A065595    SHIELDS JOHN H    09/17/20     3           1.00            .00            .00            .00         1.00
+  01     07   A065728    STEVENSON WESLE   11/23/20     3           1.00            .00            .00            .00         1.00
+  01     07   A065795    WHITECOTTON J/J   12/26/20     3       6,523.25            .00            .00            .00     6,523.25
+  01     07   A065949    GABLE ROYCE FAY   03/11/21     3       8,440.00            .00            .00            .00       126.60
+  01     07   A065994    PHARIS JOYCE MA   03/24/21     3       2,032.15            .00            .00            .00     2,032.15
+  01     07   A066103    JORDAN JR BRADL   04/29/21     3       1,828.00            .00            .00            .00     1,828.00
+  01     07   A066619    ANTHONY TROY      11/23/21     2       6,340.50       2,234.42            .00            .00       121.31
+  01     07   A066735    DRODDY RUTH LEE   01/10/22     3       2,095.00       1,150.00            .00            .00        25.00
+  01     07   A066739    CHAMBERS MARSHA   01/14/22     3       2,604.45            .00            .00            .00     2,604.45
+  01     07   A066758    GLADDEN LARRY E   01/19/22     3       2,464.00            .00            .00            .00     2,464.00
+  01     07   A066861    LANFORD JUDITH    02/28/22     3       9,140.00       2,263.01            .00            .00       102.33
+  01     07   A067057    MATHIOWETZ JUDY   05/09/22     2       6,170.00       4,480.00            .00            .00        92.55
+  01     07   A067162    HENRY MARTHA      06/16/22     3       8,145.00            .00            .00            .00       122.18
+  01     07   A067172    WINTERS RONALD    06/21/22     3       2,129.15            .00            .00            .00     2,129.15
+  01     07   A067274    BOWEN MARY CLAI   08/20/22     3       3,850.90            .00            .00            .00     3,850.90
+  01     07   A067337    SCROGGINS WILLI   09/16/22     3         213.40            .00            .00            .00       213.40
+  01     07   A067363    MILLER DORETTA    09/30/22     3       2,390.00       1,831.00            .00            .00        35.85
+  01     07   A067457    ELLKINGTON THOM   11/07/22     3       1,916.24            .00            .00            .00     1,916.24
+  01     07   A067532    HERMDON THELMA    12/21/22     3       8,772.68            .00            .00            .00     8,772.68
+  01     07   A067551    KITCHENS JEWEL    01/11/23     3       7,485.00       6,736.50            .00            .00       112.28
+  01     07   A067578    BRIDGES SHIRLEY   01/24/23     3       6,178.90            .00            .00            .00     6,178.90
+  01     07   A067579    GRAF BARBARA EL   01/23/23     2       8,405.05            .00            .00            .00     8,405.05
+  01     07   A067659    STELZL JAMES MI   02/23/23     3       3,559.90            .00            .00            .00     3,559.90
+  01     07   A069919    SPROLES JOHN E    06/15/23     3       6,615.40            .00            .00            .00     6,615.40
+  01     07   A080079    SCHOCK CHARLES    08/18/23     3       1,724.61            .00            .00            .00     1,724.61
+  01     07   A080085    MORRIS JAMES WA   08/18/23     3       9,804.76            .00            .00            .00     9,804.76
+  01     07   A080172    TICE MARGARETTE   09/27/23     2      12,862.20            .00            .00            .00    12,862.20
+  01     07   A080519    PHIPPS PHYLLIS    10/23/23     3       2,614.15            .00            .00            .00     2,614.15
+  01     07   A080524    TICE JAMES F      10/25/23     2      12,862.20            .00            .00            .00    12,862.20
+
+          * OFFICE TOTALS:   (POLICIES      80)               404,316.03      26,181.83            .00            .00   185,770.98
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     10   AF06599    KEMP JOHN T       08/16/82     3       1,875.00       1,835.00            .00            .00        38.99
+  01     10   A010373    DOUGLAS GLADYS    03/26/85     3       2,175.00            .00            .00            .00        35.00
+  01     10   A010620    EAST GLORIA       05/23/85     3       2,991.25            .00            .00            .00        44.87
+  01     10   A011830    COFFMAN MARY M    03/28/86     3       2,580.00            .00            .00            .00     2,580.00
+  01     10   A012503    BURNS JEAN M      10/02/86     3       2,245.00            .00            .00            .00        35.00
+  01     10   A015579    GODWIN BETTY A    03/14/89     3         950.00            .00            .00            .00       950.00
+  01     10   A018025    HARRIS GINA G     04/29/91     3       4,495.00            .00            .00            .00        67.42
+  01     10   A019089    TREVATHAN ANNA    02/01/92     3       4,140.00            .00            .00            .00        62.10
+  01     10   A019305    SHIRLEY WALTER    03/13/92     3       3,690.00            .00            .00            .00       100.00
+  01     10   A019334    RHYNE GERRY       03/17/92     3       4,465.00            .00            .00            .00     3,000.00
+  01     10   A022168    PHILLIPS JEAN     02/23/94     3       4,410.00            .00            .00            .00        66.67
+  01     10   A022205    BROOKS CHARLOTT   03/03/94     3       3,535.00            .00            .00            .00       707.00
+  01     10   A022442    GOFF HILTON       04/21/94     3         450.00            .00            .00            .00        16.88
+  01     10   A022786    SKOBEL EDWARD     07/29/94     3       1,055.00            .00            .00            .00        39.54
+  01     10   A023304    LAMPLEY AUBREY    12/27/94     3         450.00            .00            .00            .00        16.90
+  01     10   A024419    ZIRKLE LAURA      11/27/95     3         525.00            .00            .00            .00        19.68
+  01     10   A027291    BEENE JULIAN L    01/14/98     3       2,195.00            .00            .00            .00       395.10
+  01     10   A027292    BEENE MARGUERIT   01/14/98     3       2,295.00            .00            .00            .00       413.10
+  01     10   A027403    CHAMBLISS MARY    02/18/98     3       3,990.00            .00            .00            .00     3,990.00
+  01     10   A027442    DAVIS EDMON F     02/20/98     3       1,595.00            .00            .00            .00     1,595.00
+  01     10   A028038    EDLEMON JUDIE     07/23/98     3       1,065.00            .00            .00            .00        47.93
+  01     10   A028211    WOOTEN SAMUEL     09/09/98     3         600.00            .00            .00            .00        42.50
+  01     10   A029327    BASSE IRMA JEAN   06/18/99     3       1,620.00            .00            .00            .00        24.30
+  01     10   A040409    HERRELL SHIRLEY   02/07/00     3       3,490.00            .00            .00            .00        52.35
+  01     10   A040653    SMITH BETTY L     03/27/00     3         500.00            .00            .00            .00        37.50
+  01     10   A041240    WEST MARY GRACE   08/22/00     3       4,890.00            .00            .00            .00        73.35
+  01     10   A041253    JEFFERS BETTY J   08/24/00     3       2,595.00            .00            .00            .00        38.83
+  01     10   A041521    GIBBS MARY E      11/07/00     3       3,245.00            .00            .00            .00       584.10
+  01     10   A041728    PIKE FRANCES      01/08/01     3       3,195.00            .00            .00            .00        47.93
+  01     10   A041954    TURPIN HILDRED    02/09/01     3       3,045.00            .00            .00            .00        45.67
+  01     10   A043731    KING MICHAEL AN   04/23/02     3       3,395.50            .00            .00            .00       479.10
+  01     10   A044254    WARREN CORA       10/08/02     3       1,127.00            .00            .00            .00        52.25
+  01     10   A045558    JACKSON ELIZABE   12/02/03     3       3,126.20            .00            .00            .00        46.89
+  01     10   A045616    WHATLEY ANNETTE   12/17/03     3       7,457.80            .00            .00            .00       111.67
+  01     10   A045632    FRAZER LILLIAN    12/29/03     3       4,968.60            .00            .00            .00       122.22
+  01     10   A045876    WILLIAMSON TIMO   03/01/04     3       6,698.30            .00            .00            .00       100.47
+  01     10   A045935    PALMER RONALD J   03/16/04     3       3,033.10            .00            .00            .00        50.00
+  01     10   A047638    MORRISON VIRGIN   07/12/05     3       4,096.40            .00            .00            .00        72.00
+  01     10   A047956    PERKINS TERESA    09/27/05     3         686.00            .00            .00            .00        25.00
+  01     10   A048377    TATE IDA DEAN     12/29/05     2       5,855.50            .00            .00            .00        87.85
+  01     10   A048931    HARRIS WILLIAM    03/28/06     3       2,582.00            .00            .00            .00        38.73
+  01     10   A049605    WHELLER EUNICE    10/05/06     3       5,272.40            .00            .00            .00        79.00
+  01     10   A049948    BLAYLOCK NANCY    12/26/06     3       4,307.10            .00            .00            .00        75.76
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     10   A051090    LARUE MARY E      10/29/07     3       2,009.00            .00            .00            .00        37.66
+  01     10   A053315    MILTON BILLY JO   05/13/09     3       7,105.00            .00            .00            .00       125.00
+  01     10   A053913    WILLIAMS LINDA    10/20/09     3         783.75            .00            .00            .00       783.75
+  01     10   A054325    HIGHTOWER CARIE   02/15/10     3       9,015.00            .00            .00            .00       135.23
+  01     10   A054699    MATHIS PAUL A     06/02/10     2       9,240.00       8,240.00            .00            .00       138.00
+  01     10   A054722    BOLLINGER RICHA   06/15/10     3       3,400.00            .00            .00            .00     3,400.00
+  01     10   A054833    HARGRAVES WARNU   07/14/10     3       8,730.00            .00            .00            .00     8,730.00
+  01     10   A055263    BRAMUCCI SUE      11/17/10     3       3,600.00            .00            .00            .00        67.50
+  01     10   A057346    HENDERSON IRENE   09/18/12     3       1,895.00            .00            .00            .00        50.00
+  01     10   A057739    MANN SHEPHEN MI   01/25/13     3       9,490.00            .00            .00            .00       194.00
+  01     10   A058679    HARRELL SR ROBE   11/20/13     2       4,400.00            .00            .00            .00        65.42
+  01     10   A058943    CARLSON WILLIAM   02/20/14     3       5,870.00            .00            .00            .00     5,870.00
+  01     10   A059198    BEAVERS CHARLSI   06/03/14     3       3,345.00            .00            .00            .00        50.16
+  01     10   A059387    BARROW JAMES      08/12/14     3       6,015.00            .00            .00            .00        90.23
+  01     10   A059424    LANCASTER ROGER   08/27/14     3       7,077.50            .00            .00            .00       144.44
+  01     10   A060202    JOHNS DORIS R     05/16/15     3       8,705.00            .00            .00            .00       130.00
+  01     10   A060244    HOUSE LORINE      05/28/15     3       2,468.65            .00            .00            .00     2,468.65
+  01     10   A060354    BLEVINS MARY F    07/14/15     3         383.00            .00            .00            .00       383.00
+  01     10   A060978    PHILYAW ROBERT    02/04/16     2       2,465.00            .00            .00            .00        46.22
+  01     10   A061182    HEAVENER EVELYN   03/30/16     3       6,520.00            .00            .00            .00       114.26
+  01     10   A061472    POUNCEY BERT      07/07/16     3       2,828.00            .00            .00            .00        53.04
+  01     10   A061546    CARTER FLICE DE   08/06/16     3       1,895.00       1,080.24            .00            .00        35.52
+  01     10   A062125    FEEMSTER ROBERT   02/21/17     3         902.00            .00            .00            .00       902.00
+  01     10   A063378    CUMMINS DELORIS   05/31/18     3      10,194.70            .00            .00            .00    10,194.70
+  01     10   A063428    BRUCE RAYMOND E   06/13/18     3         875.00            .00            .00            .00        51.66
+  01     10   A064348    HALL SYBLE        05/23/19     3       4,573.55            .00            .00            .00     4,573.55
+  01     10   A064412    BELL BETTY        06/10/19     3      10,680.00       1,880.51            .00            .00       144.67
+  01     10   A064629    VARNER MARGIE M   08/16/19     3       7,144.00            .00            .00            .00     7,144.00
+  01     10   A065252    CROUCH BOBBY R    04/27/20     3       1,256.15            .00            .00            .00     1,256.15
+  01     10   A065258    WRIGHT PATSY      02/10/20     3       1,256.15            .00            .00            .00     1,256.15
+  01     10   A065501    HOOD LEILA JANE   08/03/20     3       1,395.00            .00            .00            .00       108.94
+  01     10   A065511    WAITS RAYMOND     08/01/20     3       1,395.00         297.61            .00            .00        27.02
+  01     10   A065519    COX RAYMOND C     08/10/20     3       7,187.70            .00            .00            .00     7,187.70
+  01     10   A065576    TAYLOR MAXINE     08/31/20     3       3,351.35            .00            .00            .00     3,351.35
+  01     10   A065623    MILLER DONNA JE   09/28/20     3       1,935.15            .00            .00            .00     1,935.15
+  01     10   A065934    ADEMYETZ BETTY    02/24/21     3       2,318.80            .00            .00            .00     2,318.80
+  01     10   A066062    HEAVENER EVELYN   04/08/21     3       1,395.00            .00            .00            .00        49.58
+  01     10   A066255    KISH THOMAS DAL   06/25/21     3       3,790.00         615.00            .00            .00        25.00
+  01     10   A066595    CLAWSON NACRETI   10/25/21     3       2,095.00            .00            .00            .00     2,095.00
+  01     10   A066866    WINSETT MILDRED   02/08/22     3       1,673.25            .00            .00            .00     1,673.25
+  01     10   A066910    HOUSE LORINE      03/14/22     3         388.00            .00            .00            .00       388.00
+  01     10   A067061    BILLINGS JAMES    01/27/22     3       2,490.00       1,671.20            .00            .00        38.70
+  01     10   A067105    COOLEY PHILLIP    05/17/22     3       2,032.15            .00            .00            .00     2,032.15
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       3
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     10   A067212    TAYLOR MAXINE B   07/05/22     3       3,000.00            .00            .00            .00     3,000.00
+  01     10   A067238    WILSON NORRIS R   07/26/22     3       8,596.62            .00            .00            .00     8,596.62
+  01     10   A067343    ROBERTSON ANN M   09/15/22     3       2,129.15            .00            .00            .00     2,129.15
+  01     10   A067353    WOMACK WILMA      09/20/22     3       8,985.00       8,127.87            .00            .00       157.13
+  01     10   A067454    MASEL JUDITH      11/08/22     3       2,129.15            .00            .00            .00     2,129.15
+  01     10   A067500    VINES THOMAS E    11/21/22     3       1,406.50            .00            .00            .00     1,406.50
+  01     10   A067514    CURLIN PRESLEY    12/09/22     2       2,129.15            .00            .00            .00     2,129.15
+  01     10   A067553    MOUSER KENNETH    01/11/23     3       2,588.93            .00            .00            .00     2,588.93
+  01     10   A067611    MEDLEY NORYCE     01/28/23     3       1,445.03       1,273.44            .00            .00        27.09
+  01     10   A069820    CAMPBELL JR JOH   04/29/23     3       5,728.34            .00            .00            .00     5,728.34
+  01     10   A069834    DAVIS MARY K      05/10/23     3       2,129.15            .00            .00            .00     2,129.15
+  01     10   A069840    HUNAN PATRICIA    05/11/23     3       9,520.00       7,822.26            .00            .00       134.87
+  01     10   A069922    SMITH SR JAMES    06/12/23     3       3,635.08            .00            .00            .00     3,635.08
+  01     10   A080072    BELL THOMAS SHE   08/15/23     2       6,902.47            .00            .00            .00     6,902.47
+  01     10   A080110    LHEUREUX GUY      08/23/23     3       2,129.15            .00            .00            .00     2,129.15
+  01     10   A080548    ALFORD LINDA      11/06/23     3      11,606.05            .00            .00            .00    11,606.05
+
+          * OFFICE TOTALS:   (POLICIES     102)               376,584.77      32,843.13            .00            .00   140,803.08
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     12   A013064    KIZER LOIS N      03/25/87     3       1,870.00            .00            .00            .00        28.05
+  01     12   A022361    FORTNER ANNIE     04/05/94     3       4,660.00            .00            .00            .00        69.90
+  01     12   A023367    HENDON JAMES      01/13/95     3       6,660.00            .00            .00            .00     1,200.00
+  01     12   A028780    GONZALEZ,SR JAM   02/23/99     3       3,820.00            .00            .00            .00        57.30
+  01     12   A040983    HAMRICK CHARLES   05/26/00     3       1,370.00            .00            .00            .00     1,370.00
+  01     12   A044292    THOMPSON GLYNDA   10/24/02     3       3,498.00            .00            .00            .00        55.80
+  01     12   A045121    MEADOWS VIVIAN    06/26/03     3       3,939.60            .00            .00            .00        59.09
+  01     12   A045685    OAKES GLENN       01/13/04     3       3,469.20            .00            .00            .00        52.04
+  01     12   A046558    ENGLAND COR/MAR   08/26/04     3       4,003.30            .00            .00            .00        63.29
+  01     12   A047414    HILL NOAH THOMA   04/28/05     3         421.40            .00            .00            .00       421.40
+  01     12   A047941    THOMASON VICTOR   09/16/05     3       7,237.30            .00            .00            .00     1,302.71
+  01     12   A050962    RUSSELL CHARLES   08/10/07     3          24.50            .00            .00            .00        24.50
+  01     12   A051498    COOK JOHN JAMES   01/07/08     3       2,621.50       2,307.39            .00            .00        39.11
+  01     12   A051653    WELBORN JUNE      03/08/08     3       5,045.00            .00            .00            .00        75.68
+  01     12   A056456    ALLEN NELL KIMB   11/29/11     3         542.71            .00            .00            .00       542.71
+  01     12   A056655    MORGAN,JR JAMES   01/31/12     3       7,045.00       6,613.66            .00            .00       143.78
+  01     12   A057392    POYNER WALLACE    09/27/12     3       5,932.00            .00            .00            .00        88.86
+  01     12   A057486    FOX CHARLENE      11/01/12     3       5,305.90            .00            .00            .00     5,305.90
+  01     12   A060040    STEWART LOVIE     03/23/15     3       5,116.75            .00            .00            .00     5,116.75
+  01     12   A063458    MCGARRITY JAMES   06/21/18     3       5,076.00            .00            .00            .00     5,076.00
+  01     12   A063614    DOUGLAS JOHN      08/17/18     3       2,845.00            .00            .00            .00       320.00
+  01     12   A063717    FROST BETTY       09/20/18     3       4,494.05            .00            .00            .00     4,494.05
+  01     12   A064431    STEWART FRANKIE   06/21/19     3       5,320.45            .00            .00            .00     5,320.45
+  01     12   A066220    CURTWRIGHT BERN   06/11/21     3       3,089.45            .00            .00            .00     3,089.45
+  01     12   A066455    EATMON RUBY DEA   09/21/21     3       2,997.30            .00            .00            .00     2,997.30
+  01     12   A067525    LYNCH DEBRA KAY   12/16/22     3       4,757.85            .00            .00            .00     4,757.85
+  01     12   A067536    FINCHER NOLA JE   12/21/22     3      11,885.00       4,681.46            .00            .00       101.77
+  01     12   A067571    MULLINS THOMAS    01/11/23     3       5,940.00            .00            .00            .00       119.58
+  01     12   A069983    MORGAN TIFFANY    06/21/23     2       8,026.75            .00            .00            .00     8,026.75
+
+          * OFFICE TOTALS:   (POLICIES      29)               127,014.01      13,602.51            .00            .00    50,320.07
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     17   AH00043    BYERS PAULINE     06/10/87     3       1,195.00            .00            .00            .00        20.31
+  01     17   AH10038    BURKE EVA         02/01/88     3       1,145.00            .00            .00            .00        31.81
+  01     17   AH10112    FIELDER NORMA     04/15/88     3       1,320.00            .00            .00            .00        24.58
+  01     17   A015613    BENNETT MARY M    03/23/89     3       2,770.00            .00            .00            .00        50.00
+  01     17   A018915    MILLER SAMMY      12/31/91     3       1,220.00            .00            .00            .00       219.60
+  01     17   A020532    WILLIAMSON MARJ   01/27/93     3       1,290.00            .00            .00            .00        19.35
+  01     17   A020776    ROBINSON BOBBIE   03/17/93     3       1,415.00            .00            .00            .00        21.22
+  01     17   A024008    HOLLOWAY FRANKI   07/20/95     2       4,110.00            .00            .00            .00        48.50
+  01     17   A024803    BURKE EVA         02/27/96     3         820.00            .00            .00            .00        24.60
+  01     17   A029845    JOHNSON DORENE    10/28/99     3       4,005.00            .00            .00            .00        28.41
+  01     17   A042019    GIBSON,SR CLAUD   02/19/01     3       5,610.00            .00            .00            .00        84.15
+  01     17   A045016    CALHOON KENNETH   05/28/03     3       1,930.60            .00            .00            .00        48.27
+  01     17   A045428    JENKINS ELIZABE   10/27/03     3       5,919.20            .00            .00            .00        88.79
+  01     17   A045662    SCHAFFHAUSER JA   01/02/04     2       5,576.20            .00            .00            .00       914.49
+  01     17   A047308    SIMMONS RHODA     04/14/05     3       1,710.10            .00            .00            .00        64.13
+  01     17   A050769    WOOTEN GERALDIN   07/31/07     3       2,058.00            .00            .00            .00        38.59
+  01     17   A052974    HENSON MARTHA     01/28/09     3       7,705.00            .00            .00            .00       157.24
+  01     17   A055587    BURKE EVA INEZ    01/31/11     3         577.15            .00            .00            .00       577.15
+  01     17   A057288    ALLEN BEVERLY     08/17/12     3         325.00            .00            .00            .00        48.75
+  01     17   A058117    CANTWELL DOROTH   05/30/13     3       7,100.00            .00            .00            .00     1,879.00
+  01     17   A059822    WILLIAMSON ALIC   12/09/14     3       6,007.80            .00            .00            .00     6,007.80
+  01     17   A061797    O'BRYANT KATHRY   10/12/16     3       7,774.55            .00            .00            .00     7,774.55
+  01     17   A062495    JOHNSON JEWEL D   06/21/17     3       2,565.65            .00            .00            .00     2,565.65
+  01     17   A062949    JOHNSON RUBY      11/28/17     3         965.15            .00            .00            .00       965.15
+  01     17   A062950    JOHNSON DELBERT   11/28/17     3       2,177.65            .00            .00            .00     2,177.65
+  01     17   A063349    JOHNOSN JEWEL     04/30/18     3       1,091.25            .00            .00            .00     1,091.25
+  01     17   A064915    PIERCE JAMES      12/12/19     3       3,835.00            .00            .00            .00       667.00
+  01     17   A065892    BARNES SHIRLEY    02/04/21     3       8,265.00         728.96            .00            .00        40.00
+  01     17   A067248    STANFORD JOYCE    06/17/22     3       1,381.28            .00            .00            .00     1,381.28
+  01     17   A067643    WARREN JUANITA    01/04/23     3       1,993.35            .00            .00            .00     1,993.35
+
+          * OFFICE TOTALS:   (POLICIES      30)                93,857.93         728.96            .00            .00    29,052.62
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     18   AE00027    GUFF E BURON      10/09/95     3       1,920.00            .00            .00            .00     1,920.00
+  01     18   A028071    JOHNSON JOYCE     08/04/98     3       2,215.00            .00            .00            .00     2,215.00
+  01     18   A044555    BALLARD CHARLES   02/04/03     3       4,795.00            .00            .00            .00        61.65
+  01     18   A046943    WILSON PAT C      01/18/05     3       4,454.10            .00            .00            .00        66.81
+  01     18   A052207    DAVIS MARVIN G    07/30/08     3       7,365.00            .00            .00            .00       110.48
+  01     18   A054987    JACKS KATHRYN     08/23/10     3       7,435.05            .00            .00            .00     7,435.05
+  01     18   A055826    BROWN WILBURN     04/21/11     3       6,890.00            .00            .00            .00        52.50
+  01     18   A059313    ROWTON DONNA      07/09/14     3      10,135.00            .00            .00            .00       677.92
+  01     18   A059691    LEE EARNEST       12/01/14     3       5,839.40            .00            .00            .00     5,839.40
+  01     18   A061807    DUNN MARY CHRIS   11/02/16     3       5,275.00            .00            .00            .00        79.12
+  01     18   A062631    HARDEN JACK WOO   08/24/17     3      10,090.50       3,045.20            .00            .00       101.51
+  01     18   A064989    STORY THOM/ADA    01/10/20     3       8,744.55            .00            .00            .00     8,744.55
+  01     18   A065557    MCCLAIN JEANETT   08/27/20     3       1,995.00            .00            .00            .00        40.00
+  01     18   A066375    WEST TREVA PEAR   08/12/21     3       8,502.05            .00            .00            .00     8,502.05
+  01     18   A066770    WHITEHEAD BERNA   01/27/22     3       8,264.40            .00            .00            .00     8,264.40
+  01     18   A066823    MCCLENDON JOHN    01/28/22     3       2,032.15            .00            .00            .00     2,032.15
+
+          * OFFICE TOTALS:   (POLICIES      16)                95,952.20       3,045.20            .00            .00    46,142.59
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     20   A006805    STONE BERNICE     10/27/82     3         230.00            .00            .00            .00       230.00
+  01     20   A010441    FOWLER ARVIS      04/09/85     3       1,085.00            .00            .00            .00        16.42
+  01     20   A010607    KELSO KENTON      05/21/85     3       2,790.00            .00            .00            .00        53.12
+  01     20   A011158    JONES JOSEPHINE   10/11/85     3         645.00            .00            .00            .00         9.08
+  01     20   A012160    SHAW VIRGINIA     06/17/86     3         875.00            .00            .00            .00        13.13
+  01     20   A012201    WOOLEY EMILY      07/07/86     3       2,595.00            .00            .00            .00     2,595.00
+  01     20   A012209    THOMAS JAMES      07/09/86     3       1,325.00            .00            .00            .00        27.33
+  01     20   A015876    WARD AMILEE       06/20/89     3       1,605.00            .00            .00            .00        24.08
+  01     20   A016664    CHILDERS ANN L    02/22/90     3       3,595.00            .00            .00            .00        54.08
+  01     20   A016668    FORD TROY         02/20/90     3       2,092.00            .00            .00            .00        50.00
+  01     20   A016994    FOSHEE BARBARA    05/12/90     3       4,190.00            .00            .00            .00        62.85
+  01     20   A017309    JONES JOSEPHINE   08/27/90     3         130.00            .00            .00            .00       130.00
+  01     20   A018090    LEACH EMOGENE E   05/08/91     3       2,335.00            .00            .00            .00        30.03
+  01     20   A019254    COOPER WANDA      02/28/92     3       2,515.00            .00            .00            .00     2,515.00
+  01     20   A019275    CROSS ROBERT      03/04/92     3       3,185.00            .00            .00            .00        47.76
+  01     20   A020401    WEST PAUL         12/30/92     3       1,815.00            .00            .00            .00        27.22
+  01     20   A020661    RUTLEDGE ARLENE   02/24/93     3         895.00            .00            .00            .00       895.00
+  01     20   A021426    BRILEY EMMA SUE   08/21/93     3       3,340.00            .00            .00            .00       585.95
+  01     20   A021525    NOBLITT JUANITA   09/09/93     3       2,540.00            .00            .00            .00       114.30
+  01     20   A022701    WOMACK LOTTIE     06/30/94     2       4,685.00            .00            .00            .00        70.27
+  01     20   A024746    RAY BETTY JO      02/22/96     3       5,235.00            .00            .00            .00       847.00
+  01     20   A024891    WILLBANKS CORIN   03/20/96     3       5,085.00            .00            .00            .00     5,085.00
+  01     20   A026357    COLLIER MELBA E   05/16/97     3       4,690.00            .00            .00            .00       844.20
+  01     20   A026415    MEEKS DEMZEL      05/29/97     3       3,290.00            .00            .00            .00     3,290.00
+  01     20   A026853    BATTLES CHARLEN   09/30/97     3       5,585.00            .00            .00            .00     5,585.00
+  01     20   A027388    BRADY BOBBIE J    02/09/98     3       5,810.00            .00            .00            .00        87.15
+  01     20   A027742    CROSS JOANN       05/06/98     3       6,365.00       5,528.56            .00            .00        92.14
+  01     20   A029785    MADDOX DANIEL/L   10/14/99     3       3,895.00            .00            .00            .00        58.43
+  01     20   A029925    GUNDERMAN ANNA    11/16/99     3       4,490.00            .00            .00            .00        67.33
+  01     20   A041030    PADGETT THOMAS/   06/30/00     3       4,190.00            .00            .00            .00        62.85
+  01     20   A041236    GRAFF RUBY B      08/22/00     3       6,015.00            .00            .00            .00     1,082.60
+  01     20   A041389    DUSIL TIMOTHY     09/29/00     2       5,370.00            .00            .00            .00        80.17
+  01     20   A041513    STACKS ROSE LEA   11/06/00     3       6,140.00            .00            .00            .00        35.67
+  01     20   A041661    THOMAS JIMMY E    12/20/00     3       1,795.00            .00            .00            .00       538.33
+  01     20   A041685    GLOVER COY/LESS   01/09/01     3       4,440.00            .00            .00            .00       799.20
+  01     20   A042397    GUNTER MOZELLE    05/07/01     3       3,815.00            .00            .00            .00       686.60
+  01     20   A042416    PARKER LAVOLA     05/16/01     3       6,360.00            .00            .00            .00     1,144.80
+  01     20   A042822    JONES ERKLE M     08/15/01     3       4,910.00            .00            .00            .00        73.08
+  01     20   A043324    COOK ODIE LEE     01/28/02     3       1,416.00            .00            .00            .00     1,416.00
+  01     20   A043398    COOK ODIE LEE     02/02/02     3       2,668.00            .00            .00            .00     2,668.00
+  01     20   A043550    SUBLETT BARBARA   02/06/02     3       2,225.00            .00            .00            .00     2,225.00
+  01     20   A044202    LENGLE BARBARA    09/23/02     3       1,171.00            .00            .00            .00        43.92
+  01     20   A044516    BISHOP ARTHUR     01/20/03     3       3,429.00            .00            .00            .00        50.92
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     20   A044686    LANE GENICE E     03/15/03     3       5,385.00            .00            .00            .00        56.42
+  01     20   A044747    FULMER MYRTLE C   03/28/03     3       5,746.03            .00            .00            .00     5,746.03
+  01     20   A044931    BLAKE RUTH        05/08/03     3       1,515.00            .00            .00            .00        39.56
+  01     20   A045387    RAY JESSIE C      10/02/03     3       6,316.00            .00            .00            .00        85.18
+  01     20   A045574    AUSTIN JUANITA    12/01/03     2       2,747.67            .00            .00            .00     2,747.67
+  01     20   A046245    SIMMONS BETTY     06/10/04     3       1,636.00            .00            .00            .00       103.00
+  01     20   A046491    HURLEY JOHN J     08/17/04     3       5,545.00            .00            .00            .00        42.42
+  01     20   A048072    ROPER JANICE      10/19/05     2       4,331.60            .00            .00            .00       277.63
+  01     20   A050128    FOREMAN ROYANN    02/06/07     3       7,722.00            .00            .00            .00     2,722.00
+  01     20   A050400    BITTLE DANNY R    04/25/07     2       5,522.00            .00            .00            .00        87.43
+  01     20   A050401    BITTLE DARLENE    04/25/07     2       5,772.00            .00            .00            .00        91.40
+  01     20   A050402    BITTLE LONNIE L   04/25/07     2       5,772.00            .00            .00            .00        91.40
+  01     20   A050403    BITTLE RHONI      04/25/07     2       5,772.00            .00            .00            .00        91.40
+  01     20   A050899    HARRIS TEDDY      09/07/07     3       6,423.90            .00            .00            .00        90.40
+  01     20   A050992    RUDDER DUSTIN P   10/01/07     3       6,270.00            .00            .00            .00       127.96
+  01     20   A051468    WEST FARON GLEN   01/14/08     3       6,305.00            .00            .00            .00       110.92
+  01     20   A052911    WALSH,JR THOMAS   01/30/09     3       5,520.00            .00            .00            .00       993.60
+  01     20   A054118    PATTERSON LAVON   12/31/09     3       6,360.25            .00            .00            .00     6,360.25
+  01     20   A054294    MITCHELL HARDY    02/15/10     3       7,045.00            .00            .00            .00       105.67
+  01     20   A055019    MILLER JAMES A    09/01/10     3       8,295.00            .00            .00            .00       131.33
+  01     20   A055124    MARTINEZ CHARLE   09/27/10     3       5,885.00            .00            .00            .00       120.10
+  01     20   A056132    GREGG JACK EARL   08/03/11     3       4,845.15            .00            .00            .00     4,845.15
+  01     20   A056479    FUNKE DONALD      12/12/11     2       1,838.15            .00            .00            .00     1,838.15
+  01     20   A056495    HERRING BRAYLIS   12/06/11     3       4,385.00            .00            .00            .00        62.68
+  01     20   A056674    FURMAN BETTY RU   02/03/12     3       7,420.00            .00            .00            .00       111.30
+  01     20   A056749    WIMBERLY EDWARD   03/01/12     3       7,835.00       4,795.11            .00            .00       159.89
+  01     20   A056756    WALL,JR CURTIS    03/03/12     3       7,427.50            .00            .00            .00       130.67
+  01     20   A057638    WELDON WILLIAM    12/28/12     3       7,190.00            .00            .00            .00       107.85
+  01     20   A057828    HERMES ELTON M    02/25/13     3       7,305.00            .00            .00            .00       105.08
+  01     20   A057967    HARRELL CHARLES   04/03/13     3       7,085.85            .00            .00            .00     7,085.85
+  01     20   A058357    COLCASURE BETTY   08/09/13     3         897.01            .00            .00            .00       897.01
+  01     20   A058472    BAKER FLODINE     09/16/13     3       7,025.00            .00            .00            .00        75.41
+  01     20   A058976    CALDWELL GARY H   03/07/14     3       6,265.00            .00            .00            .00        93.97
+  01     20   A059066    HEGI NORA         04/05/14     3       1,375.00            .00            .00            .00        28.02
+  01     20   A059841    JENKINS DYLES N   01/28/15     3       5,199.20            .00            .00            .00     5,199.20
+  01     20   A059886    HAZEL ERMA J      02/06/15     3       5,240.00            .00            .00            .00        70.67
+  01     20   A060239    LUCKETT JERRY     05/29/15     3       2,481.00            .00            .00            .00        93.03
+  01     20   A060303    SPRINGER JR EMM   06/09/15     3       4,043.93            .00            .00            .00     4,043.93
+  01     20   A060419    BATSON FRANCIS    08/05/15     3       6,397.15            .00            .00            .00     6,397.15
+  01     20   A060446    WEST WILLIAM JO   08/14/15     3       5,910.00            .00            .00            .00        88.65
+  01     20   A060543    PENNINGTON LIND   09/08/15     2       2,129.15            .00            .00            .00     2,129.15
+  01     20   A060585    MEEKS DENZEL      09/21/15     3       1,075.00            .00            .00            .00        40.29
+  01     20   A060937    MCGAHA RONNIE     01/28/16     3       5,140.00            .00            .00            .00        77.10
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       3
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     20   A060989    BROOKS BOBBY      02/05/16     3           1.00            .00            .00            .00         1.00
+  01     20   A061474    THOMAS JIMMY      07/14/16     3       3,720.00            .00            .00            .00        58.88
+  01     20   A061674    WILLIAMS ROBERT   09/16/16     2      10,195.00            .00            .00            .00       152.93
+  01     20   A061746    KING GERALD       10/13/16     3       8,875.00       7,079.60            .00            .00       155.10
+  01     20   A061816    GUNTER BERANDIN   10/31/16     3         577.15            .00            .00            .00       577.15
+  01     20   A061947    STACY JEAN        12/29/16     3       1,030.00            .00            .00            .00        51.50
+  01     20   A062160    QUATTLEBAUM BER   03/06/17     3       8,919.15            .00            .00            .00     8,919.15
+  01     20   A062786    MILLER JAMES A    10/22/17     3         400.00            .00            .00            .00       400.00
+  01     20   A062787    ERVINE ALBERT     10/10/17     3           1.00            .00            .00            .00         1.00
+  01     20   A062825    WAGGONER VIRGIN   11/13/17     3      11,120.00            .00            .00            .00       166.80
+  01     20   A063095    LOFTIN MARION     02/20/18     3       8,434.00            .00            .00            .00     8,434.00
+  01     20   A063594    CUDD LOYD         08/13/18     3           1.00            .00            .00            .00         1.00
+  01     20   A063710    WASHAM ROY        09/24/18     3       8,230.00       7,668.50            .00            .00       144.79
+  01     20   A064188    BATTLES VIRGINI   03/17/19     3      11,785.00      11,195.00            .00            .00       207.31
+  01     20   A064576    OCHOA REYNALEO    08/07/19     2       7,725.00            .00            .00            .00       115.87
+  01     20   A064611    BOYETT MICHAEL    08/15/19     3       1,995.00            .00            .00            .00        74.79
+  01     20   A064649    FORRESTER, SR B   09/02/19     3       7,721.20            .00            .00            .00     7,721.20
+  01     20   A064820    JOHNSON LE AN     10/29/19     3       5,059.00            .00            .00            .00     5,059.00
+  01     20   A065074    HELLERICH DAVID   01/29/20     3       1,741.63            .00            .00            .00     1,741.63
+  01     20   A065148    CUDD LOYD DELBE   02/27/20     3         589.27            .00            .00            .00       589.27
+  01     20   A065173    MIZE KENNETH      03/13/20     2      10,272.78            .00            .00            .00    10,272.78
+  01     20   A065400    WHEELER JUDY AN   06/25/20     3       7,173.15            .00            .00            .00     7,173.15
+  01     20   A065498    ERWIN WILLIAM     07/31/20     3       1,735.00            .00            .00            .00     1,735.00
+  01     20   A066044    HENRY LOIS ANN    03/30/21     3       2,372.00            .00            .00            .00     2,372.00
+  01     20   A066156    DIEHL GWENDOLYN   05/17/21     3      10,455.00            .00            .00            .00       183.89
+  01     20   A066178    BROCK HERMAN FR   05/28/21     3       2,134.00            .00            .00            .00     2,134.00
+  01     20   A066202    BARNES RICHARD    06/08/21     3       1,828.93            .00            .00            .00     1,828.93
+  01     20   A066259    WILLIAMS BONNIE   06/28/21     3      10,243.20            .00            .00            .00    10,243.20
+  01     20   A066347    STONE PEGGY       08/04/21     3       8,429.30            .00            .00            .00     8,429.30
+  01     20   A067029    OXNER CAROLYN     04/30/22     3       2,095.00         100.00            .00            .00       100.00
+  01     20   A067159    AUSTIN JUDY L     06/14/22     3       9,947.35            .00            .00            .00     9,947.35
+  01     20   A067229    WALKER BRENDA S   07/21/22     2       2,726.18            .00            .00            .00     2,726.18
+  01     20   A067230    WALKER GERALD D   07/21/22     2       2,726.18            .00            .00            .00     2,726.18
+  01     20   A067309    HUBBARD ROSEMAR   08/26/22     3       2,129.15            .00            .00            .00     2,129.15
+  01     20   A067369    MORRISON GENEVA   09/07/22     3       5,766.65            .00            .00            .00     5,766.65
+  01     20   A067493    BOWIE LOELL       11/16/22     3      10,946.45            .00            .00            .00    10,946.45
+  01     20   A067497    TURNER TOMMY      11/14/22     3         431.65            .00            .00            .00       431.65
+  01     20   A067512    DELCAMPO DANIEL   12/05/22     3       5,451.40            .00            .00            .00     5,451.40
+  01     20   A067534    NEIGHBORS EULA    12/20/22     3       9,690.30            .00            .00            .00     9,690.30
+  01     20   A067538    HORTON BOBBIE     12/27/22     3      10,415.00       7,291.42            .00            .00       123.58
+  01     20   A067552    ORRELL BRYAN      01/10/23     3       6,550.00       6,150.00            .00            .00       128.12
+  01     20   A067574    FIRESTONE HAROL   01/20/23     3       2,129.15            .00            .00            .00     2,129.15
+  01     20   A067595    LAMPKIN WILLIAM   01/18/23     3      11,024.05            .00            .00            .00    11,024.05
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       4
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     20   A067640    DUVALL GARY ALL   02/16/23     3       8,285.00       5,285.00            .00            .00        88.08
+  01     20   A067649    SANDERS HAZEL     02/16/23     3      13,001.88            .00            .00            .00    13,001.88
+  01     20   A069737    CUMMINGS DAVID    03/14/23     3      11,135.00      10,021.00            .00            .00     2,505.25
+  01     20   A069758    WIEDOWER WANDA    03/27/23     3       2,960.92            .00            .00            .00     2,960.92
+  01     20   A069760    GUFFEY NELDA MA   03/29/23     3       9,885.00       2,085.16            .00            .00        81.42
+  01     20   A080152    HOLLAND JETTIE    09/11/23     3       8,628.15            .00            .00            .00     8,628.15
+  01     20   A080520    WILBANKS WILLAR   10/26/23     3       2,090.84            .00            .00            .00     2,090.84
+
+          * OFFICE TOTALS:   (POLICIES     136)               656,029.60      67,199.35            .00            .00   259,937.35
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     21   A043399    JUNYOR MARY E     01/18/02     3       3,213.00            .00            .00            .00        47.24
+  01     21   A043648    TAPLEY JACQUE     04/10/02     2       2,092.47            .00            .00            .00     2,092.47
+  01     21   A044586    FREEMAN HAROLD    02/17/03     2         995.00            .00            .00            .00        24.86
+  01     21   A045007    TAPLEY JACQUELI   05/29/03     2         877.00            .00            .00            .00       877.00
+  01     21   A045499    PASSMORE WAYMON   11/24/03     3       3,993.66            .00            .00            .00        62.42
+  01     21   A046106    GLENN BILLY S     04/21/04     3       5,385.00            .00            .00            .00        80.58
+  01     21   A046107    GLENN ANITA       04/21/04     2       5,385.00            .00            .00            .00        80.58
+  01     21   A046230    KING JOE D        06/11/04     3       3,715.00            .00            .00            .00        55.75
+  01     21   A048297    STEPHENS BILLIE   12/02/05     3       5,541.90            .00            .00            .00     5,541.90
+  01     21   A048586    MILLS J B         01/31/06     3       7,830.20            .00            .00            .00     1,409.44
+  01     21   A049422    CHAPMAN PAUL      08/15/06     2       7,178.50            .00            .00            .00       142.07
+  01     21   A051338    TOWNSEND WILLIA   12/28/07     3       7,291.20            .00            .00            .00        96.52
+  01     21   A052276    ROBBINS BOBB      08/25/08     3       5,195.00            .00            .00            .00        82.25
+  01     21   A054106    WEBB BETTY        12/31/09     3       6,270.00            .00            .00            .00       104.50
+  01     21   A055975    ST CLAIR KEITH    06/10/11     3       2,871.20            .00            .00            .00     2,871.20
+  01     21   A056510    MCCALLISTER CHA   12/06/11     3       1,552.00            .00            .00            .00     1,552.00
+  01     21   A056946    WOOD BILLY ROY    05/08/12     3       2,115.00            .00            .00            .00        52.88
+  01     21   A056949    JUENGER BETTIE    05/08/12     3       6,380.00            .00            .00            .00        78.00
+  01     21   A061171    FEATHERS CAROLY   03/15/16     3       1,895.00            .00            .00            .00     1,895.00
+  01     21   A061718    JOHNSON GENEVA    10/04/16     3         195.00            .00            .00            .00       195.00
+  01     21   A062625    WILKINS JAMES E   08/18/17     3       7,561.63            .00            .00            .00     7,561.63
+  01     21   A062660    TAPLEY CHARLES    08/31/17     2       7,100.40            .00            .00            .00     7,100.40
+  01     21   A063293    STACKS BERNICE    05/01/18     3       9,428.40            .00            .00            .00     9,428.40
+  01     21   A064465    WILKINS JAMES K   06/26/19     3       1,285.25            .00            .00            .00     1,285.25
+  01     21   A064690    ST CLAIR KEITH    09/09/19     3       1,091.25            .00            .00            .00     1,091.25
+  01     21   A065028    JACOBS LARRY H    01/16/20     3       9,884.78            .00            .00            .00     9,884.78
+  01     21   A065073    FIDDLER MAUREEN   01/29/20     3       9,433.00            .00            .00            .00     9,433.00
+  01     21   A065705    WATSON TOMMY      11/13/20     2       9,615.00            .00            .00            .00       144.00
+  01     21   A066002    ROBINSON JOE T    03/23/21     3       8,303.20            .00            .00            .00     8,303.20
+  01     21   A066280    BRAZZIL JR GEOR   07/02/21     3       3,007.00            .00            .00            .00     3,007.00
+  01     21   A067587    PATTERSON JACKI   01/26/23     3       5,963.00       4,651.40            .00            .00        89.45
+
+          * OFFICE TOTALS:   (POLICIES      31)               152,644.04       4,651.40            .00            .00    74,670.02
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     22   A013393    JACOBS EVELYN     06/12/87     3       2,135.00            .00            .00            .00     2,135.00
+  01     22   A014970    JUSTUS JAMES E    09/15/88     3       2,475.00            .00            .00            .00       445.50
+  01     22   A015495    LOVE JUNE         02/15/89     3       1,950.00            .00            .00            .00       351.00
+  01     22   A040904    CHALK WESLEY D    05/30/00     3       1,120.00            .00            .00            .00     1,120.00
+  01     22   A040906    CHALK MICHAEL     05/30/00     3       1,330.50            .00            .00            .00     1,330.50
+  01     22   A040937    RENFROE GLORIA    06/07/00     3       5,390.00            .00            .00            .00        80.85
+  01     22   A041188    FOERSTER JANELL   07/26/00     3       1,120.00            .00            .00            .00        42.08
+  01     22   A044812    APPLEBY JIMMIE    03/18/03     3       1,171.00            .00            .00            .00        44.00
+  01     22   A044963    FRENCH GARY DON   05/08/03     3       1,224.20            .00            .00            .00        45.91
+  01     22   A045082    KELLEY WILLIE C   06/17/03     2       1,171.00            .00            .00            .00        44.00
+  01     22   A045458    SISCO ROBERT C    11/05/03     3       3,327.10            .00            .00            .00        49.91
+  01     22   A045710    HARPER WIN/OLL    01/21/04     3       4,581.00            .00            .00            .00       824.20
+  01     22   A045719    GRANDON JOAN      01/21/04     3       1,195.56            .00            .00            .00        44.84
+  01     22   A045722    GRIGGS ELAINE     01/24/04     3       3,483.90            .00            .00            .00        52.26
+  01     22   A047666    MERCER LINDA      07/12/05     3       8,854.00            .00            .00            .00       132.57
+  01     22   A047785    JENNINGS RICHAR   08/09/05     3       4,070.00            .00            .00            .00        61.05
+  01     22   A048110    WEATHERLY HA/CO   10/28/05     3       1,294.00            .00            .00            .00        26.41
+  01     22   A048869    ROWE MARIE N      03/22/06     3       6,786.00            .00            .00            .00       101.78
+  01     22   A049344    HENDERSON BETTY   07/25/06     2       7,379.00            .00            .00            .00     1,328.20
+  01     22   A051439    SISCO ROBERT      01/07/08     3       2,303.00            .00            .00            .00        34.55
+  01     22   A051839    WEATHERLY HA/CO   05/07/08     3       1,620.00            .00            .00            .00        33.06
+  01     22   A054584    GOATCHER EARL G   04/30/10     3       7,648.00            .00            .00            .00     7,648.00
+  01     22   A056725    ISRAEL LILLOWS    02/16/12     3       5,723.00            .00            .00            .00     5,723.00
+  01     22   A057571    HUDSON BROUGHTO   12/11/12     3       1,895.00            .00            .00            .00        71.04
+  01     22   A057609    STEWART LAURA     12/20/12     3       6,045.00            .00            .00            .00        84.08
+  01     22   A057729    MCGRAW MARTHA     01/08/13     3       2,875.00            .00            .00            .00        28.70
+  01     22   A058405    SMITH SANDRA      08/28/13     3       1,396.80            .00            .00            .00     1,396.80
+  01     22   A058497    GODFREY MARIE     10/01/13     3       6,683.00            .00            .00            .00     6,683.00
+  01     22   A058801    LEWIS LENARD      01/15/14     3       2,775.00            .00            .00            .00        41.62
+  01     22   A059256    WADE JOHN EDWIN   06/24/14     2       1,654.00            .00            .00            .00     1,654.00
+  01     22   A059748    GUNTER BERNADIN   12/30/14     3       4,075.00            .00            .00            .00       366.78
+  01     22   A059931    GODFREY ELDORA    02/05/15     3       5,034.30            .00            .00            .00     5,034.30
+  01     22   A062969    LANGFORD LOUISE   01/05/18     3       4,272.85            .00            .00            .00     4,272.85
+  01     22   A063098    HENDERSON RUBY    02/21/18     3       6,030.00            .00            .00            .00        57.25
+  01     22   A063399    OWENS AUTREY E    06/08/18     3       1,653.85            .00            .00            .00     1,653.85
+  01     22   A063401    FIELDS JOYCE      06/13/18     3       1,706.00            .00            .00            .00        63.97
+  01     22   A064890    OOOTEN DACY JOY   11/26/19     3       9,685.00       2,022.19            .00            .00       106.41
+  01     22   A065280    WALLACE AMALINE   05/07/20     3       1,550.50            .00            .00            .00     1,550.50
+  01     22   A065730    PRUITT ELIZABET   11/20/20     3       1,459.85            .00            .00            .00     1,459.85
+  01     22   A066231    GLEIT ROBERT      06/18/21     3       1,450.15            .00            .00            .00     1,450.15
+  01     22   A066336    WAMPLER JOHN W    07/26/21     3       2,968.69            .00            .00            .00     2,968.69
+  01     22   A067166    LOFTIS BRENDA     06/07/22     3       5,695.00       3,268.28            .00            .00        64.08
+  01     22   A067622    CLARK DAVID H     01/16/23     3       5,577.50            .00            .00            .00     5,577.50
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     22   A069714    MCGAHA MARY FRA   03/09/23     3       5,887.90            .00            .00            .00     5,887.90
+  01     22   A069715    MCGAHA JAMES      03/09/23     3       4,636.60            .00            .00            .00     4,636.60
+  01     22   A069878    SEATON WILMA JE   05/24/23     3       1,644.15            .00            .00            .00     1,644.15
+  01     22   A080075    STACKS DONA W     08/14/23     3       8,357.08            .00            .00            .00     8,357.08
+
+          * OFFICE TOTALS:   (POLICIES      47)               172,359.48       5,290.47            .00            .00    76,809.82
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     28   AL00003    AVEY AUDREY       08/31/87     3       3,087.00            .00            .00            .00     3,087.00
+  01     28   AL00076    HALLIDAY CHARLE   04/10/09     3       4,870.00            .00            .00            .00     4,870.00
+  01     28   AL00093    JAMES JOYCE       03/23/10     3       6,865.00            .00            .00            .00     6,865.00
+  01     28   AL00115    LONG CHARLES      11/18/10     3       1,790.00            .00            .00            .00     1,790.00
+  01     28   AL00121    MANLEY EUNICE (   11/15/99     3       3,590.00            .00            .00            .00     3,590.00
+  01     28   A060327    SPURLOCK MARILY   06/29/15     3       7,935.00            .00            .00            .00     1,287.00
+  01     28   A060675    VALDEZ ELIDA      10/22/15     2       1,159.00            .00            .00            .00     1,159.00
+  01     28   A061192    OTT LOU ANN       04/13/16     3       5,855.00            .00            .00            .00        87.75
+  01     28   A061855    SCOTT MARILYN     10/31/16     3       1,343.00            .00            .00            .00     1,343.00
+  01     28   A061895    DAVENPORT ZELL    12/07/16     3       8,335.50            .00            .00            .00       124.89
+  01     28   A062468    DUNLAP AGNES      06/27/17     3       8,424.00            .00            .00            .00     8,424.00
+  01     28   A062754    CASSON MARY CAT   10/13/17     3       1,195.00            .00            .00            .00        44.79
+  01     28   A063544    COPELAND BEVERL   07/19/18     3       3,720.00            .00            .00            .00        35.83
+  01     28   A063882    JONES CAROLYN E   12/04/18     2       1,320.00            .00            .00            .00        47.18
+  01     28   A063883    JONES LARRY MAR   12/04/18     2       1,320.00            .00            .00            .00        47.18
+  01     28   A064747    UCHIDA KENNETH    10/09/19     3       1,338.50            .00            .00            .00     1,338.50
+  01     28   A064921    COCHRAN JODY      12/17/19     3       1,395.00            .00            .00            .00        55.28
+  01     28   A064979    DODSON BILLY DE   01/08/20     3       4,220.00            .00            .00            .00        74.24
+  01     28   A065420    ISOM DAVID LEE    07/16/20     3       1,353.00            .00            .00            .00     1,353.00
+  01     28   A065495    COPELAND BEVERL   08/04/20     3       1,285.00            .00            .00            .00     1,285.00
+  01     28   A066208    COPELAND BEVERL   05/28/21     3       2,328.00            .00            .00            .00     2,328.00
+  01     28   A067005    PADEN ROBERT W    04/25/22     3       8,744.55            .00            .00            .00     8,744.55
+  01     28   A067555    EMRY JOHN ALBER   01/17/23     3       6,885.50       5,853.40            .00            .00       106.42
+  01     28   A067624    BURNS ANNIS K     02/07/23     3       1,644.15            .00            .00            .00     1,644.15
+  01     28   A067638    BACKES PERRY JA   02/14/23     3       1,600.98            .00            .00            .00     1,600.98
+  01     28   A069804    JONES LARRY M     04/13/23     3       2,995.00       1,675.00            .00            .00        50.76
+  01     28   A080078    DEARMOE JACQUEL   08/24/23     3       1,644.15            .00            .00            .00     1,644.15
+  01     28   A080095    ELLIS RICHARD A   08/29/23     3       1,479.74            .00            .00            .00     1,479.74
+  01     28   A080546    HARLOW JILL       11/09/23     3       1,615.50       1,415.50            .00            .00        39.32
+
+          * OFFICE TOTALS:   (POLICIES      29)                99,337.57       8,943.90            .00            .00    54,546.71
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     29   AA00008    SMITH NELDA       05/23/97     3       3,622.00            .00            .00            .00     3,622.00
+  01     29   A054210    ARNOLD VIRGINIA   01/18/10     3       3,020.00            .00            .00            .00        45.29
+  01     29   A054337    GRAY MARGARET J   02/22/10     3       1,267.00            .00            .00            .00        35.54
+  01     29   A055140    PLUMLEE MARILYN   10/07/10     3      10,442.00            .00            .00            .00    10,442.00
+  01     29   A055248    LONG GERALD EDW   11/09/10     3      10,640.00            .00            .00            .00     1,908.00
+  01     29   A055720    BURKHARDT JACK    03/22/11     3       9,449.50            .00            .00            .00       141.66
+  01     29   A056556    HULL WILLIAM A    01/03/12     2       7,387.00            .00            .00            .00     1,329.40
+  01     29   A057066    LINCH VIVIAN      06/14/12     2       9,520.00            .00            .00            .00       752.00
+  01     29   A057646    MAYES VIRGINIA    01/08/13     3       7,609.00            .00            .00            .00     7,609.00
+  01     29   A058672    MITCHELL EDWARD   12/03/13     3       6,112.50            .00            .00            .00     1,098.50
+  01     29   A059162    SMITH VEDA JO     05/20/14     3       3,634.00            .00            .00            .00        37.50
+  01     29   A060027    GASKILL MARTHA    03/26/15     3       9,622.00            .00            .00            .00     9,622.00
+  01     29   A061390    SAVAGE INGE       06/10/16     2       9,375.00            .00            .00            .00     9,375.00
+  01     29   A061831    SNOW DONNA FAYE   11/04/16     3       2,270.00            .00            .00            .00        51.00
+  01     29   A062358    BUIE ROBERT FRA   05/14/17     3       1,395.00            .00            .00            .00        25.94
+  01     29   A062964    HUFFMAN CHERYL    01/05/18     3       5,350.00       2,875.74            .00            .00       109.18
+  01     29   A063214    GOTCHER TONCIE    03/21/18     3       9,410.00            .00            .00            .00        83.22
+  01     29   A063761    MULANAR JIMMY     10/15/18     3       7,595.00            .00            .00            .00       683.50
+  01     29   A064119    STRATTON GREGOR   02/25/19     3           1.00            .00            .00            .00         1.00
+  01     29   A064210    SIMS GERALD DEN   03/27/19     3       8,780.00            .00            .00            .00     1,580.00
+  01     29   A064696    RHODES SIBYL      09/16/19     3       8,972.00            .00            .00            .00     8,972.00
+  01     29   A066334    CHATTERTON WILL   07/29/21     3      10,325.00            .00            .00            .00    10,325.00
+  01     29   A066540    THORNE DALE W     09/13/21     3       7,682.00            .00            .00            .00     7,682.00
+  01     29   A066732    FLOWERS NELDA J   12/29/21     3       4,457.15            .00            .00            .00     4,457.15
+  01     29   A067286    TEAGUE VIRGIL     08/20/22     3       9,932.80            .00            .00            .00     9,932.80
+  01     29   A067672    SMITH VEDA JO     01/16/23     3       1,280.40            .00            .00            .00     1,280.40
+  01     29   A067673    KEATING DELORES   01/20/23     3       1,886.65            .00            .00            .00     1,886.65
+  01     29   A069917    MARKLE MYRTLE     06/13/23     3       9,520.55            .00            .00            .00     9,520.55
+  01     29   A069939    WIATT MARK        06/19/23     3       1,644.15            .00            .00            .00     1,644.15
+  01     29   A069942    MCCUTCHEON DELL   06/06/23     3       1,925.45            .00            .00            .00     1,925.45
+  01     29   A080011    JONES LEROY       07/21/23     3       1,644.15            .00            .00            .00     1,644.15
+  01     29   A080013    HAMPTON SILVIA    07/07/23     3       8,385.00       6,885.00            .00            .00       153.85
+  01     29   A080222    KLEINERT EDITH    11/22/23     3       1,741.15            .00            .00            .00     1,741.15
+
+          * OFFICE TOTALS:   (POLICIES      33)               195,897.45       9,760.74            .00            .00   109,717.03
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     30   A015939    LONG REBA M       07/03/89     3       3,720.00            .00            .00            .00        55.80
+  01     30   A015981    EDWARDS PATSY     07/18/89     3       3,620.00            .00            .00            .00       162.90
+  01     30   A019272    TUCKER PHYLLIS    03/06/92     3       3,415.00            .00            .00            .00       648.00
+  01     30   A019386    RUSSELL JERRY     04/06/92     3       2,545.00            .00            .00            .00       458.10
+  01     30   A020800    HARRIS HAZEL      03/24/93     3       2,715.00            .00            .00            .00        40.73
+  01     30   A021402    MCHONE DORENE     08/03/93     3       4,740.00            .00            .00            .00        71.10
+  01     30   A021637    GRANT SARAH       10/06/93     3       4,440.00            .00            .00            .00        66.60
+  01     30   A021804    MCLEOD G BERNIE   11/02/93     3       3,240.00            .00            .00            .00        48.60
+  01     30   A022138    CURTSINGER RICH   02/15/94     3       2,155.00            .00            .00            .00       387.90
+  01     30   A023169    WHITFIELD VELMA   09/20/94     3         325.00            .00            .00            .00         8.94
+  01     30   A023259    HARDISON MARY     11/08/94     3       4,885.00            .00            .00            .00     4,885.00
+  01     30   A023420    DESOUSA DORIS     01/23/95     2       1,220.00            .00            .00            .00       366.00
+  01     30   A023709    ZIMMER IRMGARD    04/10/95     3       3,600.50            .00            .00            .00       620.10
+  01     30   A024338    KINCAID MARY      10/28/95     3       5,610.00            .00            .00            .00        84.15
+  01     30   A024698    HENSON REIDA      02/14/96     3       5,110.00            .00            .00            .00     2,610.00
+  01     30   A027488    WILLIAMS CLYDE    03/04/98     3         965.15            .00            .00            .00        14.48
+  01     30   A028794    BROWN WILBUR H    03/05/99     3       5,338.50            .00            .00            .00       960.90
+  01     30   A029075    PAIGE NORMAN      04/24/99     3       4,785.00            .00            .00            .00       215.30
+  01     30   A029355    RIDDELL MARY LO   06/24/99     2       1,154.00            .00            .00            .00        43.29
+  01     30   A029746    LOCKARD JAMES I   09/28/99     2       4,485.00       3,430.60            .00            .00       201.80
+  01     30   A029747    LOCKARD MYRA J    09/28/99     2       4,485.00       3,430.60            .00            .00       201.80
+  01     30   A040539    RUBIS SHIRLEY     01/25/00     2       3,292.30            .00            .00            .00       244.57
+  01     30   A040687    LOEBIG DENNIS A   04/04/00     2       1,145.00            .00            .00            .00        28.61
+  01     30   A041498    SIMPSON LON/BIL   11/01/00     3       4,392.00            .00            .00            .00       530.40
+  01     30   A042240    WHITFIELD VELMA   03/16/01     3       1,550.00            .00            .00            .00        32.92
+  01     30   A042468    COCKRUM VERNA     06/05/01     3       4,912.00            .00            .00            .00        73.53
+  01     30   A042553    MUTTERS ELISA     06/27/01     3       4,682.00            .00            .00            .00        52.31
+  01     30   A043264    WIDMER JEROME W   01/14/02     3       1,215.00            .00            .00            .00        46.88
+  01     30   A043423    SIM SHARON        02/11/02     3       1,465.00            .00            .00            .00        25.29
+  01     30   A044465    PEEL CHARLENE     01/02/03     3       4,998.00            .00            .00            .00        75.13
+  01     30   A045508    COTTER FORREST    11/17/03     3       6,311.00            .00            .00            .00     1,136.20
+  01     30   A046896    GOBBLE LAWRENCE   01/11/05     2       1,357.00            .00            .00            .00        51.13
+  01     30   A047028    WILLETT CHARLES   02/02/05     3       1,607.00            .00            .00            .00        40.19
+  01     30   A047168    ROWE THEODORE     02/28/05     3       6,350.00            .00            .00            .00        95.25
+  01     30   A047386    LASECKI,SR ALAN   04/21/05     3         595.00            .00            .00            .00        22.30
+  01     30   A047723    SUTHERLAND LEON   07/26/05     3       5,682.50            .00            .00            .00     1,022.60
+  01     30   A047834    DOTSON MARGIE I   08/23/05     2       1,347.00            .00            .00            .00        33.67
+  01     30   A048022    WALKER PATSY A    10/11/05     3       5,021.00            .00            .00            .00        75.30
+  01     30   A048203    GOODMAN MARY LA   11/15/05     3       6,732.00            .00            .00            .00        45.53
+  01     30   A048352    FOSTER PATRICIA   12/16/05     2       2,107.00            .00            .00            .00     1,896.00
+  01     30   A049277    ERICSON THOMAS    07/07/06     3       1,205.00            .00            .00            .00     1,205.00
+  01     30   A049644    NICHELE DORIS L   10/10/06     3       6,404.00            .00            .00            .00        96.05
+  01     30   A050116    DAY RICHARD NEL   01/30/07     2       7,124.00            .00            .00            .00     1,282.20
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     30   A050117    DAY SUE S         01/30/07     2       7,443.00            .00            .00            .00     1,339.60
+  01     30   A050553    NELSON KENNETH    05/30/07     3       5,081.00            .00            .00            .00       914.20
+  01     30   A050879    CONNER JUNIOR J   08/24/07     3       6,815.00            .00            .00            .00       101.92
+  01     30   A051162    QUICK LARRY GEN   11/12/07     3       7,075.00            .00            .00            .00       106.08
+  01     30   A052191    WALKER CALVIN     08/06/08     3       6,445.00            .00            .00            .00       678.33
+  01     30   A052758    WHEELER DOROTHY   01/02/09     2       1,985.00            .00            .00            .00        49.58
+  01     30   A052759    WHEELER JAMES     01/02/09     2       1,985.00            .00            .00            .00        49.58
+  01     30   A052882    BIGGERS JAM/VID   01/20/09     2       5,630.00            .00            .00            .00        99.04
+  01     30   A053317    PUMFORD JOYCE     05/11/09     3       6,203.00            .00            .00            .00     6,203.00
+  01     30   A054644    RIPPLE BETTY JO   05/21/10     3       4,500.00            .00            .00            .00        67.50
+  01     30   A055313    WHITAKER CAROL    11/29/10     3       1,974.00            .00            .00            .00     1,974.00
+  01     30   A056416    VIERECK BONNIE    11/09/11     3       5,228.30            .00            .00            .00     5,228.30
+  01     30   A056923    COX BERTHA ANN    04/30/12     3       4,895.00            .00            .00            .00        99.82
+  01     30   A057188    CARRILLO JR LOU   06/15/12     3       5,185.00            .00            .00            .00     5,185.00
+  01     30   A057993    SCHOLZ CAROL      04/12/13     3         723.00            .00            .00            .00       723.00
+  01     30   A058265    LUKOWICH IVAN     07/12/13     3         745.00            .00            .00            .00        37.22
+  01     30   A058488    RUBIS SHIRLEY     09/25/13     3         218.25            .00            .00            .00       218.25
+  01     30   A058507    CONWAY RALPH L    09/27/13     3       4,885.00            .00            .00            .00       100.00
+  01     30   A059276    MCANINCH HUEY     07/01/14     3         941.38            .00            .00            .00       941.38
+  01     30   A059520    DROTT DOROTHY     09/09/14     2       1,037.90            .00            .00            .00     1,037.90
+  01     30   A059628    TREAT ANITA       10/31/14     3       3,787.00            .00            .00            .00     3,787.00
+  01     30   A060346    HANBY ANITA       07/06/15     3       1,784.80            .00            .00            .00     1,784.80
+  01     30   A060915    POWELL SHARON D   01/14/16     3       1,195.00            .00            .00            .00        50.00
+  01     30   A061055    ZEIGER SHARON     02/24/16     2           1.00            .00            .00            .00         1.00
+  01     30   A061445    DOVER HAZEL E     06/29/16     3       1,159.00            .00            .00            .00     1,159.00
+  01     30   A062013    SNOW LETA M       01/16/17     3       2,042.00            .00            .00            .00     2,042.00
+  01     30   A063008    HUFF WILMA J      01/10/18     3       1,195.00            .00            .00            .00     1,195.00
+  01     30   A063786    TRACY SNOW        10/16/18     3       1,042.00            .00            .00            .00     1,042.00
+  01     30   A063931    HARRIS ALMA LOU   12/19/18     3       1,789.00            .00            .00            .00     1,789.00
+  01     30   A064035    GUTTING STEPHEN   01/31/19     3       1,159.00            .00            .00            .00     1,159.00
+  01     30   A064099    LOOSSE LEE ROY    01/31/19     3       1,850.00            .00            .00            .00     1,850.00
+  01     30   A064487    WALLACE MARILYN   07/09/19     2       2,850.00            .00            .00            .00        58.16
+  01     30   A065211    KELSH LYNN        04/07/20     3       1,395.00            .00            .00            .00       100.00
+  01     30   A066253    HENSON GEORGE     06/24/21     2       1,495.00         555.00            .00            .00        50.00
+  01     30   A066657    GREENE SHARON     12/02/21     2       1,450.15            .00            .00            .00     1,450.15
+  01     30   A066686    SANDBERG MARY V   12/07/21     3       1,450.00            .00            .00            .00     1,450.00
+  01     30   A067189    BAKER COY LEVER   06/30/22     3       7,494.22            .00            .00            .00     7,494.22
+  01     30   A067298    TOLLE SADINA      08/24/22     3       7,445.00       2,033.42            .00            .00       111.58
+  01     30   A067463    MEARS LORA RUTH   11/02/22     3       3,952.75            .00            .00            .00     3,952.75
+  01     30   A067483    BEAMER RICHARD    11/17/22     3       1,479.74            .00            .00            .00     1,479.74
+  01     30   A067518    HAVNER WANDA JU   12/14/22     3       1,644.15            .00            .00            .00     1,644.15
+  01     30   A067519    MILFORD DELORES   12/12/22     3       1,644.15            .00            .00            .00     1,644.15
+  01     30   A067520    MILFORD JR JESS   12/12/22     3       1,479.74            .00            .00            .00     1,479.74
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       3
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     30   A067523    MOULTRIE DAVID    12/12/22     3       7,435.05            .00            .00            .00     7,435.05
+  01     30   A067528    ROSENKOTTER MAR   12/20/22     3       7,040.00            .00            .00            .00        84.17
+  01     30   A069769    ROETHLISBERGER    04/04/23     3       1,644.15            .00            .00            .00     1,644.15
+  01     30   A069895    COX SHEILA LYNN   06/01/23     3       1,765.40            .00            .00            .00     1,765.40
+  01     30   A069948    BRACKIN JAQUITA   06/26/23     3       1,644.15            .00            .00            .00     1,644.15
+  01     30   A069960    CROWNOVER ARNOL   06/29/23     3       6,591.64            .00            .00            .00     6,591.64
+  01     30   A080010    GEORGE MARJORIE   07/14/23     3       1,479.74            .00            .00            .00     1,479.74
+  01     30   A080106    LATALA EDWARD     08/28/23     3       2,463.80            .00            .00            .00     2,463.80
+
+          * OFFICE TOTALS:   (POLICIES      94)               311,889.41       9,449.62            .00            .00   105,297.79
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     31   A045899    MORGAN JOSEPH     03/01/04     3         656.25            .00            .00            .00        24.64
+  01     31   A047083    RILEY BARBARA M   02/17/05     3         595.00            .00            .00            .00        29.72
+  01     31   A052322    MILLER CATHERIN   08/27/08     2         900.00            .00            .00            .00        27.00
+  01     31   A052467    SCOTT LOUISE      10/16/08     3         900.00            .00            .00            .00       405.00
+  01     31   A052469    WILLIAMS WILLIA   10/17/08     2         900.00            .00            .00            .00       405.00
+  01     31   A053428    SEMRO KAY ANN     06/18/09     2       1,295.00            .00            .00            .00        38.83
+  01     31   A053429    SEMRO,JR STEVE    06/18/09     2       1,295.00            .00            .00            .00        38.83
+  01     31   A053542    SENTIVANAC BRIG   07/16/09     3       1,315.00            .00            .00            .00       590.00
+  01     31   A053574    BOGARD JEANNE     07/20/09     2         900.00            .00            .00            .00        33.75
+  01     31   A053857    HOEPPNER NORMA    10/05/09     3         900.00            .00            .00            .00        33.75
+  01     31   A054372    LYONS ROBERT      02/26/10     3       1,020.00            .00            .00            .00        76.50
+  01     31   A055869    NOLET JEAN M      04/29/11     3       1,020.00            .00            .00            .00        38.25
+  01     31   A057377    HOOK DONALD GEO   09/25/12     3       3,615.00            .00            .00            .00     1,807.50
+  01     31   A057378    HOOK DELORES      09/25/12     3       3,615.00            .00            .00            .00     1,807.50
+
+          * OFFICE TOTALS:   (POLICIES      14)                18,926.25            .00            .00            .00     5,356.27
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     32   AI1231     SIMS HULDA P      02/01/94     3       2,289.00            .00            .00            .00     2,289.00
+  01     32   AI1250     SPRAGG RAOUL      03/21/94     3       4,564.00            .00            .00            .00     4,564.00
+  01     32   AI1250A    SPRAGG RAOUL      03/21/94     3         334.00            .00       1,051.39            .00       334.00
+  01     32   AI1307     MEHARG MARGIE     09/26/94     3       4,729.00            .00            .00            .00     4,729.00
+  01     32   AI1334     CARTWRIGHT OMA    11/09/94     3       4,375.00            .00            .00            .00       800.00
+  01     32   AI1397     HARMON MARIE      02/17/95     3       4,530.00            .00            .00            .00     4,530.00
+  01     32   AI1567     WILLIAMS EVELYN   01/06/97     3       4,604.00            .00            .00            .00     4,604.00
+  01     32   AI1567A    WILLIAMS EVELYN   01/06/97     3         193.60            .00         518.00           3.11       193.60
+  01     32   AI1832     WILLIAMS LYLAMA   06/03/99     3       5,108.00            .00            .00            .00     5,108.00
+  01     32   AI1832A    WILLIAMS LYLAMA   06/03/99     3         277.00            .00         683.86          41.33       277.00
+  01     32   A041293    GAY ANITA         09/01/00     3       1,694.00            .00            .00            .00        76.25
+  01     32   A041438    JAMES LUCILLE     10/17/00     3       4,539.00            .00            .00            .00       756.40
+  01     32   A041485    BIBB DELORIS R    11/01/00     3       4,791.00            .00            .00            .00        71.87
+  01     32   A041844    HOPPER DOROTHY    01/23/01     3       4,475.00            .00            .00            .00        67.08
+  01     32   A042337    MELTON JOY F      04/25/01     3       4,252.00            .00            .00            .00       764.40
+  01     32   A043023    CROWSON CHARLES   10/30/01     3       4,375.00            .00            .00            .00       787.00
+  01     32   A044046    WREN BRENDA M     08/13/02     3       4,380.00            .00            .00            .00       109.54
+  01     32   A045068    TALBURT DORMA J   06/11/03     3       5,899.00            .00            .00            .00     1,061.80
+  01     32   A046447    BAKER EDWARD O    08/03/04     3       3,322.00            .00            .00            .00       299.20
+  01     32   A046656    WHITE DEMPSIE G   10/11/04     3       2,521.00            .00            .00            .00       454.20
+  01     32   A046927    RAINEY MARTHA S   01/20/05     3       5,909.00            .00            .00            .00     5,909.00
+  01     32   A048244    MUNS JIMMY        11/21/05     3       4,748.00            .00            .00            .00        83.52
+  01     32   A049449    CONOYERS GLENNA   08/15/06     3       6,435.00            .00            .00            .00       131.33
+  01     32   A051175    FETZER ILA R      10/26/07     3       3,217.75            .00            .00            .00       409.35
+  01     32   A053448    MIDDLETON LANCE   06/25/09     3       7,140.00            .00            .00            .00     1,535.00
+  01     32   A054809    BIBB DAVID W      06/30/10     3       5,310.00            .00            .00            .00        79.65
+  01     32   A055568    SCROGGINS BILLY   01/21/11     3       8,700.00            .00            .00            .00       130.50
+  01     32   A056609    BARNES JERRY      01/10/12     3       2,540.00            .00            .00            .00        44.69
+  01     32   A056940    MOORE SUE         05/03/12     3       2,027.00            .00            .00            .00     2,027.00
+  01     32   A057264    MEHARG YUA CHU    08/20/12     2       9,040.00            .00            .00            .00       135.67
+  01     32   A057265    MEHARG STEVEN     08/20/12     2       8,301.00            .00            .00            .00       125.02
+  01     32   A057595    COVINGTON JOANN   12/18/12     2       7,885.00            .00            .00            .00       138.61
+  01     32   A057736    YOUNG VERNA M     01/29/13     3       7,540.00            .00            .00            .00     1,108.00
+  01     32   A057758    DAVIS ERMA        02/05/13     3       3,888.04            .00            .00            .00     3,887.04
+  01     32   A058735    ARNOLD MILDRED    01/02/14     3       9,559.00            .00            .00            .00     9,559.00
+  01     32   A059393    TODDY CHARLOTTE   08/19/14     3       1,353.00            .00            .00            .00     1,353.00
+  01     32   A059637    SNIDER TESSIE     11/10/14     3       5,087.00            .00            .00            .00     5,087.00
+  01     32   A059649    SNIDER TESSIE     11/12/14     3         625.00            .00            .00            .00       625.00
+  01     32   A059786    COLEY BRENDA      01/08/15     3       3,190.00            .00            .00            .00        49.71
+  01     32   A061457    VICKERS BILLY     06/09/16     3       6,591.00            .00            .00            .00     6,591.00
+  01     32   A062613    TATUM ELWANDA G   08/15/17     3       7,875.00            .00            .00            .00     1,421.00
+  01     32   A062994    CAMPBELL WILLIA   01/24/18     3       8,358.00            .00            .00            .00     8,358.00
+  01     32   A063162    WESTBROOK ADDIE   03/06/18     3       7,260.00            .00            .00            .00     7,260.00
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     32   A063774    DAVIS KAREN J     10/22/18     3       9,095.00            .00            .00            .00       118.25
+  01     32   A064344    HARGROVE LORETT   05/16/19     3       1,995.00            .00            .00            .00       149.58
+  01     32   A064507    BUCHANAN JAMES    07/15/19     3       2,730.00            .00            .00            .00     2,730.00
+  01     32   A064566    DUGGER ROSE M     07/31/19     3       6,615.00            .00            .00            .00        99.42
+  01     32   A064861    JEFFORD MARGIE    11/15/19     3       9,678.00            .00            .00            .00     9,678.00
+  01     32   A065216    THOMAS VICKIE     03/31/20     2       8,845.00       3,007.07            .00            .00       107.39
+  01     32   A065376    WASHINGTON JOE    06/23/20     3         436.00            .00            .00            .00       436.00
+  01     32   A065669    KING GLENDA J     10/27/20     3       8,660.00       4,550.00            .00            .00       130.00
+  01     32   A066045    MEEKS GLENDA      04/08/21     2       2,095.00         710.60            .00            .00        39.48
+  01     32   A066421    MCBRIDE VIRGINI   07/01/21     3       6,120.00            .00            .00            .00        35.92
+  01     32   A066584    WEBB CHARLES H    10/29/21     3       8,436.20            .00            .00            .00     8,436.20
+  01     32   A066783    TODDY CHARLOTTE   01/31/22     3         125.00            .00            .00            .00       125.00
+  01     32   A067097    ARMS MARY LOUIS   05/24/22     3      10,975.55            .00            .00            .00    10,975.55
+  01     32   A067153    LIVINGSTON POLL   06/01/22     3      12,435.40            .00            .00            .00    12,435.40
+  01     32   A067304    EDINGTON RAYMON   08/29/22     3      10,383.85            .00            .00            .00    10,383.85
+  01     32   A067322    HUDDLESTON JR E   09/08/22     3       2,902.73            .00            .00            .00     2,902.73
+  01     32   A069976    HUDDLESTON INA    07/10/23     3       7,992.80            .00            .00            .00     7,992.80
+  01     32   A080005    CAREY FLORA ANN   07/24/23     3       6,860.00       6,057.33            .00            .00       102.67
+  01     32   A080037    MCBRIDE VIRGINI   07/28/23     3       1,195.00         830.85            .00            .00        34.62
+
+          * OFFICE TOTALS:   (POLICIES      62)               321,405.92      15,155.85       2,253.25          44.44   154,837.29
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     33   A057673    BYRD GLENDA D     01/10/13     3       4,290.00            .00            .00            .00        87.55
+  01     33   A060691    TURNEY LAR/COBY   10/27/15     2       4,635.00            .00            .00            .00        69.58
+  01     33   A062961    RAWLINGS PAUL     12/23/17     3       1,828.00            .00            .00            .00     1,828.00
+
+          * OFFICE TOTALS:   (POLICIES       3)                10,753.00            .00            .00            .00     1,985.13
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     34   A052253    WASHINGTON JOE    08/14/08     3       4,120.00            .00            .00            .00        84.08
+  01     34   A052939    WHITE DAISY MAR   09/22/08     3           1.00            .00            .00            .00         1.00
+  01     34   A053165    WELCH DWAIN       04/06/09     2       8,615.00            .00            .00            .00       129.22
+  01     34   A057811    KELLEY CATHERIN   02/26/13     2       4,655.00            .00            .00            .00        81.94
+  01     34   A060717    BILLINGSLEY BER   11/09/15     3       8,215.00            .00            .00            .00     1,483.00
+  01     34   A062251    WOMMACK VERNEAL   04/04/17     3       6,814.00            .00            .00            .00     6,814.00
+
+          * OFFICE TOTALS:   (POLICIES       6)                32,420.00            .00            .00            .00     8,593.24
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     36   AM00459    HOFFMAN JEANNIE   06/25/93     3       1,667.00            .00            .00            .00        42.00
+  01     36   A022520    BOSTWICK KATHLE   05/03/94     3       2,220.00            .00            .00            .00       399.60
+  01     36   A025518    VICK-MOSKOP LIL   09/16/96     2       1,095.00            .00            .00            .00        41.06
+  01     36   A025852    MILAM GEARLDINE   12/30/96     2       4,140.00            .00            .00            .00        62.33
+  01     36   A028287    MARTIN EMMA/JAM   09/29/98     3       4,140.00            .00            .00            .00        62.33
+  01     36   A040592    YANCEY ARDITH     03/06/00     3       3,990.00       3,290.85            .00            .00        59.83
+  01     36   A041895    TUELL BUEFORD     01/31/01     3       4,765.00            .00            .00            .00        71.08
+  01     36   A042307    WARD HOWARD D     04/23/01     3       2,990.00            .00            .00            .00        44.83
+  01     36   A042480    WALLIS HELEN      06/06/01     3       5,990.00            .00            .00            .00     1,078.20
+  01     36   A044001    LOGGAINS GLENDA   08/05/02     3       6,320.00            .00            .00            .00        94.83
+  01     36   A048452    HENRY JACQULINE   01/03/06     3       8,261.00            .00            .00            .00     1,452.20
+  01     36   A053810    HOFFMAN JEANNIE   09/21/09     3       1,900.00            .00            .00            .00        70.83
+  01     36   A055049    HORTON MARY KAT   09/10/10     3       3,035.00            .00            .00            .00        75.00
+  01     36   A055438    GRIFFITH CAROLY   12/29/10     3       3,035.00            .00            .00            .00       111.88
+  01     36   A060567    KELLEY JAMES HA   09/10/15     3       8,470.00            .00            .00            .00       127.05
+  01     36   A061152    DAILEY ANITA      02/18/16     3       9,020.00            .00            .00            .00        83.67
+  01     36   A061225    GRIFFIN JUDY L    04/15/16     3       3,735.00            .00            .00            .00        93.36
+  01     36   A061408    SUTTERFIELD JOH   06/24/16     3       8,350.00            .00            .00            .00       125.25
+  01     36   A061463    HARRIS WILLIE     07/06/16     3      10,030.00            .00            .00            .00    10,030.00
+  01     36   A062119    WYCKOFF R D       02/15/17     3       1,655.00            .00            .00            .00     1,655.00
+  01     36   A062256    MIDDLETON JO AN   04/05/17     3       7,315.00            .00            .00            .00        64.30
+  01     36   A062434    TAYLOR IMAGEAN    06/13/17     3       2,464.00            .00            .00            .00     2,464.00
+  01     36   A066433    COFFMAN OPAL MA   09/10/21     3      11,364.00            .00            .00            .00    11,364.00
+  01     36   A069724    HORTON COY LEON   03/14/23     3      10,199.55            .00            .00            .00    10,199.55
+  01     36   A069825    SLAY MARY JO      05/01/23     3       1,695.00            .00            .00            .00        41.25
+
+          * OFFICE TOTALS:   (POLICIES      25)               127,845.55       3,290.85            .00            .00    39,913.43
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     37   A021517    SEXTON ALFRED     09/07/93     3       1,970.00            .00            .00            .00        29.55
+  01     37   A022142    BLAKE ETHEL       02/14/94     3       3,285.00            .00            .00            .00        49.28
+  01     37   A023323    BREEDLOVE BILLI   12/30/94     3         495.00            .00            .00            .00        20.00
+  01     37   A025414    FLETCHER MARIE    08/12/96     3       4,185.00            .00            .00            .00       637.00
+  01     37   A046867    HUDSPETH DOROTH   12/31/04     3       6,002.00            .00            .00            .00        90.03
+  01     37   A049512    HUFFINES SHARON   08/28/06     2       4,841.00            .00            .00            .00        72.68
+  01     37   A049598    MATLOCK HELEN     10/03/06     3       4,356.00            .00            .00            .00        35.67
+  01     37   A054110    AKINS DELORIS     12/14/09     3       2,797.00            .00            .00            .00     2,797.00
+  01     37   A055397    WISEHART JAMES    12/23/10     2       1,440.00       1,260.21            .00            .00        54.79
+  01     37   A055773    SUTTON GRAHAM     03/15/11     3       4,851.50            .00            .00            .00        99.01
+  01     37   A056224    MIZE J W          08/30/11     3       7,095.00            .00            .00            .00        88.82
+  01     37   A057417    PHELPS BETTY JE   10/05/12     3       1,838.00            .00            .00            .00     1,838.00
+  01     37   A057862    PASSMORE DELPHA   03/05/13     3       7,241.00            .00            .00            .00     7,241.00
+  01     37   A060490    HOLT MURIEL R     08/20/15     3       7,459.00            .00            .00            .00     7,459.00
+  01     37   A061209    HOLCOMB MARGARE   04/13/16     3           1.00            .00            .00            .00         1.00
+  01     37   A063209    SHEPARD JOAN      03/29/18     3         895.00            .00            .00            .00       895.00
+  01     37   A063583    JOHNSON LOYD      08/03/18     3       5,220.00            .00            .00            .00       106.53
+  01     37   A064942    LAWRENCE DANNY    12/31/19     3       3,490.00         854.86            .00            .00        71.22
+
+          * OFFICE TOTALS:   (POLICIES      18)                67,461.50       2,115.07            .00            .00    21,585.58
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     38   A042094    BARTLETT NEVA     02/24/01     2       2,025.00            .00            .00            .00        30.37
+  01     38   A046065    LOONEY MARY       04/19/04     3       4,786.00            .00            .00            .00        33.10
+  01     38   A059567    TAYLOR RONALD E   10/13/14     3       4,437.00            .00            .00            .00     4,437.00
+  01     38   A061309    MANN RALPH JERR   05/04/16     2       6,045.00            .00            .00            .00     6,045.00
+  01     38   A062905    RICHARDSON IDA    11/06/17     3       7,995.00            .00            .00            .00     7,995.00
+  01     38   A063736    NESBITT DESNAL    10/02/18     3       7,010.00            .00            .00            .00     7,010.00
+  01     38   A063985    MARIOTT JIMMY     01/09/19     3         895.00            .00            .00            .00       895.00
+  01     38   A064048    DUVENNECK JEANN   02/01/19     3       1,390.00            .00            .00            .00     1,390.00
+  01     38   A064328    MARTIN VELMA      05/09/19     3       4,760.00            .00            .00            .00     4,760.00
+  01     38   A065169    LAMB RUBY FAY     03/09/20     3         895.00            .00            .00            .00       895.00
+  01     38   A065170    LAMB JOHN WESLE   03/09/20     3         895.00            .00            .00            .00       895.00
+  01     38   A066182    HIGGINBOTHAM WI   05/26/21     3       4,065.00       2,443.40            .00            .00        61.08
+  01     38   A066654    MARTIN BETTY J    12/07/21     3       2,810.00            .00            .00            .00     2,810.00
+  01     38   A066835    POWELL KENNETH    02/17/22     3       8,215.00       5,916.00            .00            .00       123.25
+  01     38   A066988    LAWRENCE MARVA    04/20/22     3       6,710.00            .00            .00            .00       136.94
+  01     38   A067470    CATES JUNIOR      11/10/22     3       7,156.61            .00            .00            .00     7,156.61
+  01     38   A067474    FREEZE CLARA      11/16/22     3       7,604.80            .00            .00            .00     7,604.80
+  01     38   A069749    BARNUM MARIE GO   03/30/23     3       5,946.10            .00            .00            .00     5,946.10
+  01     38   A069898    JIBBARD HAROLD    06/08/23     3       1,644.15            .00            .00            .00     1,644.15
+  01     38   A069974    RACKLEY ERMA      07/06/23     3       4,554.15            .00            .00            .00     4,554.15
+  01     38   A069975    RCKLEY DAVID LE   07/06/23     3       4,369.85            .00            .00            .00     4,369.85
+  01     38   A080137    BROCK SR BUDDY    09/14/23     3       1,900.00            .00            .00            .00        62.50
+  01     38   A080206    FUTRELL JAMES     10/09/23     3       1,567.04            .00            .00            .00     1,567.04
+
+          * OFFICE TOTALS:   (POLICIES      23)                97,675.70       8,359.40            .00            .00    70,421.94
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     40   A008484    GUNTER L JEAN     11/26/83     3       2,635.00            .00            .00            .00       101.46
+  01     40   A018850    BLEDSOE NETTIE    12/12/91     3       3,290.00            .00            .00            .00        49.35
+  01     40   A020417    REDMON ANNA       01/04/93     3       3,640.00            .00            .00            .00        50.00
+  01     40   A022105    DUNCAN REVA       02/07/94     3       5,785.00            .00            .00            .00     1,040.00
+  01     40   A023127    BRIDGER KATY      10/20/94     3       4,885.00            .00            .00            .00       880.00
+  01     40   A025479    PEARCE LOUELLA    09/13/96     3       5,900.00            .00            .00            .00        88.50
+  01     40   A027946    MOON A EDWALEEN   06/30/98     3       4,790.00            .00            .00            .00        64.83
+  01     40   A040013    ROLLINS IRMA LE   11/29/99     3       7,485.00            .00            .00            .00     7,485.00
+  01     40   A042960    THREET BIL/GLOR   10/08/01     3       5,995.00            .00            .00            .00       100.00
+  01     40   A044149    STRAYHORN VELA    09/11/02     3       5,644.00            .00            .00            .00       940.80
+  01     40   A044362    ANDERSON BOB      11/18/02     3         465.00            .00            .00            .00         8.71
+  01     40   A044477    FULMER DON H      01/08/03     3       5,470.00            .00            .00            .00        82.05
+  01     40   A045293    RIDINGS DERREL    09/08/03     3       5,973.00            .00            .00            .00        89.60
+  01     40   A046635    WEINSTEIN BURTO   10/05/04     3       1,225.00            .00            .00            .00       100.00
+  01     40   A047667    ABNEY NORMA       07/09/05     3       7,555.00            .00            .00            .00     1,359.80
+  01     40   A047786    GIFFORD KATHERI   08/10/05     2       6,183.40            .00            .00            .00        92.75
+  01     40   A047800    SHEARER DAN WAY   08/22/05     3       5,745.00            .00            .00            .00        86.18
+  01     40   A049704    BYRD ALICE M      10/23/06     3       1,538.60            .00            .00            .00        57.70
+  01     40   A050894    BARKER MARGARET   09/06/07     3       3,841.60            .00            .00            .00        72.03
+  01     40   A053812    BIGNELL DONNA     09/23/09     3       1,695.00            .00            .00            .00        56.04
+  01     40   A054601    TURNER ARMON D    05/06/10     3       6,345.00            .00            .00            .00        95.17
+  01     40   A056114    GOACHER LEWIS     08/04/11     3       2,750.00            .00            .00            .00       123.75
+  01     40   A056311    LOWERY TEDDY      10/05/11     3       6,669.50            .00            .00            .00        94.50
+  01     40   A057274    POLK LAVETA       08/21/12     3       8,797.90            .00            .00            .00     8,797.90
+  01     40   A057622    FOWLER JEWEL      12/20/12     3       7,980.00            .00            .00            .00       117.51
+  01     40   A057922    TURLEY ANN M      03/20/13     2       8,160.00            .00            .00            .00       998.00
+  01     40   A058200    INGRAM GOR/LIND   06/21/13     3       9,830.00            .00            .00            .00     1,769.40
+  01     40   A059558    LAMBERTH GEORGI   09/30/14     3       2,655.00            .00            .00            .00        46.75
+  01     40   A059578    HELMS PAMELA K    10/08/14     2       4,486.25            .00            .00            .00     4,486.25
+  01     40   A059579    HELMS KENNETH     10/08/14     2       4,095.82            .00            .00            .00     4,095.82
+  01     40   A060401    BIGNELL DONNA J   07/24/15     3          85.00            .00            .00            .00        50.00
+  01     40   A060669    RICHARDSON LIND   10/21/15     3       1,895.00            .00            .00            .00        71.04
+  01     40   A061160    LOCKHEART GERAL   03/24/16     3       1,838.15            .00            .00            .00     1,838.15
+  01     40   A061356    JOYNER SR GERAL   05/31/16     3       7,265.00       1,066.51            .00            .00       108.98
+  01     40   A062014    MATHEWS DARRELL   01/11/17     3       7,709.00            .00            .00            .00       115.15
+  01     40   A062385    JACKSON JAM/LEN   05/15/17     3       2,195.00            .00            .00            .00        26.50
+  01     40   A063010    HAYNES EARL       01/17/18     3         965.15            .00            .00            .00       965.15
+  01     40   A064928    RICHARDSON LIND   12/17/19     3         189.15            .00            .00            .00       189.15
+  01     40   A065079    PRICE MARY ANN    01/29/20     3       1,445.30            .00            .00            .00     1,445.30
+  01     40   A065373    SITTON PATSY AN   06/10/20     3      10,480.00            .00            .00            .00       156.33
+  01     40   A065753    BROWN REBA        11/27/20     3       9,059.80            .00            .00            .00     9,059.80
+  01     40   A066613    EKDAHL BERNARD    11/21/21     3       1,343.93            .00            .00            .00     1,343.93
+  01     40   A066672    VAUGHN TERRY      12/02/21     3       2,095.00       1,453.60            .00            .00        42.76
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     40   A066893    BROWN BARBARA J   03/02/22     3      13,153.20            .00            .00            .00    13,153.20
+  01     40   A066993    ANDERSON EDITH    04/20/22     3      11,360.00       8,659.60            .00            .00       170.40
+  01     40   A067262    CAPPS SHIRLEY F   07/20/22     3           1.00            .00            .00            .00         1.00
+  01     40   A067513    TAYLOR BILLIE F   12/02/22     3       3,584.15            .00            .00            .00     3,584.15
+  01     40   A067594    EURIDGE WANDA L   01/29/23     3       7,823.05            .00            .00            .00     7,823.05
+  01     40   A080117    MATHEWS KAY LYN   08/28/23     3       8,365.00       5,365.00            .00            .00       447.08
+  01     40   A080149    POWELL WANDA L    09/12/23     3       9,530.25            .00            .00            .00     9,530.25
+  01     40   A080151    WORTHAM H A       09/14/23     3      11,970.00      10,770.00            .00            .00     5,385.00
+  01     40   A080200    ROBERTS ROBERT    10/03/23     2       2,395.00       2,105.00            .00            .00        44.90
+
+          * OFFICE TOTALS:   (POLICIES      52)               266,257.20      29,419.71            .00            .00    88,981.12
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     46   AU00186    BROOKS D          02/04/99     3          10.00            .00            .00            .00        10.00
+  01     46   AU00521    TRAMMELL B        02/04/99     3       3,525.00            .00            .00            .00     3,525.00
+  01     46   AU00723    WILLBANKS M       02/10/99     3         695.00            .00            .00            .00       695.00
+  01     46   AU00840    SHEETS L          02/10/99     3         275.00            .00            .00            .00       275.00
+  01     46   AU01199    HUBBELL DORIS     02/10/99     3       3,925.00            .00            .00            .00     3,925.00
+  01     46   AU01209    RUDDER A          02/10/99     3       1,930.00            .00            .00            .00     1,930.00
+  01     46   AU01238    RUPARD DORIS      02/10/99     3       6,605.00            .00            .00            .00     6,605.00
+  01     46   AU01240    CRAWFORD BETTY    02/10/99     3       3,805.00            .00            .00            .00     3,805.00
+  01     46   A028647    CRABB BOBBY G     01/19/99     3       1,835.00            .00            .00            .00     1,651.50
+  01     46   A029240    FRY PAULETTE      05/31/99     3       3,210.00            .00            .00            .00        50.83
+  01     46   A040133    PRESTIDGE THOMA   12/28/99     3       3,910.00            .00            .00            .00       649.40
+  01     46   A040497    DEMENT MARY ALI   02/26/00     3       5,090.00            .00            .00            .00        76.35
+  01     46   A040564    BROWN HELEN EAR   03/10/00     3       4,010.00            .00            .00            .00        60.15
+  01     46   A041385    MURRAY BARBARA    09/25/00     3       5,565.00            .00            .00            .00        76.08
+  01     46   A043612    SMITH MARY E      04/01/02     3       4,929.20            .00            .00            .00       100.00
+  01     46   A045207    PIZZANO BILLIE    07/25/03     3       6,546.20            .00            .00            .00        98.19
+  01     46   A045303    FOSTER JIMM/JOY   09/08/03     3       5,816.30            .00            .00            .00       587.24
+  01     46   A047551    JONES ANNA LEE    06/07/05     3       4,765.00            .00            .00            .00        97.24
+  01     46   A050981    PARKS SHEILA      09/26/07     3       6,208.30            .00            .00            .00     6,208.30
+  01     46   A051618    JONES ANNA LEE    02/28/08     3         580.00            .00            .00            .00        48.33
+  01     46   A051962    BROOKS DORIS A    06/19/08     3         931.00            .00            .00            .00       931.00
+  01     46   A051971    SPEAKS JAMES D    06/16/08     3       7,365.00            .00            .00            .00       150.31
+  01     46   A053494    TILLMAN PATSY     06/30/09     3       7,720.00            .00            .00            .00       102.93
+  01     46   A053947    HALLMARK ERNEST   11/04/09     3       1,195.00         577.10            .00            .00        29.86
+  01     46   A054503    PEMBERTON EDWAR   04/12/10     3       1,920.00            .00            .00            .00        64.00
+  01     46   A054677    BLEVINS SHELBY    06/03/10     3       7,370.00            .00            .00            .00        51.94
+  01     46   A055986    VICK MARTHA       06/16/11     3       5,121.00            .00            .00            .00     5,121.00
+  01     46   A056686    NANCE HELEN ANN   02/07/12     3       1,895.00            .00            .00            .00        50.00
+  01     46   A057550    LEWIS ESKEL       11/27/12     3       8,385.65            .00            .00            .00     8,385.65
+  01     46   A058340    DACUS DONNA       08/01/13     3       4,985.00            .00            .00            .00        74.76
+  01     46   A058552    JONES NELLIE      10/09/13     3       1,042.75            .00            .00            .00     1,042.75
+  01     46   A059192    FRIFFEY MILLIS    05/26/14     3       7,350.17            .00            .00            .00     7,350.17
+  01     46   A059493    OWENS DEBRA       09/12/14     3       7,100.00            .00            .00            .00        85.00
+  01     46   A061106    SPRADLEY MINN/C   03/12/16     3       7,000.00            .00            .00            .00       105.00
+  01     46   A063718    DAVIDSON MARGIE   09/20/18     3         480.15            .00            .00            .00       480.15
+  01     46   A064152    ABEL MARION       03/06/19     3       7,478.20            .00            .00            .00     7,478.20
+  01     46   A064284    SLAYTON HELEN P   04/08/19     3       7,056.75            .00            .00            .00     7,056.75
+  01     46   A064710    PILLOWS GLENDEL   09/12/19     3       5,697.78            .00            .00            .00     5,697.78
+  01     46   A064759    COOPER TERRY      10/01/19     3       4,145.00            .00            .00            .00        55.10
+  01     46   A064926    GREEN DAYNA       12/10/19     2       1,470.00            .00            .00            .00       110.25
+  01     46   A065435    HUDSON ROSETTA    07/10/20     3       4,045.00         450.00            .00            .00        41.67
+  01     46   A065525    DAVIDSON BOYD     08/14/20     3       7,000.00            .09            .00            .00        79.31
+  01     46   A065641    DUERR LENA        09/28/20     3       5,754.00            .00            .00            .00     5,754.00
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     46   A065991    LEMONS DORRIS     03/15/21     3           1.00            .00            .00            .00         1.00
+  01     46   A066558    COLEMAN PAULINE   10/21/21     3       8,162.55            .00            .00            .00     8,162.55
+  01     46   A066702    JONES NELLIE SU   12/16/21     3       1,328.90            .00            .00            .00     1,328.90
+  01     46   A066887    MCKNIGHT BENJAM   03/01/22     3           1.00            .00            .00            .00         1.00
+  01     46   A067051    FORKUM PEGGY      05/03/22     2       4,090.00       1,158.11            .00            .00       102.25
+  01     46   A067252    MARTIN INA        08/09/22     3         868.15            .00            .00            .00       868.15
+  01     46   A067675    WILES JERRY DON   02/16/23     3       7,635.00       6,635.00            .00            .00       110.58
+  01     46   A080089    FORE JAMES AN     08/22/23     3       8,395.00       7,747.10            .00            .00       137.12
+  01     46   A080121    HOWELL RAMONA     08/25/23     3       1,571.40            .00            .00            .00     1,571.40
+
+          * OFFICE TOTALS:   (POLICIES      52)               217,795.45      16,567.40            .00            .00    93,054.14
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     50   A016370    WOODARD LAWRENC   11/20/89     3       3,220.00       2,801.40            .00            .00        48.30
+  01     50   A016710    LEASE PAULINE     02/06/90     3       2,570.00            .00            .00            .00        38.50
+  01     50   A017525    PRESSER ALICE     10/29/90     3       2,605.00            .00            .00            .00        30.08
+  01     50   A017885    JACOBS JAMES      03/08/91     3       3,085.00            .00            .00            .00        46.25
+  01     50   A018316    SIMS HOBERT/RUT   07/10/91     3       3,665.00            .00            .00            .00        54.96
+  01     50   A018352    EAST BILLY R      07/18/91     3       3,385.00            .00            .00            .00        50.76
+  01     50   A025768    PARK VERLADEAN    11/20/96     2       5,385.00            .00            .00            .00     1,096.25
+  01     50   A026607    DAMON JAMES       07/24/97     3       5,485.00            .00            .00            .00       987.20
+  01     50   A027597    GIPSON GLADYS S   04/03/98     2       5,085.00            .00            .00            .00        76.27
+  01     50   A040119    PRUITT DORIS AN   12/23/99     3       6,174.05            .00            .00            .00     1,111.33
+  01     50   A043486    HICKEY SHIRLEY    02/27/02     3       1,489.60            .00            .00            .00        22.29
+  01     50   A050422    WARREN GLADYS L   04/27/07     3       3,547.60            .00            .00            .00        29.56
+  01     50   A051421    MCGUIRE KATALAH   01/08/08     3       8,325.10            .00            .00            .00     8,325.10
+  01     50   A051659    BARKER CAROLYN    03/12/08     3       2,880.00       2,548.80            .00            .00        43.20
+  01     50   A052127    ROBBINS LOIS      07/21/08     3       6,191.50            .00            .00            .00     6,191.50
+  01     50   A052482    HALE DEVAUGHN     10/08/08     3       4,820.00            .00            .00            .00        55.33
+  01     50   A052485    RIGGS KENNETH     10/08/08     3       5,495.00            .00            .00            .00       449.50
+  01     50   A053041    GRACE RUTHIE      02/25/09     3       4,050.00            .00            .00            .00        60.75
+  01     50   A053229    HODGE JOH/VIR     04/15/09     2       5,715.00       5,131.85            .00            .00       116.63
+  01     50   A055535    RACE,SR HARRY     01/13/11     3       1,795.00            .00            .00            .00        74.79
+  01     50   A055731    DENTON WILLIAM    03/23/11     3       7,044.50            .00            .00            .00       105.65
+  01     50   A056745    CURTIS BETTY MA   03/01/12     3       6,600.00            .00            .00            .00        85.00
+  01     50   A057500    GROSKOPF CHARLE   11/08/12     3         995.00            .00            .00            .00        41.46
+  01     50   A058969    PARKER HANNAH     03/12/14     3       4,020.65            .00            .00            .00     4,020.65
+  01     50   A059277    SOARD LAURA BEL   06/30/14     3       8,540.85            .00            .00            .00     8,540.85
+  01     50   A059611    PARKER LAWRENCE   10/31/14     2       3,169.00            .00            .00            .00        92.72
+  01     50   A059642    ALEXANDER ACEL    11/07/14     3       5,886.00            .00            .00            .00        88.28
+  01     50   A060556    SCOTT GWIN        09/04/15     3       6,505.00         871.30            .00            .00       132.75
+  01     50   A061397    RACE SR HARRY     06/13/16     3         490.00            .00            .00            .00       490.00
+  01     50   A061559    KEMP MARY RUTH    07/20/16     3       2,275.00            .00            .00            .00     2,275.00
+  01     50   A062496    LEWIS PEGGY J     07/06/17     2       8,595.00       5,170.00            .00            .00        86.17
+  01     50   A062616    PLUGGE SHIRLEY    08/17/17     3       6,887.00            .00            .00            .00     6,887.00
+  01     50   A063494    RICE PANSYM       07/11/18     3       6,861.78            .00            .00            .00     6,861.78
+  01     50   A063687    ALFARO CAROL      09/21/18     3       1,395.00            .00            .00            .00        34.86
+  01     50   A063821    WILLIS JAMES      11/02/18     3       1,255.50       1,192.72            .00            .00        33.13
+  01     50   A063896    BAILEY SHARON     11/28/18     3       2,305.75            .00            .00            .00     2,305.75
+  01     50   A064176    CLAUNCH SUSAN     03/08/19     3       2,275.00         921.39            .00            .00        34.17
+  01     50   A064233    LANTHRIP DAV/RE   03/26/19     3       7,125.00       5,530.46            .00            .00       115.22
+  01     50   A065348    VIRE BILLIE R     06/02/20     3       1,062.15            .00            .00            .00     1,062.15
+  01     50   A065759    DENEUI BETTYE     12/03/20     3       1,644.15            .00            .00            .00     1,644.15
+  01     50   A065782    CLAYBORN DAISY    12/11/20     3         388.00            .00            .00            .00       388.00
+  01     50   A066250    FORST JEROME      06/24/21     3       8,900.00            .00            .00            .00       166.88
+  01     50   A066346    HESKETT VETA JU   08/03/21     2       6,970.00       6,590.00            .00            .00       122.60
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       2
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     50   A066371    WALKER FRED L     08/19/21     3       2,095.00       1,154.28            .00            .00        42.76
+  01     50   A066800    ROGERS RITA       02/10/22     3       7,990.00       4,857.00            .00            .00       116.50
+  01     50   A067038    NELSON RONNY      05/04/22     3       1,695.00       1,400.25            .00            .00        29.82
+  01     50   A069702    SANTIAGO LONA     03/06/23     2       1,695.00       1,275.00            .00            .00        58.12
+  01     50   A069837    VIRE DONNA JOYC   04/28/23     3      10,606.95            .00            .00            .00    10,606.95
+  01     50   A069944    PARKER ALAN       06/20/23     3       2,735.00       1,590.42            .00            .00       144.58
+
+          * OFFICE TOTALS:   (POLICIES      49)               212,975.13      41,034.87            .00            .00    65,521.50
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     51   A009746    ROBINSON PHYLLI   11/28/84     3       2,540.00            .00            .00            .00        38.17
+  01     51   A019369    YOUNG JOYCELYON   03/27/92     3       3,765.00            .00            .00            .00        56.46
+
+          * OFFICE TOTALS:   (POLICIES       2)                 6,305.00            .00            .00            .00        94.63
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     52   A019087    GALBRAITH CHEST   01/28/92     2       4,395.00            .00            .00            .00        65.92
+  01     52   A020036    YOUNG BARBARA     09/04/92     3       4,795.00            .00            .00            .00     4,795.00
+  01     52   A042967    PRATT MARY MARG   09/28/01     3       4,885.20            .00            .00            .00     4,885.20
+  01     52   A044954    GORDON NORIS      05/13/03     3       3,297.70            .00            .00            .00        42.87
+  01     52   A045455    BROOKS GERALD J   11/04/03     3       5,669.30            .00            .00            .00        85.05
+  01     52   A047773    ODEN LUCILLE      08/03/05     3       6,595.40            .00            .00            .00     6,595.40
+  01     52   A048729    HARDGRAVE ROBIN   02/22/06     3       1,293.60            .00            .00            .00        48.51
+  01     52   A051300    KASTNER JOSEPHI   12/06/07     2       6,463.00            .00            .00            .00     3,232.00
+  01     52   A051337    SCHLAF LOUISE     12/28/07     3       6,199.00            .00            .00            .00        92.98
+  01     52   A052931    FREEMAN JOE MAT   01/29/09     3       7,775.00            .00            .00            .00       104.58
+  01     52   A053301    GRIST HAZEL       05/04/09     3       7,904.00            .00            .00            .00     7,904.00
+  01     52   A055138    WEWER CAROLYN     09/27/10     3       6,920.95            .00            .00            .00     6,920.95
+  01     52   A058150    ALEXANDER LINDA   06/10/13     2       8,655.00            .00            .00            .00       127.58
+  01     52   A058151    ALEXANDER SR RO   06/10/13     2       8,395.00            .00            .00            .00       123.25
+  01     52   A058338    VIRDEN SHIRLEY    08/01/13     3       3,195.00            .00            .00            .00        47.93
+  01     52   A058759    TENELEVE JOSEPH   01/08/14     3       7,861.85            .00            .00            .00     7,861.85
+  01     52   A059906    HARDGROVE ROBIN   02/04/15     3         509.25            .00            .00            .00       509.25
+  01     52   A061405    BARBER SALLY      05/24/16     3       3,220.00       1,451.70            .00            .00        53.66
+  01     52   A062210    CONROY SHARON K   03/20/17     3       2,195.00       1,255.00            .00            .00        30.00
+  01     52   A062438    HEEZEN MARY ANN   06/04/17     3         325.00            .00            .00            .00       325.00
+  01     52   A062439    HEEZEN EUGENE L   06/04/17     3         325.00            .00            .00            .00       325.00
+  01     52   A063520    KOCH BARBARA KO   07/17/18     3           1.00            .00            .00            .00         1.00
+  01     52   A063838    HUBER BRENDA      11/16/18     3       1,353.15            .00            .00            .00     1,353.15
+  01     52   A064104    KOCH DAVID ROBE   02/14/19     3       2,230.00            .00            .00            .00       165.00
+  01     52   A064375    TILLMAN DONNA J   03/17/19     3       7,350.00            .00            .00            .00        69.79
+  01     52   A064736    STEVENS WANDA M   09/22/19     3           1.00            .00            .00            .00         1.00
+  01     52   A064864    HENSON LINDA EL   11/19/19     3       9,598.15            .00            .00            .00     9,598.15
+  01     52   A065371    JOHNSON BESSIE    06/04/20     3       2,880.00            .00            .00            .00        25.00
+  01     52   A065447    VIRDEN SHIRLEY    07/16/20     3       1,309.50            .00            .00            .00     1,309.50
+  01     52   A065465    APODACA BOBBI J   07/24/20     3       1,595.00            .00            .00            .00        58.13
+  01     52   A065540    FREEMAN R C       08/18/20     3       9,857.00            .00            .00            .00       117.62
+  01     52   A066626    HOLZMAN BILLY W   11/18/21     3           1.00            .00            .00            .00         1.00
+  01     52   A066666    STUBBLEFIELD IM   12/06/21     3           1.00            .00            .00            .00         1.00
+  01     52   A066818    EDWARDS DALTON    02/10/22     3       9,137.89            .00            .00            .00     9,137.89
+  01     52   A067081    DUNLAP SHAWN LE   05/16/22     3       2,590.00            .00            .00            .00        53.75
+  01     52   A067435    SCHLUTERMAN PAT   09/30/22     3       6,969.45            .00            .00            .00     6,969.45
+  01     52   A067491    GRENWELGE ERNES   11/18/22     3       2,581.66            .00            .00            .00     2,581.66
+  01     52   A069920    REAMES ROBERT     06/10/23     3       7,047.50            .00            .00            .00       125.99
+  01     52   A080528    HORN THOMAS       10/20/23     3       8,230.94            .00            .00            .00     8,230.94
+
+          * OFFICE TOTALS:   (POLICIES      39)               173,608.49       2,706.70            .00            .00    83,976.00
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     53   A026107    HOPE KATHERINE    03/07/97     2       2,757.25            .00            .00            .00        41.35
+  01     53   A026279    MARSHALL DOROTH   04/19/97     2       4,073.00            .00            .00            .00       733.20
+  01     53   A040471    COX ELDON O       02/15/00     2       2,451.00            .00            .00            .00     2,451.00
+  01     53   A041063    JOHNSON WANDA     07/05/00     2         952.00            .00            .00            .00       428.50
+  01     53   A043216    ROBERTSON LARRY   10/25/01     2       4,539.00            .00            .00            .00        67.32
+  01     53   A057471    WELLS RUTH        10/29/12     2       4,470.00            .00            .00            .00        73.26
+  01     53   A058652    MORSE RICHARD     11/27/13     2       1,000.00            .00            .00            .00     1,000.00
+  01     53   A060445    DEITERT KENNETH   08/07/15     2       1,797.50            .00            .00            .00        67.40
+  01     53   A061021    MILLER JERRY      02/19/16     2       1,255.50            .00            .00            .00        96.29
+
+          * OFFICE TOTALS:   (POLICIES       9)                23,295.25            .00            .00            .00     4,958.32
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     70   AB01132    SOUTHARD GERALD   08/16/96     3       3,331.00            .00            .00            .00     3,331.00
+  01     70   A025237    CURTIS OPAL       07/01/96     3       5,085.00            .00            .00            .00       847.50
+  01     70   A025970    FOOKS KATHLEEN    01/30/97     3       4,412.00            .00            .00            .00        66.18
+  01     70   A027509    MULL LORETHA      03/06/98     3       4,840.30            .00            .00            .00        64.01
+  01     70   A029559    SINGLETON PATSY   08/12/99     3       4,990.65            .00            .00            .00        74.84
+  01     70   A040503    WHITFIELD MARY    02/24/00     3       5,708.45            .00            .00            .00        85.63
+  01     70   A046917    WRIGHT TIMOTHY    01/10/05     3       4,200.00            .00            .00            .00        63.00
+  01     70   A046999    DUSEK BOBBY       01/25/05     3       5,690.00            .00            .00            .00       116.13
+  01     70   A050969    GIFFORD WILLIAM   09/19/07     2       7,673.40            .00            .00            .00       111.22
+  01     70   A052535    NICELY BONNIE     10/29/08     3       3,630.00            .00            .00            .00        74.08
+  01     70   A052559    ROBERTSON BETTY   10/24/08     3           1.00            .00            .00            .00         1.00
+  01     70   A052669    PENNINGTON M IN   12/05/08     3       2,355.00            .00            .00            .00        58.88
+  01     70   A052692    WELLS RONNIE DA   12/13/08     3       5,375.00            .00            .00            .00        94.56
+  01     70   A052827    RAGAN JERRY C     12/02/08     3       1,495.00            .00            .00            .00        47.19
+  01     70   A053079    RIGGIN GEOR/LIN   03/06/09     3       6,060.00            .00            .00            .00       106.61
+  01     70   A054319    LAGRONE KEN/DAR   02/17/10     3         895.00            .00            .00            .00        35.42
+  01     70   A054464    NICELY BONNIE     04/05/10     3       1,295.00            .00            .00            .00        26.43
+  01     70   A054713    HITCHINGS DALE    06/12/10     3       7,045.00            .00            .00            .00       105.67
+  01     70   A055275    TEAL MARY M       11/12/10     3       6,560.00       5,770.36            .00            .00       115.41
+  01     70   A056251    HARVEY CLARA      09/02/11     3       1,675.00            .00            .00            .00        31.41
+  01     70   A057557    JOHNSON MARY K    11/30/12     2       6,220.00            .00            .00            .00        89.18
+  01     70   A058109    KYLE JOY/RUDY     05/30/13     3       5,645.00            .00            .00            .00        99.31
+  01     70   A058400    DIXON MARJORIE    08/26/13     3       2,463.80            .00            .00            .00     2,463.80
+  01     70   A059098    LAGRONE SR KENN   04/25/14     3       3,757.50            .00            .00            .00        66.06
+
+          * OFFICE TOTALS:   (POLICIES      24)               100,403.10       5,770.36            .00            .00     8,174.52
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+  01     72   A063844    CROCHET GLENDA    11/16/18     2       1,998.20            .00            .00            .00     1,998.20
+  01     72   A063845    CROCHET SAM H     11/16/18     2       1,649.38            .00            .00            .00     1,649.38
+  01     72   A065128    NEEDHAM JO/JAME   02/18/20     2       1,995.00            .00            .00            .00        80.00
+  01     72   A065244    TADLOCK CHARLES   05/01/20     3       6,392.00            .00            .00            .00     6,392.00
+  01     72   A066284    BUTLER JANIS D    07/09/21     3       6,057.65            .00            .00            .00     6,057.65
+  01     72   A067451    BRAMLETT HELEN    11/04/22     3      10,280.00       5,582.24            .00            .00       174.44
+  01     72   A067526    WELCH MARY IREN   12/19/22     3       8,320.00       8,150.00            .00            .00       169.79
+  01     72   A067635    MOORE LINDA LEE   02/10/23     2       3,370.00       3,094.88            .00            .00        68.78
+  01     72   A069789    HAMMACK CAROLYN   04/11/23     3       2,885.00       2,804.86            .00            .00        77.91
+  01     72   A069802    TATUM WILLIAM     04/21/23     3       1,975.50            .00            .00            .00        78.77
+  01     72   A069873    LONG SHIRLEY AN   05/22/23     3       8,744.55            .00            .00            .00     8,744.55
+  01     72   A069890    BUSH RUTH ANN     05/26/23     3       8,909.45            .00            .00            .00     8,909.45
+  01     72   A069902    YANCEY EDNA ELL   06/07/23     3      10,873.70            .00            .00            .00    10,873.70
+  01     72   A069990    PARSON EMMA A     07/17/23     3       9,636.95            .00            .00            .00     9,636.95
+  01     72   A080143    TOWNSLEY DARDAN   09/08/23     3       7,710.00       6,921.50            .00            .00       115.36
+
+          * OFFICE TOTALS:   (POLICIES      15)                90,797.38      26,553.48            .00            .00    55,026.93
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+ CO.  OFFICE  CONTRACT                      ISSUE    SUSPEND    CONTRACT      PRINCIPAL        TOTAL          CURRENT       MODE
+CODE   CODE    NUMBER      SHORT NAME        DATE     CODE       AMOUNT        BALANCE      ACCRUED INT.     YEAR INT.     PREMIUM
+
+          * FILE TOTALS:     (POLICIES   1,157)             5,011,176.10     383,381.29       2,253.25          44.44 1,969,553.11
+
+
+DENVER ROLLER ASSURED PEACE FUNERAL PLAN          MASTER POLICIES DELETED - YEAR END      DATE  12/31/2023              PAGE       1
+
+
+              * CONTROL DATA *         MASTER FILE       PAYMENT FILE
+
+          INPUT CONTROL RECORD              14,583            337,117
+
+          RECORDS DELETED                    1,157             22,783
+
+          OUTPUT CONTROL RECORD             13,426            314,334
+
+            * BALANCE                            0                  0
+

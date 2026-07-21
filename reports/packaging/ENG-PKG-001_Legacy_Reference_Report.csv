@@ -1,0 +1,26 @@
+file,reference,count,removable,notes
+qla_core/crosswalk_enrichment.py,plan_analysis,2,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/cso_mortality_crosswalk.py,plan_analysis,2,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/cso_mortality_crosswalk.py,CSO,15,N,
+qla_core/issue21_open_item_decisions.py,QLA_Migration,1,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/issue21f_premium_adjustment.py,QLA_Migration,1,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/lifepro_source_resolver.py,QLA_Migration,1,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/modal_premium_factors.py,QLA_Migration,1,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/plan_source_paths.py,QLA_Migration,2,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/plan_source_paths.py,plan_analysis,2,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/product_business_test_cut.py,QLA_Migration,8,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/product_business_test_cut.py,plan_analysis,8,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/quikisrr_loader.py,QLA_Migration,5,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/quikloan_converter.py,QLA_Migration,1,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/quikplan_converter.py,QLA_Migration,3,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/quikplan_converter.py,CSO,1,N,
+qla_core/quikplan_rate_variation_flags.py,QLA_Migration,2,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/quikplan_rate_variation_flags.py,plan_analysis,2,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/rate_emit.py,QLA_Migration,1,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/rate_emit.py,plan_analysis,2,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/rate_key_setup.py,CSO,3,N,
+qla_core/rate_pipeline.py,plan_analysis,1,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/rate_pipeline.py,CSO,3,N,
+qla_core/run_logging.py,QLA_Migration,2,N,"Path resolver default — runtime only, not packaged client data"
+qla_core/run_logging.py,CSO,1,N,
+qla_core/variation_classification.py,QLA_Migration,1,N,"Path resolver default — runtime only, not packaged client data"

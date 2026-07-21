@@ -1,0 +1,8 @@
+colorama==0.4.6
+iniconfig==2.3.0
+packaging==26.2
+pluggy==1.6.0
+Pygments==2.20.0
+pytest==9.1.1
+PyYAML==6.0.3
+qla-enterprise-conversion-engine @ file:///C:/Users/warren/Documents/GitHub/Warrenhughes1974/dist/qla_enterprise_conversion_engine-0.1.0-py3-none-any.whl#sha256=320165544a8fc63d882508fb478ae77b911c2d6e4de5647a7408414b299ff674

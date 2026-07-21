@@ -1,0 +1,75 @@
+---
+description: Citizens Product and Rate Conversion — scope, boundaries, and stage gates
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Citizens Product and Rate Conversion
+
+This repository is exclusively for the Citizens Product and Rate Conversion.
+
+Do not use CSO assumptions, mappings, source paths, plan codes, actuarial
+assumptions, validation evidence, or business rules unless an approved
+Citizens requirement explicitly references them.
+
+Do not modify the Enterprise Conversion Engine from the Citizens repository.
+
+Do not copy Enterprise Engine source modules into the Citizens repository.
+
+Do not make conversion-code changes during Intake, Inventory, Profiling,
+Mapping, Dependency, Ownership, or Risk stages.
+
+All implementation must be driven by:
+
+1. An approved issue
+2. An approved mapping
+3. An identified source authority
+4. A passed dependency gate
+5. An explicit development authorization
+
+Every code change must:
+
+1. Identify the issue number.
+2. Identify whether the change is Enterprise or Citizens-specific.
+3. Preserve existing approved behavior.
+4. Add or update validation.
+5. Generate reconciliation evidence.
+6. Update the applicable version.
+7. Remain limited to the approved scope.
+
+Never infer a missing actuarial rule.
+
+Never manufacture missing rates.
+
+Never alter original source data.
+
+Never treat zero, blank, missing, unknown, and not applicable as equivalent.
+
+Never silently discard rejected rows.
+
+Never overwrite an approved mapping with a working mapping.
+
+Never mix original source files with generated output.
+
+Never place Citizens-specific logic into reusable Enterprise Engine code
+without an explicit ownership decision.
+
+Never execute a migration copy unless migration_inventory.csv has been
+reviewed and the applicable rows have COPY_APPROVED = YES.
+
+Never overwrite an existing destination file during migration.
+
+If a destination collision occurs, stop that item and record the conflict.
+
+## Source Project (Read-Only)
+
+`CFIC_Rates` at the parent monorepo path is the legacy audit source. Do not
+modify, delete, or move files in that folder without explicit authorization.
+
+## Output Boundaries
+
+- `source/` — original client deliverables only
+- `staging/` and `output/` — generated conversion data (gitignored by default)
+- `mappings/approved/` — signed mappings only
+- `mappings/working/` — in-progress mappings

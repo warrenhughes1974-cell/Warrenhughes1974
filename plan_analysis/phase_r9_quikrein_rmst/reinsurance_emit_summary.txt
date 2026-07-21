@@ -1,0 +1,14 @@
+Phase 1 Reinsurance Conversion Summary
+PROD_PTRTY rows: 7
+PREIN rows: 1185
+PREINTRT rows (raw): 3545
+PREINTRT rows (canonical): 733
+PREINTRT superseded: 2812
+QuikRein emitted: 7
+QuikRmst emitted: 733
+QuikRein exceptions: 0
+QuikRmst exceptions: 0
+Defaulted fields: 0
+
+Reinsurer crosswalk: Manual Placeholder / User Provided
+Stored-value rule: no recalculation of retained/ceded/allocation/premium.

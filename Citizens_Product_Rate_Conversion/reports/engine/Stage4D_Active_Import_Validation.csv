@@ -1,0 +1,6 @@
+file,sys_path_insert,qla_core_direct,import_ok
+conversion/orchestration/cfic_reserve_build.py,0,False,Y
+conversion/orchestration/cfic_rate_publish.py,0,False,Y
+conversion/orchestration/package_cfic_rates.py,0,False,Y
+conversion/orchestration/build_cfic_assumption_template.py,0,False,Y
+conversion/orchestration/legacy_cfic_paths.py,0,False,Y

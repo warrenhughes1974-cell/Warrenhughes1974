@@ -136,6 +136,10 @@ Batch hooks: root `app.py` and `QLA_Migration/app.py` (gated, mirrors QuikLoan p
 3. **Phase resolution fallback** — when BENEFIT_SEQ does not match quikridr, single-phase policies fall back to the only converted phase (0 exceptions on May 2026 extract).
 4. **Retained reconciliation** — informational only; do not expect 1:1 sum match across treaty rows.
 5. **Phase 2+** — QuikRcoa, billing/history, PRADJ, and production reinsurer crosswalk remain out of scope.
+6. **2026-07-19 docs comparison** (Reinsure.pdf + sample QLAdmin DBFs):
+   - Issues **90 / 91 / 92** Active on issues log; email prepared for Eric; waiting on response — `Issue_Reinsurance_Phase1_Open_Business_Questions.md`
+   - MSTATUS 50/57 verified valid; MUWCLASS T/R pass-throughs pending business mapping — `Issue_Reinsurance_Phase1_Code_Verification.md`
+   - MBILLTO/MPCTCEDED/retention-field gaps and QUIKRBLL schema drift — `Issue_Reinsurance_Phase2_Scope_Notes.md`
 
 ---
 

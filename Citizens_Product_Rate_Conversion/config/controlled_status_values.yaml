@@ -1,0 +1,59 @@
+# Controlled status values for Citizens Product and Rate Conversion manifests
+# Owner: Project Lead
+# Update: Only via approved DECISION_LOG entry
+
+general_workflow:
+  - NOT_STARTED
+  - IN_PROGRESS
+  - BLOCKED
+  - READY_FOR_REVIEW
+  - APPROVED
+  - REJECTED
+  - NOT_APPLICABLE
+  - DEFERRED
+
+source_status:
+  - NOT_RECEIVED
+  - RECEIVED
+  - PROFILING
+  - PROFILED
+  - REJECTED_SOURCE
+  - SUPERSEDED
+
+coverage_status:
+  - REQUIRED_RECEIVED
+  - REQUIRED_MISSING
+  - RECEIVED_UNEXPECTED
+  - NOT_APPLICABLE
+  - PENDING_CLASSIFICATION
+  - MAPPED
+  - CONVERTED
+  - VALIDATED
+  - CLIENT_APPROVED
+
+migration_action:
+  - COPY
+  - COPY_AND_RENAME
+  - COPY_TO_ARCHIVE
+  - COPY_TO_QUARANTINE
+  - EXCLUDE_GENERATED
+  - EXCLUDE_TEMPORARY
+  - REVIEW_REQUIRED
+  - DUPLICATE_REVIEW
+  - DO_NOT_MIGRATE
+  - UNKNOWN
+
+copy_approved:
+  - "YES"
+  - "NO"
+
+classification_confidence:
+  - HIGH
+  - MEDIUM
+  - LOW
+  - UNKNOWN
+
+approval_status:
+  - approved
+  - working
+  - unknown

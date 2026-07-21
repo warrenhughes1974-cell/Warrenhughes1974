@@ -1,0 +1,2 @@
+collisions=373
+Re-extract staging after crosswalk fix; collisions mean duplicate PLAN/AGE/CNTL/segment cells.

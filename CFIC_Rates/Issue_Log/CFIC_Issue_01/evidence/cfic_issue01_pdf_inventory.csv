@@ -1,0 +1,1106 @@
+zip,product,filename,path_in_zip,size_bytes,naming_pattern,skip_extraction
+802M_CV.zip,802M,Directions.pdf,802M/Directions.pdf,260310,directions,True
+802M_CV.zip,802M,Exiry Age 86.pdf,802M/Exiry Age 86.pdf,1253939,expiry_age,False
+802M_CV.zip,802M,Exiry Age 87.pdf,802M/Exiry Age 87.pdf,2511617,expiry_age,False
+802M_CV.zip,802M,Exiry Age 88.pdf,802M/Exiry Age 88.pdf,2388201,expiry_age,False
+802M_CV.zip,802M,Exiry Age 89.pdf,802M/Exiry Age 89.pdf,2476614,expiry_age,False
+802M_CV.zip,802M,Exiry Age 90.pdf,802M/Exiry Age 90.pdf,2378918,expiry_age,False
+802M_CV.zip,802M,Exiry Age 91.pdf,802M/Exiry Age 91.pdf,2510965,expiry_age,False
+802M_CV.zip,802M,Exiry Age 92.pdf,802M/Exiry Age 92.pdf,2532865,expiry_age,False
+802M_CV.zip,802M,Exiry Age 93.pdf,802M/Exiry Age 93.pdf,2506660,expiry_age,False
+802M_CV.zip,802M,Exiry Age 94.pdf,802M/Exiry Age 94.pdf,2254197,expiry_age,False
+802M_CV.zip,802M,Exiry Age 95.pdf,802M/Exiry Age 95.pdf,2544984,expiry_age,False
+802M_CV.zip,802M,Exiry Age 96.pdf,802M/Exiry Age 96.pdf,2565325,expiry_age,False
+802M_CV.zip,802M,Exiry Age 97.pdf,802M/Exiry Age 97.pdf,2542070,expiry_age,False
+802M_CV.zip,802M,Exiry Age 98.pdf,802M/Exiry Age 98.pdf,2559953,expiry_age,False
+802M_CV.zip,802M,Exiry Age 99.pdf,802M/Exiry Age 99.pdf,2532256,expiry_age,False
+802M_CV.zip,802M,Expiry Age 02.pdf,802M/Expiry Age 02.pdf,1312957,other,False
+802M_CV.zip,802M,Expiry Age 03.pdf,802M/Expiry Age 03.pdf,1422572,other,False
+802M_CV.zip,802M,Expiry Age 04.pdf,802M/Expiry Age 04.pdf,1455439,other,False
+802M_CV.zip,802M,Expiry Age 05.pdf,802M/Expiry Age 05.pdf,1259544,other,False
+802M_CV.zip,802M,Expiry Age 06.pdf,802M/Expiry Age 06.pdf,1145117,other,False
+802M_CV.zip,802M,Expiry Age 07.pdf,802M/Expiry Age 07.pdf,1161509,other,False
+802M_CV.zip,802M,Expiry Age 08.pdf,802M/Expiry Age 08.pdf,1101874,other,False
+802M_CV.zip,802M,Expiry Age 09.pdf,802M/Expiry Age 09.pdf,1159985,other,False
+802M_CV.zip,802M,Expiry Age 10.pdf,802M/Expiry Age 10.pdf,1116919,other,False
+802M_CV.zip,802M,Expiry Age 11.pdf,802M/Expiry Age 11.pdf,1183128,other,False
+802M_CV.zip,802M,Expiry Age 12.pdf,802M/Expiry Age 12.pdf,1115298,other,False
+802M_CV.zip,802M,Expiry Age 13.pdf,802M/Expiry Age 13.pdf,1136667,other,False
+802M_CV.zip,802M,Expiry Age 14.pdf,802M/Expiry Age 14.pdf,1109325,other,False
+802M_CV.zip,802M,Expiry Age 15.pdf,802M/Expiry Age 15.pdf,1172817,other,False
+802M_CV.zip,802M,Expiry Age 16.pdf,802M/Expiry Age 16.pdf,1105858,other,False
+802M_CV.zip,802M,Expiry Age 17.pdf,802M/Expiry Age 17.pdf,1157141,other,False
+802M_CV.zip,802M,Expiry Age 18.pdf,802M/Expiry Age 18.pdf,1147549,other,False
+802M_CV.zip,802M,Expiry Age 19.pdf,802M/Expiry Age 19.pdf,1179782,other,False
+802M_CV.zip,802M,Expiry Age 20.pdf,802M/Expiry Age 20.pdf,1137546,other,False
+802M_CV.zip,802M,Expiry Age 21.pdf,802M/Expiry Age 21.pdf,1190643,other,False
+802M_CV.zip,802M,Expiry Age 22.pdf,802M/Expiry Age 22.pdf,1054684,other,False
+802M_CV.zip,802M,Expiry Age 23.pdf,802M/Expiry Age 23.pdf,1157405,other,False
+802M_CV.zip,802M,Expiry Age 24.pdf,802M/Expiry Age 24.pdf,1006155,other,False
+802M_CV.zip,802M,Expiry Age 25.pdf,802M/Expiry Age 25.pdf,1162858,other,False
+802M_CV.zip,802M,Expiry Age 26.pdf,802M/Expiry Age 26.pdf,1161056,other,False
+802M_CV.zip,802M,Expiry Age 27.pdf,802M/Expiry Age 27.pdf,1047468,other,False
+802M_CV.zip,802M,Expiry Age 28.pdf,802M/Expiry Age 28.pdf,1125869,other,False
+802M_CV.zip,802M,Expiry Age 29.pdf,802M/Expiry Age 29.pdf,1177095,other,False
+802M_CV.zip,802M,Expiry Age 30.pdf,802M/Expiry Age 30.pdf,1157940,other,False
+802M_CV.zip,802M,Expiry Age 31.pdf,802M/Expiry Age 31.pdf,1045748,other,False
+802M_CV.zip,802M,Expiry Age 32.pdf,802M/Expiry Age 32.pdf,1141306,other,False
+802M_CV.zip,802M,Expiry Age 33.pdf,802M/Expiry Age 33.pdf,1216944,other,False
+802M_CV.zip,802M,Expiry Age 34.pdf,802M/Expiry Age 34.pdf,1209371,other,False
+802M_CV.zip,802M,Expiry Age 35.pdf,802M/Expiry Age 35.pdf,1241067,other,False
+802M_CV.zip,802M,Expiry Age 36.pdf,802M/Expiry Age 36.pdf,1197670,other,False
+802M_CV.zip,802M,Expiry Age 37.pdf,802M/Expiry Age 37.pdf,1192263,other,False
+802M_CV.zip,802M,Expiry Age 38.pdf,802M/Expiry Age 38.pdf,1073194,other,False
+802M_CV.zip,802M,Expiry Age 39.pdf,802M/Expiry Age 39.pdf,1225250,other,False
+802M_CV.zip,802M,Expiry Age 40.pdf,802M/Expiry Age 40.pdf,1213915,other,False
+802M_CV.zip,802M,Expiry Age 41.pdf,802M/Expiry Age 41.pdf,1226770,other,False
+802M_CV.zip,802M,Expiry Age 42.pdf,802M/Expiry Age 42.pdf,1110997,other,False
+802M_CV.zip,802M,Expiry Age 43.pdf,802M/Expiry Age 43.pdf,1239840,other,False
+802M_CV.zip,802M,Expiry Age 44.pdf,802M/Expiry Age 44.pdf,1211631,other,False
+802M_CV.zip,802M,Expiry Age 45.pdf,802M/Expiry Age 45.pdf,1085215,other,False
+802M_CV.zip,802M,Expiry Age 46.pdf,802M/Expiry Age 46.pdf,1241147,other,False
+802M_CV.zip,802M,Expiry Age 47.pdf,802M/Expiry Age 47.pdf,1107541,other,False
+802M_CV.zip,802M,Expiry Age 48.pdf,802M/Expiry Age 48.pdf,1234056,other,False
+802M_CV.zip,802M,Expiry Age 49.pdf,802M/Expiry Age 49.pdf,1252300,other,False
+802M_CV.zip,802M,Expiry Age 50.pdf,802M/Expiry Age 50.pdf,2360884,other,False
+802M_CV.zip,802M,Expiry Age 51.pdf,802M/Expiry Age 51.pdf,2381214,other,False
+802M_CV.zip,802M,Expiry Age 52.pdf,802M/Expiry Age 52.pdf,2428574,other,False
+802M_CV.zip,802M,Expiry Age 53.pdf,802M/Expiry Age 53.pdf,2395133,other,False
+802M_CV.zip,802M,Expiry Age 54.pdf,802M/Expiry Age 54.pdf,2402556,other,False
+802M_CV.zip,802M,Expiry Age 55.pdf,802M/Expiry Age 55.pdf,2363421,other,False
+802M_CV.zip,802M,Expiry Age 56.pdf,802M/Expiry Age 56.pdf,2268425,other,False
+802M_CV.zip,802M,Expiry Age 57.pdf,802M/Expiry Age 57.pdf,2377043,other,False
+802M_CV.zip,802M,Expiry Age 58.pdf,802M/Expiry Age 58.pdf,2147502,other,False
+802M_CV.zip,802M,Expiry Age 59.pdf,802M/Expiry Age 59.pdf,2261219,other,False
+802M_CV.zip,802M,Expiry Age 60.pdf,802M/Expiry Age 60.pdf,2423646,other,False
+802M_CV.zip,802M,Expiry Age 61.pdf,802M/Expiry Age 61.pdf,2421166,other,False
+802M_CV.zip,802M,Expiry Age 62.pdf,802M/Expiry Age 62.pdf,2341366,other,False
+802M_CV.zip,802M,Expiry Age 63.pdf,802M/Expiry Age 63.pdf,2413334,other,False
+802M_CV.zip,802M,Expiry Age 64.pdf,802M/Expiry Age 64.pdf,2431235,other,False
+802M_CV.zip,802M,Expiry Age 65.pdf,802M/Expiry Age 65.pdf,2396161,other,False
+802M_CV.zip,802M,Expiry Age 66.pdf,802M/Expiry Age 66.pdf,2440060,other,False
+802M_CV.zip,802M,Expiry Age 67.pdf,802M/Expiry Age 67.pdf,2382515,other,False
+802M_CV.zip,802M,Expiry Age 68.pdf,802M/Expiry Age 68.pdf,2411974,other,False
+802M_CV.zip,802M,Expiry Age 69.pdf,802M/Expiry Age 69.pdf,2390475,other,False
+802M_CV.zip,802M,Expiry Age 70.pdf,802M/Expiry Age 70.pdf,2433740,other,False
+802M_CV.zip,802M,Expiry Age 71.pdf,802M/Expiry Age 71.pdf,2394365,other,False
+802M_CV.zip,802M,Expiry Age 72.pdf,802M/Expiry Age 72.pdf,2444807,other,False
+802M_CV.zip,802M,Expiry Age 73.pdf,802M/Expiry Age 73.pdf,2415111,other,False
+802M_CV.zip,802M,Expiry Age 74.pdf,802M/Expiry Age 74.pdf,2449643,other,False
+802M_CV.zip,802M,Expiry Age 75.pdf,802M/Expiry Age 75.pdf,2283289,other,False
+802M_CV.zip,802M,Expiry Age 76.pdf,802M/Expiry Age 76.pdf,2444483,other,False
+802M_CV.zip,802M,Expiry Age 77.pdf,802M/Expiry Age 77.pdf,2331540,other,False
+802M_CV.zip,802M,Expiry Age 78.pdf,802M/Expiry Age 78.pdf,2477957,other,False
+802M_CV.zip,802M,Expiry Age 79.pdf,802M/Expiry Age 79.pdf,2411997,other,False
+802M_CV.zip,802M,Expiry Age 80.pdf,802M/Expiry Age 80.pdf,2323756,other,False
+802M_CV.zip,802M,Expiry Age 81.pdf,802M/Expiry Age 81.pdf,2329832,other,False
+802M_CV.zip,802M,Expiry Age 82.pdf,802M/Expiry Age 82.pdf,2338943,other,False
+802M_CV.zip,802M,Expiry Age 83.pdf,802M/Expiry Age 83.pdf,2471332,other,False
+802M_CV.zip,802M,Expiry Age 84.pdf,802M/Expiry Age 84.pdf,2483230,other,False
+802M_CV.zip,802M,Expiry Age 85.pdf,802M/Expiry Age 85.pdf,2464221,other,False
+802M_CV.zip,802M,Expiry Age 86.pdf,802M/Expiry Age 86.pdf,1260154,other,False
+802W_CV.zip,802W,00.pdf,802W/00.pdf,1426355,age_pdf,False
+802W_CV.zip,802W,01.pdf,802W/01.pdf,1420629,age_pdf,False
+802W_CV.zip,802W,02.pdf,802W/02.pdf,1350093,age_pdf,False
+802W_CV.zip,802W,03.pdf,802W/03.pdf,1367972,age_pdf,False
+802W_CV.zip,802W,04.pdf,802W/04.pdf,1375897,age_pdf,False
+802W_CV.zip,802W,05.pdf,802W/05.pdf,1352725,age_pdf,False
+802W_CV.zip,802W,06.pdf,802W/06.pdf,1176196,age_pdf,False
+802W_CV.zip,802W,07.pdf,802W/07.pdf,1261833,age_pdf,False
+802W_CV.zip,802W,08.pdf,802W/08.pdf,1234011,age_pdf,False
+802W_CV.zip,802W,09.pdf,802W/09.pdf,1213712,age_pdf,False
+802W_CV.zip,802W,10.pdf,802W/10.pdf,1223417,age_pdf,False
+802W_CV.zip,802W,11.pdf,802W/11.pdf,1213178,age_pdf,False
+802W_CV.zip,802W,12.pdf,802W/12.pdf,1260111,age_pdf,False
+802W_CV.zip,802W,13.pdf,802W/13.pdf,1247635,age_pdf,False
+802W_CV.zip,802W,14.pdf,802W/14.pdf,1218143,age_pdf,False
+802W_CV.zip,802W,15.pdf,802W/15.pdf,1175545,age_pdf,False
+802W_CV.zip,802W,16.pdf,802W/16.pdf,1202655,age_pdf,False
+802W_CV.zip,802W,17.pdf,802W/17.pdf,1188427,age_pdf,False
+802W_CV.zip,802W,18.pdf,802W/18.pdf,1173158,age_pdf,False
+802W_CV.zip,802W,19.pdf,802W/19.pdf,1148918,age_pdf,False
+802W_CV.zip,802W,20.pdf,802W/20.pdf,1116065,age_pdf,False
+802W_CV.zip,802W,21.pdf,802W/21.pdf,1156552,age_pdf,False
+802W_CV.zip,802W,22.pdf,802W/22.pdf,1117771,age_pdf,False
+802W_CV.zip,802W,23.pdf,802W/23.pdf,1090667,age_pdf,False
+802W_CV.zip,802W,24.pdf,802W/24.pdf,1081074,age_pdf,False
+802W_CV.zip,802W,25.pdf,802W/25.pdf,1097827,age_pdf,False
+802W_CV.zip,802W,26.pdf,802W/26.pdf,1052390,age_pdf,False
+802W_CV.zip,802W,27.pdf,802W/27.pdf,1053036,age_pdf,False
+802W_CV.zip,802W,28.pdf,802W/28.pdf,1066330,age_pdf,False
+802W_CV.zip,802W,29.pdf,802W/29.pdf,1006831,age_pdf,False
+802W_CV.zip,802W,30.pdf,802W/30.pdf,1006695,age_pdf,False
+802W_CV.zip,802W,31.pdf,802W/31.pdf,988646,age_pdf,False
+802W_CV.zip,802W,32.pdf,802W/32.pdf,995807,age_pdf,False
+802W_CV.zip,802W,33.pdf,802W/33.pdf,998071,age_pdf,False
+802W_CV.zip,802W,34.pdf,802W/34.pdf,941353,age_pdf,False
+802W_CV.zip,802W,35.pdf,802W/35.pdf,918328,age_pdf,False
+802W_CV.zip,802W,36.pdf,802W/36.pdf,922756,age_pdf,False
+802W_CV.zip,802W,37.pdf,802W/37.pdf,942725,age_pdf,False
+802W_CV.zip,802W,38.pdf,802W/38.pdf,930226,age_pdf,False
+802W_CV.zip,802W,39.pdf,802W/39.pdf,899319,age_pdf,False
+802W_CV.zip,802W,40.pdf,802W/40.pdf,872322,age_pdf,False
+802W_CV.zip,802W,41.pdf,802W/41.pdf,868243,age_pdf,False
+802W_CV.zip,802W,42.pdf,802W/42.pdf,860260,age_pdf,False
+802W_CV.zip,802W,43.pdf,802W/43.pdf,852317,age_pdf,False
+802W_CV.zip,802W,44.pdf,802W/44.pdf,850005,age_pdf,False
+802W_CV.zip,802W,45.pdf,802W/45.pdf,837001,age_pdf,False
+802W_CV.zip,802W,46.pdf,802W/46.pdf,809674,age_pdf,False
+802W_CV.zip,802W,47.pdf,802W/47.pdf,795982,age_pdf,False
+802W_CV.zip,802W,48.pdf,802W/48.pdf,785683,age_pdf,False
+802W_CV.zip,802W,49.pdf,802W/49.pdf,778975,age_pdf,False
+802W_CV.zip,802W,50.pdf,802W/50.pdf,757779,age_pdf,False
+802W_CV.zip,802W,51.pdf,802W/51.pdf,759981,age_pdf,False
+802W_CV.zip,802W,52.pdf,802W/52.pdf,749968,age_pdf,False
+802W_CV.zip,802W,53.pdf,802W/53.pdf,719934,age_pdf,False
+802W_CV.zip,802W,54.pdf,802W/54.pdf,703102,age_pdf,False
+802W_CV.zip,802W,55.pdf,802W/55.pdf,710542,age_pdf,False
+802W_CV.zip,802W,56.pdf,802W/56.pdf,718227,age_pdf,False
+802W_CV.zip,802W,57.pdf,802W/57.pdf,694993,age_pdf,False
+802W_CV.zip,802W,58.pdf,802W/58.pdf,665595,age_pdf,False
+802W_CV.zip,802W,59.pdf,802W/59.pdf,654961,age_pdf,False
+802W_CV.zip,802W,60.pdf,802W/60.pdf,635729,age_pdf,False
+802W_CV.zip,802W,61.pdf,802W/61.pdf,653437,age_pdf,False
+802W_CV.zip,802W,62.pdf,802W/62.pdf,633580,age_pdf,False
+802W_CV.zip,802W,63.pdf,802W/63.pdf,598765,age_pdf,False
+802W_CV.zip,802W,64.pdf,802W/64.pdf,587436,age_pdf,False
+802W_CV.zip,802W,65.pdf,802W/65.pdf,573586,age_pdf,False
+802W_CV.zip,802W,66.pdf,802W/66.pdf,574609,age_pdf,False
+802W_CV.zip,802W,67.pdf,802W/67.pdf,550688,age_pdf,False
+802W_CV.zip,802W,68.pdf,802W/68.pdf,514737,age_pdf,False
+802W_CV.zip,802W,69.pdf,802W/69.pdf,533048,age_pdf,False
+802W_CV.zip,802W,70.pdf,802W/70.pdf,497851,age_pdf,False
+802W_CV.zip,802W,71.pdf,802W/71.pdf,479348,age_pdf,False
+802W_CV.zip,802W,72.pdf,802W/72.pdf,488270,age_pdf,False
+802W_CV.zip,802W,73.pdf,802W/73.pdf,488711,age_pdf,False
+802W_CV.zip,802W,74.pdf,802W/74.pdf,461836,age_pdf,False
+802W_CV.zip,802W,75.pdf,802W/75.pdf,427939,age_pdf,False
+802W_CV.zip,802W,76.pdf,802W/76.pdf,429781,age_pdf,False
+802W_CV.zip,802W,77.pdf,802W/77.pdf,429352,age_pdf,False
+802W_CV.zip,802W,78.pdf,802W/78.pdf,409552,age_pdf,False
+802W_CV.zip,802W,79.pdf,802W/79.pdf,385026,age_pdf,False
+802W_CV.zip,802W,80.pdf,802W/80.pdf,383610,age_pdf,False
+802W_CV.zip,802W,81.pdf,802W/81.pdf,367342,age_pdf,False
+802W_CV.zip,802W,82.pdf,802W/82.pdf,381571,age_pdf,False
+802W_CV.zip,802W,83.pdf,802W/83.pdf,346778,age_pdf,False
+802W_CV.zip,802W,84.pdf,802W/84.pdf,313749,age_pdf,False
+802W_CV.zip,802W,85.pdf,802W/85.pdf,335550,age_pdf,False
+802W_CV.zip,802W,86.pdf,802W/86.pdf,314767,age_pdf,False
+802W_CV.zip,802W,87.pdf,802W/87.pdf,310047,age_pdf,False
+802W_CV.zip,802W,88.pdf,802W/88.pdf,288346,age_pdf,False
+802W_CV.zip,802W,89.pdf,802W/89.pdf,280371,age_pdf,False
+802W_CV.zip,802W,90.pdf,802W/90.pdf,275632,age_pdf,False
+802W_CV.zip,802W,91.pdf,802W/91.pdf,233431,age_pdf,False
+802W_CV.zip,802W,92.pdf,802W/92.pdf,260303,age_pdf,False
+802W_CV.zip,802W,93.pdf,802W/93.pdf,236732,age_pdf,False
+802W_CV.zip,802W,94.pdf,802W/94.pdf,234387,age_pdf,False
+802W_CV.zip,802W,95.pdf,802W/95.pdf,218470,age_pdf,False
+802W_CV.zip,802W,96.pdf,802W/96.pdf,211288,age_pdf,False
+802W_CV.zip,802W,97.pdf,802W/97.pdf,197772,age_pdf,False
+802W_CV.zip,802W,98.pdf,802W/98.pdf,222344,age_pdf,False
+802W_CV.zip,802W,99.pdf,802W/99.pdf,397181,age_pdf,False
+802W_CV.zip,Table of Days,Table of Days.pdf,802W/Table of Days/Table of Days.pdf,734641,other,False
+ABFN_CV.zip,ABFN,15.pdf,ABFN/15.pdf,3511177,age_pdf,False
+ABFN_CV.zip,ABFN,16.pdf,ABFN/16.pdf,3547013,age_pdf,False
+ABFN_CV.zip,ABFN,17.pdf,ABFN/17.pdf,3514617,age_pdf,False
+ABFN_CV.zip,ABFN,18.pdf,ABFN/18.pdf,3509905,age_pdf,False
+ABFN_CV.zip,ABFN,19.pdf,ABFN/19.pdf,3522946,age_pdf,False
+ABFN_CV.zip,ABFN,20.pdf,ABFN/20.pdf,3352781,age_pdf,False
+ABFN_CV.zip,ABFN,21.pdf,ABFN/21.pdf,3481337,age_pdf,False
+ABFN_CV.zip,ABFN,22.pdf,ABFN/22.pdf,3544690,age_pdf,False
+ABFN_CV.zip,ABFN,23.pdf,ABFN/23.pdf,3454349,age_pdf,False
+ABFN_CV.zip,ABFN,24.pdf,ABFN/24.pdf,3440332,age_pdf,False
+ABFN_CV.zip,ABFN,25.pdf,ABFN/25.pdf,3439018,age_pdf,False
+ABFN_CV.zip,ABFN,26.pdf,ABFN/26.pdf,3439089,age_pdf,False
+ABFN_CV.zip,ABFN,27.pdf,ABFN/27.pdf,3404898,age_pdf,False
+ABFN_CV.zip,ABFN,28.pdf,ABFN/28.pdf,3422519,age_pdf,False
+ABFN_CV.zip,ABFN,29.pdf,ABFN/29.pdf,3391852,age_pdf,False
+ABFN_CV.zip,ABFN,30.pdf,ABFN/30.pdf,3391992,age_pdf,False
+ABFN_CV.zip,ABFN,31.pdf,ABFN/31.pdf,3406508,age_pdf,False
+ABFN_CV.zip,ABFN,32.pdf,ABFN/32.pdf,3373638,age_pdf,False
+ABFN_CV.zip,ABFN,33.pdf,ABFN/33.pdf,4968961,age_pdf,False
+ABFN_CV.zip,ABFN,34.pdf,ABFN/34.pdf,3370348,age_pdf,False
+ABFN_CV.zip,ABFN,35.pdf,ABFN/35.pdf,3388714,age_pdf,False
+ABFN_CV.zip,ABFN,36.pdf,ABFN/36.pdf,3371531,age_pdf,False
+ABFN_CV.zip,ABFN,37.pdf,ABFN/37.pdf,3344745,age_pdf,False
+ABFN_CV.zip,ABFN,38.pdf,ABFN/38.pdf,3359977,age_pdf,False
+ABFN_CV.zip,ABFN,39.pdf,ABFN/39.pdf,3365874,age_pdf,False
+ABFN_CV.zip,ABFN,40.pdf,ABFN/40.pdf,3339174,age_pdf,False
+ABFN_CV.zip,ABFN,41.pdf,ABFN/41.pdf,3385349,age_pdf,False
+ABFN_CV.zip,ABFN,42.pdf,ABFN/42.pdf,3327442,age_pdf,False
+ABFN_CV.zip,ABFN,43.pdf,ABFN/43.pdf,3334344,age_pdf,False
+ABFN_CV.zip,ABFN,44.pdf,ABFN/44.pdf,3335230,age_pdf,False
+ABFN_CV.zip,ABFN,45.pdf,ABFN/45.pdf,3331507,age_pdf,False
+ABFN_CV.zip,ABFN,46.pdf,ABFN/46.pdf,3329949,age_pdf,False
+ABFN_CV.zip,ABFN,47.pdf,ABFN/47.pdf,3312032,age_pdf,False
+ABFN_CV.zip,ABFN,48.pdf,ABFN/48.pdf,3322541,age_pdf,False
+ABFN_CV.zip,ABFN,49.pdf,ABFN/49.pdf,3306097,age_pdf,False
+ABFN_CV.zip,ABFN,50.pdf,ABFN/50.pdf,1797872,age_pdf,False
+ABFN_CV.zip,ABFN,51.pdf,ABFN/51.pdf,1795411,age_pdf,False
+ABFN_CV.zip,ABFN,52.pdf,ABFN/52.pdf,1795385,age_pdf,False
+ABFN_CV.zip,ABFN,53.pdf,ABFN/53.pdf,1789862,age_pdf,False
+ABFN_CV.zip,ABFN,54.pdf,ABFN/54.pdf,1785448,age_pdf,False
+ABFN_CV.zip,ABFN,55.pdf,ABFN/55.pdf,1780266,age_pdf,False
+ABFN_CV.zip,ABFN,56.pdf,ABFN/56.pdf,1778837,age_pdf,False
+ABFN_CV.zip,ABFN,57.pdf,ABFN/57.pdf,1773339,age_pdf,False
+ABFN_CV.zip,ABFN,58.pdf,ABFN/58.pdf,1771230,age_pdf,False
+ABFN_CV.zip,ABFN,59.pdf,ABFN/59.pdf,1748786,age_pdf,False
+ABFN_CV.zip,ABFN,60.pdf,ABFN/60.pdf,1772084,age_pdf,False
+ABFN_CV.zip,ABFN,61.pdf,ABFN/61.pdf,1755660,age_pdf,False
+ABFN_CV.zip,ABFN,62.pdf,ABFN/62.pdf,1759626,age_pdf,False
+ABFN_CV.zip,ABFN,63.pdf,ABFN/63.pdf,1721326,age_pdf,False
+ABFN_CV.zip,ABFN,64.pdf,ABFN/64.pdf,1718659,age_pdf,False
+ABFN_CV.zip,ABFN,65.pdf,ABFN/65.pdf,1721111,age_pdf,False
+ABFN_CV.zip,ABFN,66.pdf,ABFN/66.pdf,1712825,age_pdf,False
+ABFN_CV.zip,ABFN,67.pdf,ABFN/67.pdf,1699052,age_pdf,False
+ABFN_CV.zip,ABFN,68.pdf,ABFN/68.pdf,1699555,age_pdf,False
+ABFN_CV.zip,ABFN,69.pdf,ABFN/69.pdf,1682375,age_pdf,False
+ABFN_CV.zip,ABFN,70.pdf,ABFN/70.pdf,1692720,age_pdf,False
+ABFN_CV.zip,ABFN,71.pdf,ABFN/71.pdf,1687711,age_pdf,False
+ABFN_CV.zip,ABFN,72.pdf,ABFN/72.pdf,1676434,age_pdf,False
+ABFN_CV.zip,ABFN,73.pdf,ABFN/73.pdf,1663580,age_pdf,False
+ABFN_CV.zip,ABFN,74.pdf,ABFN/74.pdf,1655923,age_pdf,False
+ABFN_CV.zip,ABFN,75.pdf,ABFN/75.pdf,1787596,age_pdf,False
+ABFN_CV.zip,ABFN,Cash Value Sheets.pdf,ABFN/Cash Value Sheets.pdf,16576390,consolidated,False
+ABFS_CV.zip,ABFS,00.pdf,ABFS/00.pdf,5263415,age_pdf,False
+ABFS_CV.zip,ABFS,01.pdf,ABFS/01.pdf,3616427,age_pdf,False
+ABFS_CV.zip,ABFS,02.pdf,ABFS/02.pdf,3612489,age_pdf,False
+ABFS_CV.zip,ABFS,03.pdf,ABFS/03.pdf,3624710,age_pdf,False
+ABFS_CV.zip,ABFS,04.pdf,ABFS/04.pdf,3609500,age_pdf,False
+ABFS_CV.zip,ABFS,05.pdf,ABFS/05.pdf,3602594,age_pdf,False
+ABFS_CV.zip,ABFS,06.pdf,ABFS/06.pdf,3621046,age_pdf,False
+ABFS_CV.zip,ABFS,07.pdf,ABFS/07.pdf,3601933,age_pdf,False
+ABFS_CV.zip,ABFS,08.pdf,ABFS/08.pdf,3598278,age_pdf,False
+ABFS_CV.zip,ABFS,09.pdf,ABFS/09.pdf,3610918,age_pdf,False
+ABFS_CV.zip,ABFS,10.pdf,ABFS/10.pdf,3584948,age_pdf,False
+ABFS_CV.zip,ABFS,11.pdf,ABFS/11.pdf,3579138,age_pdf,False
+ABFS_CV.zip,ABFS,12.pdf,ABFS/12.pdf,3572479,age_pdf,False
+ABFS_CV.zip,ABFS,13.pdf,ABFS/13.pdf,3565370,age_pdf,False
+ABFS_CV.zip,ABFS,14.pdf,ABFS/14.pdf,3553425,age_pdf,False
+ABFS_CV.zip,ABFS,15.pdf,ABFS/15.pdf,3543826,age_pdf,False
+ABFS_CV.zip,ABFS,16.pdf,ABFS/16.pdf,3545579,age_pdf,False
+ABFS_CV.zip,ABFS,17.pdf,ABFS/17.pdf,3533652,age_pdf,False
+ABFS_CV.zip,ABFS,18.pdf,ABFS/18.pdf,3536397,age_pdf,False
+ABFS_CV.zip,ABFS,19.pdf,ABFS/19.pdf,3539357,age_pdf,False
+ABFS_CV.zip,ABFS,20.pdf,ABFS/20.pdf,3522398,age_pdf,False
+ABFS_CV.zip,ABFS,21.pdf,ABFS/21.pdf,3537772,age_pdf,False
+ABFS_CV.zip,ABFS,22.pdf,ABFS/22.pdf,3521641,age_pdf,False
+ABFS_CV.zip,ABFS,23.pdf,ABFS/23.pdf,3504127,age_pdf,False
+ABFS_CV.zip,ABFS,24.pdf,ABFS/24.pdf,3514396,age_pdf,False
+ABFS_CV.zip,ABFS,25.pdf,ABFS/25.pdf,3500746,age_pdf,False
+ABFS_CV.zip,ABFS,26.pdf,ABFS/26.pdf,3517571,age_pdf,False
+ABFS_CV.zip,ABFS,27.pdf,ABFS/27.pdf,3499616,age_pdf,False
+ABFS_CV.zip,ABFS,28.pdf,ABFS/28.pdf,3475318,age_pdf,False
+ABFS_CV.zip,ABFS,29.pdf,ABFS/29.pdf,3478816,age_pdf,False
+ABFS_CV.zip,ABFS,30.pdf,ABFS/30.pdf,3457201,age_pdf,False
+ABFS_CV.zip,ABFS,31.pdf,ABFS/31.pdf,3480816,age_pdf,False
+ABFS_CV.zip,ABFS,32.pdf,ABFS/32.pdf,3471069,age_pdf,False
+ABFS_CV.zip,ABFS,33.pdf,ABFS/33.pdf,3470243,age_pdf,False
+ABFS_CV.zip,ABFS,34.pdf,ABFS/34.pdf,3463934,age_pdf,False
+ABFS_CV.zip,ABFS,35.pdf,ABFS/35.pdf,3436119,age_pdf,False
+ABFS_CV.zip,ABFS,36.pdf,ABFS/36.pdf,3429018,age_pdf,False
+ABFS_CV.zip,ABFS,37.pdf,ABFS/37.pdf,3427085,age_pdf,False
+ABFS_CV.zip,ABFS,38.pdf,ABFS/38.pdf,3421956,age_pdf,False
+ABFS_CV.zip,ABFS,39.pdf,ABFS/39.pdf,3422580,age_pdf,False
+ABFS_CV.zip,ABFS,40.pdf,ABFS/40.pdf,3396740,age_pdf,False
+ABFS_CV.zip,ABFS,41.pdf,ABFS/41.pdf,3407667,age_pdf,False
+ABFS_CV.zip,ABFS,42.pdf,ABFS/42.pdf,3400445,age_pdf,False
+ABFS_CV.zip,ABFS,43.pdf,ABFS/43.pdf,3400312,age_pdf,False
+ABFS_CV.zip,ABFS,44.pdf,ABFS/44.pdf,3393689,age_pdf,False
+ABFS_CV.zip,ABFS,45.pdf,ABFS/45.pdf,3382416,age_pdf,False
+ABFS_CV.zip,ABFS,46.pdf,ABFS/46.pdf,3371054,age_pdf,False
+ABFS_CV.zip,ABFS,47.pdf,ABFS/47.pdf,3359321,age_pdf,False
+ABFS_CV.zip,ABFS,48.pdf,ABFS/48.pdf,3349384,age_pdf,False
+ABFS_CV.zip,ABFS,49.pdf,ABFS/49.pdf,3371490,age_pdf,False
+ABFS_CV.zip,ABFS,50.pdf,ABFS/50.pdf,1829247,age_pdf,False
+ABFS_CV.zip,ABFS,51.pdf,ABFS/51.pdf,1822430,age_pdf,False
+ABFS_CV.zip,ABFS,52.pdf,ABFS/52.pdf,1821330,age_pdf,False
+ABFS_CV.zip,ABFS,53.pdf,ABFS/53.pdf,1799421,age_pdf,False
+ABFS_CV.zip,ABFS,54.pdf,ABFS/54.pdf,1793538,age_pdf,False
+ABFS_CV.zip,ABFS,55.pdf,ABFS/55.pdf,1791045,age_pdf,False
+ABFS_CV.zip,ABFS,56.pdf,ABFS/56.pdf,1790886,age_pdf,False
+ABFS_CV.zip,ABFS,57.pdf,ABFS/57.pdf,1774479,age_pdf,False
+ABFS_CV.zip,ABFS,58.pdf,ABFS/58.pdf,1778594,age_pdf,False
+ABFS_CV.zip,ABFS,59.pdf,ABFS/59.pdf,1756168,age_pdf,False
+ABFS_CV.zip,ABFS,60.pdf,ABFS/60.pdf,1768612,age_pdf,False
+ABFS_CV.zip,ABFS,61.pdf,ABFS/61.pdf,1755228,age_pdf,False
+ABFS_CV.zip,ABFS,62.pdf,ABFS/62.pdf,1740540,age_pdf,False
+ABFS_CV.zip,ABFS,63.pdf,ABFS/63.pdf,1734690,age_pdf,False
+ABFS_CV.zip,ABFS,64.pdf,ABFS/64.pdf,1755300,age_pdf,False
+ABFS_CV.zip,ABFS,65.pdf,ABFS/65.pdf,1715606,age_pdf,False
+ABFS_CV.zip,ABFS,66.pdf,ABFS/66.pdf,1720293,age_pdf,False
+ABFS_CV.zip,ABFS,67.pdf,ABFS/67.pdf,1705695,age_pdf,False
+ABFS_CV.zip,ABFS,68.pdf,ABFS/68.pdf,1708170,age_pdf,False
+ABFS_CV.zip,ABFS,69.pdf,ABFS/69.pdf,1703636,age_pdf,False
+ABFS_CV.zip,ABFS,70.pdf,ABFS/70.pdf,1677894,age_pdf,False
+ABFS_CV.zip,ABFS,71.pdf,ABFS/71.pdf,1686576,age_pdf,False
+ABFS_CV.zip,ABFS,72.pdf,ABFS/72.pdf,1675349,age_pdf,False
+ABFS_CV.zip,ABFS,73.pdf,ABFS/73.pdf,1655358,age_pdf,False
+ABFS_CV.zip,ABFS,74.pdf,ABFS/74.pdf,1658286,age_pdf,False
+ABFS_CV.zip,ABFS,75.pdf,ABFS/75.pdf,1636119,age_pdf,False
+ABFS_CV.zip,ABFS,Cash Value Sheets.pdf,ABFS/Cash Value Sheets.pdf,20314151,consolidated,False
+ABMN_CV.zip,ABMN,15.pdf,ABMN/15.pdf,3510660,age_pdf,False
+ABMN_CV.zip,ABMN,16.pdf,ABMN/16.pdf,3510925,age_pdf,False
+ABMN_CV.zip,ABMN,17.pdf,ABMN/17.pdf,3517183,age_pdf,False
+ABMN_CV.zip,ABMN,18.pdf,ABMN/18.pdf,3510167,age_pdf,False
+ABMN_CV.zip,ABMN,19.pdf,ABMN/19.pdf,3480783,age_pdf,False
+ABMN_CV.zip,ABMN,20.pdf,ABMN/20.pdf,3486577,age_pdf,False
+ABMN_CV.zip,ABMN,21.pdf,ABMN/21.pdf,3493039,age_pdf,False
+ABMN_CV.zip,ABMN,22.pdf,ABMN/22.pdf,3461140,age_pdf,False
+ABMN_CV.zip,ABMN,23.pdf,ABMN/23.pdf,3471550,age_pdf,False
+ABMN_CV.zip,ABMN,24.pdf,ABMN/24.pdf,3430816,age_pdf,False
+ABMN_CV.zip,ABMN,25.pdf,ABMN/25.pdf,3441643,age_pdf,False
+ABMN_CV.zip,ABMN,26.pdf,ABMN/26.pdf,3433337,age_pdf,False
+ABMN_CV.zip,ABMN,27.pdf,ABMN/27.pdf,3418903,age_pdf,False
+ABMN_CV.zip,ABMN,28.pdf,ABMN/28.pdf,3416818,age_pdf,False
+ABMN_CV.zip,ABMN,29.pdf,ABMN/29.pdf,3406647,age_pdf,False
+ABMN_CV.zip,ABMN,30.pdf,ABMN/30.pdf,3396697,age_pdf,False
+ABMN_CV.zip,ABMN,31.pdf,ABMN/31.pdf,3386606,age_pdf,False
+ABMN_CV.zip,ABMN,32.pdf,ABMN/32.pdf,3384476,age_pdf,False
+ABMN_CV.zip,ABMN,33.pdf,ABMN/33.pdf,3392737,age_pdf,False
+ABMN_CV.zip,ABMN,34.pdf,ABMN/34.pdf,3356745,age_pdf,False
+ABMN_CV.zip,ABMN,35.pdf,ABMN/35.pdf,3362325,age_pdf,False
+ABMN_CV.zip,ABMN,36.pdf,ABMN/36.pdf,3348322,age_pdf,False
+ABMN_CV.zip,ABMN,37.pdf,ABMN/37.pdf,3355983,age_pdf,False
+ABMN_CV.zip,ABMN,38.pdf,ABMN/38.pdf,3357284,age_pdf,False
+ABMN_CV.zip,ABMN,39.pdf,ABMN/39.pdf,3339966,age_pdf,False
+ABMN_CV.zip,ABMN,40.pdf,ABMN/40.pdf,3341850,age_pdf,False
+ABMN_CV.zip,ABMN,41.pdf,ABMN/41.pdf,3345304,age_pdf,False
+ABMN_CV.zip,ABMN,42.pdf,ABMN/42.pdf,3373421,age_pdf,False
+ABMN_CV.zip,ABMN,43.pdf,ABMN/43.pdf,3375983,age_pdf,False
+ABMN_CV.zip,ABMN,44.pdf,ABMN/44.pdf,3325493,age_pdf,False
+ABMN_CV.zip,ABMN,45.pdf,ABMN/45.pdf,3330279,age_pdf,False
+ABMN_CV.zip,ABMN,46.pdf,ABMN/46.pdf,3312170,age_pdf,False
+ABMN_CV.zip,ABMN,47.pdf,ABMN/47.pdf,3317584,age_pdf,False
+ABMN_CV.zip,ABMN,48.pdf,ABMN/48.pdf,3316030,age_pdf,False
+ABMN_CV.zip,ABMN,49.pdf,ABMN/49.pdf,3296695,age_pdf,False
+ABMN_CV.zip,ABMN,50.pdf,ABMN/50.pdf,1805316,age_pdf,False
+ABMN_CV.zip,ABMN,51.pdf,ABMN/51.pdf,1804937,age_pdf,False
+ABMN_CV.zip,ABMN,52.pdf,ABMN/52.pdf,1791589,age_pdf,False
+ABMN_CV.zip,ABMN,53.pdf,ABMN/53.pdf,1763671,age_pdf,False
+ABMN_CV.zip,ABMN,54.pdf,ABMN/54.pdf,1788665,age_pdf,False
+ABMN_CV.zip,ABMN,55.pdf,ABMN/55.pdf,1779115,age_pdf,False
+ABMN_CV.zip,ABMN,56.pdf,ABMN/56.pdf,1780466,age_pdf,False
+ABMN_CV.zip,ABMN,57.pdf,ABMN/57.pdf,1754229,age_pdf,False
+ABMN_CV.zip,ABMN,58.pdf,ABMN/58.pdf,1745393,age_pdf,False
+ABMN_CV.zip,ABMN,59.pdf,ABMN/59.pdf,1753597,age_pdf,False
+ABMN_CV.zip,ABMN,60.pdf,ABMN/60.pdf,1749645,age_pdf,False
+ABMN_CV.zip,ABMN,61.pdf,ABMN/61.pdf,1714275,age_pdf,False
+ABMN_CV.zip,ABMN,62.pdf,ABMN/62.pdf,1768030,age_pdf,False
+ABMN_CV.zip,ABMN,63.pdf,ABMN/63.pdf,1687734,age_pdf,False
+ABMN_CV.zip,ABMN,64.pdf,ABMN/64.pdf,1766441,age_pdf,False
+ABMN_CV.zip,ABMN,65.pdf,ABMN/65.pdf,1694220,age_pdf,False
+ABMN_CV.zip,ABMN,66.pdf,ABMN/66.pdf,1756007,age_pdf,False
+ABMN_CV.zip,ABMN,67.pdf,ABMN/67.pdf,1670166,age_pdf,False
+ABMN_CV.zip,ABMN,68.pdf,ABMN/68.pdf,1713409,age_pdf,False
+ABMN_CV.zip,ABMN,69.pdf,ABMN/69.pdf,1665404,age_pdf,False
+ABMN_CV.zip,ABMN,70.pdf,ABMN/70.pdf,1718847,age_pdf,False
+ABMN_CV.zip,ABMN,71.pdf,ABMN/71.pdf,1667821,age_pdf,False
+ABMN_CV.zip,ABMN,72.pdf,ABMN/72.pdf,1697125,age_pdf,False
+ABMN_CV.zip,ABMN,73.pdf,ABMN/73.pdf,1641044,age_pdf,False
+ABMN_CV.zip,ABMN,74.pdf,ABMN/74.pdf,1697251,age_pdf,False
+ABMN_CV.zip,ABMN,75.pdf,ABMN/75.pdf,1641917,age_pdf,False
+ABMN_CV.zip,ABMN,Cash Value Sheets.pdf,ABMN/Cash Value Sheets.pdf,18179634,consolidated,False
+ABMS_CV.zip,ABMS,00.pdf,ABMS/00.pdf,5159019,age_pdf,False
+ABMS_CV.zip,ABMS,01.pdf,ABMS/01.pdf,3648863,age_pdf,False
+ABMS_CV.zip,ABMS,02.pdf,ABMS/02.pdf,3500007,age_pdf,False
+ABMS_CV.zip,ABMS,03.pdf,ABMS/03.pdf,3644958,age_pdf,False
+ABMS_CV.zip,ABMS,04.pdf,ABMS/04.pdf,3624760,age_pdf,False
+ABMS_CV.zip,ABMS,05.pdf,ABMS/05.pdf,3606599,age_pdf,False
+ABMS_CV.zip,ABMS,06.pdf,ABMS/06.pdf,3619517,age_pdf,False
+ABMS_CV.zip,ABMS,07.pdf,ABMS/07.pdf,3601884,age_pdf,False
+ABMS_CV.zip,ABMS,08.pdf,ABMS/08.pdf,3609729,age_pdf,False
+ABMS_CV.zip,ABMS,09.pdf,ABMS/09.pdf,3608606,age_pdf,False
+ABMS_CV.zip,ABMS,10.pdf,ABMS/10.pdf,3600558,age_pdf,False
+ABMS_CV.zip,ABMS,11.pdf,ABMS/11.pdf,3457728,age_pdf,False
+ABMS_CV.zip,ABMS,12.pdf,ABMS/12.pdf,3572026,age_pdf,False
+ABMS_CV.zip,ABMS,13.pdf,ABMS/13.pdf,3596520,age_pdf,False
+ABMS_CV.zip,ABMS,14.pdf,ABMS/14.pdf,3576975,age_pdf,False
+ABMS_CV.zip,ABMS,15.pdf,ABMS/15.pdf,3571044,age_pdf,False
+ABMS_CV.zip,ABMS,16.pdf,ABMS/16.pdf,3568679,age_pdf,False
+ABMS_CV.zip,ABMS,17.pdf,ABMS/17.pdf,3561965,age_pdf,False
+ABMS_CV.zip,ABMS,18.pdf,ABMS/18.pdf,3557721,age_pdf,False
+ABMS_CV.zip,ABMS,19.pdf,ABMS/19.pdf,3553529,age_pdf,False
+ABMS_CV.zip,ABMS,20.pdf,ABMS/20.pdf,3553933,age_pdf,False
+ABMS_CV.zip,ABMS,21.pdf,ABMS/21.pdf,3544773,age_pdf,False
+ABMS_CV.zip,ABMS,22.pdf,ABMS/22.pdf,3534790,age_pdf,False
+ABMS_CV.zip,ABMS,23.pdf,ABMS/23.pdf,3549907,age_pdf,False
+ABMS_CV.zip,ABMS,24.pdf,ABMS/24.pdf,3543461,age_pdf,False
+ABMS_CV.zip,ABMS,25.pdf,ABMS/25.pdf,3387492,age_pdf,False
+ABMS_CV.zip,ABMS,26.pdf,ABMS/26.pdf,3546392,age_pdf,False
+ABMS_CV.zip,ABMS,27.pdf,ABMS/27.pdf,3522185,age_pdf,False
+ABMS_CV.zip,ABMS,28.pdf,ABMS/28.pdf,3523408,age_pdf,False
+ABMS_CV.zip,ABMS,29.pdf,ABMS/29.pdf,3529357,age_pdf,False
+ABMS_CV.zip,ABMS,30.pdf,ABMS/30.pdf,3495394,age_pdf,False
+ABMS_CV.zip,ABMS,31.pdf,ABMS/31.pdf,3513693,age_pdf,False
+ABMS_CV.zip,ABMS,32.pdf,ABMS/32.pdf,3486497,age_pdf,False
+ABMS_CV.zip,ABMS,33.pdf,ABMS/33.pdf,3482596,age_pdf,False
+ABMS_CV.zip,ABMS,34.pdf,ABMS/34.pdf,3487383,age_pdf,False
+ABMS_CV.zip,ABMS,35.pdf,ABMS/35.pdf,3465824,age_pdf,False
+ABMS_CV.zip,ABMS,36.pdf,ABMS/36.pdf,3456473,age_pdf,False
+ABMS_CV.zip,ABMS,37.pdf,ABMS/37.pdf,3433742,age_pdf,False
+ABMS_CV.zip,ABMS,38.pdf,ABMS/38.pdf,3434514,age_pdf,False
+ABMS_CV.zip,ABMS,39.pdf,ABMS/39.pdf,3427436,age_pdf,False
+ABMS_CV.zip,ABMS,40.pdf,ABMS/40.pdf,3427947,age_pdf,False
+ABMS_CV.zip,ABMS,41.pdf,ABMS/41.pdf,3421096,age_pdf,False
+ABMS_CV.zip,ABMS,42.pdf,ABMS/42.pdf,3410433,age_pdf,False
+ABMS_CV.zip,ABMS,43.pdf,ABMS/43.pdf,3415738,age_pdf,False
+ABMS_CV.zip,ABMS,44.pdf,ABMS/44.pdf,3389985,age_pdf,False
+ABMS_CV.zip,ABMS,45.pdf,ABMS/45.pdf,3261443,age_pdf,False
+ABMS_CV.zip,ABMS,46.pdf,ABMS/46.pdf,3395795,age_pdf,False
+ABMS_CV.zip,ABMS,47.pdf,ABMS/47.pdf,3377886,age_pdf,False
+ABMS_CV.zip,ABMS,48.pdf,ABMS/48.pdf,3381772,age_pdf,False
+ABMS_CV.zip,ABMS,49.pdf,ABMS/49.pdf,3223942,age_pdf,False
+ABMS_CV.zip,ABMS,50.pdf,ABMS/50.pdf,3353885,age_pdf,False
+ABMS_CV.zip,ABMS,51.pdf,ABMS/51.pdf,1867051,age_pdf,False
+ABMS_CV.zip,ABMS,52.pdf,ABMS/52.pdf,1775435,age_pdf,False
+ABMS_CV.zip,ABMS,53.pdf,ABMS/53.pdf,1839067,age_pdf,False
+ABMS_CV.zip,ABMS,54.pdf,ABMS/54.pdf,1757515,age_pdf,False
+ABMS_CV.zip,ABMS,55.pdf,ABMS/55.pdf,1832276,age_pdf,False
+ABMS_CV.zip,ABMS,56.pdf,ABMS/56.pdf,1748956,age_pdf,False
+ABMS_CV.zip,ABMS,57.pdf,ABMS/57.pdf,1811177,age_pdf,False
+ABMS_CV.zip,ABMS,58.pdf,ABMS/58.pdf,1733953,age_pdf,False
+ABMS_CV.zip,ABMS,59.pdf,ABMS/59.pdf,1790357,age_pdf,False
+ABMS_CV.zip,ABMS,60.pdf,ABMS/60.pdf,1726189,age_pdf,False
+ABMS_CV.zip,ABMS,61.pdf,ABMS/61.pdf,1781205,age_pdf,False
+ABMS_CV.zip,ABMS,62.pdf,ABMS/62.pdf,1714078,age_pdf,False
+ABMS_CV.zip,ABMS,63.pdf,ABMS/63.pdf,1766896,age_pdf,False
+ABMS_CV.zip,ABMS,64.pdf,ABMS/64.pdf,1696795,age_pdf,False
+ABMS_CV.zip,ABMS,65.pdf,ABMS/65.pdf,1758487,age_pdf,False
+ABMS_CV.zip,ABMS,66.pdf,ABMS/66.pdf,1691702,age_pdf,False
+ABMS_CV.zip,ABMS,67.pdf,ABMS/67.pdf,1739960,age_pdf,False
+ABMS_CV.zip,ABMS,68.pdf,ABMS/68.pdf,1666496,age_pdf,False
+ABMS_CV.zip,ABMS,69.pdf,ABMS/69.pdf,1707572,age_pdf,False
+ABMS_CV.zip,ABMS,70.pdf,ABMS/70.pdf,1668794,age_pdf,False
+ABMS_CV.zip,ABMS,71.pdf,ABMS/71.pdf,1709770,age_pdf,False
+ABMS_CV.zip,ABMS,72.pdf,ABMS/72.pdf,1653271,age_pdf,False
+ABMS_CV.zip,ABMS,73.pdf,ABMS/73.pdf,1685413,age_pdf,False
+ABMS_CV.zip,ABMS,74.pdf,ABMS/74.pdf,1624622,age_pdf,False
+ABMS_CV.zip,ABMS,75.pdf,ABMS/75.pdf,1666177,age_pdf,False
+ABMS_CV.zip,ABMS,Cash Value Sheets.pdf,ABMS/Cash Value Sheets.pdf,21819250,consolidated,False
+MultipleCashValueFiles.zip,1015,0-99.pdf,MultipleCashValueFiles/1015/0-99.pdf,1379960,all_ages,False
+MultipleCashValueFiles.zip,101G,0-99.pdf,MultipleCashValueFiles/101G/0-99.pdf,852398,all_ages,False
+MultipleCashValueFiles.zip,101M,0-99.pdf,MultipleCashValueFiles/101M/0-99.pdf,3768284,all_ages,False
+MultipleCashValueFiles.zip,ALP2,Cash Value Sheets.pdf,MultipleCashValueFiles/ALP2/Cash Value Sheets.pdf,31381149,consolidated,False
+MultipleCashValueFiles.zip,ALP6,Cash Value Sheets.pdf,MultipleCashValueFiles/ALP6/Cash Value Sheets.pdf,22504034,consolidated,False
+MultipleCashValueFiles.zip,GDB,Cash Value Sheets.pdf,MultipleCashValueFiles/GDB/Cash Value Sheets.pdf,32375802,consolidated,False
+MultipleCashValueFiles.zip,P8FJ,Cash Value Sheets.pdf,MultipleCashValueFiles/P8FJ/Cash Value Sheets.pdf,5895269,consolidated,False
+MultipleCashValueFiles.zip,P8FN,Cash Value Sheets.pdf,MultipleCashValueFiles/P8FN/Cash Value Sheets.pdf,26178823,consolidated,False
+MultipleCashValueFiles.zip,P8FS,Cash Value Sheets.pdf,MultipleCashValueFiles/P8FS/Cash Value Sheets.pdf,21714183,consolidated,False
+MultipleCashValueFiles.zip,P8MJ,Cash Value Sheets.pdf,MultipleCashValueFiles/P8MJ/Cash Value Sheets.pdf,5945515,consolidated,False
+MultipleCashValueFiles.zip,P8MN,Cash Value Sheets.pdf,MultipleCashValueFiles/P8MN/Cash Value Sheets.pdf,25736468,consolidated,False
+MultipleCashValueFiles.zip,P8MS,Cash Value Sheets.pdf,MultipleCashValueFiles/P8MS/Cash Value Sheets.pdf,26193411,consolidated,False
+MultipleCashValueFiles.zip,P9FJ,Cash Value Sheets.pdf,MultipleCashValueFiles/P9FJ/Cash Value Sheets.pdf,5739042,consolidated,False
+MultipleCashValueFiles.zip,P9FN,Cash Value Sheets.pdf,MultipleCashValueFiles/P9FN/Cash Value Sheets.pdf,22751024,consolidated,False
+MultipleCashValueFiles.zip,P9FS,Cash Value Sheets.pdf,MultipleCashValueFiles/P9FS/Cash Value Sheets.pdf,22583244,consolidated,False
+MultipleCashValueFiles.zip,P9MJ,Cash Value Sheets.pdf,MultipleCashValueFiles/P9MJ/Cash Value Sheets.pdf,5358776,consolidated,False
+MultipleCashValueFiles.zip,P9MN,Cash Value Sheets.pdf,MultipleCashValueFiles/P9MN/Cash Value Sheets.pdf,24162876,consolidated,False
+MultipleCashValueFiles.zip,P9MS,Cash Value Sheets.pdf,MultipleCashValueFiles/P9MS/Cash Value Sheets.pdf,22469679,consolidated,False
+MultipleCashValueFiles.zip,R29G,Cash Value Sheets.pdf,MultipleCashValueFiles/R29G/Cash Value Sheets.pdf,23040193,consolidated,False
+MultipleCashValueFiles.zip,R69G,Cash Value Sheets.pdf,MultipleCashValueFiles/R69G/Cash Value Sheets.pdf,17566813,consolidated,False
+MultipleCashValueFiles.zip,RW9G,Cash Value Sheets.pdf,MultipleCashValueFiles/RW9G/Cash Value Sheets.pdf,22658250,consolidated,False
+P7FN_CV.zip,P7FN,18.pdf,P7FN/18.pdf,3247466,age_pdf,False
+P7FN_CV.zip,P7FN,19.pdf,P7FN/19.pdf,3164136,age_pdf,False
+P7FN_CV.zip,P7FN,20.pdf,P7FN/20.pdf,3188570,age_pdf,False
+P7FN_CV.zip,P7FN,21.pdf,P7FN/21.pdf,3096253,age_pdf,False
+P7FN_CV.zip,P7FN,22.pdf,P7FN/22.pdf,3132027,age_pdf,False
+P7FN_CV.zip,P7FN,23.pdf,P7FN/23.pdf,3217533,age_pdf,False
+P7FN_CV.zip,P7FN,24.pdf,P7FN/24.pdf,3100995,age_pdf,False
+P7FN_CV.zip,P7FN,25.pdf,P7FN/25.pdf,3207008,age_pdf,False
+P7FN_CV.zip,P7FN,26.pdf,P7FN/26.pdf,3187372,age_pdf,False
+P7FN_CV.zip,P7FN,27.pdf,P7FN/27.pdf,3044300,age_pdf,False
+P7FN_CV.zip,P7FN,28.pdf,P7FN/28.pdf,3052065,age_pdf,False
+P7FN_CV.zip,P7FN,29.pdf,P7FN/29.pdf,3156813,age_pdf,False
+P7FN_CV.zip,P7FN,30.pdf,P7FN/30.pdf,3030303,age_pdf,False
+P7FN_CV.zip,P7FN,31.pdf,P7FN/31.pdf,3034019,age_pdf,False
+P7FN_CV.zip,P7FN,32.pdf,P7FN/32.pdf,3069891,age_pdf,False
+P7FN_CV.zip,P7FN,33.pdf,P7FN/33.pdf,3018822,age_pdf,False
+P7FN_CV.zip,P7FN,34.pdf,P7FN/34.pdf,3054929,age_pdf,False
+P7FN_CV.zip,P7FN,35.pdf,P7FN/35.pdf,3053518,age_pdf,False
+P7FN_CV.zip,P7FN,36.pdf,P7FN/36.pdf,3095831,age_pdf,False
+P7FN_CV.zip,P7FN,37.pdf,P7FN/37.pdf,2986169,age_pdf,False
+P7FN_CV.zip,P7FN,38.pdf,P7FN/38.pdf,2990160,age_pdf,False
+P7FN_CV.zip,P7FN,39.pdf,P7FN/39.pdf,2959869,age_pdf,False
+P7FN_CV.zip,P7FN,40.pdf,P7FN/40.pdf,3041283,age_pdf,False
+P7FN_CV.zip,P7FN,41.pdf,P7FN/41.pdf,3025074,age_pdf,False
+P7FN_CV.zip,P7FN,42.pdf,P7FN/42.pdf,3005351,age_pdf,False
+P7FN_CV.zip,P7FN,43.pdf,P7FN/43.pdf,2955102,age_pdf,False
+P7FN_CV.zip,P7FN,44.pdf,P7FN/44.pdf,2936233,age_pdf,False
+P7FN_CV.zip,P7FN,45.pdf,P7FN/45.pdf,2954639,age_pdf,False
+P7FN_CV.zip,P7FN,46.pdf,P7FN/46.pdf,3016222,age_pdf,False
+P7FN_CV.zip,P7FN,47.pdf,P7FN/47.pdf,2939349,age_pdf,False
+P7FN_CV.zip,P7FN,48.pdf,P7FN/48.pdf,2940937,age_pdf,False
+P7FN_CV.zip,P7FN,49.pdf,P7FN/49.pdf,2985923,age_pdf,False
+P7FN_CV.zip,P7FN,50.pdf,P7FN/50.pdf,3011903,age_pdf,False
+P7FN_CV.zip,P7FN,51.pdf,P7FN/51.pdf,1591459,age_pdf,False
+P7FN_CV.zip,P7FN,52.pdf,P7FN/52.pdf,1579167,age_pdf,False
+P7FN_CV.zip,P7FN,53.pdf,P7FN/53.pdf,1648656,age_pdf,False
+P7FN_CV.zip,P7FN,54.pdf,P7FN/54.pdf,1575360,age_pdf,False
+P7FN_CV.zip,P7FN,55.pdf,P7FN/55.pdf,1639684,age_pdf,False
+P7FN_CV.zip,P7FN,56.pdf,P7FN/56.pdf,1625531,age_pdf,False
+P7FN_CV.zip,P7FN,57.pdf,P7FN/57.pdf,1561849,age_pdf,False
+P7FN_CV.zip,P7FN,58.pdf,P7FN/58.pdf,1558597,age_pdf,False
+P7FN_CV.zip,P7FN,59.pdf,P7FN/59.pdf,1625329,age_pdf,False
+P7FN_CV.zip,P7FN,60.pdf,P7FN/60.pdf,1553377,age_pdf,False
+P7FN_CV.zip,P7FN,61.pdf,P7FN/61.pdf,1546298,age_pdf,False
+P7FN_CV.zip,P7FN,62.pdf,P7FN/62.pdf,1604149,age_pdf,False
+P7FN_CV.zip,P7FN,63.pdf,P7FN/63.pdf,1598216,age_pdf,False
+P7FN_CV.zip,P7FN,64.pdf,P7FN/64.pdf,1531395,age_pdf,False
+P7FN_CV.zip,P7FN,65.pdf,P7FN/65.pdf,1528140,age_pdf,False
+P7FN_CV.zip,P7FN,66.pdf,P7FN/66.pdf,1516132,age_pdf,False
+P7FN_CV.zip,P7FN,67.pdf,P7FN/67.pdf,1514316,age_pdf,False
+P7FN_CV.zip,P7FN,68.pdf,P7FN/68.pdf,1509209,age_pdf,False
+P7FN_CV.zip,P7FN,69.pdf,P7FN/69.pdf,1509247,age_pdf,False
+P7FN_CV.zip,P7FN,70.pdf,P7FN/70.pdf,1676672,age_pdf,False
+P7FN_CV.zip,P7FN,Cash Value Sheets.pdf,P7FN/Cash Value Sheets.pdf,20356253,consolidated,False
+P7FS_CV.zip,P7FS,0.pdf,P7FS/0.pdf,4758636,age_pdf,False
+P7FS_CV.zip,P7FS,01.pdf,P7FS/01.pdf,4541534,age_pdf,False
+P7FS_CV.zip,P7FS,02.pdf,P7FS/02.pdf,3198110,age_pdf,False
+P7FS_CV.zip,P7FS,03.pdf,P7FS/03.pdf,3201370,age_pdf,False
+P7FS_CV.zip,P7FS,04.pdf,P7FS/04.pdf,3184311,age_pdf,False
+P7FS_CV.zip,P7FS,05.pdf,P7FS/05.pdf,3183373,age_pdf,False
+P7FS_CV.zip,P7FS,06.pdf,P7FS/06.pdf,3170152,age_pdf,False
+P7FS_CV.zip,P7FS,07.pdf,P7FS/07.pdf,3243029,age_pdf,False
+P7FS_CV.zip,P7FS,08.pdf,P7FS/08.pdf,3172118,age_pdf,False
+P7FS_CV.zip,P7FS,09.pdf,P7FS/09.pdf,3212354,age_pdf,False
+P7FS_CV.zip,P7FS,10.pdf,P7FS/10.pdf,3164728,age_pdf,False
+P7FS_CV.zip,P7FS,11.pdf,P7FS/11.pdf,3139023,age_pdf,False
+P7FS_CV.zip,P7FS,12.pdf,P7FS/12.pdf,3224652,age_pdf,False
+P7FS_CV.zip,P7FS,13.pdf,P7FS/13.pdf,3153549,age_pdf,False
+P7FS_CV.zip,P7FS,14.pdf,P7FS/14.pdf,3275098,age_pdf,False
+P7FS_CV.zip,P7FS,15.pdf,P7FS/15.pdf,3142895,age_pdf,False
+P7FS_CV.zip,P7FS,16.pdf,P7FS/16.pdf,3264891,age_pdf,False
+P7FS_CV.zip,P7FS,17.pdf,P7FS/17.pdf,3253357,age_pdf,False
+P7FS_CV.zip,P7FS,18.pdf,P7FS/18.pdf,3200646,age_pdf,False
+P7FS_CV.zip,P7FS,19.pdf,P7FS/19.pdf,3124138,age_pdf,False
+P7FS_CV.zip,P7FS,20.pdf,P7FS/20.pdf,3190042,age_pdf,False
+P7FS_CV.zip,P7FS,21.pdf,P7FS/21.pdf,3180132,age_pdf,False
+P7FS_CV.zip,P7FS,22.pdf,P7FS/22.pdf,3125002,age_pdf,False
+P7FS_CV.zip,P7FS,23.pdf,P7FS/23.pdf,3115030,age_pdf,False
+P7FS_CV.zip,P7FS,24.pdf,P7FS/24.pdf,3091899,age_pdf,False
+P7FS_CV.zip,P7FS,25.pdf,P7FS/25.pdf,3097407,age_pdf,False
+P7FS_CV.zip,P7FS,26.pdf,P7FS/26.pdf,3080192,age_pdf,False
+P7FS_CV.zip,P7FS,27.pdf,P7FS/27.pdf,3087261,age_pdf,False
+P7FS_CV.zip,P7FS,28.pdf,P7FS/28.pdf,3081282,age_pdf,False
+P7FS_CV.zip,P7FS,29.pdf,P7FS/29.pdf,3080095,age_pdf,False
+P7FS_CV.zip,P7FS,30.pdf,P7FS/30.pdf,3087068,age_pdf,False
+P7FS_CV.zip,P7FS,31.pdf,P7FS/31.pdf,3054942,age_pdf,False
+P7FS_CV.zip,P7FS,32.pdf,P7FS/32.pdf,3072245,age_pdf,False
+P7FS_CV.zip,P7FS,33.pdf,P7FS/33.pdf,3061351,age_pdf,False
+P7FS_CV.zip,P7FS,34.pdf,P7FS/34.pdf,3119264,age_pdf,False
+P7FS_CV.zip,P7FS,35.pdf,P7FS/35.pdf,3192762,age_pdf,False
+P7FS_CV.zip,P7FS,36.pdf,P7FS/36.pdf,3039964,age_pdf,False
+P7FS_CV.zip,P7FS,37.pdf,P7FS/37.pdf,3039634,age_pdf,False
+P7FS_CV.zip,P7FS,38.pdf,P7FS/38.pdf,3045534,age_pdf,False
+P7FS_CV.zip,P7FS,39.pdf,P7FS/39.pdf,3099829,age_pdf,False
+P7FS_CV.zip,P7FS,40.pdf,P7FS/40.pdf,3042495,age_pdf,False
+P7FS_CV.zip,P7FS,41.pdf,P7FS/41.pdf,3070543,age_pdf,False
+P7FS_CV.zip,P7FS,42.pdf,P7FS/42.pdf,3031047,age_pdf,False
+P7FS_CV.zip,P7FS,43.pdf,P7FS/43.pdf,3090315,age_pdf,False
+P7FS_CV.zip,P7FS,44.pdf,P7FS/44.pdf,3013782,age_pdf,False
+P7FS_CV.zip,P7FS,45.pdf,P7FS/45.pdf,3011905,age_pdf,False
+P7FS_CV.zip,P7FS,46.pdf,P7FS/46.pdf,2993881,age_pdf,False
+P7FS_CV.zip,P7FS,47.pdf,P7FS/47.pdf,3018312,age_pdf,False
+P7FS_CV.zip,P7FS,48.pdf,P7FS/48.pdf,3122040,age_pdf,False
+P7FS_CV.zip,P7FS,49.pdf,P7FS/49.pdf,3026316,age_pdf,False
+P7FS_CV.zip,P7FS,50.pdf,P7FS/50.pdf,3062101,age_pdf,False
+P7FS_CV.zip,P7FS,51.pdf,P7FS/51.pdf,1688623,age_pdf,False
+P7FS_CV.zip,P7FS,52.pdf,P7FS/52.pdf,1685276,age_pdf,False
+P7FS_CV.zip,P7FS,53.pdf,P7FS/53.pdf,1667992,age_pdf,False
+P7FS_CV.zip,P7FS,54.pdf,P7FS/54.pdf,1667797,age_pdf,False
+P7FS_CV.zip,P7FS,55.pdf,P7FS/55.pdf,1595785,age_pdf,False
+P7FS_CV.zip,P7FS,56.pdf,P7FS/56.pdf,1648609,age_pdf,False
+P7FS_CV.zip,P7FS,57.pdf,P7FS/57.pdf,1583139,age_pdf,False
+P7FS_CV.zip,P7FS,58.pdf,P7FS/58.pdf,1589943,age_pdf,False
+P7FS_CV.zip,P7FS,59.pdf,P7FS/59.pdf,1586787,age_pdf,False
+P7FS_CV.zip,P7FS,60.pdf,P7FS/60.pdf,1569611,age_pdf,False
+P7FS_CV.zip,P7FS,61.pdf,P7FS/61.pdf,1559241,age_pdf,False
+P7FS_CV.zip,P7FS,62.pdf,P7FS/62.pdf,1561273,age_pdf,False
+P7FS_CV.zip,P7FS,63.pdf,P7FS/63.pdf,1550477,age_pdf,False
+P7FS_CV.zip,P7FS,64.pdf,P7FS/64.pdf,1548561,age_pdf,False
+P7FS_CV.zip,P7FS,65.pdf,P7FS/65.pdf,1542935,age_pdf,False
+P7FS_CV.zip,P7FS,66.pdf,P7FS/66.pdf,1527214,age_pdf,False
+P7FS_CV.zip,P7FS,67.pdf,P7FS/67.pdf,1532640,age_pdf,False
+P7FS_CV.zip,P7FS,68.pdf,P7FS/68.pdf,1512996,age_pdf,False
+P7FS_CV.zip,P7FS,69.pdf,P7FS/69.pdf,1506519,age_pdf,False
+P7FS_CV.zip,P7FS,70.pdf,P7FS/70.pdf,1582385,age_pdf,False
+P7FS_CV.zip,P7FS,Cash Value Sheets.pdf,P7FS/Cash Value Sheets.pdf,19192202,consolidated,False
+P7MN_CV.zip,P7MN,18.pdf,P7MN/18.pdf,3231572,age_pdf,False
+P7MN_CV.zip,P7MN,19.pdf,P7MN/19.pdf,3134431,age_pdf,False
+P7MN_CV.zip,P7MN,20.pdf,P7MN/20.pdf,3124651,age_pdf,False
+P7MN_CV.zip,P7MN,21.pdf,P7MN/21.pdf,3137641,age_pdf,False
+P7MN_CV.zip,P7MN,22.pdf,P7MN/22.pdf,3108160,age_pdf,False
+P7MN_CV.zip,P7MN,23.pdf,P7MN/23.pdf,3171872,age_pdf,False
+P7MN_CV.zip,P7MN,24.pdf,P7MN/24.pdf,3176202,age_pdf,False
+P7MN_CV.zip,P7MN,25.pdf,P7MN/25.pdf,3154712,age_pdf,False
+P7MN_CV.zip,P7MN,26.pdf,P7MN/26.pdf,3101529,age_pdf,False
+P7MN_CV.zip,P7MN,27.pdf,P7MN/27.pdf,3076895,age_pdf,False
+P7MN_CV.zip,P7MN,28.pdf,P7MN/28.pdf,3057469,age_pdf,False
+P7MN_CV.zip,P7MN,29.pdf,P7MN/29.pdf,3056724,age_pdf,False
+P7MN_CV.zip,P7MN,30.pdf,P7MN/30.pdf,3102502,age_pdf,False
+P7MN_CV.zip,P7MN,31.pdf,P7MN/31.pdf,3112718,age_pdf,False
+P7MN_CV.zip,P7MN,32.pdf,P7MN/32.pdf,3092089,age_pdf,False
+P7MN_CV.zip,P7MN,33.pdf,P7MN/33.pdf,3083911,age_pdf,False
+P7MN_CV.zip,P7MN,34.pdf,P7MN/34.pdf,3084284,age_pdf,False
+P7MN_CV.zip,P7MN,35.pdf,P7MN/35.pdf,3081134,age_pdf,False
+P7MN_CV.zip,P7MN,36.pdf,P7MN/36.pdf,3070908,age_pdf,False
+P7MN_CV.zip,P7MN,37.pdf,P7MN/37.pdf,3129341,age_pdf,False
+P7MN_CV.zip,P7MN,38.pdf,P7MN/38.pdf,3049400,age_pdf,False
+P7MN_CV.zip,P7MN,39.pdf,P7MN/39.pdf,3045663,age_pdf,False
+P7MN_CV.zip,P7MN,40.pdf,P7MN/40.pdf,2981397,age_pdf,False
+P7MN_CV.zip,P7MN,41.pdf,P7MN/41.pdf,3042075,age_pdf,False
+P7MN_CV.zip,P7MN,42.pdf,P7MN/42.pdf,3042817,age_pdf,False
+P7MN_CV.zip,P7MN,43.pdf,P7MN/43.pdf,2951749,age_pdf,False
+P7MN_CV.zip,P7MN,44.pdf,P7MN/44.pdf,3032967,age_pdf,False
+P7MN_CV.zip,P7MN,45.pdf,P7MN/45.pdf,2952070,age_pdf,False
+P7MN_CV.zip,P7MN,46.pdf,P7MN/46.pdf,2966848,age_pdf,False
+P7MN_CV.zip,P7MN,47.pdf,P7MN/47.pdf,2939420,age_pdf,False
+P7MN_CV.zip,P7MN,48.pdf,P7MN/48.pdf,2939904,age_pdf,False
+P7MN_CV.zip,P7MN,49.pdf,P7MN/49.pdf,2934972,age_pdf,False
+P7MN_CV.zip,P7MN,50.pdf,P7MN/50.pdf,2928355,age_pdf,False
+P7MN_CV.zip,P7MN,51.pdf,P7MN/51.pdf,1659305,age_pdf,False
+P7MN_CV.zip,P7MN,52.pdf,P7MN/52.pdf,1581700,age_pdf,False
+P7MN_CV.zip,P7MN,53.pdf,P7MN/53.pdf,1575773,age_pdf,False
+P7MN_CV.zip,P7MN,54.pdf,P7MN/54.pdf,1630235,age_pdf,False
+P7MN_CV.zip,P7MN,55.pdf,P7MN/55.pdf,1562588,age_pdf,False
+P7MN_CV.zip,P7MN,56.pdf,P7MN/56.pdf,1568803,age_pdf,False
+P7MN_CV.zip,P7MN,57.pdf,P7MN/57.pdf,1564493,age_pdf,False
+P7MN_CV.zip,P7MN,58.pdf,P7MN/58.pdf,1547930,age_pdf,False
+P7MN_CV.zip,P7MN,59.pdf,P7MN/59.pdf,1606868,age_pdf,False
+P7MN_CV.zip,P7MN,60.pdf,P7MN/60.pdf,1543585,age_pdf,False
+P7MN_CV.zip,P7MN,61.pdf,P7MN/61.pdf,1600029,age_pdf,False
+P7MN_CV.zip,P7MN,62.pdf,P7MN/62.pdf,1529127,age_pdf,False
+P7MN_CV.zip,P7MN,63.pdf,P7MN/63.pdf,1520251,age_pdf,False
+P7MN_CV.zip,P7MN,64.pdf,P7MN/64.pdf,1518438,age_pdf,False
+P7MN_CV.zip,P7MN,65.pdf,P7MN/65.pdf,1515551,age_pdf,False
+P7MN_CV.zip,P7MN,66.pdf,P7MN/66.pdf,1509499,age_pdf,False
+P7MN_CV.zip,P7MN,67.pdf,P7MN/67.pdf,1506364,age_pdf,False
+P7MN_CV.zip,P7MN,68.pdf,P7MN/68.pdf,1496509,age_pdf,False
+P7MN_CV.zip,P7MN,69.pdf,P7MN/69.pdf,1491342,age_pdf,False
+P7MN_CV.zip,P7MN,70.pdf,P7MN/70.pdf,1483090,age_pdf,False
+P7MN_CV.zip,P7MN,Cash Value Sheets.pdf,P7MN/Cash Value Sheets.pdf,19301955,consolidated,False
+P7MS_CV.zip,P7MS,0.pdf,P7MS/0.pdf,4633847,age_pdf,False
+P7MS_CV.zip,P7MS,01.pdf,P7MS/01.pdf,4516440,age_pdf,False
+P7MS_CV.zip,P7MS,02.pdf,P7MS/02.pdf,3239701,age_pdf,False
+P7MS_CV.zip,P7MS,03.pdf,P7MS/03.pdf,3183375,age_pdf,False
+P7MS_CV.zip,P7MS,04.pdf,P7MS/04.pdf,3237065,age_pdf,False
+P7MS_CV.zip,P7MS,05.pdf,P7MS/05.pdf,3164412,age_pdf,False
+P7MS_CV.zip,P7MS,06.pdf,P7MS/06.pdf,3146943,age_pdf,False
+P7MS_CV.zip,P7MS,07.pdf,P7MS/07.pdf,3213242,age_pdf,False
+P7MS_CV.zip,P7MS,08.pdf,P7MS/08.pdf,3216636,age_pdf,False
+P7MS_CV.zip,P7MS,09.pdf,P7MS/09.pdf,3190895,age_pdf,False
+P7MS_CV.zip,P7MS,10.pdf,P7MS/10.pdf,3205784,age_pdf,False
+P7MS_CV.zip,P7MS,11.pdf,P7MS/11.pdf,3208504,age_pdf,False
+P7MS_CV.zip,P7MS,12.pdf,P7MS/12.pdf,3196151,age_pdf,False
+P7MS_CV.zip,P7MS,13.pdf,P7MS/13.pdf,3199544,age_pdf,False
+P7MS_CV.zip,P7MS,14.pdf,P7MS/14.pdf,3135542,age_pdf,False
+P7MS_CV.zip,P7MS,15.pdf,P7MS/15.pdf,3128146,age_pdf,False
+P7MS_CV.zip,P7MS,16.pdf,P7MS/16.pdf,3134204,age_pdf,False
+P7MS_CV.zip,P7MS,17.pdf,P7MS/17.pdf,3164906,age_pdf,False
+P7MS_CV.zip,P7MS,18.pdf,P7MS/18.pdf,3125604,age_pdf,False
+P7MS_CV.zip,P7MS,19.pdf,P7MS/19.pdf,3094427,age_pdf,False
+P7MS_CV.zip,P7MS,20.pdf,P7MS/20.pdf,3170786,age_pdf,False
+P7MS_CV.zip,P7MS,21.pdf,P7MS/21.pdf,3187307,age_pdf,False
+P7MS_CV.zip,P7MS,22.pdf,P7MS/22.pdf,3162090,age_pdf,False
+P7MS_CV.zip,P7MS,23.pdf,P7MS/23.pdf,3159506,age_pdf,False
+P7MS_CV.zip,P7MS,24.pdf,P7MS/24.pdf,3091155,age_pdf,False
+P7MS_CV.zip,P7MS,25.pdf,P7MS/25.pdf,3215839,age_pdf,False
+P7MS_CV.zip,P7MS,26.pdf,P7MS/26.pdf,3157505,age_pdf,False
+P7MS_CV.zip,P7MS,27.pdf,P7MS/27.pdf,3073506,age_pdf,False
+P7MS_CV.zip,P7MS,28.pdf,P7MS/28.pdf,3084968,age_pdf,False
+P7MS_CV.zip,P7MS,29.pdf,P7MS/29.pdf,3077513,age_pdf,False
+P7MS_CV.zip,P7MS,30.pdf,P7MS/30.pdf,3127798,age_pdf,False
+P7MS_CV.zip,P7MS,31.pdf,P7MS/31.pdf,3127177,age_pdf,False
+P7MS_CV.zip,P7MS,32.pdf,P7MS/32.pdf,3052365,age_pdf,False
+P7MS_CV.zip,P7MS,33.pdf,P7MS/33.pdf,3114041,age_pdf,False
+P7MS_CV.zip,P7MS,34.pdf,P7MS/34.pdf,3063430,age_pdf,False
+P7MS_CV.zip,P7MS,35.pdf,P7MS/35.pdf,3123379,age_pdf,False
+P7MS_CV.zip,P7MS,36.pdf,P7MS/36.pdf,3063251,age_pdf,False
+P7MS_CV.zip,P7MS,37.pdf,P7MS/37.pdf,3088043,age_pdf,False
+P7MS_CV.zip,P7MS,38.pdf,P7MS/38.pdf,3107523,age_pdf,False
+P7MS_CV.zip,P7MS,39.pdf,P7MS/39.pdf,3020456,age_pdf,False
+P7MS_CV.zip,P7MS,40.pdf,P7MS/40.pdf,3072120,age_pdf,False
+P7MS_CV.zip,P7MS,41.pdf,P7MS/41.pdf,3093788,age_pdf,False
+P7MS_CV.zip,P7MS,42.pdf,P7MS/42.pdf,3067458,age_pdf,False
+P7MS_CV.zip,P7MS,43.pdf,P7MS/43.pdf,3021159,age_pdf,False
+P7MS_CV.zip,P7MS,44.pdf,P7MS/44.pdf,3104804,age_pdf,False
+P7MS_CV.zip,P7MS,45.pdf,P7MS/45.pdf,3084319,age_pdf,False
+P7MS_CV.zip,P7MS,46.pdf,P7MS/46.pdf,3008897,age_pdf,False
+P7MS_CV.zip,P7MS,47.pdf,P7MS/47.pdf,2999840,age_pdf,False
+P7MS_CV.zip,P7MS,48.pdf,P7MS/48.pdf,3116065,age_pdf,False
+P7MS_CV.zip,P7MS,49.pdf,P7MS/49.pdf,3054860,age_pdf,False
+P7MS_CV.zip,P7MS,50.pdf,P7MS/50.pdf,3031542,age_pdf,False
+P7MS_CV.zip,P7MS,51.pdf,P7MS/51.pdf,1616382,age_pdf,False
+P7MS_CV.zip,P7MS,52.pdf,P7MS/52.pdf,1602570,age_pdf,False
+P7MS_CV.zip,P7MS,53.pdf,P7MS/53.pdf,1592864,age_pdf,False
+P7MS_CV.zip,P7MS,54.pdf,P7MS/54.pdf,1603181,age_pdf,False
+P7MS_CV.zip,P7MS,55.pdf,P7MS/55.pdf,1656151,age_pdf,False
+P7MS_CV.zip,P7MS,56.pdf,P7MS/56.pdf,1590766,age_pdf,False
+P7MS_CV.zip,P7MS,57.pdf,P7MS/57.pdf,1581417,age_pdf,False
+P7MS_CV.zip,P7MS,58.pdf,P7MS/58.pdf,1573572,age_pdf,False
+P7MS_CV.zip,P7MS,59.pdf,P7MS/59.pdf,1637705,age_pdf,False
+P7MS_CV.zip,P7MS,60.pdf,P7MS/60.pdf,1574943,age_pdf,False
+P7MS_CV.zip,P7MS,61.pdf,P7MS/61.pdf,1574725,age_pdf,False
+P7MS_CV.zip,P7MS,62.pdf,P7MS/62.pdf,1621025,age_pdf,False
+P7MS_CV.zip,P7MS,63.pdf,P7MS/63.pdf,1549718,age_pdf,False
+P7MS_CV.zip,P7MS,64.pdf,P7MS/64.pdf,1614663,age_pdf,False
+P7MS_CV.zip,P7MS,65.pdf,P7MS/65.pdf,1612067,age_pdf,False
+P7MS_CV.zip,P7MS,66.pdf,P7MS/66.pdf,1540455,age_pdf,False
+P7MS_CV.zip,P7MS,67.pdf,P7MS/67.pdf,1543753,age_pdf,False
+P7MS_CV.zip,P7MS,68.pdf,P7MS/68.pdf,1533795,age_pdf,False
+P7MS_CV.zip,P7MS,69.pdf,P7MS/69.pdf,1530981,age_pdf,False
+P7MS_CV.zip,P7MS,70.pdf,P7MS/70.pdf,1578214,age_pdf,False
+P7MS_CV.zip,P7MS,Cash Value Sheets.pdf,P7MS/Cash Value Sheets.pdf,19433441,consolidated,False
+PLP6_CV.zip,PLP6,0.pdf,PLP6/0.pdf,2800829,age_pdf,False
+PLP6_CV.zip,PLP6,01.pdf,PLP6/01.pdf,2867525,age_pdf,False
+PLP6_CV.zip,PLP6,02.pdf,PLP6/02.pdf,2702386,age_pdf,False
+PLP6_CV.zip,PLP6,03.pdf,PLP6/03.pdf,2571857,age_pdf,False
+PLP6_CV.zip,PLP6,04.pdf,PLP6/04.pdf,2618793,age_pdf,False
+PLP6_CV.zip,PLP6,05.pdf,PLP6/05.pdf,2659658,age_pdf,False
+PLP6_CV.zip,PLP6,06.pdf,PLP6/06.pdf,2580609,age_pdf,False
+PLP6_CV.zip,PLP6,07.pdf,PLP6/07.pdf,2582506,age_pdf,False
+PLP6_CV.zip,PLP6,08.pdf,PLP6/08.pdf,2599208,age_pdf,False
+PLP6_CV.zip,PLP6,09.pdf,PLP6/09.pdf,2595282,age_pdf,False
+PLP6_CV.zip,PLP6,10.pdf,PLP6/10.pdf,2597340,age_pdf,False
+PLP6_CV.zip,PLP6,11.pdf,PLP6/11.pdf,2558762,age_pdf,False
+PLP6_CV.zip,PLP6,12.pdf,PLP6/12.pdf,2662020,age_pdf,False
+PLP6_CV.zip,PLP6,13.pdf,PLP6/13.pdf,2619266,age_pdf,False
+PLP6_CV.zip,PLP6,14.pdf,PLP6/14.pdf,2588140,age_pdf,False
+PLP6_CV.zip,PLP6,15.pdf,PLP6/15.pdf,2569983,age_pdf,False
+PLP6_CV.zip,PLP6,16.pdf,PLP6/16.pdf,2510618,age_pdf,False
+PLP6_CV.zip,PLP6,17.pdf,PLP6/17.pdf,2509117,age_pdf,False
+PLP6_CV.zip,PLP6,18.pdf,PLP6/18.pdf,2502795,age_pdf,False
+PLP6_CV.zip,PLP6,19.pdf,PLP6/19.pdf,2515128,age_pdf,False
+PLP6_CV.zip,PLP6,20.pdf,PLP6/20.pdf,2539285,age_pdf,False
+PLP6_CV.zip,PLP6,21.pdf,PLP6/21.pdf,2630646,age_pdf,False
+PLP6_CV.zip,PLP6,22.pdf,PLP6/22.pdf,2528284,age_pdf,False
+PLP6_CV.zip,PLP6,23.pdf,PLP6/23.pdf,2495294,age_pdf,False
+PLP6_CV.zip,PLP6,24.pdf,PLP6/24.pdf,2484911,age_pdf,False
+PLP6_CV.zip,PLP6,25.pdf,PLP6/25.pdf,1309598,age_pdf,False
+PLP6_CV.zip,PLP6,26.pdf,PLP6/26.pdf,1283436,age_pdf,False
+PLP6_CV.zip,PLP6,27.pdf,PLP6/27.pdf,1279119,age_pdf,False
+PLP6_CV.zip,PLP6,28.pdf,PLP6/28.pdf,1273769,age_pdf,False
+PLP6_CV.zip,PLP6,29.pdf,PLP6/29.pdf,1277442,age_pdf,False
+PLP6_CV.zip,PLP6,30.pdf,PLP6/30.pdf,1259361,age_pdf,False
+PLP6_CV.zip,PLP6,31.pdf,PLP6/31.pdf,1331093,age_pdf,False
+PLP6_CV.zip,PLP6,32.pdf,PLP6/32.pdf,1283707,age_pdf,False
+PLP6_CV.zip,PLP6,33.pdf,PLP6/33.pdf,1285026,age_pdf,False
+PLP6_CV.zip,PLP6,34.pdf,PLP6/34.pdf,1274063,age_pdf,False
+PLP6_CV.zip,PLP6,35.pdf,PLP6/35.pdf,1304695,age_pdf,False
+PLP6_CV.zip,PLP6,36.pdf,PLP6/36.pdf,1276894,age_pdf,False
+PLP6_CV.zip,PLP6,37.pdf,PLP6/37.pdf,1279911,age_pdf,False
+PLP6_CV.zip,PLP6,38.pdf,PLP6/38.pdf,1320022,age_pdf,False
+PLP6_CV.zip,PLP6,39.pdf,PLP6/39.pdf,1349675,age_pdf,False
+PLP6_CV.zip,PLP6,40.pdf,PLP6/40.pdf,1276401,age_pdf,False
+PLP6_CV.zip,PLP6,41.pdf,PLP6/41.pdf,1250887,age_pdf,False
+PLP6_CV.zip,PLP6,42.pdf,PLP6/42.pdf,1327424,age_pdf,False
+PLP6_CV.zip,PLP6,43.pdf,PLP6/43.pdf,1257205,age_pdf,False
+PLP6_CV.zip,PLP6,44.pdf,PLP6/44.pdf,1278773,age_pdf,False
+PLP6_CV.zip,PLP6,45.pdf,PLP6/45.pdf,1300503,age_pdf,False
+PLP_CV.zip,PLP,0.pdf,PLP/0.pdf,4694469,age_pdf,False
+PLP_CV.zip,PLP,01.pdf,PLP/01.pdf,4567539,age_pdf,False
+PLP_CV.zip,PLP,02.pdf,PLP/02.pdf,4869357,age_pdf,False
+PLP_CV.zip,PLP,03.pdf,PLP/03.pdf,4631010,age_pdf,False
+PLP_CV.zip,PLP,04.pdf,PLP/04.pdf,4826157,age_pdf,False
+PLP_CV.zip,PLP,05.pdf,PLP/05.pdf,4818141,age_pdf,False
+PLP_CV.zip,PLP,06.pdf,PLP/06.pdf,4929793,age_pdf,False
+PLP_CV.zip,PLP,07.pdf,PLP/07.pdf,4713570,age_pdf,False
+PLP_CV.zip,PLP,08.pdf,PLP/08.pdf,4729105,age_pdf,False
+PLP_CV.zip,PLP,09.pdf,PLP/09.pdf,4762307,age_pdf,False
+PLP_CV.zip,PLP,10.pdf,PLP/10.pdf,4826129,age_pdf,False
+PLP_CV.zip,PLP,11.pdf,PLP/11.pdf,4735343,age_pdf,False
+PLP_CV.zip,PLP,12.pdf,PLP/12.pdf,4903911,age_pdf,False
+PLP_CV.zip,PLP,13.pdf,PLP/13.pdf,4815739,age_pdf,False
+PLP_CV.zip,PLP,14.pdf,PLP/14.pdf,4944159,age_pdf,False
+PLP_CV.zip,PLP,15.pdf,PLP/15.pdf,4616365,age_pdf,False
+PLP_CV.zip,PLP,16.pdf,PLP/16.pdf,4850533,age_pdf,False
+PLP_CV.zip,PLP,17.pdf,PLP/17.pdf,4787985,age_pdf,False
+PLP_CV.zip,PLP,18.pdf,PLP/18.pdf,4878991,age_pdf,False
+PLP_CV.zip,PLP,19.pdf,PLP/19.pdf,3247413,age_pdf,False
+PLP_CV.zip,PLP,20.pdf,PLP/20.pdf,3223268,age_pdf,False
+PLP_CV.zip,PLP,21.pdf,PLP/21.pdf,3302095,age_pdf,False
+PLP_CV.zip,PLP,22.pdf,PLP/22.pdf,3274689,age_pdf,False
+PLP_CV.zip,PLP,23.pdf,PLP/23.pdf,3160795,age_pdf,False
+PLP_CV.zip,PLP,24.pdf,PLP/24.pdf,3375692,age_pdf,False
+PLP_CV.zip,PLP,25.pdf,PLP/25.pdf,3190065,age_pdf,False
+PLP_CV.zip,PLP,26.pdf,PLP/26.pdf,3266342,age_pdf,False
+PLP_CV.zip,PLP,27.pdf,PLP/27.pdf,3256210,age_pdf,False
+PLP_CV.zip,PLP,28.pdf,PLP/28.pdf,3345153,age_pdf,False
+PLP_CV.zip,PLP,29.pdf,PLP/29.pdf,3312901,age_pdf,False
+PLP_CV.zip,PLP,30.pdf,PLP/30.pdf,3365250,age_pdf,False
+PLP_CV.zip,PLP,31.pdf,PLP/31.pdf,3305795,age_pdf,False
+PLP_CV.zip,PLP,32.pdf,PLP/32.pdf,3157256,age_pdf,False
+PLP_CV.zip,PLP,33.pdf,PLP/33.pdf,3316277,age_pdf,False
+PLP_CV.zip,PLP,34.pdf,PLP/34.pdf,3132157,age_pdf,False
+PLP_CV.zip,PLP,35.pdf,PLP/35.pdf,3211912,age_pdf,False
+PLP_CV.zip,PLP,36.pdf,PLP/36.pdf,3148537,age_pdf,False
+PLP_CV.zip,PLP,37.pdf,PLP/37.pdf,3198962,age_pdf,False
+PLP_CV.zip,PLP,38.pdf,PLP/38.pdf,3160906,age_pdf,False
+PLP_CV.zip,PLP,39.pdf,PLP/39.pdf,3292393,age_pdf,False
+PLP_CV.zip,PLP,40.pdf,PLP/40.pdf,3308976,age_pdf,False
+PLP_CV.zip,PLP,41.pdf,PLP/41.pdf,3120693,age_pdf,False
+PLP_CV.zip,PLP,42.pdf,PLP/42.pdf,3197620,age_pdf,False
+PLP_CV.zip,PLP,43.pdf,PLP/43.pdf,3180000,age_pdf,False
+PLP_CV.zip,PLP,44.pdf,PLP/44.pdf,3190764,age_pdf,False
+PLP_CV.zip,PLP,45.pdf,PLP/45.pdf,3184330,age_pdf,False
+PLP_CV.zip,PLP,46.pdf,PLP/46.pdf,3260488,age_pdf,False
+PLP_CV.zip,PLP,47.pdf,PLP/47.pdf,3095444,age_pdf,False
+PLP_CV.zip,PLP,48.pdf,PLP/48.pdf,3174253,age_pdf,False
+PLP_CV.zip,PLP,49.pdf,PLP/49.pdf,3235748,age_pdf,False
+PLP_CV.zip,PLP,50.pdf,PLP/50.pdf,3070099,age_pdf,False
+PLP_CV.zip,PLP,51.pdf,PLP/51.pdf,3137165,age_pdf,False
+PLP_CV.zip,PLP,52.pdf,PLP/52.pdf,3118523,age_pdf,False
+PLP_CV.zip,PLP,53.pdf,PLP/53.pdf,3139697,age_pdf,False
+PLP_CV.zip,PLP,54.pdf,PLP/54.pdf,3131047,age_pdf,False
+PLP_CV.zip,PLP,55.pdf,PLP/55.pdf,3030489,age_pdf,False
+PLP_CV.zip,PLP,56.pdf,PLP/56.pdf,3125186,age_pdf,False
+PLP_CV.zip,PLP,57.pdf,PLP/57.pdf,3139607,age_pdf,False
+PLP_CV.zip,PLP,58.pdf,PLP/58.pdf,3180133,age_pdf,False
+PLP_CV.zip,PLP,59.pdf,PLP/59.pdf,1596683,age_pdf,False
+PLP_CV.zip,PLP,60.pdf,PLP/60.pdf,1583151,age_pdf,False
+PLP_CV.zip,PLP,61.pdf,PLP/61.pdf,1589648,age_pdf,False
+PLP_CV.zip,PLP,62.pdf,PLP/62.pdf,1570487,age_pdf,False
+PLP_CV.zip,PLP,63.pdf,PLP/63.pdf,1574084,age_pdf,False
+PLP_CV.zip,PLP,64.pdf,PLP/64.pdf,1668834,age_pdf,False
+PLP_CV.zip,PLP,65.pdf,PLP/65.pdf,1577724,age_pdf,False
+PLP_CV.zip,PLP,66.pdf,PLP/66.pdf,1654702,age_pdf,False
+PLP_CV.zip,PLP,67.pdf,PLP/67.pdf,1564480,age_pdf,False
+PLP_CV.zip,PLP,68.pdf,PLP/68.pdf,1562462,age_pdf,False
+PLP_CV.zip,PLP,69.pdf,PLP/69.pdf,1635009,age_pdf,False
+PLP_CV.zip,PLP,70.pdf,PLP/70.pdf,1643569,age_pdf,False
+PLP_CV.zip,PLP,71.pdf,PLP/71.pdf,1544396,age_pdf,False
+PLP_CV.zip,PLP,72.pdf,PLP/72.pdf,1634181,age_pdf,False
+PLP_CV.zip,PLP,73.pdf,PLP/73.pdf,1629583,age_pdf,False
+PLP_CV.zip,PLP,74.pdf,PLP/74.pdf,1623785,age_pdf,False
+PLP_CV.zip,PLP,75.pdf,PLP/75.pdf,1525690,age_pdf,False
+PLP_CV.zip,PLP,76.pdf,PLP/76.pdf,1533844,age_pdf,False
+PLP_CV.zip,PLP,77.pdf,PLP/77.pdf,1597594,age_pdf,False
+PLP_CV.zip,PLP,78.pdf,PLP/78.pdf,1611328,age_pdf,False
+PLP_CV.zip,PLP,79.pdf,PLP/79.pdf,1512147,age_pdf,False
+R28G_CV.zip,R28G,0.pdf,R28G/0.pdf,1218773,age_pdf,False
+R28G_CV.zip,R28G,01.pdf,R28G/01.pdf,1216944,age_pdf,False
+R28G_CV.zip,R28G,02.pdf,R28G/02.pdf,1352755,age_pdf,False
+R28G_CV.zip,R28G,03.pdf,R28G/03.pdf,1302968,age_pdf,False
+R28G_CV.zip,R28G,04.pdf,R28G/04.pdf,1330298,age_pdf,False
+R28G_CV.zip,R28G,05.pdf,R28G/05.pdf,1298419,age_pdf,False
+R28G_CV.zip,R28G,06.pdf,R28G/06.pdf,1384273,age_pdf,False
+R28G_CV.zip,R28G,07.pdf,R28G/07.pdf,1360888,age_pdf,False
+R28G_CV.zip,R28G,08.pdf,R28G/08.pdf,1329691,age_pdf,False
+R28G_CV.zip,R28G,09.pdf,R28G/09.pdf,1287900,age_pdf,False
+R28G_CV.zip,R28G,10.pdf,R28G/10.pdf,1265440,age_pdf,False
+R28G_CV.zip,R28G,11.pdf,R28G/11.pdf,1350633,age_pdf,False
+R28G_CV.zip,R28G,12.pdf,R28G/12.pdf,1323357,age_pdf,False
+R28G_CV.zip,R28G,13.pdf,R28G/13.pdf,1293259,age_pdf,False
+R28G_CV.zip,R28G,14.pdf,R28G/14.pdf,1353071,age_pdf,False
+R28G_CV.zip,R28G,15.pdf,R28G/15.pdf,1322016,age_pdf,False
+R28G_CV.zip,R28G,16.pdf,R28G/16.pdf,1318411,age_pdf,False
+R28G_CV.zip,R28G,17.pdf,R28G/17.pdf,1199724,age_pdf,False
+R28G_CV.zip,R28G,18.pdf,R28G/18.pdf,1302957,age_pdf,False
+R28G_CV.zip,R28G,19.pdf,R28G/19.pdf,1339892,age_pdf,False
+R28G_CV.zip,R28G,20.pdf,R28G/20.pdf,1305427,age_pdf,False
+R28G_CV.zip,R28G,21.pdf,R28G/21.pdf,1291589,age_pdf,False
+R28G_CV.zip,R28G,22.pdf,R28G/22.pdf,1336676,age_pdf,False
+R28G_CV.zip,R28G,23.pdf,R28G/23.pdf,1310270,age_pdf,False
+R28G_CV.zip,R28G,24.pdf,R28G/24.pdf,1306600,age_pdf,False
+R28G_CV.zip,R28G,25.pdf,R28G/25.pdf,1318349,age_pdf,False
+R28G_CV.zip,R28G,26.pdf,R28G/26.pdf,1280951,age_pdf,False
+R28G_CV.zip,R28G,27.pdf,R28G/27.pdf,1376079,age_pdf,False
+R28G_CV.zip,R28G,28.pdf,R28G/28.pdf,1349532,age_pdf,False
+R28G_CV.zip,R28G,29.pdf,R28G/29.pdf,1278036,age_pdf,False
+R28G_CV.zip,R28G,30.pdf,R28G/30.pdf,1226359,age_pdf,False
+R28G_CV.zip,R28G,31.pdf,R28G/31.pdf,1276845,age_pdf,False
+R28G_CV.zip,R28G,32.pdf,R28G/32.pdf,1306616,age_pdf,False
+R28G_CV.zip,R28G,33.pdf,R28G/33.pdf,1260198,age_pdf,False
+R28G_CV.zip,R28G,34.pdf,R28G/34.pdf,1244951,age_pdf,False
+R28G_CV.zip,R28G,35.pdf,R28G/35.pdf,1156356,age_pdf,False
+R28G_CV.zip,R28G,36.pdf,R28G/36.pdf,1356337,age_pdf,False
+R28G_CV.zip,R28G,37.pdf,R28G/37.pdf,1278312,age_pdf,False
+R28G_CV.zip,R28G,38.pdf,R28G/38.pdf,1218090,age_pdf,False
+R28G_CV.zip,R28G,39.pdf,R28G/39.pdf,1354762,age_pdf,False
+R28G_CV.zip,R28G,40.pdf,R28G/40.pdf,1304289,age_pdf,False
+R28G_CV.zip,R28G,41.pdf,R28G/41.pdf,1333336,age_pdf,False
+R28G_CV.zip,R28G,42.pdf,R28G/42.pdf,1245877,age_pdf,False
+R28G_CV.zip,R28G,43.pdf,R28G/43.pdf,1363139,age_pdf,False
+R28G_CV.zip,R28G,44.pdf,R28G/44.pdf,1294728,age_pdf,False
+R28G_CV.zip,R28G,45.pdf,R28G/45.pdf,1319844,age_pdf,False
+R28G_CV.zip,R28G,46.pdf,R28G/46.pdf,1200866,age_pdf,False
+R28G_CV.zip,R28G,47.pdf,R28G/47.pdf,1304325,age_pdf,False
+R28G_CV.zip,R28G,48.pdf,R28G/48.pdf,1236352,age_pdf,False
+R28G_CV.zip,R28G,49.pdf,R28G/49.pdf,1299248,age_pdf,False
+R28G_CV.zip,R28G,50.pdf,R28G/50.pdf,1156277,age_pdf,False
+R28G_CV.zip,R28G,51.pdf,R28G/51.pdf,1375653,age_pdf,False
+R28G_CV.zip,R28G,52.pdf,R28G/52.pdf,1279149,age_pdf,False
+R28G_CV.zip,R28G,53.pdf,R28G/53.pdf,1293415,age_pdf,False
+R28G_CV.zip,R28G,54.pdf,R28G/54.pdf,1245883,age_pdf,False
+R28G_CV.zip,R28G,55.pdf,R28G/55.pdf,1356968,age_pdf,False
+R28G_CV.zip,R28G,56.pdf,R28G/56.pdf,1331901,age_pdf,False
+R28G_CV.zip,R28G,57.pdf,R28G/57.pdf,1316601,age_pdf,False
+R28G_CV.zip,R28G,58.pdf,R28G/58.pdf,1272866,age_pdf,False
+R28G_CV.zip,R28G,59.pdf,R28G/59.pdf,1265397,age_pdf,False
+R28G_CV.zip,R28G,60.pdf,R28G/60.pdf,1318220,age_pdf,False
+R28G_CV.zip,R28G,61.pdf,R28G/61.pdf,1367376,age_pdf,False
+R28G_CV.zip,R28G,62.pdf,R28G/62.pdf,1314155,age_pdf,False
+R28G_CV.zip,R28G,63.pdf,R28G/63.pdf,1304127,age_pdf,False
+R28G_CV.zip,R28G,64.pdf,R28G/64.pdf,1245608,age_pdf,False
+R28G_CV.zip,R28G,65.pdf,R28G/65.pdf,1339760,age_pdf,False
+R28G_CV.zip,R28G,66.pdf,R28G/66.pdf,1252581,age_pdf,False
+R28G_CV.zip,R28G,67.pdf,R28G/67.pdf,1290712,age_pdf,False
+R28G_CV.zip,R28G,68.pdf,R28G/68.pdf,1260162,age_pdf,False
+R28G_CV.zip,R28G,69.pdf,R28G/69.pdf,1253851,age_pdf,False
+R28G_CV.zip,R28G,70.pdf,R28G/70.pdf,1354826,age_pdf,False
+R28G_CV.zip,R28G,71.pdf,R28G/71.pdf,1278891,age_pdf,False
+R28G_CV.zip,R28G,72.pdf,R28G/72.pdf,1340303,age_pdf,False
+R28G_CV.zip,R28G,73.pdf,R28G/73.pdf,1248011,age_pdf,False
+R28G_CV.zip,R28G,74.pdf,R28G/74.pdf,1294875,age_pdf,False
+R28G_CV.zip,R28G,75.pdf,R28G/75.pdf,1247779,age_pdf,False
+R28G_CV.zip,R28G,76.pdf,R28G/76.pdf,1272897,age_pdf,False
+R28G_CV.zip,R28G,77.pdf,R28G/77.pdf,1285413,age_pdf,False
+R28G_CV.zip,R28G,78.pdf,R28G/78.pdf,1362201,age_pdf,False
+R28G_CV.zip,R28G,79.pdf,R28G/79.pdf,1284373,age_pdf,False
+R28G_CV.zip,R28G,80.pdf,R28G/80.pdf,1249719,age_pdf,False
+R28G_CV.zip,R28G,81.pdf,R28G/81.pdf,1205832,age_pdf,False
+R28G_CV.zip,R28G,Cash Value Sheets.pdf,R28G/Cash Value Sheets.pdf,19543749,consolidated,False
+R68G_CV.zip,R68G,0.pdf,R68G/0.pdf,2945363,age_pdf,False
+R68G_CV.zip,R68G,01.pdf,R68G/01.pdf,2611420,age_pdf,False
+R68G_CV.zip,R68G,02.pdf,R68G/02.pdf,2705926,age_pdf,False
+R68G_CV.zip,R68G,03.pdf,R68G/03.pdf,2730532,age_pdf,False
+R68G_CV.zip,R68G,04.pdf,R68G/04.pdf,2595270,age_pdf,False
+R68G_CV.zip,R68G,05.pdf,R68G/05.pdf,2588218,age_pdf,False
+R68G_CV.zip,R68G,06.pdf,R68G/06.pdf,2614898,age_pdf,False
+R68G_CV.zip,R68G,07.pdf,R68G/07.pdf,2651052,age_pdf,False
+R68G_CV.zip,R68G,08.pdf,R68G/08.pdf,2599890,age_pdf,False
+R68G_CV.zip,R68G,09.pdf,R68G/09.pdf,2696025,age_pdf,False
+R68G_CV.zip,R68G,10.pdf,R68G/10.pdf,2535882,age_pdf,False
+R68G_CV.zip,R68G,11.pdf,R68G/11.pdf,2551198,age_pdf,False
+R68G_CV.zip,R68G,12.pdf,R68G/12.pdf,2607800,age_pdf,False
+R68G_CV.zip,R68G,13.pdf,R68G/13.pdf,2587990,age_pdf,False
+R68G_CV.zip,R68G,14.pdf,R68G/14.pdf,2589651,age_pdf,False
+R68G_CV.zip,R68G,15.pdf,R68G/15.pdf,2521282,age_pdf,False
+R68G_CV.zip,R68G,16.pdf,R68G/16.pdf,2588259,age_pdf,False
+R68G_CV.zip,R68G,17.pdf,R68G/17.pdf,2586741,age_pdf,False
+R68G_CV.zip,R68G,18.pdf,R68G/18.pdf,2459791,age_pdf,False
+R68G_CV.zip,R68G,19.pdf,R68G/19.pdf,2530248,age_pdf,False
+R68G_CV.zip,R68G,20.pdf,R68G/20.pdf,2675719,age_pdf,False
+R68G_CV.zip,R68G,21.pdf,R68G/21.pdf,2612352,age_pdf,False
+R68G_CV.zip,R68G,22.pdf,R68G/22.pdf,2582736,age_pdf,False
+R68G_CV.zip,R68G,23.pdf,R68G/23.pdf,2606472,age_pdf,False
+R68G_CV.zip,R68G,24.pdf,R68G/24.pdf,2663699,age_pdf,False
+R68G_CV.zip,R68G,25.pdf,R68G/25.pdf,1393955,age_pdf,False
+R68G_CV.zip,R68G,26.pdf,R68G/26.pdf,1313580,age_pdf,False
+R68G_CV.zip,R68G,27.pdf,R68G/27.pdf,1290595,age_pdf,False
+R68G_CV.zip,R68G,28.pdf,R68G/28.pdf,1244752,age_pdf,False
+R68G_CV.zip,R68G,29.pdf,R68G/29.pdf,1396032,age_pdf,False
+R68G_CV.zip,R68G,30.pdf,R68G/30.pdf,1290674,age_pdf,False
+R68G_CV.zip,R68G,31.pdf,R68G/31.pdf,1319674,age_pdf,False
+R68G_CV.zip,R68G,32.pdf,R68G/32.pdf,1299841,age_pdf,False
+R68G_CV.zip,R68G,33.pdf,R68G/33.pdf,1307003,age_pdf,False
+R68G_CV.zip,R68G,34.pdf,R68G/34.pdf,1265302,age_pdf,False
+R68G_CV.zip,R68G,35.pdf,R68G/35.pdf,1353437,age_pdf,False
+R68G_CV.zip,R68G,36.pdf,R68G/36.pdf,1329392,age_pdf,False
+R68G_CV.zip,R68G,37.pdf,R68G/37.pdf,1362189,age_pdf,False
+R68G_CV.zip,R68G,38.pdf,R68G/38.pdf,1285872,age_pdf,False
+R68G_CV.zip,R68G,39.pdf,R68G/39.pdf,1305815,age_pdf,False
+R68G_CV.zip,R68G,40.pdf,R68G/40.pdf,1298757,age_pdf,False
+R68G_CV.zip,R68G,41.pdf,R68G/41.pdf,1348311,age_pdf,False
+R68G_CV.zip,R68G,42.pdf,R68G/42.pdf,1249889,age_pdf,False
+R68G_CV.zip,R68G,43.pdf,R68G/43.pdf,1198052,age_pdf,False
+R68G_CV.zip,R68G,44.pdf,R68G/44.pdf,1330756,age_pdf,False
+R68G_CV.zip,R68G,45.pdf,R68G/45.pdf,1236138,age_pdf,False
+R68G_CV.zip,R68G,Cash Value Sheets.pdf,R68G/Cash Value Sheets.pdf,19450285,consolidated,False
+RW8_CV.zip,RW8,0.pdf,RW8/0.pdf,4199037,age_pdf,False
+RW8_CV.zip,RW8,01.pdf,RW8/01.pdf,4046857,age_pdf,False
+RW8_CV.zip,RW8,02.pdf,RW8/02.pdf,4009315,age_pdf,False
+RW8_CV.zip,RW8,03.pdf,RW8/03.pdf,3992125,age_pdf,False
+RW8_CV.zip,RW8,04.pdf,RW8/04.pdf,4087436,age_pdf,False
+RW8_CV.zip,RW8,05.pdf,RW8/05.pdf,3938612,age_pdf,False
+RW8_CV.zip,RW8,06.pdf,RW8/06.pdf,3776290,age_pdf,False
+RW8_CV.zip,RW8,07.pdf,RW8/07.pdf,4036556,age_pdf,False
+RW8_CV.zip,RW8,08.pdf,RW8/08.pdf,3946992,age_pdf,False
+RW8_CV.zip,RW8,09.pdf,RW8/09.pdf,4037386,age_pdf,False
+RW8_CV.zip,RW8,10.pdf,RW8/10.pdf,3845372,age_pdf,False
+RW8_CV.zip,RW8,11.pdf,RW8/11.pdf,4051528,age_pdf,False
+RW8_CV.zip,RW8,12.pdf,RW8/12.pdf,3799551,age_pdf,False
+RW8_CV.zip,RW8,13.pdf,RW8/13.pdf,3705270,age_pdf,False
+RW8_CV.zip,RW8,14.pdf,RW8/14.pdf,3737518,age_pdf,False
+RW8_CV.zip,RW8,15.pdf,RW8/15.pdf,3996809,age_pdf,False
+RW8_CV.zip,RW8,16.pdf,RW8/16.pdf,3925608,age_pdf,False
+RW8_CV.zip,RW8,17.pdf,RW8/17.pdf,4009321,age_pdf,False
+RW8_CV.zip,RW8,18.pdf,RW8/18.pdf,3817961,age_pdf,False
+RW8_CV.zip,RW8,19.pdf,RW8/19.pdf,2584971,age_pdf,False
+RW8_CV.zip,RW8,20.pdf,RW8/20.pdf,2729283,age_pdf,False
+RW8_CV.zip,RW8,21.pdf,RW8/21.pdf,2768975,age_pdf,False
+RW8_CV.zip,RW8,22.pdf,RW8/22.pdf,2664225,age_pdf,False
+RW8_CV.zip,RW8,23.pdf,RW8/23.pdf,2548656,age_pdf,False
+RW8_CV.zip,RW8,24.pdf,RW8/24.pdf,2852139,age_pdf,False
+RW8_CV.zip,RW8,25.pdf,RW8/25.pdf,2747917,age_pdf,False
+RW8_CV.zip,RW8,26.pdf,RW8/26.pdf,2750356,age_pdf,False
+RW8_CV.zip,RW8,27.pdf,RW8/27.pdf,2759543,age_pdf,False
+RW8_CV.zip,RW8,28.pdf,RW8/28.pdf,2691112,age_pdf,False
+RW8_CV.zip,RW8,29.pdf,RW8/29.pdf,2577516,age_pdf,False
+RW8_CV.zip,RW8,30.pdf,RW8/30.pdf,2713530,age_pdf,False
+RW8_CV.zip,RW8,31.pdf,RW8/31.pdf,2750291,age_pdf,False
+RW8_CV.zip,RW8,32.pdf,RW8/32.pdf,2693777,age_pdf,False
+RW8_CV.zip,RW8,33.pdf,RW8/33.pdf,2857687,age_pdf,False
+RW8_CV.zip,RW8,34.pdf,RW8/34.pdf,2769397,age_pdf,False
+RW8_CV.zip,RW8,35.pdf,RW8/35.pdf,2744260,age_pdf,False
+RW8_CV.zip,RW8,36.pdf,RW8/36.pdf,2761507,age_pdf,False
+RW8_CV.zip,RW8,37.pdf,RW8/37.pdf,2657390,age_pdf,False
+RW8_CV.zip,RW8,38.pdf,RW8/38.pdf,2794288,age_pdf,False
+RW8_CV.zip,RW8,39.pdf,RW8/39.pdf,2669420,age_pdf,False
+RW8_CV.zip,RW8,40.pdf,RW8/40.pdf,2726237,age_pdf,False
+RW8_CV.zip,RW8,41.pdf,RW8/41.pdf,2701415,age_pdf,False
+RW8_CV.zip,RW8,42.pdf,RW8/42.pdf,2743167,age_pdf,False
+RW8_CV.zip,RW8,43.pdf,RW8/43.pdf,2625518,age_pdf,False
+RW8_CV.zip,RW8,44.pdf,RW8/44.pdf,2704653,age_pdf,False
+RW8_CV.zip,RW8,45.pdf,RW8/45.pdf,2646524,age_pdf,False
+RW8_CV.zip,RW8,46.pdf,RW8/46.pdf,2663548,age_pdf,False
+RW8_CV.zip,RW8,47.pdf,RW8/47.pdf,2757757,age_pdf,False
+RW8_CV.zip,RW8,48.pdf,RW8/48.pdf,2660899,age_pdf,False
+RW8_CV.zip,RW8,49.pdf,RW8/49.pdf,2622059,age_pdf,False
+RW8_CV.zip,RW8,50.pdf,RW8/50.pdf,2522361,age_pdf,False
+RW8_CV.zip,RW8,51.pdf,RW8/51.pdf,2602412,age_pdf,False
+RW8_CV.zip,RW8,52.pdf,RW8/52.pdf,2632053,age_pdf,False
+RW8_CV.zip,RW8,53.pdf,RW8/53.pdf,2538177,age_pdf,False
+RW8_CV.zip,RW8,54.pdf,RW8/54.pdf,2598968,age_pdf,False
+RW8_CV.zip,RW8,55.pdf,RW8/55.pdf,2617637,age_pdf,False
+RW8_CV.zip,RW8,56.pdf,RW8/56.pdf,2482215,age_pdf,False
+RW8_CV.zip,RW8,57.pdf,RW8/57.pdf,2411361,age_pdf,False
+RW8_CV.zip,RW8,58.pdf,RW8/58.pdf,2457707,age_pdf,False
+RW8_CV.zip,RW8,59.pdf,RW8/59.pdf,2537862,age_pdf,False
+RW8_CV.zip,RW8,60.pdf,RW8/60.pdf,1341155,age_pdf,False
+RW8_CV.zip,RW8,61.pdf,RW8/61.pdf,1379718,age_pdf,False
+RW8_CV.zip,RW8,62.pdf,RW8/62.pdf,1271171,age_pdf,False
+RW8_CV.zip,RW8,63.pdf,RW8/63.pdf,1347459,age_pdf,False
+RW8_CV.zip,RW8,64.pdf,RW8/64.pdf,1388549,age_pdf,False
+RW8_CV.zip,RW8,65.pdf,RW8/65.pdf,1364008,age_pdf,False
+RW8_CV.zip,RW8,66.pdf,RW8/66.pdf,1384625,age_pdf,False
+RW8_CV.zip,RW8,67.pdf,RW8/67.pdf,1305963,age_pdf,False
+RW8_CV.zip,RW8,68.pdf,RW8/68.pdf,1361591,age_pdf,False
+RW8_CV.zip,RW8,69.pdf,RW8/69.pdf,1302759,age_pdf,False
+RW8_CV.zip,RW8,70.pdf,RW8/70.pdf,1351353,age_pdf,False
+RW8_CV.zip,RW8,71.pdf,RW8/71.pdf,1332583,age_pdf,False
+RW8_CV.zip,RW8,72.pdf,RW8/72.pdf,1216230,age_pdf,False
+RW8_CV.zip,RW8,73.pdf,RW8/73.pdf,1264652,age_pdf,False
+RW8_CV.zip,RW8,74.pdf,RW8/74.pdf,1252597,age_pdf,False
+RW8_CV.zip,RW8,75.pdf,RW8/75.pdf,1291287,age_pdf,False
+RW8_CV.zip,RW8,76.pdf,RW8/76.pdf,1310058,age_pdf,False
+RW8_CV.zip,RW8,77.pdf,RW8/77.pdf,1258494,age_pdf,False
+RW8_CV.zip,RW8,78.pdf,RW8/78.pdf,1204533,age_pdf,False
+RW8_CV.zip,RW8,79.pdf,RW8/79.pdf,1314041,age_pdf,False
+RW8_CV.zip,RW8,80.pdf,RW8/80.pdf,1147290,age_pdf,False
+RW8_CV.zip,RW8,81.pdf,RW8/81.pdf,1293934,age_pdf,False
+RW8_CV.zip,RW8,82.pdf,RW8/82.pdf,1333817,age_pdf,False
+RW8_CV.zip,RW8,83.pdf,RW8/83.pdf,1235152,age_pdf,False
+RW8_CV.zip,RW8,84.pdf,RW8/84.pdf,1297634,age_pdf,False
+RW8_CV.zip,RW8,85.pdf,RW8/85.pdf,1260668,age_pdf,False
+RW8_CV.zip,RW8,86.pdf,RW8/86.pdf,1252215,age_pdf,False
+RW8_CV.zip,RW8,87.pdf,RW8/87.pdf,1236345,age_pdf,False
+RW8_CV.zip,RW8,88.pdf,RW8/88.pdf,1177979,age_pdf,False
+RW8_CV.zip,RW8,89.pdf,RW8/89.pdf,1215047,age_pdf,False
+RW8_CV.zip,RW8,90.pdf,RW8/90.pdf,1296208,age_pdf,False
+RW8_CV.zip,RW8,91.pdf,RW8/91.pdf,1259489,age_pdf,False
+RW8_CV.zip,RW8,92.pdf,RW8/92.pdf,1286610,age_pdf,False
+RW8_CV.zip,RW8,93.pdf,RW8/93.pdf,1280515,age_pdf,False
+RW8_CV.zip,RW8,94.pdf,RW8/94.pdf,1242272,age_pdf,False
+RW8_CV.zip,RW8,95.pdf,RW8/95.pdf,1322431,age_pdf,False
+RW8_CV.zip,RW8,Cash Value Sheets.pdf,RW8/Cash Value Sheets.pdf,23888266,consolidated,False

@@ -72,7 +72,7 @@
 | **#38** | Dividend Accumulations (`quikdvdp.MDEPOSIT`) | **CLOSED ✓** · **v57.44** · 59 policies | **v57.44** | |
 | **#40** | Inherited CV rate load — missing QuikCvs on CV-capable plans | **IMPLEMENTED / CLIENT UAT** · QuikCvs + QuikPlCv regenerated | — | 10 inherited plans emit 101,793 source-matched CV rows; `17085M` now 1,002 keys; 100% source-to-QLA PASS; full guarded emit still blocked by unrelated QuikUint |
 | **#41** | CV age-100 endpoint off by one | **IMPLEMENTED / CLIENT UAT** · QuikCvs regenerated | — | 1960PO CV M/26 value 784.65 now maps to QLA duration index 57; age-100 endpoint proof PASS; full guarded emit still blocked by unrelated QuikUint dependency |
-| **#42** | Missing rate extract rows — L01 10Y NP and L10 LP9595 | **CLOSED** · **v57.97** | **v57.97** | PDAGE miss-fill; wired to 20260714 + rates re-emitted 2026-07-17; L17/LP85-8 CV now in source; residual 0824/GPO OL NP |
+| **#42** | Missing rate extract rows — L01 10Y NP and L10 LP9595 | **CLOSED** · **v57.97** | **v57.97** | PDAGE miss-fill; 20260714 refresh. Eric 2026-07-20: 0824/GPO OL NP **N/A** (PPBEN Status T / Reason EX) |
 | **#23** | ISWL 3.5% premium expense charge (plan setup) | **DECIDED / Ready for plan setup** | — | Eric 2026-07-13: all ISWL have 3.5%; statement Censi I proves Premium Charge ≈ 3.5% of premium; exclude single premium |
 | **#43** | ISWL expense charge source discovery | **DECIDED / Ready for plan setup** | — | Eric 2026-07-13: $25 POLICY_FEE taken monthly (~$2.08/mo); 3.5% confirmed; U6 = COI not expense |
 | **#44** | QuikLoan stale PLOAN latest-row (`LAST_CHG_TIME` sort) | **CLOSED ✓** · **v57.60** · Phase A only | **v57.60** | Resolution: QuikLoan sorts PLOAN LAST_CHG_TIME as HHMMSS so same-day zero clears win; Phase B withdrawn |
@@ -108,6 +108,15 @@
 | **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
 | **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |
 | **#18** | Citizens FoxPro Rate Tables (Reserve / Plans / CIFIANU1) | **OPEN — Awaiting source** | — | Request full tables from Tom/Debbie/Jelaine. Schema evidence in `SourceData_11-18-2024` Rate.cpy, Plan.cpy, AnnPrems,cpy. No Go until received. CFIC tracker: `CFIC_Rates/tracking/`. |
+| **A** | QuikPlan / PVO / rate-key structural defects (Robert) | **INTERNAL — A10 Gate PASS** | — | A1/A4/A8/A9b done v58.21. **A10 QuikUwpo** Gate PASS (await Risk/Dev). A2/A3/A5/A7 open. **Not client-facing.** |
+
+### Internal track (not client-facing)
+
+| ID | Item | Status | Notes |
+|---|---|---|---|
+| **A** | QuikPlan / PVO / rate-key defects (Robert 2026-07-20) | **A10 Gate PASS** | QuikUwpo master missing NS/PR/SM/ST. Checklist every conversion. |
+
+**Issue A detail:** `Issue_Log_Items/Issue_A/` · Risk: `Issue_A_Risk_Review_Report.md` · Checklist + `.cursor/rules/issue-a-conversion-checklist.mdc`
 
 **#18 detail:** `Issue_Log_Items/Issue_18/` · Citizens QLAdmin rate load · Not Warren app.py · Reserve file = CV/reserve/paid-up/ETI only (not gross premium, dividends, COI, loan values)
 
@@ -129,7 +138,7 @@
 
 **#82 detail:** `Issue_Log_Items/Issue_82/` · Intake parked · PUA QuikPlCv/Tv keys vs #60 SD-60-1
 
-**#42 detail:** `Issue_Log_Items/Issue_42/` · **CLOSED** · **v57.97** (refresh 2026-07-17) · Resolution: PDAGE miss-fill + segment resolve → QuikNps/Tvs · wired to 20260714 extracts · full `Output/rates/` + `Test_Validation/rates/` · QuikUint waived (PDINTTBL missing) · L17/LP85-8 CV now in source · residual `0824 P DTH` / `L10 GPO OL` NP
+**#42 detail:** `Issue_Log_Items/Issue_42/` · **CLOSED** · **v57.97** · Resolution: PDAGE miss-fill + segment resolve → QuikNps/Tvs · 20260714 refresh · QuikUint waived (PDINTTBL missing) · Eric 2026-07-20 closed residual `0824 P DTH` / `L10 GPO OL` NP as **not applicable** (PPBEN Status T / Reason EX)
 
 **#23 detail:** `Issue_Log_Items/Issue_23/` · **DECIDED 2026-07-13** · 3.5% premium expense all ISWL (non–single premium) · statement proof `Annual_Statement_Censi_I_9010817956.pdf` · companion #43
 

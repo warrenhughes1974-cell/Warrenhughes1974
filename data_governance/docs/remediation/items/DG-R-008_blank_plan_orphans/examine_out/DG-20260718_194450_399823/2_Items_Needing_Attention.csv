@@ -1,0 +1,2 @@
+﻿Area,Table,Record,Problem,Current Value,Required Value,Type,Reference
+Plan Setup,Plan Setup,,The low age must be less than the high age.,0/0,A readable low age below the high age (low age may be greater than zero),Data Problem,DG-QUIKPLAN-008

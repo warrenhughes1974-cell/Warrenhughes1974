@@ -14,7 +14,7 @@ These decisions replace the prior **AWAITING CLIENT** placeholders for 21D / 21E
 |---|---|---|---|
 | **21D** | ISWL Dividend Accum Int Rate = **4.50%**; non-ISWL remains **4.00%** | Already in engine (v57.36 `MDEPINT` allowlist) | **DECIDED / IMPLEMENTED** |
 | **21E** | Traditional CV = **compute** from QuikCvs rates; UL = **load** `PPBEN.FV_BALANCE2` → `quikridr.MCV0` (phase 1) | New UL fund-balance enrichment | **DECIDED / IMPLEMENTED (UL load)**; traditional depends on rate tables (#40/#41) |
-| **21F** | Accept source premium-history floor (~**2017-01-01**) | None (source-side) | **DECIDED** |
+| **21F** | **Superseded 2026-07-11:** keep extract floor for detail rows; add **one Conversion Adjustment** `quikprmh` row (non-ISWL) so lifetime premiums paid match LifePRO | **IMPLEMENTED v57.72** | **IMPLEMENTED** |
 | **21G** | Source mapping locked (client workbook); stage totals to `Reports/` until QLAdmin target field named | Staged report on full batch | **DECIDED / STAGED** |
 | **21I** | Type + split already correct; **`MRELATION=1000` is intentional** (RNA has no kinship field for B1/B2) | None (rulebook default retained) | **DECIDED** |
 
@@ -45,26 +45,40 @@ These decisions replace the prior **AWAITING CLIENT** placeholders for 21D / 21E
 
 ---
 
-## 21F — Premium history depth
+## 21F — Premium history depth / conversion adjustment
 
-**Decision:** Accept the current extract floor (**DATEPAID from ~2017-01-01**). Full history to issue is **not** required for go-live.
+**Prior decision (2026-07-09):** Accept the extract floor (~2017-01-01) for detailed payment rows — still true; full transaction replay to issue is **not** required.
 
-**Rationale:** Engine correctly loads all rows present; truncation is source-imposed. Tax/cost basis is preserved via 21G totals, so a full accounting replay is not required for basis.
+**Updated decision (2026-07-11 — Eric confirmed):** Reconcile **lifetime premiums paid** by emitting **one Conversion Adjustment** `quikprmh` row per eligible **non-ISWL** policy when LifePRO total > converted history sum.
 
-**Code:** None. Re-extract only if client later mandates full-to-issue history.
+| Rule | Value |
+|---|---|
+| LifePRO total | `PREMIUMS_PAID` + `PU_PREMIUMS_PAID` + `SU_PREMIUMS_PAID` + `SL_PREMIUMS_PAID` (PPBENTYP) |
+| Adjustment date | **2017-12-31** |
+| Classification | Conversion Adjustment (not a customer payment) |
+| Negatives | Exception report only — do not load |
+| ISWL | Excluded from phase 1 |
+| Validation | Before / adjustment / after / variance (+ components) in `Reports/` |
+
+**Canonical package:** `Issue_Log_Items/Issue_21/Issue_21F/`
+
+**Code:** `qla_core/issue21f_premium_adjustment.py` + batch wire in `app.py` v57.72.
 
 ---
 
 ## 21G — Total premium / cost basis
 
-**Decision:**
+**Decision (CLOSED 2026-07-11):**
 
 1. **Source (locked)** from `docs/Copy of Premium Paid Fields.xlsx`:
    - Traditional: `PREMIUMS_PAID` + `PU_PREMIUMS_PAID` / `TAX_BASIS` + `PU_TAX_BASIS` (PPBENTYP)
    - ISWL/UL: `FV_GUAR_DEPOSITS` / `FV_BASIS2` (PPBEN FV rows)
-2. **Target:** No QLAdmin load field until client names the screen/field. Until then, totals are **staged informationally**.
+2. **Target:** **Not required in QLAdmin.** New Era confirmed QL does not program cost basis / taxable gains on life policies, does not withhold on life surrenders, and expects any gain/tax work outside QL (accounting). Premium history may support a manual estimate but is often incomplete on converted business.
+3. **Conversion:** Do **not** load Premiums Paid / Tax Basis into a QLAdmin master field. Optional informational staging to `Reports/issue21g_premium_basis_totals.csv` may remain for reference.
 
-**Code (v57.63):** Full batch writes `QLA_Migration/Reports/issue21g_premium_basis_totals.csv` (not in Output load package).
+**Resolution:** QLAdmin has no programmed cost basis / taxable-gain field for life policies and does not compute or withhold taxable gains on life surrenders; conversion will not load LifePRO Premiums Paid or Tax Basis into a QLAdmin master field — use premium history and/or the staged report for any manual estimate outside QL.
+
+**Code (v57.63):** Staged report only (not in Output load package). No further mapping change.
 
 ---
 
@@ -86,7 +100,8 @@ These decisions replace the prior **AWAITING CLIENT** placeholders for 21D / 21E
 |---|---|---|
 | UL `MCV0` load | Traditional policies incorrectly get MCV0 | Only policies with FV_BALANCE2 cache entry; phase-1 only |
 | 21G report | Output folder pollution | Writes to `Reports/` only |
-| 21D/F/I | None | Documentation / existing behavior |
+| 21D/I | None | Documentation / existing behavior |
+| 21F adjustment (pending) | Additive `quikprmh` rows; ISWL/negatives mishandled | See Issue_21F Planning / Risk |
 
 ---
 
@@ -100,4 +115,5 @@ These decisions replace the prior **AWAITING CLIENT** placeholders for 21D / 21E
 
 ---
 
-*Decisions locked 2026-07-09. Supersedes AWAITING CLIENT for 21D/E/F/G/I on the Issue 21 tracking sheet.*
+*Decisions locked 2026-07-09. Supersedes AWAITING CLIENT for 21D/E/F/G/I on the Issue 21 tracking sheet.*  
+*21F updated 2026-07-11: conversion adjustment approach (Eric confirmed) — see `Issue_21F/Issue_21F_Business_Decisions.md`.*

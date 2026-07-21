@@ -222,3 +222,23 @@ def ensure_members_for_keys(member_rows, key_rows, effdate=None):
     # Final prune in case key walk re-introduced NA beside real codes
     removed = prune_default_members_when_real_exist(member_rows)
     return added - removed if removed else added
+
+
+def build_quikuwpo_rows(member_rows, key_rows=None):
+    """Issue A A10 — distinct UWCODE master for QuikUwpo (one row per code, always include 00)."""
+    codes = {"00"}
+    for row in member_rows.get("QuikPlUw") or []:
+        code = (row.get("UWCODE") or "").strip()
+        if code:
+            codes.add(code)
+    if key_rows:
+        for rows in key_rows.values():
+            for row in rows or []:
+                code = (row.get("UWCLASS") or "").strip()
+                if code:
+                    codes.add(code)
+    out = []
+    for code in sorted(codes):
+        descr = S.UWCLASS_LABEL.get(code, code)
+        out.append({"UWCODE": code, "UWDESCR": (descr or code)[:20]})
+    return out

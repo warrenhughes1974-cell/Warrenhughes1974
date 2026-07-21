@@ -1,0 +1,64 @@
+{
+  "timestamp_utc": "2026-07-12T15:37:25Z",
+  "project": "Citizens Product and Rate Conversion",
+  "environment": "local",
+  "engine_status": "PINNED",
+  "compatible": true,
+  "blocked": false,
+  "distribution": {
+    "distribution_name": "qla-enterprise-conversion-engine",
+    "import_name": "qla_core",
+    "expected_version": "0.1.0",
+    "installed_version": "0.1.0",
+    "distribution_found": true,
+    "version_match": true,
+    "import_version": "0.1.0",
+    "metadata_version_match": true,
+    "api_compatibility_expected": "1",
+    "api_compatibility_installed": 1,
+    "api_compatibility_match": true,
+    "errors": []
+  },
+  "modules": {
+    "modules": {
+      "rate_dbf_schema": {
+        "importable": true,
+        "symbols": {
+          "MAX_AGE": true,
+          "source_duration_to_ql": true,
+          "duration_to_cntl_col": true,
+          "KEY_TABLE": true
+        }
+      },
+      "rate_factor_loader": {
+        "importable": true,
+        "symbols": {
+          "LoaderConfig": true,
+          "build_factor_grid": true,
+          "grid_to_factor_rows": true
+        }
+      },
+      "rate_key_setup": {
+        "importable": true,
+        "symbols": {
+          "AssumptionProvider": true,
+          "build_key_rows": true
+        }
+      },
+      "rate_member_setup": {
+        "importable": true,
+        "symbols": {
+          "build_member_rows": true
+        }
+      },
+      "rate_dbf_writer": {
+        "importable": true,
+        "symbols": {
+          "emit_all_rate_tables_csv": true
+        }
+      }
+    },
+    "errors": []
+  },
+  "corrective_action": null
+}

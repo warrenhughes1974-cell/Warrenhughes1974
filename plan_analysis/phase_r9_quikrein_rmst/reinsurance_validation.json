@@ -1,0 +1,92 @@
+{
+  "module": "reinsurance_phase1",
+  "quikrein_rows": 7,
+  "quikrmst_rows": 733,
+  "stats": {
+    "ptrty_rows": 7,
+    "prein_rows": 1185,
+    "preintrt_rows_raw": 3545,
+    "preintrt_rows": 3545,
+    "preintrt_rows_canonical": 733,
+    "preintrt_superseded": 2812,
+    "quikrein_emitted": 7,
+    "quikrmst_emitted": 733,
+    "quikrein_exceptions": 0,
+    "quikrmst_exceptions": 0,
+    "defaulted_fields": 0,
+    "ceded_reconciliation_ok": true,
+    "ceded_source_total": 4101000.0,
+    "ceded_emit_total": 4101000.0,
+    "amount_tolerance": 0.01,
+    "reinsurer_crosswalk_rows": 7
+  },
+  "checks": [
+    {
+      "check": "quikrein_schema",
+      "status": "PASS",
+      "detail": "['MREINCO', 'MTREATY', 'MTYPE', 'MCOMP', 'MEFFDATE', 'MENDDATE', 'MREINNAME', 'MREINADDR1', 'MREINADDR2', 'MREINCITY', 'MREINST', 'MREINZIP', 'MREINZIP2', 'MCEDED', 'MMINRETAIN', 'MMAXRETAIN', 'MMINCEDED', 'MMAXCEDED', 'MFEEFY', 'MFEERY', 'MMODEMETH', 'MNARCALC', 'MBILLPFEE']"
+    },
+    {
+      "check": "quikrmst_schema",
+      "status": "PASS",
+      "detail": "['MPOLICY', 'MPHASE', 'MSTATUS', 'MPLAN', 'MREINCO', 'MTREATY', 'MTYPE', 'MUWCLASS', 'MINITAMT', 'MRETAINED', 'MCEDED', 'MPCTCEDED', 'MBILLTO', 'MMODE', 'MMODEPREM', 'MCLAIMAMT', 'MCLAIMDATE', 'MRECOVERBL', 'MRECVDDATE']"
+    },
+    {
+      "check": "quikrein_row_count",
+      "status": "PASS",
+      "detail": "emit=7 ptrty=7"
+    },
+    {
+      "check": "quikrmst_row_count",
+      "status": "PASS",
+      "detail": "emit=733 exc=0 canonical=733"
+    },
+    {
+      "check": "ceded_reconciliation",
+      "status": "PASS",
+      "detail": "src=4101000.0 emit=4101000.0"
+    },
+    {
+      "check": "mreinco_populated",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "mcomp_default_c",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "rmst_treaties_in_quikrein",
+      "status": "PASS",
+      "detail": "missing=[]"
+    },
+    {
+      "check": "no_duplicate_rmst_keys",
+      "status": "PASS",
+      "detail": "dup=0"
+    },
+    {
+      "check": "placeholder_crosswalk_flagged",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "mpctceded_blank_phase1",
+      "status": "PASS",
+      "detail": "MPCTCEDED must remain blank/default in Phase 1"
+    },
+    {
+      "check": "munich50_quikrein_only",
+      "status": "PASS",
+      "detail": "rein_has_munich50=True rmst_munich50_rows=0"
+    },
+    {
+      "check": "app_version_log_aligned",
+      "status": "PASS",
+      "detail": "aligned"
+    }
+  ],
+  "overall": "PASS",
+  "failed_count": 0
+}

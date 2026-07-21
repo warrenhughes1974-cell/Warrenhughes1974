@@ -1,0 +1,8 @@
+[2026-07-18 19:32:52] QLAdmin Data Governance run starting
+[2026-07-18 19:32:52] Run ID: DG-20260718_193252_718815
+[2026-07-18 19:32:52] Data region: Q:\CSO\CSO_Test_6_30_2026
+[2026-07-18 19:32:52] Output base: data_governance\docs\remediation\items\DG-R-006_closed_planvalopt\validation_out
+[2026-07-18 19:32:52] Run folder: data_governance\docs\remediation\items\DG-R-006_closed_planvalopt\validation_out\DG-20260718_193252_718815
+[2026-07-18 19:32:52] Review scope: rule
+[2026-07-18 19:32:52] Source DBF files will be opened read-only; source files are never modified
+[2026-07-18 19:32:52] 'Unknown governance rule ID: DG-QUIKPLAN-022'

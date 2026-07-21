@@ -10,17 +10,23 @@ set QLA_GENERATE_UAT_CLAIMS_DBF=1
 set QLA_CLAIMS_ORCHESTRATE=1
 set QLA_ENABLE_QUIKLOAN_EMIT=1
 set QLA_QUIKLOAN_WRITE_OUTPUT=1
+set QLA_ENABLE_QUIKBENH_LOAN_EMIT=1
+set QLA_QUIKBENH_LOAN_WRITE_OUTPUT=1
 set QLA_BATCH_INCLUDE_RATE_TABLES=1
 set QLA_ENABLE_QUIKISRR_EMIT=1
 set QLA_ENABLE_REINSURANCE_EMIT=1
 set QLA_REINSURANCE_WRITE_OUTPUT=1
+REM Year-end / extract as-of date for QUIKRIDR.MLASTANN (override if needed)
+if not defined QLA_VALUATION_DATE set QLA_VALUATION_DATE=20251231
 
 echo ============================================================
 echo QLA Enterprise Data Integration Engine - UAT Batch Mode
 echo ============================================================
 echo Repo root : %REPO_ROOT%
 echo RUN_MODE  : %QLA_RUN_MODE%
-echo Engine    : v57.64 full UAT batch (claims + QuikLoan + rates + QuikIsrr + Reinsurance)
+echo VALUATION : %QLA_VALUATION_DATE%  (QUIKRIDR.MLASTANN)
+echo Engine    : v57.86 full UAT batch
+echo   claims + QuikLoan + QuikBenh + rates + QuikIsrr + Reinsurance
 echo.
 echo In the UI, set paths to QLA_Migration:
 echo   Source    : QLA_Migration\Source\  (any CSV; engine resolves dated extracts)

@@ -1,0 +1,2 @@
+cfic_issue_id,title,status,framework_stage,owner,assigned,priority,source_pdfs,products,crosswalk_match,blockers,risk_decision,next_agent,next_action,date_updated
+01,Green-Sheet NF/Reserve Rate Extraction,Wave 1 pipeline built — validation FAIL,G4-Wave1,Warren,Warren,High,1104,37,35/37 exact,"OBQ-1;OBQ-2;OCR accuracy",Conditional Go Wave 1 only,Validation / OCR tuning,Install Tesseract or Azure DI; re-run pilot ages 18-50,2026-07-11

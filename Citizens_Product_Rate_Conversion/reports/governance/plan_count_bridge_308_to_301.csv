@@ -1,0 +1,47 @@
+STEP,DESCRIPTION,DELTA,RUNNING_COUNT,PLAN_CODES
+1,Start: distinct tracker plan codes,0,308,
+2,Intersect tracker ∩ DBF (unchanged),0,308,count=285
+3,Subtract tracker-only codes,-23,285,802N;802P;802Q;802R;9R1F;9R1M;9R5F;9R5M;B1MN;B1MS;B2FS;B2MS;B3FS;B3MS;CFA4;CFA7;DR1F;DR1M;DR5F;DR5M;R29;R69;RW9
+4,Add DBF-only codes,16,301,$GS2;100V;802E;9PFM;BAYN;CFA0;CTRP;DR6G;DX1F;DX51;DX5F;DX5M;FBAF;GS28;HIV;MEB
+5,End: distinct DBF plan codes (should equal 301),0,301,dbf=301
+6,CHECK: tracker - tracker_only + dbf_only == dbf?,0,301,equals_dbf=True
+7,Unresolved residual (must be 0 if bridge closes),0,0,
+,TRACKER_ONLY detail: 802N,-1,,802N
+,TRACKER_ONLY detail: 802P,-1,,802P
+,TRACKER_ONLY detail: 802Q,-1,,802Q
+,TRACKER_ONLY detail: 802R,-1,,802R
+,TRACKER_ONLY detail: 9R1F,-1,,9R1F
+,TRACKER_ONLY detail: 9R1M,-1,,9R1M
+,TRACKER_ONLY detail: 9R5F,-1,,9R5F
+,TRACKER_ONLY detail: 9R5M,-1,,9R5M
+,TRACKER_ONLY detail: B1MN,-1,,B1MN
+,TRACKER_ONLY detail: B1MS,-1,,B1MS
+,TRACKER_ONLY detail: B2FS,-1,,B2FS
+,TRACKER_ONLY detail: B2MS,-1,,B2MS
+,TRACKER_ONLY detail: B3FS,-1,,B3FS
+,TRACKER_ONLY detail: B3MS,-1,,B3MS
+,TRACKER_ONLY detail: CFA4,-1,,CFA4
+,TRACKER_ONLY detail: CFA7,-1,,CFA7
+,TRACKER_ONLY detail: DR1F,-1,,DR1F
+,TRACKER_ONLY detail: DR1M,-1,,DR1M
+,TRACKER_ONLY detail: DR5F,-1,,DR5F
+,TRACKER_ONLY detail: DR5M,-1,,DR5M
+,TRACKER_ONLY detail: R29,-1,,R29
+,TRACKER_ONLY detail: R69,-1,,R69
+,TRACKER_ONLY detail: RW9,-1,,RW9
+,DBF_ONLY detail: $GS2,1,,$GS2
+,DBF_ONLY detail: 100V,1,,100V
+,DBF_ONLY detail: 802E,1,,802E
+,DBF_ONLY detail: 9PFM,1,,9PFM
+,DBF_ONLY detail: BAYN,1,,BAYN
+,DBF_ONLY detail: CFA0,1,,CFA0
+,DBF_ONLY detail: CTRP,1,,CTRP
+,DBF_ONLY detail: DR6G,1,,DR6G
+,DBF_ONLY detail: DX1F,1,,DX1F
+,DBF_ONLY detail: DX51,1,,DX51
+,DBF_ONLY detail: DX5F,1,,DX5F
+,DBF_ONLY detail: DX5M,1,,DX5M
+,DBF_ONLY detail: FBAF,1,,FBAF
+,DBF_ONLY detail: GS28,1,,GS28
+,DBF_ONLY detail: HIV,1,,HIV
+,DBF_ONLY detail: MEB,1,,MEB

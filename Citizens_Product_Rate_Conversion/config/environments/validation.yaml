@@ -1,0 +1,5 @@
+environment: validation
+runtime:
+  validation_only: true
+  write_output: false
+  dry_run: true

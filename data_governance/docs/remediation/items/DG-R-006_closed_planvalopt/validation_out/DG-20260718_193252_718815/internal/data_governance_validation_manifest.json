@@ -1,0 +1,3077 @@
+{
+  "run_id": "DG-20260718_193252_718815",
+  "run_timestamp": "2026-07-18 19:32:52",
+  "data_region_path": "Q:\\CSO\\CSO_Test_6_30_2026",
+  "output_path": "data_governance\\docs\\remediation\\items\\DG-R-006_closed_planvalopt\\validation_out\\DG-20260718_193252_718815",
+  "overall_result": "ERROR",
+  "data_conformance_accuracy": {
+    "Records_Reviewed": 0,
+    "Looked_Fine": 0,
+    "Problems_Found": 0,
+    "Data_Conformance_Accuracy_Percent": null,
+    "Data_Conformance_Accuracy_Display": "Not Available \u2014 No records were evaluated",
+    "counts_reconcile": true,
+    "warning": "",
+    "interpretation": "Data Conformance Accuracy represents the percentage of evaluated records that matched the active governance rules during this run. It does not independently confirm that every value is factually or actuarially correct."
+  },
+  "source_opened_read_only": true,
+  "source_files_modified": false,
+  "tables_reviewed": [],
+  "tables_unavailable_or_errored": [],
+  "rules_executed": [],
+  "rules_not_selected": [
+    {
+      "governance_item_id": "DG-QUIKCOMP",
+      "rule_id": "DG-QUIKCOMP-001",
+      "business_name": "Unique QuikComp Company Code",
+      "technical_name": "Unique Company Code",
+      "purpose": "Ensure each company code appears only once in QuikComp.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikComp"
+      ],
+      "source_fields": [
+        "MCOMP"
+      ],
+      "primary_table": "QuikComp",
+      "primary_fields": [
+        "QuikComp.MCOMP"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "After standard DBF character normalization, each nonblank MCOMP value must occur exactly once in QuikComp. Blank or null MCOMP fails.",
+      "failure_conditions": [
+        "The same normalized MCOMP appears on more than one QuikComp record.",
+        "MCOMP is blank or null."
+      ],
+      "normalization": "After standard DBF character normalization, each nonblank MCOMP value must occur exactly once in QuikComp. Blank or null MCOMP fails.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "After standard DBF character normalization, each nonblank MCOMP value must occur exactly once in QuikComp. Blank or null MCOMP fails.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKCOMP",
+      "rule_id": "DG-QUIKCOMP-002",
+      "business_name": "Agent Company Code Must Exist in QuikComp",
+      "technical_name": "Agent Company Code Must Exist",
+      "purpose": "Ensure every company code assigned to an agent is defined in QuikComp.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikAgts",
+        "QuikComp"
+      ],
+      "source_fields": [
+        "QuikAgts.MCOMP",
+        "QuikComp.MCOMP",
+        "QuikAgts.MAGENT",
+        "QuikAgts.MAGTNAME"
+      ],
+      "primary_table": "QuikAgts",
+      "primary_fields": [
+        "QuikAgts.MCOMP",
+        "QuikAgts.MAGENT",
+        "QuikAgts.MAGTNAME"
+      ],
+      "reference_tables": [
+        "QuikComp"
+      ],
+      "reference_fields": [
+        "QuikComp.MCOMP"
+      ],
+      "expected_condition": "Each distinct nonblank normalized QuikAgts.MCOMP value must match exactly one normalized QuikComp.MCOMP value.",
+      "failure_conditions": [
+        "QuikAgts.MCOMP is blank or null for an agent record.",
+        "QuikAgts.MCOMP does not exist in QuikComp.",
+        "The matching QuikComp company code is duplicated."
+      ],
+      "normalization": "Each distinct nonblank normalized QuikAgts.MCOMP value must match exactly one normalized QuikComp.MCOMP value.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Each distinct nonblank normalized QuikAgts.MCOMP value must match exactly one normalized QuikComp.MCOMP value.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKCOMP",
+      "rule_id": "DG-QUIKCOMP-003",
+      "business_name": "Policy Number Company Code Must Exist in QuikComp",
+      "technical_name": "Policy Company Code Must Exist",
+      "purpose": "Ensure the company code represented by the final character of each policy number exists in QuikComp.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikMstr",
+        "QuikComp"
+      ],
+      "source_fields": [
+        "QuikMstr.MPOLICY",
+        "QuikComp.MCOMP"
+      ],
+      "primary_table": "QuikMstr",
+      "primary_fields": [
+        "QuikMstr.MPOLICY"
+      ],
+      "reference_tables": [
+        "QuikComp"
+      ],
+      "reference_fields": [
+        "QuikComp.MCOMP"
+      ],
+      "expected_condition": "Business rule (supplied): the final non-space character of MPOLICY represents the policy company code. That code must match exactly one normalized QuikComp.MCOMP value. Not represented as a QLAdmin manual rule.",
+      "failure_conditions": [
+        "MPOLICY is blank or null.",
+        "A company code cannot be derived from MPOLICY.",
+        "The derived company code does not exist in QuikComp.",
+        "The matching QuikComp company code is duplicated."
+      ],
+      "normalization": "Business rule (supplied): the final non-space character of MPOLICY represents the policy company code. That code must match exactly one normalized QuikComp.MCOMP value. Not represented as a QLAdmin manual rule.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Business rule (supplied): the final non-space character of MPOLICY represents the policy company code. That code must match exactly one normalized QuikComp.MCOMP value. Not represented as a QLAdmin manual rule.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKMSTR",
+      "rule_id": "DG-QUIKMSTR-001",
+      "business_name": "Policy Number Must Contain 4 to 11 Characters",
+      "technical_name": "Validate QuikMstr Policy Number Length",
+      "purpose": "Ensure every policy number stored in QuikMstr contains an acceptable number of characters.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikMstr"
+      ],
+      "source_fields": [
+        "MPOLICY"
+      ],
+      "primary_table": "QuikMstr",
+      "primary_fields": [
+        "QuikMstr.MPOLICY"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "After safely handling nulls and removing only leading/trailing DBF padding, MPOLICY must contain between 4 and 11 characters (inclusive). Internal spaces are retained and counted. Policy numbers are never corrected by this rule.",
+      "failure_conditions": [
+        "MPOLICY is null.",
+        "MPOLICY is blank after DBF padding is removed.",
+        "Normalized policy number contains fewer than 4 characters.",
+        "Normalized policy number contains more than 11 characters."
+      ],
+      "normalization": "After safely handling nulls and removing only leading/trailing DBF padding, MPOLICY must contain between 4 and 11 characters (inclusive). Internal spaces are retained and counted. Policy numbers are never corrected by this rule.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "After safely handling nulls and removing only leading/trailing DBF padding, MPOLICY must contain between 4 and 11 characters (inclusive). Internal spaces are retained and counted. Policy numbers are never corrected by this rule.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-ACCOUNTING",
+      "rule_id": "DG-QUIKACTG-001",
+      "business_name": "Company and Account Number Combination Must Be Unique",
+      "technical_name": "Validate Unique QuikActg Company and Account Key",
+      "purpose": "Ensure QuikActg does not contain duplicate accounting assignment records for the same company and plan (verified composite key MCOMP + MPLAN).",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikActg"
+      ],
+      "source_fields": [
+        "MCOMP",
+        "MPLAN"
+      ],
+      "primary_table": "QuikActg",
+      "primary_fields": [
+        "QuikActg.MCOMP",
+        "QuikActg.MPLAN"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Supplied business rule: each normalized company-and-plan combination must occur at most once. Verified physical fields: MCOMP C(1) + MPLAN C(6). QuikActg has no MACCOUNT column; QuikChrt uses MCOMP+MACCOUNT for COA. Multiple plans per company are valid; the same plan under different companies is valid. Leading zeros in MPLAN are preserved.",
+      "failure_conditions": [
+        "Same normalized MCOMP + MPLAN occurs more than once.",
+        "MCOMP is null or blank after trim.",
+        "MPLAN is null or blank after trim."
+      ],
+      "normalization": "Supplied business rule: each normalized company-and-plan combination must occur at most once. Verified physical fields: MCOMP C(1) + MPLAN C(6). QuikActg has no MACCOUNT column; QuikChrt uses MCOMP+MACCOUNT for COA. Multiple plans per company are valid; the same plan under different companies is valid. Leading zeros in MPLAN are preserved.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Supplied business rule: each normalized company-and-plan combination must occur at most once. Verified physical fields: MCOMP C(1) + MPLAN C(6). QuikActg has no MACCOUNT column; QuikChrt uses MCOMP+MACCOUNT for COA. Multiple plans per company are valid; the same plan under different companies is valid. Leading zeros in MPLAN are preserved.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-ACCOUNTING",
+      "rule_id": "DG-QUIKACTG-002",
+      "business_name": "QuikActg Company Code Must Exist in QuikComp",
+      "technical_name": "Validate QuikActg Company Reference",
+      "purpose": "Ensure every company code used by QuikActg is defined once in QuikComp.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikActg",
+        "QuikComp"
+      ],
+      "source_fields": [
+        "QuikActg.MCOMP",
+        "QuikComp.MCOMP",
+        "QuikActg.MPLAN"
+      ],
+      "primary_table": "QuikActg",
+      "primary_fields": [
+        "QuikActg.MCOMP",
+        "QuikActg.MPLAN"
+      ],
+      "reference_tables": [
+        "QuikComp"
+      ],
+      "reference_fields": [
+        "QuikComp.MCOMP"
+      ],
+      "expected_condition": "Every distinct nonblank normalized QuikActg.MCOMP must match exactly one normalized QuikComp.MCOMP. Reuses shared QuikComp company-code index / normalization from Item 1.",
+      "failure_conditions": [
+        "QuikActg.MCOMP is null or blank.",
+        "Normalized company code does not exist in QuikComp.",
+        "Matching QuikComp company code is duplicated."
+      ],
+      "normalization": "Every distinct nonblank normalized QuikActg.MCOMP must match exactly one normalized QuikComp.MCOMP. Reuses shared QuikComp company-code index / normalization from Item 1.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Every distinct nonblank normalized QuikActg.MCOMP must match exactly one normalized QuikComp.MCOMP. Reuses shared QuikComp company-code index / normalization from Item 1.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKLIST",
+      "rule_id": "DG-QUIKLIST-001",
+      "business_name": "Group Number Must Be Unique",
+      "technical_name": "Validate Unique QuikList Group Number",
+      "purpose": "Ensure each group number appears only once in QuikList.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikList"
+      ],
+      "source_fields": [
+        "MGROUP"
+      ],
+      "primary_table": "QuikList",
+      "primary_fields": [
+        "QuikList.MGROUP"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "After standard DBF character normalization, each nonblank MGROUP value must occur exactly once in QuikList. MGROUP is never converted to numeric; leading zeros are preserved.",
+      "failure_conditions": [
+        "The same normalized MGROUP occurs more than once.",
+        "MGROUP is null.",
+        "MGROUP is blank after normalization."
+      ],
+      "normalization": "After standard DBF character normalization, each nonblank MGROUP value must occur exactly once in QuikList. MGROUP is never converted to numeric; leading zeros are preserved.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "After standard DBF character normalization, each nonblank MGROUP value must occur exactly once in QuikList. MGROUP is never converted to numeric; leading zeros are preserved.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKLIST",
+      "rule_id": "DG-QUIKLIST-002",
+      "business_name": "QuikList Company Code Must Exist in QuikComp",
+      "technical_name": "Validate QuikList Company Reference",
+      "purpose": "Ensure every company code assigned to a QuikList group is defined in QuikComp.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikList",
+        "QuikComp"
+      ],
+      "source_fields": [
+        "QuikList.MCOMP",
+        "QuikComp.MCOMP",
+        "QuikList.MGROUP"
+      ],
+      "primary_table": "QuikList",
+      "primary_fields": [
+        "QuikList.MCOMP",
+        "QuikList.MGROUP"
+      ],
+      "reference_tables": [
+        "QuikComp"
+      ],
+      "reference_fields": [
+        "QuikComp.MCOMP"
+      ],
+      "expected_condition": "Every nonblank normalized QuikList.MCOMP must match exactly one normalized QuikComp.MCOMP. Reuses shared QuikComp company-code index / normalization.",
+      "failure_conditions": [
+        "QuikList.MCOMP is null or blank.",
+        "QuikList.MCOMP does not exist in QuikComp.",
+        "The matching QuikComp company code is duplicated."
+      ],
+      "normalization": "Every nonblank normalized QuikList.MCOMP must match exactly one normalized QuikComp.MCOMP. Reuses shared QuikComp company-code index / normalization.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Every nonblank normalized QuikList.MCOMP must match exactly one normalized QuikComp.MCOMP. Reuses shared QuikComp company-code index / normalization.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKLIST",
+      "rule_id": "DG-QUIKLIST-003",
+      "business_name": "Group Billing Name Must Be Populated",
+      "technical_name": "Validate Required QuikList Billing Name",
+      "purpose": "Ensure every QuikList group has a billing name.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikList"
+      ],
+      "source_fields": [
+        "MBILLNAME",
+        "MGROUP"
+      ],
+      "primary_table": "QuikList",
+      "primary_fields": [
+        "QuikList.MBILLNAME",
+        "QuikList.MGROUP"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "MBILLNAME must contain a meaningful nonblank value after DBF padding is removed. Billing names are not required to be unique and are never derived from another field.",
+      "failure_conditions": [
+        "MBILLNAME is null.",
+        "MBILLNAME is blank or whitespace-only after trim."
+      ],
+      "normalization": "MBILLNAME must contain a meaningful nonblank value after DBF padding is removed. Billing names are not required to be unique and are never derived from another field.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "MBILLNAME must contain a meaningful nonblank value after DBF padding is removed. Billing names are not required to be unique and are never derived from another field.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKLIST",
+      "rule_id": "DG-QUIKLIST-004",
+      "business_name": "Group Bill Sort Must Default to N",
+      "technical_name": "Validate QuikList MSORT Default",
+      "purpose": "Ensure QuikList.MSORT equals the business-supplied default N.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikList"
+      ],
+      "source_fields": [
+        "MSORT",
+        "MGROUP"
+      ],
+      "primary_table": "QuikList",
+      "primary_fields": [
+        "QuikList.MSORT",
+        "QuikList.MGROUP"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Business-supplied governance standard (not claimed as a QLAdmin manual default): after character and case normalization, MSORT must equal 'N'.",
+      "failure_conditions": [
+        "MSORT is null or blank.",
+        "MSORT contains any value other than N after case normalization."
+      ],
+      "normalization": "Business-supplied governance standard (not claimed as a QLAdmin manual default): after character and case normalization, MSORT must equal 'N'.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Business-supplied governance standard (not claimed as a QLAdmin manual default): after character and case normalization, MSORT must equal 'N'.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKLIST",
+      "rule_id": "DG-QUIKLIST-005",
+      "business_name": "Life Lapse Days Must Default to Zero",
+      "technical_name": "Validate QuikList MLAPSEL Default",
+      "purpose": "Ensure QuikList.MLAPSEL equals the business-supplied default 0.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikList"
+      ],
+      "source_fields": [
+        "MLAPSEL",
+        "MGROUP"
+      ],
+      "primary_table": "QuikList",
+      "primary_fields": [
+        "QuikList.MLAPSEL",
+        "QuikList.MGROUP"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Business-supplied governance standard: MLAPSEL must decode to numeric zero. Null and blank are not treated as zero.",
+      "failure_conditions": [
+        "MLAPSEL is null, blank, or unreadable.",
+        "MLAPSEL contains a numeric value other than zero."
+      ],
+      "normalization": "Business-supplied governance standard: MLAPSEL must decode to numeric zero. Null and blank are not treated as zero.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Business-supplied governance standard: MLAPSEL must decode to numeric zero. Null and blank are not treated as zero.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKLIST",
+      "rule_id": "DG-QUIKLIST-006",
+      "business_name": "Health and Accident Lapse Days Must Default to Zero",
+      "technical_name": "Validate QuikList MLAPSEH Default",
+      "purpose": "Ensure QuikList.MLAPSEH equals the business-supplied default 0.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikList"
+      ],
+      "source_fields": [
+        "MLAPSEH",
+        "MGROUP"
+      ],
+      "primary_table": "QuikList",
+      "primary_fields": [
+        "QuikList.MLAPSEH",
+        "QuikList.MGROUP"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Business-supplied governance standard: MLAPSEH must decode to numeric zero. Field name is MLAPSEH (not MLASPEH). Null and blank are not treated as zero.",
+      "failure_conditions": [
+        "MLAPSEH is null, blank, or unreadable.",
+        "MLAPSEH contains a numeric value other than zero."
+      ],
+      "normalization": "Business-supplied governance standard: MLAPSEH must decode to numeric zero. Field name is MLAPSEH (not MLASPEH). Null and blank are not treated as zero.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Business-supplied governance standard: MLAPSEH must decode to numeric zero. Field name is MLAPSEH (not MLASPEH). Null and blank are not treated as zero.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKLIST",
+      "rule_id": "DG-QUIKLIST-007",
+      "business_name": "Group Status Must Default to Active",
+      "technical_name": "Validate QuikList MSTATUS Default",
+      "purpose": "Ensure QuikList.MSTATUS equals the business-supplied default A.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikList"
+      ],
+      "source_fields": [
+        "MSTATUS",
+        "MGROUP"
+      ],
+      "primary_table": "QuikList",
+      "primary_fields": [
+        "QuikList.MSTATUS",
+        "QuikList.MGROUP"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Business-supplied governance standard: after character and case normalization, MSTATUS must equal 'A'.",
+      "failure_conditions": [
+        "MSTATUS is null or blank.",
+        "MSTATUS contains any value other than A after case normalization."
+      ],
+      "normalization": "Business-supplied governance standard: after character and case normalization, MSTATUS must equal 'A'.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Business-supplied governance standard: after character and case normalization, MSTATUS must equal 'A'.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKLIST",
+      "rule_id": "DG-QUIKLIST-008",
+      "business_name": "Group Bill Day Must Default to Zero",
+      "technical_name": "Validate QuikList MBILLDAY Default",
+      "purpose": "Ensure QuikList.MBILLDAY equals the business-supplied default 0.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikList"
+      ],
+      "source_fields": [
+        "MBILLDAY",
+        "MGROUP"
+      ],
+      "primary_table": "QuikList",
+      "primary_fields": [
+        "QuikList.MBILLDAY",
+        "QuikList.MGROUP"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Business-supplied governance standard: MBILLDAY must decode to numeric zero. Null and blank are not treated as zero.",
+      "failure_conditions": [
+        "MBILLDAY is null, blank, or unreadable.",
+        "MBILLDAY contains a numeric value other than zero."
+      ],
+      "normalization": "Business-supplied governance standard: MBILLDAY must decode to numeric zero. Null and blank are not treated as zero.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Business-supplied governance standard: MBILLDAY must decode to numeric zero. Null and blank are not treated as zero.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKLIST",
+      "rule_id": "DG-QUIKLIST-009",
+      "business_name": "Group Bill Mode Must Default to Zero",
+      "technical_name": "Validate QuikList MBILLMODE Default",
+      "purpose": "Ensure QuikList.MBILLMODE equals the business-supplied default 0.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikList"
+      ],
+      "source_fields": [
+        "MBILLMODE",
+        "MGROUP"
+      ],
+      "primary_table": "QuikList",
+      "primary_fields": [
+        "QuikList.MBILLMODE",
+        "QuikList.MGROUP"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Business-supplied governance standard: MBILLMODE must decode to numeric zero. Null and blank are not treated as zero.",
+      "failure_conditions": [
+        "MBILLMODE is null, blank, or unreadable.",
+        "MBILLMODE contains a numeric value other than zero."
+      ],
+      "normalization": "Business-supplied governance standard: MBILLMODE must decode to numeric zero. Null and blank are not treated as zero.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Business-supplied governance standard: MBILLMODE must decode to numeric zero. Null and blank are not treated as zero.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKDATE",
+      "rule_id": "DG-QUIKDATE-001",
+      "business_name": "PAC Bill Date Must Be Set to the Previous Month End",
+      "technical_name": "Validate QuikDate PAC Bill Prior Month End",
+      "purpose": "Ensure the QuikDate PAC Bill date equals the final calendar day of the month immediately before the governance run date.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikDate"
+      ],
+      "source_fields": [
+        "PACBILL"
+      ],
+      "primary_table": "QuikDate",
+      "primary_fields": [
+        "QuikDate.PACBILL"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Verified field PACBILL (D). Decode the DBF date and compare calendar date only to the dynamically calculated prior-month-end date for the run date.",
+      "failure_conditions": [
+        "PACBILL is null or blank.",
+        "PACBILL is invalid or unreadable.",
+        "PACBILL is any valid date other than the calculated prior-month-end date."
+      ],
+      "normalization": "Verified field PACBILL (D). Decode the DBF date and compare calendar date only to the dynamically calculated prior-month-end date for the run date.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Verified field PACBILL (D). Decode the DBF date and compare calendar date only to the dynamically calculated prior-month-end date for the run date.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKDATE",
+      "rule_id": "DG-QUIKDATE-002",
+      "business_name": "Direct Bill Date Must Be Set to the Previous Month End",
+      "technical_name": "Validate QuikDate Direct Bill Prior Month End",
+      "purpose": "Ensure the QuikDate Direct Bill date equals the final calendar day of the month immediately before the governance run date.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikDate"
+      ],
+      "source_fields": [
+        "DIRBILL"
+      ],
+      "primary_table": "QuikDate",
+      "primary_fields": [
+        "QuikDate.DIRBILL"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Verified field DIRBILL (D). Decode the DBF date and compare calendar date only to the dynamically calculated prior-month-end date for the run date.",
+      "failure_conditions": [
+        "DIRBILL is null or blank.",
+        "DIRBILL is invalid or unreadable.",
+        "DIRBILL is any valid date other than the calculated prior-month-end date."
+      ],
+      "normalization": "Verified field DIRBILL (D). Decode the DBF date and compare calendar date only to the dynamically calculated prior-month-end date for the run date.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Verified field DIRBILL (D). Decode the DBF date and compare calendar date only to the dynamically calculated prior-month-end date for the run date.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKDATE",
+      "rule_id": "DG-QUIKDATE-003",
+      "business_name": "Reinsurance Bill Date Must Be Set to the Previous Month End",
+      "technical_name": "Validate QuikDate Reinsurance Bill Prior Month End",
+      "purpose": "Ensure the QuikDate Reinsurance Bill date equals the final calendar day of the month immediately before the governance run date.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikDate"
+      ],
+      "source_fields": [
+        "REINBILL"
+      ],
+      "primary_table": "QuikDate",
+      "primary_fields": [
+        "QuikDate.REINBILL"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Verified field REINBILL (D). Business label: Reinsurance Bill. Decode the DBF date and compare calendar date only to the dynamically calculated prior-month-end date for the run date.",
+      "failure_conditions": [
+        "REINBILL is null or blank.",
+        "REINBILL is invalid or unreadable.",
+        "REINBILL is any valid date other than the calculated prior-month-end date."
+      ],
+      "normalization": "Verified field REINBILL (D). Business label: Reinsurance Bill. Decode the DBF date and compare calendar date only to the dynamically calculated prior-month-end date for the run date.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Verified field REINBILL (D). Business label: Reinsurance Bill. Decode the DBF date and compare calendar date only to the dynamically calculated prior-month-end date for the run date.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKDATE",
+      "rule_id": "DG-QUIKDATE-004",
+      "business_name": "ACH File ID Must Default to Zero",
+      "technical_name": "Validate QuikDate ACHFILEID Default",
+      "purpose": "Ensure QuikDate.ACHFILEID equals the business-supplied default 0.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikDate"
+      ],
+      "source_fields": [
+        "ACHFILEID"
+      ],
+      "primary_table": "QuikDate",
+      "primary_fields": [
+        "QuikDate.ACHFILEID"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Verified field ACHFILEID N(1). Must decode to numeric zero. Null and blank are not treated as zero. Separate from ACHFILEID2.",
+      "failure_conditions": [
+        "ACHFILEID is null, blank, or unreadable.",
+        "ACHFILEID contains a numeric value other than zero."
+      ],
+      "normalization": "Verified field ACHFILEID N(1). Must decode to numeric zero. Null and blank are not treated as zero. Separate from ACHFILEID2.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Verified field ACHFILEID N(1). Must decode to numeric zero. Null and blank are not treated as zero. Separate from ACHFILEID2.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKDATE",
+      "rule_id": "DG-QUIKDATE-005",
+      "business_name": "Secondary ACH File ID Must Default to A",
+      "technical_name": "Validate QuikDate ACHFILEID2 Default",
+      "purpose": "Ensure QuikDate.ACHFILEID2 equals the business-supplied default A.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikDate"
+      ],
+      "source_fields": [
+        "ACHFILEID2"
+      ],
+      "primary_table": "QuikDate",
+      "primary_fields": [
+        "QuikDate.ACHFILEID2"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Verified field ACHFILEID2 C(1). After trim and case normalization must equal 'A'. Separate from ACHFILEID.",
+      "failure_conditions": [
+        "ACHFILEID2 is null or blank.",
+        "ACHFILEID2 contains any normalized value other than A."
+      ],
+      "normalization": "Verified field ACHFILEID2 C(1). After trim and case normalization must equal 'A'. Separate from ACHFILEID.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Verified field ACHFILEID2 C(1). After trim and case normalization must equal 'A'. Separate from ACHFILEID.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKDATE",
+      "rule_id": "DG-QUIKDATE-006",
+      "business_name": "ESCDATE Must Be Blank",
+      "technical_name": "Validate QuikDate ESCDATE Blank",
+      "purpose": "Ensure the QuikDate ESCDATE value is blank (physical field ESC_DATE).",
+      "severity": "Error",
+      "source_tables": [
+        "QuikDate"
+      ],
+      "source_fields": [
+        "ESC_DATE"
+      ],
+      "primary_table": "QuikDate",
+      "primary_fields": [
+        "QuikDate.ESC_DATE"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Verified physical field ESC_DATE (D) \u2014 business label ESCDATE. Passes when the value is a supported empty DBF date, null representing no date, or blank after trim. Populated dates fail.",
+      "failure_conditions": [
+        "ESC_DATE contains a populated date.",
+        "ESC_DATE contains a nonblank character or unreadable nonblank value."
+      ],
+      "normalization": "Verified physical field ESC_DATE (D) \u2014 business label ESCDATE. Passes when the value is a supported empty DBF date, null representing no date, or blank after trim. Populated dates fail.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Verified physical field ESC_DATE (D) \u2014 business label ESCDATE. Passes when the value is a supported empty DBF date, null representing no date, or blank after trim. Populated dates fail.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-PLANVALUES",
+      "rule_id": "DG-PLANVALUES-001",
+      "business_name": "Mortality Table Must Exist in QuikQxs",
+      "technical_name": "Validate Plan Value Mortality Table Reference",
+      "purpose": "Ensure every populated normalized MORT value on applicable plan-value tables exists exactly once in QuikQxs.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv",
+        "QuikQxs"
+      ],
+      "source_fields": [
+        "MORT",
+        "QuikQxs.MORT"
+      ],
+      "primary_table": "QuikPlCv",
+      "primary_fields": [
+        "QuikPlCv.MORT"
+      ],
+      "reference_tables": [
+        "QuikQxs",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv"
+      ],
+      "reference_fields": [
+        "QuikQxs.MORT"
+      ],
+      "expected_condition": "Source field MORT C(2) on QuikPlCv and QuikPlTv (verified). After trim-only normalization preserving leading zeros, each nonblank MORT must match exactly one QuikQxs.MORT. Null and blank fail. Other plan-value tables without MORT are NOT_RUN for this rule. Does not confirm actuarial appropriateness.",
+      "failure_conditions": [
+        "MORT is null.",
+        "MORT is blank.",
+        "MORT does not exist in QuikQxs.",
+        "The matching QuikQxs.MORT key is duplicated."
+      ],
+      "normalization": "Source field MORT C(2) on QuikPlCv and QuikPlTv (verified). After trim-only normalization preserving leading zeros, each nonblank MORT must match exactly one QuikQxs.MORT. Null and blank fail. Other plan-value tables without MORT are NOT_RUN for this rule. Does not confirm actuarial appropriateness.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "This rule confirms that the mortality-table code exists in QuikQxs. It does not confirm that the mortality table is actuarially appropriate for the plan.",
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source field MORT C(2) on QuikPlCv and QuikPlTv (verified). After trim-only normalization preserving leading zeros, each nonblank MORT must match exactly one QuikQxs.MORT. Null and blank fail. Other plan-value tables without MORT are NOT_RUN for this rule. Does not confirm actuarial appropriateness.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-PLANVALUES",
+      "rule_id": "DG-PLANVALUES-002",
+      "business_name": "ETI Mortality Table Must Exist in QuikQxs",
+      "technical_name": "Validate Plan Value ETI Mortality Table Reference",
+      "purpose": "Ensure every populated normalized ETIMORT value exists exactly once in QuikQxs.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv",
+        "QuikQxs"
+      ],
+      "source_fields": [
+        "ETIMORT",
+        "QuikQxs.MORT"
+      ],
+      "primary_table": "QuikPlCv",
+      "primary_fields": [
+        "QuikPlCv.ETIMORT"
+      ],
+      "reference_tables": [
+        "QuikQxs",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv"
+      ],
+      "reference_fields": [
+        "QuikQxs.MORT"
+      ],
+      "expected_condition": "Source field ETIMORT C(2) on QuikPlCv only (verified). Same QuikQxs.MORT key as MORT. Null and blank fail. Tables without ETIMORT are NOT_RUN.",
+      "failure_conditions": [
+        "ETIMORT is null.",
+        "ETIMORT is blank.",
+        "ETIMORT does not exist in QuikQxs.",
+        "The matching QuikQxs.MORT key is duplicated."
+      ],
+      "normalization": "Source field ETIMORT C(2) on QuikPlCv only (verified). Same QuikQxs.MORT key as MORT. Null and blank fail. Tables without ETIMORT are NOT_RUN.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "This rule confirms that the ETI mortality-table code exists in QuikQxs. It does not confirm that the mortality table is actuarially appropriate for the plan.",
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source field ETIMORT C(2) on QuikPlCv only (verified). Same QuikQxs.MORT key as MORT. Null and blank fail. Tables without ETIMORT are NOT_RUN.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-PLANVALUES",
+      "rule_id": "DG-PLANVALUES-003",
+      "business_name": "Plan Must Exist in QuikPlan",
+      "technical_name": "Validate Plan Value Plan Reference",
+      "purpose": "Ensure every populated normalized PLAN value exists exactly once in QuikPlan.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv",
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN",
+        "QuikPlan.PLAN"
+      ],
+      "primary_table": "QuikPlCv",
+      "primary_fields": [
+        "QuikPlCv.PLAN"
+      ],
+      "reference_tables": [
+        "QuikPlan",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv"
+      ],
+      "reference_fields": [
+        "QuikPlan.PLAN"
+      ],
+      "expected_condition": "Source field PLAN C(6) on all five plan-value tables. Leading zeros preserved. Each nonblank PLAN must match exactly one QuikPlan.PLAN. Null and blank fail. Does not confirm the rate record belongs to the correct plan product.",
+      "failure_conditions": [
+        "PLAN is null.",
+        "PLAN is blank.",
+        "PLAN does not exist in QuikPlan.",
+        "The matching QuikPlan.PLAN is duplicated."
+      ],
+      "normalization": "Source field PLAN C(6) on all five plan-value tables. Leading zeros preserved. Each nonblank PLAN must match exactly one QuikPlan.PLAN. Null and blank fail. Does not confirm the rate record belongs to the correct plan product.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "This rule confirms that the plan code exists in QuikPlan. It does not confirm that the source rate record belongs to the correct plan.",
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source field PLAN C(6) on all five plan-value tables. Leading zeros preserved. Each nonblank PLAN must match exactly one QuikPlan.PLAN. Null and blank fail. Does not confirm the rate record belongs to the correct plan product.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-PLANVALUES",
+      "rule_id": "DG-PLANVALUES-004",
+      "business_name": "Gender Must Be Default Zero or a Valid Gender Code",
+      "technical_name": "Validate Plan Value Gender Code",
+      "purpose": "Ensure GENDER is the approved default 0 or exists once in QuikPlGd for the plan.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv",
+        "QuikPlGd"
+      ],
+      "source_fields": [
+        "GENDER",
+        "QuikPlGd.GDCODE",
+        "QuikPlGd.PLAN"
+      ],
+      "primary_table": "QuikPlCv",
+      "primary_fields": [
+        "QuikPlCv.GENDER"
+      ],
+      "reference_tables": [
+        "QuikPlGd",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv"
+      ],
+      "reference_fields": [
+        "QuikPlGd.GDCODE",
+        "QuikPlGd.PLAN"
+      ],
+      "expected_condition": "Source GENDER C(1). Passes when normalized value is '0', or (PLAN, GENDER) matches exactly one QuikPlGd (PLAN, GDCODE). Leading zeros preserved. Missing QuikPlGd does not invent missing-reference findings for nonzero values.",
+      "failure_conditions": [
+        "GENDER is null.",
+        "GENDER is blank.",
+        "GENDER is not 0 and does not exist in QuikPlGd for the plan.",
+        "GENDER is not 0 and matches multiple QuikPlGd records."
+      ],
+      "normalization": "Source GENDER C(1). Passes when normalized value is '0', or (PLAN, GENDER) matches exactly one QuikPlGd (PLAN, GDCODE). Leading zeros preserved. Missing QuikPlGd does not invent missing-reference findings for nonzero values.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "This rule confirms that the gender code is the approved default or a valid QuikPlGd setup reference. It does not confirm that the selected code is appropriate for a particular insured or product.",
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source GENDER C(1). Passes when normalized value is '0', or (PLAN, GENDER) matches exactly one QuikPlGd (PLAN, GDCODE). Leading zeros preserved. Missing QuikPlGd does not invent missing-reference findings for nonzero values.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-PLANVALUES",
+      "rule_id": "DG-PLANVALUES-005",
+      "business_name": "Underwriting Class Must Be Default 00 or a Valid Class",
+      "technical_name": "Validate Plan Value Underwriting Class",
+      "purpose": "Ensure UWCLASS is the approved default '00' or exists once in QuikPlUw for the plan.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv",
+        "QuikPlUw"
+      ],
+      "source_fields": [
+        "UWCLASS",
+        "QuikPlUw.UWCODE",
+        "QuikPlUw.PLAN"
+      ],
+      "primary_table": "QuikPlCv",
+      "primary_fields": [
+        "QuikPlCv.UWCLASS"
+      ],
+      "reference_tables": [
+        "QuikPlUw",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv"
+      ],
+      "reference_fields": [
+        "QuikPlUw.UWCODE",
+        "QuikPlUw.PLAN"
+      ],
+      "expected_condition": "Source UWCLASS C(2). Passes when normalized value is '00' (not converted to numeric zero), or (PLAN, UWCLASS) matches exactly one QuikPlUw (PLAN, UWCODE).",
+      "failure_conditions": [
+        "UWCLASS is null.",
+        "UWCLASS is blank.",
+        "UWCLASS is not '00' and does not exist in QuikPlUw for the plan.",
+        "UWCLASS is not '00' and matches multiple QuikPlUw records."
+      ],
+      "normalization": "Source UWCLASS C(2). Passes when normalized value is '00' (not converted to numeric zero), or (PLAN, UWCLASS) matches exactly one QuikPlUw (PLAN, UWCODE).",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "This rule confirms that the underwriting class is the approved default or a valid QuikPlUw setup reference. It does not confirm product appropriateness.",
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source UWCLASS C(2). Passes when normalized value is '00' (not converted to numeric zero), or (PLAN, UWCLASS) matches exactly one QuikPlUw (PLAN, UWCODE).",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-PLANVALUES",
+      "rule_id": "DG-PLANVALUES-006",
+      "business_name": "Band Must Be Default 00 or a Valid Band",
+      "technical_name": "Validate Plan Value Band Code",
+      "purpose": "Ensure BAND is the approved default '00' or exists once in the verified band setup table for the plan.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv",
+        "QuikPlBd"
+      ],
+      "source_fields": [
+        "BAND",
+        "QuikPlBd.BDCODE",
+        "QuikPlBd.PLAN"
+      ],
+      "primary_table": "QuikPlCv",
+      "primary_fields": [
+        "QuikPlCv.BAND"
+      ],
+      "reference_tables": [
+        "QuikPlBd",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv"
+      ],
+      "reference_fields": [
+        "QuikPlBd.BDCODE",
+        "QuikPlBd.PLAN"
+      ],
+      "expected_condition": "Source BAND C(2). QuikPlVd was not present in the inspected CSO region; verified reference is QuikPlBd.BDCODE scoped by PLAN. Passes when value is '00' or (PLAN, BAND) matches exactly one QuikPlBd (PLAN, BDCODE). '00' is not converted to numeric zero.",
+      "failure_conditions": [
+        "BAND is null.",
+        "BAND is blank.",
+        "BAND is not '00' and does not exist in QuikPlBd for the plan.",
+        "BAND is not '00' and matches multiple QuikPlBd records."
+      ],
+      "normalization": "Source BAND C(2). QuikPlVd was not present in the inspected CSO region; verified reference is QuikPlBd.BDCODE scoped by PLAN. Passes when value is '00' or (PLAN, BAND) matches exactly one QuikPlBd (PLAN, BDCODE). '00' is not converted to numeric zero.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "This rule confirms that the band is the approved default or a valid QuikPlBd setup reference (QuikPlVd was not present in the verified CSO region). It does not confirm product appropriateness.",
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source BAND C(2). QuikPlVd was not present in the inspected CSO region; verified reference is QuikPlBd.BDCODE scoped by PLAN. Passes when value is '00' or (PLAN, BAND) matches exactly one QuikPlBd (PLAN, BDCODE). '00' is not converted to numeric zero.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-PLANVALUES",
+      "rule_id": "DG-PLANVALUES-007",
+      "business_name": "Issue State Must Be Default 00 or a Valid State Abbreviation",
+      "technical_name": "Validate Plan Value Issue State",
+      "purpose": "Ensure ISSUEST is '00' or an approved two-character United States state/DC abbreviation.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv"
+      ],
+      "source_fields": [
+        "ISSUEST"
+      ],
+      "primary_table": "QuikPlCv",
+      "primary_fields": [
+        "QuikPlCv.ISSUEST"
+      ],
+      "reference_tables": [
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv"
+      ],
+      "reference_fields": [],
+      "expected_condition": "Source ISSUEST C(2). Uppercase normalization. Passes when value is '00' or in the approved 50-state + DC list. Territories and military codes are not accepted. Does not confirm the rate is legally approved for sale in that state.",
+      "failure_conditions": [
+        "ISSUEST is null.",
+        "ISSUEST is blank.",
+        "ISSUEST is not '00' and is not an approved abbreviation.",
+        "ISSUEST is not exactly two meaningful characters after normalization."
+      ],
+      "normalization": "Source ISSUEST C(2). Uppercase normalization. Passes when value is '00' or in the approved 50-state + DC list. Territories and military codes are not accepted. Does not confirm the rate is legally approved for sale in that state.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "This rule confirms that the value is '00' or an approved state abbreviation. It does not confirm that the rate is legally approved for sale in that state.",
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source ISSUEST C(2). Uppercase normalization. Passes when value is '00' or in the approved 50-state + DC list. Territories and military codes are not accepted. Does not confirm the rate is legally approved for sale in that state.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-PLANVALUES",
+      "rule_id": "DG-PLANVALUES-008",
+      "business_name": "Effective Date Must Be Within the Approved Date Range",
+      "technical_name": "Validate Plan Value Effective Date",
+      "purpose": "Ensure EFFDATE is a valid calendar date on or after 1900-01-01 and on or before the governance run date plus 12 calendar months.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv"
+      ],
+      "source_fields": [
+        "EFFDATE"
+      ],
+      "primary_table": "QuikPlCv",
+      "primary_fields": [
+        "QuikPlCv.EFFDATE"
+      ],
+      "reference_tables": [
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv"
+      ],
+      "reference_fields": [],
+      "expected_condition": "Source EFFDATE D(8). Inclusive bounds: minimum 1900-01-01; maximum = add_calendar_months(run_date, 12) with end-of-month day clamping (e.g. 2024-02-29 + 12 months \u2192 2025-02-28). Time-of-day is ignored. Does not confirm the date is the correct product/rate filing effective date.",
+      "failure_conditions": [
+        "EFFDATE is null.",
+        "EFFDATE is blank.",
+        "EFFDATE is invalid or unreadable.",
+        "EFFDATE is earlier than January 1, 1900.",
+        "EFFDATE is later than the governance run date plus 12 calendar months."
+      ],
+      "normalization": "Source EFFDATE D(8). Inclusive bounds: minimum 1900-01-01; maximum = add_calendar_months(run_date, 12) with end-of-month day clamping (e.g. 2024-02-29 + 12 months \u2192 2025-02-28). Time-of-day is ignored. Does not confirm the date is the correct product/rate filing effective date.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "This rule confirms that the date falls within the approved governance range. It does not confirm that the date is the correct effective date for the product or rate filing.",
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source EFFDATE D(8). Inclusive bounds: minimum 1900-01-01; maximum = add_calendar_months(run_date, 12) with end-of-month day clamping (e.g. 2024-02-29 + 12 months \u2192 2025-02-28). Time-of-day is ignored. Does not confirm the date is the correct product/rate filing effective date.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-001",
+      "business_name": "Plan Code Must Contain Six Characters",
+      "technical_name": "Validate Plan Code Length",
+      "purpose": "Ensure every plan code contains exactly six meaningful characters.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source PLAN C(6). After trim-only normalization preserving leading zeros, each plan code must contain exactly six characters. Blank and null fail.",
+      "failure_conditions": [
+        "PLAN is blank.",
+        "PLAN is null.",
+        "PLAN contains fewer than six characters.",
+        "PLAN contains more than six characters."
+      ],
+      "normalization": "Source PLAN C(6). After trim-only normalization preserving leading zeros, each plan code must contain exactly six characters. Blank and null fail.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source PLAN C(6). After trim-only normalization preserving leading zeros, each plan code must contain exactly six characters. Blank and null fail.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-002",
+      "business_name": "Plan Code May Contain Only Letters and Numbers",
+      "technical_name": "Validate Plan Code Characters",
+      "purpose": "Ensure plan codes contain only letters and numbers with no spaces or special characters.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source PLAN C(6). Exactly six characters; each character must be A\u2013Z or 0\u20139 after uppercase normalization. Spaces, punctuation, and special characters fail.",
+      "failure_conditions": [
+        "PLAN does not contain exactly six characters.",
+        "PLAN contains a space.",
+        "PLAN contains a special character or punctuation."
+      ],
+      "normalization": "Source PLAN C(6). Exactly six characters; each character must be A\u2013Z or 0\u20139 after uppercase normalization. Spaces, punctuation, and special characters fail.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source PLAN C(6). Exactly six characters; each character must be A\u2013Z or 0\u20139 after uppercase normalization. Spaces, punctuation, and special characters fail.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-003",
+      "business_name": "Plan Code May Not Use a Reserved PUA Suffix",
+      "technical_name": "Validate Plan Code PUA Suffix",
+      "purpose": "Ensure plan codes do not end with suffixes reserved for paid-up additions.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source PLAN C(6). Case-insensitive comparison. The final two characters must not be PA, XP, XF, or XS.",
+      "failure_conditions": [
+        "PLAN ends with PA, XP, XF, or XS (case-insensitive)."
+      ],
+      "normalization": "Source PLAN C(6). Case-insensitive comparison. The final two characters must not be PA, XP, XF, or XS.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source PLAN C(6). Case-insensitive comparison. The final two characters must not be PA, XP, XF, or XS.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-004",
+      "business_name": "PAR Must Be 0 or 1",
+      "technical_name": "Validate Participating Plan Setting",
+      "purpose": "Ensure the participating-plan setting is valid.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PAR"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PAR"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source PAR. Allowed values after trim are 0 or 1 only.",
+      "failure_conditions": [
+        "PAR is not 0 or 1."
+      ],
+      "normalization": "Source PAR. Allowed values after trim are 0 or 1 only.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source PAR. Allowed values after trim are 0 or 1 only.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-005",
+      "business_name": "Annuity Basis Must Match the Plan Type",
+      "technical_name": "Validate Annuity Basis",
+      "purpose": "Ensure annuity plans use a valid annuity basis and non-annuity plans leave the basis blank.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN",
+        "BASIS"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.BASIS"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Annuity plans begin with A. For A plans, BASIS must be exactly one of NONQ, QUAL, NQIA, QLIA, or TXBL (case-sensitive). For non-A plans, BASIS must be blank.",
+      "failure_conditions": [
+        "An annuity plan has a blank or invalid BASIS.",
+        "A non-annuity plan has a populated BASIS."
+      ],
+      "normalization": "Annuity plans begin with A. For A plans, BASIS must be exactly one of NONQ, QUAL, NQIA, QLIA, or TXBL (case-sensitive). For non-A plans, BASIS must be blank.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Annuity plans begin with A. For A plans, BASIS must be exactly one of NONQ, QUAL, NQIA, QLIA, or TXBL (case-sensitive). For non-A plans, BASIS must be blank.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-006",
+      "business_name": "Loan Interest Option Must Be A or R",
+      "technical_name": "Validate Loan Interest Option",
+      "purpose": "Ensure the loan interest option is valid.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "LOANINTX"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.LOANINTX"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source LOANINTX. Allowed values are A or R after casefold normalization. Expected default is A. Any other value fails.",
+      "failure_conditions": [
+        "LOANINTX is blank or null.",
+        "LOANINTX is not A or R."
+      ],
+      "normalization": "Source LOANINTX. Allowed values are A or R after casefold normalization. Expected default is A. Any other value fails.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source LOANINTX. Allowed values are A or R after casefold normalization. Expected default is A. Any other value fails.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-007",
+      "business_name": "MYGA Plans Must Have Positive Deposit Interest",
+      "technical_name": "Validate MYGA Deposit Interest",
+      "purpose": "Ensure confirmed MYGA plans have a deposit interest value greater than zero.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN",
+        "DEPINT"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.DEPINT"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Uses plan_classification.csv to identify MYGA plans. For confirmed MYGA plans, DEPINT must be greater than zero. Non-MYGA plans are not evaluated. When classification is unavailable, the rule reports Could Not Be Checked.",
+      "failure_conditions": [
+        "A confirmed MYGA plan has DEPINT less than or equal to zero.",
+        "DEPINT is null, blank, or unreadable for a confirmed MYGA plan.",
+        "Plan classification config is unavailable."
+      ],
+      "normalization": "Uses plan_classification.csv to identify MYGA plans. For confirmed MYGA plans, DEPINT must be greater than zero. Non-MYGA plans are not evaluated. When classification is unavailable, the rule reports Could Not Be Checked.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Uses plan_classification.csv to identify MYGA plans. For confirmed MYGA plans, DEPINT must be greater than zero. Non-MYGA plans are not evaluated. When classification is unavailable, the rule reports Could Not Be Checked.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-008",
+      "business_name": "Low Age Must Be Valid",
+      "technical_name": "Validate Low and High Age",
+      "purpose": "Ensure the low age is zero for the Age 1 row and is less than the high age.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "LOAGE",
+        "HIAGE"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.LOAGE",
+        "QuikPlan.HIAGE"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source LOAGE and HIAGE. LOAGE must equal 0 for the Age 1 row. LOAGE must be less than HIAGE. Unreadable values fail.",
+      "failure_conditions": [
+        "LOAGE or HIAGE is null, blank, or unreadable.",
+        "LOAGE is not zero.",
+        "LOAGE is greater than or equal to HIAGE."
+      ],
+      "normalization": "Source LOAGE and HIAGE. LOAGE must equal 0 for the Age 1 row. LOAGE must be less than HIAGE. Unreadable values fail.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source LOAGE and HIAGE. LOAGE must equal 0 for the Age 1 row. LOAGE must be less than HIAGE. Unreadable values fail.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-009",
+      "business_name": "Renewal Setting Must Be Valid",
+      "technical_name": "Validate Renewal Setting",
+      "purpose": "Ensure the renewal setting matches the plan type.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN",
+        "RENEW"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.RENEW"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source RENEW. Plans beginning with 5 may use N or Y. All other plans must use N. Expected default is N.",
+      "failure_conditions": [
+        "RENEW is blank, null, or unreadable.",
+        "RENEW is not N for a plan that does not begin with 5.",
+        "RENEW is not N or Y for a plan beginning with 5."
+      ],
+      "normalization": "Source RENEW. Plans beginning with 5 may use N or Y. All other plans must use N. Expected default is N.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source RENEW. Plans beginning with 5 may use N or Y. All other plans must use N. Expected default is N.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-010",
+      "business_name": "Payment Years and Payment Age Cannot Both Be Zero",
+      "technical_name": "Validate Payment Period",
+      "purpose": "Ensure the payment period is populated for applicable plans.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN",
+        "PAYYRS",
+        "PAYAGE"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.PAYYRS",
+        "QuikPlan.PAYAGE"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Physical field PAYYRS (business PAYRS) and PAYAGE. For plans not beginning with 5, at least one of PAYYRS or PAYAGE must be greater than zero. Plans beginning with 5 may have both zero.",
+      "failure_conditions": [
+        "PAYYRS and PAYAGE are both zero for a plan not beginning with 5.",
+        "PAYYRS or PAYAGE is unreadable for an evaluated plan."
+      ],
+      "normalization": "Physical field PAYYRS (business PAYRS) and PAYAGE. For plans not beginning with 5, at least one of PAYYRS or PAYAGE must be greater than zero. Plans beginning with 5 may have both zero.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Physical field PAYYRS (business PAYRS) and PAYAGE. For plans not beginning with 5, at least one of PAYYRS or PAYAGE must be greater than zero. Plans beginning with 5 may have both zero.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-011",
+      "business_name": "Insurance Years and Insurance Age Cannot Both Be Zero",
+      "technical_name": "Validate Insurance Period",
+      "purpose": "Ensure the insurance period is populated for applicable plans.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN",
+        "INSYRS",
+        "INSAGE"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.INSYRS",
+        "QuikPlan.INSAGE"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source INSYRS and INSAGE. For plans not beginning with 5, at least one of INSYRS or INSAGE must be greater than zero. Plans beginning with 5 may have both zero.",
+      "failure_conditions": [
+        "INSYRS and INSAGE are both zero for a plan not beginning with 5.",
+        "INSYRS or INSAGE is unreadable for an evaluated plan."
+      ],
+      "normalization": "Source INSYRS and INSAGE. For plans not beginning with 5, at least one of INSYRS or INSAGE must be greater than zero. Plans beginning with 5 may have both zero.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source INSYRS and INSAGE. For plans not beginning with 5, at least one of INSYRS or INSAGE must be greater than zero. Plans beginning with 5 may have both zero.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-012",
+      "business_name": "Single-Premium Plans Must Use Single-Premium Settings",
+      "technical_name": "Validate Single-Premium Settings",
+      "purpose": "Ensure confirmed single-premium plans use required payment settings.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN",
+        "PAYYRS",
+        "PAYAGE",
+        "SEMI",
+        "QTRL",
+        "MTHD",
+        "MTHB"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.PAYYRS",
+        "QuikPlan.PAYAGE",
+        "QuikPlan.SEMI",
+        "QuikPlan.QTRL",
+        "QuikPlan.MTHD",
+        "QuikPlan.MTHB"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Uses plan_classification.csv to identify single-premium plans. For confirmed single-premium plans: PAYYRS (business PAYRS) must be 1; PAYAGE, SEMI, QTRL, MTHD, and MTHB must be 0. When classification is unavailable, the rule reports Could Not Be Checked.",
+      "failure_conditions": [
+        "A confirmed single-premium plan has an incorrect PAYYRS, PAYAGE, SEMI, QTRL, MTHD, or MTHB value.",
+        "Plan classification config is unavailable."
+      ],
+      "normalization": "Uses plan_classification.csv to identify single-premium plans. For confirmed single-premium plans: PAYYRS (business PAYRS) must be 1; PAYAGE, SEMI, QTRL, MTHD, and MTHB must be 0. When classification is unavailable, the rule reports Could Not Be Checked.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Uses plan_classification.csv to identify single-premium plans. For confirmed single-premium plans: PAYYRS (business PAYRS) must be 1; PAYAGE, SEMI, QTRL, MTHD, and MTHB must be 0. When classification is unavailable, the rule reports Could Not Be Checked.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-013",
+      "business_name": "Payment Age May Not Exceed 125",
+      "technical_name": "Validate Payment Age Maximum",
+      "purpose": "Ensure the payment age does not exceed 125.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PAYAGE"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PAYAGE"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source PAYAGE. When populated and readable, PAYAGE must be 125 or less.",
+      "failure_conditions": [
+        "PAYAGE is greater than 125."
+      ],
+      "normalization": "Source PAYAGE. When populated and readable, PAYAGE must be 125 or less.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source PAYAGE. When populated and readable, PAYAGE must be 125 or less.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-014",
+      "business_name": "Insurance Age May Not Exceed 125",
+      "technical_name": "Validate Insurance Age Maximum",
+      "purpose": "Ensure the insurance age does not exceed 125.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "INSAGE"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.INSAGE"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source INSAGE. When populated and readable, INSAGE must be 125 or less.",
+      "failure_conditions": [
+        "INSAGE is greater than 125."
+      ],
+      "normalization": "Source INSAGE. When populated and readable, INSAGE must be 125 or less.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source INSAGE. When populated and readable, INSAGE must be 125 or less.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-015",
+      "business_name": "Initial Value Must Use the Approved Default",
+      "technical_name": "Validate Initial Value Default",
+      "purpose": "Ensure INITVAL uses the approved default unless a transformation exception applies.",
+      "severity": "Advisory",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN",
+        "INITVAL"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.INITVAL"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source INITVAL. Expected default is 1000. Plans listed in plan_classification.csv as INITVAL exceptions pass with non-default values. Other non-default values generate warnings, not hard failures.",
+      "failure_conditions": [
+        "INITVAL is null, blank, or unreadable.",
+        "INITVAL differs from 1000 and no approved transformation exception applies."
+      ],
+      "normalization": "Source INITVAL. Expected default is 1000. Plans listed in plan_classification.csv as INITVAL exceptions pass with non-default values. Other non-default values generate warnings, not hard failures.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source INITVAL. Expected default is 1000. Plans listed in plan_classification.csv as INITVAL exceptions pass with non-default values. Other non-default values generate warnings, not hard failures.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-016",
+      "business_name": "Commission ID Must Exist or Be Blank",
+      "technical_name": "Validate Commission ID Reference",
+      "purpose": "Ensure populated commission IDs exist exactly once in Commission Setup.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan",
+        "QuikComm"
+      ],
+      "source_fields": [
+        "COMMID",
+        "QuikComm.COMMID"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.COMMID"
+      ],
+      "reference_tables": [
+        "QuikComm"
+      ],
+      "reference_fields": [
+        "QuikComm.COMMID"
+      ],
+      "expected_condition": "Source COMMID on QuikPlan. Blank passes. A populated value must match exactly one QuikComm.COMMID. When QuikComm is missing, one Could Not Be Checked item is reported.",
+      "failure_conditions": [
+        "COMMID is populated and does not exist in QuikComm.",
+        "COMMID matches more than one QuikComm record.",
+        "QuikComm is not available in the data region."
+      ],
+      "normalization": "Source COMMID on QuikPlan. Blank passes. A populated value must match exactly one QuikComm.COMMID. When QuikComm is missing, one Could Not Be Checked item is reported.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source COMMID on QuikPlan. Blank passes. A populated value must match exactly one QuikComm.COMMID. When QuikComm is missing, one Could Not Be Checked item is reported.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-017",
+      "business_name": "Maximum Units Must Not Be Below Minimum Units",
+      "technical_name": "Validate Maximum and Minimum Units",
+      "purpose": "Ensure maximum units are not less than minimum units.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "MAXUNIT",
+        "MINUNIT"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.MAXUNIT",
+        "QuikPlan.MINUNIT"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Physical field MAXUNIT (business MAXUNITS) and MINUNIT. MAXUNIT must be greater than or equal to MINUNIT.",
+      "failure_conditions": [
+        "MAXUNIT or MINUNIT is null, blank, or unreadable.",
+        "MAXUNIT is less than MINUNIT."
+      ],
+      "normalization": "Physical field MAXUNIT (business MAXUNITS) and MINUNIT. MAXUNIT must be greater than or equal to MINUNIT.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Physical field MAXUNIT (business MAXUNITS) and MINUNIT. MAXUNIT must be greater than or equal to MINUNIT.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-018",
+      "business_name": "Rounding Rule Must Default to B",
+      "technical_name": "Validate Rounding Rule Default",
+      "purpose": "Ensure the rounding rule uses the approved default.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "RRULE"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.RRULE"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Physical field RRULE (business ROUNDING). Required value is B after casefold normalization.",
+      "failure_conditions": [
+        "RRULE is blank, null, or not B."
+      ],
+      "normalization": "Physical field RRULE (business ROUNDING). Required value is B after casefold normalization.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Physical field RRULE (business ROUNDING). Required value is B after casefold normalization.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-019",
+      "business_name": "Automatic NFO Must Default to 0",
+      "technical_name": "Validate Automatic NFO Default",
+      "purpose": "Ensure the automatic nonforfeiture setting uses the approved default.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "AUTONFO"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.AUTONFO"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source AUTONFO. Required value is 0 after trim.",
+      "failure_conditions": [
+        "AUTONFO is blank, null, or not 0."
+      ],
+      "normalization": "Source AUTONFO. Required value is 0 after trim.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source AUTONFO. Required value is 0 after trim.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-020",
+      "business_name": "Deficiency Must Be N for Alphabetic or 9-Series Plans",
+      "technical_name": "Validate Deficiency Setting",
+      "purpose": "Ensure deficiency is N for plans whose first character is A\u2013Z or 9.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLAN",
+        "DEFICIENCY"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.DEFICIENCY"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "When the first plan-code character is alphabetic or 9, DEFICIENCY must equal N after casefold normalization. Plans beginning with 0\u20138 are not evaluated.",
+      "failure_conditions": [
+        "An alphabetic or 9-series plan has DEFICIENCY other than N."
+      ],
+      "normalization": "When the first plan-code character is alphabetic or 9, DEFICIENCY must equal N after casefold normalization. Plans beginning with 0\u20138 are not evaluated.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "When the first plan-code character is alphabetic or 9, DEFICIENCY must equal N after casefold normalization. Plans beginning with 0\u20138 are not evaluated.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-021",
+      "business_name": "Active Plan Status Must Use a Valid Logical Value",
+      "technical_name": "Validate New-Business Status",
+      "purpose": "Ensure the new-business status contains a valid yes-or-no value.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "BACTIVE"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.BACTIVE"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source BACTIVE. Accepts T/F, Y/N, or 1/0 logical representations. True means eligible for new business; false means closed. This rule validates storage format only, not whether the plan should be open or closed.",
+      "failure_conditions": [
+        "BACTIVE is null, blank, or an unreadable logical value."
+      ],
+      "normalization": "Source BACTIVE. Accepts T/F, Y/N, or 1/0 logical representations. True means eligible for new business; false means closed. This rule validates storage format only, not whether the plan should be open or closed.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source BACTIVE. Accepts T/F, Y/N, or 1/0 logical representations. True means eligible for new business; false means closed. This rule validates storage format only, not whether the plan should be open or closed.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-023",
+      "business_name": "MLAPSE Must Default to 0",
+      "technical_name": "Validate MLAPSE Default",
+      "purpose": "Ensure the lapse setting uses the approved default.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "MLAPSE"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.MLAPSE"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source MLAPSE. Required numeric value is 0.",
+      "failure_conditions": [
+        "MLAPSE is null, blank, unreadable, or not zero."
+      ],
+      "normalization": "Source MLAPSE. Required numeric value is 0.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source MLAPSE. Required numeric value is 0.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-024",
+      "business_name": "MNAICLOB Must Default to NAPLAN",
+      "technical_name": "Validate MNAICLOB Default",
+      "purpose": "Ensure the NAIC line-of-business setting uses the approved default.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "MNAICLOB"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.MNAICLOB"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "Source MNAICLOB. Required value is NAPLAN after casefold normalization.",
+      "failure_conditions": [
+        "MNAICLOB is blank, null, or not NAPLAN."
+      ],
+      "normalization": "Source MNAICLOB. Required value is NAPLAN after casefold normalization.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Source MNAICLOB. Required value is NAPLAN after casefold normalization.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-025",
+      "business_name": "Gross Premium Supporting Tables Must Exist",
+      "technical_name": "Validate Gross Premium Supporting Tables",
+      "purpose": "Ensure plans that use variable gross premium setup have required supporting records.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan",
+        "QuikGps",
+        "QuikPlGp"
+      ],
+      "source_fields": [
+        "PLAN",
+        "VARGP"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.VARGP"
+      ],
+      "reference_tables": [
+        "QuikGps",
+        "QuikPlGp"
+      ],
+      "reference_fields": [],
+      "expected_condition": "When VARGP is not 4, the plan must exist in both QuikGps and QuikPlGp. When a supporting table is missing, one Could Not Be Checked item is reported.",
+      "failure_conditions": [
+        "VARGP is not 4 and the plan is missing from QuikGps.",
+        "VARGP is not 4 and the plan is missing from QuikPlGp.",
+        "A required supporting table is not available."
+      ],
+      "normalization": "When VARGP is not 4, the plan must exist in both QuikGps and QuikPlGp. When a supporting table is missing, one Could Not Be Checked item is reported.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "When VARGP is not 4, the plan must exist in both QuikGps and QuikPlGp. When a supporting table is missing, one Could Not Be Checked item is reported.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-026",
+      "business_name": "Death Benefit Supporting Tables Must Exist",
+      "technical_name": "Validate Death Benefit Supporting Tables",
+      "purpose": "Ensure plans that use variable death-benefit setup have required supporting records.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan",
+        "QuikDbs",
+        "QuikPlDb"
+      ],
+      "source_fields": [
+        "PLAN",
+        "VARDB"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.VARDB"
+      ],
+      "reference_tables": [
+        "QuikDbs",
+        "QuikPlDb"
+      ],
+      "reference_fields": [],
+      "expected_condition": "When VARDB is not 4, the plan must exist in both QuikDbs and QuikPlDb. When a supporting table is missing, one Could Not Be Checked item is reported.",
+      "failure_conditions": [
+        "VARDB is not 4 and the plan is missing from QuikDbs.",
+        "VARDB is not 4 and the plan is missing from QuikPlDb.",
+        "A required supporting table is not available."
+      ],
+      "normalization": "When VARDB is not 4, the plan must exist in both QuikDbs and QuikPlDb. When a supporting table is missing, one Could Not Be Checked item is reported.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "When VARDB is not 4, the plan must exist in both QuikDbs and QuikPlDb. When a supporting table is missing, one Could Not Be Checked item is reported.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-027",
+      "business_name": "Traditional Plans Should Have Required Value Tables",
+      "technical_name": "Validate Traditional Plan Value Tables",
+      "purpose": "Warn when traditional plans (first character 0\u20138) are missing expected value and reserve tables.",
+      "severity": "Advisory",
+      "source_tables": [
+        "QuikPlan",
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikCvs",
+        "QuikTvs",
+        "QuikNps"
+      ],
+      "source_fields": [
+        "PLAN"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN"
+      ],
+      "reference_tables": [
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikCvs",
+        "QuikTvs",
+        "QuikNps"
+      ],
+      "reference_fields": [],
+      "expected_condition": "Traditional plans begin with 0\u20138. Issue a warning when the plan is missing from any of QuikPlCv, QuikPlTv, QuikCvs, QuikTvs, or QuikNps.",
+      "failure_conditions": [
+        "A traditional plan is missing from an expected value or reserve table.",
+        "A required supporting table is not available."
+      ],
+      "normalization": "Traditional plans begin with 0\u20138. Issue a warning when the plan is missing from any of QuikPlCv, QuikPlTv, QuikCvs, QuikTvs, or QuikNps.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Traditional plans begin with 0\u20138. Issue a warning when the plan is missing from any of QuikPlCv, QuikPlTv, QuikCvs, QuikTvs, or QuikNps.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-028",
+      "business_name": "Annuity Plans Should Have Required Annuity Tables",
+      "technical_name": "Validate Annuity Supporting Tables",
+      "purpose": "Warn when annuity plans are missing expected annuity setup records.",
+      "severity": "Advisory",
+      "source_tables": [
+        "QuikPlan",
+        "QuikAint",
+        "QuikAing",
+        "QuikAexp",
+        "QuikAinf"
+      ],
+      "source_fields": [
+        "PLAN",
+        "MPLAN"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.MPLAN"
+      ],
+      "reference_tables": [
+        "QuikAint",
+        "QuikAing",
+        "QuikAexp",
+        "QuikAinf"
+      ],
+      "reference_fields": [],
+      "expected_condition": "Annuity plans begin with A. Issue a warning when the plan is missing from QuikAint, QuikAing, QuikAexp, or QuikAinf.",
+      "failure_conditions": [
+        "An annuity plan is missing from an expected annuity setup table.",
+        "A required supporting table is not available."
+      ],
+      "normalization": "Annuity plans begin with A. Issue a warning when the plan is missing from QuikAint, QuikAing, QuikAexp, or QuikAinf.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Annuity plans begin with A. Issue a warning when the plan is missing from QuikAint, QuikAing, QuikAexp, or QuikAinf.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-029",
+      "business_name": "UL Plans Must Exist in QuikUint",
+      "technical_name": "Validate Universal Life Interest Record",
+      "purpose": "Ensure confirmed Universal Life plans have a Universal Life interest record.",
+      "severity": "Error",
+      "source_tables": [
+        "QuikPlan",
+        "QuikUint"
+      ],
+      "source_fields": [
+        "PLAN",
+        "QuikUint.MPLAN"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN"
+      ],
+      "reference_tables": [
+        "QuikUint"
+      ],
+      "reference_fields": [
+        "QuikUint.MPLAN"
+      ],
+      "expected_condition": "Uses plan_classification.csv to identify UL plans. Confirmed UL plans must exist in QuikUint. When classification is unavailable, the rule reports Could Not Be Checked.",
+      "failure_conditions": [
+        "A confirmed UL plan is missing from QuikUint.",
+        "Plan classification config is unavailable.",
+        "QuikUint is not available in the data region."
+      ],
+      "normalization": "Uses plan_classification.csv to identify UL plans. Confirmed UL plans must exist in QuikUint. When classification is unavailable, the rule reports Could Not Be Checked.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Uses plan_classification.csv to identify UL plans. Confirmed UL plans must exist in QuikUint. When classification is unavailable, the rule reports Could Not Be Checked.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-030",
+      "business_name": "MEDS Plan Flags Must Match the Plan Type",
+      "technical_name": "Validate MEDS Plan Flags",
+      "purpose": "Ensure MEDS plans use required commission and rating-key settings.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan"
+      ],
+      "source_fields": [
+        "PLANTYPE",
+        "HCOMMIP",
+        "HRIGPKEY"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLANTYPE",
+        "QuikPlan.HCOMMIP",
+        "QuikPlan.HRIGPKEY"
+      ],
+      "reference_tables": [],
+      "reference_fields": [],
+      "expected_condition": "When PLANTYPE is MEDS, HCOMMIP and HRIGPKEY must be true. For all other plan types, both must be false.",
+      "failure_conditions": [
+        "PLANTYPE is MEDS and HCOMMIP or HRIGPKEY is false.",
+        "PLANTYPE is not MEDS and HCOMMIP or HRIGPKEY is true.",
+        "HCOMMIP or HRIGPKEY is an unreadable logical value."
+      ],
+      "normalization": "When PLANTYPE is MEDS, HCOMMIP and HRIGPKEY must be true. For all other plan types, both must be false.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "When PLANTYPE is MEDS, HCOMMIP and HRIGPKEY must be true. For all other plan types, both must be false.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-031",
+      "business_name": "Rate and Key Table Plan Codes Must Exist in QuikPlan",
+      "technical_name": "Validate Rate Key Plan References",
+      "purpose": "Ensure every plan code used in approved rate and key tables exists exactly once in Plan Setup.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikPlan",
+        "QuikGps",
+        "QuikCvs",
+        "QuikDbs",
+        "QuikNps",
+        "QuikTvs",
+        "QuikNff",
+        "QuikPlGp",
+        "QuikPlCv",
+        "QuikPlDb",
+        "QuikPlDv",
+        "QuikPlTv",
+        "QuikPlGd",
+        "QuikPlUw",
+        "QuikPlBd",
+        "QuikPlSt",
+        "QuikPlNb",
+        "QuikUint",
+        "QuikAint",
+        "QuikAing",
+        "QuikAexp",
+        "QuikAinf",
+        "QuikIssc"
+      ],
+      "source_fields": [
+        "PLAN",
+        "MPLAN",
+        "QuikPlan.PLAN"
+      ],
+      "primary_table": "QuikPlan",
+      "primary_fields": [
+        "QuikPlan.PLAN",
+        "QuikPlan.MPLAN",
+        "QuikPlan.PLAN"
+      ],
+      "reference_tables": [
+        "QuikGps",
+        "QuikCvs",
+        "QuikDbs",
+        "QuikNps",
+        "QuikTvs",
+        "QuikNff",
+        "QuikPlGp",
+        "QuikPlCv",
+        "QuikPlDb",
+        "QuikPlDv",
+        "QuikPlTv",
+        "QuikPlGd",
+        "QuikPlUw",
+        "QuikPlBd",
+        "QuikPlSt",
+        "QuikPlNb",
+        "QuikUint",
+        "QuikAint",
+        "QuikAing",
+        "QuikAexp",
+        "QuikAinf",
+        "QuikIssc"
+      ],
+      "reference_fields": [],
+      "expected_condition": "Cross-table reference check using the approved rate and key table inventory. Each populated plan code in those tables must match exactly one QuikPlan.PLAN.",
+      "failure_conditions": [
+        "A populated plan code in an approved rate or key table does not exist in QuikPlan.",
+        "A populated plan code matches more than one QuikPlan record."
+      ],
+      "normalization": "Cross-table reference check using the approved rate and key table inventory. Each populated plan code in those tables must match exactly one QuikPlan.PLAN.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Cross-table reference check using the approved rate and key table inventory. Each populated plan code in those tables must match exactly one QuikPlan.PLAN.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-032",
+      "business_name": "Company Codes Must Exist in Company Setup",
+      "technical_name": "Validate Company Code References",
+      "purpose": "Ensure company codes used in approved tables exist exactly once in Company Setup.",
+      "severity": "Critical",
+      "source_tables": [
+        "QuikComp",
+        "QuikAgts",
+        "QuikActg",
+        "QuikList",
+        "QuikChrt"
+      ],
+      "source_fields": [
+        "MCOMP",
+        "QuikComp.MCOMP"
+      ],
+      "primary_table": "QuikComp",
+      "primary_fields": [
+        "QuikComp.MCOMP",
+        "QuikComp.MCOMP"
+      ],
+      "reference_tables": [
+        "QuikAgts",
+        "QuikActg",
+        "QuikList",
+        "QuikChrt"
+      ],
+      "reference_fields": [],
+      "expected_condition": "Cross-table reference check using the approved company-bearing table inventory. Each populated company code must match exactly one QuikComp.MCOMP.",
+      "failure_conditions": [
+        "A populated company code does not exist in QuikComp.",
+        "A populated company code matches more than one QuikComp record.",
+        "QuikComp is not available in the data region."
+      ],
+      "normalization": "Cross-table reference check using the approved company-bearing table inventory. Each populated company code must match exactly one QuikComp.MCOMP.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Cross-table reference check using the approved company-bearing table inventory. Each populated company code must match exactly one QuikComp.MCOMP.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    },
+    {
+      "governance_item_id": "DG-QUIKPLAN",
+      "rule_id": "DG-QUIKPLAN-033",
+      "business_name": "Conversion Dates Outside the Approved Range Must Be Warned",
+      "technical_name": "Validate Conversion Date Range",
+      "purpose": "Warn when conversion dates fall outside the approved date range.",
+      "severity": "Advisory",
+      "source_tables": [
+        "QuikPlCv",
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv",
+        "QuikPlNb",
+        "QuikDate",
+        "QuikComm",
+        "QuikAint",
+        "QuikUint"
+      ],
+      "source_fields": [
+        "EFFDATE",
+        "PACBILL",
+        "DIRBILL",
+        "REINBILL",
+        "MEFFDATE"
+      ],
+      "primary_table": "QuikPlCv",
+      "primary_fields": [
+        "QuikPlCv.EFFDATE",
+        "QuikPlCv.PACBILL",
+        "QuikPlCv.DIRBILL",
+        "QuikPlCv.REINBILL",
+        "QuikPlCv.MEFFDATE"
+      ],
+      "reference_tables": [
+        "QuikPlTv",
+        "QuikPlGp",
+        "QuikPlDb",
+        "QuikPlDv",
+        "QuikPlNb",
+        "QuikDate",
+        "QuikComm",
+        "QuikAint",
+        "QuikUint"
+      ],
+      "reference_fields": [],
+      "expected_condition": "Approved date fields across conversion tables. Inclusive bounds: minimum 1900-01-01; maximum = add_calendar_months(governance run date, 12). Dates outside the range generate warnings. Source values are not modified.",
+      "failure_conditions": [
+        "A populated date is earlier than January 1, 1900.",
+        "A populated date is later than the governance run date plus 12 calendar months."
+      ],
+      "normalization": "Approved date fields across conversion tables. Inclusive bounds: minimum 1900-01-01; maximum = add_calendar_months(governance run date, 12). Dates outside the range generate warnings. Source values are not modified.",
+      "records_reviewed": 0,
+      "looked_fine": 0,
+      "problems_found": 0,
+      "result": "NOT RUN",
+      "execution_status": "NOT_RUN",
+      "not_run_reason": "Not selected for this run (full suite not requested, or a single governance item/rule filter was applied).",
+      "limitations": [
+        "Whether values are factually or actuarially correct beyond this rule's checks.",
+        "Fields on the same table that are not listed in this rule.",
+        "Business intent that is not encoded in the rule definition.",
+        "Whether missing reference data should be created automatically."
+      ],
+      "pass_conditions": [
+        "Approved date fields across conversion tables. Inclusive bounds: minimum 1900-01-01; maximum = add_calendar_months(governance run date, 12). Dates outside the range generate warnings. Source values are not modified.",
+        "The record was available for evaluation.",
+        "None of the listed failure conditions applied after normalization."
+      ],
+      "summary_metrics": {}
+    }
+  ],
+  "generated_from": "registered rules selected for this run + RuleExecutionResult counts"
+}

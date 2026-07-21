@@ -1,0 +1,7 @@
+cfic_plan,issue_age,policy_year,field,reserve,access,delta,pass
+P7MN,18,10,cash_value,20.9,21.0,-0.1,Y
+P7MN,18,10,paid_up,197.0,197.0,0.0,Y
+P7MN,18,20,cash_value,84.0,84.0,0.0,Y
+P7MN,18,20,paid_up,514.0,514.0,0.0,Y
+P7MN,18,47,cash_value,432.02,433.0,-0.98,Y
+P7MN,18,47,paid_up,898.0,898.0,0.0,Y

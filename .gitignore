@@ -40,3 +40,7 @@ plan_analysis/phase_p3g_quikplan_completeness/blank_mplan_business_review_report
 # Local test sandboxes
 Z_SOURCEFORTESTING/
 **/desktop.ini
+
+# Oversized artifacts (>100MB GitHub limit) - keep local only
+CFIC_Rates/CFIC_Cash_Values/*.zip
+docs/quikprmh.dbf

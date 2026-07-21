@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-29 16:22:05",
+  "generated_at": "2026-07-19 14:44:12",
   "phase": "P3F",
   "component": "quikactg",
   "closed_mplan_authority": "ENABLED",
@@ -11,7 +11,7 @@
   "legacy_passthrough_count": 0,
   "validation_passed": true,
   "pactg_stats": {
-    "pactg_rows_read": 402079,
+    "pactg_rows_read": 389663,
     "distinct_plans": 87,
     "emitted_rows": 87,
     "validation_passed": true,

@@ -1,0 +1,280 @@
+{
+  "generated": "2026-07-14T19:56:09",
+  "script_version": "1.0",
+  "output": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
+  "counts": {
+    "IN_DATA": 45,
+    "WARN": 5
+  },
+  "results": [
+    {
+      "id": "#25",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#13",
+      "status": "WARN",
+      "detail": "validator blocked on missing dated extract (environmental)",
+      "exit": 1
+    },
+    {
+      "id": "#26",
+      "status": "WARN",
+      "detail": "validator blocked on missing dated extract (environmental)",
+      "exit": 1
+    },
+    {
+      "id": "#28",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#36",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#38",
+      "status": "WARN",
+      "detail": "validator blocked on missing dated extract (environmental)",
+      "exit": 1
+    },
+    {
+      "id": "#49",
+      "status": "IN_DATA",
+      "detail": "PASS functional gates; 7 #59 deltas expected",
+      "exit": 1
+    },
+    {
+      "id": "#50",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#51",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#54",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#55",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#57",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#58",
+      "status": "IN_DATA",
+      "detail": "fee values present; format string only",
+      "exit": 1
+    },
+    {
+      "id": "#59",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#60",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#21F",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#21A",
+      "status": "WARN",
+      "detail": "validator blocked on missing dated extract (environmental)",
+      "exit": 1
+    },
+    {
+      "id": "#21J",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#21M",
+      "status": "WARN",
+      "detail": "validator blocked on missing dated extract (environmental)",
+      "exit": 1
+    },
+    {
+      "id": "#13",
+      "status": "IN_DATA",
+      "detail": "termination samples 54/56"
+    },
+    {
+      "id": "#25",
+      "status": "IN_DATA",
+      "detail": "quikmstr MPOLICY width violations=0"
+    },
+    {
+      "id": "#36",
+      "status": "IN_DATA",
+      "detail": "010367131C modal factors present"
+    },
+    {
+      "id": "#38",
+      "status": "IN_DATA",
+      "detail": "quikdvdp MDEPOSIT non-zero=59/5083"
+    },
+    {
+      "id": "#40/#41",
+      "status": "IN_DATA",
+      "detail": "QuikCvs rows=38047"
+    },
+    {
+      "id": "#41",
+      "status": "IN_DATA",
+      "detail": "1960PO QuikCvs rows=1001"
+    },
+    {
+      "id": "#44",
+      "status": "IN_DATA",
+      "detail": "quikloan rows=356"
+    },
+    {
+      "id": "#45",
+      "status": "IN_DATA",
+      "detail": "MBANKNO populated=2736"
+    },
+    {
+      "id": "#47",
+      "status": "IN_DATA",
+      "detail": "MBILLDAY non-zero=5083"
+    },
+    {
+      "id": "#49",
+      "status": "IN_DATA",
+      "detail": "override/preserve traces OK"
+    },
+    {
+      "id": "#50",
+      "status": "IN_DATA",
+      "detail": "memo rows=5083; sample hits={'018495BC': True, '01159D276C': True, '01ML8522C': True, '010335038C': True}"
+    },
+    {
+      "id": "#51",
+      "status": "IN_DATA",
+      "detail": "QuikAint plans=['A60MIR', 'A96DAR']"
+    },
+    {
+      "id": "#54",
+      "status": "IN_DATA",
+      "detail": "quikbenh=41066 types={'11': 14156, '12': 19135, '10': 4118, '8': 3657}"
+    },
+    {
+      "id": "#55",
+      "status": "IN_DATA",
+      "detail": "sub-floor MUNIT=0"
+    },
+    {
+      "id": "#57:010367131C",
+      "status": "IN_DATA",
+      "detail": "MNFOPT=2"
+    },
+    {
+      "id": "#57:010392763C",
+      "status": "IN_DATA",
+      "detail": "MNFOPT=3"
+    },
+    {
+      "id": "#57:011221309C",
+      "status": "IN_DATA",
+      "detail": "MNFOPT=1"
+    },
+    {
+      "id": "#58",
+      "status": "IN_DATA",
+      "detail": "010367131C MANNLFEE=10.4400 MSEMIFEE=5.4288"
+    },
+    {
+      "id": "#59:01122D991C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
+    },
+    {
+      "id": "#59:014FG8217C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
+    },
+    {
+      "id": "#59:016FG8217C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
+    },
+    {
+      "id": "#59:01ML8171C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
+    },
+    {
+      "id": "#59:01ML8250C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
+    },
+    {
+      "id": "#59:01ML8522C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
+    },
+    {
+      "id": "#59:010521213C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=50 (Death Claim Pending)"
+    },
+    {
+      "id": "#60",
+      "status": "IN_DATA",
+      "detail": "010310404C PUA phase Chris rules"
+    },
+    {
+      "id": "#60:other-rider",
+      "status": "IN_DATA",
+      "detail": "920ADB dates unchanged"
+    },
+    {
+      "id": "#56/60 plan",
+      "status": "IN_DATA",
+      "detail": "1960PA absent from quikplan (Chris)"
+    },
+    {
+      "id": "#21F",
+      "status": "IN_DATA",
+      "detail": "quikprmh CONV_ADJ-like rows=2609"
+    },
+    {
+      "id": "Claims 14-19",
+      "status": "IN_DATA",
+      "detail": "clms=5771 clmp=5366"
+    },
+    {
+      "id": "Engine",
+      "status": "IN_DATA",
+      "detail": "expect v57.85 (batch completed)"
+    }
+  ]
+}

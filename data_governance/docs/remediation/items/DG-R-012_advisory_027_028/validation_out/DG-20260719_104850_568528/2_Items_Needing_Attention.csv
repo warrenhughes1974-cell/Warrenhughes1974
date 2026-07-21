@@ -1,0 +1,5 @@
+﻿Area,Table,Record,Problem,Current Value,Required Value,Type,Reference
+Plan Setup,Annuity Expense Setup,A60MIR,Annuity plan A60MIR does not have a Annuity Expense Setup record.,,A supporting record for the plan,Warning,DG-QUIKPLAN-028
+Plan Setup,Annuity Expense Setup,A96DAR,Annuity plan A96DAR does not have a Annuity Expense Setup record.,,A supporting record for the plan,Warning,DG-QUIKPLAN-028
+Plan Setup,Annuity Guarantee Setup,A60MIR,Annuity plan A60MIR does not have an Annuity Guarantee Setup (QuikAing) or Annuity Information Setup (QuikAinf) record.,,A supporting record for the plan,Warning,DG-QUIKPLAN-028
+Plan Setup,Annuity Guarantee Setup,A96DAR,Annuity plan A96DAR does not have an Annuity Guarantee Setup (QuikAing) or Annuity Information Setup (QuikAinf) record.,,A supporting record for the plan,Warning,DG-QUIKPLAN-028

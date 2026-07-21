@@ -2,10 +2,14 @@
 
 **Issue:** #43 — ISWL Expense Charge Source Discovery  
 **Date:** 2026-07-08  
-**Framework stage:** Investigation complete — awaiting client confirmation  
-**Status:** Investigation Complete / Awaiting Client  
-**Owner:** Warren · **Assigned:** Client (Sujitha) / LifePRO SME  
-**Priority:** Awaiting Client / No Go for expense mapping until confirmed
+**Updated:** 2026-07-13 — client decisions received (see Meeting Decisions)  
+**Framework stage:** Decisions locked → handoff to Sujitha / Planning for plan expense setup  
+**Status:** **DECIDED (D1–D2)** · Open follow-up on U6 only  
+**Owner:** Warren · **Assigned:** Sujitha / CSO (Eric)  
+**Priority:** **Go for plan expense setup** (programming pending; not in conversion `app.py` yet)
+
+**Meeting decisions:** `Issue_43_Meeting_Decisions_20260713.md`  
+**Companion:** Issue **#23** (3.5% premium expense) · Evidence PDF: `evidence/Annual_Statement_Censi_I_9010817956.pdf`
 
 ---
 
@@ -17,6 +21,14 @@ Client found **"Expense Type: Policy fee"** in a txt file and asked whether it i
 - Monthly expense per $1,000
 
 **Scope:** Eight ISWL products only. Investigation only — no code, mapping, output, or documentation changes.
+
+### 2026-07-13 decisions (Eric + annual statement)
+
+| Topic | Decision |
+|-------|----------|
+| $25 Policy fee | **Yes** — equivalent to monthly per-policy expense; **$25/year taken monthly (~$2.08/mo)** on statement |
+| 3.5% premium expense | **Confirmed** on all ISWL contracts; statement Premium Charge ≈ 3.5% of premiums received |
+| U6 Curr COI tables | **Open question from Eric** — research answer: **No** (U6 = Current COI, not expense) |
 
 | LifePRO Coverage ID | QL Plan Code |
 |-------------------|--------------|
