@@ -1,6 +1,6 @@
 === Phase 17B Deferred Governance Population Summary ===
 
-Rollback snapshot: PHASE17B-DEFERRED-GOVERNANCE-20260719T194707Z
+Rollback snapshot: PHASE17B-DEFERRED-GOVERNANCE-20260721T181736Z
 Deferred claims: 344
 Deferred payments: 374
 

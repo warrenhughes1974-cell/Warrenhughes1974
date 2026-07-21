@@ -151,3 +151,34 @@ Notes:
 - Test reload: `QLA_Migration/Output/Test_Validation/rates/QuikUwpo.csv`
 - Wired into rate emit (CSV + DBF) for future Rate Tables runs
 - Verify: `Issue_Log_Items/Issue_A/scripts/verify_issue_a_a10_quikuwpo.py`
+
+### Run 2026-07-21 — app.py v58.22 — Full batch — Source=PPOLC_PolicyMaster_Extract_20260630.csv
+
+Operator: Agent (user request: check in + rerun full conversion on 6/30 data)  
+Env: `QLA_PREFER_MIDYEAR_EXTRACT=1`, `QLA_VALUATION_DATE=20260630`, UAT mode, rates included  
+Result summary: **8 PASS** · **2 BLOCKED** · **5 OPEN** (SME-gated)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | `1668SP`, `10L171`, `10L172`, `1L17SP`: PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **BLOCKED** | All 141 DEFICIENCY=N; awaiting CSO |
+| A3 | **BLOCKED** | Decision locked (every plan); implementation awaits Development approval |
+| A4 | **PASS** | 0 blank-PLAN rows in QuikPl* |
+| A5 | **OPEN** | Awaiting Valuation_Setup / Issue #80 |
+| A6 | **PASS** | 0 orphan vary flags without keys |
+| A7 | **OPEN** | 126/141 VARGP=4 with GP keys; awaiting Eric (Item 09) |
+| A8a | **PASS** | A-prefix PAR=0 |
+| A8b | **PASS** | A-prefix VARDB=0 |
+| A8c | **OPEN** | Awaiting Eric — annuity interest scope |
+| A8d | **OPEN** | Awaiting Eric — schg scope |
+| A8e | **PASS** | A-prefix PLANVALOPT/VARY all clear |
+| A9a | **OPEN** | Supp type field name — awaiting Eric |
+| A9b | **PASS** | Prefix-9 PAR=1 count 0 |
+| A10 | **PASS** | QuikUwpo 5 rows (00/NS/PR/SM/ST); 0 dupes; full QuikPlUw coverage |
+
+Notes:
+- Row counts: quikmstr 5,084 · quikridr 6,936 · quikplan 141 · quikprmh 201,572 · quikbenh 39,112 · quikloan 365 · quikclms 5,447 · quikclmp 6,248 · rates/ 24 CSVs (incl. Issue #88 QuikUint 32 rows, QuikIssc 8 rows)
+- Rate loader: status=SUCCESS, blockers=0, tables=26; Issue #40 inherited CV verify PASS
+- Known non-checklist FAILED flags (pre-existing, not new this run): P3E MPLAN authority (493 rider rows on 6 PUA plan codes not in quikplan — documented in Issue #28 report); UAT DBF rehearsal QUIKCLMP MCHECKNO numeric overflow (DBF field width; CSVs unaffected); QUIKISRR PR7 candidate-count baseline mismatch (3,510 vs 3,657 expected — stale EXPECTED constant in Issue 34 PR7 emitter)
+- Output hygiene: audit CSVs moved to `Reports/`, UAT DBF + claims staging moved to `Staging/`; Output root is table CSVs + `rates/` + `Test_Validation/` only
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt` (console copy `_full_batch_0630_console.txt`)
