@@ -110,7 +110,7 @@ Revert `app.py` / `QLA_Migration/app.py` to v58.23 and re-emit `quikridr` (with 
 
 | Item | Value |
 |------|-------|
-| Commit | `df986b4` |
+| Commit | `cb0fb43` |
 | Branch | `issue-34-pr7-quikisrr` |
 | Push | Required for network batch machines |
 | Output | gitignored — reload `Test_Validation/quikridr.csv` or rebatch after pull |
