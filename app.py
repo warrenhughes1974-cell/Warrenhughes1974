@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.22
-# Date:        2026-07-20
+# Version:     v58.24
+# Date:        2026-07-22
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.22 — Issue A A10: emit QuikUwpo (UW class master) from distinct plan UW codes.
+# Change Note: v58.24 — Issue #89: load POLICY_FEE cache on quikridr path (ridr-only rebatch safe);
+#              fail-closed guard if MANNLFEE fleet wipe detected after emit.
+#              v58.22 — Issue A A10: emit QuikUwpo (UW class master) from distinct plan UW codes.
 #              v58.21 — Issue A A4/A6/A8/A9b internal QuikPlan setup fixes.
 #              v58.20 — Single Table quikplan: define out_dir before variation audit write.
 #              v58.19 — Issue A A1: single-prem SP modal zeros re-applied after #21J overlay (4 DESCR plans).
@@ -455,7 +457,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.23"
+APP_VERSION = "v58.24"
 APP_BRAND = "QUIKConvert"
 APP_TAGLINE = APP_PRIMARY_TAGLINE
 
@@ -7154,8 +7156,10 @@ class QLAdminEnterpriseIntegrationSuite:
                     except Exception as e:
                         self.log(f"Warning: Failed to load PPBENTYP cache for quikridr - {e}")
                     # Issue #88: PPOLC BILLING_MODE for annualized Prem/Unit fallback
+                    # Issue #89: POLICY_FEE cache on quikridr path (ridr-only rebatch must not wipe MANNLFEE)
                     try:
                         self._billing_mode_map = {}
+                        self._policy_fee_map = {}
                         _src_dir_i88 = os.path.dirname(src_path)
                         _ppolc_i88 = None
                         for _fn in os.listdir(_src_dir_i88):
@@ -7172,25 +7176,49 @@ class QLAdminEnterpriseIntegrationSuite:
                                 _ppolc_i88, encoding="latin1", low_memory=False, dtype=str, on_bad_lines="skip"
                             ).fillna("")
                             _pmdf.columns = [str(c).strip().upper() for c in _pmdf.columns]
-                            if "POLICY_NUMBER" in _pmdf.columns and "BILLING_MODE" in _pmdf.columns:
+                            if "POLICY_NUMBER" in _pmdf.columns:
+                                _has_billing = "BILLING_MODE" in _pmdf.columns
+                                _has_policy_fee = "POLICY_FEE" in _pmdf.columns
                                 for _, _pr in _pmdf.iterrows():
                                     _pol = self.normalize(_pr.get("POLICY_NUMBER"))
-                                    _bm = str(_pr.get("BILLING_MODE", "")).strip()
-                                    if _bm.endswith(".0"):
-                                        _bm = _bm[:-2]
-                                    if not _pol or _bm.lower() in ("", "nan", "none", "null"):
+                                    if not _pol:
                                         continue
-                                    try:
-                                        self._billing_mode_map[_pol] = int(float(_bm))
-                                    except (ValueError, TypeError):
-                                        continue
-                                self.log(
-                                    f"Issue #88: loaded PPOLC BILLING_MODE cache "
-                                    f"({len(self._billing_mode_map)} policies; {os.path.basename(_ppolc_i88)})"
-                                )
+                                    if _has_billing:
+                                        _bm = str(_pr.get("BILLING_MODE", "")).strip()
+                                        if _bm.endswith(".0"):
+                                            _bm = _bm[:-2]
+                                        if _bm.lower() not in ("", "nan", "none", "null"):
+                                            try:
+                                                self._billing_mode_map[_pol] = int(float(_bm))
+                                            except (ValueError, TypeError):
+                                                pass
+                                    if _has_policy_fee:
+                                        _fee = str(_pr.get("POLICY_FEE", "")).strip()
+                                        if _fee.endswith(".0"):
+                                            _fee = _fee[:-2]
+                                        if not _fee or _fee.lower() in ("", "nan", "none", "null"):
+                                            continue
+                                        try:
+                                            if float(_fee) == 0.0:
+                                                continue
+                                            _fee = f"{float(_fee):.2f}"
+                                        except ValueError:
+                                            pass
+                                        self._policy_fee_map[_pol] = _fee
+                                if _has_billing:
+                                    self.log(
+                                        f"Issue #88: loaded PPOLC BILLING_MODE cache "
+                                        f"({len(self._billing_mode_map)} policies; {os.path.basename(_ppolc_i88)})"
+                                    )
+                                if _has_policy_fee:
+                                    self.log(
+                                        f"Issue #89: loaded Policy Fee cache for quikridr "
+                                        f"({len(self._policy_fee_map)} records; {os.path.basename(_ppolc_i88)})"
+                                    )
                     except Exception as e:
-                        self.log(f"Warning: Issue #88 BILLING_MODE cache failed - {e}")
+                        self.log(f"Warning: Issue #88/#89 PPOLC cache failed - {e}")
                         self._billing_mode_map = {}
+                        self._policy_fee_map = {}
 
                 quikagts_clnt_cache = {}
                 if t_id.lower() == "quikagts":
@@ -8353,6 +8381,25 @@ class QLAdminEnterpriseIntegrationSuite:
                         aligned_out_df, fee_stats = apply_modal_policy_fees_to_quikridr(
                             aligned_out_df, mstr_df,
                         )
+                        # Issue #89: fail-closed if fee cache populated but MANNLFEE wiped on base rows
+                        _fee_cache_n = len(getattr(self, "_policy_fee_map", {}) or {})
+                        if _fee_cache_n >= 1000:
+                            _mann_pop = 0
+                            for _, _fr in aligned_out_df.iterrows():
+                                if str(_fr.get("MPHASE", "")).strip() not in ("1", "01"):
+                                    continue
+                                try:
+                                    if float(str(_fr.get("MANNLFEE", "")).strip() or 0) > 0:
+                                        _mann_pop += 1
+                                except ValueError:
+                                    pass
+                            if _mann_pop == 0:
+                                _i89_msg = (
+                                    f"Issue #89 FATAL: PPOLC fee cache has {_fee_cache_n} policies but "
+                                    f"quikridr MANNLFEE populated on 0 base rows — fee wipe detected; aborting."
+                                )
+                                self.log(_i89_msg)
+                                raise RuntimeError(_i89_msg)
                         aligned_out_df.to_csv(out_csv, index=False)
                         self.log(
                             f"Issue 36: plan modal factors copied to quikmstr "

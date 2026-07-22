@@ -107,9 +107,11 @@ def main() -> int:
                 if abs(got - _num(want)) > 0.015:
                     failures.append(f"{pol} {field}: expected {want}, got {got:.2f}")
                 continue
-            got = (row.get(field) or "").strip()
-            if got != want:
-                failures.append(f"{pol} {field}: expected {want}, got {got!r}")
+            # Numeric compare — emit may be 10.44 or 10.4400 (Issue #89 / #58 format)
+            if abs(_num(row.get(field)) - _num(want)) > 0.00015:
+                failures.append(
+                    f"{pol} {field}: expected {want}, got {(row.get(field) or '').strip()!r}"
+                )
         print(
             f"trace {pol}: MANNLFEE={row.get('MANNLFEE')} "
             f"MSEMIFEE={row.get('MSEMIFEE')} MQTRLFEE={row.get('MQTRLFEE')} "

@@ -105,6 +105,7 @@
 | **#86** | QuikDate full rebuild (prior-month-end + screenshot defaults) | **Implemented v58.13 — Awaiting Validation** | **v58.13** | Full single-row quikdate emit: PME on all date fields (ESC blank); PDUEDAYS=31, VERSION=5.318, UPDATENUM=359, ACH 0+A. Not crosswalk. Validator PASS 2026-07-19. |
 | **#87** | QuikForge Balancing (source↔QLAdmin recon report) | **G5+G6 PASS — Ready for Client UAT** | **v58.14** | Balancing UI button + `qla_core/balancing.py`; reports → `Balancing/`. Val+Reg PASS 2026-07-19. BAL-D07 MSPLIT finding for client review. |
 | **#88** | Blank ANN_PPU fallback loads full MODE_PREMIUM into Prem/Unit (valuation × units) | **CLOSED ✓** | **v58.23** | **Resolution:** When ANN_PREM_PER_UNIT is blank, quikridr.MPREM now uses annualized MODE_PREMIUM ÷ NUMBER_OF_UNITS instead of full modal premium; quikmstr Mode Prem unchanged. Val+Reg PASS; anchor 010779727C; reload Test_Validation/quikridr.csv. |
+| **#89** | Policy fee wipe after `quikridr`-only rebatch (`MANNLFEE` / modal fees) | **CLOSED ✓** | **v58.24** | **Resolution:** Policy fees now load from LifePRO on every `quikridr` emit (including ridr-only rebatches), with a fail-closed guard so a blank fleet fee wipe cannot ship again; annual and modal fees are restored on fee-bearing policies. |
 | **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
 | **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
 | **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |
@@ -190,6 +191,8 @@
 **#85 detail:** `Issue_Log_Items/Issue_85/` · **Implemented v58.03 — Awaiting Validation** · G5 PASS · Dev Grok 4.5 override · 5,624→5,447 headers; 177 merges; 3,034 rephase; 6,151 payees unchanged · UAT: `Test_Validation/quikclms.csv` + `quikclmp.csv` · `Issue_85_Implementation_Notes.md`
 
 **#87 detail:** `Issue_Log_Items/Issue_87/` · **G5+G6 PASS — Ready for Client UAT** · v58.14 · Val+Reg 2026-07-19 · Next: Closure Agent or client UAT (Balancing button)
+
+**#89 detail:** `Issue_Log_Items/Issue_89/` · **CLOSED ✓** · **v58.24** · `Issue_89_Resolution_Summary.md` · UAT: `Test_Validation/quikridr.csv`
 
 **#59 detail:** `Issue_Log_Items/Issue_59/` · **CLOSED 2026-07-14** · **v57.84** · Resolution: seven-policy scoped MSTATUS fix (6×54→22; 010521213C→50). `Issue_59_Resolution_Summary.md`. Client UAT pending Eric.
 

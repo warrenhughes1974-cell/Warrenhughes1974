@@ -1,0 +1,2 @@
+ID,Item,Description (with example),Phase,Risk,Status,Owner,Resolution
+89,Policy fee wipe after quikridr-only rebatch,"v58.24: fee cache on quikridr path + fail-closed guard. Rebatch: 4457 MANNLFEE restored. Eric 010310404C=10.00.",2,High,CLOSED,Conversion,"Resolution: Policy fees now load from LifePRO on every quikridr emit (including ridr-only rebatches), with a fail-closed guard so a blank fleet fee wipe cannot ship again; annual and modal fees are restored on fee-bearing policies."
