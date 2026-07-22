@@ -1,92 +1,70 @@
 # Issue #88 — Dependency Gate
 
-**Issue:** #88 — ISWL QuikIssc / QuikUint empty in batch CSV package (D1 + D2)  
+**Issue:** #88 — Blank ANN_PREM_PER_UNIT fallback / Prem/Unit × units  
 **Framework stage:** Dependency Gate (G2)  
 **Generated:** 2026-07-21  
-**Model:** Cursor Grok 4.5 (locked)  
-**Gate result:** **PASS — Ready for Risk Review**  
-**Code changes:** None  
+**Status:** **PASS**
 
 ---
 
-## Source data
+## Checklist
 
-| Check | Met? | Notes |
-|-------|:----:|-------|
-| Required LifePRO extract(s) present | **Met** | Rate_Table_Extract_Txt.txt; PDINT/PDINTTBL/PSEGT `*_20260630.csv` |
-| Stale 20260629 targets absent | **Met** | Confirms D2 root cause; replacement files exist |
-| Extract row count > 0 | **Met** | Rate_Table SL hub = 14 durations; PDINT/PDINTTBL present |
-| Column headers documented | **Met** | Issue #33 / Phase5 design + Planning §2–3 |
-| Extract date/version matches batch | **Met** | Fix will align config to 20260630 midyear set |
+### Source data
 
----
+| Check | Met? |
+|-------|------|
+| Required LifePRO extract(s) present in `QLA_Migration/Source/` | **Met** (same PPBEN/PPOLC package as #26 / current batch) |
+| Extract row count > 0 | **Met** |
+| Column headers documented | **Met** (`ANN_PREM_PER_UNIT`, `MODE_PREMIUM`, units — Issue #26) |
+| Extract date/version matches batch under test | **Met** (midyear/current Source used for conversion) |
+| Re-extract required? | **N/A** — blank ANN is expected source state |
 
-## Field definitions
+### Field definitions
 
-| Check | Met? | Notes |
-|-------|:----:|-------|
-| QLAdmin target tables confirmed | **Met** | QuikIssc, QuikUint — schema in `rate_dbf_schema.py` |
-| Writers already exist | **Met** | `write_quikissc_csv`, `write_quikuint_csv` in `rate_dbf_writer.py` |
-| Loader logic confirmed | **Met** | Issc loader returns 8 rows today; Uint blocked only by path |
-| Transformation notes identified | **Met** | Emit wiring only — no new mapping |
+| Check | Met? |
+|-------|------|
+| QLAdmin target table confirmed | **Met** — `quikridr.MPREM` |
+| QLAdmin target field semantics confirmed | **Met** — annual premium **per unit** (#26 Field Definition / QLAdmin Help) |
+| LifePRO source field semantics confirmed | **Met** — ANN_PPU vs MODE_PREMIUM |
+| Transformation notes identified | **Met** — ÷ units fallback; mode annualization flagged for Risk |
 
----
+### Client clarification
 
-## Client clarification
+| Check | Met? |
+|-------|------|
+| Scope boundary agreed | **Met** — fix load fallback only; no plan VarGP in this issue; no commit until user asks |
+| Business rule for blank/zero ANN | **Met** — user directed: Prem/Unit = ModePrem ÷ units (Risk to refine non-annual modes) |
+| Retention / filtering | **N/A** |
+| UAT acceptance criteria stated | **Met** — Policy Mode Prem unchanged; Prem/Unit not equal to full ModePrem when units>1; valuation not ModePrem×units; user will validate before commit |
 
-| Check | Met? | Notes |
-|-------|:----:|-------|
-| Scope boundary agreed | **Met** | Scope Decisions locked; OBQs stay on Issue_ISWL |
-| Business rule for edge cases | **Met** | Issue #33 SME: AGE=0, M-only, hub replicate to 8 MPLANs |
-| UAT acceptance criteria stated | **Met** | QuikIssc 8 rows with SCHG01–14; QuikUint non-empty; Sujitha can reload |
+### Evidence
 
-Open Issue_ISWL questions (OBQ-3, OBQ-6–10) are **non-blocking** for this delivery fix.
+| Check | Met? |
+|-------|------|
+| Example policies identified | **Met** — `010779727C` |
+| Screenshots / compare workbook | **Met** |
+| Before-state measurable | **Met** — QuikValf/QLR MPREM1=1,465,400; Policy Prem/Unit=2,930.75 |
 
----
+### Regression guards
 
-## Evidence
-
-| Check | Met? | Notes |
-|-------|:----:|-------|
-| Before-state measurable | **Met** | Empty QuikIssc/QuikUint CSV + V-UINT-PDINT in dryrun issues |
-| Approved target shape | **Met** | Phase6 `iswl_quikissc_keys_by_mplan.csv` (8 plans) |
-| Validators available | **Met** | `tools/validators/iswl_quikissc_reconcile.py`, `iswl_quikuint_reconcile.py` |
-| Correct emit pattern exists | **Met** | R5 CLI `rate_loader_emit.py` CSV branch |
-
----
-
-## Regression guards
-
-| Check | Met? | Notes |
-|-------|:----:|-------|
-| Preserve factor/key/member emit | **Met** | Plan only adds Issc/Uint CSV writes after existing tables |
-| Preserve Issue #33 SL schedule | **Met** | No loader/schedule changes |
-| Preserve COI/GCOI allowlists | **Met** | Out of scope |
-| Plan does not alter Sync_Rulebooks | **Met** | Rate emit + config only |
+| Check | Met? |
+|-------|------|
+| Plan preserves Issue #25 MPOLICY padding | **Met** |
+| Plan preserves Issue #26 primary ANN→MPREM map | **Met** (only blank fallback changes) |
+| Plan does not alter unrelated rulebooks | **Met** (comment-only on quikridr rulebook) |
 
 ---
+
+## Gate result
+
+**PASS** — proceed to Risk Agent when user says: `Proceed to Risk Agent`
+
+No missing extracts. Open Risk-only item: quantify non-annual mode blank-ANN rows before Development implements annualization (if any).
+
+## Recommended tracking status
+
+**Dependency Gate PASS → Ready for Risk**
 
 ## Blockers
 
-**None.**
-
-Soft items for Risk (non-blocking):
-
-1. Whether to harden partial-emit so empty QuikIssc/QuikUint cannot ship silently again.  
-2. Exact QuikUint expected row count (use Phase5 baseline / reconcile script).  
-
----
-
-## Gate decision
-
-| Gate | Result |
-|------|--------|
-| G0 Intake | **PASS** |
-| G1 Planning | **PASS** |
-| **G2 Dependency** | **PASS** |
-| G3 Risk | **GO** (`Issue_88_Risk_Review_Report.md`) |
-| Development | Awaiting “Approved for Development” (Composer 2.5) |
-
-**Recommended tracking status:** **Ready for Development**
-
-**Next:** Say **“Approved for Development on Issue 88”** and switch to **Composer 2.5**.
+None.

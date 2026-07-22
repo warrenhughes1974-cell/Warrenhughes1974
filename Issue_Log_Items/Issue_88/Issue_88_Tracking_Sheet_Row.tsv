@@ -1,2 +1,2 @@
-Issue	Title	Status	Priority	Owner	Opened	Last_Updated	Next_Action	Parent
-88	ISWL QuikIssc/QuikUint empty in batch CSV package (D1+D2)	Closed	High	Warren	2026-07-21	2026-07-21	Redeliver QuikIssc+QuikUint to Sujitha	Issue_ISWL D1/D2
+Issue	Title	Status	Priority	Owner	Opened	Last_Updated	Next_Action	Resolution
+88	Blank ANN_PPU fallback → Prem/Unit × units (valuation)	Closed	High	Warren	2026-07-21	2026-07-21	Reload quikridr on network if not already done	Resolution: When ANN_PREM_PER_UNIT is blank, quikridr.MPREM now uses annualized MODE_PREMIUM ÷ NUMBER_OF_UNITS instead of full modal premium; quikmstr Mode Prem unchanged (v58.23).

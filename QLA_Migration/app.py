@@ -156,6 +156,7 @@
 #              v57.34 — Release integration: Issue 21M-FU QUIKMEMO one row per MEMOKEY (production grain).
 #              v57.33 — Issue 21M: quikmemo DBF+DBT packaged in Output/quikmemo_uat_dbf/ (hygiene skip).
 #              v57.32 — Issue 21M: QUIKMEMO from PNOTE + PENSE dual-source merge (CSV + DBF/FPT).
+#              v58.23 — Issue 88: blank ANN_PREM_PER_UNIT MPREM fallback = annualized MODE_PREMIUM / units (not raw MODE_PREMIUM).
 #              v57.31 — Issue 26: quikridr.MPREM maps ANN_PREM_PER_UNIT with MODE_PREMIUM fallback.
 #              v57.30 — QLAdmin MPOLICY fixed-width 10-char emit (leading-space left-pad after crosswalk).
 #              v57.29 — Issue 21I: quikbenf dedupe by (MPOLICY, MBENFID, MTYPE) and equal MSPLIT
@@ -454,7 +455,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.22"
+APP_VERSION = "v58.23"
 APP_BRAND = "QUIKConvert"
 APP_TAGLINE = APP_PRIMARY_TAGLINE
 
@@ -7136,6 +7137,7 @@ class QLAdminEnterpriseIntegrationSuite:
                     # ----------------------------------
 
                 quikridr_par_cache = {}
+                self._billing_mode_map = getattr(self, "_billing_mode_map", {}) or {}
                 if t_id.lower() == "quikridr":
                     try:
                         ppb_path = os.path.normpath(os.path.join(os.path.dirname(src_path), "PPBENTYP.csv"))
@@ -7152,6 +7154,44 @@ class QLAdminEnterpriseIntegrationSuite:
                                 self.log(f"Auto-loaded PPBENTYP PAR Cache for quikridr ({len(quikridr_par_cache)} records)")
                     except Exception as e:
                         self.log(f"Warning: Failed to load PPBENTYP cache for quikridr - {e}")
+                    # Issue #88: PPOLC BILLING_MODE for annualized Prem/Unit fallback
+                    try:
+                        self._billing_mode_map = {}
+                        _src_dir_i88 = os.path.dirname(src_path)
+                        _ppolc_i88 = None
+                        for _fn in os.listdir(_src_dir_i88):
+                            if (
+                                "ppolc" in _fn.lower()
+                                and _fn.lower().endswith(".csv")
+                                and not any(bad in _fn.lower() for bad in ("copy", "old", "backup", "archive"))
+                            ):
+                                _cand = os.path.normpath(os.path.join(_src_dir_i88, _fn))
+                                if _ppolc_i88 is None or os.path.getmtime(_cand) > os.path.getmtime(_ppolc_i88):
+                                    _ppolc_i88 = _cand
+                        if _ppolc_i88:
+                            _pmdf = pd.read_csv(
+                                _ppolc_i88, encoding="latin1", low_memory=False, dtype=str, on_bad_lines="skip"
+                            ).fillna("")
+                            _pmdf.columns = [str(c).strip().upper() for c in _pmdf.columns]
+                            if "POLICY_NUMBER" in _pmdf.columns and "BILLING_MODE" in _pmdf.columns:
+                                for _, _pr in _pmdf.iterrows():
+                                    _pol = self.normalize(_pr.get("POLICY_NUMBER"))
+                                    _bm = str(_pr.get("BILLING_MODE", "")).strip()
+                                    if _bm.endswith(".0"):
+                                        _bm = _bm[:-2]
+                                    if not _pol or _bm.lower() in ("", "nan", "none", "null"):
+                                        continue
+                                    try:
+                                        self._billing_mode_map[_pol] = int(float(_bm))
+                                    except (ValueError, TypeError):
+                                        continue
+                                self.log(
+                                    f"Issue #88: loaded PPOLC BILLING_MODE cache "
+                                    f"({len(self._billing_mode_map)} policies; {os.path.basename(_ppolc_i88)})"
+                                )
+                    except Exception as e:
+                        self.log(f"Warning: Issue #88 BILLING_MODE cache failed - {e}")
+                        self._billing_mode_map = {}
 
                 quikagts_clnt_cache = {}
                 if t_id.lower() == "quikagts":
@@ -7480,14 +7520,38 @@ class QLAdminEnterpriseIntegrationSuite:
                                             val = pulled_fee
                                 # -----------------------------------------------------------------
 
-                                # --- Issue 26: ANN_PREM_PER_UNIT -> MPREM; fallback MODE_PREMIUM when blank/zero ---
+                                # --- Issue 26/88: ANN_PREM_PER_UNIT -> MPREM; blank => annualized MODE_PREMIUM / units ---
                                 if t_id.lower() == "quikridr" and t_f == "MPREM":
                                     try:
                                         ann_num = float(str(val).replace(",", "").strip() or 0)
                                     except (ValueError, TypeError):
                                         ann_num = 0.0
                                     if ann_num == 0.0:
-                                        val = self.normalize(src_row.get("MODE_PREMIUM", ""))
+                                        # Issue #88: do not load full MODE_PREMIUM into Prem/Unit
+                                        try:
+                                            mode_prem = float(
+                                                str(src_row.get("MODE_PREMIUM", "")).replace(",", "").strip() or 0
+                                            )
+                                        except (ValueError, TypeError):
+                                            mode_prem = 0.0
+                                        try:
+                                            units = float(
+                                                str(src_row.get("NUMBER_OF_UNITS", "")).replace(",", "").strip() or 0
+                                            )
+                                        except (ValueError, TypeError):
+                                            units = 0.0
+                                        if units > 0.0:
+                                            pol_key = self.normalize(src_row.get("POLICY_NUMBER", ""))
+                                            bill_mode = getattr(self, "_billing_mode_map", {}).get(pol_key)
+                                            ann_factor = {12: 1.0, 6: 2.0, 3: 4.0, 1: 12.0}.get(
+                                                bill_mode if bill_mode is not None else 12, 1.0
+                                            )
+                                            annual_ppu = (mode_prem * ann_factor) / units
+                                            val = f"{annual_ppu:.6f}".rstrip("0").rstrip(".")
+                                            if val in ("", "-0"):
+                                                val = "0"
+                                        else:
+                                            val = ""
                                 # -----------------------------------------------------------------
     
                                 # --- MSTATUS COMPOSITE KEY INTERCEPTOR (Issue #13: T wins; Issue #59 scoped) ---

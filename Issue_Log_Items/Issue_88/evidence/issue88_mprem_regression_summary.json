@@ -1,0 +1,83 @@
+{
+  "joined": 6934,
+  "ann_populated_unchanged": 3775,
+  "ann_populated_changed_BAD": 0,
+  "blank_ann_changed": 1845,
+  "blank_ann_unchanged": 1314,
+  "rule_fail": 0,
+  "risk_sim_rows": 1850,
+  "risk_sim_missing_in_output": 0,
+  "risk_sim_proposed_mismatch": 1013,
+  "risk_sim_expected_changes": 1850,
+  "quikridr_rows": 6934,
+  "blank_mridrid": 0,
+  "header_match_archive": true,
+  "header_cols": 40,
+  "archive_rows_ref": 6934,
+  "table_counts": {
+    "quikmstr": 5083,
+    "quikridr": 6934,
+    "quikprmh": 209470,
+    "quikplan": 141,
+    "quikclid": 32285,
+    "quikclnt": 13597,
+    "quikbenf": 5916,
+    "quikmemo": 5083,
+    "quikactg": 87
+  },
+  "table_mtimes": {
+    "quikmstr": "2026-07-21T20:09",
+    "quikridr": "2026-07-21T20:09",
+    "quikprmh": "2026-07-21T17:14",
+    "quikplan": "2026-07-21T17:07",
+    "quikclid": "2026-07-21T17:06",
+    "quikclnt": "2026-07-21T17:05",
+    "quikbenf": "2026-07-21T17:09",
+    "quikmemo": "2026-07-21T17:23",
+    "quikactg": "2026-07-21T17:20"
+  },
+  "issue26_traces_ok": true,
+  "anchor_mprem": 5.8615,
+  "anchor_mmodeprem": 2930.75,
+  "change_examples": [
+    [
+      "010390251C",
+      "1",
+      10.0,
+      5.0,
+      5.0
+    ],
+    [
+      "010428688C",
+      "1",
+      10.44,
+      0.657369,
+      0.657369464306853
+    ],
+    [
+      "010713707C",
+      "1",
+      128.5,
+      5.14,
+      5.14
+    ],
+    [
+      "010715467C",
+      "1",
+      1129.0,
+      22.58,
+      22.58
+    ],
+    [
+      "010716973C",
+      "1",
+      263.0,
+      10.52,
+      10.52
+    ]
+  ],
+  "risk_sim_annualized_match": 1850,
+  "risk_sim_raw_proposed_match": 837,
+  "verdict": "PASS",
+  "note": "risk_sim_proposed_mismatch vs raw proposed is expected; annualized match 1850/1850"
+}

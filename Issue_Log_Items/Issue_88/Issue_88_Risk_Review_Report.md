@@ -1,105 +1,102 @@
 # Issue #88 — Risk Review Report
 
-**Issue:** #88 — ISWL QuikIssc / QuikUint empty in batch CSV package (D1 + D2)  
-**Framework stage:** Risk Agent (G3)  
-**Status:** **GO → Ready for Development** (pending explicit user approval)  
+**Issue:** #88 — Blank `ANN_PREM_PER_UNIT` fallback loads full `MODE_PREMIUM` into Prem/Unit  
+**Framework stage:** Risk Agent  
+**Status:** **Conditional Go — Ready for Development** (after user approval)  
+**Fallback simulated:** `MODE_PREMIUM / units` (raw) + mode semantics analysis  
 **Generated:** 2026-07-21  
-**Model:** Cursor Grok 4.5 (locked)  
-**Status note:** Risk analysis only — no production code changes.  
-**Depends on:** Dependency Gate **PASS** (`Issue_88_Dependency_Gate.md`)  
-**Scope locked:** `Issue_88_Scope_Decisions.md`  
-**Parent:** `Issue_ISWL` defects D1 / D2 (Sujitha 2026-07-20)
+**Agent/script:** Cursor Grok 4.5 · `QLA_Migration/_risk_review_issue88_mprem_unit_fallback.py`
+
+**Status note:** Risk analysis only — no production code changes.
 
 ---
 
 ## Go / No-Go Recommendation
 
-**GO** — Confirmed packaging/config defects with known healthy loaders and a proven correct emit pattern already in the R5 CLI. Fix restores intended Phase5/Phase6 outputs (QuikIssc **8** rows; QuikUint **32** rows) without changing rate math, allowlists, or policy conversion. Blast radius is confined to `qla_core/rate_emit.py` CSV branch + three config paths. Residual risk (partial-emit still allowing empty tables if paths break again) is mitigated by Validation gates; optional hardening listed below is **recommended but not required** for GO.
+**CONDITIONAL GO** — Fix the blank-ANN fallback so Prem/Unit is never the full phase modal premium when units > 1; Development must **annualize by billing mode before ÷ units** (not raw `MODE_PREMIUM / units` for all modes).
 
-| Factor | Assessment |
-|--------|------------|
-| Symptom | QuikIssc + QuikUint header-only in batch CSV package |
-| Root cause | D1 missing CSV writes; D2 stale 20260629 PDINT/PSEGT paths |
-| Dependency Gate | PASS |
-| Policy conversion rows impacted | **0** |
-| Rate factor/key/member tables | **Untouched** (emit order unchanged; only add Issc/Uint CSV) |
-| Loader / schedule / allowlist | **Untouched** |
-| Primary risk | Shipping wrong QuikUint if wrong PDINT file chosen |
-| Mitigation | Use present 20260630 files; validate against Phase5 baseline (32 rows / 8 MPLANs) |
-| Client answers required | **None** for this issue |
-
-Development may proceed after user says **Approved for Development** and switches to **Composer 2.5**.
+Rationale: Anchor and ISWL valuation blow-ups are real and fixed by ÷ units on annual (mode 12). Raw ÷ units alone is **wrong for monthly/quarterly/semi** because `MPREM` is defined as **annual** premium per unit.
 
 ---
 
 ## 1. Current vs Proposed Mapping
 
-This issue does **not** change LifePRO→QLAdmin field mappings. It restores missing file writes and corrects extract paths.
+| Field | Current | Proposed | Change? |
+|-------|---------|----------|---------|
+| `quikridr.MPREM` when ANN ≠ 0 | `ANN_PREM_PER_UNIT` (#26) | unchanged | **No** |
+| `quikridr.MPREM` when ANN blank/zero | raw `MODE_PREMIUM` (total) | `(MODE_PREMIUM × annualize(mode)) / NUMBER_OF_UNITS` | **Yes** |
+| `quikridr.MPREM` when units ≤ 0 | today: MODE_PREMIUM | leave blank/zero (do not divide) | **Yes** (edge) |
+| `quikmstr.MMODEPREM` | PPOLC.MODE_PREMIUM | unchanged | **No** |
 
-| Surface | Current | Proposed | Change? |
-|---------|---------|----------|---------|
-| QuikIssc loader | Builds 8 rows | Unchanged | **No** |
-| QuikUint loader | Builds 0 (missing PDINTTBL path) | Builds 32 with 20260630 paths | **Config only** |
-| `rate_emit.py` CSV branch | Omits Issc/Uint writes | Write CSV when rows present | **Yes** (surgical) |
-| `rate_emit.py` DBF branch | Already writes Issc/Uint | Unchanged | **No** |
-| `rate_loader_config.json` | `*_20260629` PDINT/PSEGT | `*_20260630` | **Yes** |
-| Factor tables (Coi/Cvs/Gps/…) | Emit as today | Unchanged | **No** |
-| Policy tables / Sync_Rulebooks | — | Unchanged | **No** |
-| `APP_VERSION` | Current | **No bump** unless Dev also edits `app.py` | Prefer **No** |
+### Annualize(mode) for LifePRO `BILLING_MODE`
+
+| BILLING_MODE | Meaning (this book) | Factor |
+|-------------:|---------------------|-------:|
+| 12 | Annual | ×1 |
+| 6 | Semi-annual | ×2 |
+| 3 | Quarterly | ×4 |
+| 1 | Monthly | ×12 |
+
+Evidence: PPOLC samples — mode 12 MODE≈ANNUAL; mode 1 MODE×12≈ANNUAL; mode 6 MODE×2≈ANNUAL.
 
 ---
 
 ## 2. Premium / Related Fields Untouched
 
-| Target | Touched? |
-|--------|----------|
-| quikmstr / quikridr / quikplan policy fields | **No** |
-| QuikGps / QuikCoi / QuikGcoi values | **No** |
-| QuikIssc SCHG schedule values | **No** (emit only) |
-| QuikUint tier rates / merge rules | **No** (config path only) |
-| Issue #25 / #26 | **No** |
-| Sync_Rulebook_*.csv | **No** |
+| Target | Source | Touched? |
+|--------|--------|----------|
+| `quikmstr.MMODEPREM` | PPOLC.MODE_PREMIUM | **No** |
+| `quikridr.MUNIT` / `MVPU` | existing | **No** |
+| `quikridr` M*FEE (#58) | existing | **No** |
+| MPOLICY padding (#25) | existing | **No** |
+| Populated ANN→MPREM (#26 primary) | existing | **No** |
 
 ---
 
-## 3. Repo References (touch points for Dev)
+## 3. Repo References
 
-| Location | Role | Risk |
-|----------|------|------|
-| `qla_core/rate_emit.py` ~208–228 | **Add** QuikUint + QuikIssc CSV writes before manifest | Low — copy DBF/CLI pattern |
-| `qla_core/rate_dbf_writer.py` | Existing `write_quik*_csv` | Read-only reuse |
-| `plan_analysis/.../rate_loader_config.json` | Repoint 3 paths | Low — files verified present |
-| `rate_loader_config.example.json` | Align example paths if stale | Docs/config only |
-| `tools/validators/iswl_quikissc_reconcile.py` | Validation gate | No code change required |
-| `tools/validators/iswl_quikuint_reconcile.py` | Validation gate | No code change required |
-| `app.py` / `QLA_Migration/app.py` | Prefer **untouched** | Avoid version churn |
+| Location | Role |
+|----------|------|
+| `QLA_Migration/app.py` ~7483–7490 | Issue #26 blank → MODE_PREMIUM interceptor |
+| `QLA_Migration/Configs/Sync_Rulebook_quikridr.csv` | ANN_PREM_PER_UNIT → MPREM |
+| `Issue_Log_Items/Issue_26/` | Prior field definition + mode_prem fallback choice |
+| `docs/Valuation/analysis/iswl_premium_times_units_*.csv` | Valuation symptom population |
 
 ---
 
-## 4. Population Analysis (package impact)
+## 4. Population Analysis
 
-| Metric | Before (7/19 package) | After (expected) |
-|--------|----------------------:|-----------------:|
-| QuikIssc data rows | **0** | **8** |
-| QuikUint data rows | **0** | **32** (4 tiers × 8 MPLANs) |
-| QuikIssc plans with SCHG | 0 | 8 incl. 1659CR / 1659SR / 1669SR |
-| Policy conversion rows changed | 0 | **0** |
-| Factor table row deltas (Coi/Cvs/Gps/…) | — | **0 expected** |
+Source: `PPBEN_PolicyBenefit_Extract_20260630` ⋈ crosswalk ⋈ `Output/quikridr.csv`  
+Script: `_risk_review_issue88_mprem_unit_fallback.py`  
+Simulation compared **current Output MPREM** vs **ANN if present else MODE_PREMIUM/units** (raw ÷ units).
 
-### QuikUint expected tiers (Phase5 baseline)
+| Metric | Count |
+|--------|------:|
+| Joined PPBEN↔quikridr rows | 6,934 |
+| ANN_PREM_PER_UNIT populated | 3,775 |
+| ANN blank/zero | 3,159 |
+| Rows that would change under raw ÷ units | **1,850** |
+| Rows unchanged | 5,084 |
+| Blank ANN with units ≤ 0 | 0 (among joined blank rows with mode prem path) |
+| No quikridr match (non-emit / UV etc.) | 4,764 |
 
-| MEFFDATE | MCURRATE / MGTDRATE |
-|----------|---------------------|
-| 19800101 | 11.0000 |
-| 19890101 | 9.0000 |
-| 19990101 | 5.0000 |
-| 20020101 | 4.5000 |
+### Changes by BILLING_MODE (raw ÷ units sim)
 
-Source: `Issue_Log_Items/Issue_32/output/baselines/iswl_quikuint_regression_baseline.json` (`quikuint_rows: 32`).
+| Mode | Meaning | Rows that would change |
+|-----:|---------|-----------------------:|
+| 12 | Annual | 837 |
+| 1 | Monthly | 714 |
+| 3 | Quarterly | 203 |
+| 6 | Semi | 96 |
 
-### QuikIssc expected schedule (Phase6)
+### Blank ANN unit buckets (joined blanks)
 
-Hub `659 CEN II` SL durations 1–14: 100,100,70,60,50,40,30,20,15,10,8,6,4,2 (%). One row per MPLAN; AGE=0; GENDER=M.
+| Units | Count |
+|-------|------:|
+| 1 | 58 |
+| 1–25 | 2,798 |
+| 25–100 | 299 |
+| >100 | 4 |
 
 ---
 
@@ -107,105 +104,111 @@ Hub `659 CEN II` SL durations 1–14: 100,100,70,60,50,40,30,20,15,10,8,6,4,2 (%
 
 | Option | Assessment |
 |--------|------------|
-| A. Fix D1 + D2 together (Planning plan) | **Recommended — GO** |
-| B. Fix D1 only (Issc); leave Uint empty | Reject — Sujitha also needs interest; same emit path |
-| C. Manual copy of Phase6 CSV into Output | Reject as permanent fix — will regress on next batch |
-| D. Invent QuikIssc rows without loader | **Reject** |
-| E. Change PARTIAL_EMIT_BLOCKERS this issue | **Optional follow-on** — do not block GO |
+| A. Keep MODE_PREMIUM total (#26 today) | **Reject** — causes Prem/Unit × units in valuation |
+| B. Raw MODE_PREMIUM / units (all modes) | **Reject as sole rule** — understates annual PPU for mode 1/3/6 |
+| C. `(MODE_PREMIUM × 12/mode) / units` | **Recommended** |
+| D. Mode-12-only ÷ units | Acceptable phased scope; leaves monthly/Q/S wrong until follow-up |
 
-**Recommended fallback if Validation fails after Dev:** revert `rate_emit.py` + config path edits; leave prior empty CSVs; do not ship partial Issc without Uint when phase5 enabled.
+**Recommended fallback:** Option **C**.  
+When ANN blank/zero and `NUMBER_OF_UNITS` > 0:  
+`MPREM = MODE_PREMIUM * (12 / BILLING_MODE) / NUMBER_OF_UNITS`  
+with BILLING_MODE from PPOLC (cache lookup during quikridr emit).  
+If BILLING_MODE missing/invalid: Risk default = treat as annual (factor 1) and log count.
 
----
-
-## 6. Trace Plans (rate package)
-
-| Plan | QuikIssc before | QuikIssc after | QuikUint before | QuikUint after |
-|------|----------------:|---------------:|----------------:|---------------:|
-| 1658CS | 0 | 1 | 0 | 4 |
-| 1659CR | 0 | 1 | 0 | 4 |
-| 1659SR | 0 | 1 | 0 | 4 |
-| 1669SR | 0 | 1 | 0 | 4 |
-| 1679CS | 0 | 1 | 0 | 4 |
-| (all 8) | 0 | 8 | 0 | 32 |
-
-No policy-level MPOLICY traces — rate tables only.
+**Note:** Quarterly may not match PPOLC `ANNUAL_PREMIUM` exactly (modal factors). Frequency annualization (×4) is still the correct semantic for “annual per unit” vs leaving full modal total in Prem/Unit.
 
 ---
 
-## 7. Material Calculation Impact
+## 6. Trace Policies
 
-| Area | Impact |
-|------|--------|
-| Surrender charge math | None — restores approved schedule to package |
-| Credited interest math | None — restores Phase5 tiers to package |
-| COI / GPS / CV | None |
-| Guideline premium / quikspec | None (out of scope) |
-| ISWL account values in QLAdmin UAT | **Positive** — Sujitha can load non-empty Issc/Uint |
+| Policy | Phase | ANN | Units | Mode | Current MPREM | Proposed (raw ÷u) | Proposed (ann. ÷u) | Pass? |
+|--------|------:|----:|------:|-----:|--------------:|------------------:|-------------------:|-------|
+| `010779727C` | 1 | 0 | 500 | 12 | 2,930.75 | **5.8615** | **5.8615** | Yes — fixes 1,465,400 val |
+| `010779727C` | 2 | 0.25 | 500 | 12 | 0.25 | 0.25 | 0.25 | Yes — ANN path |
+| `010779727C` | 4 | -169.5 | 1 | 12 | -169.5 | -169.5 | -169.5 | Yes — ANN path |
+| `010310404C` | 1 | 13.20 | 15 | — | 13.20 | 13.20 | 13.20 | Yes — #26 primary |
+| `010331768C` | 1 | 10.96 | 15 | — | 10.96 | 10.96 | 10.96 | Yes |
+| `010367131C` | 1 | 9.12 | 5.434 | — | 9.12 | 9.12 | 9.12 | Yes |
+| `010736035C` | 1 | 0 | 125 | 1 | 211.49 | 1.6919 | **~20.30** (×12) | Need ann. rule |
 
 ---
 
-## 8. Prior Fix Preservation
+## 7. Top Largest Changes (raw ÷ units vs current)
+
+| Policy | Units | Mode | Before | After (raw) | Delta |
+|--------|------:|-----:|-------:|------------:|------:|
+| `010897303C` | 14.16 | 12 | 6887.88 | 486.38 | -6401.50 |
+| `010826903C` | 21.93 | 12 | 5000.00 | 228.05 | -4771.95 |
+| `010779727C` | 500 | 12 | 2930.75 | 5.86 | -2924.89 |
+| `011072813C` | 100 | 12 | 2794.00 | 27.94 | -2766.06 |
+
+Full list: `Issue_Log_Items/Issue_88/evidence/issue88_mprem_simulated_changes.csv` (1,850 rows).
+
+These large drops are **intentional corrections** (total → per-unit), not collateral drift.
+
+---
+
+## 8. Material Calculation Impact
+
+| Impact | Intentional? |
+|--------|--------------|
+| Coverage Prem/Unit drops from full modal to per-unit rate | **Yes** — semantic fix |
+| Valuation Mode Prem stops ≈ ModePrem × units | **Yes** — symptom fix |
+| Policy header Mode Prem / `MMODEPREM` | **No change** |
+| #26 rows with populated ANN | **No change** |
+| Monthly blank-ANN if Dev uses raw ÷ units only | **Bad** — blocked by Conditional Go annualize rule |
+
+---
+
+## 9. Prior Fix Preservation
 
 | Check | Result |
 |-------|--------|
-| Issue #25 MPOLICY padding | **Preserved** (untouched) |
-| Issue #26 MPREM / MMODPREM | **Preserved** |
-| Issue #31 COI/GCOI | **Preserved** |
-| Issue #32 QuikUint design | **Preserved** — re-enable via correct paths |
-| Issue #33 QuikIssc design | **Preserved** — re-enable via CSV write |
-| Issue #40 CV inheritance | **Preserved** |
-| Issue #51 QuikAint stubs | **Preserved** (existing CSV write stays) |
-| Issue A A10 QuikUwpo | **Preserved** |
-
----
-
-## 9. Conditional soft recommendation (non-blocking)
-
-**Partial-emit silence:** `PARTIAL_EMIT_BLOCKERS` includes `V-UINT-PDINT`, `V-ISSC-RATE`, `V-ISSC-SL`, which allowed the 7/19 batch to succeed with empty Issc/Uint CSVs.
-
-| Recommendation | In #88 Dev? |
-|----------------|-------------|
-| After Fix A/B, Validation must assert non-empty Issc/Uint when phases enabled | **Yes — required** |
-| Log explicit `RATE_LOG` lines with Issc/Uint row counts on emit | **Yes — recommended** (low risk) |
-| Remove UINT/ISSC from `PARTIAL_EMIT_BLOCKERS` | **No for #88** — defer; could block CV package on transient path errors |
+| Issue #25 MPOLICY padding | **Preserve** — untouched |
+| Issue #26 ANN→MPREM when populated | **Preserve** |
+| Issue #26 blank fallback | **Replace** (this issue) |
+| `MMODEPREM` | **Preserve** |
 
 ---
 
 ## 10. Regression Testing Checklist (for Validation Agent)
 
-- [ ] QuikIssc.csv: **8** data rows; plans = full ISWL allowlist including 1659CR/1659SR/1669SR  
-- [ ] QuikIssc: AGE=0; SCHG01–14 match hub schedule; SCHG15–20 blank  
-- [ ] `iswl_quikissc_reconcile.py` PASS  
-- [ ] QuikUint.csv: **32** data rows; 4 tiers × 8 MPLANs; rates match Phase5 baseline  
-- [ ] `iswl_quikuint_reconcile.py` PASS; no `V-UINT-PDINT`  
-- [ ] `rate_csv_manifest.csv` counts match files  
-- [ ] QuikCoi / QuikGcoi / QuikGps / QuikCvs row counts unchanged vs pre-fix snapshot  
-- [ ] Publish modified rate CSVs only to `Output/Test_Validation/rates/` on PASS  
+- [ ] `010779727C` ph1: MPREM ≈ 5.8615; MMODEPREM/Mode Prem still 2,930.75
+- [ ] `010779727C` ph2/ph3/ph4: ANN-driven MPREM unchanged
+- [ ] #26 traces `010310404C` / `010331768C` / `010367131C` ph1 unchanged
+- [ ] Sample monthly blank-ANN (mode 1): MPREM ≈ (MODE_PREMIUM×12)/units, not MODE/units
+- [ ] Sample semi (mode 6): MPREM ≈ (MODE×2)/units
+- [ ] 1-unit blank ANN: numeric MPREM ≈ prior (annualized total / 1)
+- [ ] Row count `quikridr` stable; no MPOLICY width change
+- [ ] After reload: valuation Mode Prem not equal to prior Prem/Unit × units for anchor
+- [ ] Publish `Output/Test_Validation/quikridr.csv` on PASS; **no commit** unless user asks
 
 ---
 
 ## 11. Recommended Development Agent Task
 
-1. In `qla_core/rate_emit.py` CSV branch (after QuikUwpo/QuikAint, before `_write_csv_manifest`): write QuikUint.csv and QuikIssc.csv when `res.quikuint_rows` / `res.quikissc_rows` are non-empty; append manifest entries; add RATE_LOG messages with row counts.  
-2. In `rate_loader_config.json` (and example if needed): repoint `psegt_csv`, `pdint_extract`, `pdinttbl_extract` to `*_20260630.csv`.  
-3. Do **NOT** change loaders, allowlists, SL schedule, COI/GCOI, Sync_Rulebooks, or policy converters.  
-4. Prefer **no** `app.py` / `APP_VERSION` bump.  
-5. Re-run rate emit; run Issc + Uint reconcile validators; snapshot factor-table row counts for regression.  
-6. On PASS: copy `QuikIssc.csv` + `QuikUint.csv` (+ manifest if useful) to `QLA_Migration/Output/Test_Validation/rates/`.  
-7. Write `Issue_88_Implementation_Notes.md`.  
+**Model:** Composer 2.5 (locked). User must say `Approved for Development`.
 
-**Model for Development:** **Composer 2.5** (locked).
+1. In `app.py` Issue #26 interceptor (`quikridr`/`MPREM`):  
+   - If ANN ≠ 0 → keep current (#26).  
+   - If ANN blank/zero and units > 0:  
+     `val = MODE_PREMIUM * ann_factor(BILLING_MODE) / NUMBER_OF_UNITS`  
+     with `ann_factor` = `{12:1, 6:2, 3:4, 1:12}` default 1 if unknown.  
+   - BILLING_MODE via PPOLC cache (mirror `_policy_fee_map` pattern) — not on PPBEN row.  
+   - If units ≤ 0: do not emit full MODE_PREMIUM as Prem/Unit; emit blank/zero.  
+2. Update comment on `Sync_Rulebook_quikridr.csv` MPREM row.  
+3. Bump `APP_VERSION` in **both** root `app.py` and `QLA_Migration/app.py`.  
+4. Add validator `tools/validators/validate_issue88_mprem_unit_fallback.py`.  
+5. Re-batch `quikridr` for user Validation; **do not commit**.
+
+**Do NOT change:** `MMODEPREM`, fees, units, #25 padding, plan VarGP.
 
 ---
 
-## Gate decision
+## Appendix
 
-| Gate | Result |
-|------|--------|
-| G0 Intake | PASS |
-| G1 Planning | PASS |
-| G2 Dependency | PASS |
-| **G3 Risk** | **GO** |
-| Development | Awaiting user: **Approved for Development on Issue 88** (+ Composer 2.5) |
-
-**Recommended tracking status:** **Ready for Development**
+- Simulation changes: `Issue_Log_Items/Issue_88/evidence/issue88_mprem_simulated_changes.csv`
+- Summary: `Issue_Log_Items/Issue_88/evidence/issue88_risk_sim_summary.txt`
+- Scripts: `QLA_Migration/_risk_review_issue88_mprem_unit_fallback.py`, `_risk_issue88_mode_check.py`
+- Planning: `Issue_88_Planning_Report.md`
+- Gate: `Issue_88_Dependency_Gate.md` PASS

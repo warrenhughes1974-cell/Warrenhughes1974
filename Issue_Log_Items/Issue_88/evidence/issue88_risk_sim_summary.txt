@@ -1,0 +1,5 @@
+stats={'no_crosswalk': 1, 'joined': 6934, 'ann_populated': 3775, 'unchanged': 5084, 'ann_blank': 3159, 'blank_mode_per_unit': 3159, 'no_quikridr': 4764, 'would_change': 1850}
+by_mode={'12': 2150, '1': 3627, '3': 763, '6': 394}
+by_mode_blank={'12': 1311, '1': 1399, '3': 288, '6': 161}
+by_units_bucket={'1-25': 2798, '1': 58, '25-100': 299, '>100': 4}
+changes=1850

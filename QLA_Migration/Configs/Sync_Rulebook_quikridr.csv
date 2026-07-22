@@ -13,7 +13,7 @@ PAY_UP_DATE,MPAYUP,,
 ISSUE_AGE,MAGE,,
 NUMBER_OF_UNITS,MUNIT,,
 VALUE_PER_UNIT,MVPU,,
-ANN_PREM_PER_UNIT,MPREM,,Issue 26: annual premium per unit; engine fallback to MODE_PREMIUM when blank/zero
+ANN_PREM_PER_UNIT,MPREM,,Issue 26/88: annual premium per unit; blank fallback = annualized MODE_PREMIUM / NUMBER_OF_UNITS (not raw MODE_PREMIUM)
 ,MANNLFEE,,
 ,MSEMIFEE,,
 ,MQTRLFEE,,
