@@ -84,6 +84,9 @@ def spot_checks() -> list[dict]:
     dvdp = load_csv("quikdvdp.csv")
     aint = load_csv("rates/QuikAint.csv") if (OUT / "rates" / "QuikAint.csv").exists() else []
     cvs = load_csv("rates/QuikCvs.csv") if (OUT / "rates" / "QuikCvs.csv").exists() else []
+    plcv = load_csv("rates/QuikPlCv.csv") if (OUT / "rates" / "QuikPlCv.csv").exists() else []
+    pltv = load_csv("rates/QuikPlTv.csv") if (OUT / "rates" / "QuikPlTv.csv").exists() else []
+    tvs = load_csv("rates/QuikTvs.csv") if (OUT / "rates" / "QuikTvs.csv").exists() else []
     plan = load_csv("quikplan.csv")
 
     mstat = {_norm(r["MPOLICY"]): r for r in mstr}
@@ -167,6 +170,43 @@ def spot_checks() -> list[dict]:
             "GAP",
             f"17085M M/14 anchors dur3={cv06 or '(blank)'} dur85={cv975 or '(blank)'} "
             f"dur86={cv1000 or '(blank)'}",
+        )
+
+    # #96 CSO PVO + SAL MULTPL / L17 QuikPl* wiring
+    by_plan = {_norm(r.get("PLAN")): r for r in plan}
+    salmi = by_plan.get("1SALMI") or {}
+    salmi_pvo = _norm(salmi.get("PLANVALOPT")).upper() == "Y"
+    salmi_plcv_g = {
+        _norm(r.get("GENDER"))
+        for r in plcv
+        if _norm(r.get("PLAN")) == "1SALMI" and _norm(r.get("GENDER")) in ("M", "F")
+    }
+    salmi_pltv_g = {
+        _norm(r.get("GENDER"))
+        for r in pltv
+        if _norm(r.get("PLAN")) == "1SALMI" and _norm(r.get("GENDER")) in ("M", "F")
+    }
+    salmi_tvs = sum(1 for r in tvs if _norm(r.get("PLAN")) == "1SALMI")
+    l17_tvs = sum(1 for r in tvs if _norm(r.get("PLAN")) == "1L17SP")
+    if (
+        salmi_pvo
+        and salmi_plcv_g == {"M", "F"}
+        and salmi_pltv_g == {"M", "F"}
+        and salmi_tvs >= 500
+        and l17_tvs >= 30
+    ):
+        add(
+            "#96",
+            "IN_DATA",
+            f"1SALMI PVO=Y PlCv={sorted(salmi_plcv_g)} PlTv={sorted(salmi_pltv_g)} "
+            f"QuikTvs={salmi_tvs}; 1L17SP QuikTvs={l17_tvs}",
+        )
+    else:
+        add(
+            "#96",
+            "GAP",
+            f"1SALMI PVO={_norm(salmi.get('PLANVALOPT'))} PlCv={sorted(salmi_plcv_g)} "
+            f"PlTv={sorted(salmi_pltv_g)} QuikTvs={salmi_tvs}; 1L17SP QuikTvs={l17_tvs}",
         )
 
     # #44/#32 QuikLoan

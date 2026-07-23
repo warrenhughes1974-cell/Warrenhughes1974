@@ -1,6 +1,6 @@
 # Issue Log Data Accountability
 
-**Generated:** 2026-07-22T20:40:39  
+**Generated:** 2026-07-22T20:47:15  
 **Engine batch:** v57.85 full UAT Output  
 **Script:** `tools/validators/validate_issue_log_accountability.py` v1.0
 
@@ -8,7 +8,7 @@
 
 | Status | Count |
 |--------|------:|
-| IN_DATA (confirmed in Output) | 42 |
+| IN_DATA (confirmed in Output) | 43 |
 | WARN (env / known caveat) | 7 |
 | GAP (not confirmed) | 2 |
 | SKIP (no validator) | 0 |
@@ -47,6 +47,7 @@
 | #40/#41 | **IN_DATA** | QuikCvs rows=37999 |
 | #41 | **IN_DATA** | 1960PO QuikCvs rows=1000 |
 | #98 | **IN_DATA** | 17085M M/14 anchors dur3=.06 dur85=975.61 dur86=1000 |
+| #96 | **IN_DATA** | 1SALMI PVO=Y PlCv=['F', 'M'] PlTv=['F', 'M'] QuikTvs=508; 1L17SP QuikTvs=38 |
 | #44 | **IN_DATA** | quikloan rows=356 |
 | #45 | **IN_DATA** | MBANKNO populated=1824 |
 | #47 | **IN_DATA** | MBILLDAY non-zero=5083 |

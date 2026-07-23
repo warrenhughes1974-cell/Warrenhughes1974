@@ -1,9 +1,9 @@
 {
-  "generated": "2026-07-22T20:40:39",
+  "generated": "2026-07-22T20:47:15",
   "script_version": "1.0",
   "output": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
   "counts": {
-    "IN_DATA": 42,
+    "IN_DATA": 43,
     "WARN": 7,
     "GAP": 2
   },
@@ -156,6 +156,11 @@
       "id": "#98",
       "status": "IN_DATA",
       "detail": "17085M M/14 anchors dur3=.06 dur85=975.61 dur86=1000"
+    },
+    {
+      "id": "#96",
+      "status": "IN_DATA",
+      "detail": "1SALMI PVO=Y PlCv=['F', 'M'] PlTv=['F', 'M'] QuikTvs=508; 1L17SP QuikTvs=38"
     },
     {
       "id": "#44",
