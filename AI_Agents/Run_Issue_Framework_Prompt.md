@@ -2,7 +2,7 @@
 
 Copy everything below the line into Cursor. Replace the `[ISSUE BLOCK]` with your issue details.
 
-## Locked stage → model map (2026-07-11)
+## Locked stage → model map (2026-07-22)
 
 | Stage | Agent | Model |
 |-------|--------|-------|
@@ -10,12 +10,14 @@ Copy everything below the line into Cursor. Replace the `[ISSUE BLOCK]` with you
 | 2 | Planning | Cursor Grok 4.5 |
 | 3 | Dependency Gate | Cursor Grok 4.5 |
 | 4 | Risk | Cursor Grok 4.5 |
-| 5 | Development | Composer 2.5 |
+| 5 | Development | Cursor Grok 4.5 |
 | 6 | Validation | Cursor Grok 4.5 |
 | 7 | Regression | Cursor Grok 4.5 |
-| 8 | Closure | Composer 2.5 |
+| 8 | Closure | Cursor Grok 4.5 |
 
 Do **not** change this map unless the user manually overrides it. Mirror: `AI_Agents/Framework.md` and `.cursor/rules/issue-framework-stage-agents.mdc`.
+
+**Auto-chains:** Open → Intake→Planning→DG→Risk (stop for Dev approval) → after approval Dev→Validation (stop) → on Val PASS Regression→Closure.
 
 ---
 
@@ -33,16 +35,16 @@ Read and follow:
 
 Use the locked stage→model map in Framework.md.
 
-**Pre-Risk Auto-Chain (default):** In this session, run Intake → Planning → Dependency Gate
-automatically on Cursor Grok 4.5. Do not wait for a separate "proceed to Planning" prompt.
+**Pre-Development Auto-Chain (default):** Run Intake → Planning → Dependency Gate → Risk
+automatically on Cursor Grok 4.5. Stop after Risk and ask for Development approval.
 Same rule applies when the user says "open issue [ID]" with a symptom.
 
-Do NOT:
+Do NOT (before Development approval):
 - Write or modify conversion code
 - Modify Sync_Rulebook_*.csv
 - Run full batch conversion
 - Skip Dependency Gate if inputs are missing
-- Auto-run Risk, Development, or later stages
+- Start Development without explicit approval
 
 DO:
 - Research the repo, source extracts, rulebooks, QLAdmin Help, and prior Issue_Log_Items artifacts
@@ -52,15 +54,16 @@ DO:
 - Preserve Issue #25 MPOLICY padding and Issue #26 MPREM mapping in all recommendations
 - Follow AGENTS.md surgical-change rules
 
-Stop after Dependency Gate unless I explicitly say:
-"Proceed to Risk Agent" or "Approved for Development."
+After Risk GO, wait for: "Approved for Development."
+Then run Development → Validation and stop with Validation readout.
+On Validation PASS, continue Regression → Closure.
 
-At the end, report:
+At the end of the Pre-Dev chain, report:
 1. Current issue status (from Framework.md status list)
 2. Gate passed / blocked
 3. Deliverable file paths
 4. Open client questions
-5. Recommended next agent and prompt
+5. Ask for Development approval (if Risk GO)
 
 ---
 

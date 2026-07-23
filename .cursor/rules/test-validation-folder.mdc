@@ -33,3 +33,5 @@ python tools/validators/validate_issue49_mstatus.py --publish-test-validation
 | Full Output snapshot | `QLA_Migration/Output/` (root) |
 
 `Test_Validation` is for **partial UAT reload** only — not the full QLAdmin load package.
+
+**Closure (G7):** publishing to TV does **not** by itself allow Closed status. The fix must also PASS the issue validator on **full** `Output/` with accountability **IN_DATA** (see `issue-closure-output-gate.mdc`).

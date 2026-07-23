@@ -45,6 +45,7 @@ TESTING REQUIREMENTS:
 - avoid breaking stable production conversions
 - run issue validator + regression: intended policies change correctly; **non-candidate policies unchanged**
 - publish modified tables to `Output/Test_Validation/` when validation passes
+- **Closure (G7):** do not mark Closed until issue validator PASS on full `QLA_Migration/Output/` **and** accountability **IN_DATA** for that issue (`tools/validators/validate_issue_log_accountability.py`); see `.cursor/rules/issue-closure-output-gate.mdc`
 
 CHANGE RESTRICTIONS:
 - never replace entire app.py unless explicitly requested

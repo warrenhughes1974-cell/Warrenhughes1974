@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Issue Framework — Stage Agents (locked)
 
-**Authority:** User-locked 2026-07-11. **Do not change assigned agents/models unless the user manually overrides them in chat or edits this rule / `AI_Agents/Framework.md`.**
+**Authority:** User-locked 2026-07-11; **stage map + auto-chain revised 2026-07-22** (Grok 4.5 all stages; stops only at Development approval and after Validation). **Do not change unless the user manually overrides in chat or edits this rule / `AI_Agents/Framework.md`.**
 
 ## Linear stage order
 
@@ -15,31 +15,43 @@ alwaysApply: true
 | 2 | Planning | **No** | Cursor Grok 4.5 |
 | 3 | Dependency Gate | **No** | Cursor Grok 4.5 |
 | 4 | Risk | **No** | Cursor Grok 4.5 |
-| 5 | Development | **Yes** (surgical only) | Composer 2.5 |
+| 5 | Development | **Yes** (surgical only) | Cursor Grok 4.5 |
 | 6 | Validation | Read-only + scripts | Cursor Grok 4.5 |
 | 7 | Regression | Read-only + batch/compare | Cursor Grok 4.5 |
-| 8 | Closure | Docs only | Composer 2.5 |
+| 8 | Closure | Docs only | Cursor Grok 4.5 |
 
-## Pre-Risk Auto-Chain (default — locked 2026-07-15)
+## Auto-chains (default — locked 2026-07-22)
 
-When the user **opens** an issue (e.g. “open issue N”, new tracking row + symptom, or Run Framework prompt), **automatically continue** without waiting for a second prompt:
+### Pre-Development Auto-Chain (on issue open)
 
-**Intake → Planning → Dependency Gate** → then **stop**.
+**Intake → Planning → Dependency Gate → Risk** → then **stop**.
 
-Do **not** auto-run Risk, Development, Validation, Regression, or Closure. Those still need an explicit user advance (“Proceed to Risk Agent”, “Approved for Development”, etc.).
+Report Risk Go/No-Go findings and **ask for Development approval**. Do **not** start Development until the user says e.g. “Approved for Development”.
 
-**Opt-out:** User says “Intake only” / “stop after Intake” → stop after Intake for that issue.
+### Post-Development Auto-Chain (after Dev approval)
 
-**Hard stops:** missing issue ID/symptom; Dependency Gate BLOCKED; wrong session model for Grok stages (ask to switch).
+**Development → Validation** → then **stop**.
+
+Report Validation PASS/FAIL. Do **not** auto-run Regression/Closure yet.
+
+### Post-Validation Auto-Chain (after Validation PASS)
+
+When Validation **PASS**es (or user says validation is complete / proceed to Closure):
+
+**Regression → Closure** (including G7 Output accountability gate).
+
+**Opt-out:** “Intake only” / “stop after Intake” → stop after Intake. Dependency Gate **BLOCKED** → stop; do not Risk.
 
 ## Enforcement
 
-1. When the user advances an issue to a stage, **use (or recommend switching to) the assigned model** for that stage.
-2. Intake → Risk stages: **no production code** (`app.py`, rulebooks, converters).
-3. Opening an issue triggers the Pre-Risk Auto-Chain (Intake → Planning → Dependency Gate) unless the user opts out.
-4. Development cannot start until G1 + G2 + G3 pass, and only after explicit Development approval.
-5. If the current session model does not match the stage assignment, **say so** and ask the user to switch (or confirm a one-time override) before continuing that stage’s work.
-6. Canonical copy also lives in `AI_Agents/Framework.md` — keep both in sync when the user changes the map.
+1. Use Cursor Grok 4.5 for **all** stages unless the user overrides.
+2. Intake → Risk: **no production code**.
+3. Opening an issue triggers the Pre-Development Auto-Chain unless the user opts out.
+4. Development requires G1 + G2 + G3 **and** explicit Development approval.
+5. After Development approval, run Development then Validation, then stop for the Validation readout.
+6. After Validation PASS, continue Regression → Closure in the same session (or when user confirms).
+7. Canonical copy: `AI_Agents/Framework.md` — keep both in sync.
+8. **G7 Closure Output gate:** do **not** mark **Closed** until issue validator PASS on full `QLA_Migration/Output/` and accountability **IN_DATA** (see `.cursor/rules/issue-closure-output-gate.mdc`).
 
 ## Related
 

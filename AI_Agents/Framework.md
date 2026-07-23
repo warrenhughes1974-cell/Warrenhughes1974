@@ -1,10 +1,10 @@
 # LifePRO → QLAdmin Issue Resolution Framework
 
-**Version:** 1.2  
+**Version:** 1.3  
 **Project:** Warrenhughes1974 / QLA Migration  
-**Scope:** Gated issue log remediation — no code until approved  
-**Agent map locked:** 2026-07-11 — change only if the user manually overrides  
-**Pre-Risk Auto-Chain:** 2026-07-15 — Intake → Planning → Dependency Gate run as one block  
+**Scope:** Gated issue log remediation — no code until Development approved  
+**Agent map locked:** 2026-07-22 — **Cursor Grok 4.5 for all stages** (was mixed Composer/Grok)  
+**Auto-chains locked:** 2026-07-22 — Pre-Dev through Risk; Post-Dev through Validation; Post-Val through Closure  
 
 ---
 
@@ -21,29 +21,37 @@ Every issue log item must pass through the same **gated process** before product
 
 ---
 
-## Pre-Risk Auto-Chain (default)
+## Auto-Chains (default — locked 2026-07-22)
 
-When the user **opens** an issue (e.g. “open issue 73”, “start issue N”, tracking-sheet row + symptom, or the master Run prompt), the agent **must** complete stages **1 → 2 → 3 in the same session** without waiting for a separate “proceed to Planning / Dependency Gate” prompt:
+### Pre-Development Auto-Chain (on issue open)
+
+When the user **opens** an issue, complete stages **1 → 4** in the same session:
 
 | Order | Stage | Deliverable |
 |------:|-------|-------------|
 | 1 | Intake | `Issue_<ID>_Intake_Summary.md` (+ tracking row if needed) |
-| 2 | Planning | `Issue_<ID>_Planning_Report.md` (+ scope decisions / research scripts as needed) |
+| 2 | Planning | `Issue_<ID>_Planning_Report.md` |
 | 3 | Dependency Gate | `Issue_<ID>_Dependency_Gate.md` |
+| 4 | Risk | `Issue_<ID>_Risk_Review_Report.md` |
 
-**Stop after Dependency Gate.** Do **not** auto-run Risk, Development, Validation, Regression, or Closure.
+**Stop after Risk.** Report Go/No-Go findings and **ask for Development approval**.  
+Do **not** start Development until the user says e.g. “Approved for Development”.
 
-**Still require an explicit user prompt for:**
-- Risk → “Proceed to Risk Agent”
-- Development → “Approved for Development” (Composer 2.5)
-- Later stages → per `Run_Issue_Framework_Prompt.md`
+### Post-Development Auto-Chain (after Dev approval)
 
-**Hard stops inside the auto-chain:**
-- Intake incomplete (no ID / no symptom) → stop; do not Planning
-- Dependency Gate **BLOCKED** → publish gate file; status = Blocked; do not Risk
-- Session model is not Cursor Grok 4.5 → ask user to switch (or confirm override) before continuing the chain
+**Development → Validation** → then **stop**. Report Validation PASS/FAIL.
 
-**Opt-out:** User says “Intake only” or “stop after Intake” → honor that for this issue.
+### Post-Validation Auto-Chain (after Validation PASS)
+
+**Regression → Closure** (G7 Output accountability + commit/push rules still apply).
+
+**Hard stops:**
+- Intake incomplete (no ID / no symptom) → stop
+- Dependency Gate **BLOCKED** → stop; do not Risk
+- Risk **No-Go** → stop; do not ask for Development
+- Validation **FAIL** → stop; return to Development (do not Closure)
+
+**Opt-out:** “Intake only” / “stop after Intake” → stop after Intake.
 
 Mirror: `.cursor/rules/issue-framework-stage-agents.mdc`
 
@@ -80,12 +88,12 @@ flowchart TD
 | 2 | Planning | **No** | **Cursor Grok 4.5** |
 | 3 | Dependency Gate | **No** | **Cursor Grok 4.5** |
 | 4 | Risk | **No** | **Cursor Grok 4.5** |
-| 5 | Development | **Yes** (surgical only) | **Composer 2.5** |
+| 5 | Development | **Yes** (surgical only) | **Cursor Grok 4.5** |
 | 6 | Validation | Read-only + scripts | **Cursor Grok 4.5** |
 | 7 | Regression | Read-only + batch/compare | **Cursor Grok 4.5** |
-| 8 | Closure | Docs only | **Composer 2.5** |
+| 8 | Closure | Docs only | **Cursor Grok 4.5** |
 
-**Agent assignment rule:** Use the Assigned model for each stage. **Do not swap models** unless the user manually changes this table (or the matching Cursor rule `.cursor/rules/issue-framework-stage-agents.mdc`). If the session model does not match the stage, stop and ask the user to switch or confirm a one-time override.
+**Agent assignment rule:** Use **Cursor Grok 4.5** for every stage unless the user manually changes this table (or `.cursor/rules/issue-framework-stage-agents.mdc`).
 
 ---
 
@@ -100,7 +108,7 @@ flowchart TD
 | **G4 — Development complete** | Development | Surgical diff, version bump if `app.py`, validation script added |
 | **G5 — Validation pass** | Validation | Trace policies, field alignment, row counts per test plan |
 | **G6 — Regression pass** | Regression | Unrelated tables/fields unchanged; no schema drift |
-| **G7 — Closure** | Closure | **`Resolution:`** one-line fix summary published; resolution summary + tracking sheets updated; **`app.py` version bumped** if engine/rate path touched; **git commit + push to remote** (issue-scoped); **production-ready** batch verified (validators + network pull instructions) |
+| **G7 — Closure** | Closure | **`Resolution:`** one-line fix summary published; resolution summary + tracking sheets updated; **`app.py` version bumped** if engine/rate path touched; **git commit + push to remote** (issue-scoped); **Output accountability gate:** issue validator PASS on full `QLA_Migration/Output/` + accountability **IN_DATA** for this issue (no GAP) + affected tables in `Test_Validation/`; **production-ready** batch verified (validators + network pull instructions) |
 
 **Development cannot begin until G1 + G2 + G3 are satisfied.**
 
@@ -121,7 +129,7 @@ Use these statuses in issue tracking sheets and report headers:
 | **In Development** | Code/rulebook changes in progress | Complete dev + self-check |
 | **Ready for Validation** | Dev complete; awaiting proof | Run Validation Agent |
 | **Ready for Client UAT** | Validation + regression pass | Client QLAdmin review |
-| **Closed** | Resolution summary published; fix **committed and pushed** | Archive artifacts; network batch at new `app.py` version |
+| **Closed** | Resolution summary published; fix **proven in full Output** (validator PASS + accountability IN_DATA); **committed and pushed** | Archive artifacts; network batch at new `app.py` version |
 
 ---
 
@@ -135,7 +143,8 @@ Use these statuses in issue tracking sheets and report headers:
 6. Every issue must end with an **issue-log-ready resolution summary** (Closure Agent).
 7. **G7 brief resolution (required):** Closure must publish a single paste-ready line — **`Resolution:`** followed by one brief sentence stating what the fix was (**do not include engine version** in this line; version belongs in the summary header / Release column). This line goes in the resolution summary header, tracking sheets, and client readout — not only the long-form report.
 8. **G7 release gate:** When Development touched conversion or rate code, Closure must **commit issue-scoped changes and `git push` to remote** so network batch machines can pull the fix. Bump **`app.py` version** when the batch path changes.
-8. **Preserve prior fixes:** Issue #25 MPOLICY padding (`format_qladmin_mpolicy`) and Issue #26 MPREM mapping (`ANN_PREM_PER_UNIT` + fallback) must not regress.
+9. **G7 Output accountability gate:** Do **not** mark **Closed** until (a) the issue validator PASSes on **full** `QLA_Migration/Output/`, (b) `validate_issue_log_accountability.py` (or equivalent) shows this issue **IN_DATA** (GAP blocks Closure), and (c) affected tables are published to `Output/Test_Validation/`. Code-only or TV-only proof is insufficient. User waiver only, with reason + date.
+10. **Preserve prior fixes:** Issue #25 MPOLICY padding (`format_qladmin_mpolicy`) and Issue #26 MPREM mapping (`ANN_PREM_PER_UNIT` + fallback) must not regress.
 
 ---
 
@@ -210,9 +219,9 @@ Use these statuses in issue tracking sheets and report headers:
 ## How to Run
 
 1. Open an issue in chat (or paste the master prompt from `AI_Agents/Run_Issue_Framework_Prompt.md`)
-2. Agent auto-runs **Intake → Planning → Dependency Gate** (Pre-Risk Auto-Chain) on Cursor Grok 4.5
-3. Review gate result; then say **“Proceed to Risk Agent”** when ready
-4. Development and later stages still require explicit advancement; do not skip gates
+2. Agent auto-runs **Intake → Planning → Dependency Gate → Risk** on Cursor Grok 4.5, then stops and asks for Development approval
+3. Say **“Approved for Development”** → agent runs **Development → Validation**, then stops with Validation readout
+4. On Validation **PASS**, agent continues **Regression → Closure** (G7 gates still apply)
 
 ---
 

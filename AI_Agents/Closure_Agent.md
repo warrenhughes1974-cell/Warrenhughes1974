@@ -2,7 +2,7 @@
 
 **Stage:** 8 of 8  
 **Code changes:** **Prohibited** (documentation only)  
-**Assigned model (locked 2026-07-11):** **Composer 2.5** — change only if user manually overrides Framework / stage-agents rule
+**Assigned model (locked 2026-07-22):** **Cursor Grok 4.5** — change only if user manually overrides Framework / stage-agents rule
 
 ---
 
@@ -104,6 +104,19 @@ Do not close if:
 - Validation or Regression FAIL
 - Client UAT required but not completed (status stays **Ready for Client UAT**)
 - Open blocker without documented waiver
+- **Output accountability gate fails** (below) — unless the user explicitly waives with reason + date in the resolution summary
+
+### Output accountability gate (required before Closed)
+
+An issue must **not** be marked **Closed** until the fix is proven in **full** `QLA_Migration/Output/` (code-only or `Test_Validation/`-only is insufficient):
+
+1. **Issue validator PASS** on current full Output for the tables this issue owns.
+2. **Accountability IN_DATA** for this issue ID via  
+   `python tools/validators/validate_issue_log_accountability.py`  
+   (or an equivalent spot-check recorded in the resolution summary). **GAP blocks Closure.** Environmental WARN is allowed.
+3. **Publish** modified tables to `Output/Test_Validation/` on PASS (partial UAT reload).
+
+Record validator command + accountability status (**IN_DATA**) in `Issue_<ID>_Resolution_Summary.md`.
 
 ---
 
@@ -115,6 +128,9 @@ Do not close if:
 - [ ] All artifact paths linked
 - [ ] Status set to **Closed** in tracking
 - [ ] No open blockers without owner
+- [ ] **Output gate:** issue validator PASS on full `QLA_Migration/Output/`
+- [ ] **Output gate:** accountability **IN_DATA** for this issue (no GAP); evidence cited in resolution summary
+- [ ] **Output gate:** affected tables published to `Output/Test_Validation/`
 - [ ] **Production ready:** `app.py` version bumped when batch/rate path changed; validators PASS; network batch instructions documented (`Output/` gitignored → re-run emit on pull)
 - [ ] **Git release:** issue-scoped **commit** created; **`git push`** to remote completed (or user explicitly waives push with reason)
 - [ ] Commit hash + branch recorded in resolution summary
@@ -131,8 +147,14 @@ Read AI_Agents/Closure_Agent.md and Templates/Issue_Resolution_Template.md.
 
 Validation and Regression both PASS.
 
+Before marking Closed, confirm Output accountability gate:
+- issue validator PASS on full QLA_Migration/Output/
+- validate_issue_log_accountability.py shows this issue IN_DATA (GAP blocks Closure)
+- affected tables published to Output/Test_Validation/
+
 Produce Issue_<ID>_Resolution_Summary.md suitable for issue log and client readout.
 Lead with the required **`Resolution:`** one-line fix summary.
+Cite Output gate evidence (validator + IN_DATA).
 Update tracking sheet to Closed and include the same Resolution line.
 If Development touched code: bump app.py version, commit issue-scoped files, git push to remote.
 Record commit hash in resolution summary.

@@ -182,3 +182,36 @@ Notes:
 - Known non-checklist FAILED flags (pre-existing, not new this run): P3E MPLAN authority (493 rider rows on 6 PUA plan codes not in quikplan — documented in Issue #28 report); UAT DBF rehearsal QUIKCLMP MCHECKNO numeric overflow (DBF field width; CSVs unaffected); QUIKISRR PR7 candidate-count baseline mismatch (3,510 vs 3,657 expected — stale EXPECTED constant in Issue 34 PR7 emitter)
 - Output hygiene: audit CSVs moved to `Reports/`, UAT DBF + claims staging moved to `Staging/`; Output root is table CSVs + `rates/` + `Test_Validation/` only
 - Log: `QLA_Migration/Logs/_full_batch_test_log.txt` (console copy `_full_batch_0630_console.txt`)
+
+### Run 2026-07-21 (evening) — app.py v58.22 — Full batch — Source=PPOLC_…_20260630 + rates 20260713
+
+Operator: Agent (user request: 6/30 policy conversion; use 7/13 PAAGE/PAAGERAT/PDAGE)  
+Env: UAT mode; rates included; PAAGERAT/PDAGE/PAAGE `20260630` deleted before run  
+Result summary: **8 PASS** · **1 PARTIAL** · **2 BLOCKED** · **4 OPEN** (SME-gated)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | `1668SP`, `10L171`, `10L172`, `1L17SP`: PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **BLOCKED** | All 141 DEFICIENCY=N; awaiting CSO |
+| A3 | **BLOCKED** | Default PVO fleet rule awaiting Development approval |
+| A4 | **PASS** | 0 blank-PLAN rows in QuikPl* |
+| A5 | **OPEN** | Awaiting Valuation_Setup / Issue #80 |
+| A6 | **PARTIAL** | Orphan-flag logic ok; **A60MIR**, **A96DAR** still GP keys + STVARYGP=N |
+| A7 | **OPEN** | 73/141 VARGP=4 with QuikPlGp keys; awaiting Eric (Item 09) |
+| A8a | **PASS** | A-prefix PAR=0 |
+| A8b | **PASS** | A-prefix VARDB=0 |
+| A8c | **OPEN** | Awaiting Eric — annuity interest scope |
+| A8d | **OPEN** | Awaiting Eric — schg scope |
+| A8e | **PASS** | A-prefix PLANVALOPT/VARY clear |
+| A9a | **OPEN** | Supp type field name — awaiting Eric |
+| A9b | **PASS** | Prefix-9 PAR=1 count 0 |
+| A10 | **PASS** | QuikUwpo 5 rows (00/NS/PR/SM/ST); 0 dupes |
+
+Notes:
+- Source lock: `PPOLC_PolicyMaster_Extract_20260630.csv`; rates via `PAAGERAT`/`PDAGE`/`PAAGE` **20260713**; `Rate_Table_Extract_Txt.txt` LastWrite 2026-07-10
+- Exit 0 in ~26.5 min; rate loader SUCCESS blockers=0 tables=24; Issue #40 inherited CV verify PASS; Issue #88 QuikUint=32 QuikIssc=8
+- Row counts: quikmstr 5,083 · quikridr 6,934 · quikplan 141 · quikprmh 209,470 · quikbenh 41,066 · quikloan 356 · quikclms 5,594 · quikclmp 6,422 · quikrmst 733 · QuikIsrr 3,657
+- Data governance (report-only): Problems=3,320 Incomplete=27 → `Reports/data_governance/DG-20260721_172940_687378/`
+- Note: `QuikCoi.csv` / `QuikGcoi.csv` timestamps still 13:24 (not rewritten this rate pass) — other rate CSVs 17:29
+- Output hygiene: audit CSVs → `Reports/`; claims/memo UAT staging → `Staging/`
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt` (+ `_full_batch_console_20260721.txt`)

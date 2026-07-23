@@ -1,0 +1,41 @@
+---
+description: G7 Closure gate — do not mark Closed until full Output proves the fix (issue validator + accountability IN_DATA).
+alwaysApply: true
+---
+
+# Issue Closure — Output Accountability Gate (G7)
+
+**Authority:** Locked 2026-07-21. An issue may **not** be marked **Closed** on tracking sheets until the fix is proven in **full** `QLA_Migration/Output/` (not only code, not only `Test_Validation/`).
+
+## Hard rule
+
+Before status **Closed** (or “CLOSED ✓” / “RELEASED” treated as client-done):
+
+1. **Issue validator PASS** against **full** `QLA_Migration/Output/` (the tables the issue owns).
+2. **Accountability IN_DATA** for that issue ID — run or spot-check via:
+   ```text
+   python tools/validators/validate_issue_log_accountability.py
+   ```
+   The issue’s row/spot-check must be **IN_DATA** (not GAP). WARN for environmental extract gaps is allowed; **GAP blocks Closure**.
+
+3. **Affected tables published** to `Output/Test_Validation/` on PASS (see `test-validation-folder.mdc`) so partial UAT reload matches what was proven.
+
+## Do not close if
+
+| Condition | Required status instead |
+|-----------|-------------------------|
+| Issue validator FAIL / not run on current Output | Ready for Validation (or stay In Development) |
+| Accountability **GAP** for this issue | Ready for Validation — fix Output / re-batch |
+| Fix only in code or `Test_Validation`, absent from full Output | Ready for Validation — full batch required |
+| Validation/Regression PASS but Output stale vs this commit | Re-batch, then re-validate before Closure |
+
+## Waivers
+
+Only the **user** may waive this gate (document reason + date in the resolution summary). Agents must not auto-waive.
+
+## Related
+
+- `AI_Agents/Closure_Agent.md` (G7 checklist)
+- `AI_Agents/Framework.md` (G7 criteria)
+- `tools/validators/validate_issue_log_accountability.py`
+- `.cursor/rules/test-validation-folder.mdc`
