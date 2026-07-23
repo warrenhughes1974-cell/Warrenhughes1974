@@ -128,6 +128,11 @@ DEFAULT_KEY_UWCLASS = "00"
 DEFAULT_KEY_BAND = "00"
 DEFAULT_KEY_ISSCNTRY = "0000"
 DEFAULT_KEY_ISSUEST = "00"
+ISSUE96_REQUIRED_GENDER_COMPANIONS = {
+    # SAL MULTPL needs both M/F valuation keys to mirror SAL OL for CSO valuation.
+    # Factor values are not invented; these key rows enable Values=N companions.
+    "1SALMI": frozenset(("QuikPlCv", "QuikPlTv")),
+}
 
 
 def _plan_key_dims(key_rows, plan):
@@ -360,5 +365,41 @@ def ensure_gender_companion_keys(key_rows, member_rows, assumptions=None):
                     continue
                 rows.append(new_row)
                 existing_sigs.add(sig)
+                added.append((plan, kt, gender))
+    return added
+
+
+def ensure_issue96_sal_gender_companion_keys(key_rows, assumptions=None):
+    """Issue #96: durable SAL MULTPL M/F QuikPlCv/QuikPlTv setup.
+
+    `1SALMI` uses inherited SAL OL CV/TV rates and must carry the same M/F
+    assumption key rows as `1SALOL`. This is intentionally narrower than the
+    general Issue #83 member-driven companion rule because the source authority
+    is the CSO valuation setup decision for this plan.
+    """
+    assumptions = assumptions or AssumptionProvider()
+    added = []
+    for plan, required_tables in ISSUE96_REQUIRED_GENDER_COMPANIONS.items():
+        for kt in sorted(required_tables):
+            rows = key_rows.setdefault(kt, [])
+            templates = [
+                r for r in rows
+                if (r.get("PLAN") or "").strip() == plan
+                and (r.get("GENDER") or "").strip() in REAL_GENDERS
+            ]
+            if not templates:
+                continue
+            existing = {_key_signature(r) for r in rows}
+            have = {(r.get("GENDER") or "").strip() for r in templates}
+            template = sorted(templates, key=lambda r: (r.get("GENDER") or ""))[0]
+            for gender in sorted(REAL_GENDERS):
+                if gender in have:
+                    continue
+                new_row = _clone_gender_companion_key(template, kt, gender, assumptions)
+                sig = _key_signature(new_row)
+                if sig in existing:
+                    continue
+                rows.append(new_row)
+                existing.add(sig)
                 added.append((plan, kt, gender))
     return added

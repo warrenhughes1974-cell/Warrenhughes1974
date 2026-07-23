@@ -129,6 +129,46 @@ def spot_checks() -> list[dict]:
     po = sum(1 for r in cvs if _norm(r.get("PLAN")) == "1960PO")
     add("#41", "IN_DATA" if po else "GAP", f"1960PO QuikCvs rows={po}")
 
+    # #98 GL85 CV endpoint / duration placement (010398471C / 17085M M age 14)
+    def _cv_at(plan, gender, age, duration):
+        for r in cvs:
+            if _norm(r.get("PLAN")) != plan or _norm(r.get("GENDER")) != gender:
+                continue
+            try:
+                a = int(_norm(r.get("AGE")) or -1)
+                cntl = int(_norm(r.get("CNTL")) or -1)
+            except ValueError:
+                continue
+            if a != age:
+                continue
+            col = duration - cntl * 10
+            if 0 <= col <= 9:
+                return _norm(r.get(f"CV{col}"))
+        return ""
+
+    def _cv_num(s):
+        try:
+            return round(float(s), 2)
+        except ValueError:
+            return None
+
+    cv06 = _cv_at("17085M", "M", 14, 3)
+    cv975 = _cv_at("17085M", "M", 14, 85)
+    cv1000 = _cv_at("17085M", "M", 14, 86)
+    if (
+        _cv_num(cv06) == 0.06
+        and _cv_num(cv975) == 975.61
+        and _cv_num(cv1000) == 1000.0
+    ):
+        add("#98", "IN_DATA", "17085M M/14 anchors dur3=.06 dur85=975.61 dur86=1000")
+    else:
+        add(
+            "#98",
+            "GAP",
+            f"17085M M/14 anchors dur3={cv06 or '(blank)'} dur85={cv975 or '(blank)'} "
+            f"dur86={cv1000 or '(blank)'}",
+        )
+
     # #44/#32 QuikLoan
     add("#44", "IN_DATA" if len(loan) >= 300 else "GAP", f"quikloan rows={len(loan)}")
 

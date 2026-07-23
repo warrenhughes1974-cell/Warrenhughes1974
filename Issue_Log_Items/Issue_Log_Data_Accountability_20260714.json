@@ -1,10 +1,11 @@
 {
-  "generated": "2026-07-14T19:56:09",
+  "generated": "2026-07-22T20:40:39",
   "script_version": "1.0",
   "output": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
   "counts": {
-    "IN_DATA": 45,
-    "WARN": 5
+    "IN_DATA": 42,
+    "WARN": 7,
+    "GAP": 2
   },
   "results": [
     {
@@ -82,20 +83,20 @@
     {
       "id": "#58",
       "status": "IN_DATA",
-      "detail": "fee values present; format string only",
-      "exit": 1
+      "detail": "validator PASS",
+      "exit": 0
     },
     {
       "id": "#59",
-      "status": "IN_DATA",
-      "detail": "validator PASS",
-      "exit": 0
+      "status": "WARN",
+      "detail": "validator vs Output may show #49 override; check patched MSTATUS below",
+      "exit": 1
     },
     {
       "id": "#60",
-      "status": "IN_DATA",
-      "detail": "validator PASS",
-      "exit": 0
+      "status": "GAP",
+      "detail": "validate_issue60_pua_phase.py 1.0 | PUA rows checked: 494 | Other later-phase rows checked: 1357 | FAIL |   PUA 010391355C: MLASTANN != base |   PUA 010391876C: MLASTANN != base |   PUA 010391878C: MLASTANN != base |   PUA 010392930C: MLASTANN != base |   PUA 010395098C: MLASTANN != base |   PUA fleet violations: 27 (first 5 listed) |   PHASE1 delta ('010149295C', '1', '221END') MLASTANN |   PHASE1 delta ('010149295C', '1', '221END') MPREM |   PHASE1 delta ('010150031C', '1', '221END') MPREM |   Phase-1 field deltas vs baseline: 3089",
+      "exit": 1
     },
     {
       "id": "#21F",
@@ -111,9 +112,9 @@
     },
     {
       "id": "#21J",
-      "status": "IN_DATA",
-      "detail": "validator PASS",
-      "exit": 0
+      "status": "WARN",
+      "detail": "MTHB: expected 8.3298, got 0 |   quikplan 10L172 SEMI: expected 50.0000, got 0 |   quikplan 10L172 QTRL: expected 25.0035, got 0 |   quikplan 10L172 MTHD: expected 8.3298, got 0 |   quikplan 10L172 MTHB: expected 8.3298, got 0 |   quikplan 1668SP SEMI: expected 52.5017, got 0 |   quikplan 1668SP QTRL: expected 27.0007, got 0 |   quikplan 1668SP MTHD: expected 9.1997, got 0 |   quikplan 1668SP MTHB: expected 8.7966, got 0 |   quikplan 1L17SP SEMI: expected 50.0000, got 0 |   quikplan 1L17SP QTRL: expected 25.0035, got 0 |   quikplan 1L17SP MTHD: expected 8.3298, got 0 |   quikplan 1L17SP MTHB: expected 8.3298, got 0",
+      "exit": 1
     },
     {
       "id": "#21M",
@@ -144,12 +145,17 @@
     {
       "id": "#40/#41",
       "status": "IN_DATA",
-      "detail": "QuikCvs rows=38047"
+      "detail": "QuikCvs rows=37999"
     },
     {
       "id": "#41",
       "status": "IN_DATA",
-      "detail": "1960PO QuikCvs rows=1001"
+      "detail": "1960PO QuikCvs rows=1000"
+    },
+    {
+      "id": "#98",
+      "status": "IN_DATA",
+      "detail": "17085M M/14 anchors dur3=.06 dur85=975.61 dur86=1000"
     },
     {
       "id": "#44",
@@ -159,7 +165,7 @@
     {
       "id": "#45",
       "status": "IN_DATA",
-      "detail": "MBANKNO populated=2736"
+      "detail": "MBANKNO populated=1824"
     },
     {
       "id": "#47",
@@ -184,7 +190,7 @@
     {
       "id": "#54",
       "status": "IN_DATA",
-      "detail": "quikbenh=41066 types={'11': 14156, '12': 19135, '10': 4118, '8': 3657}"
+      "detail": "quikbenh=41066 types={'10': 4118, '11': 14156, '12': 19135, '8': 3657}"
     },
     {
       "id": "#55",
@@ -243,8 +249,8 @@
     },
     {
       "id": "#59:010521213C",
-      "status": "IN_DATA",
-      "detail": "MSTATUS=50 (Death Claim Pending)"
+      "status": "GAP",
+      "detail": "MSTATUS=22 (Death Claim Pending)"
     },
     {
       "id": "#60",
@@ -269,7 +275,7 @@
     {
       "id": "Claims 14-19",
       "status": "IN_DATA",
-      "detail": "clms=5771 clmp=5366"
+      "detail": "clms=5594 clmp=6422"
     },
     {
       "id": "Engine",

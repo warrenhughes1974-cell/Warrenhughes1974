@@ -44,6 +44,8 @@ def _write_dbf_manifest(res, manifest):
         manifest.append({"kind": "key", "table": key_table, "format": "dbf",
                          "path": os.path.relpath(path, ROOT), "rows": n})
     for member_table, rows in res.member_rows.items():
+        if not rows:
+            continue
         path = os.path.join(EMIT_DIR, f"{member_table}.dbf")
         n = W.write_member_table(path, member_table, rows, overwrite=True)
         manifest.append({"kind": "member", "table": member_table, "format": "dbf",
@@ -85,6 +87,8 @@ def _write_csv_manifest(res, csv_dir, manifest):
         manifest.append({"kind": "key", "table": key_table, "format": "csv",
                          "path": os.path.relpath(path, ROOT), "rows": n})
     for member_table, rows in res.member_rows.items():
+        if not rows:
+            continue
         path = os.path.join(csv_dir, f"{member_table}.csv")
         n = W.write_member_table_csv(path, member_table, rows, overwrite=True)
         manifest.append({"kind": "member", "table": member_table, "format": "csv",

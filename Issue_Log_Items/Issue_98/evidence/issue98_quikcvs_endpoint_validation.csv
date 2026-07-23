@@ -1,0 +1,6 @@
+check,plan,gender,issue_age,duration,expected,actual,result
+first_0.06,17085M,M,14,3,0.06,.06,PASS
+neighbor_lo,17085M,M,14,54,674.69,674.69,PASS
+neighbor_hi,17085M,M,14,55,688.11,688.11,PASS
+year85,17085M,M,14,85,975.61,975.61,PASS
+year86_terminal,17085M,M,14,86,1000.00,1000.00,PASS

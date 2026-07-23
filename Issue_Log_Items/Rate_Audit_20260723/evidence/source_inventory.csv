@@ -1,0 +1,18 @@
+source_name,path,exists,bytes,role
+rate_loader_config,C:\Users\warren\Documents\GitHub\Warrenhughes1974\Issue_Log_Items\Rate_Audit_20260723\evidence\audit_rate_loader_config.json,Y,5256,Config authority
+source_rate_extract,QLA_Migration/Source/Rate_Table_Extract_Txt.txt,Y,94834824,Rate_Table direct CV/DB/DV/NP/RV/PR/NF/SL source
+paagerat_pr_extract,QLA_Migration/Source/PAAGERAT_AttainedAge_Rates_Extract_20260713.csv,Y,4591730,PAAGERAT PR/BP/NF/COI/GCOI/DB source
+pdage_extract,QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260713.csv,Y,274302450,PDAGE miss-fill source
+pdint_extract,QLA_Migration/Source/PDINT_DeclaredInterestRates_Extract_20260630.csv,Y,15240,PDINT declared interest header
+pdinttbl_extract,QLA_Migration/Source/PDINTTBL_DeclaredInterestRates_Extract_20260630.csv,Y,6084,PDINTTBL declared interest tiers
+pcovrsgt_csv,plan_analysis/source_data/coverage/PCOVRSGT.csv,Y,568656,Segment hierarchy
+pcovr_csv,plan_analysis/source_data/coverage/PCOVR.csv,Y,496782,Coverage hierarchy
+psegt_csv,QLA_Migration/Source/PSEGT_Segment_Extract_20260630.csv,Y,446720,Product segment source
+plan_form_crosswalk,plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx,Y,17297,Coverage to QLA plan
+cso_mortality_crosswalk,plan_analysis/source_data/rates/CSO_Mortiality_Crosswalk.csv,Y,22252,Fallback assumption authority
+cso_valuation_setup,plan_analysis/source_data/rates/CSO_Valuation_Setup.csv,Y,2683,QuikPlCv/QuikPlTv assumption authority
+assumption_mapping_csv,plan_analysis/phase_r4_loader_architecture/business_inputs/plan_rate_key_assumption_mapping_template.csv,Y,44723,Legacy assumption map
+issue40_cv_inheritance,Issue_Log_Items/Issue_40/Issue_40_Fleet_CV_Inheritance_Audit.csv,Y,2043,Inherited CV manifest
+non_cv_rate_inheritance,Issue_Log_Items/Issue_Rates_Inheritance_Validation/non_cv_inheritance_analysis/approved_first_pass_scope.csv,Y,14187,Inherited NP/RV/DV/DB manifest
+shared_rate_candidates,Issue_Log_Items/Issue_Rates_Inheritance_Validation/master_rate_completeness/approved_shared_rate_candidates.csv,Y,18759,Shared rate candidate manifest
+quikaing_parallel,PFSA_Annuity_interest/QUIKAING.DBF,Y,3067,"Parallel annuity guaranteed-interest DBF, not main pipeline"

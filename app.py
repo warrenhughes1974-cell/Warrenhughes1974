@@ -1,10 +1,14 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.24
+# Version:     v58.26
 # Date:        2026-07-22
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.24 — Issue #89: load POLICY_FEE cache on quikridr path (ridr-only rebatch safe);
+# Change Note: v58.26 — Issue #96: CSO val PVO enablement when QuikTvs/Cvs present; 1SALMI on
+#              CSO Valuation_Setup (PlTv/PlCv = SAL OL); re-run R7B on quikplan after rate emit.
+#              v58.25 — L17 child plans inherit QuikTvs RV from segment L17 (Eric 7/22);
+#              SAL MULTPL/ML→SAL OL RV already live; L01/L05/L07/667 ART held for actuarial.
+#              v58.24 — Issue #89: load POLICY_FEE cache on quikridr path (ridr-only rebatch safe);
 #              fail-closed guard if MANNLFEE fleet wipe detected after emit.
 #              v58.22 — Issue A A10: emit QuikUwpo (UW class master) from distinct plan UW codes.
 #              v58.21 — Issue A A4/A6/A8/A9b internal QuikPlan setup fixes.
@@ -49,6 +53,8 @@
 #              v57.98 — Issue #78: recover missing quikclmp rows for claim policies with zero
 #              payments when PACTG live payout exists; Tier 1/2/3 PE/B1/estate payee fallback;
 #              append-only + Reports/issue78_quikclmp_recovery_audit.csv; quikclms unchanged.
+#              v58.27 — Rate audit fixes: durable 1SALMI M/F PlCv/PlTv keys (#96) and
+#              Issue #98 GL85 CV duration endpoint alignment.
 #              v57.97 — Wire rate loader to LifePRO 20260714 PDAGE/PAAGERAT package (Issue #42
 #              miss-fill path + plan_source_paths prefer 20260714; key/seg defaults unchanged).
 #              v57.96 — Policy-book alignment: BF_LST→3 translation; quikmstr MBILLTO 0/blank→MPAIDTO,
@@ -457,7 +463,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.24"
+APP_VERSION = "v58.27"
 APP_BRAND = "QUIKConvert"
 APP_TAGLINE = APP_PRIMARY_TAGLINE
 
@@ -3594,6 +3600,20 @@ class QLAdminEnterpriseIntegrationSuite:
             self._refresh_rate_loader_visibility()
             status = result.get("status", "UNKNOWN")
             self.log(f"RATE LOADER: completed status={status} blockers={result.get('blockers', '?')}")
+            # Issue #96: re-apply R7B PVO after rates exist so QuikTvs/Cvs plans get PLANVALOPT/GDVARY*
+            if status in ("SUCCESS", "PARTIAL") or result.get("partial_emit"):
+                try:
+                    from qla_core.quikplan_rate_variation_flags import integrate_quikplan_file
+                    out_dir = self.path_vars["Out"][0].get()
+                    qp_path = os.path.normpath(os.path.join(out_dir, "quikplan.csv"))
+                    if os.path.isfile(qp_path):
+                        r7 = integrate_quikplan_file(qp_path, repo_root=self._repo_root())
+                        self.log(
+                            f"Issue #96: post-rate quikplan PVO refresh — "
+                            f"PLANVALOPT=Y plans={r7.planvalopt_y} blockers={r7.validation_blockers}"
+                        )
+                except Exception as exc:
+                    self.log(f"Issue #96: post-rate PVO refresh skipped: {exc}")
             if not from_batch:
                 self.update_run_progress(4, detail=f"validation — status={status}")
                 self._run_output_hygiene(run_error_log)

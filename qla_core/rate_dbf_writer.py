@@ -207,6 +207,8 @@ def emit_all_rate_tables_csv(
         n = write_key_table_csv(path, key_table, rows, overwrite=overwrite)
         manifest.append({"kind": "key", "table": key_table, "path": path, "rows": n})
     for member_table, rows in member_rows.items():
+        if not rows:
+            continue
         path = os.path.join(output_dir, f"{member_table}.csv")
         n = write_member_table_csv(path, member_table, rows, overwrite=overwrite)
         manifest.append({"kind": "member", "table": member_table, "path": path, "rows": n})

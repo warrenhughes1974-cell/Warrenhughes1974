@@ -101,6 +101,8 @@ def _write_dbf_tables(res, emit_dir, manifest):
         n = W.write_key_table(path, key_table, rows, overwrite=True)
         manifest.append({"kind": "key", "table": key_table, "format": "dbf", "path": path, "rows": n})
     for member_table, rows in res.member_rows.items():
+        if not rows:
+            continue
         path = os.path.join(emit_dir, f"{member_table}.dbf")
         n = W.write_member_table(path, member_table, rows, overwrite=True)
         manifest.append({"kind": "member", "table": member_table, "format": "dbf", "path": path, "rows": n})

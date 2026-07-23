@@ -106,6 +106,10 @@
 | **#87** | QuikForge Balancing (source↔QLAdmin recon report) | **G5+G6 PASS — Ready for Client UAT** | **v58.14** | Balancing UI button + `qla_core/balancing.py`; reports → `Balancing/`. Val+Reg PASS 2026-07-19. BAL-D07 MSPLIT finding for client review. |
 | **#88** | Blank ANN_PPU fallback loads full MODE_PREMIUM into Prem/Unit (valuation × units) | **CLOSED ✓** | **v58.23** | **Resolution:** When ANN_PREM_PER_UNIT is blank, quikridr.MPREM now uses annualized MODE_PREMIUM ÷ NUMBER_OF_UNITS instead of full modal premium; quikmstr Mode Prem unchanged. Val+Reg PASS; anchor 010779727C; reload Test_Validation/quikridr.csv. |
 | **#89** | Policy fee wipe after `quikridr`-only rebatch (`MANNLFEE` / modal fees) | **CLOSED ✓** | **v58.24** | **Resolution:** Policy fees now load from LifePRO on every `quikridr` emit (including ridr-only rebatches), with a fail-closed guard so a blank fleet fee wipe cannot ship again; annual and modal fees are restored on fee-bearing policies. |
+| **#95** | Declared Interest Rates Incorrect (PDINTTBL vs QuikUint) | **Blocked — Awaiting Client Clarification** | — | Eric No-Go 7/21: PDINTTBL rates DAR/DIV/IBA/L10=3.50%, SAL=2.00%, ISWL=4.50%. Source matches; QuikUint ISWL-only today. Gate FAIL — need target screen + MPLAN scope. |
+| **#96** | CSO val cannot use SAL MULTPL / L17 RV (PVO + QuikPl* wiring) | **Validation PASS — Awaiting Regression/Closure** | **v58.26** | Durable PVO when QuikTvs/Cvs present; 1SALMI on CSO setup; post-rate R7B + A8e clear. Val PASS 2026-07-22. Reload TV quikplan + rates QuikTvs/PlTv/PlCv. |
+| **#97** | Pol fee $0 / Names modal $ wrong / Memos blank (010398471C) | **Risk Complete — Awaiting Dev approval (verify track)** | — | Output already matches Eric (10.44; S/Q/M 62.40/31.80/10.80; memo CSV full). Same stack as #21C/#36/#58/#89/#50 — likely stale UAT load. **No-Go for formula code.** |
+| **#98** | CV Endpoint Off By One (010398471C / 17085M) — #41 follow-up | **CLOSED ✓** | **v58.27** | **Resolution:** GL85 CV duration placement now starts `.06` in year 3 for male issue ages 1–17 and keeps the age-100 terminal `1000` (Eric `010398471C` / `17085M` M age 14). Val+Reg PASS; reload `Test_Validation/rates/QuikCvs.csv`. |
 | **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
 | **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
 | **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |
@@ -193,6 +197,8 @@
 **#87 detail:** `Issue_Log_Items/Issue_87/` · **G5+G6 PASS — Ready for Client UAT** · v58.14 · Val+Reg 2026-07-19 · Next: Closure Agent or client UAT (Balancing button)
 
 **#89 detail:** `Issue_Log_Items/Issue_89/` · **CLOSED ✓** · **v58.24** · `Issue_89_Resolution_Summary.md` · UAT: `Test_Validation/quikridr.csv`
+
+**#95 detail:** `Issue_Log_Items/Issue_95/` · Intake + Planning + Dependency Gate 2026-07-22 · **Gate FAIL** · Awaiting Eric: QuikUint confirm, 3.50% plan list, 668 vs 669, SALMI, history vs current-only
 
 **#59 detail:** `Issue_Log_Items/Issue_59/` · **CLOSED 2026-07-14** · **v57.84** · Resolution: seven-policy scoped MSTATUS fix (6×54→22; 010521213C→50). `Issue_59_Resolution_Summary.md`. Client UAT pending Eric.
 

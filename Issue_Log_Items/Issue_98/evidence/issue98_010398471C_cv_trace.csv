@@ -1,0 +1,6 @@
+point,source_duration,source_value,current_ql_duration,current_qla_value,eric_expected_ql_duration,eric_expected_value,result
+first_0.06,2,0.06,4,0.06,3,0.06,FAIL
+neighbor_lo,53,674.69,55,674.69,54,674.69,FAIL
+neighbor_hi,54,688.11,56,688.11,55,688.11,FAIL
+year85,84,975.61,86,975.61,85,975.61,FAIL
+year86_terminal,85,1000.0,87_TRUNCATED,,86,1000.0,FAIL

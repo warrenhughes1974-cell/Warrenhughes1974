@@ -1,0 +1,154 @@
+{
+  "_comment": "R5 rate-loader config \u2014 ISWL Phase 1 (QUIKCVS) paths. External Source files need not be in Git.",
+  "assumption_mapping_csv": "plan_analysis/phase_r4_loader_architecture/business_inputs/plan_rate_key_assumption_mapping_template.csv",
+  "cso_mortality_crosswalk": "plan_analysis/source_data/rates/CSO_Mortiality_Crosswalk.csv",
+  "cso_valuation_setup": "plan_analysis/source_data/rates/CSO_Valuation_Setup.csv",
+  "issue40_cv_inheritance": {
+    "_note": "Issue #40 \u2014 emit inherited CV rows under issuing plans via PCOVRSGT manifest.",
+    "enabled": true,
+    "fleet_audit_csv": "Issue_Log_Items/Issue_40/Issue_40_Fleet_CV_Inheritance_Audit.csv"
+  },
+  "issue42_pdage_missfill": {
+    "_note": "Issue #42 \u2014 append PDAGE age/duration rows missing from Rate_Table; segment-resolve via PCOVRSGT. Use July Source package (20260713).",
+    "approved_types": [
+      "NP",
+      "RV",
+      "CV",
+      "DB",
+      "DV",
+      "NF",
+      "NN",
+      "PN"
+    ],
+    "enabled": true,
+    "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260713.csv",
+    "staging_merged_csv": "Issue_Log_Items/Rate_Audit_20260723/evidence/audit_rate_table_pdage_missfill_merged.csv"
+  },
+  "iswl_phase1": {
+    "_note": "Validation-only; does not filter global rate emit.",
+    "quikcvs_vargp": "2"
+  },
+  "iswl_phase2": {
+    "_note": "ISWL QUIKGPS \u2014 PAAGERAT TYPE=BP, VARGP=3 attained-age scalar.",
+    "bp_mplan_allowlist": [
+      "1658CS",
+      "1659CS",
+      "1669SR",
+      "1679CS"
+    ],
+    "bp_type_code": "BP",
+    "quikgps_enabled": true
+  },
+  "iswl_phase3": {
+    "_note": "ISWL QUIKCOI \u2014 PAAGERAT TYPE=U6, VARGP=3 attained-age scalar.",
+    "coi_mplan_allowlist": [
+      "1658CS",
+      "1679CS"
+    ],
+    "coi_type_code": "U6",
+    "quikcoi_enabled": true
+  },
+  "iswl_phase4": {
+    "_note": "ISWL QUIKGCOI \u2014 PAAGERAT TYPE=U5, VARGP=3 attained-age scalar.",
+    "gcoi_mplan_allowlist": [
+      "1679CS"
+    ],
+    "gcoi_type_code": "U5",
+    "quikgcoi_enabled": true
+  },
+  "iswl_phase5": {
+    "_note": "ISWL QUIKUINT \u2014 PDINT CENII/A1 union_merge historical tiers \u2192 QuikUint.",
+    "dint_rule_tiebreak": "3",
+    "dint_rules": [
+      "0",
+      "3"
+    ],
+    "emit_mode": "union_merge",
+    "g1_mode": "mirror_a1",
+    "mplan_allowlist": [
+      "1658C1",
+      "1658CS",
+      "1659C2",
+      "1659CR",
+      "1659CS",
+      "1659SR",
+      "1669SR",
+      "1679CS"
+    ],
+    "pdint_ident": "CENII",
+    "quikuint_enabled": true,
+    "type_code": "A1"
+  },
+  "iswl_phase6": {
+    "_note": "ISWL QUIKISSC \u2014 Rate_Table TYPE=SL hub schedule \u2192 QuikIssc (8 rows).",
+    "emit_mode": "duration_pivot",
+    "hub_segment_id": "659 CEN II",
+    "iss_cntry_default": "0000",
+    "iss_state_default": "00",
+    "mplan_allowlist": [
+      "1658C1",
+      "1658CS",
+      "1659C2",
+      "1659CR",
+      "1659CS",
+      "1659SR",
+      "1669SR",
+      "1679CS"
+    ],
+    "quikissc_enabled": true,
+    "rate_coverage_id": "659 CEN II",
+    "rate_source": "rate_table_sl",
+    "rate_type_code": "SL",
+    "replicate_hub_to_all_mplans": true,
+    "schg_max_duration": 20,
+    "schg_populated_duration": 14
+  },
+  "non_cv_rate_inheritance": {
+    "_note": "First-pass inherited non-CV rates (NP/RV/DV/DB) from approved manifest.",
+    "approved_types": [
+      "NP",
+      "RV",
+      "DV",
+      "DB"
+    ],
+    "enabled": true,
+    "manifest_csv": "Issue_Log_Items/Issue_Rates_Inheritance_Validation/non_cv_inheritance_analysis/approved_first_pass_scope.csv"
+  },
+  "paagerat_pr_extract": "QLA_Migration/Source/PAAGERAT_AttainedAge_Rates_Extract_20260713.csv",
+  "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
+  "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
+  "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260713.csv",
+  "pdint_extract": "QLA_Migration/Source/PDINT_DeclaredInterestRates_Extract_20260630.csv",
+  "pdinttbl_extract": "QLA_Migration/Source/PDINTTBL_DeclaredInterestRates_Extract_20260630.csv",
+  "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",
+  "psegt_csv": "QLA_Migration/Source/PSEGT_Segment_Extract_20260630.csv",
+  "segmentation_defaults": {
+    "effdate": "19000101",
+    "isscntry": "0000",
+    "issuest": "00",
+    "source_decimals": 2
+  },
+  "shared_rate_candidates": {
+    "_note": "Rate-completeness shared/inherited candidates from master inventory; confirmed target tables only.",
+    "candidate_csv": "Issue_Log_Items/Issue_Rates_Inheritance_Validation/master_rate_completeness/approved_shared_rate_candidates.csv",
+    "enabled": true
+  },
+  "source_rate_extract": "QLA_Migration/Source/Rate_Table_Extract_Txt.txt",
+  "wave2_db": {
+    "_note": "Wave 2 QUIKDBS \u2014 PAAGERAT TYPE=DB, VARDB=3 attained-age scalar (Option B).",
+    "db_mplan_allowlist": [
+      "130JEB",
+      "1970JB",
+      "542STR",
+      "578STR",
+      "719CDT",
+      "7619DT",
+      "7619PU",
+      "7647FP",
+      "7647SP",
+      "7690DT"
+    ],
+    "db_type_code": "DB",
+    "quikdbs_enabled": true
+  }
+}

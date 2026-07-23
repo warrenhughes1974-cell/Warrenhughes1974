@@ -364,6 +364,9 @@ def run(config_path, repo_root):
     res.gender_companion_keys = K.ensure_gender_companion_keys(
         res.key_rows, res.member_rows, assumptions=assumptions,
     )
+    res.gender_companion_keys.extend(
+        K.ensure_issue96_sal_gender_companion_keys(res.key_rows, assumptions=assumptions)
+    )
     # Issue #77: member codes for stub keys (e.g. GENDER=0 / UW=00)
     MB.ensure_members_for_keys(res.member_rows, res.key_rows, effdate=config.effdate)
 

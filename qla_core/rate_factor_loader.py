@@ -76,6 +76,8 @@ def cv_lifepro_first_duration(sex, age_int):
     if sex == "M":
         if age_int == 0:
             return 7
+        if 1 <= age_int <= 17:
+            return 3
         if 18 <= age_int <= 22:
             return 4
         if age_int >= 24:

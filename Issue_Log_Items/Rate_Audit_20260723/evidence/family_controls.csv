@@ -1,0 +1,11 @@
+check_id,area,status,detail
+RA-CV-098-01,CV,PASS,17085M M/14 .06 at duration 3; expected=0.06; actual=.06
+RA-CV-098-02,CV,PASS,17085M M/14 975.61 at duration 85; expected=975.61; actual=975.61
+RA-CV-098-03,CV,PASS,17085M M/14 1000 at duration 86; expected=1000.00; actual=1000.00
+RA-GATE-001,pipeline,PASS,Pipeline blockers: none
+RA-UINT-001,interest,PASS,QuikUint PDINTTBL dependency clear
+RA-COI-001,coi,PASS,No forbidden QuikPlCoi/QuikPlGcoi companion files
+RA-MANIFEST-001,manifest,PASS,rate_csv_manifest row counts match current CSVs
+RA-AING-001,annuity_interest,PASS,QuikAing documented as separate follow-up scope
+RA-QLA-001,qla_export,PENDING,QLAdmin export directory: (not provided)
+RA-TV-001,test_validation,PASS,3 Test_Validation rate files; stale/different vs Output: none

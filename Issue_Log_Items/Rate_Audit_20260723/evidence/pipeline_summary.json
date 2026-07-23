@@ -1,0 +1,376 @@
+{
+  "age_capping": {
+    "cap_induced_collisions_resolved": 491,
+    "groups": 334,
+    "rows_capped": 499,
+    "rule": "AGE>99 -> 99 (QLAdmin AGE is C2); audited, non-blocking. Capped cells colliding with genuine AGE 99 data yield to the genuine value (retained), capped value dropped + audited."
+  },
+  "assumption_dependencies_deferred": 74,
+  "emit_ready": true,
+  "excluded_type_codes": {
+    "BP": {
+      "distinct_coverage_ids": 8,
+      "rows": 7005
+    },
+    "CV": {
+      "distinct_coverage_ids": 40,
+      "rows": 13936
+    },
+    "DB": {
+      "distinct_coverage_ids": 10,
+      "rows": 2512
+    },
+    "JT": {
+      "distinct_coverage_ids": 1,
+      "rows": 575
+    },
+    "NC": {
+      "distinct_coverage_ids": 4,
+      "rows": 3775
+    },
+    "NF": {
+      "distinct_coverage_ids": 4,
+      "rows": 2552
+    },
+    "NN": {
+      "distinct_coverage_ids": 16,
+      "rows": 118642
+    },
+    "NP": {
+      "distinct_coverage_ids": 7,
+      "rows": 5015
+    },
+    "PN": {
+      "distinct_coverage_ids": 15,
+      "rows": 110852
+    },
+    "PR": {
+      "distinct_coverage_ids": 136,
+      "rows": 84513
+    },
+    "PU": {
+      "distinct_coverage_ids": 14,
+      "rows": 11115
+    },
+    "RD": {
+      "distinct_coverage_ids": 10,
+      "rows": 60
+    },
+    "RV": {
+      "distinct_coverage_ids": 8,
+      "rows": 4565
+    },
+    "SL": {
+      "distinct_coverage_ids": 2,
+      "rows": 24
+    },
+    "TP": {
+      "distinct_coverage_ids": 2,
+      "rows": 22840
+    },
+    "TX": {
+      "distinct_coverage_ids": 1,
+      "rows": 19780
+    },
+    "U5": {
+      "distinct_coverage_ids": 3,
+      "rows": 2685
+    },
+    "U6": {
+      "distinct_coverage_ids": 3,
+      "rows": 4000
+    },
+    "UF": {
+      "distinct_coverage_ids": 1,
+      "rows": 1
+    },
+    "YP": {
+      "distinct_coverage_ids": 1,
+      "rows": 585
+    }
+  },
+  "factor_rows_by_family": {
+    "CASH_VALUE": {
+      "distinct_keys": 37999,
+      "distinct_plans": 46,
+      "factor_rows": 37999
+    },
+    "CURRENT_COI": {
+      "distinct_keys": 792,
+      "distinct_plans": 2,
+      "factor_rows": 792
+    },
+    "DEATH_BENEFIT": {
+      "distinct_keys": 2513,
+      "distinct_plans": 23,
+      "factor_rows": 2513
+    },
+    "DIVIDEND": {
+      "distinct_keys": 6452,
+      "distinct_plans": 20,
+      "factor_rows": 6452
+    },
+    "GROSS_PREMIUM": {
+      "distinct_keys": 11983,
+      "distinct_plans": 109,
+      "factor_rows": 11983
+    },
+    "GUARANTEED_COI": {
+      "distinct_keys": 198,
+      "distinct_plans": 1,
+      "factor_rows": 198
+    },
+    "NET_PREMIUM": {
+      "distinct_keys": 52647,
+      "distinct_plans": 76,
+      "factor_rows": 52647
+    },
+    "NONFORFEITURE_FACTOR": {
+      "distinct_keys": 20217,
+      "distinct_plans": 23,
+      "factor_rows": 20217
+    },
+    "TERMINAL_RESERVE": {
+      "distinct_keys": 53970,
+      "distinct_plans": 84,
+      "factor_rows": 53970
+    }
+  },
+  "format_observations": {
+    "does_not_fit": 0,
+    "precision_reduced": 260
+  },
+  "issue40_cv_inheritance": {
+    "issuing_plans": [
+      "1666AI",
+      "1668SP",
+      "17085M",
+      "1L10SO",
+      "1L10SR",
+      "1SALMI",
+      "1SALML",
+      "261PUA",
+      "265PUA",
+      "280PUA"
+    ],
+    "manifest_entries": 10,
+    "row_status": {
+      "EXCLUDED": 1862,
+      "IN_SCOPE": 101885
+    }
+  },
+  "issue42_pdage_missfill": {
+    "enabled": true,
+    "merge": {
+      "reused": true,
+      "staging_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items/Rate_Audit_20260723/evidence/audit_rate_table_pdage_missfill_merged.csv"
+    },
+    "row_status": {}
+  },
+  "key_tables": {
+    "QuikPlCv": 236,
+    "QuikPlDb": 215,
+    "QuikPlDv": 215,
+    "QuikPlGp": 287,
+    "QuikPlTv": 286
+  },
+  "member_placeholders_deferred": {
+    "BDLOWVAL": 129,
+    "MLOANINT": 129,
+    "TERMDATE": 129
+  },
+  "member_tables": {
+    "QuikAint": 0,
+    "QuikIssc": 0,
+    "QuikPlBd": 129,
+    "QuikPlGd": 217,
+    "QuikPlNb": 129,
+    "QuikPlSt": 129,
+    "QuikPlUw": 187,
+    "QuikUint": 0
+  },
+  "non_cv_rate_inheritance": {
+    "issuing_plans": [
+      "10L171",
+      "10L172",
+      "117JPO",
+      "1666AI",
+      "1668SP",
+      "1669SR",
+      "1679CS",
+      "170588",
+      "17085M",
+      "17MJPO",
+      "1L10OD",
+      "1L10PR",
+      "1L10SO",
+      "1SALMI",
+      "1SALML",
+      "7687J3"
+    ],
+    "manifest_entries": 28,
+    "rate_types": [
+      "DB",
+      "DV",
+      "NP",
+      "RV"
+    ],
+    "row_status": {
+      "IN_SCOPE": 377280
+    }
+  },
+  "paagerat_bp": {
+    "bp_plan_count": 0,
+    "enabled": true,
+    "mplan_allowlist": [
+      "1658CS",
+      "1659CS",
+      "1669SR",
+      "1679CS"
+    ],
+    "row_status": {}
+  },
+  "paagerat_coi": {
+    "coi_plan_count": 2,
+    "enabled": true,
+    "mplan_allowlist": [
+      "1658CS",
+      "1679CS"
+    ],
+    "row_status": {
+      "EXCLUDED": 31108,
+      "IN_SCOPE": 1000
+    }
+  },
+  "paagerat_db": {
+    "db_plan_count": 10,
+    "enabled": true,
+    "grid_mode": "VARDB=3 attained-age (SEQ->AGE, CNTL=00/DB0)",
+    "mplan_allowlist": [
+      "130JEB",
+      "1970JB",
+      "542STR",
+      "578STR",
+      "719CDT",
+      "7619DT",
+      "7619PU",
+      "7647FP",
+      "7647SP",
+      "7690DT"
+    ],
+    "row_status": {
+      "EXCLUDED": 31480,
+      "IN_SCOPE": 628
+    }
+  },
+  "paagerat_gcoi": {
+    "enabled": true,
+    "gcoi_plan_count": 1,
+    "mplan_allowlist": [
+      "1679CS"
+    ],
+    "row_status": {
+      "EXCLUDED": 31708,
+      "IN_SCOPE": 400
+    }
+  },
+  "paagerat_nf": {
+    "grid_mode": "VARGP=3 attained-age (SEQ->AGE, CNTL=00/NFF0)",
+    "row_status": {
+      "EXCLUDED": 31470,
+      "IN_SCOPE": 638
+    }
+  },
+  "paagerat_pr": {
+    "grid_mode": "VARGP=3 attained-age (SEQ->AGE, CNTL=00/GP0)",
+    "row_status": {
+      "BAD_VALUE": 2121,
+      "EXCLUDED": 11536,
+      "IN_SCOPE": 13331,
+      "SEGMENT_UNRESOLVED": 5120
+    },
+    "vargp3_plan_count": 86
+  },
+  "phase": "RATE_AUDIT",
+  "quikissc": {
+    "distinct_plans": 8,
+    "enabled": true,
+    "row_count": 8,
+    "status": {
+      "HUB_DURATIONS": 14,
+      "MPLANS": 8,
+      "ROWS_EMITTED": 8
+    }
+  },
+  "quikuint": {
+    "distinct_mplans": 8,
+    "enabled": true,
+    "row_count": 32,
+    "status": {
+      "MPLANS": 8,
+      "ROWS_EMITTED": 32,
+      "UNION_MERGE": 4
+    }
+  },
+  "row_status": {
+    "BAD_VALUE": 5993,
+    "EXCLUDED": 415032,
+    "IN_SCOPE": 1550942,
+    "PLAN_UNRESOLVED": 1864,
+    "SEGMENT_UNRESOLVED": 5120
+  },
+  "shared_rate_candidates": {
+    "issuing_plans": [
+      "1658C1",
+      "1658CS",
+      "1659C2",
+      "1659CR",
+      "1659CS",
+      "1659SR",
+      "1668SP",
+      "1669SR",
+      "1679CS",
+      "170588",
+      "17085M",
+      "1L1095",
+      "1L10OD",
+      "1L10SO",
+      "1L10SR",
+      "1SALMI",
+      "1SALML",
+      "261PUA",
+      "265PUA",
+      "280PUA",
+      "719CTR",
+      "960ADB"
+    ],
+    "manifest_entries": 43,
+    "rate_types": [
+      "DB",
+      "DV",
+      "NF",
+      "NP",
+      "PR",
+      "RV"
+    ],
+    "row_status": {
+      "BAD_VALUE": 3872,
+      "IN_SCOPE": 135853
+    }
+  },
+  "source": "Issue_Log_Items/Rate_Audit_20260723/evidence/audit_rate_loader_config.json",
+  "validation": {
+    "blocker_count": 0,
+    "by_id": {
+      "AGE_CAPPED_TO_99": 334,
+      "AGE_CAP_COLLISION_RESOLVED": 24,
+      "V06": 638,
+      "V10": 260,
+      "V15": 74
+    },
+    "by_severity": {
+      "WARNING": 1330
+    },
+    "total_issues": 1330
+  }
+}
