@@ -112,6 +112,6 @@ Revert v58.27 rate-loader changes and re-emit `Output/rates` from prior commit. 
 
 | Field | Value |
 |-------|-------|
-| Commit | *(filled after commit)* |
+| Commit | `0b122984a68125558fd5c7f13f44814d8cba4cb7` |
 | Branch | `issue-34-pr7-quikisrr` |
 | Remote | `origin` |
