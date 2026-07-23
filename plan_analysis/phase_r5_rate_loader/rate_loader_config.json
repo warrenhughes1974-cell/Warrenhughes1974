@@ -1,18 +1,18 @@
 {
   "_comment": "R5 rate-loader config — ISWL Phase 1 (QUIKCVS) paths. External Source files need not be in Git.",
   "source_rate_extract": "QLA_Migration/Source/Rate_Table_Extract_Txt.txt",
-  "paagerat_pr_extract": "QLA_Migration/Source/PAAGERAT_AttainedAge_Rates_Extract_20260714.csv",
+  "paagerat_pr_extract": "QLA_Migration/Source/PAAGERAT_AttainedAge_Rates_Extract_20260713.csv",
   "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
   "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
   "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",
   "cso_mortality_crosswalk": "plan_analysis/source_data/rates/CSO_Mortiality_Crosswalk.csv",
   "cso_valuation_setup": "plan_analysis/source_data/rates/CSO_Valuation_Setup.csv",
   "psegt_csv": "QLA_Migration/Source/PSEGT_Segment_Extract_20260630.csv",
-  "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260714.csv",
+  "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260713.csv",
   "issue42_pdage_missfill": {
-    "_note": "Issue #42 — append PDAGE age/duration rows missing from Rate_Table; segment-resolve via PCOVRSGT. Prefer 20260714 package.",
+    "_note": "Issue #42 — append PDAGE age/duration rows missing from Rate_Table; segment-resolve via PCOVRSGT. Use July Source package (20260713).",
     "enabled": true,
-    "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260714.csv",
+    "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260713.csv",
     "staging_merged_csv": "QLA_Migration/Staging/rate_table_pdage_missfill_merged.csv",
     "approved_types": ["NP", "RV", "CV", "DB", "DV", "NF", "NN", "PN"]
   },

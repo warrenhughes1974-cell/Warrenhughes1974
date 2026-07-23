@@ -48,5 +48,6 @@ qla_plan,lifepro_plan,QuikPlCv_MORT,QuikPlCv_ETIMORT,QuikPlCv_NFOINT,QuikPlCv_IN
 10L172,L17 2+,A1,C1,A,0,A1,A,1,0,False,False
 17MJPO,L17 2+ JPO,A1,C1,A,0,A1,A,1,0,False,False
 1L17SP,L17 BASE,A1,C1,A,0,A1,A,1,0,False,False
+1SALMI,SAL MULTPL,O1,Q1,4,0,O1,4,1,0,False,False
 1SALML,SAL ML,O1,Q1,4,0,O1,4,1,0,False,False
 1SALOL,SAL OL,O1,Q1,4,0,O1,4,1,0,False,False

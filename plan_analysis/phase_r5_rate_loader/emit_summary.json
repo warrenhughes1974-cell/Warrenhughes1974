@@ -1,59 +1,65 @@
 {
   "phase": "R5 GUARDED EMIT",
-  "source": "plan_analysis/source_data/rates/Rate_Table_Extract_20260427.csv",
+  "source": "QLA_Migration/Source/Rate_Table_Extract_Txt.txt",
   "row_status": {
-    "IN_SCOPE": 785080,
-    "EXCLUDED": 439479,
-    "BAD_VALUE": 2121
+    "IN_SCOPE": 1550942,
+    "EXCLUDED": 415032,
+    "PLAN_UNRESOLVED": 1864,
+    "SEGMENT_UNRESOLVED": 5120,
+    "BAD_VALUE": 5993
   },
   "excluded_type_codes": {
     "BP": {
-      "rows": 4180,
-      "distinct_coverage_ids": 7
+      "rows": 7005,
+      "distinct_coverage_ids": 8
     },
     "CV": {
-      "rows": 9616,
-      "distinct_coverage_ids": 36
+      "rows": 13936,
+      "distinct_coverage_ids": 40
     },
     "DB": {
       "rows": 2512,
       "distinct_coverage_ids": 10
     },
+    "JT": {
+      "rows": 575,
+      "distinct_coverage_ids": 1
+    },
     "NC": {
-      "rows": 2760,
-      "distinct_coverage_ids": 3
+      "rows": 3775,
+      "distinct_coverage_ids": 4
     },
     "NF": {
-      "rows": 84477,
-      "distinct_coverage_ids": 10
+      "rows": 2552,
+      "distinct_coverage_ids": 4
     },
     "NN": {
       "rows": 118642,
       "distinct_coverage_ids": 16
     },
     "NP": {
-      "rows": 3800,
-      "distinct_coverage_ids": 6
+      "rows": 5015,
+      "distinct_coverage_ids": 7
     },
     "PN": {
       "rows": 110852,
       "distinct_coverage_ids": 15
     },
     "PR": {
-      "rows": 45319,
-      "distinct_coverage_ids": 79
+      "rows": 84513,
+      "distinct_coverage_ids": 136
     },
     "PU": {
-      "rows": 7020,
-      "distinct_coverage_ids": 10
+      "rows": 11115,
+      "distinct_coverage_ids": 14
     },
     "RD": {
-      "rows": 40,
-      "distinct_coverage_ids": 8
+      "rows": 60,
+      "distinct_coverage_ids": 10
     },
     "RV": {
-      "rows": 3280,
-      "distinct_coverage_ids": 6
+      "rows": 4565,
+      "distinct_coverage_ids": 8
     },
     "SL": {
       "rows": 24,
@@ -68,48 +74,23 @@
       "distinct_coverage_ids": 1
     },
     "U5": {
-      "rows": 1468,
-      "distinct_coverage_ids": 2
+      "rows": 2685,
+      "distinct_coverage_ids": 3
     },
     "U6": {
-      "rows": 2400,
-      "distinct_coverage_ids": 2
+      "rows": 4000,
+      "distinct_coverage_ids": 3
     },
     "UF": {
       "rows": 1,
       "distinct_coverage_ids": 1
     },
     "YP": {
-      "rows": 468,
+      "rows": 585,
       "distinct_coverage_ids": 1
     }
   },
   "factor_rows_by_family": {
-    "CASH_VALUE": {
-      "factor_rows": 26495,
-      "distinct_keys": 26495,
-      "distinct_plans": 36
-    },
-    "GROSS_PREMIUM": {
-      "factor_rows": 12567,
-      "distinct_keys": 12567,
-      "distinct_plans": 88
-    },
-    "DIVIDEND": {
-      "factor_rows": 3978,
-      "distinct_keys": 3978,
-      "distinct_plans": 15
-    },
-    "TERMINAL_RESERVE": {
-      "factor_rows": 26097,
-      "distinct_keys": 26097,
-      "distinct_plans": 49
-    },
-    "DEATH_BENEFIT": {
-      "factor_rows": 1380,
-      "distinct_keys": 1380,
-      "distinct_plans": 10
-    },
     "CURRENT_COI": {
       "factor_rows": 792,
       "distinct_keys": 792,
@@ -121,75 +102,110 @@
       "distinct_plans": 1
     },
     "NET_PREMIUM": {
-      "factor_rows": 26650,
-      "distinct_keys": 26650,
-      "distinct_plans": 47
+      "factor_rows": 52647,
+      "distinct_keys": 52647,
+      "distinct_plans": 76
+    },
+    "TERMINAL_RESERVE": {
+      "factor_rows": 53970,
+      "distinct_keys": 53970,
+      "distinct_plans": 84
+    },
+    "DEATH_BENEFIT": {
+      "factor_rows": 2513,
+      "distinct_keys": 2513,
+      "distinct_plans": 23
+    },
+    "NONFORFEITURE_FACTOR": {
+      "factor_rows": 20217,
+      "distinct_keys": 20217,
+      "distinct_plans": 23
+    },
+    "GROSS_PREMIUM": {
+      "factor_rows": 11983,
+      "distinct_keys": 11983,
+      "distinct_plans": 109
+    },
+    "DIVIDEND": {
+      "factor_rows": 6452,
+      "distinct_keys": 6452,
+      "distinct_plans": 20
+    },
+    "CASH_VALUE": {
+      "factor_rows": 37999,
+      "distinct_keys": 37999,
+      "distinct_plans": 46
     }
   },
   "key_tables": {
-    "QuikPlCv": 70,
-    "QuikPlDb": 12,
-    "QuikPlTv": 112,
-    "QuikPlDv": 20,
-    "QuikPlGp": 205
+    "QuikPlCv": 236,
+    "QuikPlDb": 215,
+    "QuikPlTv": 286,
+    "QuikPlDv": 215,
+    "QuikPlGp": 287
   },
   "member_tables": {
-    "QuikPlGd": 178,
-    "QuikPlUw": 145,
-    "QuikPlBd": 130,
-    "QuikPlSt": 111,
-    "QuikPlNb": 111,
+    "QuikPlGd": 217,
+    "QuikPlUw": 187,
+    "QuikPlBd": 129,
+    "QuikPlSt": 129,
+    "QuikPlNb": 129,
     "QuikUint": 0,
+    "QuikAint": 0,
     "QuikIssc": 0
   },
   "member_placeholders_deferred": {
-    "BDLOWVAL": 130,
-    "MLOANINT": 111,
-    "TERMDATE": 111
+    "BDLOWVAL": 129,
+    "MLOANINT": 129,
+    "TERMDATE": 129
   },
   "age_capping": {
-    "groups": 312,
-    "rows_capped": 469,
-    "cap_induced_collisions_resolved": 466,
+    "groups": 334,
+    "rows_capped": 499,
+    "cap_induced_collisions_resolved": 491,
     "rule": "AGE>99 -> 99 (QLAdmin AGE is C2); audited, non-blocking. Capped cells colliding with genuine AGE 99 data yield to the genuine value (retained), capped value dropped + audited."
   },
   "validation": {
-    "total_issues": 711,
+    "total_issues": 1330,
     "by_severity": {
-      "WARNING": 710,
-      "BLOCKER": 1
+      "WARNING": 1330
     },
     "by_id": {
       "V10": 260,
-      "V15": 116,
-      "AGE_CAPPED_TO_99": 312,
-      "AGE_CAP_COLLISION_RESOLVED": 22,
-      "V-UINT-PDINT": 1
+      "V06": 638,
+      "V15": 74,
+      "AGE_CAPPED_TO_99": 334,
+      "AGE_CAP_COLLISION_RESOLVED": 24
     },
-    "blocker_count": 1
+    "blocker_count": 0
   },
   "format_observations": {
     "does_not_fit": 0,
     "precision_reduced": 260
   },
-  "assumption_dependencies_deferred": 116,
-  "emit_ready": false,
+  "assumption_dependencies_deferred": 74,
+  "emit_ready": true,
   "paagerat_pr": {
-    "vargp3_plan_count": 77,
+    "vargp3_plan_count": 86,
     "row_status": {
-      "IN_SCOPE": 12392,
-      "EXCLUDED": 9911,
-      "BAD_VALUE": 2121
+      "IN_SCOPE": 13331,
+      "SEGMENT_UNRESOLVED": 5120,
+      "BAD_VALUE": 2121,
+      "EXCLUDED": 11536
     },
     "grid_mode": "VARGP=3 attained-age (SEQ->AGE, CNTL=00/GP0)"
   },
+  "paagerat_nf": {
+    "row_status": {
+      "EXCLUDED": 31470,
+      "IN_SCOPE": 638
+    },
+    "grid_mode": "VARGP=3 attained-age (SEQ->AGE, CNTL=00/NFF0)"
+  },
   "paagerat_bp": {
     "enabled": true,
-    "bp_plan_count": 4,
-    "row_status": {
-      "EXCLUDED": 23260,
-      "IN_SCOPE": 1164
-    },
+    "bp_plan_count": 0,
+    "row_status": {},
     "mplan_allowlist": [
       "1658CS",
       "1659CS",
@@ -201,8 +217,8 @@
     "enabled": true,
     "coi_plan_count": 2,
     "row_status": {
-      "EXCLUDED": 23624,
-      "IN_SCOPE": 800
+      "EXCLUDED": 31108,
+      "IN_SCOPE": 1000
     },
     "mplan_allowlist": [
       "1658CS",
@@ -213,20 +229,43 @@
     "enabled": true,
     "gcoi_plan_count": 1,
     "row_status": {
-      "EXCLUDED": 24224,
-      "IN_SCOPE": 200
+      "EXCLUDED": 31708,
+      "IN_SCOPE": 400
     },
     "mplan_allowlist": [
       "1679CS"
     ]
   },
+  "paagerat_db": {
+    "enabled": true,
+    "db_plan_count": 10,
+    "row_status": {
+      "EXCLUDED": 31480,
+      "IN_SCOPE": 628
+    },
+    "mplan_allowlist": [
+      "130JEB",
+      "1970JB",
+      "542STR",
+      "578STR",
+      "719CDT",
+      "7619DT",
+      "7619PU",
+      "7647FP",
+      "7647SP",
+      "7690DT"
+    ],
+    "grid_mode": "VARDB=3 attained-age (SEQ->AGE, CNTL=00/DB0)"
+  },
   "quikuint": {
     "enabled": true,
-    "row_count": 0,
+    "row_count": 32,
     "status": {
-      "BLOCKER_NO_PDINTTBL": 1
+      "UNION_MERGE": 4,
+      "ROWS_EMITTED": 32,
+      "MPLANS": 8
     },
-    "distinct_mplans": 0
+    "distinct_mplans": 8
   },
   "quikissc": {
     "enabled": true,
@@ -238,17 +277,113 @@
     },
     "distinct_plans": 8
   },
+  "issue40_cv_inheritance": {
+    "manifest_entries": 10,
+    "row_status": {
+      "IN_SCOPE": 101885,
+      "EXCLUDED": 1862
+    },
+    "issuing_plans": [
+      "1666AI",
+      "1668SP",
+      "17085M",
+      "1L10SO",
+      "1L10SR",
+      "1SALMI",
+      "1SALML",
+      "261PUA",
+      "265PUA",
+      "280PUA"
+    ]
+  },
+  "non_cv_rate_inheritance": {
+    "manifest_entries": 28,
+    "row_status": {
+      "IN_SCOPE": 377280
+    },
+    "issuing_plans": [
+      "10L171",
+      "10L172",
+      "117JPO",
+      "1666AI",
+      "1668SP",
+      "1669SR",
+      "1679CS",
+      "170588",
+      "17085M",
+      "17MJPO",
+      "1L10OD",
+      "1L10PR",
+      "1L10SO",
+      "1SALMI",
+      "1SALML",
+      "7687J3"
+    ],
+    "rate_types": [
+      "DB",
+      "DV",
+      "NP",
+      "RV"
+    ]
+  },
+  "shared_rate_candidates": {
+    "manifest_entries": 43,
+    "row_status": {
+      "IN_SCOPE": 135853,
+      "BAD_VALUE": 3872
+    },
+    "issuing_plans": [
+      "1658C1",
+      "1658CS",
+      "1659C2",
+      "1659CR",
+      "1659CS",
+      "1659SR",
+      "1668SP",
+      "1669SR",
+      "1679CS",
+      "170588",
+      "17085M",
+      "1L1095",
+      "1L10OD",
+      "1L10SO",
+      "1L10SR",
+      "1SALMI",
+      "1SALML",
+      "261PUA",
+      "265PUA",
+      "280PUA",
+      "719CTR",
+      "960ADB"
+    ],
+    "rate_types": [
+      "DB",
+      "DV",
+      "NF",
+      "NP",
+      "PR",
+      "RV"
+    ]
+  },
+  "issue42_pdage_missfill": {
+    "enabled": true,
+    "merge": {
+      "staging_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration/Staging/rate_table_pdage_missfill_merged.csv",
+      "reused": true
+    },
+    "row_status": {}
+  },
   "gate": {
     "rule": "BLOCKER_COUNT == 0",
-    "blocker_count": 1,
-    "passed": false
+    "blocker_count": 0,
+    "passed": true
   },
   "emitted_dbf": false,
-  "emitted_csv": false,
+  "emitted_csv": true,
   "emit_dir": null,
-  "csv_dir": null,
-  "tables_written": 0,
-  "csv_tables_written": 0,
-  "total_rows_written": 0,
+  "csv_dir": "QLA_Migration\\Output\\rates",
+  "tables_written": 23,
+  "csv_tables_written": 23,
+  "total_rows_written": 188848,
   "note": "CSV outputs use confirmed DBF field order for QLAdmin append. EFFDATE/ISSCNTRY/ISSUEST + actuarial assumptions remain configurable placeholders; isolated rollback-safe output, source DBFs untouched."
 }

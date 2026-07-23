@@ -824,6 +824,99 @@ def run_integration_validation(
     return checks
 
 
+def _count_factor_plans(rates_csv_dir: str, table_name: str) -> dict[str, int]:
+    """Count factor rows per PLAN in Output/rates QuikTvs / QuikCvs."""
+    if not rates_csv_dir or not os.path.isdir(rates_csv_dir):
+        return {}
+    path = os.path.join(rates_csv_dir, f"{table_name}.csv")
+    if not os.path.isfile(path):
+        for name in os.listdir(rates_csv_dir):
+            if name.lower() == f"{table_name}.csv".lower():
+                path = os.path.join(rates_csv_dir, name)
+                break
+        else:
+            return {}
+    counts: dict[str, int] = defaultdict(int)
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            plan = (row.get("PLAN") or "").strip()
+            if plan:
+                counts[plan] += 1
+    return dict(counts)
+
+
+def apply_factor_table_pvo_enablement(
+    rows: list[dict],
+    rates_csv_dir: str | None,
+    skip_plan_prefixes: tuple[str, ...] = ("A",),
+) -> tuple[list[dict], dict[str, dict]]:
+    """Issue #96: enable PLANVALOPT + GDVARYTV/CV when factor tables exist.
+
+    QLAdmin cannot use QuikTvs/QuikCvs unless plan valuation options are on.
+    Skip A-prefix plans (Issue A annuity PVO clear).
+    """
+    tvs = _count_factor_plans(rates_csv_dir or "", "QuikTvs")
+    cvs = _count_factor_plans(rates_csv_dir or "", "QuikCvs")
+    touched: dict[str, dict] = {}
+    out = []
+    for row in rows:
+        r = dict(row)
+        plan = (r.get("PLAN") or "").strip()
+        if not plan or any(plan.startswith(p) for p in skip_plan_prefixes):
+            out.append(r)
+            continue
+        changed = False
+        if tvs.get(plan, 0) > 0:
+            for fld, val in (
+                ("PLANVALOPT", "Y"),
+                ("GDVARYTV", "Y"),
+                ("BDVARYTV", "Y"),
+            ):
+                if (r.get(fld) or "").strip() != val:
+                    r[fld] = val
+                    changed = True
+        if cvs.get(plan, 0) > 0:
+            for fld, val in (
+                ("PLANVALOPT", "Y"),
+                ("GDVARYCV", "Y"),
+                ("BDVARYCV", "Y"),
+            ):
+                if (r.get(fld) or "").strip() != val:
+                    r[fld] = val
+                    changed = True
+        if changed:
+            touched[plan] = {
+                "PLAN": plan,
+                "PLANVALOPT": r.get("PLANVALOPT", ""),
+                "GDVARYTV": r.get("GDVARYTV", ""),
+                "GDVARYCV": r.get("GDVARYCV", ""),
+                "UPDATE_REASON": "issue96 factor tables present",
+            }
+        out.append(r)
+    return out, touched
+
+
+def apply_annuity_a8e_pvo_clear(rows: list[dict]) -> tuple[list[dict], int]:
+    """Issue A A8e — A-prefix annuities must stay PLANVALOPT=N / *VARY*=N after R7B refresh."""
+    cleared = 0
+    out = []
+    for row in rows:
+        r = dict(row)
+        plan = (r.get("PLAN") or "").strip()
+        if not plan.startswith("A"):
+            out.append(r)
+            continue
+        if (r.get("PLANVALOPT") or "").strip().upper() == "Y":
+            r["PLANVALOPT"] = "N"
+            cleared += 1
+        for field in VARY_FIELD_NAMES:
+            if (r.get(field) or "").strip().upper() not in ("", "N", "F", "0", "FALSE"):
+                r[field] = "N"
+                cleared += 1
+        out.append(r)
+    return out, cleared
+
+
 def enrich_quikplan_rows(
     rows: list[dict],
     config: RateVariationEnrichmentConfig | None = None,
@@ -865,6 +958,23 @@ def enrich_quikplan_rows(
             continue
         if pvo not in ("Y", "N", ""):
             row["PLANVALOPT"] = "N"
+    # Issue #96: after rate CSVs exist, force TV/CV PVO when factor tables present
+    rates_dir = config.emitted_csv_dir if os.path.isdir(config.emitted_csv_dir or "") else None
+    enriched, factor_touch = apply_factor_table_pvo_enablement(enriched, rates_dir)
+    for plan, upd in factor_touch.items():
+        base = dict(applicable.get(plan) or {"PLAN": plan})
+        base.update(upd)
+        applicable[plan] = base
+    # Issue A A8e: R7B / post-rate refresh must not leave annuity PVO=Y
+    enriched, _a8e = apply_annuity_a8e_pvo_clear(enriched)
+    for plan in list(applicable.keys()):
+        if plan.startswith("A"):
+            applicable[plan] = {
+                **applicable[plan],
+                "PLANVALOPT": "N",
+                **{f: "N" for f in VARY_FIELD_NAMES},
+                "UPDATE_REASON": "issue A A8e annuity PVO clear",
+            }
     diffs = compute_field_diffs(original, enriched, applicable)
     checks = run_integration_validation(original, enriched, applicable)
     blockers = sum(1 for c in checks if c["STATUS"] == "FAIL")
