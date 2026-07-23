@@ -1,10 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.26
-# Date:        2026-07-22
+# Version:     v58.29
+# Date:        2026-07-23
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.26 — Issue #96: CSO val PVO enablement when QuikTvs/Cvs present; 1SALMI on
+# Change Note: v58.29 — Issue #2: MPOLICY = source POLICY_NUMBER + C, right-justify width 11 (supersedes #25).
+#              v58.28 — Issue #99: ISWL quikplan MKTG/PRODUCT/HLOB = ISWLFE (8 MPLAN allowlist).
+#              v58.27 — Issue #98: GL85 CV endpoint remap (male ages 1–17); age-100 terminal preserved.
+#              v58.26 — Issue #96: CSO val PVO enablement when QuikTvs/Cvs present; 1SALMI on
 #              CSO Valuation_Setup (PlTv/PlCv = SAL OL); re-run R7B on quikplan after rate emit.
 #              v58.25 — L17 child plans inherit QuikTvs RV from segment L17 (Eric 7/22);
 #              SAL MULTPL/ML→SAL OL RV already live; L01/L05/L07/667 ART held for actuarial.
@@ -165,6 +168,7 @@
 #              v57.32 — Issue 21M: QUIKMEMO from PNOTE + PENSE dual-source merge (CSV + DBF/FPT).
 #              v58.23 — Issue 88: blank ANN_PREM_PER_UNIT MPREM fallback = annualized MODE_PREMIUM / units (not raw MODE_PREMIUM).
 #              v57.31 — Issue 26: quikridr.MPREM maps ANN_PREM_PER_UNIT with MODE_PREMIUM fallback.
+#              v58.29 — Issue #2: MPOLICY = source POLICY_NUMBER + C, right-justify width 11 (supersedes #25 strip9+C/10-pad).
 #              v57.30 — QLAdmin MPOLICY fixed-width 10-char emit (leading-space left-pad after crosswalk).
 #              v57.29 — Issue 21I: quikbenf dedupe by (MPOLICY, MBENFID, MTYPE) and equal MSPLIT
 #              within each (MPOLICY, MTYPE) primary/contingent group (100.00 total per group).
@@ -214,6 +218,7 @@ from qla_core.quikplan_converter import (
     apply_rate_variation_flag_enrichment,
     apply_single_premium_payment_settings,
     apply_ploan_loanint_enrichment,
+    apply_iswl_product_tags,
 )
 from qla_core.issue_a_plan_setup import apply_issue_a_plan_setup
 from qla_core.cso_mortality_crosswalk import (
@@ -463,7 +468,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.27"
+APP_VERSION = "v58.29"
 APP_BRAND = "QUIKConvert"
 APP_TAGLINE = APP_PRIMARY_TAGLINE
 
@@ -3940,7 +3945,7 @@ class QLAdminEnterpriseIntegrationSuite:
                 val = default_val
             val = self.normalize(val) if val else ""
             if t_f == "MPOLICY" and val:
-                val = crosswalk.get(val, val)
+                # Issue #2: source + C (no strip-9 crosswalk)
                 val = self._format_qladmin_mpolicy(val)
             if t_f in money_fields:
                 val = self._format_claims_money(val if val else default_val)
@@ -6278,7 +6283,7 @@ class QLAdminEnterpriseIntegrationSuite:
                             mbillfrm = trans_map.get(f"BF_{bf_val}", trans_map.get(bf_val, bf_val))
                             
                             pol = self.normalize(src_row.get("POLICY_NUMBER", ""))
-                            mpolicy = self._format_qladmin_mpolicy(cw_map.get(pol, pol))
+                            mpolicy = self._format_qladmin_mpolicy(pol)
                             
                             row_data = {
                                 "MPOLICY": mpolicy,
@@ -7458,6 +7463,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         qdf, self._app_base_dir(), log=self.log
                     )
                     qdf = apply_issue_a_plan_setup(qdf, repo_root=self._app_base_dir(), log=self.log)
+                    qdf = apply_iswl_product_tags(qdf, log=self.log)
 
                     output = qdf[schema].values.tolist()
                     bank_draft_exceptions = None
@@ -7873,7 +7879,10 @@ class QLAdminEnterpriseIntegrationSuite:
                                     val = self._derive_rna_policy_from_identifying_alpha(src_row, cw_map)
 
                                 if t_f in ["MPOLICY", "MCLIENTID", "MPRIMID", "MOWNRID", "MPAYRID", "MASGNID", "MBENPID", "MBENCID", "MCID", "MOWNCID", "MRIDRID", "MPLAN", "PLAN"]:
-                                    if (
+                                    if t_f == "MPOLICY":
+                                        # Issue #2: keep source POLICY_NUMBER; do not apply strip-9 crosswalk
+                                        pass
+                                    elif (
                                         t_id.lower() == "quikridr"
                                         and t_f == "MPLAN"
                                         and self._closed_mplan_authority_enabled()

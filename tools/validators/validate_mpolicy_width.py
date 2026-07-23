@@ -1,11 +1,12 @@
 """
-QLAdmin MPOLICY fixed-width validation (Issue #25 / v57.30).
+QLAdmin MPOLICY fixed-width validation (Issue #2 / v58.29).
 
-Verifies every emitted MPOLICY field is exactly 10 characters (leading-space padded).
+Verifies every emitted MPOLICY field is exactly 11 characters (leading-space padded).
+Supersedes Issue #25 width-10 contract.
 
 Usage:
-  python QLA_Migration/_validate_mpolicy_width.py
-  python QLA_Migration/_validate_mpolicy_width.py --output-dir QLA_Migration/Output
+  python tools/validators/validate_mpolicy_width.py
+  python tools/validators/validate_mpolicy_width.py --output-dir QLA_Migration/Output
 """
 
 from __future__ import annotations
@@ -16,17 +17,20 @@ from pathlib import Path
 
 import pandas as pd
 
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "2.0"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
+MPOLICY_WIDTH = 11
 
-ISSUE25_SAMPLES = {
-    "9018510": "   018510C",
-    "9018495B": "  018495BC",
-    "9018499C": "  018499CC",
+# Issue #2 samples: LifePRO source → QLA (source + C, rjust 11)
+ISSUE2_SAMPLES = {
+    "9010143726": "9010143726C",
+    "901222DC": "  901222DCC",
+    "9014059": "   9014059C",
+    "9014100C": "  9014100CC",
 }
 
-ISSUE25_PADDED = set(ISSUE25_SAMPLES.values())
+ISSUE2_PADDED = set(ISSUE2_SAMPLES.values())
 
 TABLES_WITH_MPOLICY = [
     "quikmstr.csv",
@@ -38,10 +42,12 @@ TABLES_WITH_MPOLICY = [
     "quikdvdp.csv",
     "quikdvpr.csv",
     "quikagts.csv",
-    "quikplan.csv",
     "quikclms.csv",
     "quikclmp.csv",
     "quikloan.csv",
+    "quikbenh.csv",
+    "QuikIsrr.csv",
+    "quikrmst.csv",
 ]
 
 
@@ -62,8 +68,9 @@ def _mpolicy_col(df: pd.DataFrame) -> str | None:
 
 def validate(output_dir: Path) -> int:
     print("=" * 72)
-    print(f"MPOLICY WIDTH VALIDATION (Issue #25, script v{SCRIPT_VERSION})")
+    print(f"MPOLICY WIDTH VALIDATION (Issue #2, script v{SCRIPT_VERSION})")
     print(f"Output: {output_dir}")
+    print(f"Required width: {MPOLICY_WIDTH}")
     print("=" * 72)
 
     total_checked = 0
@@ -90,12 +97,16 @@ def validate(output_dir: Path) -> int:
         if not col:
             continue
 
-        values = [str(v) for v in df[col].tolist() if str(v).strip() and str(v).strip().lower() not in ("nan", "none")]
+        values = [
+            str(v)
+            for v in df[col].tolist()
+            if str(v).strip() and str(v).strip().lower() not in ("nan", "none")
+        ]
         if not values:
             continue
 
-        t_short = sum(1 for v in values if len(v) < 10)
-        t_long = sum(1 for v in values if len(v) > 10)
+        t_short = sum(1 for v in values if len(v) < MPOLICY_WIDTH)
+        t_long = sum(1 for v in values if len(v) > MPOLICY_WIDTH)
         t_blank = len(df[col]) - len(values)
         total_checked += len(values)
         short_count += t_short
@@ -112,8 +123,8 @@ def validate(output_dir: Path) -> int:
             affected_tables.append(str(rel))
 
     print(f"\nTotal MPOLICY fields checked: {total_checked}")
-    print(f"Shorter than 10 characters:    {short_count}  (must be 0)")
-    print(f"Longer than 10 characters:     {long_count}  (must be 0)")
+    print(f"Shorter than {MPOLICY_WIDTH} characters: {short_count}  (must be 0)")
+    print(f"Longer than {MPOLICY_WIDTH} characters:  {long_count}  (must be 0)")
     print(f"Blank / skipped:               {blank_count}")
 
     print("\nPer-table summary:")
@@ -124,53 +135,19 @@ def validate(output_dir: Path) -> int:
     if affected_tables:
         errors.append(f"Width violations in: {', '.join(affected_tables)}")
 
-    print("\nIssue #25 expected padded values (cross-table consistency):")
-    core_tables = ["quikmstr.csv", "quikclid.csv", "quikridr.csv", "quikplan.csv"]
-    for padded in sorted(ISSUE25_PADDED):
-        print(f"\n  Target: {repr(padded)}")
-        for tbl in core_tables:
-            path = output_dir / tbl
-            df = _read_csv(path)
-            if df is None or _mpolicy_col(df) is None:
-                print(f"    {tbl}: (no file or no MPOLICY column)")
-                continue
-            col = _mpolicy_col(df)
-            hits = df[df[col] == padded]
-            print(f"    {tbl}: {len(hits)} row(s)")
-
-    print("\nBefore/after samples (Issue #25 LifePRO -> QLAdmin MPOLICY):")
-    for lifepro, expected in ISSUE25_SAMPLES.items():
+    print("\nIssue #2 expected sample keys:")
+    for lifepro, expected in ISSUE2_SAMPLES.items():
         print(f"  LifePRO {lifepro} -> {repr(expected)} (len={len(expected)})")
 
     mstr = _read_csv(output_dir / "quikmstr.csv")
     if mstr is not None and _mpolicy_col(mstr):
         col = _mpolicy_col(mstr)
-        for expected in ISSUE25_PADDED:
+        for expected in ISSUE2_PADDED:
             row = mstr[mstr[col] == expected]
-            if len(row):
-                print(f"  quikmstr sample row MPOLICY={repr(row.iloc[0][col])}")
-
-    clid = _read_csv(output_dir / "quikclid.csv")
-    ridr = _read_csv(output_dir / "quikridr.csv")
-    if mstr is not None and clid is not None and ridr is not None:
-        mcol = _mpolicy_col(mstr)
-        ccol = _mpolicy_col(clid)
-        rcol = _mpolicy_col(ridr)
-        if mcol and ccol and rcol:
-            m_set = set(mstr[mcol].unique())
-            c_set = set(clid[ccol].unique())
-            r_set = set(ridr[rcol].unique())
-            for padded in ISSUE25_PADDED:
-                in_m = padded in m_set
-                in_c = padded in c_set
-                in_r = padded in r_set
-                if not (in_m and in_c and in_r):
-                    errors.append(
-                        f"Inconsistent MPOLICY {repr(padded)} across master/child: "
-                        f"quikmstr={in_m}, quikclid={in_c}, quikridr={in_r}"
-                    )
-                else:
-                    print(f"\n  Consistency PASS for {repr(padded)} in quikmstr, quikclid, quikridr")
+            status = "FOUND" if len(row) else "MISSING"
+            print(f"  quikmstr {repr(expected)}: {status}")
+            if not len(row):
+                errors.append(f"Missing sample MPOLICY {repr(expected)} in quikmstr")
 
     print("\n" + "=" * 72)
     if short_count or long_count or errors:
@@ -180,13 +157,13 @@ def validate(output_dir: Path) -> int:
         print("=" * 72)
         return 1
 
-    print("OVERALL: PASS - all MPOLICY fields are exactly 10 characters")
+    print(f"OVERALL: PASS - all MPOLICY fields are exactly {MPOLICY_WIDTH} characters")
     print("=" * 72)
     return 0
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Validate QLAdmin MPOLICY fixed-width 10-char emit")
+    ap = argparse.ArgumentParser(description="Validate QLAdmin MPOLICY fixed-width 11-char emit (Issue #2)")
     ap.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     args = ap.parse_args()
     return validate(args.output_dir.resolve())

@@ -36,9 +36,10 @@ def _money(value: Any) -> str:
 
 
 def _qla_to_lifepro(mpolicy: str) -> str:
+    # Issue #2: QLA key is source + C → LifePRO is key without trailing C
     mp = normalize(mpolicy)
     if mp.endswith("C") and len(mp) >= 2:
-        return "9" + mp[:-1]
+        return mp[:-1]
     return mp
 
 

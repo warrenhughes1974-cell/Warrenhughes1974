@@ -304,15 +304,28 @@ def convert_quikbenh_loan_history_from_pactg(
             amt_raw = src_row.get("TRANS_AMOUNT     ", "")
         eff = _fmt_date_yyyymmdd(src_row.get("EFFECTIVE_DATE", ""))
 
-        cw_val = cw_map.get(pol) or cw_map.get(pol.strip(), "")
-        mpolicy = format_qladmin_mpolicy(cw_val)
-        if not mpolicy:
+        # Issue #2: membership via cw keys; identity is source + C
+        pol_key = pol.strip().upper()
+        if cw_map is not None and pol_key not in cw_map and pol.strip() not in cw_map:
             stats["orphan_no_crosswalk"] += 1
             exc_rows.append(
                 {
                     "POLICY_NUMBER": pol,
                     "PACTG_CODE": emit_code,
                     "REASON": "ORPHAN_NO_CROSSWALK",
+                    "EFFECTIVE_DATE": eff,
+                    "TRANS_AMOUNT": str(amt_raw),
+                }
+            )
+            continue
+        mpolicy = format_qladmin_mpolicy(pol)
+        if not mpolicy:
+            stats["orphan_no_crosswalk"] += 1
+            exc_rows.append(
+                {
+                    "POLICY_NUMBER": pol,
+                    "PACTG_CODE": emit_code,
+                    "REASON": "INVALID_POLICY_KEY",
                     "EFFECTIVE_DATE": eff,
                     "TRANS_AMOUNT": str(amt_raw),
                 }

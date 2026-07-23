@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+2	CLOSED ✓	11 Character Policy Number	Scrap current LP→QLA policy transform (crosswalk strip-9+C + #25 10-char pad). Keep source POLICY_NUMBER and append C; right-justify in 11-char QLA fields.	5/5/2026	Go	Warren	Warren	2026-07-23	Resolution: QLAdmin policy numbers now keep the LifePRO source policy number with a trailing C and are right-justified to 11 characters (replacing the old strip-9 crosswalk and 10-character pad). Engine v58.29. UAT: Test_Validation.

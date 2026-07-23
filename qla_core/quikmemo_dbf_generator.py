@@ -9,7 +9,7 @@ import dbf
 import pandas as pd
 
 QUIKMEMO_DBF_LAYOUT = [
-    {"field": "MEMOKEY", "type": "CHARACTER", "length": 10, "decimals": 0},
+    {"field": "MEMOKEY", "type": "CHARACTER", "length": 11, "decimals": 0},
     {"field": "MEMOTEXT", "type": "MEMO", "length": 10, "decimals": 0},
 ]
 
@@ -38,23 +38,24 @@ def layout_to_dbf_spec(layout: list[dict]) -> str:
     return "; ".join(parts)
 
 
-def _memokey_for_dbf(raw: Any, length: int = 10) -> str | None:
-    """Preserve Issue #25 left-padding — do not strip MEMOKEY."""
+def _memokey_for_dbf(raw: Any, length: int = 11) -> str | None:
+    """Issue #2/#50: right-justify MEMOKEY (leading spaces) — do not strip."""
     s = _strip_val(raw)
-    if not s:
+    if not s or not str(s).strip():
         return None
-    if len(s) > length:
-        return s[:length]
-    if len(s) < length:
-        return s.ljust(length)
-    return s
+    if len(s) == length:
+        return s
+    core = str(s).strip()
+    if len(core) > length:
+        return core[:length]
+    return core.rjust(length)
 
 
-def _rewrite_dbf_memokey_bytes(dbf_path: str, memokeys: list[str], length: int = 10) -> int:
+def _rewrite_dbf_memokey_bytes(dbf_path: str, memokeys: list[str], length: int = 11) -> int:
     """
-    Issue #50 UAT: Python `dbf` library strips leading spaces on CHARACTER append,
-    storing right-padded keys (e.g. b'018495BC  '). QLAdmin SEEK uses left-padded
-    MPOLICY (e.g. b'  018495BC') → Memo tab blank. Patch MEMOKEY bytes after write.
+    Issue #50 UAT: Python `dbf` library strips leading spaces on CHARACTER append.
+    QLAdmin SEEK uses left-padded (right-justified) MEMOKEY — patch bytes after write.
+    Issue #2: width 11.
     """
     import struct
 
@@ -72,7 +73,7 @@ def _rewrite_dbf_memokey_bytes(dbf_path: str, memokeys: list[str], length: int =
         if len(raw) > length:
             raw = raw[:length]
         elif len(raw) < length:
-            raw = raw.ljust(length)
+            raw = raw.rjust(length)
         off = header_len + i * rec_len + 1  # skip delete flag
         data[off : off + length] = raw
     with open(dbf_path, "wb") as f:
@@ -88,7 +89,7 @@ def csv_row_to_dbf_values(row: pd.Series, layout: list[dict]) -> tuple:
         raw = row.get(name, row.get(name.lower(), ""))
         if ftype == "CHARACTER":
             if name == "MEMOKEY":
-                val = _memokey_for_dbf(raw, int(fld.get("length", 10)))
+                val = _memokey_for_dbf(raw, int(fld.get("length", 11)))
             else:
                 s = _strip_val(raw)
                 val = s[: int(fld.get("length", 10))] if s else None
@@ -126,9 +127,9 @@ def write_quikmemo_dbf(csv_path: str, dbf_path: str) -> dict[str, Any]:
         table.append(vals)
     table.close()
 
-    # Preserve Issue #25 left-padded MEMOKEY bytes (dbf lib right-pads / strips lead spaces)
-    memokeys = [_memokey_for_dbf(row.get("MEMOKEY", ""), 10) or "" for _, row in df.iterrows()]
-    _rewrite_dbf_memokey_bytes(dbf_path, memokeys, 10)
+    # Preserve Issue #2/#50 left-padded MEMOKEY bytes (dbf lib strips lead spaces)
+    memokeys = [_memokey_for_dbf(row.get("MEMOKEY", ""), 11) or "" for _, row in df.iterrows()]
+    _rewrite_dbf_memokey_bytes(dbf_path, memokeys, 11)
 
     sidecar_written = (
         os.path.isfile(fpt_path)

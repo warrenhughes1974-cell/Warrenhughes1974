@@ -68,10 +68,10 @@ def norm_policy_digits(v: str) -> str:
 
 
 def xwalk_policy(pactg_policy: str) -> str:
-    pol = norm_policy_digits(pactg_policy)
-    if len(pol) == 10 and pol.startswith("9"):
-        return pol[1:] + "C"
-    return pol
+    # Issue #2: keep source policy number + C, width 11 (shared formatter)
+    from qla_core.normalize_utils import format_qladmin_mpolicy
+
+    return format_qladmin_mpolicy(pactg_policy)
 
 
 def parse_amount(v: str) -> float | None:

@@ -105,9 +105,35 @@ def spot_checks() -> list[dict]:
     else:
         add("#13", "GAP", "termination samples mismatch")
 
-    # #25
-    bad = sum(1 for r in mstr if len(r.get("MPOLICY", "")) != 10)
-    add("#25", "IN_DATA" if bad == 0 else "GAP", f"quikmstr MPOLICY width violations={bad}")
+    # #2 — source POLICY_NUMBER + C, width 11 (supersedes #25 width-10)
+    bad2 = sum(1 for r in mstr if len(r.get("MPOLICY", "")) != 11)
+    start90 = sum(1 for r in mstr if _norm(r.get("MPOLICY", "")).startswith("90"))
+    sample2 = _norm(mstat.get("9010143726C", {}).get("MPOLICY") or "")
+    # mstat keys may be padded — also try strip lookup
+    if not sample2:
+        for k, row in mstat.items():
+            if _norm(k) == "9010143726C":
+                sample2 = _norm(row.get("MPOLICY", ""))
+                break
+    ok2 = bad2 == 0 and start90 >= int(0.99 * len(mstr)) and (
+        sample2 == "9010143726C" or any(_norm(r.get("MPOLICY")) == "9010143726C" for r in mstr)
+    )
+    add(
+        "#2",
+        "IN_DATA" if ok2 else "GAP",
+        f"quikmstr width11 violations={bad2}; start90={start90}/{len(mstr)}; sample 9010143726C present={ok2}",
+    )
+
+    # #25 superseded by #2 — record as WARN (not GAP) when width-11 fleet is in place
+    bad25 = sum(1 for r in mstr if len(r.get("MPOLICY", "")) != 10)
+    if bad25 == 0:
+        add("#25", "IN_DATA", "quikmstr MPOLICY width-10 (legacy)")
+    else:
+        add(
+            "#25",
+            "WARN",
+            f"superseded by #2 width-11; legacy width-10 violations={bad25}",
+        )
 
     # #36 modal factors on mstr
     sample = mstat.get("010367131C") or {}
@@ -362,6 +388,7 @@ def main() -> int:
     print("=" * 72)
 
     validator_jobs = [
+        ("#2", ["QLA_Migration/_validate_issue2_mpolicy.py"], True),
         ("#25", ["tools/validators/validate_mpolicy_width.py"], True),
         ("#13", ["tools/validators/validate_issue13_mstatus.py"], False),
         ("#26", ["tools/validators/validate_issue26_mprem.py"], False),

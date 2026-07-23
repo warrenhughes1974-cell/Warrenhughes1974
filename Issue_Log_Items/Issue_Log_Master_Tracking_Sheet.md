@@ -64,8 +64,9 @@
 
 | ID | Item | Status | Release | Resolution |
 |---|---|---|---|---|
+| **#2** | 11 Character Policy Number | **CLOSED ✓** | **v58.29** | Resolution: QLAdmin policy numbers now keep the LifePRO source policy number with a trailing C and are right-justified to 11 characters (replacing the old strip-9 crosswalk and 10-character pad). Detail: `Issue_Log_Items/Issue_2/` |
 | **#13** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.48** | When CONTRACT_CODE=T, MSTATUS follows CONTRACT_REASON not PAID_UP_TYPE; 607 policies (v57.48). |
-| **#25** | MPOLICY 10-char left-pad | **RELEASED ✓** | v57.30 / v57.34 | |
+| **#25** | MPOLICY 10-char left-pad | **SUPERSEDED by #2** | v57.30 / v57.34 | Replaced by Issue #2 width-11 source+`C` (v58.29). |
 | **#26** | quikridr.MPREM mapping | **RELEASED ✓** | v57.31 / v57.34 | |
 | **#28** | Product catalog PLAN mapping (crosswalk authority) | **CLOSED ✓** | **v57.35** | |
 | **#37** | Age/Duration rate placement — fleet-wide | **CLOSED ✓** · **v57.43** · QuikCvs grid fix | **v57.43** | |
@@ -110,6 +111,7 @@
 | **#96** | CSO val cannot use SAL MULTPL / L17 RV (PVO + QuikPl* wiring) | **CLOSED ✓** | **v58.26 / v58.27** | **Resolution:** CSO valuation now enables Plan Values Options when QuikTvs/Cvs exist for SAL MULTPL and L17 RV plans, and `1SALMI` carries the same M/F QuikPlCv/QuikPlTv keys as `1SALOL`. Val+Reg PASS. |
 | **#97** | Pol fee $0 / Names modal $ wrong / Memos blank (010398471C) | **Risk Complete — Awaiting Dev approval (verify track)** | — | Output already matches Eric (10.44; S/Q/M 62.40/31.80/10.80; memo CSV full). Same stack as #21C/#36/#58/#89/#50 — likely stale UAT load. **No-Go for formula code.** |
 | **#98** | CV Endpoint Off By One (010398471C / 17085M) — #41 follow-up | **CLOSED ✓** | **v58.27** | **Resolution:** GL85 CV duration placement now starts `.06` in year 3 for male issue ages 1–17 and keeps the age-100 terminal `1000` (Eric `010398471C` / `17085M` M age 14). Val+Reg PASS; reload `Test_Validation/rates/QuikCvs.csv`. |
+| **#99** | ISWL QuikPlan MKTG/PRODUCT/HLOB = ISWLFE | **Implemented v58.28 — Awaiting Validation** | **v58.28** | Sujitha: tag 8 ISWL plans MKTG/PRODUCT/HLOB=`ISWLFE` so QL picks them up as ISWL. Validator PASS; UAT reload `Test_Validation/quikplan.csv`. |
 | **#57** | NFO Option incorrect (LP 3/4/5 + PUT overwrite) | **CLOSED ✓** | v57.78 | **Resolution:** NFO codes 3/4/5 → MNFOPT 1/2/3; removed PAID_UP_TYPE→MNFOPT. Eric: 010367131C, 010148272C, 010143726C (ETI); 010392763C (RPU); 011221309C (APL). |
 | **#58** | Premium Mode Amounts Incorrect (Names-tab fees) | **IMPLEMENTED v57.80** | **v57.80** | Derive `quikridr` M*FEE = MANNLFEE × post-PAC factors. Eric 010367131C → 15.90/5.40. Re-batch + validator. |
 | **#59** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.84** | Resolution: For seven client-cited policies only, Active+LP→22 (not 54); S+DP→50 (not Paid Up). Exactly 7 MSTATUS deltas. UAT: reload Test_Validation quikmstr+quikridr. |

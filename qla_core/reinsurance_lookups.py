@@ -107,10 +107,12 @@ def load_quikmstr_policy_set(path: str | None) -> set[str]:
 
 
 def resolve_mpolicy(source_policy: str, cw_map: dict[str, str] | None) -> tuple[str, str]:
+    # Issue #2: source + C; optional cw_map is membership-only (not strip-9 remap)
     src = _s(source_policy)
     cw_map = cw_map or {}
-    mapped = cw_map.get(src, src)
-    return format_qladmin_mpolicy(mapped), ("CROSSWALK_APPLIED" if src in cw_map else "SOURCE_POLICY")
+    if cw_map and src not in cw_map and src.upper() not in cw_map:
+        return "", "CROSSWALK_MISS"
+    return format_qladmin_mpolicy(src), "SOURCE_PLUS_C"
 
 
 def candidate_phase_from_benefit_seq(benefit_seq: Any) -> str:

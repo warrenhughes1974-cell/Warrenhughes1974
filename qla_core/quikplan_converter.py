@@ -59,6 +59,9 @@ def _apply_crosswalk_value(
     cw_map: dict,
     crosswalk_authority: CrosswalkAuthority | None,
 ) -> str:
+    # Issue #2: MPOLICY identity is source + C via format_qladmin_mpolicy — no strip-9 remap
+    if t_f == "MPOLICY":
+        return val
     if crosswalk_authority is not None:
         if t_f in PRODUCT_PLAN_FIELDS:
             return crosswalk_authority.product_plan_map.get(val, val)
@@ -390,6 +393,48 @@ def run_quikplan_conversion(
     from qla_core.issue_a_plan_setup import apply_issue_a_plan_setup
 
     df = apply_issue_a_plan_setup(df, repo_root=repo_root)
+    df = apply_iswl_product_tags(df)
+    return df
+
+
+def apply_iswl_product_tags(
+    df: pd.DataFrame,
+    log=None,
+) -> pd.DataFrame:
+    """Issue #99: tag ISWL MPLANs with MKTG/PRODUCT/HLOB = ISWLFE for QLAdmin pickup."""
+    if df is None or df.empty or "PLAN" not in df.columns:
+        return df
+    try:
+        from qla_core.cso_mortality_crosswalk import (
+            ISWL_PRODUCT_TAG,
+            ISWL_PRODUCT_TAG_FIELDS,
+            is_iswl_mplan,
+        )
+    except ImportError:
+        return df
+
+    updated = 0
+    for idx in df.index:
+        plan = normalize(df.at[idx, "PLAN"])
+        if not is_iswl_mplan(plan):
+            continue
+        for col in ISWL_PRODUCT_TAG_FIELDS:
+            if col in df.columns:
+                df.at[idx, col] = ISWL_PRODUCT_TAG
+        updated += 1
+
+    if log is not None and updated:
+        try:
+            log(
+                f"Issue #99: ISWL product tags applied to {updated} plans "
+                f"({ISWL_PRODUCT_TAG} on {', '.join(ISWL_PRODUCT_TAG_FIELDS)})"
+            )
+        except Exception:
+            pass
+    try:
+        df.attrs["iswl_product_tags_updated"] = updated
+    except Exception:
+        pass
     return df
 
 

@@ -132,9 +132,8 @@ def _is_active_rna_cancel_date(val: Any) -> bool:
 
 
 def _map_policy(pol: str, cw_map: dict[str, str]) -> str:
-    raw = normalize(pol)
-    mapped = cw_map.get(raw, raw)
-    return format_qladmin_mpolicy(mapped)
+    # Issue #2: source + C (ignore strip-9 New_Value; cw_map unused for identity)
+    return format_qladmin_mpolicy(normalize(pol))
 
 
 def _finalize_control(

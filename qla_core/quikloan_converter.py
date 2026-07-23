@@ -357,14 +357,15 @@ def _resolve_mloanidt(row: pd.Series, rules: dict) -> tuple[str, str]:
 
 
 def _map_policy_number(policy: str, cw_map: dict | None) -> tuple[str, str]:
+    # Issue #2: source + C; cw_map used only as conversion-population membership gate
     src = _s(policy)
-    if not cw_map:
-        return src, "NO_CROSSWALK"
     key = src.upper()
-    mapped = cw_map.get(key) or cw_map.get(src)
-    if mapped:
-        return format_qladmin_mpolicy(mapped), "CROSSWALK_APPLIED"
-    return src, "CROSSWALK_MISS"
+    if cw_map is not None and key not in cw_map and src not in cw_map:
+        return "", "CROSSWALK_MISS"
+    mapped = format_qladmin_mpolicy(src)
+    if not mapped:
+        return "", "INVALID_POLICY"
+    return mapped, "SOURCE_PLUS_C"
 
 
 def map_ploan_to_quikloan(

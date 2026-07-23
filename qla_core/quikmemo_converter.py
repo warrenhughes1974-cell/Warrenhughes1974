@@ -232,8 +232,9 @@ def convert_quikmemo_from_pnote_pense(
 
     def _emit(source: str, lp: str, row: pd.Series, memotext: str, sort_key: tuple, src_order: int) -> None:
         nonlocal stats
-        qla = cw_map.get(lp, "")
-        if not qla:
+        # Issue #2: membership via cw keys only; identity is source + C (not New_Value)
+        lp_key = str(lp or "").strip().upper()
+        if cw_map is not None and lp_key not in cw_map and str(lp or "").strip() not in cw_map:
             stats["skipped_orphan"] += 1
             orphan_rows.append({
                 "SOURCE": source,
@@ -241,12 +242,20 @@ def convert_quikmemo_from_pnote_pense(
                 "REASON": "no_crosswalk",
             })
             return
+        memokey = format_qladmin_mpolicy(lp)
+        if not memokey:
+            stats["skipped_orphan"] += 1
+            orphan_rows.append({
+                "SOURCE": source,
+                "LP": lp,
+                "REASON": "invalid_policy_key",
+            })
+            return
         dup_key = _exact_dup_key(source, lp, row, memotext, source)
         if dup_key in seen_exact:
             stats["skipped_exact_dup"] += 1
             return
         seen_exact.add(dup_key)
-        memokey = format_qladmin_mpolicy(qla)
         memo_records.append({
             "MEMOKEY": memokey,
             "MEMOTEXT": memotext,

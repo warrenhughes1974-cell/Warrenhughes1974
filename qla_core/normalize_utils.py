@@ -16,16 +16,34 @@ def normalize(val) -> str:
     return s
 
 
+# Issue #2: QLAdmin policy keys are source POLICY_NUMBER + trailing C, width 11.
+QLADMIN_MPOLICY_WIDTH = 11
+
+
 def format_qladmin_mpolicy(val) -> str:
-    """Fixed-width QLAdmin MPOLICY: left-pad with spaces to exactly 10 characters."""
+    """Issue #2: keep source policy number, append C, right-justify to 11 characters.
+
+    Supersedes Issue #25 (10-char pad after strip-9 crosswalk).
+    - Identity: normalize(source); append 'C' unless already present
+    - Reject sentinel / over-length keys (blank emit)
+    - Width: left-pad with spaces to exactly 11 (CSV→DBF right-justify)
+    """
     if pd.isna(val) or str(val).strip().lower() in ["nan", "none", ""]:
         return ""
     core = normalize(val)
     if not core:
         return ""
-    if len(core) >= 10:
+    # Placeholder / garbage keys (e.g. extract sentinel '-------------')
+    if core.replace("-", "") == "" or core.startswith("----"):
+        return ""
+    # Idempotent: already a final Issue #2 key (exactly width 11, trailing C)
+    if len(core) == QLADMIN_MPOLICY_WIDTH and core.endswith("C"):
         return core
-    return core.rjust(10)
+    # Always append C to the source policy number (Warren 2026-07-23)
+    core = core + "C"
+    if len(core) > QLADMIN_MPOLICY_WIDTH:
+        return ""
+    return core.rjust(QLADMIN_MPOLICY_WIDTH)
 
 
 # LifePRO NAME_ID is Character(11), right-justified with leading spaces.

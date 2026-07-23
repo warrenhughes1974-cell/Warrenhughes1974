@@ -59,6 +59,10 @@ ISWL_MPLAN_ALLOWLIST = frozenset({
 # Authoritative ISWL Dividend Accum Int Rate per CSO crosswalk nfo_interest_source.
 ISWL_MDEPINT_PERCENT = "4.50"
 
+# Issue #99 — QLAdmin plan tag so ISWL plans are recognized (MKTG / PRODUCT / HLOB).
+ISWL_PRODUCT_TAG = "ISWLFE"
+ISWL_PRODUCT_TAG_FIELDS = ("MKTG", "PRODUCT", "HLOB")
+
 
 def default_crosswalk_path(repo_root: str) -> str:
     return os.path.normpath(os.path.join(repo_root, DEFAULT_CROSSWALK_RELPATH))

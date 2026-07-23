@@ -215,3 +215,33 @@ Notes:
 - Note: `QuikCoi.csv` / `QuikGcoi.csv` timestamps still 13:24 (not rewritten this rate pass) — other rate CSVs 17:29
 - Output hygiene: audit CSVs → `Reports/`; claims/memo UAT staging → `Staging/`
 - Log: `QLA_Migration/Logs/_full_batch_test_log.txt` (+ `_full_batch_console_20260721.txt`)
+
+### Run 2026-07-23 — app.py v58.29 — Full batch — Source=PPOLC_…_20260630 (Issue #2 policy keys)
+
+Operator: Agent (Issue #2 Development→Validation; full conversion required)  
+Env: UAT mode; rates included  
+Result summary: **8 PASS** · **1 PARTIAL** · **2 BLOCKED** · **4 OPEN** (SME-gated) · Issue #2 identity **PASS**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | `1668SP`, `10L171`, `10L172`, `1L17SP`: PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **BLOCKED** | Awaiting CSO (unchanged) |
+| A3 | **BLOCKED** | Default PVO fleet rule awaiting Development approval |
+| A4 | **PASS** | 0 blank-PLAN rows in QuikPl* |
+| A5 | **OPEN** | Awaiting Valuation_Setup |
+| A6 | **PARTIAL** | Pre-existing orphan-flag residual (A60MIR/A96DAR pattern) |
+| A7 | **OPEN** | Awaiting Eric (Item 09) |
+| A8a | **PASS** | A-prefix PAR=0 |
+| A8b | **PASS** | A-prefix VARDB=0 |
+| A8c | **OPEN** | Awaiting Eric |
+| A8d | **OPEN** | Awaiting Eric |
+| A8e | **PASS** | Annuity PVO defaults (prior impl) |
+| A9a | **OPEN** | Awaiting Eric |
+| A9b | **PASS** | Prefix-9 PAR≠0 count 0 |
+| A10 | **PASS** | QuikUwpo 5 rows (00/NS/PR/SM/ST) |
+
+Notes:
+- **Issue #2:** MPOLICY = source + `C`, width 11; validator PASS (322,084 fields); traces `9010143726C`, `  901222DCC`, etc.
+- Row counts: quikmstr 5,083 · quikridr 6,934 · quikplan 141 · full batch exit 0 ~27 min
+- Published `Output/Test_Validation/` for Issue_2 (15 tables)
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt`
