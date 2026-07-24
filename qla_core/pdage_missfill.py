@@ -229,7 +229,8 @@ def _transform_rate_table_row(
             ql_dur = S.source_duration_to_ql(dur)
     else:
         try:
-            ql_dur = S.source_duration_to_ql(dur)
+            # Issue #106: RV identity Dur; other non-CV miss-fill stay source-1
+            ql_dur = S.duration_to_ql_for_type(typ, dur)
         except ValueError:
             yield {
                 "status": "BAD_VALUE",

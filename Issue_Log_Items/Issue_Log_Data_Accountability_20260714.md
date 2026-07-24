@@ -1,6 +1,6 @@
 # Issue Log Data Accountability
 
-**Generated:** 2026-07-23T10:11:20  
+**Generated:** 2026-07-24T11:55:08  
 **Engine batch:** v57.85 full UAT Output  
 **Script:** `tools/validators/validate_issue_log_accountability.py` v1.0
 
@@ -8,19 +8,20 @@
 
 | Status | Count |
 |--------|------:|
-| IN_DATA (confirmed in Output) | 20 |
-| WARN (env / known caveat) | 12 |
-| GAP (not confirmed) | 20 |
+| IN_DATA (confirmed in Output) | 25 |
+| WARN (env / known caveat) | 13 |
+| GAP (not confirmed) | 19 |
 | SKIP (no validator) | 0 |
 
 ## Verdict
 
-**ATTENTION — 20 GAP(s)** must be reviewed before training.
+**ATTENTION — 19 GAP(s)** must be reviewed before training.
 
 ## Detail
 
 | Issue | Status | Evidence |
 |-------|--------|----------|
+| #2 | **IN_DATA** | validator PASS |
 | #25 | **IN_DATA** | validator PASS |
 | #13 | **WARN** | validator blocked on missing dated extract (environmental) |
 | #26 | **WARN** | validator blocked on missing dated extract (environmental) |
@@ -40,14 +41,17 @@
 | #21A | **WARN** | validator blocked on missing dated extract (environmental) |
 | #21J | **WARN** | MTHB: expected 8.3298, got 0 /   quikplan 10L172 SEMI: expected 50.0000, got 0 /   quikplan 10L172 QTRL: expected 25.0035, got 0 /   quikplan 10L172 MTHD: expec |
 | #21M | **WARN** | validator blocked on missing dated extract (environmental) |
+| #105 | **IN_DATA** | validator PASS |
 | #13 | **GAP** | termination samples mismatch |
-| #25 | **GAP** | quikmstr MPOLICY width violations=5083 |
+| #2 | **IN_DATA** | quikmstr width11 violations=0; start90=5083/5083; sample 9010143726C present=True |
+| #25 | **WARN** | superseded by #2 width-11; legacy width-10 violations=5083 |
 | #36 | **IN_DATA** | policies with modal factors=4983 |
 | #38 | **IN_DATA** | quikdvdp MDEPOSIT non-zero=59/5083 |
 | #40/#41 | **IN_DATA** | QuikCvs rows=37999 |
 | #41 | **IN_DATA** | 1960PO QuikCvs rows=1000 |
 | #98 | **IN_DATA** | 17085M M/14 anchors dur3=.06 dur85=975.61 dur86=1000 |
-| #96 | **IN_DATA** | 1SALMI PVO=Y PlCv=['F', 'M'] PlTv=['F', 'M'] QuikTvs=508; 1L17SP QuikTvs=38 |
+| #106 | **IN_DATA** | 170858 M/17 Dur2=8.76 Dur83=1000; 1659C2 M/17 SM Dur1=1 Dur83=978 |
+| #96 | **IN_DATA** | 1SALMI PVO=Y PlCv=['F', 'M'] PlTv=['F', 'M'] QuikTvs=516; 1L17SP QuikTvs=56 |
 | #44 | **IN_DATA** | quikloan rows=356 |
 | #45 | **IN_DATA** | MBANKNO populated=1824 |
 | #47 | **IN_DATA** | MBILLDAY non-zero=5083 |
@@ -72,6 +76,7 @@
 | #56/60 plan | **IN_DATA** | 1960PA absent from quikplan (Chris) |
 | #21F | **IN_DATA** | quikprmh CONV_ADJ-like rows=2619 |
 | Claims 14-19 | **IN_DATA** | clms=5594 clmp=6422 |
+| #105 | **IN_DATA** | MPAR=1 rows=2895; mismatches vs plan PAR=0 |
 | Engine | **IN_DATA** | expect v57.85 (batch completed) |
 
 ## Intentionally not in conversion data

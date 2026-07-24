@@ -1,13 +1,19 @@
 {
-  "generated": "2026-07-23T10:11:20",
+  "generated": "2026-07-24T11:55:08",
   "script_version": "1.0",
   "output": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
   "counts": {
-    "IN_DATA": 20,
-    "WARN": 12,
-    "GAP": 20
+    "IN_DATA": 25,
+    "WARN": 13,
+    "GAP": 19
   },
   "results": [
+    {
+      "id": "#2",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
     {
       "id": "#25",
       "status": "IN_DATA",
@@ -123,14 +129,25 @@
       "exit": 1
     },
     {
+      "id": "#105",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
       "id": "#13",
       "status": "GAP",
       "detail": "termination samples mismatch"
     },
     {
+      "id": "#2",
+      "status": "IN_DATA",
+      "detail": "quikmstr width11 violations=0; start90=5083/5083; sample 9010143726C present=True"
+    },
+    {
       "id": "#25",
-      "status": "GAP",
-      "detail": "quikmstr MPOLICY width violations=5083"
+      "status": "WARN",
+      "detail": "superseded by #2 width-11; legacy width-10 violations=5083"
     },
     {
       "id": "#36",
@@ -158,9 +175,14 @@
       "detail": "17085M M/14 anchors dur3=.06 dur85=975.61 dur86=1000"
     },
     {
+      "id": "#106",
+      "status": "IN_DATA",
+      "detail": "170858 M/17 Dur2=8.76 Dur83=1000; 1659C2 M/17 SM Dur1=1 Dur83=978"
+    },
+    {
       "id": "#96",
       "status": "IN_DATA",
-      "detail": "1SALMI PVO=Y PlCv=['F', 'M'] PlTv=['F', 'M'] QuikTvs=508; 1L17SP QuikTvs=38"
+      "detail": "1SALMI PVO=Y PlCv=['F', 'M'] PlTv=['F', 'M'] QuikTvs=516; 1L17SP QuikTvs=56"
     },
     {
       "id": "#44",
@@ -281,6 +303,11 @@
       "id": "Claims 14-19",
       "status": "IN_DATA",
       "detail": "clms=5594 clmp=6422"
+    },
+    {
+      "id": "#105",
+      "status": "IN_DATA",
+      "detail": "MPAR=1 rows=2895; mismatches vs plan PAR=0"
     },
     {
       "id": "Engine",

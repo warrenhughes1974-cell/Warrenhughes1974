@@ -245,6 +245,18 @@ def source_duration_to_ql(source_duration):
     return int(source_duration) - 1
 
 
+def rv_source_duration_to_ql(source_duration):
+    """Issue #106: RV LifePRO Dur labels match QuikTvs Dur (identity, not source-1)."""
+    return int(source_duration)
+
+
+def duration_to_ql_for_type(type_code, source_duration):
+    """Route duration indexing by TYPE_CODE. RV=#106 identity; other non-CV=source-1."""
+    if (type_code or "").strip() == "RV":
+        return rv_source_duration_to_ql(source_duration)
+    return source_duration_to_ql(source_duration)
+
+
 def format_factor(value, max_len=FACTOR_FIELD_LEN, source_decimals=DEFAULT_DECIMALS):
     """
     Format a numeric factor into the CHAR(7) text field WITHOUT scaling or truncating

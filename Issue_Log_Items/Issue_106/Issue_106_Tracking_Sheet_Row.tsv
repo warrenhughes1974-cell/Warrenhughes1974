@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+106	CLOSED ✓	RV Rates Dur Off-by-One	Resolution: QuikTvs RV factors now use the same duration year as LifePRO (Dur N to Dur N) instead of shifting one year early.	2026-07-24	No-Go	Eric	Warren	2026-07-24	v58.31. Val+Reg PASS; IN_DATA. UAT: Test_Validation/rates/QuikTvs.csv. Follow-up #107. Detail: Issue_Log_Items/Issue_106/

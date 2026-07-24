@@ -1,10 +1,11 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.29
-# Date:        2026-07-23
+# Version:     v58.30
+# Date:        2026-07-24
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.29 — Issue #2: MPOLICY = source POLICY_NUMBER + C, right-justify width 11 (supersedes #25).
+# Change Note: v58.30 — Issue #105: quikridr.MPAR from product quikplan.PAR by MPLAN (participating=1).
+#              v58.29 — Issue #2: MPOLICY = source POLICY_NUMBER + C, right-justify width 11 (supersedes #25).
 #              v58.28 — Issue #99: ISWL quikplan MKTG/PRODUCT/HLOB = ISWLFE (8 MPLAN allowlist).
 #              v58.27 — Issue #98: GL85 CV endpoint remap (male ages 1–17); age-100 terminal preserved.
 #              v58.26 — Issue #96: CSO val PVO enablement when QuikTvs/Cvs present; 1SALMI on
@@ -468,7 +469,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.29"
+APP_VERSION = "v58.31"
 APP_BRAND = "QUIKConvert"
 APP_TAGLINE = APP_PRIMARY_TAGLINE
 
@@ -7163,6 +7164,7 @@ class QLAdminEnterpriseIntegrationSuite:
                     # ----------------------------------
 
                 quikridr_par_cache = {}
+                quikridr_product_par_map = {}
                 self._billing_mode_map = getattr(self, "_billing_mode_map", {}) or {}
                 if t_id.lower() == "quikridr":
                     try:
@@ -7180,6 +7182,30 @@ class QLAdminEnterpriseIntegrationSuite:
                                 self.log(f"Auto-loaded PPBENTYP PAR Cache for quikridr ({len(quikridr_par_cache)} records)")
                     except Exception as e:
                         self.log(f"Warning: Failed to load PPBENTYP cache for quikridr - {e}")
+                    # Issue #105: product participating (quikplan.PAR by MPLAN) is MPAR authority
+                    try:
+                        _qp_out = os.path.normpath(
+                            os.path.join(self.path_vars["Out"][0].get().strip() or self._migration_output_dir(), "quikplan.csv")
+                        )
+                        if os.path.exists(_qp_out):
+                            _qpdf = pd.read_csv(_qp_out, encoding="latin1", low_memory=False, dtype=str, on_bad_lines="skip").fillna("")
+                            _qpdf.columns = [str(c).strip().upper() for c in _qpdf.columns]
+                            if "PLAN" in _qpdf.columns and "PAR" in _qpdf.columns:
+                                for _, r in _qpdf.iterrows():
+                                    _pl = self.normalize(r.get("PLAN"))
+                                    _pr = self.normalize(r.get("PAR"))
+                                    if _pl and _pr in ("0", "1"):
+                                        quikridr_product_par_map[_pl] = _pr
+                                self.log(
+                                    f"Issue #105: loaded product PAR map for quikridr MPAR "
+                                    f"({len(quikridr_product_par_map)} plans)"
+                                )
+                            else:
+                                self.log("Issue #105: quikplan.csv missing PLAN/PAR — MPAR defaults to 0")
+                        else:
+                            self.log("Issue #105: quikplan.csv not found — MPAR defaults to 0")
+                    except Exception as e:
+                        self.log(f"Warning: Issue #105 product PAR map failed - {e}")
                     # Issue #88: PPOLC BILLING_MODE for annualized Prem/Unit fallback
                     # Issue #89: POLICY_FEE cache on quikridr path (ridr-only rebatch must not wipe MANNLFEE)
                     try:
@@ -7546,22 +7572,10 @@ class QLAdminEnterpriseIntegrationSuite:
                                         val = pulled_bank
     
                                 if t_id.lower() == "quikridr" and t_f == "MPAR":
-                                    pol_key = self.normalize(src_row.get("POLICY_NUMBER", ""))
-                                    seq_key = self.normalize(src_row.get("BENEFIT_SEQ", ""))
-                                    
-                                    pulled_par = quikridr_par_cache.get((pol_key, seq_key))
-                                    
-                                    if pulled_par is not None:
-                                        normalized_par = self.normalize(pulled_par)
-                                        
-                                        translated_par = trans_map.get(
-                                            f"PAR_{normalized_par}",
-                                            normalized_par
-                                        )
-                                        
-                                        val = translated_par if translated_par else "0"
-                                    else:
-                                        val = "0"
+                                    # Issue #105: MPAR = product quikplan.PAR for this row's MPLAN
+                                    mplan_key = self.normalize(row_data.get("MPLAN", ""))
+                                    product_par = quikridr_product_par_map.get(mplan_key)
+                                    val = product_par if product_par in ("0", "1") else "0"
     
                                 # --- POLICY FEE -> MANNLFEE (Issue 21C, base-coverage row only) ---
                                 if t_id.lower() == "quikridr" and t_f == "MANNLFEE":
@@ -7925,11 +7939,12 @@ class QLAdminEnterpriseIntegrationSuite:
                                         val = ""
                                         
                                 if t_id.lower() == "quikridr" and actual_h == "MPAR":
+                                    # Issue #105: force 0/1; product PAR authority already applied above
                                     normalized_mpar = self.normalize(val)
-                                    if normalized_mpar in ["", "N", "X", "F"]:
-                                        val = "0"
-                                    elif normalized_mpar == "P":
+                                    if normalized_mpar == "1":
                                         val = "1"
+                                    else:
+                                        val = "0"
                                         
                                 if t_id.lower() == "quikclid" and actual_h == "MPHASE":
                                     # Phase finalized after MRELATION is known (below).

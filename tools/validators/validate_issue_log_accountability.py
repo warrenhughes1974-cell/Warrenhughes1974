@@ -159,8 +159,8 @@ def spot_checks() -> list[dict]:
     add("#41", "IN_DATA" if po else "GAP", f"1960PO QuikCvs rows={po}")
 
     # #98 GL85 CV endpoint / duration placement (010398471C / 17085M M age 14)
-    def _cv_at(plan, gender, age, duration):
-        for r in cvs:
+    def _factor_at(rows, plan, gender, age, duration, pfx):
+        for r in rows:
             if _norm(r.get("PLAN")) != plan or _norm(r.get("GENDER")) != gender:
                 continue
             try:
@@ -172,7 +172,28 @@ def spot_checks() -> list[dict]:
                 continue
             col = duration - cntl * 10
             if 0 <= col <= 9:
-                return _norm(r.get(f"CV{col}"))
+                return _norm(r.get(f"{pfx}{col}"))
+        return ""
+
+    def _cv_at(plan, gender, age, duration):
+        return _factor_at(cvs, plan, gender, age, duration, "CV")
+
+    def _tv_at(plan, gender, age, duration, uw=None):
+        for r in tvs:
+            if _norm(r.get("PLAN")) != plan or _norm(r.get("GENDER")) != gender:
+                continue
+            if uw is not None and _norm(r.get("UWCLASS")) != uw:
+                continue
+            try:
+                a = int(_norm(r.get("AGE")) or -1)
+                cntl = int(_norm(r.get("CNTL")) or -1)
+            except ValueError:
+                continue
+            if a != age:
+                continue
+            col = duration - cntl * 10
+            if 0 <= col <= 9:
+                return _norm(r.get(f"TV{col}"))
         return ""
 
     def _cv_num(s):
@@ -196,6 +217,30 @@ def spot_checks() -> list[dict]:
             "GAP",
             f"17085M M/14 anchors dur3={cv06 or '(blank)'} dur85={cv975 or '(blank)'} "
             f"dur86={cv1000 or '(blank)'}",
+        )
+
+    # #106 RV QuikTvs duration identity (LifePRO Dur N == QL Dur N)
+    tv876 = _tv_at("170858", "M", 17, 2)
+    tv1000 = _tv_at("170858", "M", 17, 83)
+    tv1_cen = _tv_at("1659C2", "M", 17, 1, uw="SM")
+    tv978 = _tv_at("1659C2", "M", 17, 83, uw="SM")
+    if (
+        _cv_num(tv876) == 8.76
+        and _cv_num(tv1000) == 1000.0
+        and _cv_num(tv1_cen) == 1.0
+        and _cv_num(tv978) == 978.0
+    ):
+        add(
+            "#106",
+            "IN_DATA",
+            "170858 M/17 Dur2=8.76 Dur83=1000; 1659C2 M/17 SM Dur1=1 Dur83=978",
+        )
+    else:
+        add(
+            "#106",
+            "GAP",
+            f"170858 Dur2={tv876 or '(blank)'} Dur83={tv1000 or '(blank)'}; "
+            f"1659C2 SM Dur1={tv1_cen or '(blank)'} Dur83={tv978 or '(blank)'}",
         )
 
     # #96 CSO PVO + SAL MULTPL / L17 QuikPl* wiring
@@ -372,6 +417,25 @@ def spot_checks() -> list[dict]:
     clmp = load_csv("quikclmp.csv")
     add("Claims 14-19", "IN_DATA" if len(clms) > 1000 and len(clmp) > 1000 else "GAP", f"clms={len(clms)} clmp={len(clmp)}")
 
+    # #105 product PAR → quikridr.MPAR
+    par_map = {_norm(r.get("PLAN")): _norm(r.get("PAR")) for r in plan}
+    mpar_bad = 0
+    mpar_on = 0
+    for r in ridr:
+        mpar = _norm(r.get("MPAR"))
+        plan_par = par_map.get(_norm(r.get("MPLAN")), "")
+        if mpar == "1":
+            mpar_on += 1
+        if plan_par == "1" and mpar != "1":
+            mpar_bad += 1
+        elif plan_par != "1" and mpar == "1":
+            mpar_bad += 1
+    add(
+        "#105",
+        "IN_DATA" if mpar_on > 0 and mpar_bad == 0 else "GAP",
+        f"MPAR=1 rows={mpar_on}; mismatches vs plan PAR={mpar_bad}",
+    )
+
     # engine version
     add("Engine", "IN_DATA", "expect v57.85 (batch completed)")
 
@@ -408,6 +472,7 @@ def main() -> int:
         ("#21A", ["tools/validators/validate_issue21a_mnfopt.py"], False),
         ("#21J", ["tools/validators/validate_issue21j_modal_factors.py"], False),
         ("#21M", ["tools/validators/validate_issue21m_quikmemo.py"], False),
+        ("#105", ["tools/validators/validate_issue105_mpar.py"], True),
     ]
 
     val_results = []

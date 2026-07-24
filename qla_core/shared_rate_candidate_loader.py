@@ -126,7 +126,8 @@ def _transform_rate_table_row(row, lineno, cov, entry, config):
             "raw_value": val, "lineno": lineno,
         }
     try:
-        ql_dur = S.source_duration_to_ql(dur)
+        # Issue #106: RV identity Dur; other shared non-CV stay source-1
+        ql_dur = S.duration_to_ql_for_type(typ, dur)
     except ValueError:
         return {
             "status": "BAD_VALUE", "source": "SHARED_RATE_TABLE",

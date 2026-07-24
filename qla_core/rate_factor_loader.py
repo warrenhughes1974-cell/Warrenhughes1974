@@ -248,7 +248,8 @@ def transform_source(source_csv, cov2plan, config, cv_fnz=None, segment_resolver
                     ql_dur = S.source_duration_to_ql(dur)
             else:
                 try:
-                    ql_dur = S.source_duration_to_ql(dur)
+                    # Issue #106: RV → QuikTvs uses identity Dur; other non-CV stay source-1
+                    ql_dur = S.duration_to_ql_for_type(typ, dur)
                 except ValueError:
                     yield {"status": "BAD_VALUE", "type_code": typ, "coverage_id": cov,
                            "plan": plan, "raw_duration": dur, "lineno": lineno}

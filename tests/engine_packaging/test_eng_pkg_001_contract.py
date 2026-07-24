@@ -17,7 +17,14 @@ REQUIRED_MODULES = (
 )
 
 REQUIRED_SYMBOLS = {
-    "rate_dbf_schema": ["MAX_AGE", "source_duration_to_ql", "duration_to_cntl_col", "KEY_TABLE"],
+    "rate_dbf_schema": [
+        "MAX_AGE",
+        "source_duration_to_ql",
+        "rv_source_duration_to_ql",
+        "duration_to_ql_for_type",
+        "duration_to_cntl_col",
+        "KEY_TABLE",
+    ],
     "rate_factor_loader": ["LoaderConfig", "build_factor_grid", "grid_to_factor_rows"],
     "rate_key_setup": ["AssumptionProvider", "build_key_rows"],
     "rate_member_setup": ["build_member_rows"],
@@ -81,6 +88,9 @@ def test_rate_schema_behavior_unchanged(import_snapshot):
     S = importlib.import_module("qla_core.rate_dbf_schema")
     assert S.duration_to_cntl_col(0) == ("00", 0)
     assert S.source_duration_to_ql(1) == 0
+    assert S.rv_source_duration_to_ql(1) == 1  # Issue #106
+    assert S.duration_to_ql_for_type("RV", 2) == 2
+    assert S.duration_to_ql_for_type("NP", 2) == 1
     assert S.format_factor(1.5)  # returns string, no exception
 
 

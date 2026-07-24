@@ -166,7 +166,8 @@ def _transform_row(r, lineno, cov, entry, config):
     age2 = emitted_age_int
 
     try:
-        ql_dur = S.source_duration_to_ql(dur)
+        # Issue #106: RV identity Dur; other inherited non-CV stay source-1
+        ql_dur = S.duration_to_ql_for_type(typ, dur)
     except ValueError:
         return {
             "status": "BAD_VALUE", "type_code": typ, "coverage_id": cov,
