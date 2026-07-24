@@ -108,4 +108,8 @@ Revert v58.31 duration helpers; re-emit QuikTvs from prior `source − 1` behavi
 
 ## Git
 
-See commit recorded at close (issue-scoped).
+| Item | Value |
+|------|-------|
+| Commit | `d6919ae` |
+| Branch | `issue-34-pr7-quikisrr` |
+| Message | Close Issue #106: QuikTvs RV duration identity (v58.31). |
