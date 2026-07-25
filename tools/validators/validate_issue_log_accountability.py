@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import subprocess
 import sys
 from collections import Counter, defaultdict
@@ -20,7 +21,11 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
 PY = sys.executable
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "1.1"
+
+# Match UAT batch / run_converter.bat so MLASTANN validators (#60/#76) use the
+# extract as-of date rather than today's system date.
+os.environ.setdefault("QLA_VALUATION_DATE", "20251231")
 
 
 def _norm(v) -> str:

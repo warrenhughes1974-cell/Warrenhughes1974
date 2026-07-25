@@ -246,3 +246,35 @@ Notes:
 - Row counts: quikmstr 5,083 · quikridr 6,934 · quikplan 141 · full batch exit 0 ~27 min
 - Published `Output/Test_Validation/` for Issue_2 (15 tables)
 - Log: `QLA_Migration/Logs/_full_batch_test_log.txt`
+
+### Run 2026-07-25 — app.py v58.36 — Full batch — Source=PPOLC_…_20260630 (post #114 dividend history)
+
+Operator: Agent (check-in + full conversion + issue accountability)  
+Env: UAT; rates included; QuikBenh loan + dividend emit on; `QLA_VALUATION_DATE=20251231`  
+Result summary: **8 PASS** · **1 PARTIAL** · **2 BLOCKED** · **4 OPEN** (SME-gated) · conversion exit **0** (~29 min)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | `1668SP`, `10L171`, `10L172`, `1L17SP`: PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **BLOCKED** | All 141 DEFICIENCY=N; awaiting CSO |
+| A3 | **BLOCKED** | Default PVO fleet rule awaiting Development approval |
+| A4 | **PASS** | 0 blank-PLAN rows across 10 QuikPl*/QuikPI* files |
+| A5 | **OPEN** | Awaiting Valuation_Setup |
+| A6 | **PARTIAL** | Pre-existing orphan-flag residual |
+| A7 | **OPEN** | VARGP=4 still fleet-wide; awaiting Eric (Item 09) |
+| A8a | **PASS** | A-prefix PAR=0 (2 plans) |
+| A8b | **PASS** | A-prefix VARDB=0 |
+| A8c | **OPEN** | Awaiting Eric |
+| A8d | **OPEN** | Awaiting Eric |
+| A8e | **PASS** | Annuity PVO defaults (prior impl) |
+| A9a | **OPEN** | Awaiting Eric |
+| A9b | **PASS** | Prefix-9 PAR≠0 count 0 (56 plans) |
+| A10 | **PASS** | QuikUwpo 5 rows (00/NS/PR/SM/ST) |
+
+Notes:
+- **Issue #114:** batch log shows 2,500 PACTG + 579 plugs → 43,589 quikbenh rows; validator PASS; accountability **IN_DATA**
+- **Issue #54/#110/#105/#75/#72/#60/#2:** direct validators PASS on this Output
+- **Issue #76:** PASS when `QLA_VALUATION_DATE=20251231` (false GAP if accountability uses system date)
+- **Issue #54 script GAP:** stale 10-char MPOLICY expectations — not a data regression (spot-check IN_DATA; types 8/10/11/12 + 1–4 present)
+- Row counts: quikmstr 5,083 · quikridr 6,934 · quikplan 141 · quikbenh 43,589 · quikprmh 209,480
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt` / `_full_batch_console_20260725.txt`
