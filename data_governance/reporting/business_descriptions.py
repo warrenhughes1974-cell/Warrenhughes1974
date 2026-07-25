@@ -388,6 +388,73 @@ RULE_DESCRIPTIONS: dict[str, RuleDescription] = {
         record_strategy="policy_number",
         problem_default="Residence state validation is deferred.",
     ),
+    "DG-QUIKMSTR-027": RuleDescription(
+        rule_id="DG-QUIKMSTR-027",
+        area_name="Policy Master",
+        check_description=(
+            "A terminated policy carries no coverage that is still in force."
+        ),
+        required_value="Every coverage terminated when the policy is terminated",
+        record_strategy="policy_number",
+        problem_default="The policy is terminated but a coverage is still in force.",
+    ),
+    "DG-QUIKMSTR-028": RuleDescription(
+        rule_id="DG-QUIKMSTR-028",
+        area_name="Policy Master",
+        check_description=(
+            "On an extended term or reduced paid-up policy, the base coverage carries the "
+            "same status as the policy."
+        ),
+        required_value="Phase 1 coverage status equals the policy status",
+        record_strategy="policy_number",
+        problem_default="The base coverage status does not match the policy status.",
+    ),
+    "DG-QUIKMSTR-029": RuleDescription(
+        rule_id="DG-QUIKMSTR-029",
+        area_name="Policy Master",
+        check_description=(
+            "Coverages beyond the base are normally terminated on an extended term or "
+            "reduced paid-up policy. Any still in force are listed for source review."
+        ),
+        required_value="Other coverages terminated, or confirmed against the source system",
+        record_strategy="policy_number",
+        problem_default=(
+            "A coverage beyond the base is still in force on a nonforfeiture policy."
+        ),
+    ),
+    "DG-QUIKMSTR-030": RuleDescription(
+        rule_id="DG-QUIKMSTR-030",
+        area_name="Policy Master",
+        check_description="An active policy has at least one coverage still in force.",
+        required_value="At least one in-force coverage on an active policy",
+        record_strategy="policy_number",
+        problem_default="The policy is active but every coverage is terminated.",
+    ),
+    "DG-QUIKMSTR-031": RuleDescription(
+        rule_id="DG-QUIKMSTR-031",
+        area_name="Policy Master",
+        check_description=(
+            "The nonforfeiture election agrees with the policy status. Disagreements are "
+            "listed for source review rather than corrected."
+        ),
+        required_value="Election 2 for extended term, 3 for reduced paid-up",
+        record_strategy="policy_number",
+        problem_default=(
+            "The nonforfeiture election does not agree with the policy status."
+        ),
+    ),
+    "DG-QUIKMSTR-032": RuleDescription(
+        rule_id="DG-QUIKMSTR-032",
+        area_name="Policy Master",
+        check_description=(
+            "Extended term and reduced paid-up policies carry a complete and consistent "
+            "field set: pay-up date, attained age, blank save fields, zero premium on "
+            "extended term, and terminated paid-up additions."
+        ),
+        required_value="Complete nonforfeiture field set",
+        record_strategy="policy_number",
+        problem_default="A nonforfeiture field is missing or inconsistent.",
+    ),
     "DG-QUIKMSTR-026": RuleDescription(
         rule_id="DG-QUIKMSTR-026",
         area_name="Policy Master",

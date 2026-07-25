@@ -814,6 +814,12 @@ from data_governance.catalog.governance_items_policy_data import (  # noqa: E402
     RULE_DG_QUIKMSTR_024,
     RULE_DG_QUIKMSTR_025,
     RULE_DG_QUIKMSTR_026,
+    RULE_DG_QUIKMSTR_027,
+    RULE_DG_QUIKMSTR_028,
+    RULE_DG_QUIKMSTR_029,
+    RULE_DG_QUIKMSTR_030,
+    RULE_DG_QUIKMSTR_031,
+    RULE_DG_QUIKMSTR_032,
 )
 
 ALL_GOVERNANCE_ITEMS = (

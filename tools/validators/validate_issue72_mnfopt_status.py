@@ -1,9 +1,17 @@
 """
-Issue #72 — quikmstr MNFOPT validation for this batch.
+Issue #72 — quikmstr MNFOPT vs ETI/RPU status.
+
+Robert 2026-07-25 reversed the original rule. MNFOPT must carry the **source** election from
+PPBENTYP; the converter must no longer force it from MSTATUS. Any disagreement between the
+election and the policy status is reported for source review instead of being overwritten.
 
 Rules:
-  1. MSTATUS 44 → MNFOPT 2; MSTATUS 45 → MNFOPT 3 (Robert)
-  2. MNFOPT > 0 → phase-1 plan is life with CV (QuikPlCv key or VARDB ≠ 0)
+  1. MNFOPT is NOT forced. Every NFO policy whose election disagrees with its status must
+     appear in Reports/nfo_election_status_mismatch.csv, and the report must agree exactly
+     with what was emitted (no silently forced rows, no phantom rows).
+  2. MNFOPT domain is 0-3.
+  3. MNFOPT > 0 -> phase-1 plan is life with CV (QuikPlCv key or VARDB != 0).
+  4. Client trace policies carry their specified source election.
 
 Usage:
   python tools/validators/validate_issue72_mnfopt_status.py
@@ -19,14 +27,15 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
-BASELINE = PROJECT_ROOT / "Issue_Log_Items" / "Issue_72" / "evidence" / "issue72_risk_mnfopt_deltas.csv"
+DEFAULT_REPORTS = PROJECT_ROOT / "QLA_Migration" / "Reports"
+MISMATCH_REPORT = "nfo_election_status_mismatch.csv"
 EVIDENCE = PROJECT_ROOT / "Issue_Log_Items" / "Issue_72" / "evidence" / "issue72_nfo_life_cv_validation.csv"
 
-SCRIPT_VERSION = "1.1"
+SCRIPT_VERSION = "2.0"
 EXPECTED_ROW_COUNT = 5083
-EXPECTED_FORCE_COUNT = 277
 
-ROBERT_SAMPLE = "010407670C"
+# Client trace policies (recorded in the pre-Issue-#2 10-char form; matched via _canon).
+# Expected values are the SOURCE election, not a status-derived one.
 CONTROLS = {
     "010367131C": ("22", "2"),
     "010148272C": ("22", "2"),
@@ -38,6 +47,16 @@ CONTROLS = {
 
 def _n(v: object) -> str:
     return ("" if v is None else str(v)).strip()
+
+
+def _canon(v: object) -> str:
+    """Policy identity that matches across the Issue #2 key change (see #108F)."""
+    s = _n(v).upper()
+    if s.endswith("C"):
+        s = s[:-1]
+    if s.startswith("9"):
+        s = s[1:]
+    return s
 
 
 def _load_csv(path: Path) -> list[dict]:
@@ -59,8 +78,7 @@ def _is_life_with_cv(mplan: str, plans: dict[str, dict], cv_plans: set[str]) -> 
     pl = plans.get(mplan)
     if not pl:
         return False
-    vardb = _n(pl.get("VARDB"))
-    return mplan in cv_plans or vardb not in ("", "0")
+    return mplan in cv_plans or _n(pl.get("VARDB")) not in ("", "0")
 
 
 def _validate_nfo_life_cv(output_dir: Path, mstr_rows: list[dict], errors: list[str]) -> tuple[int, int]:
@@ -72,81 +90,107 @@ def _validate_nfo_life_cv(output_dir: Path, mstr_rows: list[dict], errors: list[
             errors.append(f"life-with-CV check: missing {p.name}")
             return 0, 0
 
-    ridr = _load_csv(ridr_path)
     plans = {_n(r.get("PLAN")): r for r in _load_csv(plan_path) if _n(r.get("PLAN"))}
     cv_plans = {_n(r.get("PLAN")) for r in _load_csv(plcv_path) if _n(r.get("PLAN"))}
     phase1 = {
-        _n(r.get("MPOLICY")): r
-        for r in ridr
+        _canon(r.get("MPOLICY")): r
+        for r in _load_csv(ridr_path)
         if _n(r.get("MPHASE")) == "1"
     }
 
     checked = 0
     fails: list[dict] = []
     for r in mstr_rows:
-        nfo = _to_int(r.get("MNFOPT"))
-        if nfo <= 0:
+        if _to_int(r.get("MNFOPT")) <= 0:
             continue
         checked += 1
         pol = _n(r.get("MPOLICY"))
-        p1 = phase1.get(pol)
+        p1 = phase1.get(_canon(pol))
         if not p1:
-            fails.append({
-                "MPOLICY": pol,
-                "MNFOPT": str(nfo),
-                "MPLAN": "",
-                "RESULT": "FAIL",
-                "REASON": "no phase-1 quikridr row",
-            })
+            fails.append({"MPOLICY": pol, "MNFOPT": _n(r.get("MNFOPT")), "MPLAN": "",
+                          "RESULT": "FAIL", "REASON": "no phase-1 quikridr row"})
             continue
         mplan = _n(p1.get("MPLAN"))
-        pl = plans.get(mplan, {})
-        ok = _is_life_with_cv(mplan, plans, cv_plans)
-        if not ok:
+        if not _is_life_with_cv(mplan, plans, cv_plans):
+            pl = plans.get(mplan, {})
             fails.append({
-                "MPOLICY": pol,
-                "MNFOPT": str(nfo),
-                "MPLAN": mplan,
+                "MPOLICY": pol, "MNFOPT": _n(r.get("MNFOPT")), "MPLAN": mplan,
                 "RESULT": "FAIL",
-                "REASON": (
-                    f"not life-with-CV "
-                    f"(PRODUCT={_n(pl.get('PRODUCT'))} VARDB={_n(pl.get('VARDB'))} "
-                    f"QuikPlCv={mplan in cv_plans})"
-                ),
+                "REASON": (f"not life-with-CV (PRODUCT={_n(pl.get('PRODUCT'))} "
+                           f"VARDB={_n(pl.get('VARDB'))} QuikPlCv={mplan in cv_plans})"),
             })
 
     EVIDENCE.parent.mkdir(parents=True, exist_ok=True)
     with EVIDENCE.open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(
-            f,
-            fieldnames=["MPOLICY", "MNFOPT", "MPLAN", "RESULT", "REASON"],
-        )
+        w = csv.DictWriter(f, fieldnames=["MPOLICY", "MNFOPT", "MPLAN", "RESULT", "REASON"])
         w.writeheader()
-        if fails:
-            w.writerows(fails)
-        else:
-            w.writerow({
-                "MPOLICY": "(fleet)",
-                "MNFOPT": "",
-                "MPLAN": "",
-                "RESULT": "PASS",
-                "REASON": f"all {checked} MNFOPT>0 policies have life-with-CV phase-1 plan",
-            })
+        w.writerows(fails or [{
+            "MPOLICY": "(fleet)", "MNFOPT": "", "MPLAN": "", "RESULT": "PASS",
+            "REASON": f"all {checked} MNFOPT>0 policies have life-with-CV phase-1 plan",
+        }])
 
-    if fails:
-        for row in fails[:5]:
-            errors.append(
-                f"NFO>0 not life-with-CV: {row['MPOLICY']} plan={row['MPLAN']} {row['REASON']}"
-            )
-        if len(fails) > 5:
-            errors.append(f"NFO>0 life-with-CV failures: {len(fails)} total (see {EVIDENCE.name})")
+    for row in fails[:5]:
+        errors.append(f"NFO>0 not life-with-CV: {row['MPOLICY']} plan={row['MPLAN']} {row['REASON']}")
+    if len(fails) > 5:
+        errors.append(f"NFO>0 life-with-CV failures: {len(fails)} total (see {EVIDENCE.name})")
 
     return checked, len(fails)
+
+
+def _validate_no_force(rows: list[dict], reports_dir: Path, errors: list[str]) -> tuple[int, int]:
+    """The emitted mismatches and the exception report must agree exactly."""
+    expected_by_status = {"44": "2", "45": "3"}
+    emitted: dict[str, tuple[str, str]] = {}
+    for r in rows:
+        st = _n(r.get("MSTATUS"))
+        want = expected_by_status.get(st)
+        if want is None:
+            continue
+        got = _n(r.get("MNFOPT"))
+        if got != want:
+            emitted[_canon(r.get("MPOLICY"))] = (st, got)
+
+    report_path = reports_dir / MISMATCH_REPORT
+    if not report_path.exists():
+        errors.append(
+            f"missing {MISMATCH_REPORT} — the Issue #72 downgrade requires the exception "
+            "report to be written every batch (header even when empty)"
+        )
+        return len(emitted), 0
+
+    reported = {_canon(r.get("MPOLICY")): r for r in _load_csv(report_path)}
+
+    missing = set(emitted) - set(reported)
+    phantom = set(reported) - set(emitted)
+    if missing:
+        errors.append(
+            f"{len(missing)} policies disagree with their status but are absent from "
+            f"{MISMATCH_REPORT} (e.g. {sorted(missing)[0]})"
+        )
+    if phantom:
+        errors.append(
+            f"{len(phantom)} policies in {MISMATCH_REPORT} do not disagree in the output "
+            f"(e.g. {sorted(phantom)[0]}) — report is stale"
+        )
+
+    for pol, row in reported.items():
+        if pol not in emitted:
+            continue
+        st, got = emitted[pol]
+        if _n(row.get("MSTATUS")) != st or _n(row.get("MNFOPT_EMITTED")) != got:
+            errors.append(
+                f"{_n(row.get('MPOLICY'))}: report says {_n(row.get('MSTATUS'))}/"
+                f"{_n(row.get('MNFOPT_EMITTED'))}, output has {st}/{got}"
+            )
+            break
+
+    return len(emitted), len(reported)
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
+    ap.add_argument("--reports-dir", type=Path, default=DEFAULT_REPORTS)
     args = ap.parse_args()
     mstr_path = args.output_dir / "quikmstr.csv"
     if not mstr_path.exists():
@@ -159,31 +203,18 @@ def main() -> int:
     if len(rows) != EXPECTED_ROW_COUNT:
         errors.append(f"row count {len(rows)} != expected {EXPECTED_ROW_COUNT}")
 
-    bad44 = bad45 = 0
-    for r in rows:
-        st, nfo, pol = _n(r.get("MSTATUS")), _n(r.get("MNFOPT")), _n(r.get("MPOLICY"))
-        if st == "44" and nfo != "2":
-            bad44 += 1
-            if bad44 <= 3:
-                errors.append(f"status 44 MNFOPT!=2: {pol} got {nfo}")
-        if st == "45" and nfo != "3":
-            bad45 += 1
-            if bad45 <= 3:
-                errors.append(f"status 45 MNFOPT!=3: {pol} got {nfo}")
-
-    if bad44 or bad45:
-        errors.append(f"violations: status44={bad44} status45={bad45}")
-
-    sample = next((r for r in rows if _n(r.get("MPOLICY")) == ROBERT_SAMPLE), None)
-    if not sample:
-        errors.append(f"missing sample {ROBERT_SAMPLE}")
-    elif _n(sample.get("MSTATUS")) != "45" or _n(sample.get("MNFOPT")) != "3":
+    bad_domain = [r for r in rows if _n(r.get("MNFOPT")) not in ("", "0", "1", "2", "3")]
+    if bad_domain:
         errors.append(
-            f"{ROBERT_SAMPLE}: expected 45/3 got {_n(sample.get('MSTATUS'))}/{_n(sample.get('MNFOPT'))}"
+            f"MNFOPT outside 0-3 on {len(bad_domain)} policies "
+            f"(e.g. {_n(bad_domain[0].get('MPOLICY'))}={_n(bad_domain[0].get('MNFOPT'))})"
         )
 
+    mismatches, reported = _validate_no_force(rows, args.reports_dir, errors)
+
+    by_pol = {_canon(r.get("MPOLICY")): r for r in rows}
     for pol, (exp_st, exp_nfo) in CONTROLS.items():
-        r = next((x for x in rows if _n(x.get("MPOLICY")) == pol), None)
+        r = by_pol.get(_canon(pol))
         if not r:
             errors.append(f"missing control {pol}")
             continue
@@ -193,27 +224,12 @@ def main() -> int:
                 f"{_n(r.get('MSTATUS'))}/{_n(r.get('MNFOPT'))}"
             )
 
-    # Optional delta count vs risk baseline
-    if BASELINE.exists():
-        with BASELINE.open(newline="", encoding="utf-8") as f:
-            baseline_n = sum(1 for _ in csv.DictReader(f))
-        forced = 0
-        with BASELINE.open(newline="", encoding="utf-8") as f:
-            for b in csv.DictReader(f):
-                pol = _n(b.get("MPOLICY"))
-                r = next((x for x in rows if _n(x.get("MPOLICY")) == pol), None)
-                if r and _n(r.get("MNFOPT")) == _n(b.get("MNFOPT_AFTER")):
-                    forced += 1
-        if forced != baseline_n:
-            errors.append(f"baseline delta match {forced}/{baseline_n}")
-
     nfo_cv_checked, nfo_cv_fails = _validate_nfo_life_cv(args.output_dir, rows, errors)
 
-    print(f"validate_issue72_mnfopt_status v{SCRIPT_VERSION}")
-    print(f"  rows={len(rows)} bad44={bad44} bad45={bad45}")
+    print(f"validate_issue72_mnfopt_status v{SCRIPT_VERSION} (report-only; force removed v58.33)")
+    print(f"  rows={len(rows)}")
+    print(f"  election/status disagreements: emitted={mismatches} reported={reported}")
     print(f"  NFO>0 life-with-CV: checked={nfo_cv_checked} fail={nfo_cv_fails}")
-    if sample:
-        print(f"  {ROBERT_SAMPLE}: MSTATUS={_n(sample.get('MSTATUS'))} MNFOPT={_n(sample.get('MNFOPT'))}")
 
     if errors:
         print("FAIL:")

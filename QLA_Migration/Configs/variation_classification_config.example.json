@@ -2,7 +2,7 @@
   "_comment": "Variation Classification Engine — audit-first by default.",
   "AUTO_APPLY_VARIATION_CODES": false,
   "rate_table_extract": "QLA_Migration/Source/Rate_Table_Extract_Txt.txt",
-  "paagerat_extract": "QLA_Migration/Source/PAAGERAT_AttainedAge_Rates_Extract_20260630.csv",
+  "paagerat_extract": "QLA_Migration/Staging/paagerat_dated_merged.csv",
   "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
   "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
   "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",

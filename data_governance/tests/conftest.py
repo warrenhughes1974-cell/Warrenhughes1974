@@ -116,9 +116,11 @@ def clean_company_tables():
                 "MLANGUAGE": "E",
             },
         ],
+        # MPHSTAT is required by the cross-table status rules (DG-QUIKMSTR-027 to 032):
+        # both policies are active, so their base coverage must be in force.
         "QuikRidr": [
-            {"MPOLICY": "123456789A", "MPHASE": 1},
-            {"MPOLICY": "987654321B", "MPHASE": 1},
+            {"MPOLICY": "123456789A", "MPHASE": 1, "MPHSTAT": "22"},
+            {"MPOLICY": "987654321B", "MPHASE": 1, "MPHSTAT": "22"},
         ],
         "QuikClid": [
             {

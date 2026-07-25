@@ -1,0 +1,37 @@
+---
+description: Emit only the changed issue-log row on status updates (not the full list)
+alwaysApply: true
+---
+
+# Issue Log — changed row only on status updates
+
+**Authority:** User instruction 2026-07-25 (revised same day: stop full-list reprints).
+
+When an issue changes status (or Notes/resolution are updated for the sheet), emit
+**only that issue’s row** — do **not** reprint the entire issue list unless the user
+explicitly asks for the full list.
+
+## Required format
+
+Tab-separated, one row, exactly these 10 columns:
+
+```text
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+```
+
+Note the trailing spaces in `Short Name ` and `Assigned ` — they match the client sheet.
+
+## Rules
+
+1. Output the single row in chat as a **plain code block** (not a code reference) so it
+   can be copied into Google Sheets, and keep the backing `.tsv` / tracking row in sync.
+2. Every cell on one line — no embedded newlines, or Sheets will split the row.
+3. Empty `Date Resolved` stays empty (two consecutive tabs). Populate it on Closure only.
+4. Update `Status` and `Notes` together — Notes should say what changed and in which release.
+5. Full-list reprint only when the user asks (e.g. “full list” / “reprint the sheet”).
+
+## Closure reminder
+
+Status **Closed** still requires the G7 gate: issue validator PASS on full
+`QLA_Migration/Output/` **and** accountability **IN_DATA**. See
+`.cursor/rules/issue-closure-output-gate.mdc`. Never set Closed to make a list look tidy.

@@ -17,6 +17,8 @@ os.environ.setdefault("QLA_ENABLE_QUIKLOAN_EMIT", "1")
 os.environ.setdefault("QLA_QUIKLOAN_WRITE_OUTPUT", "1")
 os.environ.setdefault("QLA_ENABLE_QUIKBENH_LOAN_EMIT", "1")
 os.environ.setdefault("QLA_QUIKBENH_LOAN_WRITE_OUTPUT", "1")
+os.environ.setdefault("QLA_ENABLE_QUIKBENH_DIVIDEND_EMIT", "1")
+os.environ.setdefault("QLA_QUIKBENH_DIVIDEND_WRITE_OUTPUT", "1")
 os.environ.setdefault("QLA_BATCH_INCLUDE_RATE_TABLES", "1")
 os.environ.setdefault("QLA_ENABLE_QUIKISRR_EMIT", "1")
 os.environ.setdefault("QLA_ENABLE_REINSURANCE_EMIT", "1")
@@ -31,6 +33,8 @@ os.environ["QLA_ENABLE_QUIKLOAN_EMIT"] = "1"
 os.environ["QLA_QUIKLOAN_WRITE_OUTPUT"] = "1"
 os.environ["QLA_ENABLE_QUIKBENH_LOAN_EMIT"] = "1"
 os.environ["QLA_QUIKBENH_LOAN_WRITE_OUTPUT"] = "1"
+os.environ["QLA_ENABLE_QUIKBENH_DIVIDEND_EMIT"] = "1"
+os.environ["QLA_QUIKBENH_DIVIDEND_WRITE_OUTPUT"] = "1"
 os.environ["QLA_BATCH_INCLUDE_RATE_TABLES"] = "1"
 os.environ["QLA_ENABLE_QUIKISRR_EMIT"] = "1"
 os.environ["QLA_ENABLE_REINSURANCE_EMIT"] = "1"

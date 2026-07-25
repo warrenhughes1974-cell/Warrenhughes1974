@@ -43,7 +43,7 @@ def test_all_registered_rules_run_together(tmp_path, clean_company_tables):
         write_reports=False,
         preloaded_tables=clean_company_tables,
     )
-    assert len(result.rules_executed) == 100
+    assert len(result.rules_executed) == 106
     assert "DG-QUIKMSTR-001" in result.rules_executed
     assert "DG-QUIKMSTR-026" in result.rules_executed
     assert "DG-QUIKCLNT-001" in result.rules_executed
@@ -73,7 +73,7 @@ def test_one_rule_failure_does_not_stop_others(tmp_path):
         write_reports=False,
         preloaded_tables=tables,
     )
-    assert len(result.rule_results) == 100
+    assert len(result.rule_results) == 106
     by_id = {r.rule_id: r for r in result.rule_results}
     assert by_id["DG-QUIKCOMP-001"].status == STATUS_FAIL
     assert by_id["DG-QUIKCOMP-002"].status == STATUS_FAIL

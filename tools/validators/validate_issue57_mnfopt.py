@@ -30,7 +30,7 @@ RULEBOOK = PROJECT_ROOT / "QLA_Migration" / "Configs" / "Sync_Rulebook_quikmstr.
 PPBENTYP = DEFAULT_SOURCE / "PPBENTYP_BenefitType_Extract_20260630.csv"
 CROSSWALK = PROJECT_ROOT / "QLA_Migration" / "Mapping" / "Master_Crosswalk.csv"
 
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "1.1"
 EXPECTED_ROW_COUNT = 5083
 
 REQUIRED_TRANS = {
@@ -66,6 +66,20 @@ def _read_csv(path: Path) -> pd.DataFrame:
 
 def _strip_val(s: object) -> str:
     return str(s).strip().replace(".0", "")
+
+
+def _canon(v: object) -> str:
+    """Policy identity that matches across the Issue #2 key change (v58.29).
+
+    Traces below are recorded in the pre-#2 10-char form; MPOLICY is now 11 characters.
+    Dropping a trailing C and a single leading 9 makes both forms comparable.
+    """
+    s = _strip_val(v).upper()
+    if s.endswith("C"):
+        s = s[:-1]
+    if s.startswith("9"):
+        s = s[1:]
+    return s
 
 
 def _load_trans() -> dict[str, str]:
@@ -151,7 +165,8 @@ def validate(output_dir: Path) -> int:
     if len(qm) != EXPECTED_ROW_COUNT:
         errors.append(f"quikmstr row count: got {len(qm)}, expected {EXPECTED_ROW_COUNT}")
 
-    mnfopt = qm.set_index("MPOLICY")["MNFOPT"].astype(str).str.strip().str.replace(".0", "", regex=False)
+    qm["_CANON"] = qm["MPOLICY"].map(_canon)
+    mnfopt = qm.set_index("_CANON")["MNFOPT"].astype(str).str.strip().str.replace(".0", "", regex=False)
     invalid = mnfopt[~mnfopt.isin(["0", "1", "2", "3", ""])]
     if len(invalid):
         errors.append(f"MNFOPT outside 0-3: {len(invalid)} policies (e.g. {invalid.index[0]}={invalid.iloc[0]})")
@@ -161,7 +176,7 @@ def validate(output_dir: Path) -> int:
     print(f"quikmstr rows: {len(qm)}")
 
     for mp, want in {**ERIC_TRACES, **REGRESSION_21A}.items():
-        got = _strip_val(mnfopt.get(mp, "")) or "0"
+        got = _strip_val(mnfopt.get(_canon(mp), "")) or "0"
         label = "ERIC" if mp in ERIC_TRACES else "21A"
         print(f"TRACE {label} {mp}: MNFOPT={got} expected={want}")
         if got != want:
@@ -171,14 +186,11 @@ def validate(output_dir: Path) -> int:
     if PPBENTYP.exists():
         ppb = _read_csv(PPBENTYP)
         ppb = ppb[ppb["BENEFIT_SEQ"].astype(str).str.strip().isin(["1", "01"])].copy()
-        cw = _read_csv(CROSSWALK)
-        old_col = "OLD_VALUE" if "OLD_VALUE" in cw.columns else "Old_Value"
-        new_col = "NEW_VALUE" if "NEW_VALUE" in cw.columns else "New_Value"
-        cw_map = dict(zip(cw[old_col].astype(str).str.strip(), cw[new_col].astype(str).str.strip()))
+        # Match on canonical identity rather than the crosswalk: Master_Crosswalk.csv still
+        # holds pre-Issue-#2 New_Value keys, so a cw lookup here silently matches nothing.
         for _, r in ppb.iterrows():
             lp = _strip_val(r.get("POLICY_NUMBER", ""))
-            mp = cw_map.get(lp, lp)
-            if mp != "010392763C":
+            if _canon(lp) != _canon("010392763C"):
                 continue
             raw = _resolve_source_nfo(r)
             sim = _translate_nfo(raw, trans)

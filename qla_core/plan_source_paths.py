@@ -1,10 +1,21 @@
-"""Canonical plan/rate source paths — single resolver with legacy fallbacks."""
+"""Canonical plan/rate source paths — single resolver with legacy fallbacks.
+
+Rate extracts (PAAGE / PAAGERAT / PDAGE): discover all dated files under
+QLA_Migration/Source and merge oldest→newest so filename YYYYMMDD wins on
+duplicate keys (see qla_core.dated_extract_merge).
+"""
 import os
+
+from qla_core.dated_extract_merge import ensure_merged_family
 
 _ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 _SRC = os.path.join(_ROOT, "plan_analysis", "source_data")
 _QLA_SOURCE = os.path.join(_ROOT, "QLA_Migration", "Source")
+_STAGING = os.path.join(_ROOT, "QLA_Migration", "Staging")
 _LEGACY = os.path.join(_ROOT, "docs", "plan_conversion_reference")
+
+# Last merge summaries (for pipeline logging / diagnostics)
+_LAST_MERGE: dict[str, dict] = {}
 
 
 def _first(*candidates):
@@ -12,6 +23,10 @@ def _first(*candidates):
         if p and os.path.isfile(p):
             return p
     return candidates[0] if candidates else ""
+
+
+def last_merge_summaries() -> dict[str, dict]:
+    return dict(_LAST_MERGE)
 
 
 def rate_table_extract():
@@ -23,24 +38,53 @@ def rate_table_extract():
     )
 
 
-def paagerat_extract():
-    """Prefer QLA Source package PAAGERAT, then plan_analysis / legacy twins."""
-    return _first(
-        os.path.join(_QLA_SOURCE, "PAAGERAT_AttainedAge_Rates_Extract_20260714.csv"),
-        os.path.join(_QLA_SOURCE, "PAAGERAT_AttainedAge_Rates_Extract_20260713.csv"),
-        os.path.join(_QLA_SOURCE, "PAAGERAT_AttainedAge_Rates_Extract_20260630.csv"),
-        os.path.join(_SRC, "rates", "PAAGERAT_AttainedAge_Rates_Extract_20260428.csv"),
-        os.path.join(_LEGACY, "PAAGERAT_AttainedAge_Rates_Extract_20260428.csv"),
+def _merged_family(family: str, legacy_fallbacks: list[str], log=None) -> str:
+    path, summary = ensure_merged_family(
+        _QLA_SOURCE,
+        _STAGING,
+        family,
+        extra_paths=legacy_fallbacks,
+        log=log,
+    )
+    _LAST_MERGE[family.upper()] = summary
+    if path:
+        return path
+    return _first(*legacy_fallbacks)
+
+
+def paage_extract(log=None):
+    """PAAGE attained-age header extract — all dated Source files, newest filename wins."""
+    return _merged_family(
+        "PAAGE",
+        [
+            os.path.join(_QLA_SOURCE, "PAAGE_AttainedAge_Rates_Extract_20260714.csv"),
+            os.path.join(_QLA_SOURCE, "PAAGE_AttainedAge_Rates_Extract_20260713.csv"),
+            os.path.join(_QLA_SOURCE, "PAAGE_AttainedAge_Rates_Extract_20260630.csv"),
+        ],
+        log=log,
     )
 
 
-def pdage_extract():
-    """Prefer QLA Source package PDAGE (Issue #42 miss-fill), then legacy twins."""
-    return _first(
-        os.path.join(_QLA_SOURCE, "PDAGE_AgeDuration_Rates_Extract_20260714.csv"),
-        os.path.join(_QLA_SOURCE, "PDAGE_AgeDuration_Rates_Extract_20260713.csv"),
-        os.path.join(_QLA_SOURCE, "PDAGE_AgeDuration_Rates_Extract_20260630.csv"),
-        os.path.join(_QLA_SOURCE, "PDAGE_AgeDuration_Rates_Extract_20260530.csv"),
+def paagerat_extract(log=None):
+    """PAAGERAT attained-age values — all dated Source files, newest filename wins."""
+    return _merged_family(
+        "PAAGERAT",
+        [
+            os.path.join(_SRC, "rates", "PAAGERAT_AttainedAge_Rates_Extract_20260428.csv"),
+            os.path.join(_LEGACY, "PAAGERAT_AttainedAge_Rates_Extract_20260428.csv"),
+        ],
+        log=log,
+    )
+
+
+def pdage_extract(log=None):
+    """PDAGE age/duration — all dated Source files, newest filename wins."""
+    return _merged_family(
+        "PDAGE",
+        [
+            os.path.join(_QLA_SOURCE, "PDAGE_AgeDuration_Rates_Extract_20260530.csv"),
+        ],
+        log=log,
     )
 
 
@@ -65,10 +109,12 @@ def pcovrsgt_csv():
     )
 
 
-def paagerat_rate_paths():
-    """Minimal path bundle for PAAGERAT PR / VARGP=3 plan resolution."""
+def paagerat_rate_paths(log=None):
+    """Minimal path bundle for PAAGERAT PR / VARGP=3 plan resolution (+ PAAGE)."""
     return {
-        "paagerat_pr_extract": paagerat_extract(),
+        "paagerat_pr_extract": paagerat_extract(log=log),
+        "paage_extract": paage_extract(log=log),
+        "pdage_extract": pdage_extract(log=log),
         "pcovrsgt_csv": pcovrsgt_csv(),
         "pcovr_csv": pcovr_csv(),
         "plan_form_crosswalk": policy_form_crosswalk(),

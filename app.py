@@ -1,10 +1,34 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.30
-# Date:        2026-07-24
+# Version:     v58.36
+# Date:        2026-07-25
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.30 — Issue #105: quikridr.MPAR from product quikplan.PAR by MPLAN (participating=1).
+# Change Note: v58.36 — Issue #114: LifePRO dividend history → QuikBenh benefit types 1-5.
+#              Layer A loads PACTG dividend election codes 0514/0515/0516/0517/0518 (DEBIT leg
+#              only — the credit leg is the contra side and would double-count) as dated rows;
+#              Layer B adds one conversion adjustment row per policy (20171231) for the pre-extract
+#              remainder so each policy ties to PPBENTYP.DIVIDENDS_CREDITED. Gated by
+#              QLA_ENABLE_QUIKBENH_DIVIDEND_EMIT / QLA_QUIKBENH_DIVIDEND_WRITE_OUTPUT.
+#              Appends only — MBENTYP 8 (#34) and 10/11/12 (#54) preserved in place.
+#              v58.35 — Issue #75 reopen: rebuild aba_routing_lookup from June PPCOM
+#              (PPACH+PPPAC accounts; unique + latest-ambiguous; checksum-valid 9-digit ABA).
+#              Keep QLA-safe MBANKNO gate; preserve source account leading zeros (digits-only);
+#              ABA leading zero kept when part of validated 9-digit routing.
+#              v58.34 — Issue #110: PPBENTYP dividend cache keyed off source POLICY_NUMBER
+#              (same Issue #2 key regression as #108F; MDIVOPT was 0 on all 5,083 policies).
+#              v58.33 — Issue #108F: PPBENTYP non-forfeiture cache keyed off source POLICY_NUMBER.
+#              The Issue #2 (v58.29) MPOLICY change left the crosswalk lookup resolving nothing,
+#              dropping the NFO election on 4,346 policies. Issue #72 downgraded from a force to
+#              Reports/nfo_election_status_mismatch.csv per Robert 2026-07-25.
+#              v58.32 — Issue #108 (Robert NFO conformance), ETI/RPU phase-1 only:
+#              108B quikridr.MAGE = attained age at MPAIDTO (was issue age) and Issue #76
+#              MLASTANN now anniversary-accurate against the batch valuation date;
+#              108C ETI (44) MPREM = 0.00 (RPU 45 unchanged per spec);
+#              108D PUA rider on an ETI/RPU base = MPHSTAT 54, not Issue #60's 41;
+#              108A MSAVE* left blank on ETI/RPU phase 1 (v57.96 mirror suppressed).
+#              v58.31 — Issue #106: QuikTvs Dur identity for 1L1095 / L10 fleet.
+#              v58.30 — Issue #105: quikridr.MPAR from product quikplan.PAR by MPLAN (participating=1).
 #              v58.29 — Issue #2: MPOLICY = source POLICY_NUMBER + C, right-justify width 11 (supersedes #25).
 #              v58.28 — Issue #99: ISWL quikplan MKTG/PRODUCT/HLOB = ISWLFE (8 MPLAN allowlist).
 #              v58.27 — Issue #98: GL85 CV endpoint remap (male ages 1–17); age-100 terminal preserved.
@@ -248,6 +272,11 @@ from qla_core.quikbenh_loan_history_converter import (
     load_derivation_rules as load_benh_loan_rules,
     write_quikbenh_csv,
 )
+from qla_core.quikbenh_dividend_history_converter import (
+    convert_quikbenh_dividend_history,
+    load_dividend_rules as load_benh_dividend_rules,
+    write_quikbenh_csv as write_benh_dividend_csv,
+)
 from qla_core.reinsurance_converter import convert_reinsurance_phase1, load_derivation_rules as load_reinsurance_derivation_rules
 from qla_core import rate_emit as RE
 from qla_core.quikmemo_converter import convert_quikmemo_from_pnote_pense
@@ -469,7 +498,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.31"
+APP_VERSION = "v58.36"
 APP_BRAND = "QUIKConvert"
 APP_TAGLINE = APP_PRIMARY_TAGLINE
 
@@ -961,6 +990,52 @@ class QLAdminEnterpriseIntegrationSuite:
 
     def _migration_configs_dir(self):
         return os.path.normpath(os.path.join(self._migration_root(), "Configs"))
+
+    def _emit_quikbenh_dividend_history(self, pactg_path, src_base, cw_map):
+        """Issue #114: PACTG dividend elections + PPBENTYP lifetime total -> QuikBenh types 1-5."""
+        ppbentyp_path = resolve_ppbentyp_extract_path(src_base)
+        if not ppbentyp_path:
+            ppbentyp_path = resolve_ppbentyp_extract_path(self._migration_source_dir())
+        if not ppbentyp_path:
+            self.log("Issue #114: skipped — PPBENTYP extract not found")
+            return
+
+        self.log("Working Table: QUIKBENH (PACTG + PPBENTYP → dividend history Issue #114)")
+        self.log(f"  PPBENTYP lifetime source: {ppbentyp_path}")
+        out_dir = self.path_vars["Out"][0].get()
+        existing_benh = os.path.normpath(os.path.join(out_dir, "quikbenh.csv"))
+        phase_dir = os.path.normpath(
+            os.path.join(self._app_base_dir(), "plan_analysis", "phase_benh_dividend_history")
+        )
+        try:
+            merged_df, dividend_df, plug_df, exceptions_df, stats = (
+                convert_quikbenh_dividend_history(
+                    pactg_path,
+                    ppbentyp_path,
+                    cw_map=cw_map,
+                    rules=load_benh_dividend_rules(),
+                    output_dir=phase_dir,
+                    existing_benh_path=existing_benh if os.path.isfile(existing_benh) else None,
+                    reports_dir=os.path.normpath(os.path.join(self._migration_root(), "Reports")),
+                )
+            )
+        except Exception as e:
+            self.log(f"Warning: Issue #114 dividend history failed - {e}")
+            return
+
+        self.log(
+            f"QUIKBENH Issue #114: {len(dividend_df)} PACTG dividend rows + "
+            f"{len(plug_df)} conversion adjustments -> {stats.get('merged_rows', 0)} merged; "
+            f"reconciled {stats.get('reconciled_dollars', 0):,.2f} of "
+            f"{stats.get('lifetime_target_dollars', 0):,.2f}; "
+            f"exceptions={len(exceptions_df)}; "
+            f"preserved non-dividend rows={stats.get('existing_preserved_rows', 0)}; "
+            f"reports -> {phase_dir}"
+        )
+        if os.environ.get("QLA_QUIKBENH_DIVIDEND_WRITE_OUTPUT", "").strip() == "1":
+            out_path = os.path.normpath(os.path.join(out_dir, "quikbenh.csv"))
+            write_benh_dividend_csv(merged_df, out_path)
+            self.log(f"GATED OUTPUT: {out_path} ({len(merged_df)} rows)")
 
     def _is_excluded_path(self, path):
         lower = os.path.normpath(path).lower()
@@ -3096,7 +3171,13 @@ class QLAdminEnterpriseIntegrationSuite:
             row_data["MPAYUP"] = base_meff
         if base_mage:
             row_data["MAGE"] = base_mage
-        if self._quikridr_status_code_int(entry.get("MPHSTAT", "")) < 50:
+        base_status = self._quikridr_status_code_int(entry.get("MPHSTAT", ""))
+        if base_status in (44, 45):
+            # Issue #108D: base on ETI/RPU terminates every other coverage (spec 54).
+            # Statuses 44/45 fall inside the Issue #60 "< 50" window but are not the
+            # active base that rule was written for.
+            row_data["MPHSTAT"] = "54"
+        elif base_status < 50:
             row_data["MPHSTAT"] = "41"
         self.log(
             "PUA RULE APPLIED: "
@@ -5378,8 +5459,16 @@ class QLAdminEnterpriseIntegrationSuite:
             return ""
         return re.sub(r"\s+", "", raw)
 
+    def _issue75_aba_checksum_ok(self, aba_digits):
+        """Issue #75: ABA routing check-digit (3-7-1 weighted mod 10)."""
+        a = str(aba_digits or "")
+        if len(a) != 9 or not a.isdigit() or set(a) == {"0"}:
+            return False
+        d = [int(x) for x in a]
+        return (3 * (d[0] + d[3] + d[6]) + 7 * (d[1] + d[4] + d[7]) + (d[2] + d[5] + d[8])) % 10 == 0
+
     def _issue45_lookup_aba_for_account(self, acct_digits, aba_lookup):
-        """Issue #45 / #21H: resolve full 9-digit ABA from lookup by account digits."""
+        """Issue #45 / #21H / #75: resolve checksum-valid 9-digit ABA from PPCOM lookup."""
         if not acct_digits or not aba_lookup:
             return ""
         for lk_key in (acct_digits, acct_digits.lstrip("0") or "0", acct_digits.zfill(17)):
@@ -5390,12 +5479,15 @@ class QLAdminEnterpriseIntegrationSuite:
             if aba.endswith(".0"):
                 aba = aba[:-2]
             aba_d = re.sub(r"\D", "", aba)
-            if len(aba_d) == 9 and set(aba_d) != {"0"}:
+            if self._issue75_aba_checksum_ok(aba_d):
                 return aba_d
         return ""
 
     def _issue75_usable_acct_digits(self, acct_raw):
-        """Issue #75: digits-only account half for QLA-safe MBANKNO."""
+        """Issue #75: digits-only account half for QLA-safe MBANKNO.
+
+        Preserves leading zeros from source/PPCOM (do not strip or zfill accounts).
+        """
         usable = self._issue45_usable_bank_account(acct_raw)
         if not usable:
             return ""
@@ -5405,7 +5497,7 @@ class QLAdminEnterpriseIntegrationSuite:
         return acct_d
 
     def _issue75_usable_aba_digits(self, aba_raw, acct_digits=None, aba_lookup=None):
-        """Issue #75: emit only 9-digit ABA — lookup by account, else raw when already 9."""
+        """Issue #75: emit only checksum-valid 9-digit ABA — PPCOM lookup first, else raw 9."""
         if acct_digits and aba_lookup:
             lk = self._issue45_lookup_aba_for_account(acct_digits, aba_lookup)
             if lk:
@@ -5414,15 +5506,15 @@ class QLAdminEnterpriseIntegrationSuite:
         if aba.endswith(".0"):
             aba = aba[:-2]
         aba_d = re.sub(r"\D", "", aba)
-        if len(aba_d) == 9 and set(aba_d) != {"0"}:
+        if self._issue75_aba_checksum_ok(aba_d):
             return aba_d
         return ""
 
     def _issue75_build_mbankno(self, aba_digits, acct_digits):
-        """Issue #75: QLA Bank Acct = 9-digit routing / digits-only account."""
+        """Issue #75: QLA Bank Acct = 9-digit routing / digits-only account (zeros preserved)."""
         if not aba_digits or not acct_digits:
             return ""
-        if len(aba_digits) != 9:
+        if not self._issue75_aba_checksum_ok(aba_digits):
             return ""
         return f"{aba_digits}/{acct_digits}"
 
@@ -5434,7 +5526,7 @@ class QLAdminEnterpriseIntegrationSuite:
         aba, acct = mb.split("/", 1)
         aba_d = re.sub(r"\D", "", aba)
         acct_d = re.sub(r"\D", "", acct)
-        if len(aba_d) != 9 or not acct_d or len(acct_d) < 4:
+        if not self._issue75_aba_checksum_ok(aba_d) or not acct_d or len(acct_d) < 4:
             return False
         if re.search(r"[^0-9]", acct or ""):
             return False
@@ -5500,23 +5592,55 @@ class QLAdminEnterpriseIntegrationSuite:
             "EXCEPTION_DETAIL": exc_detail,
         })
 
-    def _apply_issue72_mnfopt_status_force(self, row_data):
-        """Issue #72: exercised ETI/RPU status must match MNFOPT (Robert rule)."""
+    def _check_issue72_mnfopt_status(self, row_data, exceptions):
+        """Issue #72 → #108G: ETI/RPU status vs NFO election — report, do not force.
+
+        Robert 2026-07-25: the election should come from the crosswalk and any
+        disagreement with the policy status should be raised for source review. The
+        prior force overwrote the source election, which both destroyed the value and
+        guaranteed the mismatch check could never fire.
+        """
         st = self.normalize(row_data.get("MSTATUS", ""))
-        if st == "44":
-            before = self.normalize(row_data.get("MNFOPT", ""))
-            row_data["MNFOPT"] = "2"
-            if before != "2":
-                self._issue72_mnfopt_force_count = (
-                    getattr(self, "_issue72_mnfopt_force_count", 0) + 1
-                )
-        elif st == "45":
-            before = self.normalize(row_data.get("MNFOPT", ""))
-            row_data["MNFOPT"] = "3"
-            if before != "3":
-                self._issue72_mnfopt_force_count = (
-                    getattr(self, "_issue72_mnfopt_force_count", 0) + 1
-                )
+        expected = {"44": "2", "45": "3"}.get(st)
+        if expected is None or exceptions is None:
+            return
+        actual = self.normalize(row_data.get("MNFOPT", ""))
+        if actual == expected:
+            return
+        exceptions.append({
+            "MPOLICY": self.normalize(row_data.get("MPOLICY", "")),
+            "MSTATUS": st,
+            "NFO_TYPE": "ETI" if st == "44" else "RPU",
+            "MNFOPT_EMITTED": actual,
+            "MNFOPT_EXPECTED": expected,
+            "EXCEPTION_REASON": (
+                "NFO election missing" if actual in ("", "0")
+                else "NFO election disagrees with policy status"
+            ),
+        })
+
+    def _write_issue72_mnfopt_status_exceptions(self, exceptions):
+        """Write Issue #72 NFO election vs status review CSV under Reports/ (header always)."""
+        cols = [
+            "MPOLICY",
+            "MSTATUS",
+            "NFO_TYPE",
+            "MNFOPT_EMITTED",
+            "MNFOPT_EXPECTED",
+            "EXCEPTION_REASON",
+        ]
+        reports = self._reports_dir()
+        os.makedirs(reports, exist_ok=True)
+        path = os.path.normpath(os.path.join(reports, "nfo_election_status_mismatch.csv"))
+        with open(path, "w", newline="", encoding="utf-8") as fh:
+            writer = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
+            writer.writeheader()
+            for row in exceptions or []:
+                writer.writerow({c: row.get(c, "") for c in cols})
+        self.log(
+            f"Issue #72: NFO election vs status mismatches: {len(exceptions or [])} -> {path}"
+        )
+        return path
 
     def _apply_quikmstr_v5796_defaults(self, row_data):
         """v57.96: MBILLTO 0/blank -> MPAIDTO; MORIGBILL/MORIGMODE default to final bill form/mode."""
@@ -5533,39 +5657,91 @@ class QLAdminEnterpriseIntegrationSuite:
         if not str(row_data.get("MORIGMODE", "")).strip():
             row_data["MORIGMODE"] = str(row_data.get("MMODE", "")).strip()
 
-    def _apply_quikridr_v5796_defaults(self, row_data):
+    def _apply_quikridr_v5796_defaults(self, row_data, nfo_phase1=False):
         """v57.96: blank MSAVE* mirror final live fields; MRRULE default A (post-translation,
-        because a rulebook default would hit the bare A→22 status translation)."""
-        for save_f, live_f in (
-            ("MSAVEAGE", "MAGE"),
-            ("MSAVEUNIT", "MUNIT"),
-            ("MSAVEVPU", "MVPU"),
-            ("MSAVEPREM", "MPREM"),
-            ("MSAVESTAT", "MPHSTAT"),
-        ):
-            if not str(row_data.get(save_f, "")).strip():
-                row_data[save_f] = str(row_data.get(live_f, "")).strip()
+        because a rulebook default would hit the bare A→22 status translation).
+
+        Issue #108A: on ETI/RPU phase 1 the live fields are already the post-nonforfeiture
+        values, so mirroring them would make a QLAdmin reinstatement restore the policy
+        back into ETI/RPU. The save fields hold the pre-NFO snapshot, which conversion does
+        not have, so they are left blank.
+        """
+        if not nfo_phase1:
+            for save_f, live_f in (
+                ("MSAVEAGE", "MAGE"),
+                ("MSAVEUNIT", "MUNIT"),
+                ("MSAVEVPU", "MVPU"),
+                ("MSAVEPREM", "MPREM"),
+                ("MSAVESTAT", "MPHSTAT"),
+            ):
+                if not str(row_data.get(save_f, "")).strip():
+                    row_data[save_f] = str(row_data.get(live_f, "")).strip()
         if not str(row_data.get("MRRULE", "")).strip():
             row_data["MRRULE"] = "A"
 
-    def _apply_issue76_eti_rpu_phase1_payup_mlastann(self, row_data, qm_status, qm_paidto):
-        """Issue #76: ETI/RPU phase-1 pay-up = paid-to; duration = run-year − pay-up year."""
+    def _apply_issue76_eti_rpu_phase1_payup_mlastann(self, row_data, qm_status, qm_paidto, valuation_date=None):
+        """Issue #76: ETI/RPU phase-1 pay-up = paid-to; duration = completed NFO years.
+
+        Issue #108B: duration is measured to the NFO anniversary against the batch
+        valuation date. Calendar-year subtraction ran a year high whenever the
+        anniversary had not yet occurred, and datetime.now() made MLASTANN differ
+        between reruns of the same batch. MLASTANN drives QLAdmin CV interpolation.
+        """
         st = self.normalize(qm_status)
         if st not in ("44", "45"):
             return
         paidto = self._normalize_yyyymmdd_date(qm_paidto)
         if not paidto:
             return
+        nfo = self._parse_conversion_date(paidto)
+        if not nfo:
+            return
         before_payup = self.normalize(row_data.get("MPAYUP", ""))
         before_mlast = self.normalize(row_data.get("MLASTANN", ""))
-        duration_year = datetime.now().year
-        new_mlast = str(duration_year - int(paidto[:4]))
+        val = valuation_date or datetime.now().date()
+        duration = val.year - nfo.year - ((val.month, val.day) < (nfo.month, nfo.day))
+        new_mlast = str(duration if duration >= 0 else 0)
         row_data["MPAYUP"] = paidto
         row_data["MLASTANN"] = new_mlast
         if before_payup != paidto or before_mlast != new_mlast:
             self._issue76_payup_adjust_count = (
                 getattr(self, "_issue76_payup_adjust_count", 0) + 1
             )
+
+    def _apply_issue108_nfo_phase1_fields(self, row_data, qm_status, qm_paidto):
+        """Issue #108: ETI/RPU phase-1 age and premium per QLAdmin_ETI_RPU spec.
+
+        MAGE becomes the attained age at the date of nonforfeiture (paid-to). QLAdmin
+        rebuilds NFO cash values as q(x+t) where x is the age at nonforfeiture, so
+        emitting the issue age evaluates mortality decades too young.
+
+        MPREM is zeroed on ETI only — the specification does not zero it for RPU.
+
+        Caller must invoke this after MPHDOB resolution: _derive_mphdob_from_issue_age
+        reads MAGE, so writing the attained age first would corrupt MPHDOB.
+        """
+        st = self.normalize(qm_status)
+        if st not in ("44", "45"):
+            return
+        nfo = self._parse_conversion_date(self._normalize_yyyymmdd_date(qm_paidto))
+        dob = self._parse_conversion_date(row_data.get("MPHDOB", ""))
+        if nfo and dob and nfo >= dob:
+            attained = nfo.year - dob.year - ((nfo.month, nfo.day) < (dob.month, dob.day))
+            if attained >= 0:
+                before_age = self.normalize(row_data.get("MAGE", ""))
+                new_age = str(attained).zfill(max(len(before_age), 2))
+                row_data["MAGE"] = new_age
+                if before_age != new_age:
+                    self._issue108_mage_count = (
+                        getattr(self, "_issue108_mage_count", 0) + 1
+                    )
+        if st == "44":
+            before_prem = self.normalize(row_data.get("MPREM", ""))
+            row_data["MPREM"] = "0"
+            if before_prem not in ("", "0"):
+                self._issue108_eti_mprem_count = (
+                    getattr(self, "_issue108_eti_mprem_count", 0) + 1
+                )
 
     def _write_bank_draft_account_exceptions(self, exceptions):
         """Write Issue #45 client-review exception CSV under Reports/ (header always)."""
@@ -6487,15 +6663,26 @@ class QLAdminEnterpriseIntegrationSuite:
                         self.log(f"GATED OUTPUT: {out_path} ({len(passed_df)} rows)")
                     continue
                 if t_id.lower() == "quikbenh":
-                    if os.environ.get("QLA_ENABLE_QUIKBENH_LOAN_EMIT", "").strip() != "1":
+                    benh_loan_emit = (
+                        os.environ.get("QLA_ENABLE_QUIKBENH_LOAN_EMIT", "").strip() == "1"
+                    )
+                    benh_dividend_emit = (
+                        os.environ.get("QLA_ENABLE_QUIKBENH_DIVIDEND_EMIT", "").strip() == "1"
+                    )
+                    if not benh_loan_emit and not benh_dividend_emit:
                         self.log(
-                            "Skipping QUIKBENH loan history — set QLA_ENABLE_QUIKBENH_LOAN_EMIT=1 "
+                            "Skipping QUIKBENH — set QLA_ENABLE_QUIKBENH_LOAN_EMIT=1 "
                             "for Issue #54 (or run plan_analysis/phase_benh_loan_history/"
-                            "quikbenh_loan_runner.py)."
+                            "quikbenh_loan_runner.py), and/or "
+                            "QLA_ENABLE_QUIKBENH_DIVIDEND_EMIT=1 for Issue #114 dividend history."
                         )
                         continue
                     if not os.path.exists(src_path):
                         self.log(f"Skipping {t_id.upper()} -> Missing Source Data: {src_path}")
+                        continue
+                    if benh_dividend_emit:
+                        self._emit_quikbenh_dividend_history(src_path, src_base, cw_map)
+                    if not benh_loan_emit:
                         continue
                     ploan_path, ploan_label = resolve_table_source(src_base, "quikloan")
                     if not ploan_path:
@@ -6824,11 +7011,11 @@ class QLAdminEnterpriseIntegrationSuite:
                         # --- PPACH BANKING CACHE ---
                         self._ppach_bank_map = {}
                         self._ppach_acct_meta = {}
-                        # Issue 21H: full 9-digit ABA recovery. PPACH E_ABA_NUM is leading-/trailing-
-                        # truncated; the authoritative full routing number comes from PPCOM
-                        # (E_TRAN_ABA_NUMBER), joined by bank account number and pre-resolved into
-                        # aba_routing_lookup.csv (UNIQUE accounts only). Falls back to the raw PPACH
-                        # value when no lookup file or no unique match exists (rollback-safe).
+                        # Issue 21H / #75 reopen: full 9-digit ABA from PPCOM (E_TRAN_ABA_NUMBER),
+                        # joined by bank account digits into aba_routing_lookup.csv (rebuild script:
+                        # Issue_Log_Items/Issue_75/scripts/rebuild_aba_routing_lookup_from_ppcom.py).
+                        # Includes PPACH+PPPAC accounts; unique + latest-ambiguous; checksum-valid.
+                        # Falls back to raw PPACH only when already a checksum-valid 9-digit ABA.
                         aba_lookup = {}
                         try:
                             aba_lk_path = find_extract('aba_routing_lookup')
@@ -6839,7 +7026,10 @@ class QLAdminEnterpriseIntegrationSuite:
                                     aba_lookup = dict(zip(
                                         ldf['ACCOUNT_DIGITS'].astype(str).str.strip(),
                                         ldf['FULL_ABA'].astype(str).str.strip()))
-                                    self.log(f"Auto-loaded ABA routing lookup (Issue 21H): {len(aba_lookup)} accounts")
+                                    self.log(
+                                        f"Auto-loaded ABA routing lookup (Issue 21H/#75 PPCOM): "
+                                        f"{len(aba_lookup)} account keys"
+                                    )
                         except Exception as e:
                             self.log(f"Warning: Could not load ABA routing lookup - {e}")
                         ppach_path = find_extract('ppach')
@@ -6913,7 +7103,10 @@ class QLAdminEnterpriseIntegrationSuite:
                                             if aba_raw.endswith('.0'):
                                                 aba_raw = aba_raw[:-2]
                                             aba_d = re.sub(r'\D', '', aba_raw)
-                                            if len(aba_d) == 9 and set(aba_d) != {'0'} and not re.search(r'[xX*]{2,}', aba_raw, re.I):
+                                            if (
+                                                self._issue75_aba_checksum_ok(aba_d)
+                                                and not re.search(r'[xX*]{2,}', aba_raw, re.I)
+                                            ):
                                                 abas.add(aba_d)
                                         if abas:
                                             rna_aba_by_pol[rpol] = sorted(abas)
@@ -7496,8 +7689,7 @@ class QLAdminEnterpriseIntegrationSuite:
                 else:
                     output = []
                     bank_draft_exceptions = [] if t_id.lower() == "quikmstr" else None
-                    if t_id.lower() == "quikmstr":
-                        self._issue72_mnfopt_force_count = 0
+                    nfo_status_exceptions = [] if t_id.lower() == "quikmstr" else None
                     # Safe defaults when table is not quikridr (Issue #21E vars set in quikridr branch).
                     if t_id.lower() != "quikridr":
                         ul_fund_balance_cache = {}
@@ -7687,21 +7879,31 @@ class QLAdminEnterpriseIntegrationSuite:
     
                                 if t_f in ['MNFOPT', 'MDIVOPT'] and val in ["", "0", "0.0"] and t_id.lower() == "quikmstr":
                                     pol_id = self.normalize(row_data.get('MPOLICY', ''))
-                                    
+                                    # Issue #108F: the PPBENTYP caches are keyed on the raw
+                                    # PPBENTYP.POLICY_NUMBER. Since Issue #2 (v58.29) MPOLICY is
+                                    # source + C, so resolving through the retired crosswalk matched
+                                    # nothing and the election was dropped fleet-wide. Try the source
+                                    # key first, keeping the crosswalk paths as fallbacks.
+                                    src_pol_id = self.normalize(src_row.get('POLICY_NUMBER', src_row.get('MPOLICY', src_row.get('POLICY_ID', ''))))
+
                                     if not pol_id:
-                                        pol_id = self.normalize(src_row.get('POLICY_NUMBER', src_row.get('MPOLICY', src_row.get('POLICY_ID', ''))))
-                                        pol_id = cw_map.get(pol_id, pol_id)
+                                        pol_id = cw_map.get(src_pol_id, src_pol_id)
                                         
                                     legacy_id = reverse_cw_map.get(pol_id, pol_id) 
     
                                     if t_f == 'MNFOPT' and 'NON_FORFEITURE' in lifepro_extra:
-                                        pulled_val = lifepro_extra['NON_FORFEITURE'].get(legacy_id)
-                                        if pulled_val is None: pulled_val = lifepro_extra['NON_FORFEITURE'].get(pol_id, val)
+                                        _nfo_cache = lifepro_extra['NON_FORFEITURE']
+                                        pulled_val = _nfo_cache.get(src_pol_id)
+                                        if pulled_val is None: pulled_val = _nfo_cache.get(legacy_id)
+                                        if pulled_val is None: pulled_val = _nfo_cache.get(pol_id, val)
                                         val = self.normalize(pulled_val)
                                         
                                     elif t_f == 'MDIVOPT' and 'DIVIDEND' in lifepro_extra:
-                                        pulled_val = lifepro_extra['DIVIDEND'].get(legacy_id)
-                                        if pulled_val is None: pulled_val = lifepro_extra['DIVIDEND'].get(pol_id, val)
+                                        # Issue #110: same key repoint as MNFOPT above.
+                                        _dv_cache = lifepro_extra['DIVIDEND']
+                                        pulled_val = _dv_cache.get(src_pol_id)
+                                        if pulled_val is None: pulled_val = _dv_cache.get(legacy_id)
+                                        if pulled_val is None: pulled_val = _dv_cache.get(pol_id, val)
                                         val = self.normalize(pulled_val)
     
                                 if note == "EXTRACT_DAY": val = self.extract_day(val)
@@ -8285,18 +8487,24 @@ class QLAdminEnterpriseIntegrationSuite:
                             if self._resolve_quikridr_mphdob(row_data, src_row, rel_name_cache):
                                 quikridr_mphdob_fix_count += 1
                             self._apply_quikridr_mlastann(row_data, src_row, quikridr_valuation_date)
+                            _nfo_phase1 = False
                             if tphase == "1":
                                 _qm_st = (getattr(self, "_qm_status_cache", None) or {}).get(tp, "")
                                 _qm_pd = (getattr(self, "_qm_paidto_cache", None) or {}).get(tp, "")
                                 self._apply_issue76_eti_rpu_phase1_payup_mlastann(
-                                    row_data, _qm_st, _qm_pd,
+                                    row_data, _qm_st, _qm_pd, quikridr_valuation_date,
                                 )
+                                # Issue #108B/#108C: NFO attained age + ETI premium.
+                                # Runs after MPHDOB resolution above — that derivation reads MAGE.
+                                self._apply_issue108_nfo_phase1_fields(row_data, _qm_st, _qm_pd)
+                                _nfo_phase1 = self.normalize(_qm_st) in ("44", "45")
                             apply_quikridr_decimal_emit(row_data)
                             # v57.96: blank MSAVE* mirror final live fields; MRRULE default A
-                            self._apply_quikridr_v5796_defaults(row_data)
-                        # Issue #72: ETI/RPU status → matching MNFOPT (after final MSTATUS)
+                            # Issue #108A: mirror suppressed on ETI/RPU phase 1
+                            self._apply_quikridr_v5796_defaults(row_data, nfo_phase1=_nfo_phase1)
+                        # Issue #72: ETI/RPU status vs NFO election — report only (after final MSTATUS)
                         if t_id.lower() == "quikmstr":
-                            self._apply_issue72_mnfopt_status_force(row_data)
+                            self._check_issue72_mnfopt_status(row_data, nfo_status_exceptions)
                         # Issue #45: bank-draft missing account → blank MBANKNO + exception (MBILLFRM unchanged)
                         if t_id.lower() == "quikmstr":
                             self._apply_issue45_bank_draft_gate(row_data, src_row, bank_draft_exceptions)
@@ -8332,12 +8540,11 @@ class QLAdminEnterpriseIntegrationSuite:
                                 f"Issue #76: adjusted phase-1 MPAYUP/MLASTANN on "
                                 f"{_i76} ETI/RPU polic(ies)"
                             )
-                    if t_id.lower() == "quikmstr":
-                        _i72 = getattr(self, "_issue72_mnfopt_force_count", 0)
-                        if _i72:
-                            self.log(
-                                f"Issue #72: forced MNFOPT from ETI/RPU status on {_i72} polic(ies)"
-                            )
+                    if t_id.lower() == "quikmstr" and nfo_status_exceptions:
+                        self.log(
+                            f"Issue #72: {len(nfo_status_exceptions)} ETI/RPU polic(ies) where the "
+                            f"NFO election does not match the policy status (see Reports/)"
+                        )
                         _v5796 = getattr(self, "_v5796_mbillto_fix_count", 0)
                         if _v5796:
                             self.log(
@@ -8404,6 +8611,9 @@ class QLAdminEnterpriseIntegrationSuite:
 
                 if t_id.lower() == "quikmstr" and bank_draft_exceptions is not None:
                     self._write_bank_draft_account_exceptions(bank_draft_exceptions)
+
+                if t_id.lower() == "quikmstr" and nfo_status_exceptions is not None:
+                    self._write_issue72_mnfopt_status_exceptions(nfo_status_exceptions)
 
                 if t_id.lower() == "quikridr":
                     mstr_path = os.path.normpath(os.path.join(out_dir, "quikmstr.csv"))

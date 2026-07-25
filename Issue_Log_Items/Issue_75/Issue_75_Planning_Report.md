@@ -1,192 +1,127 @@
-# Issue #75 — Planning Report
+# Issue #75 — Planning Report (REOPEN — PPCOM recovery)
 
-**Issue:** #75 — Bank Acct / `MBANKNO` QLA validation  
-**Framework stage:** Planning Agent  
-**Status:** Ready for Dependency Gate  
-**Generated:** 2026-07-15  
+**Issue:** #75 — Bank Acct / `MBANKNO` via PPCOM  
+**Framework stage:** Planning Agent (G1)  
+**Date:** 2026-07-25  
 **Model:** Cursor Grok 4.5 (locked)  
-**Scope decisions:** `Issue_75_Scope_Decisions.md`  
-**Intake:** `Issue_75_Intake_Summary.md`  
-**Evidence:** `evidence/issue75_mbankno_format_defects.csv`
+**Code changes:** None (planning only)
 
 ---
 
-## 1. Executive Finding
+## 1. Executive finding
 
-Client cannot save a policy change in QLAdmin because Bank Acct fails routing validation (`Invalid routing number (//)` on **010161748C**).
+v57.92 correctly stopped emitting QLA-invalid `MBANKNO`, but **~910 bank-draft policies remain blank** even though PPPAC has an account on every one of them. The missing piece is a **current PPCOM-backed 9-digit ABA**. The May `aba_routing_lookup.csv` (built from PPACH accounts only) hits almost none of these PPPAC-only blanks.
 
-Conversion already maps bank draft into `quikmstr.MBANKNO` as `ABA/ACCOUNT` (Issues **#21H** / **#45**). Current Output for the example is:
-
-`09130385/000000200-058-1`
-
-That value is **not QLA-safe**: ABA is **8 digits** (must be 9), and the account contains **hyphens**. Fleet-wide, **~986** filled `MBANKNO` rows have ABA ≠ 9 digits; **15** have multiple slashes (literal `//` or `/…/…`); **165** have account punctuation.
-
-**Direction:** Tighten emit rules so `MBANKNO` is only written as a QLA-valid `9digitABA/accountDigits` (optional `/S`/`/A` later if client confirms). Re-apply #21H full-ABA recovery where possible; strip punctuation; reject/blank + exception when ABA cannot be recovered to 9 digits. Ready for Dependency Gate / Risk.
+**Plan:** Keep the QLA-safe emit gate; rebuild ABA resolution from `PPCOM_PACAccountInformation_Extract_20260630.csv` joined by account digits (PPACH primary, PPPAC fallback); emit `9digitABA/accountDigits`; decide leading-zero account form explicitly.
 
 ---
 
-## 2. Confirmed LifePRO Source Table/File(s)
+## 2. Confirmed LifePRO sources
 
-| Source | Role | In this workspace Source/? | Notes |
-|--------|------|:--------------------------:|-------|
-| PPACH | Primary ABA + account | Not present locally | Existing `#21H` path → `_ppach_bank_map` |
-| PPPAC | Fallback account (#45) | Not present locally | Used when PPACH account missing |
-| `aba_routing_lookup.csv` | Full 9-digit ABA by account digits | Not present locally | Issue #21H recovery |
-| RelationshipNameAddress | Fallback ABA (#45) | Not present locally | Single distinct ABA only |
+| Source | File | Grain | Bank fields |
+|--------|------|-------|-------------|
+| **PPCOM** (authoritative ABA) | `PPCOM_PACAccountInformation_Extract_20260630.csv` | PAC account history (~2.62M rows, 37 cols) | `E_ACCOUNT_NUMBER`, `E_TRAN_ABA_NUMBER`, `EFFECTIVE_DATE`, `DRAFT_TYPE`; **no POLICY_NUMBER** |
+| PPACH | `PPACH_PACHistory_Extract_20260630.csv` | Policy PAC history | `POLICY_NUMBER`, `E_ACCOUNT_NUMBER`, `E_ABA_NUM` (often truncated) |
+| PPPAC | `PPPAC_PACDetail_Extract_20260630.csv` | Policy PAC detail | `POLICY_NUMBER`, `E_ACCOUNT_NUMBER`, `PAC_ID` (PAC_ID does **not** join cleanly to PPCOM) |
+| Lookup (current engine) | `aba_routing_lookup.csv` | Account→ABA | Stale; rebuild from PPCOM |
 
-Sources are documented and used on the batch path (Issue #45 closed on same example policy). Local `QLA_Migration/Source/` is empty in this workspace; **before-state is measurable from `Output/quikmstr.csv`**.
-
-### Available source fields (from prior #21H/#45)
-
-| Field | Column | Notes |
-|-------|--------|-------|
-| Policy | `POLICY_NUMBER` | Crosswalk → MPOLICY |
-| ABA (history) | PPACH `E_ABA_NUM` | Often truncated |
-| Account (history) | PPACH `E_ACCOUNT_NUMBER` | |
-| Account (current PAC) | PPPAC `E_ACCOUNT_NUMBER` | No ABA column |
-| Full ABA | lookup `FULL_ABA` / RNA `ELEC_ABA_NUMBER` | Prefer 9-digit |
+PPCOM join key = **bank account digits** (exact, then strip-leading-zeros match). Do not rely on `PAC_ID`.
 
 ---
 
-## 3. Confirmed QLAdmin Target Structure
+## 3. Confirmed QLAdmin target
 
-| Table | Field | Semantics (QLAdmin Help) |
-|-------|-------|--------------------------|
-| quikmstr | `MBANKNO` | **Bank Acct** — “Bank Routing Number plus the payor's account number for policies on bank draft.” |
-| | | Savings: end with `/S`. Advance draft: end with `/A`. Both: `/A/S` or `/S/A` after routing/account. |
-| | | Routing is **validated** by the system (matches client error). |
-| quikmstr | `MBILLFRM` | Bill form `2` = bank draft (governance: needs bank value) |
-| quikmstr | `MACCTNO` | Bill Acct — **different field**; blank on example |
+| Table | Field | Format |
+|-------|-------|--------|
+| `quikmstr` | `MBANKNO` | `AAAAAAAAA/ACCT…` — exactly one `/`, ABA **exactly 9 digits**, account **digits only** |
 
-**Repo emit path:**
-
-| Location | Role |
-|----------|------|
-| `app.py` PPACH/PPPAC cache | Builds `_ppach_bank_map[pol] = f"{use_aba}/{acct}"` |
-| Rulebook `MBANKNO` blank | Overridden from map when present |
-| `_apply_issue45_bank_draft_gate` | Blanks incomplete bank-draft rows + exception CSV |
+Governance: bank value expected when `MBILLFRM=2`; blank + exception is allowed when ABA cannot be recovered safely.
 
 ---
 
-## 4. Required Source-to-Target Field Mapping
+## 4. Proposed source-to-target mapping
 
-| LifePRO source | LifePRO field | QLAdmin target | Transformation | Change? |
-|----------------|---------------|----------------|----------------|---------|
-| PPACH (primary) | `E_ABA_NUM` + `E_ACCOUNT_NUMBER` | `MBANKNO` | Recover full **9-digit** ABA via lookup; strip acct punct; single `/` | **Yes — tighten** |
-| PPPAC (fallback) | `E_ACCOUNT_NUMBER` | `MBANKNO` account half | Same as #45 + strip `/` and punctuation from account | **Yes — tighten** |
-| aba_routing_lookup / RNA | full ABA | `MBANKNO` ABA half | Emit only if digit-length **== 9** | **Yes — gate** |
+```text
+Policy account  := PPACH.E_ACCOUNT_NUMBER (latest) else PPPAC.E_ACCOUNT_NUMBER
+Account digits  := digits-only(account); usable if len>=4 (#45/#75 rules)
+ABA             := PPCOM.E_TRAN_ABA_NUMBER for matching account digits
+                     prefer native 9-digit; if only 8-digit, accept zfill(9) ONLY when ABA checksum passes
+                     if multiple distinct 9-digit ABAs → latest EFFECTIVE_DATE (flag AMBIGUOUS)
+MBANKNO         := f"{aba9}/{account_digits_emit}" if both present else blank + exception
+```
 
-### Fields that must remain unchanged
+**Account emit (leading zeros) — recommended default for Risk:**
 
-| Target | Touch this issue? |
-|--------|-------------------|
-| `MBILLFRM` | **No** |
-| `MACCTNO` | **No** |
-| `MMODPREM` / `MPREM` (#26) | **No** |
-| MPOLICY padding (#25) | **No** |
-| PPACH-primary path when already valid 9-digit | Prefer **byte-stable** where already good |
-
----
-
-## 5. Open Client Questions
-
-1. **OBQ-75-1:** When a usable account exists but ABA **cannot** be recovered to exactly 9 digits, confirm: **blank `MBANKNO` + exception** (keep converting), same as #45 incomplete cases?  
-   - **Assumption for Risk:** **Yes.**
-
-2. **OBQ-75-2:** Strip hyphens/spaces from account numbers before emit (e.g. `000000200-058-1` → `0000002000581`)?  
-   - **Assumption for Risk:** **Yes** (digits-only account half).
-
-3. **OBQ-75-3:** Do we need LifePRO checking vs savings → append `/S`?  
-   - **Assumption:** **No for this issue** unless client provides type mapping; leave suffix out until confirmed.
-
-4. **OBQ-75-4:** Screenshot shows `//` and a slightly different account digit string than current Output. Confirm UAT load is from latest `quikmstr` / Test_Validation, or note possible local edit in QLA.  
-   - **Does not block** format hardening.
+- Prefer **PPCOM’s latest/most-common `E_ACCOUNT_NUMBER` digit form** for the matched account (strip punctuation/spaces only).
+- Do **not** invent padding (no `zfill` on accounts).
+- If PPCOM form absent, use PPACH/PPPAC digits-only as today.
+- Open question: if LifePRO UI shows 8 digits but extract stores leading zeros, confirm with client whether zeros are significant.
 
 ---
 
-## 6. Recommended Formatting Rules
+## 5. Open client questions
 
-| Rule | Recommendation |
-|------|----------------|
-| Separator | Exactly one `/` between ABA and account (suffixes `/S` `/A` only if client later confirms) |
-| ABA | Digits only; **length == 9**; else do not emit |
-| Account | Digits only (strip spaces, hyphens, leading `/`); reject if account itself contains `/` |
-| Incomplete | Blank `MBANKNO` + `bank_draft_account_exceptions.csv` when `MBILLFRM=2` |
-| Policy key | Crosswalk + #25 padding unchanged |
+1. For ambiguous account→ABA (205 blank-draft accounts map to >1 routing): OK to take latest `EFFECTIVE_DATE`, or leave blank for client list?
+2. Leading zeros on accounts: emit PPCOM form, strip insignificant zeros, or keep PPACH/PPPAC literal digits?
+3. Reload previously blanked bank-draft policies into UAT after recovery?
+
+---
+
+## 6. Formatting / fallback rules
+
+| Rule | Action |
+|------|--------|
+| ABA not 9 after PPCOM + checksum pad | Blank; `ABA_NOT_9` / `MISSING_ROUTING` |
+| Account unusable / punctuation-only | Blank; `ACCT_INVALID` / `MISSING_BANK_ACCOUNT` |
+| Multi-slash / punct in emit | Forbidden (keep v57.92 gate) |
+| No PPCOM match | Blank; do not invent |
+| Already QLA-safe filled | Unchanged unless ABA/account intentionally corrected |
 
 ---
 
 ## 7. Policy key handling
 
-Unchanged — `format_qladmin_mpolicy()` / crosswalk.
+Output keys are Issue #2 form (`9010…C`). Source `POLICY_NUMBER` may be without `C` — normalize with existing `normalize()` / append-`C` used on PPACH/PPPAC paths. PPCOM has no policy key.
 
 ---
 
-## 8. Estimated Record Counts (current Output)
+## 8. Estimated record counts (current Output)
 
-| Population | Count |
-|------------|------:|
-| quikmstr rows | 5,083 |
-| `MBANKNO` filled | 2,736 |
-| `MBILLFRM=2` with filled bank | 2,108 |
-| ABA digit length = 9 (all filled) | 1,750 |
-| ABA ≠ 9 (all filled) | **986** |
-| Multi-slash (`/` count ≥ 2) | **15** |
-| Account punctuation (hyphen/space) | **165** |
-| PAC (`MBILLFRM=2`) rows with ≥1 format flag | **961** |
+| Metric | Count |
+|--------|------:|
+| `MBILLFRM=2` | 2,132 |
+| Filled QLA-safe `MBANKNO` | 1,222 |
+| Blank bank-draft | 910 |
+| Blank with PPPAC account | 910 (100%) |
+| Blank recoverable via PPCOM (unique ABA) | **656** |
+| Blank recoverable but ambiguous ABA | **205** |
+| Blank still not in PPCOM | **49** |
+| Filled emits with leading-zero-padded 8-digit-looking accounts | ~55–91 |
 
-Detail file: `evidence/issue75_mbankno_format_defects.csv` (1,074 rows).
-
----
-
-## 9. Sample Trace
-
-| Policy | MBILLFRM | Current `MBANKNO` | Defect | Notes |
-|--------|:--------:|-------------------|--------|-------|
-| **010161748C** | 2 | `09130385/000000200-058-1` | ABA_LEN=8; hyphen acct | Client screenshot / #45 rescue sample |
-| 010157076C | 2 | `10491013/212919` | ABA_LEN=8 | #45 sample |
-| 010348734C | 2 | `08151811/208787` | ABA_LEN=8 | #45 sample |
-| 010464590C | 2 | `09140068//7562700387` | MULTI_SLASH | Literal `//` in Output |
-| 010713704C | (prior #21H) | Expect 9-digit when lookup works | Regression guard | Classic #21H example |
+Evidence: `evidence/issue75_ppcom_blank_draft_recovery.csv`
 
 ---
 
-## 10. Risks and Unknowns
+## 9. Sample traces
 
-| Risk | Mitigation |
-|------|------------|
-| Large intentional `MBANKNO` churn (~900+ PAC) | Risk Agent quantify; validate non-candidates / already-valid 9-digit stable |
-| Blanking truncated ABA may increase exceptions | Prefer recover-to-9 via lookup/RNA before blank |
-| Account digit strip changes ACH identity | Confirm OBQ-75-2 with client if hyphens are significant |
-| Screenshot ≠ CSV byte-for-byte | Harden format anyway; re-UAT after reload |
-
----
-
-## 11. Recommended Risk Agent Prompt
-
-```
-Proceed to Risk Agent for Issue #75.
-
-Read AI_Agents/Risk_Agent.md and Issue_75_Planning_Report.md.
-Model: Cursor Grok 4.5. Do not code.
-
-Quantify before/after impact on quikmstr.MBANKNO:
-- how many gain valid 9-digit ABA via recovery
-- how many blank (exception) because ABA unrecovered
-- punctuation/multi-slash cleanups
-- prove already-valid 9-digit ABA/ACCOUNT rows unchanged where possible
-GO/NO-GO for Development.
-```
+| MPOLICY | PPPAC account (raw) | PPCOM ABA | Proposed `MBANKNO` |
+|---------|---------------------|-----------|--------------------|
+| 9010161748C | `000000  200-058-1` | 091303855 | `091303855/0000002000581` (or PPCOM form if different) |
+| 9010157076C | `212919` | 104910135 | `104910135/212919` |
+| 9010348734C | `208787` | 081518113 | `081518113/208787` |
+| 9010713704C | `47374579` | 104000016 | **unchanged** `104000016/47374579` |
 
 ---
 
-## 12. Recommended Development Task (do not implement)
+## 10. Risks and unknowns
 
-1. When building `_ppach_bank_map` / PPPAC fallback:
-   - Normalize ABA to digits; accept only length **9** (or recover via lookup/RNA to 9).
-   - Normalize account: strip spaces/hyphens; reject if `/` remains in account.
-   - Emit `f"{aba9}/{acct_digits}"` only when both pass.
-2. Extend Issue #45 gate / exception reasons for `ABA_NOT_9` / `ACCT_INVALID_CHARS`.
-3. Validator: assert no filled `MBANKNO` with ABA≠9, multi-slash, or hyphen/space in account; trace **010161748C**.
-4. Version-bump both `app.py` files; publish `Test_Validation/quikmstr.csv` on PASS.
-5. Do **not** touch #25/#26 or `MBILLFRM`.
+- PPCOM file size (~5.3 GB): prefer **offline rebuild** of `aba_routing_lookup.csv` (+ optional account-form map) over full in-batch scan every run.
+- Ambiguous ABAs (205): wrong routing if latest-date rule is wrong.
+- Account leading zeros: stripping vs preserving can both be wrong for ACH; need clear rule.
+- Stale lookup in Source today means even PPACH recoveries may be underfilled vs June PPCOM.
+
+---
+
+## 11. Recommended Risk Agent focus
+
+Simulate fill of 910 blanks under (A) unique-only vs (B) unique+latest-ambiguous; measure `MBANKNO` changes on the 1,222 already filled; quantify leading-zero account diffs vs current emit; confirm non-`MBANKNO` columns untouched.

@@ -24,6 +24,22 @@ TRACE_POLS = {
     "010348734C",
     "010464590C",
     "010713704C",
+    # Issue #2 canonical Output keys
+    "9010161748C",
+    "9010157076C",
+    "9010348734C",
+    "9010464590C",
+    "9010713704C",
+}
+
+# Post v58.35 PPCOM recovery expectations (canonical keys)
+TRACE_EXPECT_FILLED = {
+    "9010161748C": "091303855/0000002000581",
+    "9010157076C": "104910135/212919",
+    "9010348734C": "081518113/208787",
+}
+TRACE_EXPECT_SAFE = {
+    "9010713704C": "104000016/47374579",
 }
 
 
@@ -81,11 +97,28 @@ def check_output(path: Path) -> tuple[bool, list[str], dict]:
     if stats["invalid_filled"]:
         errors.insert(0, f"invalid_filled={stats['invalid_filled']}")
 
-    # Trace expectations (post-fix)
-    if traces.get("010713704C") and not mbankno_is_ql_safe(traces["010713704C"]):
-        errors.append(f"010713704C regression: {traces['010713704C']!r}")
+    # Trace expectations (post v58.35 PPCOM recovery)
+    for pol, expected in TRACE_EXPECT_FILLED.items():
+        got = traces.get(pol, "")
+        if got != expected:
+            errors.append(f"{pol}: expected {expected!r} got {got!r}")
+    for pol, expected in TRACE_EXPECT_SAFE.items():
+        got = traces.get(pol, "")
+        if got and got != expected:
+            errors.append(f"{pol} regression: expected {expected!r} got {got!r}")
+        if got and not mbankno_is_ql_safe(got):
+            errors.append(f"{pol} not QLA-safe: {got!r}")
 
-    ok = stats["invalid_filled"] == 0
+    legacy = traces.get("010713704C") or traces.get("9010713704C")
+    if legacy and not mbankno_is_ql_safe(legacy):
+        errors.append(f"010713704C/9010713704C regression: {legacy!r}")
+
+    ok = stats["invalid_filled"] == 0 and not any(
+        e.startswith("9010") or e.startswith("0107") for e in errors
+    )
+    # Format gate is hard fail; trace mismatches also fail after batch
+    if any("expected" in e or "regression" in e for e in errors):
+        ok = False
     return ok, errors, stats
 
 
@@ -128,6 +161,21 @@ def test_helpers() -> tuple[bool, list[str]]:
         if aba8:
             errors.append(f"_issue75_usable_aba_digits truncated without lookup -> {aba8!r}")
 
+        if not eng._issue75_aba_checksum_ok("091303855"):
+            errors.append("checksum should accept 091303855")
+        if eng._issue75_aba_checksum_ok("009130385"):
+            errors.append("checksum should reject blind zfill 009130385")
+
+        lk = {"0000002000581": "091303855", "2000581": "091303855"}
+        resolved = eng._issue75_usable_aba_digits("09130385", "0000002000581", lk)
+        if resolved != "091303855":
+            errors.append(f"lookup recovery -> {resolved!r}")
+
+        # Account leading zeros preserved
+        acct_z = eng._issue75_usable_acct_digits("050515635")
+        if acct_z != "050515635":
+            errors.append(f"account leading zeros stripped unexpectedly -> {acct_z!r}")
+
     except Exception as exc:
         errors.append(f"helper import/test failed: {exc}")
 
@@ -159,7 +207,7 @@ def main() -> int:
     if not ok_helpers:
         return 1
     if not ok_out:
-        print("NOTE: output check FAIL expected until full batch re-run with v57.92")
+        print("NOTE: output check FAIL expected until full batch re-run with v58.35 + PPCOM lookup")
         return 2
     return 0
 

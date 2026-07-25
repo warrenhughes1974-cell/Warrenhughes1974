@@ -1,9 +1,9 @@
 CHECK,RESULT,DETAIL
 helpers,PASS,
 output_format,PASS,
-rows,5084,
-filled,1819,
+rows,5083,
+filled,2706,
 invalid_filled,0,
-pac_filled,1224,
+pac_filled,2081,
 pac_invalid,0,
-pac_blank,914,
+pac_blank,51,

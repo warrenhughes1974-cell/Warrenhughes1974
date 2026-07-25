@@ -27,6 +27,7 @@ from qla_core import paagerat_db_loader as DB
 from qla_core import quikuint_loader as UINT
 from qla_core import quikissc_loader as ISSC
 from qla_core import pdage_missfill as PDM
+from qla_core import plan_source_paths as PSP
 
 KEY_FIELDS = ("PLAN", "GENDER", "UWCLASS", "BAND", "ISSCNTRY", "ISSUEST", "EFFDATE")
 
@@ -130,7 +131,32 @@ def run(config_path, repo_root):
     cfg = json.load(open(config_path, encoding="utf-8"))
     base_rt = _resolve_path(repo_root, cfg["source_rate_extract"])
     pdage_cfg = cfg.get("issue42_pdage_missfill") or {}
-    pdage_path = _resolve_path(repo_root, pdage_cfg.get("pdage_extract", ""))
+
+    # Multi-source dated extracts: PAAGE / PAAGERAT / PDAGE — filename YYYYMMDD newest wins
+    def _plog(msg):
+        print(msg, flush=True)
+
+    paage_path = PSP.paage_extract(log=_plog)
+    paagerat_merged = PSP.paagerat_extract(log=_plog)
+    pdage_merged = PSP.pdage_extract(log=_plog)
+    dated_merge_summaries = PSP.last_merge_summaries()
+
+    # Point config loaders at merged extracts (filename newest wins)
+    if paagerat_merged and os.path.isfile(paagerat_merged):
+        cfg["paagerat_pr_extract"] = paagerat_merged
+    if pdage_merged and os.path.isfile(pdage_merged):
+        cfg["pdage_extract"] = pdage_merged
+        pdage_cfg = dict(pdage_cfg)
+        pdage_cfg["pdage_extract"] = pdage_merged
+        cfg["issue42_pdage_missfill"] = pdage_cfg
+    if paage_path and os.path.isfile(paage_path):
+        cfg["paage_extract"] = paage_path
+
+    # Prefer merged PDAGE over a single hardcoded config path
+    pdage_path = pdage_merged or _resolve_path(repo_root, pdage_cfg.get("pdage_extract", ""))
+    if not pdage_path:
+        pdage_path = _resolve_path(repo_root, cfg.get("pdage_extract", ""))
+
     xlsx = _resolve_path(repo_root, cfg["plan_form_crosswalk"])
     config = L.LoaderConfig.from_dict(cfg.get("segmentation_defaults"))
     cov2plan_pre, _ = L.load_plan_crosswalk(xlsx)
@@ -155,6 +181,10 @@ def run(config_path, repo_root):
             segment_resolver=merge_resolver,
         )
         src = pdage_merge_summary["staging_path"]
+    pdage_merge_summary["dated_extract_merge"] = dated_merge_summaries
+    pdage_merge_summary["paage_extract"] = paage_path
+    pdage_merge_summary["paagerat_dated_merged"] = paagerat_merged
+    pdage_merge_summary["pdage_dated_merged"] = pdage_merged
     cso_cfg = cfg.get("cso_mortality_crosswalk",
                       os.path.join("plan_analysis", "source_data", "rates", "CSO_Mortiality_Crosswalk.csv"))
     vs_cfg = cfg.get(
@@ -286,7 +316,7 @@ def run(config_path, repo_root):
             _track(t)
             yield t
 
-        pa_path = _resolve_path(repo_root, cfg.get("paagerat_pr_extract", ""))
+        pa_path = paagerat_merged or _resolve_path(repo_root, cfg.get("paagerat_pr_extract", ""))
         if pa_path and os.path.isfile(pa_path) and segment_resolver is not None:
             resolver = segment_resolver
             for t in PA.transform_paagerat_pr(pa_path, resolver, config, plan_exclude=pr_suppress):

@@ -101,6 +101,7 @@ Primary package: `data_governance`
 | 024 | Blank MISSCNTRY → expect 0000 | Error |
 | 025 | MRESSTATE — deferred stub (no findings) | Deferred |
 | 026 | Blank MISSCLASS → expect 00 | Error |
+| 027–032 | Cross-table policy status vs coverage status (QuikMstr ↔ QuikRidr) | Critical / Error / Advisory |
 
 ### DG-QUIKMSTR-001 — Policy Number Must Be Unique And Valid Length
 
@@ -113,6 +114,52 @@ Primary package: `data_governance`
 | Minimum / maximum length | 4 / 11 |
 | Failure conditions | Blank/null; length out of range; duplicate normalized MPOLICY |
 | Implementation status | Implemented |
+
+### DG-QUIKMSTR-027 to 032 — Policy / Coverage Status Consistency
+
+Cross-table checks comparing `QuikMstr.MSTATUS` against `QuikRidr.MPHSTAT`. Added for
+Issue #108 track G at Robert De Sarro's request: statuses should be crosswalk-driven in the
+converter, with consistency reported here rather than forced by rules inside the conversion
+program. These rules report only — they never change data.
+
+| Field | Value |
+|-------|--------|
+| Package | `rules/policy_master_integrity/dg_quikmstr_027_032_status_consistency.py` |
+| Source tables | QuikMstr, QuikRidr |
+| Tests | `tests/test_dg_quikmstr_status_consistency.py` |
+| Implementation status | Implemented |
+
+| Rule | Business name | Severity | Rule |
+|------|---------------|----------|------|
+| 027 | Terminated Policy Must Not Have In-Force Coverage | Critical | MSTATUS ≥ 50 → no MPHSTAT < 50 |
+| 028 | ETI Or RPU Phase 1 Coverage Must Match Policy Status | Critical | MSTATUS 44/45 → phase 1 MPHSTAT equals it |
+| 029 | ETI Or RPU Policy Should Not Have Other In-Force Coverages | Advisory | MSTATUS 44/45 → report phase > 1 with MPHSTAT < 50 |
+| 030 | Active Policy Must Have At Least One In-Force Coverage | Critical | MSTATUS < 44 → some MPHSTAT < 50 |
+| 031 | ETI Or RPU Election Should Match Policy Status | Advisory | MSTATUS 44 → MNFOPT 2; 45 → MNFOPT 3 |
+| 032 | ETI Or RPU Policy Fields Must Be Complete | Error | MPAYUP = MPAIDTO; MAGE set; MSAVE\* blank; ETI MPREM 0; PUA at 54 |
+
+**Status boundary.** In force is below 50, terminated at 50 or above. Robert wrote the rules
+as "greater than 50"; 50 itself is included because 15 policies carry it and excluding it
+would leave a silent gap. The stricter reading changes no current result.
+
+**Unreadable MPHSTAT.** Treated as unknown, not as terminated or in force. If no coverage
+row on an active policy carries a readable status, rule 030 reports Could Not Be Checked
+rather than inventing a failure from a missing field.
+
+**Advisory rules.** 029 and 031 emit WARN findings and the rule result stays PASS, so
+questions for the source system surface in reports without failing a governance run. This
+matches Robert's framing — he asked to "check for and question" these, not to reject them.
+
+**Excluded plans (rule 029).** `1SALML` and `1SALMI` are skipped. On those policies the
+phase 1 base carries zero units and the phase 2 rider holds the entire face amount, so an
+in-force later phase is the expected structure. Without the exclusion the rule flags 77
+legitimate RPU policies. Revisit when Issue #108E is answered; the count is reported as
+`zero_unit_base_rows_excluded` in the rule's summary metrics.
+
+**Rule 028 currently reads zero by construction.** The converter still forces phase 1
+`MPHSTAT` from the policy status (`app.py` phase-1 inherit), so the two values cannot
+disagree. The check exists so that retiring that force — the remaining part of Issue #108G —
+becomes safe rather than blind.
 
 ---
 

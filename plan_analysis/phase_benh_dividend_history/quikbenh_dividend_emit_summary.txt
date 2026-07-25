@@ -1,0 +1,27 @@
+Issue #114 QuikBenh dividend history emit @ 20260725_170818
+pactg_rows_read: 404450
+election_rows: 2510
+reversed_excluded: 6
+orphan_no_crosswalk: 0
+emit_passed: 2500
+layer_a_dollars: 401443.32
+layer_a_policies: 413
+lifetime_target_policies: 593
+lifetime_target_dollars: 1889445.44
+plug_emitted: 579
+plug_dollars: 1473854.5
+plug_exception_negative_or_zero_gap: 3
+plug_exception_unmapped_option: 11
+plug_exception_or_rows: 3
+rows_added: 3079
+existing_rows: 43589
+existing_type8_rows: 3657
+existing_type10_rows: 3562
+existing_type11_rows: 14156
+existing_type12_rows: 19135
+existing_dividend_rows_removed: 3079
+merged_rows: 43589
+reconciled_dollars: 1875297.82
+by_pactg_code: {'0515': 177, '0514': 200, '0517': 2093, '0516': 30}
+layer_a_by_mbentyp: {'1': 177, '3': 200, '4': 2093, '2': 30}
+plug_by_mbentyp: {'1': 32, '3': 64, '4': 476, '2': 7}

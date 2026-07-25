@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+104	Risk Complete — No-Go for Development (await SME)	Loan Handling	QLAdmin loan payoff interest differs from LifePRO at claim/surrender (010331768C / 9010331768C): QL $3707.11+$194.01=$3901.12 vs LP $3707.11−$18.19=$3688.92. Same #32 QuikLoan emit (gross+ACCR=0+INTX=A).	2026-07-23	No-Go	Eric	Warren		Pre-Dev G0–G3 done 2026-07-24. Risk NO-GO until SME chooses Option A/B/C. Detail: Issue_Log_Items/Issue_104/

@@ -38,4 +38,4 @@ UNDERWRITING_CLASS,MUWCLASS,00,Blank UW class defaults 00 (v57.96; SAL plans)
 ,MLOCKTYP,,
 ,MLOCKDT,,
 ,MUNLCKDT,,
-PAR_TYPE,MPAR,,
+PAR_TYPE,MPAR,,Issue #105: engine sets MPAR from product quikplan.PAR by MPLAN (1=participating); not PPBENTYP.PAR_TYPE

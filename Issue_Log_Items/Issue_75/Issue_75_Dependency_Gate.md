@@ -1,94 +1,38 @@
-# Issue #75 — Dependency Gate
+# Issue #75 — Dependency Gate (REOPEN)
 
-**Issue:** #75 — Bank Acct / `MBANKNO` QLA validation  
+**Issue:** #75 — Bank Acct / `MBANKNO` via PPCOM  
 **Framework stage:** Dependency Gate (G2)  
-**Generated:** 2026-07-15  
+**Date:** 2026-07-25  
 **Model:** Cursor Grok 4.5 (locked)  
-**Gate result:** **PASS — Ready for Risk Review**
+**Verdict:** **PASS**
 
 ---
 
-## Source data
+## Dependencies checked
 
-| Check | Met? | Notes |
-|-------|:----:|-------|
-| Required LifePRO extract(s) present in local `Source/` | **N/A*** | Extracts used on batch path (#21H/#45); not checked out in this workspace |
-| Before-state measurable | **Met** | `QLA_Migration/Output/quikmstr.csv` + defect CSV |
-| Column / mapping documented | **Met** | PPACH / PPPAC / lookup / RNA via prior issues + `app.py` |
-| Re-extract required? | **No** | Format defect is in converted output |
-
-\*Development later needs Source extracts on the batch machine (same as #45). Not a blocker for Risk.
-
----
-
-## Field definitions
-
-| Check | Met? | Notes |
-|-------|:----:|-------|
-| QLAdmin target table/field | **Met** | `quikmstr.MBANKNO` = Bank Acct (Help § Policy Display) |
-| Field semantics / validation | **Met** | Routing + `/` + account; routing validated; `/S` `/A` optional |
-| LifePRO source semantics | **Met** | Documented in #21H / #45 |
-| Transformation notes | **Met** | Require 9-digit ABA; single slash; strip acct punctuation |
-
----
-
-## Client clarification
-
-| Check | Met? | Notes |
-|-------|:----:|-------|
-| Scope boundary | **Met** | Format/validation of Bank Acct emit; SD-75-* |
-| Edge cases (blank vs bad ABA) | **Met*** | Soft assumption OBQ-75-1: blank + exception (same as #45) |
-| UAT acceptance | **Met** | 010161748C edits without routing error after reload |
-
-\*Soft assumptions documented; Risk may proceed. Client can confirm OBQ-75-1/2 before Development if preferred.
-
----
-
-## Evidence
-
-| Check | Met? | Notes |
-|-------|:----:|-------|
-| Example policy | **Met** | 010161748C |
-| Screenshot | **Met** | Invalid routing number (//) |
-| Before-state measurable | **Met** | 986 ABA≠9; 15 multi-slash; 165 punct |
-
----
-
-## Regression guards
-
-| Check | Met? | Notes |
-|-------|:----:|-------|
-| Issue #25 MPOLICY | **Met** | Untouched |
-| Issue #26 MPREM | **Met** | Untouched |
-| Unrelated rulebooks | **Met** | Emit-path only planned |
-| Issue #45 contract | **Met** | Keep both-halves-required emit |
+| Dependency | Status | Notes |
+|------------|--------|-------|
+| #21H ABA recovery pattern | PASS | Pattern exists; lookup file is stale vs 20260630 PPCOM / PPPAC blanks |
+| #45 PPPAC account fallback | PASS | Closed; still supplies accounts for all 910 blanks |
+| #75 v57.92 QLA-safe gate | PASS | Must remain; reopen adds fill, not loosen format |
+| PPCOM extract present | PASS | `Source/PPCOM_PACAccountInformation_Extract_20260630.csv` |
+| PPACH / PPPAC present | PASS | 20260630 extracts in Source |
+| Issue #2 policy keys | PASS | Join uses source policy + `C`; PPCOM joins by account only |
+| Claims / other tables | N/A | Out of scope |
 
 ---
 
 ## Blockers
 
-**None** for Risk Review.
+None. Ambiguous ABA (205) and leading-zero account rule are **Risk/client decisions**, not hard dependency blocks.
 
 ---
 
-## Gate decision
+## Gate criteria
 
-| Gate | Result |
-|------|--------|
-| G0 Intake | **PASS** |
-| G1 Planning | **PASS** |
-| **G2 Dependency** | **PASS** |
-| G3 Risk | Await “Proceed to Risk Agent” |
+- [x] Upstream bank issues understood (#21H/#45/#75 v1)
+- [x] Source files available for proposed mapping
+- [x] No conflicting open Development that owns `MBANKNO`
+- [x] Safe to proceed to Risk
 
-**Recommended tracking status:** **Ready for Risk Review**
-
----
-
-## Deliverable paths
-
-- `Issue_Log_Items/Issue_75/Issue_75_Tracking_Sheet_Row.tsv`
-- `Issue_Log_Items/Issue_75/Issue_75_Intake_Summary.md`
-- `Issue_Log_Items/Issue_75/Issue_75_Scope_Decisions.md`
-- `Issue_Log_Items/Issue_75/Issue_75_Planning_Report.md`
-- `Issue_Log_Items/Issue_75/Issue_75_Dependency_Gate.md`
-- `Issue_Log_Items/Issue_75/evidence/issue75_mbankno_format_defects.csv`
+**Result: PASS → Risk Agent**

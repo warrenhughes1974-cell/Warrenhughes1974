@@ -1,11 +1,11 @@
 {
-  "generated": "2026-07-24T11:55:08",
+  "generated": "2026-07-25T17:10:46",
   "script_version": "1.0",
   "output": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
   "counts": {
-    "IN_DATA": 25,
+    "IN_DATA": 40,
     "WARN": 13,
-    "GAP": 19
+    "GAP": 10
   },
   "results": [
     {
@@ -53,13 +53,13 @@
     {
       "id": "#49",
       "status": "WARN",
-      "detail": "atch may be required) | WARN: 01ML8515C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8535C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8556C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8565C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8584C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8678C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8772C: output MSTATUS= expected 22 (rebatch may be required) | WARN: Output appears pre-#49 - run full/quikmstr batch under v57.70 | RESULT: FAIL",
+      "detail": "ch may be required) | WARN: 01ML8515C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8535C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8556C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8565C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8584C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8678C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8772C: output MSTATUS= expected 22 (rebatch may be required) | WARN: Output appears pre-#49 \u00e2\u20ac\u201d run full/quikmstr batch under v57.70 | RESULT: FAIL",
       "exit": 1
     },
     {
       "id": "#50",
       "status": "WARN",
-      "detail": "preview:  |   010335038C len: 0 | ------------------------------------------------------------------------ | WARNINGS |   WARN: Batch quikmemo.csv missing 018495BC | ======================================================================== | RESULT: FAIL |   FAIL: 018495BC missing 'Bauerly' in MEMOTEXT |   FAIL: 018495BC missing 'Last Known' in MEMOTEXT |   FAIL: 018495BC missing [PNOTE] segment |   FAIL: 010335038C missing [PNOTE] (control policy) |   FAIL: MEMOKEY width != 10 for 4526 keys (Issue #25) |   FAIL: DBF MEMOKEY padding wrong for 018495BC: b' 9018495BC' (expected b'  018495BC') - Memo tab SEEK will miss",
+      "detail": "review:  |   010335038C len: 0 | ------------------------------------------------------------------------ | WARNINGS |   WARN: Batch quikmemo.csv missing 018495BC | ======================================================================== | RESULT: FAIL |   FAIL: 018495BC missing 'Bauerly' in MEMOTEXT |   FAIL: 018495BC missing 'Last Known' in MEMOTEXT |   FAIL: 018495BC missing [PNOTE] segment |   FAIL: 010335038C missing [PNOTE] (control policy) |   FAIL: MEMOKEY width != 10 for 4526 keys (Issue #25) |   FAIL: DBF MEMOKEY padding wrong for 018495BC: b' 9018495BC' (expected b'  018495BC') \u00e2\u20ac\u201d Memo tab SEEK will miss",
       "exit": 1
     },
     {
@@ -71,20 +71,20 @@
     {
       "id": "#54",
       "status": "GAP",
-      "detail": "6, '12': 19135, '10': 3562, '8': 3657} | OK: MBENTYP=8 preserved (3657 rows) | OK: loan-history policies=665 | OK: no MBENTYP=20 rows (deferred) | OK: MDATE YYYYMMDD format | OK: quikloan.csv unchanged (356 rows) | WARN: Estimated opening seeds (type10 - 3562 PACTG)=0; expected 550\u2013565 | WARN: No loan rows for sample MPOLICY=010331768C | ------------------------------------------------------------------------ | RESULT: FAIL | FAIL: Loan-type rows (10/11/12)=36853 outside expected 37300\u201337600 | FAIL: MPOLICY width violations: 40510 row(s) | FAIL: Missing opening seed for 010822238C: expected MBENTYP=10 MDATE=20171220",
+      "detail": "209, '3': 264, '4': 2569, '2': 37} | OK: MBENTYP=8 preserved (3657 rows) | OK: loan-history policies=665 | OK: no MBENTYP=20 rows (deferred) | OK: MDATE YYYYMMDD format | OK: quikloan.csv unchanged (356 rows) | WARN: Estimated opening seeds (type10 - 3562 PACTG)=0; expected 550\u00e2\u20ac\u201c565 | WARN: No loan rows for sample MPOLICY=010331768C | ------------------------------------------------------------------------ | RESULT: FAIL | FAIL: Loan-type rows (10/11/12)=36853 outside expected 37300\u00e2\u20ac\u201c37600 | FAIL: MPOLICY width violations: 43589 row(s) | FAIL: Missing opening seed for 010822238C: expected MBENTYP=10 MDATE=20171220",
       "exit": 1
     },
     {
       "id": "#55",
       "status": "GAP",
-      "detail": "its): 0 | Trace policies: |   018495BC P1: MISSING |   018495BC P2: MISSING |   018499CC P1: MISSING |   018499CC P2: MISSING |   018510C P1: MISSING |   018510C P2: MISSING | Issue #25 MPOLICY width (trace policies): PASS | Issue #26 MPREM: baseline not found - spot-check leading-dot only |   MPREM leading-dot count: 0 |  | RESULT: FAIL |   - Missing trace row ('018495BC', '1') |   - Missing trace row ('018495BC', '2') |   - Missing trace row ('018499CC', '1') |   - Missing trace row ('018499CC', '2') |   - Missing trace row ('018510C', '1') |   - Missing trace row ('018510C', '2') |   - Missing PUA trace row ('010434419C', '2')",
+      "detail": "s): 0 | Trace policies: |   018495BC P1: MISSING |   018495BC P2: MISSING |   018499CC P1: MISSING |   018499CC P2: MISSING |   018510C P1: MISSING |   018510C P2: MISSING | Issue #25 MPOLICY width (trace policies): PASS | Issue #26 MPREM: baseline not found \u00e2\u20ac\u201d spot-check leading-dot only |   MPREM leading-dot count: 0 |  | RESULT: FAIL |   - Missing trace row ('018495BC', '1') |   - Missing trace row ('018495BC', '2') |   - Missing trace row ('018499CC', '1') |   - Missing trace row ('018499CC', '2') |   - Missing trace row ('018510C', '1') |   - Missing trace row ('018510C', '2') |   - Missing PUA trace row ('010434419C', '2')",
       "exit": 1
     },
     {
       "id": "#57",
-      "status": "GAP",
-      "detail": "TRACE ERIC 010148272C: MNFOPT=0 expected=2 | TRACE ERIC 010143726C: MNFOPT=0 expected=2 | TRACE ERIC 010392763C: MNFOPT=0 expected=3 | TRACE ERIC 011221309C: MNFOPT=0 expected=1 | TRACE 21A 010391876C: MNFOPT=0 expected=2 | SOURCE 010392763C: LP_NFO=5 translate-> 3 |  | Errors: 6 | FAIL - rerun batch conversion after Issue #57 rulebook/translation changes |   - Trace 010367131C: MNFOPT=0, expected 2 |   - Trace 010148272C: MNFOPT=0, expected 2 |   - Trace 010143726C: MNFOPT=0, expected 2 |   - Trace 010392763C: MNFOPT=0, expected 3 |   - Trace 011221309C: MNFOPT=0, expected 1 |   - Trace 010391876C: MNFOPT=0, expected 2",
-      "exit": 1
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
     },
     {
       "id": "#58",
@@ -100,9 +100,39 @@
     },
     {
       "id": "#60",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#72",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#75",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#76",
       "status": "GAP",
-      "detail": "validate_issue60_pua_phase.py 1.0 | PUA rows checked: 494 | Other later-phase rows checked: 1357 | FAIL |   TRACE missing golden policy 010310404C |   PUA 9010391355C: MLASTANN != base |   PUA 9010391876C: MLASTANN != base |   PUA 9010391878C: MLASTANN != base |   PUA 9010392930C: MLASTANN != base |   PUA 9010395098C: MLASTANN != base |   PUA fleet violations: 27 (first 5 listed)",
+      "detail": "validate_issue76_eti_rpu_payup v2.0 |   valuation date: 2026-07-25 (system date) |   candidates=400 payup_fail=0 mlast_fail=165 | FAIL: |   - MLASTANN mismatch: 9010379477C got 25 expected 26 (paidto=20000404 val=20260725) |   - MLASTANN mismatch: 9010379478C got 25 expected 26 (paidto=20000404 val=20260725) |   - MLASTANN mismatch: 9010381516C got 44 expected 45 (paidto=19810401 val=20260725) |   - violations: payup=0 mlastann=165",
       "exit": 1
+    },
+    {
+      "id": "#110",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#114",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
     },
     {
       "id": "#21F",
@@ -136,8 +166,8 @@
     },
     {
       "id": "#13",
-      "status": "GAP",
-      "detail": "termination samples mismatch"
+      "status": "IN_DATA",
+      "detail": "termination samples 54/56"
     },
     {
       "id": "#2",
@@ -152,7 +182,7 @@
     {
       "id": "#36",
       "status": "IN_DATA",
-      "detail": "policies with modal factors=4983"
+      "detail": "010367131C modal factors present"
     },
     {
       "id": "#38",
@@ -192,7 +222,12 @@
     {
       "id": "#45",
       "status": "IN_DATA",
-      "detail": "MBANKNO populated=1824"
+      "detail": "MBANKNO populated=2706"
+    },
+    {
+      "id": "#75",
+      "status": "IN_DATA",
+      "detail": "draft MBANKNO filled=2081/2132 invalid=0; 9010161748C=091303855/0000002000581"
     },
     {
       "id": "#47",
@@ -201,8 +236,8 @@
     },
     {
       "id": "#49",
-      "status": "GAP",
-      "detail": "018252C= 018187C="
+      "status": "IN_DATA",
+      "detail": "override/preserve traces OK"
     },
     {
       "id": "#50",
@@ -217,7 +252,7 @@
     {
       "id": "#54",
       "status": "IN_DATA",
-      "detail": "quikbenh=40510 types={'11': 14156, '12': 19135, '10': 3562, '8': 3657}"
+      "detail": "quikbenh=43589 types={'11': 14156, '12': 19135, '10': 3562, '8': 3657, '1': 209, '3': 264, '4': 2569, '2': 37}"
     },
     {
       "id": "#55",
@@ -226,23 +261,23 @@
     },
     {
       "id": "#57:010367131C",
-      "status": "GAP",
-      "detail": "MNFOPT= expected 2"
+      "status": "IN_DATA",
+      "detail": "MNFOPT=2"
     },
     {
       "id": "#57:010392763C",
-      "status": "GAP",
-      "detail": "MNFOPT= expected 3"
+      "status": "IN_DATA",
+      "detail": "MNFOPT=3"
     },
     {
       "id": "#57:011221309C",
-      "status": "GAP",
-      "detail": "MNFOPT= expected 1"
+      "status": "IN_DATA",
+      "detail": "MNFOPT=1"
     },
     {
       "id": "#58",
-      "status": "GAP",
-      "detail": "010367131C modal fees missing"
+      "status": "IN_DATA",
+      "detail": "010367131C MANNLFEE=10.4400 MSEMIFEE=5.4288"
     },
     {
       "id": "#59:01122D991C",
@@ -277,17 +312,17 @@
     {
       "id": "#59:010521213C",
       "status": "GAP",
-      "detail": "MSTATUS= (Death Claim Pending)"
+      "detail": "MSTATUS=22 (Death Claim Pending)"
     },
     {
       "id": "#60",
-      "status": "GAP",
-      "detail": "golden PUA=None"
+      "status": "IN_DATA",
+      "detail": "010310404C PUA phase Chris rules"
     },
     {
       "id": "#60:other-rider",
-      "status": "GAP",
-      "detail": "ADB=None"
+      "status": "IN_DATA",
+      "detail": "920ADB dates unchanged"
     },
     {
       "id": "#56/60 plan",
@@ -307,7 +342,7 @@
     {
       "id": "#105",
       "status": "IN_DATA",
-      "detail": "MPAR=1 rows=2895; mismatches vs plan PAR=0"
+      "detail": "MPAR=1 rows=3388; mismatches vs plan PAR=0; PUA via base plan=493; unresolvable plans=0"
     },
     {
       "id": "Engine",

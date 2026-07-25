@@ -1,0 +1,55 @@
+{
+  "issue": "114",
+  "description": "LifePRO dividend history -> QLAdmin QuikBenh benefit types 1-5. Layer A loads real PACTG dividend election transactions; Layer B adds one conversion adjustment row per policy for the pre-extract remainder so each policy ties to PPBENTYP.DIVIDENDS_CREDITED.",
+
+  "pactg_election_codes": {
+    "0515": "1",
+    "0516": "2",
+    "0514": "3",
+    "0517": "4",
+    "0518": "5"
+  },
+  "emit_side": "debit",
+  "emit_side_note": "The dividend is credited to the policy on the DEBIT leg (debit 0517 / credit 0112 buys paid-up additions; debit 0515 / credit 0096 pays cash). The same code on the CREDIT leg is the contra side - either the clearing half of a posting already captured on its debit leg, or a reversal DATE_REVERSED did not flag. Emitting both legs double-counts the dividend. Contra rows go to the exception report as CONTRA_SIDE_NOT_EMITTED.",
+
+  "pactg_excluded_codes": {
+    "0641": "Interest on Dividend Accums - interest, not a dividend credit (owned by #38 MINTYTD)",
+    "0310": "Dividend Accums on Deposit - balance account, not a credit event",
+    "0562": "Surrender-PUA - surrender of dividend-purchased value, not a dividend credited",
+    "0563": "Surrender-OYT - surrender of dividend-purchased value, not a dividend credited",
+    "0519": "Death Claim Prorata Surrender",
+    "0117": "Dividend Accumulations Buy PUA - premium-side counterparty",
+    "0112": "Single Premium Paid-Up Additions - premium-side counterparty of 0517",
+    "0096": "Dividend Payout - clearing counterparty",
+    "0041": "Dividend Clearing - clearing counterparty"
+  },
+
+  "exclude_reversed_rows": true,
+
+  "lifetime_type_codes": ["BA"],
+  "lifetime_field": "DIVIDENDS_CREDITED",
+  "lifetime_excluded_type_codes": {
+    "OR": "Rider rows carry dividends on a small number of policies; excluded to match the Issue #21F premium treatment. Logged to exceptions."
+  },
+
+  "conversion_adjustment_enabled": true,
+  "conversion_adjustment_date": "20171231",
+
+  "dividend_option_mbentyp": {
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5"
+  },
+  "unmapped_option_notes": {
+    "6": "LifePRO Reduce Loan (Product Book 12-263). QLAdmin has no dividend-to-loan benefit type; nearest is 12, owned by Issue #54. Withheld to exceptions pending client answer (OQ-1).",
+    "blank": "No dividend option recorded; benefit type not derivable. Withheld to exceptions (OQ-3)."
+  },
+
+  "money_tolerance": 0.005,
+  "mbentyp_replace_on_rerun": ["1", "2", "3", "4", "5"],
+  "preserve_mbentyp": ["8", "10", "11", "12"],
+  "append_only": true,
+  "staging_subdir": "staged"
+}

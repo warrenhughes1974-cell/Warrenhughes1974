@@ -1,0 +1,22 @@
+SOURCE_POLICY,MPOLICY,DIVIDEND_OPTION,LIFEPRO_LIFETIME,LAYER_A_TOTAL,GAP,REASON,NOTE
+9018712F,  9018712FC,,8.04,0.00,8.04,UNMAPPED_OPTION_BLANK,No dividend option recorded; benefit type not derivable (OQ-3)
+9010392138,9010392138C,4,6814.92,8153.49,-1338.57,NEGATIVE_OR_ZERO_GAP,Converted transactions meet or exceed the LifePRO lifetime total; no adjustment row emitted
+9010404857,9010404857C,6,3241.10,0.00,3241.10,UNMAPPED_OPTION_6,LifePRO dividend option 6 = Reduce Loan; QLAdmin has no dividend-to-loan benefit type (OQ-1)
+9010439128,9010439128C,6,4519.86,1601.02,2918.84,UNMAPPED_OPTION_6,LifePRO dividend option 6 = Reduce Loan; QLAdmin has no dividend-to-loan benefit type (OQ-1)
+9010439435,9010439435C,6,3638.28,955.38,2682.90,UNMAPPED_OPTION_6,LifePRO dividend option 6 = Reduce Loan; QLAdmin has no dividend-to-loan benefit type (OQ-1)
+9010451453,9010451453C,6,4191.45,1591.95,2599.50,UNMAPPED_OPTION_6,LifePRO dividend option 6 = Reduce Loan; QLAdmin has no dividend-to-loan benefit type (OQ-1)
+9010458525,9010458525C,6,1866.46,620.83,1245.63,UNMAPPED_OPTION_6,LifePRO dividend option 6 = Reduce Loan; QLAdmin has no dividend-to-loan benefit type (OQ-1)
+9010462759,9010462759C,6,3497.20,0.00,3497.20,UNMAPPED_OPTION_6,LifePRO dividend option 6 = Reduce Loan; QLAdmin has no dividend-to-loan benefit type (OQ-1)
+9010473866,9010473866C,4,4757.84,5722.15,-964.31,NEGATIVE_OR_ZERO_GAP,Converted transactions meet or exceed the LifePRO lifetime total; no adjustment row emitted
+9010512061,9010512061C,4,1645.15,1872.87,-227.72,NEGATIVE_OR_ZERO_GAP,Converted transactions meet or exceed the LifePRO lifetime total; no adjustment row emitted
+9010549966,9010549966C,6,329.09,0.00,329.09,UNMAPPED_OPTION_6,LifePRO dividend option 6 = Reduce Loan; QLAdmin has no dividend-to-loan benefit type (OQ-1)
+901122D991,901122D991C,,17.82,0.00,17.82,UNMAPPED_OPTION_BLANK,No dividend option recorded; benefit type not derivable (OQ-3)
+901142D978,901142D978C,,103.11,0.00,103.11,UNMAPPED_OPTION_BLANK,No dividend option recorded; benefit type not derivable (OQ-3)
+901185D536,901185D536C,,34.99,0.00,34.99,UNMAPPED_OPTION_BLANK,No dividend option recorded; benefit type not derivable (OQ-3)
+9010510671,9010510671C,3,,,11590.26,OR_ROW_DOLLARS_EXCLUDED,Dividends on non-BA rider rows; excluded from the lifetime target to match the Issue #21F premium treatment (OQ-2)
+9010511203,9010511203C,3,,,4336.55,OR_ROW_DOLLARS_EXCLUDED,Dividends on non-BA rider rows; excluded from the lifetime target to match the Issue #21F premium treatment (OQ-2)
+9010549966,9010549966C,6,,,2793.15,OR_ROW_DOLLARS_EXCLUDED,Dividends on non-BA rider rows; excluded from the lifetime target to match the Issue #21F premium treatment (OQ-2)
+9010397528,9010397528C,,,,93.29,CONTRA_SIDE_NOT_EMITTED,"PACTG 20250901: election code 0515 on the credit leg against 0020 — clearing half or unflagged reversal, not a dividend credited"
+9010429558,9010429558C,,,,169.80,CONTRA_SIDE_NOT_EMITTED,"PACTG 20210901: election code 0515 on the credit leg against 0012 — clearing half or unflagged reversal, not a dividend credited"
+9010449158,9010449158C,,,,150.18,CONTRA_SIDE_NOT_EMITTED,"PACTG 20260303: election code 0516 on the credit leg against 0012 — clearing half or unflagged reversal, not a dividend credited"
+9010547892,9010547892C,,,,153.65,CONTRA_SIDE_NOT_EMITTED,"PACTG 20241001: election code 0517 on the credit leg against 0112 — clearing half or unflagged reversal, not a dividend credited"

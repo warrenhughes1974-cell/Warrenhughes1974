@@ -1,44 +1,52 @@
-# Issue #75 — Intake Summary
+# Issue #75 — Intake Summary (REOPEN)
 
-**Issue:** #75 — Bank Account Number / `MBANKNO` QLA validation error  
+**Issue:** #75 — Bank Acct / `MBANKNO` QLA validation + PPCOM bank recovery  
 **Framework stage:** Intake Agent (G0)  
 **Status after intake:** Planning  
-**Generated:** 2026-07-15  
+**Generated:** 2026-07-25  
 **Model:** Cursor Grok 4.5 (locked)  
-**Owner:** Conversion  
+**Owner:** Warren / Conversion  
 **Priority:** Go-No Go  
+**Reopen reason:** New LifePRO extract `PPCOM_PACAccountInformation_Extract_20260630.csv` available; prior v57.92 fix blanked invalid `MBANKNO` but left ~910 bank-draft policies without a loadable Bank Acct. Client also reports leading zeros on 8-digit account numbers.
 
 ---
 
 ## Client symptom (verbatim)
 
-> Issue 75 I am getting an error in QL when I make a policy change stating the Bank account number is not correct. I need to look into this issue. Can you look at how the bank account number is coming over into QLA. how that needs to be formatted in QLA and see what we are doing on our side.
+> Lets reopen this issue: 75 … There is a new file in source data called PPCOM. This should have much more complete bank information. Can you look at this table and analyze what we need to do to get the bank account numbers into QLA. There also seems to be leading zeros added to account numbers that have 8 digits.
 
-**Screenshot evidence (Editing Policy 010161748C — Base Data):**
+Original symptom (still in force from first intake):
 
-- Bank Acct field displays: `09130385//00000200-058-1`
-- Error popup: **Invalid routing number (//)**
+> QL error on policy change: Invalid routing number (//) / bank account not correct. Example 010161748C.
 
 ---
 
 ## Normalized symptom
 
-QLAdmin rejects the Bank Acct (`quikmstr.MBANKNO`) value on policy edit because the **routing (ABA) portion fails validation**. Conversion is emitting `MBANKNO` values that do not meet QLA’s expected bank-draft format (valid routing + `/` + account).
+1. **Format gate (already shipped v57.92):** QLA rejects non–9-digit ABA, punctuation in account, or multi-slash `MBANKNO`. Converter now blanks unsafe values — correct, but incomplete.
+2. **Fill gap (reopen):** Bank-draft policies (`MBILLFRM=2`) with usable PPPAC/PPACH accounts still emit blank `MBANKNO` because full 9-digit ABA is not resolved from the stale `aba_routing_lookup.csv` path.
+3. **Account padding:** Some emitted account halves carry leading zeros that make an 8-digit account look longer (source-driven and/or join-variant); needs an explicit emit rule against PPCOM’s account form.
 
-| Item | Value |
-|------|--------|
-| Example policy | **010161748C** (Active / status 22; EDWIN ARNDT) |
-| Current Output `MBANKNO` | `09130385/000000200-058-1` |
-| UI display (screenshot) | `09130385//00000200-058-1` (close; double-slash / slight acct digit difference vs current CSV) |
-| Bill form | `MBILLFRM=2` (bank draft) |
+---
+
+## Example policies
+
+| Client # | Output `MPOLICY` | Current `MBANKNO` | Notes |
+|----------|------------------|-------------------|--------|
+| 010161748C | 9010161748C | blank | PPPAC acct `000000  200-058-1`; PPCOM ABA **091303855** (unique, checksum OK) |
+| 010157076C | 9010157076C | blank | PPCOM ABA **104910135** |
+| 010348734C | 9010348734C | blank | PPCOM ABA **081518113** |
+| 010713704C | 9010713704C | `104000016/47374579` | Already good; regression guard |
+| 9010857359C | same | `082900872/0059281456` | Leading zeros on account vs PPCOM form `59281456` |
 
 ---
 
 ## Suspected domain
 
-- **Primary:** `quikmstr.MBANKNO` (Bank Acct on Base Data / Coverage)
-- **Sources:** PPACH + PPPAC fallback + `aba_routing_lookup` / RNA (Issues **#21H**, **#45**)
-- **Not:** `MACCTNO` (Bill Acct) — blank on this policy
+- **Primary target:** `quikmstr.MBANKNO` (`ABA/ACCOUNT`)
+- **New source:** `PPCOM` — `E_TRAN_ABA_NUMBER`, `E_ACCOUNT_NUMBER` (no `POLICY_NUMBER`; join by account digits)
+- **Existing sources:** PPACH (history), PPPAC (detail fallback #45), `aba_routing_lookup.csv` (#21H precompute)
+- **Not:** `MACCTNO` (Bill Acct), claims `quikclmp.MBANKNO`
 
 ---
 
@@ -46,16 +54,18 @@ QLAdmin rejects the Bank Acct (`quikmstr.MBANKNO`) value on policy edit because 
 
 **In scope:**
 
-- Confirm QLA Bank Acct formatting rules (Help PDF)
-- Trace how conversion builds `MBANKNO` (`ABA/ACCOUNT`)
-- Quantify format defects (truncated ABA, extra `/`, punctuation in account)
-- Recommend surgical emit/cleanup rules so QLA accepts bank-draft values on edit
+- Profile PPCOM and quantify recovery for blank bank-draft `MBANKNO`
+- Rebuild or live-load ABA resolution from current PPCOM (join PPPAC + PPACH accounts)
+- Preserve v57.92 QLA-safe emit rules (9-digit ABA, digits-only account, single `/`)
+- Define leading-zero account emit rule (prefer PPCOM form vs preserve PPACH/PPPAC padding)
+- Ambiguous account→ABA cases (multiple routing numbers)
 
-**Out of scope (unless client expands):**
+**Out of scope (unless expanded):**
 
-- Credit-card ID labeling / Bill Acct vs Bank Acct product question still open on **#21H**
-- Inventing ABA when no recoverable 9-digit routing exists
+- Inventing ABA when PPCOM has no match
 - Changing `MBILLFRM`
+- Bank-name mapping / Credit Card ID UI labeling (#21H open product question)
+- Claims banking fields
 
 ---
 
@@ -63,25 +73,27 @@ QLAdmin rejects the Bank Acct (`quikmstr.MBANKNO`) value on policy edit because 
 
 | ID | Relationship |
 |----|----------------|
-| **#21H** | ABA recovery to 9 digits; target-field placement still partly open |
-| **#45** | PPPAC account fallback; **010161748C was a rescue sample** (`*****0385/****0581`) |
-| Data governance | `MBANKNO` required when bill form is 2 |
+| **#21H** | Original PPCOM→`aba_routing_lookup` ABA recovery pattern |
+| **#45** | PPPAC account fallback when PPACH missing |
+| **#75 v57.92** | QLA-safe blanking of bad `MBANKNO` (still required) |
 
 ---
 
 ## Artifact inventory
 
-| Provided | Missing |
-|----------|---------|
-| Symptom + screenshot | Full LifePRO screen for same policy (optional) |
-| Example policy 010161748C | Client confirmation of account-type suffix rules (`/S`, `/A`) if needed |
-| Current `Output/quikmstr.csv` | Local `Source/` extracts in this workspace (batch path may hold them) |
+| Provided | Status |
+|----------|--------|
+| `Source/PPCOM_PACAccountInformation_Extract_20260630.csv` (~5.3 GB, 2.6M rows) | Present |
+| PPACH / PPPAC 20260630 extracts | Present |
+| `Source/aba_routing_lookup.csv` (May-era, 2,692 keys) | Stale vs current blanks |
+| Current `Output/quikmstr.csv` | Present (1,222 filled / 910 blank among 2,132 drafts) |
+| Intake evidence | `evidence/issue75_ppcom_blank_draft_recovery.csv` |
 
 ---
 
 ## Immediate blockers
 
-None for research. Format defect is measurable from current Output + QLAdmin Help.
+None for research/planning. Development should not start until Risk Go/No-Go and explicit Development approval (PPCOM is large; prefer rebuild lookup over in-batch full scan unless streaming is accepted).
 
 ---
 

@@ -95,7 +95,7 @@
 | **#71** | Rate/plan/policy BAND → `00` | **CLOSED ✓** | **v57.90** | **Resolution:** All rate factor and rate-key BAND values (and QuikPlBd BDCODE) now emit as `00` (NOT APPLICABLE) to match quikridr MBAND=00, restoring Policy Display cash-value lookup. Client UAT PASS (`010718309C`). |
 | **#72** | NFO must match ETI/RPU status (44→2, 45→3) | **Ready for Validation** · **v57.91** | **v57.91** | Post-map force MNFOPT from final MSTATUS 44/45; 277 policies; validator PASS; `Test_Validation/quikmstr.csv`. |
 | **#74** | Var DB Code (`quikplan.VARDB`) `4` → `0` only | **CLOSED ✓** | — | **Resolution:** Rulebook VARDB `4`→`0` (121 plans); structure `1`/`2`/`3` unchanged (20). Val+Reg PASS. `Test_Validation/quikplan.csv`. |
-| **#75** | Bank Acct / `MBANKNO` QLA validation | **Ready for Regression** · **v57.92** | **v57.92** | Val PASS: 0 invalid MBANKNO; 1074 intentional changes; Test_Validation/quikmstr.csv. Next: Regression Agent. |
+| **#75** | Bank Acct / `MBANKNO` QLA validation | **CLOSED ✓** · **v58.35** | **v58.35** | Resolution: Bank-draft MBANKNO rebuilt from June PPCOM (checksum-valid 9-digit ABA / digits-only account). |
 | **#77** | Fleet rate setup validation (PVO + default keys vs loaded rates / EX guide) | **CLOSED ✓** | **v57.95** | Resolution: Rate setup now ensures every plan with loaded rates has GP/DB/CV/TV/DV keys and correct Plan Values Options checkboxes, using NOT APPLICABLE defaults only when no real codes exist, without inventing factor values. |
 | **#80** | CSO Valuation Setup → exact QuikPlCv / QuikPlTv assumptions | **Closed** (v58.01) | **Resolution:** CSO Valuation_Setup is now the authoritative source for cash-value and reserve assumption codes on 51 non-PUA plans, writing exact QuikPlCv, QuikPlTv, and quikplan NFOINT/INTMETHCV values with blank workbook cells left blank. | G5+G6 PASS; UAT: Test_Validation quikplan + QuikPlCv/Tv. Follow-ups: #81, #82. |
 | **#81** | Valuation Setup PUA rows missing QLA Plan codes | **Intake** (parked) | — | Four rows: `622 PUA`, `675 61 PUA`, `675 AD PUA`, `991 PUA`. Split from #80. |
@@ -127,8 +127,14 @@
 | ID | Item | Status | Notes |
 |---|---|---|---|
 | **A** | QuikPlan / PVO / rate-key defects (Robert 2026-07-20) | **A10 Gate PASS** | QuikUwpo master missing NS/PR/SM/ST. Checklist every conversion. |
+| **112** | Stale issue validators / accountability harness | **Active — partial** | Not a conversion defect. Most checkers fixed 2026-07-25; seven still on retired `_20260530` extract (WARN). **Do not put on CSO log.** |
+| **108G** | Status consistency governance checks (DG-QUIKMSTR-027–032) | **Active — Part 1 done** | Governance only; no app.py. Part 2 (retire status forcing) waits on 108E. **Do not put on CSO log.** |
 
 **Issue A detail:** `Issue_Log_Items/Issue_A/` · Risk: `Issue_A_Risk_Review_Report.md` · Checklist + `.cursor/rules/issue-a-conversion-checklist.mdc`
+
+**#112 detail:** `Issue_Log_Items/Issue_112/Issue_112_Internal_Track.md` · Implementation: `Issue_112_Implementation_Notes.md`
+
+**108G detail:** `Issue_Log_Items/Issue_108/Issue_108G_Internal_Track.md` · Implementation: `Issue_108G_Implementation_Notes.md`
 
 **#18 detail:** `Issue_Log_Items/Issue_18/` · Citizens QLAdmin rate load · Not Warren app.py · Reserve file = CV/reserve/paid-up/ETI only (not gross premium, dividends, COI, loan values)
 
@@ -186,7 +192,7 @@
 
 **#74 detail:** `Issue_Log_Items/Issue_74/` · **CLOSED 2026-07-15** · `Issue_74_Resolution_Summary.md` · rulebook-only · 121×`4`→`0` / 20 keep · `Test_Validation/quikplan.csv`
 
-**#75 detail:** `Issue_Log_Items/Issue_75/` · **Ready for Regression** · **v57.92** · `Issue_75_Validation_Report.md` PASS · `Test_Validation/quikmstr.csv`
+**#75 detail:** `Issue_Log_Items/Issue_75/` · **CLOSED ✓** · **v58.35** · G7 IN_DATA · draft filled 2081/2132 · `Issue_75_Resolution_Summary.md`
 
 **#77 detail:** `Issue_Log_Items/Issue_77/` · **CLOSED v57.95** · `Issue_77_Resolution_Summary.md` · UAT: reload `Test_Validation/quikplan.csv` + `rates/QuikPl*`
 

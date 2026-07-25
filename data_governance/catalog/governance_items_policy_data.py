@@ -490,6 +490,161 @@ RULE_DG_QUIKMSTR_026 = RuleDefinition(
     ),
 )
 
+# --- Issue #108G: cross-table policy/coverage status consistency (Robert, 2026-07-25) ---
+# These compare QuikMstr policy status against QuikRidr coverage status. They exist so the
+# converter can stop forcing statuses and let governance report inconsistencies instead.
+
+RULE_DG_QUIKMSTR_027 = RuleDefinition(
+    rule_id="DG-QUIKMSTR-027",
+    governance_item_id=_GOVERNANCE_ITEM_ID_QUIKMSTR,
+    technical_name="Validate Terminated Policy Has No In-Force Coverage",
+    business_name="Terminated Policy Must Not Have In-Force Coverage",
+    purpose=(
+        "Ensure a terminated policy carries no coverage that is still in force. If the "
+        "policy is terminated, every coverage should be terminated too."
+    ),
+    source_tables=("QuikMstr", "QuikRidr"),
+    source_fields=("MPOLICY", "MSTATUS", "MPHASE", "MPHSTAT"),
+    business_rule=(
+        "When QuikMstr MSTATUS is 50 or greater, no QuikRidr row for that policy may carry "
+        "MPHSTAT below 50. Report the coverage rows, do not change them."
+    ),
+    severity="Critical",
+    failure_conditions=(
+        "Policy MSTATUS is 50 or greater and a coverage MPHSTAT is below 50.",
+    ),
+)
+
+RULE_DG_QUIKMSTR_028 = RuleDefinition(
+    rule_id="DG-QUIKMSTR-028",
+    governance_item_id=_GOVERNANCE_ITEM_ID_QUIKMSTR,
+    technical_name="Validate NFO Phase 1 Status Matches Policy Status",
+    business_name="ETI Or RPU Phase 1 Coverage Must Match Policy Status",
+    purpose=(
+        "Ensure the base coverage on a nonforfeiture policy carries the same status as the "
+        "policy. When a policy goes to ETI or RPU, phase 1 moves with it."
+    ),
+    source_tables=("QuikMstr", "QuikRidr"),
+    source_fields=("MPOLICY", "MSTATUS", "MPHASE", "MPHSTAT"),
+    business_rule=(
+        "When QuikMstr MSTATUS is 44 (ETI) or 45 (RPU), the QuikRidr phase 1 row must carry "
+        "the same MPHSTAT value."
+    ),
+    severity="Critical",
+    failure_conditions=(
+        "Policy MSTATUS is 44 or 45 and the phase 1 MPHSTAT differs.",
+        "Policy MSTATUS is 44 or 45 and no phase 1 coverage row exists.",
+    ),
+)
+
+RULE_DG_QUIKMSTR_029 = RuleDefinition(
+    rule_id="DG-QUIKMSTR-029",
+    governance_item_id=_GOVERNANCE_ITEM_ID_QUIKMSTR,
+    technical_name="Review NFO Policy Later Phase Coverages",
+    business_name="ETI Or RPU Policy Should Not Have Other In-Force Coverages",
+    purpose=(
+        "Flag coverages beyond phase 1 that are still in force on a nonforfeiture policy. "
+        "Normally all other coverages terminate, so these need source confirmation."
+    ),
+    source_tables=("QuikMstr", "QuikRidr"),
+    source_fields=("MPOLICY", "MSTATUS", "MPHASE", "MPLAN", "MPHSTAT"),
+    business_rule=(
+        "When QuikMstr MSTATUS is 44 or 45, report any QuikRidr row with MPHASE above 1 and "
+        "MPHSTAT below 50. Plans 1SALML and 1SALMI are excluded: on those policies the phase "
+        "1 base carries zero units and the phase 2 rider holds the entire face amount, so an "
+        "in-force later phase is the expected structure rather than a defect. Advisory only "
+        "— confirm against the source system before acting."
+    ),
+    severity="Advisory",
+    failure_conditions=(
+        "Policy MSTATUS is 44 or 45 and a phase 2 or later coverage has MPHSTAT below 50.",
+    ),
+)
+
+RULE_DG_QUIKMSTR_030 = RuleDefinition(
+    rule_id="DG-QUIKMSTR-030",
+    governance_item_id=_GOVERNANCE_ITEM_ID_QUIKMSTR,
+    technical_name="Validate Active Policy Has In-Force Coverage",
+    business_name="Active Policy Must Have At Least One In-Force Coverage",
+    purpose=(
+        "Ensure an active policy carries at least one coverage that is still in force. A "
+        "policy cannot be in force with no in-force coverage."
+    ),
+    source_tables=("QuikMstr", "QuikRidr"),
+    source_fields=("MPOLICY", "MSTATUS", "MPHASE", "MPHSTAT"),
+    business_rule=(
+        "When QuikMstr MSTATUS is below 44, at least one QuikRidr row for that policy must "
+        "carry MPHSTAT below 50."
+    ),
+    severity="Critical",
+    failure_conditions=(
+        "Policy MSTATUS is below 44 and every coverage MPHSTAT is 50 or greater.",
+        "Policy MSTATUS is below 44 and the policy has no coverage rows at all.",
+    ),
+)
+
+RULE_DG_QUIKMSTR_031 = RuleDefinition(
+    rule_id="DG-QUIKMSTR-031",
+    governance_item_id=_GOVERNANCE_ITEM_ID_QUIKMSTR,
+    technical_name="Review NFO Election Against Policy Status",
+    business_name="ETI Or RPU Election Should Match Policy Status",
+    purpose=(
+        "Flag nonforfeiture policies whose recorded election disagrees with the policy "
+        "status so the source system can be checked."
+    ),
+    source_tables=("QuikMstr", "QuikRidr"),
+    source_fields=("MPOLICY", "MSTATUS", "MNFOPT"),
+    business_rule=(
+        "When QuikMstr MSTATUS is 44 the election MNFOPT is expected to be 2 (ETI); when "
+        "MSTATUS is 45 it is expected to be 3 (RPU). Report disagreements for source review. "
+        "Do not overwrite the election — it carries the source value on purpose (Issue #72 "
+        "downgrade, Issue #108F)."
+    ),
+    severity="Advisory",
+    failure_conditions=(
+        "MSTATUS is 44 and MNFOPT is not 2.",
+        "MSTATUS is 45 and MNFOPT is not 3.",
+    ),
+)
+
+RULE_DG_QUIKMSTR_032 = RuleDefinition(
+    rule_id="DG-QUIKMSTR-032",
+    governance_item_id=_GOVERNANCE_ITEM_ID_QUIKMSTR,
+    technical_name="Validate NFO Policy Field Completeness",
+    business_name="ETI Or RPU Policy Fields Must Be Complete",
+    purpose=(
+        "Ensure the nonforfeiture field set is internally consistent on every ETI and RPU "
+        "policy, so a later change cannot quietly undo the Issue #108 conversion rules."
+    ),
+    source_tables=("QuikMstr", "QuikRidr"),
+    source_fields=(
+        "MPOLICY",
+        "MSTATUS",
+        "MPAIDTO",
+        "MPHASE",
+        "MPLAN",
+        "MAGE",
+        "MPAYUP",
+        "MPREM",
+        "MPHSTAT",
+        "MSAVESTAT",
+    ),
+    business_rule=(
+        "On a policy with MSTATUS 44 or 45: phase 1 MPAYUP must equal MPAIDTO; phase 1 MAGE "
+        "must be populated and nonzero; the phase 1 save fields MSAVEAGE, MSAVEUNIT, "
+        "MSAVEVPU, MSAVEPREM and MSAVESTAT must be blank; MPREM must be zero when MSTATUS is "
+        "44; and any paid-up addition coverage must carry MPHSTAT 54."
+    ),
+    severity="Error",
+    failure_conditions=(
+        "Phase 1 MPAYUP does not equal policy MPAIDTO.",
+        "Phase 1 MAGE is blank or zero.",
+        "A phase 1 save field is populated.",
+        "MSTATUS is 44 and phase 1 MPREM is not zero.",
+        "A paid-up addition coverage is not terminated at 54.",
+    ),
+)
+
 GOVERNANCE_ITEM_QUIKCLNT = GovernanceItem(
     item_id=_GOVERNANCE_ITEM_ID_QUIKCLNT,
     item_number=8,
@@ -807,6 +962,12 @@ ALL_POLICY_MSTR_RULES = (
     RULE_DG_QUIKMSTR_024,
     RULE_DG_QUIKMSTR_025,
     RULE_DG_QUIKMSTR_026,
+    RULE_DG_QUIKMSTR_027,
+    RULE_DG_QUIKMSTR_028,
+    RULE_DG_QUIKMSTR_029,
+    RULE_DG_QUIKMSTR_030,
+    RULE_DG_QUIKMSTR_031,
+    RULE_DG_QUIKMSTR_032,
 )
 
 ALL_QUIKCLNT_RULES = (

@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+105	CLOSED ✓	QuikRidr MPAR for participating products	Resolution: Participating products now set QuikRidr.MPAR to True (1) from the product’s QuikPlan PAR flag by MPLAN.	2026-07-24	Go	Warren	Conversion	2026-07-24	v58.30. 2895 rows MPAR 0→1. Validator PASS; accountability IN_DATA. UAT: reload Test_Validation/quikridr.csv.

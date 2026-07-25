@@ -32,6 +32,35 @@ def _norm(v) -> str:
     return s
 
 
+def _canon(v) -> str:
+    """Policy identity that matches across the Issue #2 key change (v58.29).
+
+    Issue #25 emitted the source number with the leading 9 stripped at width 10; Issue #2
+    emits it whole at width 11. The trace policies below were recorded in the older form.
+    """
+    s = _norm(v).upper()
+    if s.endswith("C"):
+        s = s[:-1]
+    if s.startswith("9"):
+        s = s[1:]
+    return s
+
+
+class _PolicyIndex(dict):
+    """Policy-keyed lookup that resolves either MPOLICY convention."""
+
+    def __init__(self, pairs):
+        super().__init__()
+        for k, v in pairs:
+            self[_canon(k)] = v
+
+    def get(self, key, default=None):
+        return super().get(_canon(key), default)
+
+    def __contains__(self, key) -> bool:
+        return super().__contains__(_canon(key))
+
+
 def _run(label: str, argv: list[str], required: bool = True) -> dict:
     path = ROOT / argv[0]
     if not path.exists():
@@ -89,10 +118,11 @@ def spot_checks() -> list[dict]:
     tvs = load_csv("rates/QuikTvs.csv") if (OUT / "rates" / "QuikTvs.csv").exists() else []
     plan = load_csv("quikplan.csv")
 
-    mstat = {_norm(r["MPOLICY"]): r for r in mstr}
-    by_ridr = defaultdict(list)
+    mstat = _PolicyIndex((r["MPOLICY"], r) for r in mstr)
+    _ridr_groups = defaultdict(list)
     for r in ridr:
-        by_ridr[_norm(r["MPOLICY"])].append(r)
+        _ridr_groups[_canon(r["MPOLICY"])].append(r)
+    by_ridr = _PolicyIndex(_ridr_groups.items())
 
     def add(issue, status, detail):
         results.append({"id": issue, "status": status, "detail": detail})
@@ -287,6 +317,38 @@ def spot_checks() -> list[dict]:
     bank_nz = sum(1 for r in mstr if _norm(r.get("MBANKNO")))
     add("#45", "IN_DATA" if bank_nz else "WARN", f"MBANKNO populated={bank_nz}")
 
+    # #75 PPCOM / QLA-safe MBANKNO (reopen v58.35)
+    def _mbankno_ql_safe(mb: str) -> bool:
+        mb = _norm(mb)
+        if not mb or mb.count("/") != 1:
+            return False
+        aba, acct = mb.split("/", 1)
+        if len(aba) != 9 or not aba.isdigit() or not acct.isdigit() or len(acct) < 4:
+            return False
+        return True
+
+    draft_rows = [r for r in mstr if _norm(r.get("MBILLFRM")) == "2"]
+    draft_filled = sum(1 for r in draft_rows if _norm(r.get("MBANKNO")))
+    draft_invalid = sum(
+        1 for r in draft_rows if _norm(r.get("MBANKNO")) and not _mbankno_ql_safe(r.get("MBANKNO"))
+    )
+    t75 = mstat.get("9010161748C") or mstat.get("010161748C") or {}
+    t75_mb = _norm(t75.get("MBANKNO"))
+    if draft_invalid == 0 and draft_filled >= 2000 and t75_mb.startswith("091303855/"):
+        add(
+            "#75",
+            "IN_DATA",
+            f"draft MBANKNO filled={draft_filled}/{len(draft_rows)} invalid=0; "
+            f"9010161748C={t75_mb}",
+        )
+    else:
+        add(
+            "#75",
+            "GAP",
+            f"draft filled={draft_filled}/{len(draft_rows)} invalid={draft_invalid}; "
+            f"9010161748C={t75_mb or '(blank)'}",
+        )
+
     # #47 bill day
     bd_nz = sum(1 for r in mstr if _norm(r.get("MBILLDAY")) not in ("", "0"))
     add("#47", "IN_DATA" if bd_nz else "GAP", f"MBILLDAY non-zero={bd_nz}")
@@ -418,22 +480,45 @@ def spot_checks() -> list[dict]:
     add("Claims 14-19", "IN_DATA" if len(clms) > 1000 and len(clmp) > 1000 else "GAP", f"clms={len(clms)} clmp={len(clmp)}")
 
     # #105 product PAR → quikridr.MPAR
+    # QLAdmin creates no plans for PUA coverages (Issue #111, confirmed 2026-07-25), so a
+    # synthesised PUA code has no quikplan row by design. Those rows inherit participation
+    # from the policy's phase 1 base plan and are compared against it — consistent with the
+    # "1960PA absent from quikplan" assertion above.
     par_map = {_norm(r.get("PLAN")): _norm(r.get("PAR")) for r in plan}
+    base_plan = {}
+    for r in ridr:
+        if _norm(r.get("MPHASE")) in ("1", "01"):
+            base_plan[_canon(r.get("MPOLICY"))] = _norm(r.get("MPLAN"))
     mpar_bad = 0
     mpar_on = 0
+    pua_via_base = 0
+    orphan_nonpua = 0
     for r in ridr:
         mpar = _norm(r.get("MPAR"))
-        plan_par = par_map.get(_norm(r.get("MPLAN")), "")
+        mplan = _norm(r.get("MPLAN"))
         if mpar == "1":
             mpar_on += 1
+        if mplan in par_map:
+            plan_par = par_map[mplan]
+        elif len(mplan) == 6 and mplan.upper().endswith("PA"):
+            base = base_plan.get(_canon(r.get("MPOLICY")), "")
+            if base not in par_map:
+                orphan_nonpua += 1
+                continue
+            plan_par = par_map[base]
+            pua_via_base += 1
+        else:
+            orphan_nonpua += 1
+            continue
         if plan_par == "1" and mpar != "1":
             mpar_bad += 1
         elif plan_par != "1" and mpar == "1":
             mpar_bad += 1
     add(
         "#105",
-        "IN_DATA" if mpar_on > 0 and mpar_bad == 0 else "GAP",
-        f"MPAR=1 rows={mpar_on}; mismatches vs plan PAR={mpar_bad}",
+        "IN_DATA" if mpar_on > 0 and mpar_bad == 0 and orphan_nonpua == 0 else "GAP",
+        f"MPAR=1 rows={mpar_on}; mismatches vs plan PAR={mpar_bad}; "
+        f"PUA via base plan={pua_via_base}; unresolvable plans={orphan_nonpua}",
     )
 
     # engine version
@@ -468,6 +553,11 @@ def main() -> int:
         ("#58", ["tools/validators/validate_issue58_quikridr_modal_fees.py"], False),
         ("#59", ["tools/validators/validate_issue59_mstatus.py"], False),
         ("#60", ["tools/validators/validate_issue60_pua_phase.py"], True),
+        ("#72", ["tools/validators/validate_issue72_mnfopt_status.py"], True),
+        ("#75", ["Issue_Log_Items/Issue_75/scripts/validate_issue75_mbankno.py"], True),
+        ("#76", ["tools/validators/validate_issue76_eti_rpu_payup.py"], True),
+        ("#110", ["tools/validators/validate_issue110_mdivopt.py"], True),
+        ("#114", ["tools/validators/validate_issue114_dividend_history.py"], True),
         ("#21F", ["tools/validators/validate_issue21f_premium_adjustment.py"], False),
         ("#21A", ["tools/validators/validate_issue21a_mnfopt.py"], False),
         ("#21J", ["tools/validators/validate_issue21j_modal_factors.py"], False),

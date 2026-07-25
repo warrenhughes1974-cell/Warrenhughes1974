@@ -12,6 +12,8 @@ set QLA_ENABLE_QUIKLOAN_EMIT=1
 set QLA_QUIKLOAN_WRITE_OUTPUT=1
 set QLA_ENABLE_QUIKBENH_LOAN_EMIT=1
 set QLA_QUIKBENH_LOAN_WRITE_OUTPUT=1
+set QLA_ENABLE_QUIKBENH_DIVIDEND_EMIT=1
+set QLA_QUIKBENH_DIVIDEND_WRITE_OUTPUT=1
 set QLA_BATCH_INCLUDE_RATE_TABLES=1
 set QLA_ENABLE_QUIKISRR_EMIT=1
 set QLA_ENABLE_REINSURANCE_EMIT=1
@@ -25,8 +27,8 @@ echo ============================================================
 echo Repo root : %REPO_ROOT%
 echo RUN_MODE  : %QLA_RUN_MODE%
 echo VALUATION : %QLA_VALUATION_DATE%  (QUIKRIDR.MLASTANN)
-echo Engine    : v57.86 full UAT batch
-echo   claims + QuikLoan + QuikBenh + rates + QuikIsrr + Reinsurance
+echo Engine    : v58.36 full UAT batch
+echo   claims + QuikLoan + QuikBenh (loan+#114 dividend) + rates + QuikIsrr + Reinsurance
 echo.
 echo In the UI, set paths to QLA_Migration:
 echo   Source    : QLA_Migration\Source\  (any CSV; engine resolves dated extracts)
