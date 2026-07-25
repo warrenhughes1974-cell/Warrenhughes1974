@@ -1,11 +1,11 @@
 {
-  "generated": "2026-07-25T17:10:46",
-  "script_version": "1.0",
+  "generated": "2026-07-25T17:53:31",
+  "script_version": "1.1",
   "output": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
   "counts": {
-    "IN_DATA": 40,
+    "IN_DATA": 41,
     "WARN": 13,
-    "GAP": 10
+    "GAP": 9
   },
   "results": [
     {
@@ -71,7 +71,7 @@
     {
       "id": "#54",
       "status": "GAP",
-      "detail": "209, '3': 264, '4': 2569, '2': 37} | OK: MBENTYP=8 preserved (3657 rows) | OK: loan-history policies=665 | OK: no MBENTYP=20 rows (deferred) | OK: MDATE YYYYMMDD format | OK: quikloan.csv unchanged (356 rows) | WARN: Estimated opening seeds (type10 - 3562 PACTG)=0; expected 550\u00e2\u20ac\u201c565 | WARN: No loan rows for sample MPOLICY=010331768C | ------------------------------------------------------------------------ | RESULT: FAIL | FAIL: Loan-type rows (10/11/12)=36853 outside expected 37300\u00e2\u20ac\u201c37600 | FAIL: MPOLICY width violations: 43589 row(s) | FAIL: Missing opening seed for 010822238C: expected MBENTYP=10 MDATE=20171220",
+      "detail": "5, '10': 3562, '2': 37, '8': 3657} | OK: MBENTYP=8 preserved (3657 rows) | OK: loan-history policies=665 | OK: no MBENTYP=20 rows (deferred) | OK: MDATE YYYYMMDD format | OK: quikloan.csv unchanged (356 rows) | WARN: Estimated opening seeds (type10 - 3562 PACTG)=0; expected 550\u00e2\u20ac\u201c565 | WARN: No loan rows for sample MPOLICY=010331768C | ------------------------------------------------------------------------ | RESULT: FAIL | FAIL: Loan-type rows (10/11/12)=36853 outside expected 37300\u00e2\u20ac\u201c37600 | FAIL: MPOLICY width violations: 43589 row(s) | FAIL: Missing opening seed for 010822238C: expected MBENTYP=10 MDATE=20171220",
       "exit": 1
     },
     {
@@ -118,9 +118,9 @@
     },
     {
       "id": "#76",
-      "status": "GAP",
-      "detail": "validate_issue76_eti_rpu_payup v2.0 |   valuation date: 2026-07-25 (system date) |   candidates=400 payup_fail=0 mlast_fail=165 | FAIL: |   - MLASTANN mismatch: 9010379477C got 25 expected 26 (paidto=20000404 val=20260725) |   - MLASTANN mismatch: 9010379478C got 25 expected 26 (paidto=20000404 val=20260725) |   - MLASTANN mismatch: 9010381516C got 44 expected 45 (paidto=19810401 val=20260725) |   - violations: payup=0 mlastann=165",
-      "exit": 1
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
     },
     {
       "id": "#110",
@@ -192,7 +192,7 @@
     {
       "id": "#40/#41",
       "status": "IN_DATA",
-      "detail": "QuikCvs rows=37999"
+      "detail": "QuikCvs rows=38359"
     },
     {
       "id": "#41",
@@ -222,12 +222,12 @@
     {
       "id": "#45",
       "status": "IN_DATA",
-      "detail": "MBANKNO populated=2706"
+      "detail": "MBANKNO populated=2703"
     },
     {
       "id": "#75",
       "status": "IN_DATA",
-      "detail": "draft MBANKNO filled=2081/2132 invalid=0; 9010161748C=091303855/0000002000581"
+      "detail": "draft MBANKNO filled=2078/2132 invalid=0; 9010161748C=091303855/0000002000581"
     },
     {
       "id": "#47",
@@ -252,7 +252,7 @@
     {
       "id": "#54",
       "status": "IN_DATA",
-      "detail": "quikbenh=43589 types={'11': 14156, '12': 19135, '10': 3562, '8': 3657, '1': 209, '3': 264, '4': 2569, '2': 37}"
+      "detail": "quikbenh=43589 types={'1': 209, '3': 264, '4': 2569, '11': 14156, '12': 19135, '10': 3562, '2': 37, '8': 3657}"
     },
     {
       "id": "#55",
