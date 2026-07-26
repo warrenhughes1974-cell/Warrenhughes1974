@@ -44,4 +44,5 @@ Three policies still do not foot because LifePRO shows more lifetime dividends t
 
 ## Rollback
 
-Revert `qla_core/quikbenh_dividend_history_converter.py` + `plan_governance/config/quikbenh_dividend_history_rules.json` and restore prior `quikbenh.csv`. Branch `issue-34-pr7-quikisrr`.
+Revert `qla_core/quikbenh_dividend_history_converter.py` + `plan_governance/config/quikbenh_dividend_history_rules.json` and restore prior `quikbenh.csv`.  
+Closure commit: `2eb4b32` on branch `issue-34-pr7-quikisrr`.

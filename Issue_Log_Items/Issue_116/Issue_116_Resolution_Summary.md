@@ -34,4 +34,5 @@ Dual-key cache for PACTG 0641 interest dates (crosswalk New_Value **and** emitte
 
 ## Rollback
 
-Revert `app.py` / `QLA_Migration/app.py` v58.37 MINTDATE cache change (or restore prior quikdvdp). Related commit on branch `issue-34-pr7-quikisrr`.
+Revert `app.py` / `QLA_Migration/app.py` v58.37 MINTDATE cache change (or restore prior quikdvdp).  
+Closure commit: `2eb4b32` on branch `issue-34-pr7-quikisrr`.
