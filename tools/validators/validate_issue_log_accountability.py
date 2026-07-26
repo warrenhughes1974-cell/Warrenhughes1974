@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
 PY = sys.executable
-SCRIPT_VERSION = "1.1"
+SCRIPT_VERSION = "1.2"
 
 # Match UAT batch / run_converter.bat so MLASTANN validators (#60/#76) use the
 # extract as-of date rather than today's system date.
@@ -563,6 +563,8 @@ def main() -> int:
         ("#76", ["tools/validators/validate_issue76_eti_rpu_payup.py"], True),
         ("#110", ["tools/validators/validate_issue110_mdivopt.py"], True),
         ("#114", ["tools/validators/validate_issue114_dividend_history.py"], True),
+        ("#116", ["Issue_Log_Items/Issue_116/scripts/validate_issue116.py"], True),
+        ("#117", ["Issue_Log_Items/Issue_117/scripts/validate_issue117.py"], True),
         ("#21F", ["tools/validators/validate_issue21f_premium_adjustment.py"], False),
         ("#21A", ["tools/validators/validate_issue21a_mnfopt.py"], False),
         ("#21J", ["tools/validators/validate_issue21j_modal_factors.py"], False),

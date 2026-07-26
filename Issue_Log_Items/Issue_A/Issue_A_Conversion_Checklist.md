@@ -278,3 +278,37 @@ Notes:
 - **Issue #54 script GAP:** stale 10-char MPOLICY expectations — not a data regression (spot-check IN_DATA; types 8/10/11/12 + 1–4 present)
 - Row counts: quikmstr 5,083 · quikridr 6,934 · quikplan 141 · quikbenh 43,589 · quikprmh 209,480
 - Log: `QLA_Migration/Logs/_full_batch_test_log.txt` / `_full_batch_console_20260725.txt`
+
+### Run 2026-07-26 — app.py v58.37 — Full batch — Source=PPOLC_…_20260630 (weekly cut #116/#117)
+
+Operator: Agent (Weekly Conversion Build Plan)  
+Env: UAT; Product Setup emit + UAT overlay + closed authority; rates included; QuikBenh loan + dividend emit on; `QLA_VALUATION_DATE=20251231`  
+Result summary: **8 PASS** · **1 PARTIAL** · **2 BLOCKED** · **4 OPEN** (SME-gated) · conversion exit **0** (~27 min)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | `1668SP`, `10L171`, `10L172`, `1L17SP`: PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **BLOCKED** | All 141 DEFICIENCY=N; awaiting CSO |
+| A3 | **BLOCKED** | Default PVO fleet rule awaiting Development approval |
+| A4 | **PASS** | 0 blank-PLAN rows in rates Quik* |
+| A5 | **OPEN** | Awaiting Valuation_Setup |
+| A6 | **PARTIAL** | Pre-existing orphan-flag residual |
+| A7 | **OPEN** | VARGP=4 fleet-wide (141/141); awaiting Eric (Item 09) |
+| A8a | **PASS** | A-prefix PAR=0 (2 plans) |
+| A8b | **PASS** | A-prefix VARDB=0 |
+| A8c | **OPEN** | Awaiting Eric |
+| A8d | **OPEN** | Awaiting Eric |
+| A8e | **PASS** | A-prefix PLANVALOPT clear |
+| A9a | **OPEN** | Awaiting Eric |
+| A9b | **PASS** | Prefix-9 PAR≠0 count 0 (56 plans) |
+| A10 | **PASS** | QuikUwpo 5 rows (00/NS/PR/SM/ST); 0 dupes |
+
+Notes:
+- **Issue #116:** validator PASS — 59 MINTDATE updates; future paid-to with balance 15→0; accountability **IN_DATA**
+- **Issue #117:** validator PASS — types 6/7 added (842+25); 55/59 ledger foots; 4 known exceptions held; accountability **IN_DATA**
+- **Issue #114:** types 1–5 preserved; allow-list updated for 6/7; validator PASS; accountability **IN_DATA**
+- Accountability summary: IN_DATA 43 / WARN 13 / GAP 9 (same #54/#55/#59 stale-key class as prior; does not reopen Closed)
+- Row counts: quikmstr 5,083 · quikridr 6,934 · quikplan 141 · quikbenh 44,456 · quikdvdp 5,083 · quikprmh 209,480 · rates/ 24 CSVs
+- Output hygiene: audits → `Reports/`; claims/memo UAT staging → `Staging/`; Output root = table CSVs + `rates/` + `Test_Validation/`
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt` / `_full_batch_console_20260726.txt`
+- Archive pre-run: `QLA_Migration/Archive/weekly_build_20260726_pre/`

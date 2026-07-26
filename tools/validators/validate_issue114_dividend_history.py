@@ -7,7 +7,7 @@ own report, so the validator can disagree with the converter.
 Checks:
   1. quikbenh.csv schema (MPOLICY, MBENTYP, MDATE, MBEN)
   2. Non-dividend types preserved at baseline (8=#34, 10/11/12=#54)
-  3. Dividend types 1-5 present; no type outside 1-5 / 8 / 10-12
+  3. Dividend types 1-5 present; allow ledger types 6/7 (#117); no other strays beyond 1-7 / 8 / 10-12
   4. MPOLICY width 11, MDATE YYYYMMDD, MBEN positive 2-decimal
   5. At most one conversion adjustment row (20171231) per policy
   6. Per-policy dividend total ties to PPBENTYP.DIVIDENDS_CREDITED for every
@@ -29,8 +29,8 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCRIPT_VERSION = "1.0"
-ENGINE_VERSION = "v58.36"
+SCRIPT_VERSION = "1.1"
+ENGINE_VERSION = "v58.37"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 DEFAULT_SOURCE = PROJECT_ROOT / "QLA_Migration" / "Source"
@@ -42,6 +42,8 @@ BASELINE_PRESERVED = {"8": 3657, "10": 3562, "11": 14156, "12": 19135}
 BASELINE_TOTAL_ROWS = 40510
 
 DIVIDEND_TYPES = ("1", "2", "3", "4", "5")
+# Issue #117 ledger extensions (interest credited / withdrawals) — not #114 amounts
+LEDGER_TYPES = ("6", "7")
 PLUG_DATE = "20171231"
 MPOLICY_WIDTH = 11
 MONEY_TOL = 0.01
@@ -167,10 +169,13 @@ def validate(
         _report(errors, warnings)
         return 1
 
-    allowed = set(DIVIDEND_TYPES) | set(BASELINE_PRESERVED)
+    allowed = set(DIVIDEND_TYPES) | set(LEDGER_TYPES) | set(BASELINE_PRESERVED)
     stray = {t: n for t, n in type_counts.items() if t not in allowed}
     if stray:
         errors.append(f"Unexpected MBENTYP values present: {stray}")
+    ledger_rows = sum(type_counts.get(t, 0) for t in LEDGER_TYPES)
+    if ledger_rows:
+        print(f"OK: Issue #117 ledger types 6/7 present ({ledger_rows} rows) — allowed alongside #114")
 
     if len(div_rows) < EXPECTED_DIVIDEND_ROWS_MIN:
         errors.append(
@@ -182,13 +187,18 @@ def validate(
             f"types={dict((t, type_counts.get(t, 0)) for t in DIVIDEND_TYPES)}"
         )
 
-    if len(rows) != BASELINE_TOTAL_ROWS + len(div_rows):
+    ledger_count = sum(type_counts.get(t, 0) for t in LEDGER_TYPES)
+    expected_total = BASELINE_TOTAL_ROWS + len(div_rows) + ledger_count
+    if len(rows) != expected_total:
         errors.append(
             f"Row arithmetic off: total={len(rows)} but baseline {BASELINE_TOTAL_ROWS} "
-            f"+ dividend {len(div_rows)} = {BASELINE_TOTAL_ROWS + len(div_rows)}"
+            f"+ dividend {len(div_rows)} + ledger(6/7) {ledger_count} = {expected_total}"
         )
     else:
-        print(f"OK: additive only ({BASELINE_TOTAL_ROWS} + {len(div_rows)} = {len(rows)})")
+        print(
+            f"OK: additive only ({BASELINE_TOTAL_ROWS} + {len(div_rows)} "
+            f"+ ledger {ledger_count} = {len(rows)})"
+        )
 
     # 4. Field-level format — MPOLICY is space-padded, so measure it unstripped
     widths = _raw_mpolicy_widths(benh_path)

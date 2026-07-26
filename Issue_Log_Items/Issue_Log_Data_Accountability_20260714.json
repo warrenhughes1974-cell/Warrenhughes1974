@@ -1,9 +1,9 @@
 {
-  "generated": "2026-07-25T17:53:31",
-  "script_version": "1.1",
+  "generated": "2026-07-26T12:55:42",
+  "script_version": "1.2",
   "output": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
   "counts": {
-    "IN_DATA": 41,
+    "IN_DATA": 43,
     "WARN": 13,
     "GAP": 9
   },
@@ -53,13 +53,13 @@
     {
       "id": "#49",
       "status": "WARN",
-      "detail": "ch may be required) | WARN: 01ML8515C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8535C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8556C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8565C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8584C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8678C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8772C: output MSTATUS= expected 22 (rebatch may be required) | WARN: Output appears pre-#49 \u00e2\u20ac\u201d run full/quikmstr batch under v57.70 | RESULT: FAIL",
+      "detail": "atch may be required) | WARN: 01ML8515C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8535C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8556C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8565C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8584C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8678C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8772C: output MSTATUS= expected 22 (rebatch may be required) | WARN: Output appears pre-#49 - run full/quikmstr batch under v57.70 | RESULT: FAIL",
       "exit": 1
     },
     {
       "id": "#50",
       "status": "WARN",
-      "detail": "review:  |   010335038C len: 0 | ------------------------------------------------------------------------ | WARNINGS |   WARN: Batch quikmemo.csv missing 018495BC | ======================================================================== | RESULT: FAIL |   FAIL: 018495BC missing 'Bauerly' in MEMOTEXT |   FAIL: 018495BC missing 'Last Known' in MEMOTEXT |   FAIL: 018495BC missing [PNOTE] segment |   FAIL: 010335038C missing [PNOTE] (control policy) |   FAIL: MEMOKEY width != 10 for 4526 keys (Issue #25) |   FAIL: DBF MEMOKEY padding wrong for 018495BC: b' 9018495BC' (expected b'  018495BC') \u00e2\u20ac\u201d Memo tab SEEK will miss",
+      "detail": "010335038C len: 0 | ------------------------------------------------------------------------ | WARNINGS |   WARN: Batch quikmemo.csv missing 018495BC |   WARN: No UAT DBF at C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\quikmemo_uat_dbf\\quikmemo.dbf | ======================================================================== | RESULT: FAIL |   FAIL: 018495BC missing 'Bauerly' in MEMOTEXT |   FAIL: 018495BC missing 'Last Known' in MEMOTEXT |   FAIL: 018495BC missing [PNOTE] segment |   FAIL: 010335038C missing [PNOTE] (control policy) |   FAIL: MEMOKEY width != 10 for 4526 keys (Issue #25)",
       "exit": 1
     },
     {
@@ -71,13 +71,13 @@
     {
       "id": "#54",
       "status": "GAP",
-      "detail": "5, '10': 3562, '2': 37, '8': 3657} | OK: MBENTYP=8 preserved (3657 rows) | OK: loan-history policies=665 | OK: no MBENTYP=20 rows (deferred) | OK: MDATE YYYYMMDD format | OK: quikloan.csv unchanged (356 rows) | WARN: Estimated opening seeds (type10 - 3562 PACTG)=0; expected 550\u00e2\u20ac\u201c565 | WARN: No loan rows for sample MPOLICY=010331768C | ------------------------------------------------------------------------ | RESULT: FAIL | FAIL: Loan-type rows (10/11/12)=36853 outside expected 37300\u00e2\u20ac\u201c37600 | FAIL: MPOLICY width violations: 43589 row(s) | FAIL: Missing opening seed for 010822238C: expected MBENTYP=10 MDATE=20171220",
+      "detail": "19135, '10': 3562, '2': 37, '8': 3657} | OK: MBENTYP=8 preserved (3657 rows) | OK: loan-history policies=665 | OK: no MBENTYP=20 rows (deferred) | OK: MDATE YYYYMMDD format | OK: quikloan.csv unchanged (356 rows) | WARN: Estimated opening seeds (type10 - 3562 PACTG)=0; expected 550\u2013565 | WARN: No loan rows for sample MPOLICY=010331768C | ------------------------------------------------------------------------ | RESULT: FAIL | FAIL: Loan-type rows (10/11/12)=36853 outside expected 37300\u201337600 | FAIL: MPOLICY width violations: 44456 row(s) | FAIL: Missing opening seed for 010822238C: expected MBENTYP=10 MDATE=20171220",
       "exit": 1
     },
     {
       "id": "#55",
       "status": "GAP",
-      "detail": "s): 0 | Trace policies: |   018495BC P1: MISSING |   018495BC P2: MISSING |   018499CC P1: MISSING |   018499CC P2: MISSING |   018510C P1: MISSING |   018510C P2: MISSING | Issue #25 MPOLICY width (trace policies): PASS | Issue #26 MPREM: baseline not found \u00e2\u20ac\u201d spot-check leading-dot only |   MPREM leading-dot count: 0 |  | RESULT: FAIL |   - Missing trace row ('018495BC', '1') |   - Missing trace row ('018495BC', '2') |   - Missing trace row ('018499CC', '1') |   - Missing trace row ('018499CC', '2') |   - Missing trace row ('018510C', '1') |   - Missing trace row ('018510C', '2') |   - Missing PUA trace row ('010434419C', '2')",
+      "detail": "its): 0 | Trace policies: |   018495BC P1: MISSING |   018495BC P2: MISSING |   018499CC P1: MISSING |   018499CC P2: MISSING |   018510C P1: MISSING |   018510C P2: MISSING | Issue #25 MPOLICY width (trace policies): PASS | Issue #26 MPREM: baseline not found - spot-check leading-dot only |   MPREM leading-dot count: 0 |  | RESULT: FAIL |   - Missing trace row ('018495BC', '1') |   - Missing trace row ('018495BC', '2') |   - Missing trace row ('018499CC', '1') |   - Missing trace row ('018499CC', '2') |   - Missing trace row ('018510C', '1') |   - Missing trace row ('018510C', '2') |   - Missing PUA trace row ('010434419C', '2')",
       "exit": 1
     },
     {
@@ -130,6 +130,18 @@
     },
     {
       "id": "#114",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#116",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#117",
       "status": "IN_DATA",
       "detail": "validator PASS",
       "exit": 0
@@ -252,7 +264,7 @@
     {
       "id": "#54",
       "status": "IN_DATA",
-      "detail": "quikbenh=43589 types={'1': 209, '3': 264, '4': 2569, '11': 14156, '12': 19135, '10': 3562, '2': 37, '8': 3657}"
+      "detail": "quikbenh=44456 types={'1': 209, '3': 264, '6': 842, '7': 25, '4': 2569, '11': 14156, '12': 19135, '10': 3562, '2': 37, '8': 3657}"
     },
     {
       "id": "#55",
