@@ -12,9 +12,16 @@
   "emit_side": "debit",
   "emit_side_note": "The dividend is credited to the policy on the DEBIT leg (debit 0517 / credit 0112 buys paid-up additions; debit 0515 / credit 0096 pays cash). The same code on the CREDIT leg is the contra side - either the clearing half of a posting already captured on its debit leg, or a reversal DATE_REVERSED did not flag. Emitting both legs double-counts the dividend. Contra rows go to the exception report as CONTRA_SIDE_NOT_EMITTED.",
 
+  "accumulation_account": "0310",
+  "pactg_interest_code": "0641",
+  "accumulation_mbentyp": {
+    "interest": "6",
+    "outflow": "7"
+  },
+  "accumulation_note": "Issue #117. QLAdmin Help 6.5 p.649: MBENTYP 6 = 'Interest on policy funds / dividend accumulation', MBENTYP 7 = 'Surrendered dividend accumulations'. The Dividend History window is a full ledger, not a credits list: sum(3) + sum(6) - sum(7) equals the QuikDvdp balance in its footer. Verified on 425 of 464 accumulate policies in the client's production QUIKBENH.DBF. Interest enters the accumulation as debit 0641 / credit 0310; money leaves as debit 0310 against any counterparty (0038 death clearing, 0013 surrender clearing, 0012).",
+  "accumulation_contra_note": "A debit-0310 posting reversed by a matching credit-0310 entry under a non-dividend debit code nets to zero and must not be emitted as a type 7, or the ledger understates the balance. Matched on exact amount within a policy. Reported as ACCUM_CONTRA_NETTED.",
+
   "pactg_excluded_codes": {
-    "0641": "Interest on Dividend Accums - interest, not a dividend credit (owned by #38 MINTYTD)",
-    "0310": "Dividend Accums on Deposit - balance account, not a credit event",
     "0562": "Surrender-PUA - surrender of dividend-purchased value, not a dividend credited",
     "0563": "Surrender-OYT - surrender of dividend-purchased value, not a dividend credited",
     "0519": "Death Claim Prorata Surrender",
@@ -47,8 +54,13 @@
     "blank": "No dividend option recorded; benefit type not derivable. Withheld to exceptions (OQ-3)."
   },
 
+  "balance_field": "ACCUM_DIVIDENDS",
+  "accumulation_opening_enabled": true,
+  "accumulation_opening_mbentyp": "3",
+  "accumulation_opening_note": "The 20171231 opening is split so the ledger foots. The type 3 component is DIVIDENDS_CREDITED minus in-window credits - arithmetically identical to the Issue #114 plug, so that reconciliation is preserved. The type 6 component is the residual pre-2018 interest that makes sum(3)+sum(6)-sum(7) equal ACCUM_DIVIDENDS. Only emitted for policies whose dividend option maps to MBENTYP 3. A negative residual means value left the account before the PACTG window and is withheld to exceptions as ACCUM_OPENING_SHORTFALL (OQ-1).",
+
   "money_tolerance": 0.005,
-  "mbentyp_replace_on_rerun": ["1", "2", "3", "4", "5"],
+  "mbentyp_replace_on_rerun": ["1", "2", "3", "4", "5", "6", "7"],
   "preserve_mbentyp": ["8", "10", "11", "12"],
   "append_only": true,
   "staging_subdir": "staged"

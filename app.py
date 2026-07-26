@@ -1,10 +1,20 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.36
+# Version:     v58.37
 # Date:        2026-07-25
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.36 — Issue #114: LifePRO dividend history → QuikBenh benefit types 1-5.
+# Change Note: v58.37 — Issues #116 + #117: dividend accumulation accuracy.
+#              #116 quikdvdp: the PACTG 0641 interest cache was keyed on the crosswalk
+#              New_Value while the enrichment looked it up by emitted MPOLICY, so no row ever
+#              matched and MINTDATE fell through to the premium paid-to date — a future date
+#              that made QLAdmin show negative accrued interest. Cache now registers both keys.
+#              #117 quikbenh: Dividend History is a ledger, not a credits list. Adds MBENTYP 6
+#              (interest on policy funds, PACTG 0641/0310) and MBENTYP 7 (surrendered dividend
+#              accumulations, debit 0310), nets self-reversing 0310 pairs, and splits the
+#              20171231 opening into its type 3 and type 6 halves so the window foots to the
+#              QuikDvdp balance. Issue #114 type 3 amounts are unchanged.
+#              v58.36 — Issue #114: LifePRO dividend history → QuikBenh benefit types 1-5.
 #              Layer A loads PACTG dividend election codes 0514/0515/0516/0517/0518 (DEBIT leg
 #              only — the credit leg is the contra side and would double-count) as dated rows;
 #              Layer B adds one conversion adjustment row per policy (20171231) for the pre-extract
@@ -498,7 +508,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.36"
+APP_VERSION = "v58.37"
 APP_BRAND = "QUIKConvert"
 APP_TAGLINE = APP_PRIMARY_TAGLINE
 
@@ -7273,6 +7283,7 @@ class QLAdminEnterpriseIntegrationSuite:
 
                     # --- QUIKDVDP TRANSACTION CACHE ---
                     quikdvdp_tx_cache = {}
+                    quikdvdp_tx_policies = set()
                     quikridr_mplan_cache = {}
                     if t_id.lower() == "quikdvdp":
                         try:
@@ -7317,6 +7328,13 @@ class QLAdminEnterpriseIntegrationSuite:
                                         # Enterprise-safe policy normalization:
                                         # Convert LifePRO policy IDs into QLAdmin MPOLICY space
                                         pol = self.normalize(cw_map.get(raw_pol, raw_pol))
+                                        # Issue #116: the crosswalk New_Value is not the emitted
+                                        # MPOLICY, so register the formatted key the enrichment
+                                        # below actually looks up as well.
+                                        pol_keys = [k for k in (
+                                            pol,
+                                            self.normalize(self._format_qladmin_mpolicy(raw_pol)),
+                                        ) if k]
                                         
                                         trcd = self.normalize(r.get(trcd_col))
                                         if not trcd:
@@ -7334,24 +7352,32 @@ class QLAdminEnterpriseIntegrationSuite:
                                         
                                         date_val = str(r.get(dt_col, '')).strip()
                                         
-                                        if pol not in quikdvdp_tx_cache:
-                                            quikdvdp_tx_cache[pol] = {'MINTYTD': 0.0, 'MINTDATE': ""}
+                                        entry = next(
+                                            (quikdvdp_tx_cache[k] for k in pol_keys
+                                             if k in quikdvdp_tx_cache),
+                                            None,
+                                        )
+                                        if entry is None:
+                                            entry = {'MINTYTD': 0.0, 'MINTDATE': ""}
+                                        for _k in pol_keys:
+                                            quikdvdp_tx_cache[_k] = entry
+                                        quikdvdp_tx_policies.add(raw_pol)
                                         
                                         if current_year in date_val:
-                                            quikdvdp_tx_cache[pol]['MINTYTD'] += amt
+                                            entry['MINTYTD'] += amt
                                         
-                                        curr_max = quikdvdp_tx_cache[pol]['MINTDATE']
+                                        curr_max = entry['MINTDATE']
                                         if not curr_max:
-                                            quikdvdp_tx_cache[pol]['MINTDATE'] = date_val
+                                            entry['MINTDATE'] = date_val
                                         else:
                                             try:
                                                 if pd.to_datetime(date_val) > pd.to_datetime(curr_max):
-                                                    quikdvdp_tx_cache[pol]['MINTDATE'] = date_val
+                                                    entry['MINTDATE'] = date_val
                                             except:
                                                 if date_val > curr_max:
-                                                    quikdvdp_tx_cache[pol]['MINTDATE'] = date_val
+                                                    entry['MINTDATE'] = date_val
                                                             
-                                self.log(f"Auto-loaded quikdvdp PACTG 641 cache ({len(quikdvdp_tx_cache)} policies)")
+                                self.log(f"Auto-loaded quikdvdp PACTG 641 cache ({len(quikdvdp_tx_policies)} policies)")
                         except Exception as e:
                             self.log(f"Warning: Failed to build quikdvdp transaction cache - {e}")
                     # ----------------------------------
@@ -8397,6 +8423,12 @@ class QLAdminEnterpriseIntegrationSuite:
                                 mdt = tx_data['MINTDATE']
                                 if mdt:
                                     row_data['MINTDATE'] = re.sub(r'[^0-9]', '', str(mdt))
+                                if not getattr(self, '_quikdvdp_641_hits', 0):
+                                    self.log(
+                                        f"Issue #116: quikdvdp 641 enrichment matched "
+                                        f"(first hit {tp} MINTDATE={row_data.get('MINTDATE')})"
+                                    )
+                                self._quikdvdp_641_hits = getattr(self, '_quikdvdp_641_hits', 0) + 1
                             # Issue #21D Track A: ISWL-scoped MDEPINT from MPLAN allowlist (not fleet-wide).
                             _mplan = quikridr_mplan_cache.get(tp, "")
                             if is_iswl_mplan(_mplan):

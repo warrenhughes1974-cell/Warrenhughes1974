@@ -1,0 +1,43 @@
+policy_form,uw_codes,uw_labels
+L10 LP95,PR|SM|BL,PR - Preferred Non-Smoker || SM - Standard Smoker || BL - Blended
+670 GL85-8,ST,ST - Standard
+L01 10Y LT,ST|PR,ST - Standard || PR - Preferred
+L14,NT|ST|PQ|PR,"NT - Standard, Non-Tobacco || ST - Standard || PQ - Preferred, Non-Tobacco || PR - Preferred"
+SAL ML,ST,ST - Standard
+667 ART,ST|PR,ST - Standard || PR - Preferred
+670 GL85-M,ST,ST - Standard
+L10 OLD,PR|SM|BL,PR - Preferred || SM- Standard Smoker || BL - Blended
+L10 SR OLD,BL,BL - Blended
+L10 LP95SR,BL,BL - Standard - Blend
+960 OL,ST,ST - Standard
+960 PO,ST,ST - Standard
+L17,ST,ST - Standard
+L05,ST|PR,ST - Standard || PR - Preferred
+960 LP65,ST,ST - Standard
+621 END85,ST,ST - Standard
+L07 5Y LT,ST|PR,ST - Standard || PR - Preferred
+10827 CSI5,ST,ST - Standard
+SAL OL,ST,ST - Standard
+L15,ST,ST - Standard
+10827 CSI7,ST,ST - Standard
+619 DT,ST,ST - Standard
+991 PWL,ST,ST - Standard
+666 WL,ST,ST - Standard
+10827 CSI3,ST,ST - Standard
+622 END85,ST,ST - Standard
+665 STME95,ST,ST - Standard
+980 END65,ST,ST - Standard
+L16,ST,ST - Standard
+619 SPS PU,ST,ST - Standard
+647 FLP,ST,ST - Standard
+670 GL858,ST,ST - Standard
+960 LP85-M,ST,ST - Standard
+L01 10Y MA,ST|PR,ST - Standard || PR - Preferred
+659 CEN II,ST|PR,ST - Standard || PR - Preferred
+658 CEN I,ST|PR,ST - Standard || PR - Preferred
+659 CEN SR,ST|PR,ST - Standard || PR - Preferred
+668 SPWL,ST,ST - Standard
+658 CEN SD,ST|PR,ST - Standard || PR - Preferred
+659 CEN SD,ST|PR,ST - Standard || PR - Preferred
+659 SR GD,ST|PR,ST - Standard || PR - Preferred
+679 CEN SD,ST,ST - Standard
