@@ -50,5 +50,5 @@ Revert v58.43 `MPAR="0"` line in `_apply_pua_rider_inheritance` (both `app.py` c
 ## Git release
 
 - Branch: `issue-34-pr7-quikisrr`
-- Commit: *(filled after push)*
+- Commit: `6ee0049f79b67fff333a73fb7540817c4353801b`
 - Network machines: pull, then re-emit `quikridr` (or full batch) — Output is gitignored.
