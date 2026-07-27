@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
 PY = sys.executable
-SCRIPT_VERSION = "1.2"
+SCRIPT_VERSION = "1.3"
 
 # Match UAT batch / run_converter.bat so MLASTANN validators (#60/#76) use the
 # extract as-of date rather than today's system date.
@@ -484,37 +484,29 @@ def spot_checks() -> list[dict]:
     clmp = load_csv("quikclmp.csv")
     add("Claims 14-19", "IN_DATA" if len(clms) > 1000 and len(clmp) > 1000 else "GAP", f"clms={len(clms)} clmp={len(clmp)}")
 
-    # #105 product PAR → quikridr.MPAR
-    # QLAdmin creates no plans for PUA coverages (Issue #111, confirmed 2026-07-25), so a
-    # synthesised PUA code has no quikplan row by design. Those rows inherit participation
-    # from the policy's phase 1 base plan and are compared against it — consistent with the
-    # "1960PA absent from quikplan" assertion above.
+    # #105 product PAR → quikridr.MPAR (non-PUA).
+    # #119: synthesised PUA (*PA) coverages are never participating — MPAR must be 0
+    # (Robert 2026-07-27). Missing PA plans in quikplan remain by design (#111).
     par_map = {_norm(r.get("PLAN")): _norm(r.get("PAR")) for r in plan}
-    base_plan = {}
-    for r in ridr:
-        if _norm(r.get("MPHASE")) in ("1", "01"):
-            base_plan[_canon(r.get("MPOLICY"))] = _norm(r.get("MPLAN"))
     mpar_bad = 0
     mpar_on = 0
-    pua_via_base = 0
+    pua_rows = 0
+    pua_bad = 0
     orphan_nonpua = 0
     for r in ridr:
         mpar = _norm(r.get("MPAR"))
         mplan = _norm(r.get("MPLAN"))
         if mpar == "1":
             mpar_on += 1
-        if mplan in par_map:
-            plan_par = par_map[mplan]
-        elif len(mplan) == 6 and mplan.upper().endswith("PA"):
-            base = base_plan.get(_canon(r.get("MPOLICY")), "")
-            if base not in par_map:
-                orphan_nonpua += 1
-                continue
-            plan_par = par_map[base]
-            pua_via_base += 1
-        else:
+        if len(mplan) == 6 and mplan.upper().endswith("PA"):
+            pua_rows += 1
+            if mpar != "0":
+                pua_bad += 1
+            continue
+        if mplan not in par_map:
             orphan_nonpua += 1
             continue
+        plan_par = par_map[mplan]
         if plan_par == "1" and mpar != "1":
             mpar_bad += 1
         elif plan_par != "1" and mpar == "1":
@@ -523,7 +515,12 @@ def spot_checks() -> list[dict]:
         "#105",
         "IN_DATA" if mpar_on > 0 and mpar_bad == 0 and orphan_nonpua == 0 else "GAP",
         f"MPAR=1 rows={mpar_on}; mismatches vs plan PAR={mpar_bad}; "
-        f"PUA via base plan={pua_via_base}; unresolvable plans={orphan_nonpua}",
+        f"unresolvable non-PUA plans={orphan_nonpua}",
+    )
+    add(
+        "#119",
+        "IN_DATA" if pua_rows > 0 and pua_bad == 0 else "GAP",
+        f"PUA rows={pua_rows}; PUA MPAR!=0={pua_bad}",
     )
 
     # engine version
@@ -570,6 +567,7 @@ def main() -> int:
         ("#21J", ["tools/validators/validate_issue21j_modal_factors.py"], False),
         ("#21M", ["tools/validators/validate_issue21m_quikmemo.py"], False),
         ("#105", ["tools/validators/validate_issue105_mpar.py"], True),
+        ("#119", ["tools/validators/validate_issue119_pua_mpar.py"], True),
     ]
 
     val_results = []

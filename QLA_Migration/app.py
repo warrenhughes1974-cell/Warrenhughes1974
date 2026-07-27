@@ -1,10 +1,23 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.37
-# Date:        2026-07-25
+# Version:     v58.43
+# Date:        2026-07-27
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v58.37 — Issues #116 + #117: dividend accumulation accuracy.
+# Change Note: v58.43 — Issue #119: PUA coverages force quikridr.MPAR=0 (non-participating).
+#              Robert: when QLAdmin adds a PA rider it sets PAR/MPAR to 0; do not inherit base.
+#              v58.42 — Honor Source\\<package>\\ extract folders (e.g. 12312025_Data) when
+#              Source Data File points inside a package subdir; do not collapse to Source root.
+#              v58.41 — Auto-launch DBF_Append_Tool\\run_app.bat after any successful conversion
+#              (single table, product setup, rates, or full batch). Disable with
+#              QLA_LAUNCH_DBF_APPEND_TOOL=0.
+#              v58.40 — After successful full batch, auto-launch DBF_Append_Tool\\run_app.bat
+#              (set QLA_LAUNCH_DBF_APPEND_TOOL=0 to disable).
+#              v58.39 — Always publish Output quik*.csv + rates/*.csv (flat) to
+#              C:\Users\warren\Desktop\DBF_Append_Tool\input for the append tool.
+#              v58.38 — QuikMemo UAT DBF+DBT always emit to
+#              C:\Users\warren\Desktop\DBF_Append_Tool\output (append-tool load path).
+#              v58.37 — Issues #116 + #117: dividend accumulation accuracy.
 #              #116 quikdvdp: the PACTG 0641 interest cache was keyed on the crosswalk
 #              New_Value while the enrichment looked it up by emitted MPOLICY, so no row ever
 #              matched and MINTDATE fell through to the premium paid-to date — a future date
@@ -508,7 +521,10 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.37"
+APP_VERSION = "v58.43"
+DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
+DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
+DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
 APP_BRAND = "QUIKConvert"
 APP_TAGLINE = APP_PRIMARY_TAGLINE
 
@@ -1096,10 +1112,22 @@ class QLAdminEnterpriseIntegrationSuite:
         migration_src = self._migration_source_dir()
         if src_input:
             norm_input = os.path.normpath(src_input)
-            if "qla_migration" in norm_input.lower() and os.path.isdir(migration_src):
-                return migration_src
-            explicit = os.path.dirname(norm_input)
+            explicit = norm_input if os.path.isdir(norm_input) else os.path.dirname(norm_input)
             if os.path.isdir(explicit):
+                # Dated packages (e.g. Source\12312025_Data) must win over Source root.
+                try:
+                    mig_abs = os.path.abspath(migration_src)
+                    exp_abs = os.path.abspath(explicit)
+                    if (
+                        os.path.isdir(mig_abs)
+                        and exp_abs != mig_abs
+                        and os.path.commonpath([exp_abs, mig_abs]) == mig_abs
+                    ):
+                        return exp_abs
+                except ValueError:
+                    pass
+                if "qla_migration" in norm_input.lower() and os.path.isdir(migration_src):
+                    return migration_src
                 return explicit
         if os.path.isdir(migration_src):
             return migration_src
@@ -3167,6 +3195,9 @@ class QLAdminEnterpriseIntegrationSuite:
         """PUA riders inherit base phase dates/age/status; other riders are not touched."""
         if not self._is_paid_up_addition_product(source_plan_code, cw_map):
             return row_data
+        # Issue #119: PUA coverage is never participating. QLAdmin sets PAR/MPAR=0 on PA add
+        # even when the base coverage is participating (Robert 2026-07-27).
+        row_data["MPAR"] = "0"
         entry = base_phase_cache.get(mpolicy)
         if not entry:
             self.log(f"PUA RULE WARNING: Base phase not found for policy {mpolicy}")
@@ -3194,7 +3225,7 @@ class QLAdminEnterpriseIntegrationSuite:
             "PUA RULE APPLIED: "
             f"MPOLICY={mpolicy} BASE_MPLAN={base_mplan} PUA_MPLAN={new_mplan} "
             f"BASE_MEFFDATE={base_meff} BASE_MAGE={base_mage} "
-            f"PUA_MPHSTAT={row_data.get('MPHSTAT', '')}"
+            f"PUA_MPHSTAT={row_data.get('MPHSTAT', '')} PUA_MPAR=0"
         )
         return row_data
 
@@ -3484,6 +3515,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self.log(f"PRODUCT SETUP: completed status={status}")
             self._run_output_hygiene(run_error_log)
             if status == "SUCCESS":
+                self._launch_dbf_append_tool()
                 self.complete_run_progress("Complete — quikplan.csv written to QLA_Migration\\Output")
                 messagebox.showinfo("Product Setup", "Product setup conversion completed successfully.")
             elif status == "BLOCKED":
@@ -3715,6 +3747,8 @@ class QLAdminEnterpriseIntegrationSuite:
             if not from_batch:
                 self.update_run_progress(4, detail=f"validation — status={status}")
                 self._run_output_hygiene(run_error_log)
+                if status == "SUCCESS" or result.get("partial_emit"):
+                    self._launch_dbf_append_tool()
                 if status == "SUCCESS":
                     detail = "Complete — rate tables written to QLA_Migration\\Output\\rates"
                     if result.get("partial_emit"):
@@ -6012,6 +6046,92 @@ class QLAdminEnterpriseIntegrationSuite:
         self._ui_update_status_strip()
         return summary
 
+    def _publish_dbf_append_tool_input(self, out_dir=None):
+        """Copy table + rate CSVs into Desktop\\DBF_Append_Tool\\input (flat).
+
+        QLA_Migration/Output remains the conversion home; the append tool reads a
+        flat CSV folder. Rate tables under Output/rates/ are copied to input root.
+        """
+        try:
+            src_dir = out_dir or (
+                self.path_vars["Out"][0].get().strip() if hasattr(self, "path_vars") else ""
+            ) or self._migration_output_dir()
+            if not src_dir or not os.path.isdir(src_dir):
+                return 0
+            dest = os.path.normpath(DBF_APPEND_TOOL_INPUT)
+            os.makedirs(dest, exist_ok=True)
+            skip_names = {
+                "rate_csv_manifest.csv",
+                "claims_review_hold_manifest.csv",
+                "claims_cross_table_validation_report.csv",
+                "claims_emit_enhancement_validation.csv",
+                "cso_mortality_crosswalk_qa.csv",
+                "variation_code_audit.csv",
+                "migration_audit_log.txt",
+            }
+            copied = 0
+            for name in os.listdir(src_dir):
+                if not name.lower().endswith(".csv"):
+                    continue
+                if not name.lower().startswith("quik"):
+                    continue
+                if name.lower() in skip_names:
+                    continue
+                src = os.path.join(src_dir, name)
+                if not os.path.isfile(src):
+                    continue
+                shutil.copy2(src, os.path.join(dest, name))
+                copied += 1
+            rates_dir = os.path.join(src_dir, "rates")
+            if os.path.isdir(rates_dir):
+                for name in os.listdir(rates_dir):
+                    if not name.lower().endswith(".csv"):
+                        continue
+                    if name.lower() in skip_names:
+                        continue
+                    src = os.path.join(rates_dir, name)
+                    if not os.path.isfile(src):
+                        continue
+                    shutil.copy2(src, os.path.join(dest, name))
+                    copied += 1
+            if copied:
+                self.log(
+                    f"DBF Append Tool: published {copied} CSV(s) → {dest} "
+                    f"(quikmemo.dbf/dbt stay in {DBF_APPEND_TOOL_OUTPUT})"
+                )
+            return copied
+        except Exception as exc:
+            self.log(f"DBF Append Tool publish skipped (non-fatal): {exc}")
+            return 0
+
+    def _launch_dbf_append_tool(self):
+        """Open Desktop\\DBF_Append_Tool\\run_app.bat after any successful conversion.
+
+        Called after single-table, product setup, rate-only, or full batch success.
+        Launches the Append Tool GUI (non-blocking). Does not auto-click EXECUTE —
+        paths are already defaulted to input/output. Disable with
+        QLA_LAUNCH_DBF_APPEND_TOOL=0.
+        """
+        flag = os.environ.get("QLA_LAUNCH_DBF_APPEND_TOOL", "1").strip().lower()
+        if flag in ("0", "false", "no", "off"):
+            self.log("DBF Append Tool: launch skipped (QLA_LAUNCH_DBF_APPEND_TOOL=0)")
+            return False
+        bat = os.path.normpath(DBF_APPEND_TOOL_BAT)
+        if not os.path.isfile(bat):
+            self.log(f"DBF Append Tool: launch skipped — not found: {bat}")
+            return False
+        try:
+            # Detached so conversion UI is not blocked waiting on the append tool.
+            if os.name == "nt":
+                os.startfile(bat)  # noqa: S606 — operator desktop launcher
+            else:
+                subprocess.Popen(["bash", bat], cwd=os.path.dirname(bat))
+            self.log(f"DBF Append Tool: launched {bat}")
+            return True
+        except Exception as exc:
+            self.log(f"DBF Append Tool: launch failed (non-fatal): {exc}")
+            return False
+
     def _run_output_hygiene(self, error_log=None):
         """Keep QLA_Migration/Output CSV-only. Moves (never deletes) non-CSV files
         to Reports / rate sandbox / Error_Logs and reports the result in the log."""
@@ -6030,6 +6150,7 @@ class QLAdminEnterpriseIntegrationSuite:
                          f"(left in place, not deleted):")
                 for src, reason in res["skipped"]:
                     self.log(f"  - {os.path.basename(src)}: {reason}")
+            self._publish_dbf_append_tool_input(out_dir)
         except Exception as exc:
             self.log(f"Output hygiene skipped (non-fatal): {exc}")
 
@@ -6858,7 +6979,8 @@ class QLAdminEnterpriseIntegrationSuite:
                         orphan_df.to_csv(orphan_path, index=False)
                         self.log(f"  Orphan audit: {orphan_path} ({len(orphan_df)} rows)")
                     try:
-                        dbf_dir = os.path.normpath(os.path.join(out_dir, "quikmemo_uat_dbf"))
+                        # Always land next to the DBF Append Tool load package (not under Output/).
+                        dbf_dir = os.path.normpath(DBF_APPEND_TOOL_OUTPUT)
                         os.makedirs(dbf_dir, exist_ok=True)
                         dbf_path = os.path.normpath(os.path.join(dbf_dir, "quikmemo.dbf"))
                         dbf_info = write_quikmemo_dbf(out_path, dbf_path)
@@ -8874,6 +8996,7 @@ class QLAdminEnterpriseIntegrationSuite:
             current_stage = "Writing final CSV outputs and summaries"
             self.update_run_progress(9, detail="finalizing")
             self._run_output_hygiene(run_error_log)
+            self._launch_dbf_append_tool()
             self.complete_run_progress()
         except Exception as e:
             self.log(f"!!! ERROR: {str(e)}")

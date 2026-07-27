@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+119	CLOSED ✓	PUA MPAR always non-participating (0)	Resolution: Paid-Up Addition coverages now set QuikRidr.MPAR to 0 (non-participating), matching QLAdmin PA-add behavior instead of copying the base coverage’s participating flag.	2026-07-27	Go	Warren	Conversion	2026-07-27	v58.43. 493 PUA rows MPAR 1→0 (494/494 now 0). Validators #119+#105 PASS; accountability IN_DATA; Regression PASS. UAT: reload Test_Validation/quikridr.csv.
