@@ -2,6 +2,16 @@
 set -euo pipefail
 
 DESKTOP="$HOME/Desktop"
+PROJECT="$DESKTOP/DJI Clip Cleaner Pro"
+GITHUB_RAW="https://raw.githubusercontent.com/warrenhughes1974-cell/Warrenhughes1974/main/DJI_Clip_Cleaner_Pro"
+
+# Drop latest Update.command into the project folder before cleanup finishes.
+if [[ -d "$PROJECT" ]]; then
+  curl -fsSL "$GITHUB_RAW/Update.command" -o "$PROJECT/Update.command"
+  chmod +x "$PROJECT/Update.command"
+  echo "Updated: DJI Clip Cleaner Pro/Update.command"
+  echo ""
+fi
 
 trash_item() {
   local path="$1"
