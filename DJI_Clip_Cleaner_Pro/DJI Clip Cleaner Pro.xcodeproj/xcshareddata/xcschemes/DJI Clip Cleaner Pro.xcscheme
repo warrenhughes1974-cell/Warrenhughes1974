@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1500"
+   LastUpgradeVersion = "1600"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A50000000000000000000001"
+               BlueprintIdentifier = "3CABC5AFCDD6435DA10334DD"
                BuildableName = "DJI Clip Cleaner Pro.app"
                BlueprintName = "DJI Clip Cleaner Pro"
                ReferencedContainer = "container:DJI Clip Cleaner Pro.xcodeproj">
@@ -26,8 +26,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES">
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -43,7 +42,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A50000000000000000000001"
+            BlueprintIdentifier = "3CABC5AFCDD6435DA10334DD"
             BuildableName = "DJI Clip Cleaner Pro.app"
             BlueprintName = "DJI Clip Cleaner Pro"
             ReferencedContainer = "container:DJI Clip Cleaner Pro.xcodeproj">
@@ -60,7 +59,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A50000000000000000000001"
+            BlueprintIdentifier = "3CABC5AFCDD6435DA10334DD"
             BuildableName = "DJI Clip Cleaner Pro.app"
             BlueprintName = "DJI Clip Cleaner Pro"
             ReferencedContainer = "container:DJI Clip Cleaner Pro.xcodeproj">
@@ -73,5 +72,5 @@
    <ArchiveAction
       buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
-   </AnalyzeAction>
+   </ArchiveAction>
 </Scheme>

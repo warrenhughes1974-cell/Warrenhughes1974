@@ -21,6 +21,10 @@ echo "  $DEST"
 mkdir -p "$DEST"
 ditto "$REPO_ROOT" "$DEST"
 
+# Remove stale user-specific Xcode state from copied project.
+rm -rf "$DEST/DJI Clip Cleaner Pro.xcodeproj/xcuserdata"
+rm -rf "$DEST/DJI Clip Cleaner Pro.xcodeproj/project.xcworkspace/xcuserdata"
+
 XCODEPROJ="$DEST/DJI Clip Cleaner Pro.xcodeproj"
 
 if [[ ! -d "$XCODEPROJ" ]]; then
