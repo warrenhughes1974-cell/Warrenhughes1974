@@ -35,9 +35,12 @@ if [[ -d "$REPO" ]]; then
 fi
 
 copy_file "Views/Analysis/AnalysisView.swift"
+copy_file "Views/MainTabView.swift"
+copy_file "Views/Settings/SettingsView.swift"
 copy_file "ViewModels/CleanerViewModel.swift"
 copy_file "ViewModels/AnalysisViewModel.swift"
 copy_file "Models/AnalysisResult.swift"
+copy_file "Models/AnalysisSettings.swift"
 copy_file "Services/SpeechAnalyzer.swift"
 copy_file "Services/MotionAnalyzer.swift"
 copy_file "Services/RecommendationEngine.swift"
