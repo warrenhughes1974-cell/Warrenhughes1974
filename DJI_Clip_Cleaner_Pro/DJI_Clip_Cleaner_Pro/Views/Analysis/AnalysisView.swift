@@ -1,8 +1,19 @@
 import SwiftUI
 
 struct AnalysisView: View {
+    @ObservedObject var cleanerViewModel: CleanerViewModel
+    @Binding var selectedTab: Int
+
     @State private var viewModel = AnalysisViewModel()
     @State private var showingSettings = false
+    @State private var showingPipelineConfirm = false
+
+    @AppStorage("cleaningPreset")
+    private var savedPreset = CleaningPreset.balanced.rawValue
+
+    private var selectedPreset: CleaningPreset {
+        CleaningPreset(rawValue: savedPreset) ?? .balanced
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -21,6 +32,31 @@ struct AnalysisView: View {
         .sheet(isPresented: $showingSettings) {
             SettingsView()
                 .frame(minWidth: 520, minHeight: 640)
+        }
+        .confirmationDialog(
+            "Run Pipeline?",
+            isPresented: $showingPipelineConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("Run Pipeline") {
+                viewModel.runPipeline(
+                    cleanerViewModel: cleanerViewModel,
+                    preset: selectedPreset
+                ) {
+                    selectedTab = 0
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text(
+                """
+                1. Move DISCARD clips to _DISCARD folder
+                2. Leave REVIEW clips in place
+                3. Send KEEP clips to Clip Cleaner and start processing
+
+                \(viewModel.pipelineSummary)
+                """
+            )
         }
     }
 
@@ -59,6 +95,12 @@ struct AnalysisView: View {
                 viewModel.exportReport()
             }
             .disabled(!viewModel.canExportReport || viewModel.isScanning)
+
+            Button("Run Pipeline") {
+                showingPipelineConfirm = true
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(!viewModel.canRunPipeline)
 
             if viewModel.isAnalyzing {
                 Button("Cancel", role: .destructive) {
@@ -177,5 +219,8 @@ struct AnalysisView: View {
 }
 
 #Preview {
-    AnalysisView()
+    AnalysisView(
+        cleanerViewModel: CleanerViewModel(),
+        selectedTab: .constant(1)
+    )
 }

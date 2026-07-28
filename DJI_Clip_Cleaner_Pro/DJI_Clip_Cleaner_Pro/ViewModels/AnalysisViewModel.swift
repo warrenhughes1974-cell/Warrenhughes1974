@@ -73,6 +73,67 @@ final class AnalysisViewModel {
         !results.isEmpty
     }
 
+    var canRunPipeline: Bool {
+        !results.isEmpty &&
+        !isScanning &&
+        !isAnalyzing &&
+        results.allSatisfy { $0.recommendation != .pending }
+    }
+
+    var pipelineSummary: String {
+        let keep = results.filter { $0.recommendation == .keep }.count
+        let review = results.filter { $0.recommendation == .review }.count
+        let discard = results.filter { $0.recommendation == .discard }.count
+        return "KEEP \(keep) · REVIEW \(review) · DISCARD \(discard)"
+    }
+
+    func runPipeline(
+        cleanerViewModel: CleanerViewModel,
+        preset: CleaningPreset,
+        switchToCleanerTab: () -> Void
+    ) {
+        guard canRunPipeline, let selectedFolderURL else {
+            errorMessage = "Wait for analysis to finish before running the pipeline."
+            return
+        }
+
+        errorMessage = nil
+
+        do {
+            let outcome = try ClipPipelineService.run(
+                results: results,
+                in: selectedFolderURL
+            )
+
+            let pipeline = outcome.pipeline
+            let keepVideos = outcome.keepVideos
+
+            guard !keepVideos.isEmpty else {
+                statusMessage =
+                    "Pipeline moved \(pipeline.movedToDiscard) clip(s) to _DISCARD, but no KEEP clips were found to clean."
+                return
+            }
+
+            let summary =
+                "Moved \(pipeline.movedToDiscard) DISCARD clip(s) to _DISCARD. " +
+                "REVIEW \(pipeline.reviewCount) left in place. " +
+                "Cleaning \(pipeline.keepCount) KEEP clip(s)."
+
+            cleanerViewModel.receivePipelineHandoff(
+                folder: selectedFolderURL,
+                videos: keepVideos,
+                summary: summary
+            )
+
+            switchToCleanerTab()
+            cleanerViewModel.startProcessing(using: preset)
+
+            statusMessage = summary
+        } catch {
+            errorMessage = "Pipeline failed: \(error.localizedDescription)"
+        }
+    }
+
     func exportReport() {
         guard !results.isEmpty else {
             errorMessage = "Run an analysis before exporting a report."

@@ -2,9 +2,7 @@ import SwiftUI
 
 struct CleanerView: View {
 
-    @StateObject
-    private var viewModel =
-        CleanerViewModel()
+    @ObservedObject var viewModel: CleanerViewModel
 
     @AppStorage("cleaningPreset")
     private var savedPreset =
@@ -585,5 +583,5 @@ struct CleanerView: View {
 }
 
 #Preview {
-    CleanerView()
+    CleanerView(viewModel: CleanerViewModel())
 }

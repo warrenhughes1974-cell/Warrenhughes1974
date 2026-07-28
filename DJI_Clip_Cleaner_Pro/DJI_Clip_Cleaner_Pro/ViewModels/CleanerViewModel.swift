@@ -105,6 +105,33 @@ final class CleanerViewModel: ObservableObject {
         }
     }
 
+    func receivePipelineHandoff(
+        folder: URL,
+        videos: [VideoFile],
+        summary: String
+    ) {
+        guard !isProcessing else {
+            return
+        }
+
+        selectedFolderURL = folder
+        selectedFolderPath = folder.path
+        self.videos = videos.sorted {
+            $0.name.localizedStandardCompare($1.name) == .orderedAscending
+        }
+
+        statusMessage =
+            "\(videos.count) KEEP clip(s) loaded from Smart Analysis pipeline."
+
+        appendLog("")
+        appendLog("==================================================")
+        appendLog("PIPELINE HANDOFF")
+        appendLog("==================================================")
+        appendLog(summary)
+        appendLog("KEEP clips queued: \(videos.count)")
+        appendLog("")
+    }
+
     func scanFolder() {
         guard let folderURL = selectedFolderURL else {
             return
