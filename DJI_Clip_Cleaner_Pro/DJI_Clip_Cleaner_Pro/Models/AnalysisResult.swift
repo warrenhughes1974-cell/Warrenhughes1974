@@ -16,7 +16,7 @@ enum ClipRecommendation: String, Sendable {
     case unknown = "—"
 }
 
-struct AnalysisResult: Identifiable, Sendable {
+struct AnalysisResult: Identifiable {
     let id: UUID
     let video: VideoFile
     var speechStatus: AnalysisStatus

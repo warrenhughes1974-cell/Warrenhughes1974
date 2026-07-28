@@ -2,73 +2,69 @@
 
 Personal macOS SwiftUI app for DJI footage workflows.
 
-**This folder is separate from the CSO / insurance conversion work in the repo root.**
+**Separate from the CSO / insurance conversion work in the repo root.**
 
-## What this project is
+## Tabs
 
-| Tab | Purpose |
-|-----|---------|
-| **Clip Cleaner** | Your existing proxy/transcode workflow (migrate from `ContentView.swift`) |
-| **Smart Analysis** | Scan folders, show clip table, future speech/motion/recommendation engine |
+| Tab | What it does |
+|-----|----------------|
+| **Clip Cleaner** | Batch silence-trim via Auto-Editor → `Processed/` folder |
+| **Smart Analysis** | Scan clips, show metadata table (speech/motion coming next) |
 
 ## Project layout
 
 ```
 DJI_Clip_Cleaner_Pro/
-├── DJI_Clip_Cleaner_ProApp.swift    # App entry → MainTabView
-├── Views/
-│   ├── MainTabView.swift            # Two tabs
-│   ├── Cleaner/CleanerView.swift    # ← paste your existing cleaner UI here
-│   └── Analysis/AnalysisView.swift  # Working scan + table foundation
+├── DJI_Clip_Cleaner_ProApp.swift
 ├── Models/
 │   ├── VideoFile.swift
+│   ├── CleaningPreset.swift
 │   └── AnalysisResult.swift
 ├── ViewModels/
+│   ├── CleanerViewModel.swift
 │   └── AnalysisViewModel.swift
-└── Services/
-    ├── FolderScanner.swift
-    └── VideoMetadataService.swift
+├── Views/
+│   ├── MainTabView.swift
+│   ├── Cleaner/CleanerView.swift
+│   └── Analysis/AnalysisView.swift
+├── Services/
+│   ├── FolderScanner.swift
+│   └── VideoMetadataService.swift
+└── Utilities/
+    └── DateFormatter+LogTimestamp.swift
 ```
 
-## Get this into Xcode (5 minutes)
+## Update your Mac Xcode project
 
-### If you already have the Xcode project on your Mac
+Your old single `ContentView.swift` is now split across these files. To upgrade:
 
-1. **Pull or copy** this `DJI_Clip_Cleaner_Pro` folder onto your Mac.
-2. In Xcode, right-click your project → **Add Files to "DJI Clip Cleaner Pro"…**
-3. Select the entire `DJI_Clip_Cleaner_Pro` source folder (the inner one with `.swift` files).
-4. Check **Copy items if needed** and your app target.
-5. Open `DJI_Clip_Cleaner_ProApp.swift` and confirm it launches `MainTabView()` (already set).
-6. **Migrate your cleaner:**
-   - Open your old `ContentView.swift`.
-   - Copy its `body` and supporting state into `CleanerView.swift` (or move the whole file and rename).
-   - Delete or stop using the old `ContentView` as the root view.
-7. **Build & Run** — you should see **Clip Cleaner** and **Smart Analysis** tabs.
+1. **Back up** your project folder first (Time Machine or duplicate the folder).
+2. In Xcode, **delete** the old monolithic `ContentView.swift` from the project (Move to Trash).
+3. Drag the entire inner `DJI_Clip_Cleaner_Pro` source folder into Xcode.
+   - Check **Copy items if needed**
+   - Check your app target
+4. Open `DJI_Clip_Cleaner_ProApp.swift` — it should launch `MainTabView()` (already set).
+5. **Build & Run** — you should see both tabs.
 
-### Drag files into Cursor (for AI help)
+If Xcode complains about duplicate symbols, you still have the old `ContentView.swift` in the target. Remove it.
 
-In Finder: **Product → Show Build Folder in Finder** won't help. Instead:
+## What Clip Cleaner does
 
-- In Xcode sidebar, right-click `ContentView.swift` → **Show in Finder**
-- Drag the `.swift` file into this Cursor chat
+Uses **Auto-Editor** (`/opt/homebrew/bin/auto-editor`) to remove dead air from clips:
 
-Or open **only** the DJI project folder in Cursor (File → Open Folder).
+- Originals are **never** modified
+- Output goes to a `Processed/` subfolder as `*_CLEANED.mp4`
+- Presets: Conservative (1.0s margin), Balanced (0.5s), Aggressive (0.25s)
+- Skips files that already have a `_CLEANED` output
 
-## Smart Analysis tab (working now)
+Install Auto-Editor if needed:
 
-- Choose a folder of `.mp4` / `.mov` clips
-- Scans and lists: clip name, duration, file size
-- Speech / Motion columns show **Not Yet Implemented** (hooks ready)
-- Recommendation column shows **Pending** until we add the engine
+```bash
+brew install auto-editor
+```
 
-## Roadmap (one feature per session)
+## Smart Analysis tab
 
-1. ✅ Tab shell + Smart Analysis table
-2. Migrate your Clip Cleaner into `CleanerView`
-3. Silence / speech detection column
-4. Motion / scene detection column
-5. Recommendation engine (KEEP / REVIEW / DISCARD)
-
-## Filmora proxy note
-
-If Filmora made your files smaller, that is **proxy media** — lower-resolution copies for faster editing. Your originals are still on disk. This app’s cleaner can do something similar for your DJI workflow once your existing logic is migrated.
+- Choose a folder → scans MP4/MOV/M4V
+- Shows clip name, duration, size
+- Speech / Motion columns are placeholders for the next features

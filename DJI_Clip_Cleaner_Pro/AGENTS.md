@@ -1,29 +1,32 @@
 # DJI Clip Cleaner Pro — Agent Context
 
-This is a **personal macOS SwiftUI project**. It is **not** related to CSO, QLA, QuikPlan, or `app.py` in the repo root.
+Personal macOS SwiftUI project. **Not** related to CSO, QLA, QuikPlan, or `app.py`.
 
-## Rules for AI agents
+## Rules
 
 - Work only inside `DJI_Clip_Cleaner_Pro/`
-- Do not modify insurance conversion code unless explicitly asked
-- One session = one working feature the user can Run in Xcode
-- Prefer small, surgical edits over architecture lectures
-- Keep **Clip Cleaner** and **Smart Analysis** on separate tabs
-- Never stuff new features into a monolithic single file
+- One session = one runnable feature
+- Keep Clip Cleaner and Smart Analysis on separate tabs
+- Surgical edits; no monolithic files
 
 ## Current state
 
-- `MainTabView` — two tabs wired
-- `CleanerView` — placeholder; user’s real cleaner lives in their Mac `ContentView.swift` pending migration
-- `AnalysisView` — folder scan + table works; detectors are stubs
+- **Clip Cleaner** — fully migrated from user's `ContentView.swift`
+- **Smart Analysis** — folder scan + table; detectors not implemented yet
+- Uses Auto-Editor CLI for silence trimming
 
-## User workflow
+## File map
 
-YouTube creator: Halloween hunts, product reviews, travel/work vlogs. DJI camera footage. Wants fast editing prep (proxies, analysis, keep/discard recommendations).
+| File | Role |
+|------|------|
+| `CleanerView.swift` | Clip Cleaner UI (was ContentView) |
+| `CleanerViewModel.swift` | Scan, process, cancel, logging |
+| `AnalysisView.swift` | Smart Analysis UI |
+| `AnalysisViewModel.swift` | Analysis folder scan |
+| `VideoFile.swift` | Shared video model |
 
-## Next likely tasks
+## Next features
 
-1. User pastes or drags existing `ContentView.swift` → migrate to `CleanerView` / `CleanerViewModel`
-2. Implement speech column (AVSpeechRecognizer or similar)
-3. Implement motion column (AVAssetReader frame sampling)
-4. Recommendation engine
+1. Speech detection column
+2. Motion / scene detection column
+3. KEEP / REVIEW / DISCARD recommendation engine
