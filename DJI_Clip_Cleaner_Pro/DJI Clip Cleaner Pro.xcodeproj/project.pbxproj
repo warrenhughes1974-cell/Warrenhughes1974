@@ -22,7 +22,6 @@
 		C1D2E3F4A5B6478990ABCDEF /* MotionAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E2F3A4B5C6478990ABCDEF /* MotionAnalyzer.swift */; };
 		E1F2A3B4C5D6478990ABCDEF /* RecommendationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */; };
 		5E6F7A8B9C0D4922ABCDEF02 /* AnalysisReportExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7A8B9C0D1E4933ABCDEF02 /* AnalysisReportExporter.swift */; };
-		7A8B9C0D1E2F4944ABCDEF03 /* ClipPipelineService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C0D1E2F3A4955ABCDEF03 /* ClipPipelineService.swift */; };
 		1A2B3C4D5E6F4788990ABCDEF /* AnalysisSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3C4D5E6F7A48990ABCDEF /* AnalysisSettings.swift */; };
 		3C4D5E6F7A8B4900ABCDEF01 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5E6F7A8B9C4911ABCDEF01 /* SettingsView.swift */; };
 		C224B6DD985949F1A589DBF9 /* DateFormatter+LogTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */; };
@@ -45,7 +44,6 @@
 		D1E2F3A4B5C6478990ABCDEF /* MotionAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionAnalyzer.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationEngine.swift; sourceTree = "<group>"; };
 		6F7A8B9C0D1E4933ABCDEF02 /* AnalysisReportExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisReportExporter.swift; sourceTree = "<group>"; };
-		8B9C0D1E2F3A4955ABCDEF03 /* ClipPipelineService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPipelineService.swift; sourceTree = "<group>"; };
 		2B3C4D5E6F7A48990ABCDEF /* AnalysisSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisSettings.swift; sourceTree = "<group>"; };
 		4D5E6F7A8B9C4911ABCDEF01 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+LogTimestamp.swift"; sourceTree = "<group>"; };
@@ -134,7 +132,6 @@
 				D1E2F3A4B5C6478990ABCDEF /* MotionAnalyzer.swift */,
 				F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */,
 				6F7A8B9C0D1E4933ABCDEF02 /* AnalysisReportExporter.swift */,
-				8B9C0D1E2F3A4955ABCDEF03 /* ClipPipelineService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -255,7 +252,6 @@
 				C1D2E3F4A5B6478990ABCDEF /* MotionAnalyzer.swift in Sources */,
 				E1F2A3B4C5D6478990ABCDEF /* RecommendationEngine.swift in Sources */,
 				5E6F7A8B9C0D4922ABCDEF02 /* AnalysisReportExporter.swift in Sources */,
-				7A8B9C0D1E2F4944ABCDEF03 /* ClipPipelineService.swift in Sources */,
 				1A2B3C4D5E6F4788990ABCDEF /* AnalysisSettings.swift in Sources */,
 				3C4D5E6F7A8B4900ABCDEF01 /* SettingsView.swift in Sources */,
 				C224B6DD985949F1A589DBF9 /* DateFormatter+LogTimestamp.swift in Sources */,
