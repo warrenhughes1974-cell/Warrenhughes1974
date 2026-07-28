@@ -2,57 +2,51 @@
 set -euo pipefail
 
 DESKTOP="$HOME/Desktop"
-ARCHIVE="$DESKTOP/DJI_Old_Stuff_Archive"
-KEEP_PROJECT="$DESKTOP/DJI Clip Cleaner Pro"
-KEEP_REPO="$DESKTOP/Warrenhughes1974-temp"
 
-mkdir -p "$ARCHIVE"
-
-move_if_exists() {
+trash_item() {
   local path="$1"
-  local label="$2"
-
   if [[ -e "$path" ]]; then
-    local name
-    name="$(basename "$path")"
-    echo "Archiving: $label → $ARCHIVE/$name"
-    mv "$path" "$ARCHIVE/"
+    echo "Trash: $(basename "$path")"
+    osascript -e "tell application \"Finder\" to delete POSIX file \"$path\"" >/dev/null
   fi
 }
 
 echo "=== DJI Clip Cleaner Pro — Desktop Cleanup ==="
 echo ""
-echo "Keeping:"
-echo "  • DJI Clip Cleaner Pro          (your app)"
-echo "  • Warrenhughes1974-temp           (for updates)"
-echo "  • Fix Build.command               (quick fixes)"
-echo "  • Update Everything.command       (full updates)"
+echo "KEEPING:"
+echo "  Desktop/DJI Clip Cleaner Pro/"
 echo ""
-echo "Archiving old copies into:"
-echo "  $ARCHIVE"
+echo "REMOVING (moving to Trash):"
 echo ""
 
-# Old duplicate project folders from install script backups
+# Huge full repo clone — not needed anymore (updates use /tmp)
+trash_item "$DESKTOP/Warrenhughes1974-temp"
+trash_item "$DESKTOP/Warrenhughes1974"
+
+# Duplicate / old project copies
+trash_item "$DESKTOP/DJI Clip Cleaner Pro 2"
 for item in "$DESKTOP"/DJI\ Clip\ Cleaner\ Pro.backup.*; do
-  [[ -e "$item" ]] && move_if_exists "$item" "backup folder"
+  [[ -e "$item" ]] && trash_item "$item"
 done
 
-move_if_exists "$DESKTOP/DJI Clip Cleaner Pro 2" "old duplicate project"
+# Old standalone scripts on Desktop (now live inside the project folder)
+trash_item "$DESKTOP/Fix Build.command"
+trash_item "$DESKTOP/Update Everything.command"
+trash_item "$DESKTOP/Cleanup Desktop.command"
+trash_item "$DESKTOP/DJI_Old_Stuff_Archive"
 
-# Old temp clone names if any
-move_if_exists "$DESKTOP/Warrenhughes1974" "old repo clone (no -temp suffix)"
+# Old script names inside project if duplicated at desktop root
+trash_item "$DESKTOP/Update.command"
 
 echo ""
 echo "Done."
 echo ""
-echo "Archived items are in:"
-echo "  $ARCHIVE"
+echo "Your Desktop should now have only:"
+echo "  DJI Clip Cleaner Pro/"
 echo ""
-echo "To permanently delete them later:"
-echo "  1. Open Finder → Desktop → DJI_Old_Stuff_Archive"
-echo "  2. Select all → Move to Trash"
+echo "Inside that folder:"
+echo "  • DJI Clip Cleaner Pro.xcodeproj  (double-click to open)"
+echo "  • Update.command                  (double-click for updates)"
 echo ""
 
-open "$ARCHIVE" 2>/dev/null || true
-
-osascript -e 'display notification "Old DJI copies moved to DJI_Old_Stuff_Archive on Desktop." with title "Desktop Cleanup"'
+osascript -e 'display notification "Desktop cleaned. Only DJI Clip Cleaner Pro folder kept." with title "Desktop Cleanup"'
