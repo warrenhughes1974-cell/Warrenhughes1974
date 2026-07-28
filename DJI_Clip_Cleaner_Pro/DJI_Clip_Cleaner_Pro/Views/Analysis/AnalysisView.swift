@@ -131,8 +131,13 @@ struct AnalysisView: View {
             Text(summary)
                 .foregroundStyle(.secondary)
         case .complete:
-            Text(summary)
-                .foregroundStyle(summary.contains("Silent") || summary.contains("Static") ? .secondary : .green)
+            if summary.contains("Silent") || summary.contains("Static") {
+                Text(summary)
+                    .foregroundStyle(.secondary)
+            } else {
+                Text(summary)
+                    .foregroundStyle(Color.green)
+            }
         }
     }
 

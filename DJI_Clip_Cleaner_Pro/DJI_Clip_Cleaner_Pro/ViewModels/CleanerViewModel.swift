@@ -704,14 +704,13 @@ final class CleanerViewModel: ObservableObject {
                 withTimeInterval: 1,
                 repeats: true
             ) { [weak self] _ in
-
-                guard let self,
-                      let processingStartedAt =
-                        self.processingStartedAt else {
-                    return
-                }
-
                 Task { @MainActor in
+                    guard let self,
+                          let processingStartedAt =
+                            self.processingStartedAt else {
+                        return
+                    }
+
                     self.elapsedTime =
                         Date().timeIntervalSince(
                             processingStartedAt
