@@ -17,7 +17,7 @@ struct VideoMetadataService {
                 }
             }
             return results.sorted {
-                $0.fileName.localizedStandardCompare($1.fileName) == .orderedAscending
+                $0.name.localizedStandardCompare($1.name) == .orderedAscending
             }
         }
     }
@@ -25,16 +25,16 @@ struct VideoMetadataService {
     private static func loadVideoFile(from url: URL) async -> VideoFile? {
         let fileSize = (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize).map(Int64.init) ?? 0
         let asset = AVURLAsset(url: url)
-        let duration: Double?
 
         do {
             let loadedDuration = try await asset.load(.duration)
-            let seconds = CMTimeGetSeconds(loadedDuration)
-            duration = seconds.isFinite && seconds > 0 ? seconds : nil
+            let duration = CMTimeGetSeconds(loadedDuration)
+            guard duration.isFinite, duration > 0 else {
+                return nil
+            }
+            return VideoFile(url: url, duration: duration, fileSize: fileSize)
         } catch {
-            duration = nil
+            return nil
         }
-
-        return VideoFile(url: url, fileSizeBytes: fileSize, durationSeconds: duration)
     }
 }

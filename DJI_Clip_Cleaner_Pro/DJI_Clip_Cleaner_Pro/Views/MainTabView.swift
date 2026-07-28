@@ -13,6 +13,12 @@ struct MainTabView: View {
                     Label("Smart Analysis", systemImage: "waveform.badge.magnifyingglass")
                 }
         }
+        .frame(
+            minWidth: 900,
+            idealWidth: 1_000,
+            minHeight: 720,
+            idealHeight: 800
+        )
     }
 }
 

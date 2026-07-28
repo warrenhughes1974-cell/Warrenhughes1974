@@ -1,40 +1,586 @@
 import SwiftUI
 
-/// Placeholder shell for your existing Clip Cleaner.
-/// Your working ContentView.swift logic should move into this view (or CleanerViewModel)
-/// without changing behavior.
 struct CleanerView: View {
+
+    @StateObject
+    private var viewModel =
+        CleanerViewModel()
+
+    @AppStorage("cleaningPreset")
+    private var savedPreset =
+        CleaningPreset.balanced.rawValue
+
+    private var selectedPreset: CleaningPreset {
+        CleaningPreset(
+            rawValue: savedPreset
+        ) ?? .balanced
+    }
+
     var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "sparkles")
-                .font(.system(size: 48))
-                .foregroundStyle(.blue)
+        VStack(spacing: 0) {
+            header
 
-            Text("Clip Cleaner")
-                .font(.largeTitle.bold())
+            Divider()
 
-            Text("Your existing cleaner is preserved in your Xcode project.")
-                .multilineTextAlignment(.center)
-                .foregroundStyle(.secondary)
-
-            GroupBox("Next step on your Mac") {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("1. In Xcode, drag all files from the `DJI_Clip_Cleaner_Pro` folder into your project.")
-                    Text("2. Replace this placeholder `CleanerView.swift` with your current `ContentView.swift` body, or rename ContentView → CleanerView.")
-                    Text("3. Set `MainTabView` as the app root (already wired in `DJI_Clip_Cleaner_ProApp.swift`).")
-                    Text("4. Press Run — you should see both tabs: Clip Cleaner + Smart Analysis.")
+            ScrollView {
+                VStack(
+                    alignment: .leading,
+                    spacing: 22
+                ) {
+                    folderSection
+                    inventorySection
+                    settingsSection
+                    processingSection
+                    logSection
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.callout)
+                .padding(28)
+            }
+        }
+        .alert(
+            "DJI Clip Cleaner Pro",
+            isPresented:
+                $viewModel.showingError
+        ) {
+            Button(
+                "OK",
+                role: .cancel
+            ) {}
+        } message: {
+            Text(
+                viewModel.errorMessage
+            )
+        }
+    }
+
+    private var header: some View {
+        HStack(spacing: 16) {
+            Image(
+                systemName:
+                    "wand.and.stars.inverse"
+            )
+            .font(.system(size: 34))
+            .symbolRenderingMode(
+                .hierarchical
+            )
+
+            VStack(
+                alignment: .leading,
+                spacing: 3
+            ) {
+                Text(
+                    "DJI Clip Cleaner Pro"
+                )
+                .font(.largeTitle)
+                .fontWeight(.bold)
+
+                Text(
+                    "Batch-clean video clips while preserving the originals."
+                )
+                .foregroundStyle(
+                    .secondary
+                )
             }
 
-            Text("Once migrated, this tab keeps working exactly as before. Smart Analysis lives on its own tab.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+            Spacer()
+
+            if viewModel.autoEditorPath != nil {
+                Label(
+                    "Auto-Editor Ready",
+                    systemImage:
+                        "checkmark.circle.fill"
+                )
+                .foregroundStyle(.green)
+            } else {
+                Label(
+                    "Auto-Editor Missing",
+                    systemImage:
+                        "exclamationmark.triangle.fill"
+                )
+                .foregroundStyle(.orange)
+            }
         }
-        .padding(32)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 28)
+        .padding(.vertical, 22)
+    }
+
+    private var folderSection: some View {
+        GroupBox {
+            VStack(
+                alignment: .leading,
+                spacing: 14
+            ) {
+                HStack {
+                    Image(
+                        systemName: "folder"
+                    )
+                    .font(.title2)
+
+                    Text(
+                        viewModel
+                            .selectedFolderPath
+                    )
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .textSelection(.enabled)
+
+                    Spacer()
+
+                    Button(
+                        "Choose Folder"
+                    ) {
+                        viewModel
+                            .chooseFolder()
+                    }
+                    .disabled(
+                        viewModel.isProcessing ||
+                        viewModel.isScanning
+                    )
+                }
+
+                HStack {
+                    if viewModel.isScanning {
+                        ProgressView()
+                            .controlSize(.small)
+                    }
+
+                    Text(
+                        viewModel
+                            .statusMessage
+                    )
+                    .foregroundStyle(
+                        .secondary
+                    )
+
+                    Spacer()
+
+                    if !viewModel.videos.isEmpty {
+                        Button("Rescan") {
+                            viewModel
+                                .scanFolder()
+                        }
+                        .disabled(
+                            viewModel.isScanning ||
+                            viewModel.isProcessing
+                        )
+                    }
+                }
+            }
+            .padding(4)
+        } label: {
+            Label(
+                "Source Folder",
+                systemImage:
+                    "folder.badge.plus"
+            )
+            .font(.headline)
+        }
+    }
+
+    private var inventorySection: some View {
+        GroupBox {
+            VStack(spacing: 0) {
+                if viewModel.videos.isEmpty {
+                    ContentUnavailableView(
+                        "No Videos Loaded",
+                        systemImage:
+                            "video.slash",
+                        description: Text(
+                            "Choose a folder containing MP4, MOV, or M4V files."
+                        )
+                    )
+                    .frame(height: 220)
+                } else {
+                    HStack {
+                        statistic(
+                            title: "Videos",
+                            value:
+                                "\(viewModel.videos.count)"
+                        )
+
+                        Divider()
+                            .frame(height: 42)
+
+                        statistic(
+                            title:
+                                "Total Footage",
+                            value:
+                                viewModel
+                                    .formattedTotalDuration
+                        )
+
+                        Divider()
+                            .frame(height: 42)
+
+                        statistic(
+                            title: "Output",
+                            value:
+                                "Processed folder"
+                        )
+
+                        Spacer()
+                    }
+                    .padding(.vertical, 12)
+
+                    Divider()
+
+                    List(
+                        viewModel.videos
+                    ) { video in
+                        HStack(spacing: 12) {
+                            Image(
+                                systemName: "film"
+                            )
+                            .foregroundStyle(
+                                .secondary
+                            )
+
+                            Text(video.name)
+                                .lineLimit(1)
+
+                            Spacer()
+
+                            Text(
+                                video
+                                    .formattedFileSize
+                            )
+                            .foregroundStyle(
+                                .secondary
+                            )
+                            .frame(
+                                width: 90,
+                                alignment:
+                                    .trailing
+                            )
+
+                            Text(
+                                video
+                                    .formattedDuration
+                            )
+                            .monospacedDigit()
+                            .frame(
+                                width: 75,
+                                alignment:
+                                    .trailing
+                            )
+                        }
+                    }
+                    .frame(height: 220)
+                }
+            }
+        } label: {
+            Label(
+                "Video Inventory",
+                systemImage:
+                    "list.bullet.rectangle"
+            )
+            .font(.headline)
+        }
+    }
+
+    private func statistic(
+        title: String,
+        value: String
+    ) -> some View {
+        VStack(
+            alignment: .leading,
+            spacing: 3
+        ) {
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(
+                    .secondary
+                )
+
+            Text(value)
+                .font(.headline)
+        }
+        .frame(
+            minWidth: 130,
+            alignment: .leading
+        )
+    }
+
+    private var settingsSection: some View {
+        GroupBox {
+            VStack(
+                alignment: .leading,
+                spacing: 14
+            ) {
+                Picker(
+                    "Cutting Style",
+                    selection: $savedPreset
+                ) {
+                    ForEach(
+                        CleaningPreset.allCases
+                    ) { preset in
+                        Text(preset.rawValue)
+                            .tag(
+                                preset.rawValue
+                            )
+                    }
+                }
+                .pickerStyle(.segmented)
+                .disabled(
+                    viewModel.isProcessing
+                )
+
+                HStack {
+                    Text(
+                        selectedPreset
+                            .explanation
+                    )
+                    .foregroundStyle(
+                        .secondary
+                    )
+
+                    Spacer()
+
+                    Text(
+                        String(
+                            format:
+                                "%.2f-second margin",
+                            selectedPreset
+                                .marginSeconds
+                        )
+                    )
+                    .fontWeight(.semibold)
+                }
+
+                Divider()
+
+                Label(
+                    "Original videos are never modified or deleted.",
+                    systemImage:
+                        "lock.shield"
+                )
+                .foregroundStyle(
+                    .secondary
+                )
+
+                Label(
+                    "Existing _CLEANED files are skipped automatically.",
+                    systemImage:
+                        "arrow.triangle.2.circlepath"
+                )
+                .foregroundStyle(
+                    .secondary
+                )
+            }
+            .padding(4)
+        } label: {
+            Label(
+                "Cleaning Settings",
+                systemImage:
+                    "slider.horizontal.3"
+            )
+            .font(.headline)
+        }
+    }
+
+    private var processingSection: some View {
+        GroupBox {
+            VStack(
+                alignment: .leading,
+                spacing: 14
+            ) {
+                HStack {
+                    if viewModel.isProcessing {
+                        Button(
+                            "Cancel Processing",
+                            role: .destructive
+                        ) {
+                            viewModel
+                                .cancelProcessing()
+                        }
+                        .disabled(
+                            viewModel.isCancelling
+                        )
+                    } else {
+                        Button {
+                            viewModel
+                                .startProcessing(
+                                    using:
+                                        selectedPreset
+                                )
+                        } label: {
+                            Label(
+                                "Start Processing",
+                                systemImage:
+                                    "play.fill"
+                            )
+                        }
+                        .buttonStyle(
+                            .borderedProminent
+                        )
+                        .disabled(
+                            viewModel
+                                .selectedFolderURL
+                                == nil ||
+                            viewModel
+                                .videos
+                                .isEmpty ||
+                            viewModel
+                                .isScanning
+                        )
+                    }
+
+                    Button {
+                        viewModel
+                            .openOutputFolder()
+                    } label: {
+                        Label(
+                            "Open Processed Folder",
+                            systemImage:
+                                "folder"
+                        )
+                    }
+                    .disabled(
+                        viewModel
+                            .selectedFolderURL
+                            == nil
+                    )
+
+                    Spacer()
+
+                    Text(
+                        "Elapsed: \(viewModel.formattedElapsedTime)"
+                    )
+                    .monospacedDigit()
+                    .foregroundStyle(
+                        .secondary
+                    )
+                }
+
+                ProgressView(
+                    value: viewModel.progress
+                )
+                .progressViewStyle(.linear)
+
+                HStack {
+                    if viewModel.isProcessing {
+                        Text(
+                            "\(viewModel.currentIndex + 1) of \(viewModel.videos.count)"
+                        )
+                        .fontWeight(
+                            .semibold
+                        )
+
+                        Text(
+                            viewModel
+                                .currentFileName
+                        )
+                        .lineLimit(1)
+                        .truncationMode(
+                            .middle
+                        )
+                        .foregroundStyle(
+                            .secondary
+                        )
+                    } else {
+                        Text(
+                            viewModel
+                                .statusMessage
+                        )
+                        .foregroundStyle(
+                            .secondary
+                        )
+                    }
+
+                    Spacer()
+                }
+
+                HStack(spacing: 22) {
+                    resultCount(
+                        title: "Processed",
+                        value:
+                            viewModel
+                                .processedCount,
+                        symbol:
+                            "checkmark.circle"
+                    )
+
+                    resultCount(
+                        title: "Skipped",
+                        value:
+                            viewModel
+                                .skippedCount,
+                        symbol:
+                            "forward.circle"
+                    )
+
+                    resultCount(
+                        title: "Failed",
+                        value:
+                            viewModel
+                                .failedCount,
+                        symbol:
+                            "xmark.circle"
+                    )
+                }
+            }
+            .padding(4)
+        } label: {
+            Label(
+                "Processing",
+                systemImage:
+                    "gearshape.2"
+            )
+            .font(.headline)
+        }
+    }
+
+    private func resultCount(
+        title: String,
+        value: Int,
+        symbol: String
+    ) -> some View {
+        Label(
+            "\(title): \(value)",
+            systemImage: symbol
+        )
+        .foregroundStyle(.secondary)
+    }
+
+    private var logSection: some View {
+        GroupBox {
+            ScrollView {
+                Text(
+                    viewModel.logText.isEmpty
+                    ? "Activity will appear here."
+                    : viewModel.logText
+                )
+                .font(
+                    .system(
+                        .caption,
+                        design: .monospaced
+                    )
+                )
+                .textSelection(.enabled)
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .topLeading
+                )
+                .padding(8)
+            }
+            .frame(height: 180)
+            .background(
+                Color(
+                    nsColor:
+                        .textBackgroundColor
+                )
+            )
+            .clipShape(
+                RoundedRectangle(
+                    cornerRadius: 6
+                )
+            )
+        } label: {
+            Label(
+                "Activity Log",
+                systemImage: "doc.text"
+            )
+            .font(.headline)
+        }
     }
 }
 

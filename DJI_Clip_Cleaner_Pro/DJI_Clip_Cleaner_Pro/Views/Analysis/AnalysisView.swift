@@ -69,7 +69,7 @@ struct AnalysisView: View {
             } else {
                 Table(viewModel.results) {
                     TableColumn("Clip") { result in
-                        Text(result.video.fileName)
+                        Text(result.video.name)
                     }
                     TableColumn("Duration") { result in
                         Text(result.video.formattedDuration)
