@@ -23,7 +23,7 @@ struct AnalysisView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Smart Analysis")
                 .font(.largeTitle.bold())
-            Text("Scan a folder and review clip metadata. Speech, motion, and recommendations will fill in as we add detectors.")
+            Text("Scan a folder to detect talking, motion, and keep/review/discard recommendations.")
                 .foregroundStyle(.secondary)
         }
     }
@@ -33,14 +33,20 @@ struct AnalysisView: View {
             Button("Choose Folder") {
                 viewModel.chooseFolder()
             }
-            .disabled(viewModel.isScanning)
+            .disabled(viewModel.isScanning || viewModel.isAnalyzing)
 
             Button("Rescan") {
                 viewModel.rescan()
             }
-            .disabled(viewModel.selectedFolderURL == nil || viewModel.isScanning)
+            .disabled(viewModel.selectedFolderURL == nil || viewModel.isScanning || viewModel.isAnalyzing)
 
-            if viewModel.isScanning {
+            if viewModel.isAnalyzing {
+                Button("Cancel", role: .destructive) {
+                    viewModel.cancelAnalysis()
+                }
+            }
+
+            if viewModel.isScanning || viewModel.isAnalyzing {
                 ProgressView()
                     .controlSize(.small)
             }
@@ -75,17 +81,25 @@ struct AnalysisView: View {
                         Text(result.video.formattedDuration)
                             .monospacedDigit()
                     }
-                    TableColumn("Size") { result in
-                        Text(result.video.formattedFileSize)
-                    }
                     TableColumn("Speech") { result in
-                        statusText(result.speechStatus)
+                        summaryText(
+                            result.speechSummary,
+                            status: result.speechStatus
+                        )
                     }
                     TableColumn("Motion") { result in
-                        statusText(result.motionStatus)
+                        summaryText(
+                            result.motionSummary,
+                            status: result.motionStatus
+                        )
                     }
                     TableColumn("Recommendation") { result in
                         recommendationText(result.recommendation)
+                    }
+                    TableColumn("Reason") { result in
+                        Text(result.notes)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
                     }
                 }
             }
@@ -105,20 +119,20 @@ struct AnalysisView: View {
     }
 
     @ViewBuilder
-    private func statusText(_ status: AnalysisStatus) -> some View {
+    private func summaryText(_ summary: String, status: AnalysisStatus) -> some View {
         switch status {
-        case .pending, .running:
-            Text(status.rawValue)
+        case .running, .pending:
+            Text(summary)
                 .foregroundStyle(.orange)
+        case .failed:
+            Text(summary)
+                .foregroundStyle(.red)
         case .notImplemented:
-            Text(status.rawValue)
+            Text(summary)
                 .foregroundStyle(.secondary)
         case .complete:
-            Text(status.rawValue)
-                .foregroundStyle(.green)
-        case .failed:
-            Text(status.rawValue)
-                .foregroundStyle(.red)
+            Text(summary)
+                .foregroundStyle(summary.contains("Silent") || summary.contains("Static") ? .secondary : .green)
         }
     }
 

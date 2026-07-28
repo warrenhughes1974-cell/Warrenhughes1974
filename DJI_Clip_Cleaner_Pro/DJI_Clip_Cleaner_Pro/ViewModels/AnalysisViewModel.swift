@@ -7,10 +7,15 @@ final class AnalysisViewModel {
     var selectedFolderURL: URL?
     var results: [AnalysisResult] = []
     var isScanning = false
+    var isAnalyzing = false
     var statusMessage = "Choose a folder of DJI clips to analyze."
     var errorMessage: String?
 
+    private var analysisTask: Task<Void, Never>?
+
     func chooseFolder() {
+        guard !isScanning, !isAnalyzing else { return }
+
         let panel = NSOpenPanel()
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
@@ -24,7 +29,10 @@ final class AnalysisViewModel {
     }
 
     func scanFolder(_ folderURL: URL) async {
+        analysisTask?.cancel()
+
         isScanning = true
+        isAnalyzing = false
         errorMessage = nil
         results = []
         statusMessage = "Scanning folder..."
@@ -40,14 +48,14 @@ final class AnalysisViewModel {
             statusMessage = "Loading metadata for \(urls.count) clip(s)..."
             let videos = await VideoMetadataService.loadVideoFiles(from: urls)
             results = videos.map { AnalysisResult(video: $0) }
-            statusMessage = "Loaded \(videos.count) clip(s). Analysis columns are ready for future detectors."
-            markPlaceholders()
+            isScanning = false
+
+            await runAnalysis()
         } catch {
             errorMessage = error.localizedDescription
             statusMessage = "Scan failed."
+            isScanning = false
         }
-
-        isScanning = false
     }
 
     func rescan() {
@@ -55,13 +63,62 @@ final class AnalysisViewModel {
         Task { await scanFolder(selectedFolderURL) }
     }
 
-    private func markPlaceholders() {
-        for index in results.indices {
-            results[index].speechStatus = .notImplemented
-            results[index].motionStatus = .notImplemented
-            results[index].recommendation = .pending
-            results[index].notes = "Speech and motion detectors will plug in here."
+    func cancelAnalysis() {
+        analysisTask?.cancel()
+        isAnalyzing = false
+        statusMessage = "Analysis cancelled."
+    }
+
+    private func runAnalysis() async {
+        guard !results.isEmpty else { return }
+
+        isAnalyzing = true
+        statusMessage = "Analyzing \(results.count) clip(s)..."
+
+        analysisTask = Task {
+            for index in results.indices {
+                if Task.isCancelled { break }
+
+                results[index].speechStatus = .running
+                results[index].motionStatus = .running
+                results[index].speechSummary = "Detecting..."
+                results[index].motionSummary = "Detecting..."
+                statusMessage = "Analyzing \(index + 1) of \(results.count): \(results[index].video.name)"
+
+                let videoURL = results[index].video.url
+
+                async let speech = SpeechAnalyzer.analyze(videoURL: videoURL)
+                async let motion = MotionAnalyzer.analyze(videoURL: videoURL)
+
+                let speechResult = await speech
+                let motionResult = await motion
+
+                if Task.isCancelled { break }
+
+                results[index].speechStatus = .complete
+                results[index].motionStatus = .complete
+                results[index].speechSummary = speechResult.summary
+                results[index].motionSummary = motionResult.summary
+
+                let recommendation = RecommendationEngine.recommend(
+                    video: results[index].video,
+                    speech: speechResult,
+                    motion: motionResult
+                )
+                results[index].recommendation = recommendation.0
+                results[index].notes = recommendation.1
+            }
+
+            if Task.isCancelled {
+                statusMessage = "Analysis cancelled."
+            } else {
+                statusMessage = "Analysis complete for \(results.count) clip(s)."
+            }
+
+            isAnalyzing = false
         }
+
+        await analysisTask?.value
     }
 }
 

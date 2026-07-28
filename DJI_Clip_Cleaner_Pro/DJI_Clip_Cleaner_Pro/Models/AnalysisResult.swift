@@ -21,6 +21,8 @@ struct AnalysisResult: Identifiable {
     let video: VideoFile
     var speechStatus: AnalysisStatus
     var motionStatus: AnalysisStatus
+    var speechSummary: String
+    var motionSummary: String
     var recommendation: ClipRecommendation
     var notes: String
 
@@ -29,6 +31,8 @@ struct AnalysisResult: Identifiable {
         self.video = video
         self.speechStatus = .pending
         self.motionStatus = .pending
+        self.speechSummary = "Pending"
+        self.motionSummary = "Pending"
         self.recommendation = .pending
         self.notes = ""
     }

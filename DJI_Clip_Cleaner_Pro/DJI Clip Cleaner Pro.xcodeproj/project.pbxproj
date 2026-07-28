@@ -18,6 +18,9 @@
 		75782AEF596B461E965BBEE3 /* AnalysisViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A7B92768624CABBAAB3134 /* AnalysisViewModel.swift */; };
 		47D02612BD2E459CA8463768 /* FolderScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F46D3E42C4F4B66BCF23505 /* FolderScanner.swift */; };
 		BFB2BA5DDFAE40D28C3C127B /* VideoMetadataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8286717E6BB84E76A34CB688 /* VideoMetadataService.swift */; };
+		A1B2C3D4E5F6478990ABCDEF /* SpeechAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5A6478990ABCDEF /* SpeechAnalyzer.swift */; };
+		C1D2E3F4A5B6478990ABCDEF /* MotionAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E2F3A4B5C6478990ABCDEF /* MotionAnalyzer.swift */; };
+		E1F2A3B4C5D6478990ABCDEF /* RecommendationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */; };
 		C224B6DD985949F1A589DBF9 /* DateFormatter+LogTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */; };
 		76371AAF57FB412DAB274AF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AE23DC4F179498E9C87B3CF /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -34,6 +37,9 @@
 		B3A7B92768624CABBAAB3134 /* AnalysisViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisViewModel.swift; sourceTree = "<group>"; };
 		3F46D3E42C4F4B66BCF23505 /* FolderScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderScanner.swift; sourceTree = "<group>"; };
 		8286717E6BB84E76A34CB688 /* VideoMetadataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMetadataService.swift; sourceTree = "<group>"; };
+		B1C2D3E4F5A6478990ABCDEF /* SpeechAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechAnalyzer.swift; sourceTree = "<group>"; };
+		D1E2F3A4B5C6478990ABCDEF /* MotionAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionAnalyzer.swift; sourceTree = "<group>"; };
+		F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationEngine.swift; sourceTree = "<group>"; };
 		7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+LogTimestamp.swift"; sourceTree = "<group>"; };
 		8AE23DC4F179498E9C87B3CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5CF9B53D2BA04BE1AB4A6069 /* DJI Clip Cleaner Pro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DJI Clip Cleaner Pro.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,6 +120,9 @@
 			children = (
 				3F46D3E42C4F4B66BCF23505 /* FolderScanner.swift */,
 				8286717E6BB84E76A34CB688 /* VideoMetadataService.swift */,
+				B1C2D3E4F5A6478990ABCDEF /* SpeechAnalyzer.swift */,
+				D1E2F3A4B5C6478990ABCDEF /* MotionAnalyzer.swift */,
+				F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -222,6 +231,9 @@
 				75782AEF596B461E965BBEE3 /* AnalysisViewModel.swift in Sources */,
 				47D02612BD2E459CA8463768 /* FolderScanner.swift in Sources */,
 				BFB2BA5DDFAE40D28C3C127B /* VideoMetadataService.swift in Sources */,
+				A1B2C3D4E5F6478990ABCDEF /* SpeechAnalyzer.swift in Sources */,
+				C1D2E3F4A5B6478990ABCDEF /* MotionAnalyzer.swift in Sources */,
+				E1F2A3B4C5D6478990ABCDEF /* RecommendationEngine.swift in Sources */,
 				C224B6DD985949F1A589DBF9 /* DateFormatter+LogTimestamp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
