@@ -12,14 +12,24 @@ fi
 
 copy_file() {
   local relative_path="$1"
-  local dest="$DESKTOP_APP/DJI_Clip_Cleaner_Pro/$relative_path"
+  local dest=""
+
+  if [[ "$relative_path" == DJI\ Clip\ Cleaner\ Pro.xcodeproj/* ]]; then
+    dest="$DESKTOP_APP/${relative_path}"
+  else
+    dest="$DESKTOP_APP/DJI_Clip_Cleaner_Pro/$relative_path"
+  fi
+
   local source=""
+  local url_path="${relative_path// /%20}"
 
   if [[ -f "$REPO/DJI_Clip_Cleaner_Pro/$relative_path" ]]; then
     source="$REPO/DJI_Clip_Cleaner_Pro/$relative_path"
+  elif [[ -f "$REPO/$relative_path" ]]; then
+    source="$REPO/$relative_path"
   else
     mkdir -p "$(dirname "$dest")"
-    curl -fsSL "$GITHUB_RAW/DJI_Clip_Cleaner_Pro/$relative_path" -o "$dest"
+    curl -fsSL "$GITHUB_RAW/$url_path" -o "$dest"
     echo "Downloaded: $relative_path"
     return
   fi
@@ -34,8 +44,8 @@ if [[ -d "$REPO" ]]; then
   (cd "$HOME/Desktop/Warrenhughes1974-temp" && git pull) || true
 fi
 
-copy_file "Views/Analysis/AnalysisView.swift"
 copy_file "Views/MainTabView.swift"
+copy_file "Views/Analysis/AnalysisView.swift"
 copy_file "Views/Settings/SettingsView.swift"
 copy_file "ViewModels/CleanerViewModel.swift"
 copy_file "ViewModels/AnalysisViewModel.swift"
@@ -44,7 +54,8 @@ copy_file "Models/AnalysisSettings.swift"
 copy_file "Services/SpeechAnalyzer.swift"
 copy_file "Services/MotionAnalyzer.swift"
 copy_file "Services/RecommendationEngine.swift"
+copy_file "DJI Clip Cleaner Pro.xcodeproj/project.pbxproj"
 
 open "$DESKTOP_APP/DJI Clip Cleaner Pro.xcodeproj"
 
-osascript -e 'display notification "Build fixes applied. Press ⌘R in Xcode." with title "DJI Clip Cleaner Pro"'
+osascript -e 'display notification "Update complete — press ⌘R in Xcode." with title "DJI Clip Cleaner Pro"'
