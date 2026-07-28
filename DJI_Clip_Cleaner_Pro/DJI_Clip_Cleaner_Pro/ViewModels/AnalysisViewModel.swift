@@ -103,7 +103,8 @@ final class AnalysisViewModel {
                 let recommendation = RecommendationEngine.recommend(
                     video: results[index].video,
                     speech: speechResult,
-                    motion: motionResult
+                    motion: motionResult,
+                    settings: AnalysisSettings.shared
                 )
                 results[index].recommendation = recommendation.0
                 results[index].notes = recommendation.1

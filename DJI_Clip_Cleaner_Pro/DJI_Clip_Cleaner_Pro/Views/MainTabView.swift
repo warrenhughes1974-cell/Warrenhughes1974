@@ -12,6 +12,11 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Smart Analysis", systemImage: "waveform.badge.magnifyingglass")
                 }
+
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape")
+                }
         }
         .frame(
             minWidth: 900,
