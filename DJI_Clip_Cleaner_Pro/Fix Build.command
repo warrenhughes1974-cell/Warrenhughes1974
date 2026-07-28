@@ -29,7 +29,7 @@ copy_file() {
     source="$REPO/$relative_path"
   else
     mkdir -p "$(dirname "$dest")"
-    curl -fsSL "$GITHUB_RAW/$url_path" -o "$dest"
+    curl -fsSL "$GITHUB_RAW/DJI_Clip_Cleaner_Pro/$url_path" -o "$dest"
     echo "Downloaded: $relative_path"
     return
   fi

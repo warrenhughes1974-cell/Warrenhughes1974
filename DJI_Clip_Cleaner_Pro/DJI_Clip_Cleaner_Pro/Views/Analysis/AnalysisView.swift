@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AnalysisView: View {
     @State private var viewModel = AnalysisViewModel()
+    @State private var showingSettings = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -17,14 +18,28 @@ struct AnalysisView: View {
         }
         .padding(20)
         .navigationTitle("Smart Analysis")
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
+                .frame(minWidth: 520, minHeight: 640)
+        }
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Smart Analysis")
-                .font(.largeTitle.bold())
-            Text("Scan a folder to detect talking, motion, and keep/review/discard recommendations.")
-                .foregroundStyle(.secondary)
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Smart Analysis")
+                    .font(.largeTitle.bold())
+                Text("Scan a folder to detect talking, motion, and keep/review/discard recommendations.")
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            Button {
+                showingSettings = true
+            } label: {
+                Label("Settings", systemImage: "gearshape")
+            }
         }
     }
 
