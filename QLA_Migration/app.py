@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.43
-# Date:        2026-07-27
+# Version:     v58.44
+# Date:        2026-07-28
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v58.43 — Issue #119: PUA coverages force quikridr.MPAR=0 (non-participating).
+# Change Note: v58.44 — Issue #121: ART family (5667AT/5646AT/57ATCR) must not emit ETI.
+#              PAID_UP_TYPE LE/ET no longer wins on Annual Renewable Term; use CONTRACT_CODE+REASON.
+#              v58.43 — Issue #119: PUA coverages force quikridr.MPAR=0 (non-participating).
 #              Robert: when QLAdmin adds a PA rider it sets PAR/MPAR to 0; do not inherit base.
 #              v58.42 — Honor Source\\<package>\\ extract folders (e.g. 12312025_Data) when
 #              Source Data File points inside a package subdir; do not collapse to Source root.
@@ -327,6 +329,10 @@ from qla_core.quikmstr_active_phase_status import (
     build_ppben_phase_cache,
     select_mstatus_from_active_phase,
 )
+from qla_core.issue121_art_no_eti import (
+    build_art_lifepro_policy_cache,
+    should_suppress_art_put_nfo,
+)
 from qla_core.crosswalk_enrichment import resolve_crosswalk_overlay_config
 from qla_core.product_catalog_authority import (
     allow_legacy_mplan_fallback,
@@ -521,7 +527,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.43"
+APP_VERSION = "v58.44"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -7337,20 +7343,32 @@ class QLAdminEnterpriseIntegrationSuite:
                         self._ppben_phase_cache = {}
                         self._issue49_mstatus_override_count = 0
                         self._mstatus_provisional_for_phase1_cache = {}
+                        # Issue #121: LifePRO POLICY_NUMBER set for phase-1 ART plans
+                        self._issue121_art_lp_policies = set()
+                        self._issue121_art_guard_count = 0
                         try:
                             _ppben_i49 = resolve_ppben_path(src_dir)
                             if _ppben_i49:
                                 self._ppben_phase_cache = build_ppben_phase_cache(
                                     _ppben_i49, normalize_fn=self.normalize
                                 )
+                                self._issue121_art_lp_policies = build_art_lifepro_policy_cache(
+                                    _ppben_i49, normalize_fn=self.normalize
+                                )
                                 self.log(
                                     f"Auto-loaded PPBEN phase cache for Issue #49 "
                                     f"({len(self._ppben_phase_cache)} policies; {os.path.basename(_ppben_i49)})"
+                                )
+                                self.log(
+                                    f"Issue #121: ART policy cache "
+                                    f"({len(self._issue121_art_lp_policies)} policies; "
+                                    f"{os.path.basename(_ppben_i49)})"
                                 )
                             else:
                                 self.log("Issue #49: PPBEN extract not found — active-phase MSTATUS override skipped")
                         except Exception as e:
                             self._ppben_phase_cache = {}
+                            self._issue121_art_lp_policies = set()
                             self.log(f"Warning: Could not load PPBEN phase cache for Issue #49 - {e}")
                         # ---------------------------
                 
@@ -7989,7 +8007,17 @@ class QLAdminEnterpriseIntegrationSuite:
                                         # Active contract: do not emit Lapsed via PUT_LP
                                         val = 'A_'
                                     elif put in ['PU', 'RU', 'ET', 'LE', 'LP', 'SP']:
-                                        val = f"PUT_{put}"
+                                        # Issue #121: ART (Annual Renewable Term) must not become ETI
+                                        # via PUT_LE / PUT_ET → 44. Use contract key instead.
+                                        _art_keys = getattr(self, "_issue121_art_lp_policies", None) or set()
+                                        _art_lp = self.normalize(src_row.get('POLICY_NUMBER', ''))
+                                        if should_suppress_art_put_nfo(put, _art_lp in _art_keys):
+                                            val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
+                                            self._issue121_art_guard_count = (
+                                                getattr(self, "_issue121_art_guard_count", 0) + 1
+                                            )
+                                        else:
+                                            val = f"PUT_{put}"
                                     else:
                                         val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
                                 # -----------------------------------------
@@ -8694,6 +8722,12 @@ class QLAdminEnterpriseIntegrationSuite:
                             self.log(
                                 f"Issue #76: adjusted phase-1 MPAYUP/MLASTANN on "
                                 f"{_i76} ETI/RPU polic(ies)"
+                            )
+                    if t_id.lower() == "quikmstr":
+                        _i121 = getattr(self, "_issue121_art_guard_count", 0)
+                        if _i121:
+                            self.log(
+                                f"Issue #121: suppressed PUT LE/ET→ETI on {_i121} ART polic(ies)"
                             )
                     if t_id.lower() == "quikmstr" and nfo_status_exceptions:
                         self.log(

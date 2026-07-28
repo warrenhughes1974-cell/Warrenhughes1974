@@ -523,6 +523,31 @@ def spot_checks() -> list[dict]:
         f"PUA rows={pua_rows}; PUA MPAR!=0={pua_bad}",
     )
 
+    # #121: ART family (5667AT/5646AT/57ATCR) must never emit ETI (44)
+    art_plans = {"5667AT", "5646AT", "57ATCR"}
+    art_pols = {
+        _norm(r.get("MPOLICY"))
+        for r in ridr
+        if _norm(r.get("MPLAN")) in art_plans and _norm(r.get("MPHASE")) in ("1", "01", "")
+    }
+    art_eti = sum(
+        1
+        for pol in art_pols
+        if _norm(mstat.get(pol, {}).get("MSTATUS")) == "44"
+    )
+    art_mph_eti = sum(
+        1
+        for r in ridr
+        if _norm(r.get("MPLAN")) in art_plans
+        and _norm(r.get("MPHASE")) in ("1", "01", "")
+        and _norm(r.get("MPHSTAT")) == "44"
+    )
+    add(
+        "#121",
+        "IN_DATA" if len(art_pols) > 0 and art_eti == 0 and art_mph_eti == 0 else "GAP",
+        f"ART policies={len(art_pols)}; MSTATUS=44={art_eti}; MPHSTAT=44={art_mph_eti}",
+    )
+
     # engine version
     add("Engine", "IN_DATA", "expect v57.85 (batch completed)")
 
@@ -568,6 +593,7 @@ def main() -> int:
         ("#21M", ["tools/validators/validate_issue21m_quikmemo.py"], False),
         ("#105", ["tools/validators/validate_issue105_mpar.py"], True),
         ("#119", ["tools/validators/validate_issue119_pua_mpar.py"], True),
+        ("#121", ["tools/validators/validate_issue121_art_no_eti.py"], True),
     ]
 
     val_results = []
