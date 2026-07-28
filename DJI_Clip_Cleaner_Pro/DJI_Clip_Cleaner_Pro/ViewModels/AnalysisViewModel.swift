@@ -74,6 +74,7 @@ final class AnalysisViewModel {
 
         isAnalyzing = true
         statusMessage = "Analyzing \(results.count) clip(s)..."
+        let settings = AnalysisSettings.shared.values
 
         analysisTask = Task {
             for index in results.indices {
@@ -104,7 +105,7 @@ final class AnalysisViewModel {
                     video: results[index].video,
                     speech: speechResult,
                     motion: motionResult,
-                    settings: AnalysisSettings.shared
+                    settings: settings
                 )
                 results[index].recommendation = recommendation.0
                 results[index].notes = recommendation.1

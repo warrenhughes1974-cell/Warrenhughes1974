@@ -5,7 +5,7 @@ enum RecommendationEngine {
     video: VideoFile,
     speech: SpeechAnalysis,
     motion: MotionAnalysis,
-    settings: AnalysisSettings
+    settings: AnalysisSettingsValues
   ) -> (ClipRecommendation, String) {
     let duration = video.duration
 

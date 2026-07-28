@@ -1,6 +1,16 @@
 import Foundation
 import Observation
 
+struct AnalysisSettingsValues: Sendable {
+    let minimumDurationSeconds: Double
+    let minimumTalkingPercentForKeep: Double
+    let minimumTalkingPercentForReview: Double
+    let maximumStaticTalkingDurationForKeep: Double
+    let minimumMotionPercentForBRollKeep: Double
+    let longStaticClipReviewThreshold: Double
+    let movingTalkingKeepThreshold: Double
+}
+
 @MainActor
 @Observable
 final class AnalysisSettings {
@@ -18,6 +28,18 @@ final class AnalysisSettings {
 
     private init() {
         load()
+    }
+
+    var values: AnalysisSettingsValues {
+        AnalysisSettingsValues(
+            minimumDurationSeconds: minimumDurationSeconds,
+            minimumTalkingPercentForKeep: minimumTalkingPercentForKeep,
+            minimumTalkingPercentForReview: minimumTalkingPercentForReview,
+            maximumStaticTalkingDurationForKeep: maximumStaticTalkingDurationForKeep,
+            minimumMotionPercentForBRollKeep: minimumMotionPercentForBRollKeep,
+            longStaticClipReviewThreshold: longStaticClipReviewThreshold,
+            movingTalkingKeepThreshold: movingTalkingKeepThreshold
+        )
     }
 
     func save() {
