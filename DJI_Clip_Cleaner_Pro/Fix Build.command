@@ -54,6 +54,7 @@ copy_file "Models/AnalysisSettings.swift"
 copy_file "Services/SpeechAnalyzer.swift"
 copy_file "Services/MotionAnalyzer.swift"
 copy_file "Services/RecommendationEngine.swift"
+copy_file "Services/AnalysisReportExporter.swift"
 copy_file "DJI Clip Cleaner Pro.xcodeproj/project.pbxproj"
 
 open "$DESKTOP_APP/DJI Clip Cleaner Pro.xcodeproj"

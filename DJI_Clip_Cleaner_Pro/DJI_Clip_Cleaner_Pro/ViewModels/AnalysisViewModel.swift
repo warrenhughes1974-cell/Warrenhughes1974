@@ -69,6 +69,41 @@ final class AnalysisViewModel {
         statusMessage = "Analysis cancelled."
     }
 
+    var canExportReport: Bool {
+        !results.isEmpty
+    }
+
+    func exportReport() {
+        guard !results.isEmpty else {
+            errorMessage = "Run an analysis before exporting a report."
+            return
+        }
+
+        let panel = NSSavePanel()
+        panel.title = "Export Smart Analysis Report"
+        panel.message = "Save a CSV file you can open in Excel or Numbers."
+        panel.prompt = "Export"
+        panel.canCreateDirectories = true
+        panel.nameFieldStringValue = AnalysisReportExporter.defaultFilename()
+        panel.allowedContentTypes = [.commaSeparatedText]
+
+        if let selectedFolderURL {
+            panel.directoryURL = selectedFolderURL
+        }
+
+        guard panel.runModal() == .OK, let url = panel.url else {
+            return
+        }
+
+        do {
+            try AnalysisReportExporter.write(results: results, to: url)
+            statusMessage = "Exported \(results.count) clip(s) to \(url.lastPathComponent)"
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+        } catch {
+            errorMessage = "Could not export report: \(error.localizedDescription)"
+        }
+    }
+
     private func runAnalysis() async {
         guard !results.isEmpty else { return }
 
@@ -115,12 +150,26 @@ final class AnalysisViewModel {
                 statusMessage = "Analysis cancelled."
             } else {
                 statusMessage = "Analysis complete for \(results.count) clip(s)."
+                autoExportReportIfPossible()
             }
 
             isAnalyzing = false
         }
 
         await analysisTask?.value
+    }
+
+    private func autoExportReportIfPossible() {
+        guard let selectedFolderURL else { return }
+
+        let reportURL = selectedFolderURL.appendingPathComponent("Smart_Analysis_Report.csv")
+
+        do {
+            try AnalysisReportExporter.write(results: results, to: reportURL)
+            statusMessage = "Analysis complete. Report saved to Smart_Analysis_Report.csv"
+        } catch {
+            statusMessage = "Analysis complete for \(results.count) clip(s). Export failed: \(error.localizedDescription)"
+        }
     }
 }
 

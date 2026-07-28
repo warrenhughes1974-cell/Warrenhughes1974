@@ -55,6 +55,11 @@ struct AnalysisView: View {
             }
             .disabled(viewModel.selectedFolderURL == nil || viewModel.isScanning || viewModel.isAnalyzing)
 
+            Button("Export CSV") {
+                viewModel.exportReport()
+            }
+            .disabled(!viewModel.canExportReport || viewModel.isScanning)
+
             if viewModel.isAnalyzing {
                 Button("Cancel", role: .destructive) {
                     viewModel.cancelAnalysis()
