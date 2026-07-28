@@ -4,7 +4,8 @@
 **Status:** Closed  
 **Engine:** v58.44  
 **Closed:** 2026-07-28  
-**Accountability:** **IN_DATA** (`#121` spot-check + validator PASS)
+**Accountability:** **IN_DATA** (`#121` spot-check + validator PASS)  
+**Commit:** `f53feb9`
 
 ---
 
