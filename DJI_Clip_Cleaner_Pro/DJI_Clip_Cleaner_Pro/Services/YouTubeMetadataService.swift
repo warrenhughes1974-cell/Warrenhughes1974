@@ -7,7 +7,7 @@ enum YouTubeMetadataService {
         TitleSuggestionService.formatTitle(hook: hook, brand: brand)
     }
 
-    static func hookSuggestion(from videoURL: URL) -> String {
+    static func hookSuggestion(from videoURL: URL, fallbackSeries: String = "") -> String {
         let baseName = videoURL.deletingPathExtension().lastPathComponent
         let cleaned = baseName
             .replacingOccurrences(of: "_", with: " ")
@@ -15,9 +15,7 @@ enum YouTubeMetadataService {
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
         guard !cleaned.isEmpty else {
-            return BrandSettings.shared.values.seriesName.isEmpty
-                ? "New Video"
-                : "\(BrandSettings.shared.values.seriesName) Video"
+            return fallbackSeries.isEmpty ? "New Video" : "\(fallbackSeries) Video"
         }
 
         return cleaned

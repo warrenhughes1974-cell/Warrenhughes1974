@@ -61,7 +61,10 @@ final class YouTubePrepViewModel {
         errorMessage = nil
 
         if hook.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            hook = YouTubeMetadataService.hookSuggestion(from: url)
+            hook = YouTubeMetadataService.hookSuggestion(
+                from: url,
+                fallbackSeries: BrandSettings.shared.seriesName
+            )
         }
 
         statusMessage = "Ready to prep \(url.lastPathComponent) for YouTube."
