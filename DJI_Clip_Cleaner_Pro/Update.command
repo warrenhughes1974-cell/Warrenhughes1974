@@ -6,6 +6,8 @@ trap 'rm -rf "$TEMP_REPO"' EXIT
 
 REPO_URL="https://github.com/warrenhughes1974-cell/Warrenhughes1974.git"
 INSTALLER="$TEMP_REPO/DJI_Clip_Cleaner_Pro/install-on-mac.sh"
+PROJECT_DIR="$HOME/Desktop/DJI Clip Cleaner Pro"
+BUILD_SCRIPT="$PROJECT_DIR/Install App on Desktop.command"
 
 echo "=== DJI Clip Cleaner Pro — Update ==="
 echo "Downloading latest version (only the DJI app, not the whole repo)..."
@@ -15,6 +17,11 @@ cd "$TEMP_REPO"
 git sparse-checkout set DJI_Clip_Cleaner_Pro
 
 chmod +x "$INSTALLER"
-"$INSTALLER"
+SKIP_OPEN_XCODE=1 "$INSTALLER"
 
-osascript -e 'display notification "Update complete. Press ⌘R in Xcode." with title "DJI Clip Cleaner Pro"'
+echo ""
+echo "Building and installing the Desktop app..."
+chmod +x "$BUILD_SCRIPT"
+"$BUILD_SCRIPT"
+
+osascript -e 'display notification "DJI Clip Cleaner Pro updated on your Desktop." with title "DJI Clip Cleaner Pro"'

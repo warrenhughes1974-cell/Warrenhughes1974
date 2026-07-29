@@ -32,11 +32,15 @@ else
 fi
 
 echo ""
-echo "Opening in Xcode..."
-open "$XCODEPROJ"
+if [[ "${SKIP_OPEN_XCODE:-}" == "1" ]]; then
+  echo "Source files updated."
+else
+  echo "Opening in Xcode..."
+  open "$XCODEPROJ"
+  echo ""
+  echo "Done. Press Cmd+R in Xcode to run."
+fi
 
-echo ""
-echo "Done. Press Cmd+R in Xcode to run."
 echo ""
 echo "To update later, double-click:"
 echo "  Desktop/DJI Clip Cleaner Pro/Update.command"
