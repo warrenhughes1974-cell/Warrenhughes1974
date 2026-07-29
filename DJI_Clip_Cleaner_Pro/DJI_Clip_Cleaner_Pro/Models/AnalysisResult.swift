@@ -25,6 +25,7 @@ struct AnalysisResult: Identifiable {
     var motionSummary: String
     var recommendation: ClipRecommendation
     var notes: String
+    var suggestedHook: String
     var suggestedTitle: String
     var thumbnailPath: String
 
@@ -37,6 +38,7 @@ struct AnalysisResult: Identifiable {
         self.motionSummary = "Pending"
         self.recommendation = .pending
         self.notes = ""
+        self.suggestedHook = ""
         self.suggestedTitle = ""
         self.thumbnailPath = ""
     }

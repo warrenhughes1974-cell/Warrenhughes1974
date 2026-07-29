@@ -79,6 +79,17 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
                 }
 
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Default Hook")
+                        .fontWeight(.semibold)
+                    TextField("Creepy Aisle Find", text: $brand.defaultHook)
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit { brand.save() }
+                    Text("Optional preview hook for Settings. Each clip gets its own editable Hook in Smart Analysis.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Title Format")
                         .fontWeight(.semibold)
@@ -118,6 +129,7 @@ struct SettingsView: View {
             }
             .padding(4)
             .onChange(of: brand.channelPrefix) { _, _ in brand.save() }
+            .onChange(of: brand.defaultHook) { _, _ in brand.save() }
             .onChange(of: brand.seriesName) { _, newValue in
                 if brand.selectedPreset == .custom, !newValue.isEmpty {
                     brand.save()

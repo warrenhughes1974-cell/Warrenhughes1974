@@ -21,7 +21,8 @@ enum AppManual {
         "Open Hughes Clip Prep and go to Smart Analysis.",
         "Click Scan Folder and choose that folder.",
         "Wait for analysis to finish. Review KEEP, REVIEW, and DISCARD.",
-        "Check the pink Title column for each clip. Click any title to edit it before generating thumbnails.",
+        "Check the pink Hook column for each clip. Click to type your own hook before generating thumbnails.",
+        "Full Title updates automatically from Channel · Series · Hook.",
         "Open Settings and pick a Series Preset (Halloween Hunt, Store Walk, Product Review) for consistent naming.",
         "Set your Channel Prefix and Title Format once — every clip follows the same pattern.",
         "Use Refresh Titles after changing brand settings to update every clip at once.",
@@ -94,6 +95,13 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.11",
+            highlights: [
+                "Editable Hook column in Smart Analysis — type just the hook, full title builds automatically.",
+                "Default Hook field in Settings for thumbnail preview."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.10",
             highlights: [

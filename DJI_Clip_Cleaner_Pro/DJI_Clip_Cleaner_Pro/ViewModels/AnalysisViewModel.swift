@@ -68,12 +68,25 @@ final class AnalysisViewModel {
         }
     }
 
-    func updateSuggestedTitle(for id: UUID, title: String) {
+    func updateSuggestedHook(for id: UUID, hook: String) {
         guard let index = results.firstIndex(where: { $0.id == id }) else {
             return
         }
 
-        results[index].suggestedTitle = title
+        applyHook(hook, to: index)
+    }
+
+    private func applyHook(_ hook: String, to index: Int) {
+        let brand = BrandSettings.shared.values
+        let folderName = selectedFolderURL?.lastPathComponent
+        let trimmedHook = hook.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        results[index].suggestedHook = trimmedHook
+        results[index].suggestedTitle = TitleSuggestionService.formatTitle(
+            hook: trimmedHook,
+            brand: brand,
+            folderName: folderName
+        )
     }
 
     func refreshSuggestedTitles() {
@@ -90,7 +103,7 @@ final class AnalysisViewModel {
                 continue
             }
 
-            results[index].suggestedTitle = TitleSuggestionService.suggest(
+            let hook = TitleSuggestionService.suggestHook(
                 video: results[index].video,
                 speechSummary: results[index].speechSummary,
                 motionSummary: results[index].motionSummary,
@@ -99,9 +112,11 @@ final class AnalysisViewModel {
                 brand: brand,
                 folderName: folderName
             )
+
+            applyHook(hook, to: index)
         }
 
-        statusMessage = "Refreshed titles using your current brand settings."
+        statusMessage = "Refreshed hooks and titles using your current brand settings."
         errorMessage = nil
     }
 
@@ -373,8 +388,17 @@ final class AnalysisViewModel {
                     "\(baseName)_thumb.jpg"
                 )
 
-                let title = result.suggestedTitle.isEmpty
-                    ? TitleSuggestionService.suggest(
+                let title: String
+                if !result.suggestedHook.isEmpty {
+                    title = TitleSuggestionService.formatTitle(
+                        hook: result.suggestedHook,
+                        brand: brand,
+                        folderName: selectedFolderURL.lastPathComponent
+                    )
+                } else if !result.suggestedTitle.isEmpty {
+                    title = result.suggestedTitle
+                } else {
+                    title = TitleSuggestionService.suggest(
                         video: result.video,
                         speechSummary: result.speechSummary,
                         motionSummary: result.motionSummary,
@@ -383,7 +407,7 @@ final class AnalysisViewModel {
                         brand: brand,
                         folderName: selectedFolderURL.lastPathComponent
                     )
-                    : result.suggestedTitle
+                }
 
                 do {
                     try await ThumbnailService.generate(
@@ -458,7 +482,8 @@ final class AnalysisViewModel {
                 )
                 results[index].recommendation = recommendation.0
                 results[index].notes = recommendation.1
-                results[index].suggestedTitle = TitleSuggestionService.suggest(
+
+                let hook = TitleSuggestionService.suggestHook(
                     video: results[index].video,
                     speechSummary: speechResult.summary,
                     motionSummary: motionResult.summary,
@@ -467,6 +492,7 @@ final class AnalysisViewModel {
                     brand: BrandSettings.shared.values,
                     folderName: selectedFolderURL?.lastPathComponent
                 )
+                applyHook(hook, to: index)
             }
 
             if Task.isCancelled {

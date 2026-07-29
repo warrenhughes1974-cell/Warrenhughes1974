@@ -4,13 +4,14 @@ import UniformTypeIdentifiers
 enum AnalysisReportExporter {
     static func makeCSV(from results: [AnalysisResult]) -> String {
         var lines = [
-            "RecordedAt,Clip,SuggestedTitle,Duration,DurationSeconds,FileSize,Speech,Motion,Recommendation,Reason,ThumbnailPath,FilePath"
+            "RecordedAt,Clip,SuggestedHook,SuggestedTitle,Duration,DurationSeconds,FileSize,Speech,Motion,Recommendation,Reason,ThumbnailPath,FilePath"
         ]
 
         for result in results {
             let row = [
                 result.video.formattedRecordedAt,
                 result.video.name,
+                result.suggestedHook,
                 result.suggestedTitle,
                 result.video.formattedDuration,
                 String(format: "%.2f", result.video.duration),

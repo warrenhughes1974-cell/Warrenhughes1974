@@ -4,6 +4,7 @@ import Observation
 struct BrandSettingsValues: Sendable {
     let channelPrefix: String
     let seriesName: String
+    let defaultHook: String
     let titleFormat: BrandTitleFormat
     let usePinkTitles: Bool
     let titlePinkRed: Double
@@ -20,6 +21,7 @@ final class BrandSettings {
 
     var channelPrefix = "Hughes"
     var seriesName = ""
+    var defaultHook = ""
     var selectedPreset: BrandPreset = .custom
     var titleFormat: BrandTitleFormat = .full
     var usePinkTitles = true
@@ -35,6 +37,7 @@ final class BrandSettings {
         BrandSettingsValues(
             channelPrefix: channelPrefix.trimmingCharacters(in: .whitespacesAndNewlines),
             seriesName: seriesName.trimmingCharacters(in: .whitespacesAndNewlines),
+            defaultHook: defaultHook.trimmingCharacters(in: .whitespacesAndNewlines),
             titleFormat: titleFormat,
             usePinkTitles: usePinkTitles,
             titlePinkRed: titlePinkRed,
@@ -52,8 +55,11 @@ final class BrandSettings {
     }
 
     var sampleTitle: String {
-        TitleSuggestionService.formatTitle(
-            hook: activePreset.sampleHook,
+        let hook = defaultHook.trimmingCharacters(in: .whitespacesAndNewlines)
+        let previewHook = hook.isEmpty ? activePreset.sampleHook : hook
+
+        return TitleSuggestionService.formatTitle(
+            hook: previewHook,
             brand: values
         )
     }
@@ -80,6 +86,7 @@ final class BrandSettings {
         let payload: [String: Any] = [
             "channelPrefix": channelPrefix,
             "seriesName": seriesName,
+            "defaultHook": defaultHook,
             "selectedPreset": selectedPreset.rawValue,
             "titleFormat": titleFormat.rawValue,
             "usePinkTitles": usePinkTitles,
@@ -98,6 +105,7 @@ final class BrandSettings {
 
         channelPrefix = payload["channelPrefix"] as? String ?? channelPrefix
         seriesName = payload["seriesName"] as? String ?? seriesName
+        defaultHook = payload["defaultHook"] as? String ?? defaultHook
 
         if let presetRaw = payload["selectedPreset"] as? String,
            let preset = BrandPreset(rawValue: presetRaw) {

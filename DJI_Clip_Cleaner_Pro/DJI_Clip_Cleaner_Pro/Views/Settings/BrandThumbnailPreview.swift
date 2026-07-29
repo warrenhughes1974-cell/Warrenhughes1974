@@ -111,23 +111,23 @@ struct BrandThumbnailPreview: View {
     }
 }
 
-struct EditableTitleCell: View {
+struct EditableHookCell: View {
     let resultID: UUID
     @Bindable var viewModel: AnalysisViewModel
 
-    private var titleBinding: Binding<String> {
+    private var hookBinding: Binding<String> {
         Binding(
             get: {
-                viewModel.results.first(where: { $0.id == resultID })?.suggestedTitle ?? ""
+                viewModel.results.first(where: { $0.id == resultID })?.suggestedHook ?? ""
             },
             set: { newValue in
-                viewModel.updateSuggestedTitle(for: resultID, title: newValue)
+                viewModel.updateSuggestedHook(for: resultID, hook: newValue)
             }
         )
     }
 
     var body: some View {
-        TextField("Suggested title", text: titleBinding)
+        TextField("Type hook", text: hookBinding)
             .textFieldStyle(.plain)
             .font(.caption)
             .foregroundStyle(AppTheme.brandPink)

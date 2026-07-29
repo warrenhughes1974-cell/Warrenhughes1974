@@ -217,17 +217,23 @@ struct AnalysisView: View {
                             status: result.motionStatus
                         )
                     }
-                    TableColumn("Title") { result in
+                    TableColumn("Hook") { result in
                         if result.recommendation == .pending {
                             Text("—")
                                 .foregroundStyle(.secondary)
                                 .font(.caption)
                         } else {
-                            EditableTitleCell(
+                            EditableHookCell(
                                 resultID: result.id,
                                 viewModel: viewModel
                             )
                         }
+                    }
+                    TableColumn("Full Title") { result in
+                        Text(result.suggestedTitle.isEmpty ? "—" : result.suggestedTitle)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                            .font(.caption)
                     }
                     TableColumn("Recommendation") { result in
                         recommendationText(result.recommendation)

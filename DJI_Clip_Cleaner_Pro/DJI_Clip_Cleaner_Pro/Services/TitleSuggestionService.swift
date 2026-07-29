@@ -12,7 +12,29 @@ enum TitleSuggestionService {
         brand: BrandSettingsValues,
         folderName: String?
     ) -> String {
-        let hook = contentHook(
+        let hook = suggestHook(
+            video: video,
+            speechSummary: speechSummary,
+            motionSummary: motionSummary,
+            recommendation: recommendation,
+            notes: notes,
+            brand: brand,
+            folderName: folderName
+        )
+
+        return formatTitle(hook: hook, brand: brand, folderName: folderName)
+    }
+
+    static func suggestHook(
+        video: VideoFile,
+        speechSummary: String,
+        motionSummary: String,
+        recommendation: ClipRecommendation,
+        notes: String,
+        brand: BrandSettingsValues,
+        folderName: String?
+    ) -> String {
+        contentHook(
             speechSummary: speechSummary,
             motionSummary: motionSummary,
             recommendation: recommendation,
@@ -20,8 +42,6 @@ enum TitleSuggestionService {
             video: video,
             seriesName: resolvedSeriesName(brand: brand, folderName: folderName)
         )
-
-        return formatTitle(hook: hook, brand: brand, folderName: folderName)
     }
 
     static func formatTitle(
