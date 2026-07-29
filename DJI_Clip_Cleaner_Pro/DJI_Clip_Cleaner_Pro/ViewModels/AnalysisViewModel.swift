@@ -131,7 +131,9 @@ final class AnalysisViewModel {
     }
 
     func cancelAnalysis() {
+        scanTask?.cancel()
         analysisTask?.cancel()
+        isScanning = false
         isAnalyzing = false
         statusMessage = "Analysis cancelled."
     }
