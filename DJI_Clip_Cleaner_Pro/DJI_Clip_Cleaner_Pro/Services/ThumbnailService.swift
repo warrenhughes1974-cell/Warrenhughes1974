@@ -195,21 +195,39 @@ enum ThumbnailService {
         fillColor: NSColor,
         paragraph: NSParagraphStyle
     ) {
-        let outlineWidth = max(font.pointSize * 0.14, 4.0)
+        let drawOptions: NSString.DrawingOptions = [
+            .usesLineFragmentOrigin,
+            .usesFontLeading
+        ]
 
-        let attributes: [NSAttributedString.Key: Any] = [
+        let whiteOutlineWidth = max(font.pointSize * 0.24, 7.0)
+        let blackOutlineWidth = max(font.pointSize * 0.14, 4.0)
+
+        let whiteOutlineAttributes: [NSAttributedString.Key: Any] = [
             .font: font,
-            .foregroundColor: fillColor,
-            .strokeColor: NSColor.black,
-            .strokeWidth: -outlineWidth,
+            .foregroundColor: NSColor.clear,
+            .strokeColor: NSColor.white,
+            .strokeWidth: whiteOutlineWidth,
             .paragraphStyle: paragraph
         ]
 
-        title.draw(
-            with: rect,
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: attributes
-        )
+        let blackOutlineAttributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: NSColor.clear,
+            .strokeColor: NSColor.black,
+            .strokeWidth: blackOutlineWidth,
+            .paragraphStyle: paragraph
+        ]
+
+        let fillAttributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: fillColor,
+            .paragraphStyle: paragraph
+        ]
+
+        title.draw(with: rect, options: drawOptions, attributes: whiteOutlineAttributes)
+        title.draw(with: rect, options: drawOptions, attributes: blackOutlineAttributes)
+        title.draw(with: rect, options: drawOptions, attributes: fillAttributes)
     }
 
     private static func aspectFillRect(

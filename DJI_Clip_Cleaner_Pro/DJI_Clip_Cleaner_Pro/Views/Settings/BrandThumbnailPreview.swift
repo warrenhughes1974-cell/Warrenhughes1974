@@ -59,44 +59,55 @@ struct BrandThumbnailPreview: View {
         let font = Font.headline.bold()
 
         ZStack {
-            Text(title)
-                .font(font)
-                .foregroundStyle(.black)
-                .offset(x: -2, y: 0)
-            Text(title)
-                .font(font)
-                .foregroundStyle(.black)
-                .offset(x: 2, y: 0)
-            Text(title)
-                .font(font)
-                .foregroundStyle(.black)
-                .offset(x: 0, y: -2)
-            Text(title)
-                .font(font)
-                .foregroundStyle(.black)
-                .offset(x: 0, y: 2)
-            Text(title)
-                .font(font)
-                .foregroundStyle(.black)
-                .offset(x: -1.5, y: -1.5)
-            Text(title)
-                .font(font)
-                .foregroundStyle(.black)
-                .offset(x: 1.5, y: -1.5)
-            Text(title)
-                .font(font)
-                .foregroundStyle(.black)
-                .offset(x: -1.5, y: 1.5)
-            Text(title)
-                .font(font)
-                .foregroundStyle(.black)
-                .offset(x: 1.5, y: 1.5)
+            outlineLayer(title, font: font, color: .white, offset: 3.5)
+            outlineLayer(title, font: font, color: .black, offset: 2.0)
 
             Text(title)
                 .font(font)
                 .foregroundStyle(titleColor)
         }
         .multilineTextAlignment(.leading)
+    }
+
+    @ViewBuilder
+    private func outlineLayer(
+        _ title: String,
+        font: Font,
+        color: Color,
+        offset: CGFloat
+    ) -> some View {
+        Text(title)
+            .font(font)
+            .foregroundStyle(color)
+            .offset(x: -offset, y: 0)
+        Text(title)
+            .font(font)
+            .foregroundStyle(color)
+            .offset(x: offset, y: 0)
+        Text(title)
+            .font(font)
+            .foregroundStyle(color)
+            .offset(x: 0, y: -offset)
+        Text(title)
+            .font(font)
+            .foregroundStyle(color)
+            .offset(x: 0, y: offset)
+        Text(title)
+            .font(font)
+            .foregroundStyle(color)
+            .offset(x: -offset * 0.75, y: -offset * 0.75)
+        Text(title)
+            .font(font)
+            .foregroundStyle(color)
+            .offset(x: offset * 0.75, y: -offset * 0.75)
+        Text(title)
+            .font(font)
+            .foregroundStyle(color)
+            .offset(x: -offset * 0.75, y: offset * 0.75)
+        Text(title)
+            .font(font)
+            .foregroundStyle(color)
+            .offset(x: offset * 0.75, y: offset * 0.75)
     }
 }
 
