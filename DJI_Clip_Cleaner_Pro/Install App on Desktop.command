@@ -6,7 +6,7 @@ XCODEPROJ="$PROJECT_DIR/DJI Clip Cleaner Pro.xcodeproj"
 SCHEME="DJI Clip Cleaner Pro"
 BUILD_DIR="$HOME/Library/Application Support/DJIClipCleanerPro/build"
 DESKTOP_APP="$HOME/Desktop/DJI Clip Cleaner Pro.app"
-APP_VERSION="1.2"
+APP_VERSION="1.3"
 
 echo "=== Building DJI Clip Cleaner Pro v${APP_VERSION} ==="
 echo "This may take a minute..."
@@ -48,6 +48,6 @@ echo ""
 
 open "$DESKTOP_APP"
 
-osascript -e "display dialog \"Version ${APP_VERSION} is now on your Desktop.\n\nOn Smart Analysis, look for the big blue Scan Folder button and the v${APP_VERSION} badge.\" buttons {\"OK\"} with title \"DJI Clip Cleaner Pro\""
+osascript -e "display dialog \"Version ${APP_VERSION} is now on your Desktop.\n\nClip Cleaner now has a Start & End Only trim mode for aggressive edge cuts without chopping middle pauses.\" buttons {\"OK\"} with title \"DJI Clip Cleaner Pro\""
 
 osascript -e "display notification \"Version ${APP_VERSION} installed on Desktop.\" with title \"DJI Clip Cleaner Pro\""

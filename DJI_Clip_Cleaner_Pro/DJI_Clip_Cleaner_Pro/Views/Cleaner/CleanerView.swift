@@ -8,10 +8,20 @@ struct CleanerView: View {
     private var savedPreset =
         CleaningPreset.balanced.rawValue
 
+    @AppStorage("cleaningTrimMode")
+    private var savedTrimMode =
+        CleaningTrimMode.edgesOnly.rawValue
+
     private var selectedPreset: CleaningPreset {
         CleaningPreset(
             rawValue: savedPreset
         ) ?? .balanced
+    }
+
+    private var selectedTrimMode: CleaningTrimMode {
+        CleaningTrimMode(
+            rawValue: savedTrimMode
+        ) ?? .edgesOnly
     }
 
     var body: some View {
@@ -311,6 +321,30 @@ struct CleanerView: View {
                 spacing: 14
             ) {
                 Picker(
+                    "Trim Mode",
+                    selection: $savedTrimMode
+                ) {
+                    ForEach(
+                        CleaningTrimMode.allCases
+                    ) { mode in
+                        Text(mode.rawValue)
+                            .tag(mode.rawValue)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .disabled(
+                    viewModel.isProcessing
+                )
+
+                Text(
+                    selectedTrimMode.explanation
+                )
+                .foregroundStyle(
+                    .secondary
+                )
+                .font(.callout)
+
+                Picker(
                     "Cutting Style",
                     selection: $savedPreset
                 ) {
@@ -342,7 +376,7 @@ struct CleanerView: View {
                     Text(
                         String(
                             format:
-                                "%.2f-second margin",
+                                "%.2f-second edge margin",
                             selectedPreset
                                 .marginSeconds
                         )
@@ -404,7 +438,9 @@ struct CleanerView: View {
                             viewModel
                                 .startProcessing(
                                     using:
-                                        selectedPreset
+                                        selectedPreset,
+                                    trimMode:
+                                        selectedTrimMode
                                 )
                         } label: {
                             Label(

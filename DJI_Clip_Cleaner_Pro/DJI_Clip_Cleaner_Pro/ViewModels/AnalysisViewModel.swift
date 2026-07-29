@@ -185,6 +185,7 @@ final class AnalysisViewModel {
     func runPipeline(
         cleanerViewModel: CleanerViewModel,
         preset: CleaningPreset,
+        trimMode: CleaningTrimMode,
         switchToCleanerTab: () -> Void
     ) {
         guard canRunPipeline, let selectedFolderURL else {
@@ -221,7 +222,10 @@ final class AnalysisViewModel {
             )
 
             switchToCleanerTab()
-            cleanerViewModel.startProcessing(using: preset)
+            cleanerViewModel.startProcessing(
+                using: preset,
+                trimMode: trimMode
+            )
 
             statusMessage = summary
         } catch {

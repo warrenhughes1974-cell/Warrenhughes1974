@@ -33,6 +33,8 @@ final class CleanerViewModel: ObservableObject {
 
     private var activeProcess: Process?
     private var processingQueue: [VideoFile] = []
+    private var activePreset: CleaningPreset = .balanced
+    private var activeTrimMode: CleaningTrimMode = .edgesOnly
     private var processingStartedAt: Date?
     private var elapsedTimer: Timer?
     private var cancellationRequested = false
@@ -252,7 +254,8 @@ final class CleanerViewModel: ObservableObject {
     }
 
     func startProcessing(
-        using preset: CleaningPreset
+        using preset: CleaningPreset,
+        trimMode: CleaningTrimMode
     ) {
         guard !isProcessing else {
             return
@@ -319,6 +322,8 @@ final class CleanerViewModel: ObservableObject {
         isProcessing = true
         cancellationRequested = false
         processingQueue = videos
+        activePreset = preset
+        activeTrimMode = trimMode
         processingStartedAt = Date()
 
         startElapsedTimer()
@@ -338,8 +343,11 @@ final class CleanerViewModel: ObservableObject {
             "Preset: \(preset.rawValue)"
         )
         appendLog(
+            "Trim mode: \(trimMode.rawValue)"
+        )
+        appendLog(
             String(
-                format: "Audio margin: %.2f seconds",
+                format: "Edge margin: %.2f seconds",
                 preset.marginSeconds
             )
         )
@@ -359,15 +367,13 @@ final class CleanerViewModel: ObservableObject {
 
         processNextVideo(
             autoEditorPath: autoEditorPath,
-            outputFolder: outputFolder,
-            preset: preset
+            outputFolder: outputFolder
         )
     }
 
     private func processNextVideo(
         autoEditorPath: String,
-        outputFolder: URL,
-        preset: CleaningPreset
+        outputFolder: URL
     ) {
         guard isProcessing else {
             return
@@ -427,8 +433,7 @@ final class CleanerViewModel: ObservableObject {
 
             processNextVideo(
                 autoEditorPath: autoEditorPath,
-                outputFolder: outputFolder,
-                preset: preset
+                outputFolder: outputFolder
             )
 
             return
@@ -438,21 +443,104 @@ final class CleanerViewModel: ObservableObject {
             "[START] \(video.name) (\(video.formattedDuration))"
         )
 
+        Task {
+            let arguments = await buildAutoEditorArguments(
+                for: video,
+                outputURL: outputURL
+            )
+
+            await MainActor.run {
+                self.runAutoEditor(
+                    video: video,
+                    arguments: arguments,
+                    outputURL: outputURL,
+                    autoEditorPath: autoEditorPath,
+                    outputFolder: outputFolder
+                )
+            }
+        }
+    }
+
+    private func buildAutoEditorArguments(
+        for video: VideoFile,
+        outputURL: URL
+    ) async -> [String] {
+        let margin = String(
+            format: "%.2fsec",
+            activePreset.marginSeconds
+        )
+
+        switch activeTrimMode {
+        case .fullClip:
+            return [
+                video.url.path,
+                "--margin",
+                margin,
+                "--output",
+                outputURL.path
+            ]
+
+        case .edgesOnly:
+            if let boundaries = await SpeechAnalyzer.detectSpeechBoundaries(
+                videoURL: video.url
+            ) {
+                let protectedRange = String(
+                    format: "nil,%.2fsec,%.2fsec",
+                    boundaries.firstSpeechTime,
+                    boundaries.lastSpeechTime
+                )
+
+                appendLog(
+                    String(
+                        format: "[EDGES] Protecting speech from %.1fs to %.1fs",
+                        boundaries.firstSpeechTime,
+                        boundaries.lastSpeechTime
+                    )
+                )
+
+                return [
+                    video.url.path,
+                    "--when-inactive",
+                    "cut",
+                    "--margin",
+                    margin,
+                    "--set-action",
+                    protectedRange,
+                    "--output",
+                    outputURL.path
+                ]
+            }
+
+            appendLog(
+                "[WARN] \(video.name) — no speech detected for edge trim; using full-clip mode."
+            )
+
+            return [
+                video.url.path,
+                "--margin",
+                margin,
+                "--output",
+                outputURL.path
+            ]
+        }
+    }
+
+    private func runAutoEditor(
+        video: VideoFile,
+        arguments: [String],
+        outputURL: URL,
+        autoEditorPath: String,
+        outputFolder: URL
+    ) {
+        guard isProcessing else {
+            return
+        }
+
         let process = Process()
 
         process.executableURL =
             URL(fileURLWithPath: autoEditorPath)
-
-        process.arguments = [
-            video.url.path,
-            "--margin",
-            String(
-                format: "%.2fsec",
-                preset.marginSeconds
-            ),
-            "--output",
-            outputURL.path
-        ]
+        process.arguments = arguments
 
         let temporaryLogURL =
             FileManager.default.temporaryDirectory
@@ -480,8 +568,7 @@ final class CleanerViewModel: ObservableObject {
 
             processNextVideo(
                 autoEditorPath: autoEditorPath,
-                outputFolder: outputFolder,
-                preset: preset
+                outputFolder: outputFolder
             )
 
             return
@@ -570,8 +657,7 @@ final class CleanerViewModel: ObservableObject {
 
                 self.processNextVideo(
                     autoEditorPath: autoEditorPath,
-                    outputFolder: outputFolder,
-                    preset: preset
+                    outputFolder: outputFolder
                 )
             }
         }
@@ -596,8 +682,7 @@ final class CleanerViewModel: ObservableObject {
 
             processNextVideo(
                 autoEditorPath: autoEditorPath,
-                outputFolder: outputFolder,
-                preset: preset
+                outputFolder: outputFolder
             )
         }
     }

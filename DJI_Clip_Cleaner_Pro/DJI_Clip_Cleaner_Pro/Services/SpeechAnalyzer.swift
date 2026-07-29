@@ -7,6 +7,11 @@ struct SpeechAnalysis: Sendable {
     let summary: String
 }
 
+struct SpeechBoundaries: Sendable {
+    let firstSpeechTime: TimeInterval
+    let lastSpeechTime: TimeInterval
+}
+
 enum SpeechAnalyzer {
   private static let sampleWindowSeconds = 0.5
   private static let minimumRMS: Float = 0.012
@@ -118,6 +123,96 @@ enum SpeechAnalyzer {
       talkingPercent: rounded,
       hasSpeech: true,
       summary: "Talking \(Int(rounded))%"
+    )
+  }
+
+  /// Finds the first and last moments of detected speech so edge-only trimming
+  /// can protect natural pauses in the middle of a clip.
+  static func detectSpeechBoundaries(
+    videoURL: URL
+  ) async -> SpeechBoundaries? {
+    let asset = AVURLAsset(url: videoURL)
+
+    guard let audioTrack = try? await asset.loadTracks(withMediaType: .audio).first else {
+      return nil
+    }
+
+    guard let reader = try? AVAssetReader(asset: asset) else {
+      return nil
+    }
+
+    let outputSettings: [String: Any] = [
+      AVFormatIDKey: kAudioFormatLinearPCM,
+      AVLinearPCMIsBigEndianKey: false,
+      AVLinearPCMIsFloatKey: false,
+      AVLinearPCMBitDepthKey: 16,
+      AVNumberOfChannelsKey: 1,
+      AVSampleRateKey: 16_000
+    ]
+
+    let output = AVAssetReaderTrackOutput(
+      track: audioTrack,
+      outputSettings: outputSettings
+    )
+    output.alwaysCopiesSampleData = false
+
+    guard reader.canAdd(output), reader.startReading() else {
+      return nil
+    }
+
+    var sampleBuffer = Data()
+    let bytesPerWindow = Int(16_000 * sampleWindowSeconds) * 2
+    var windowIndex = 0
+    var firstSpeechTime: TimeInterval?
+    var lastSpeechTime: TimeInterval?
+
+    while reader.status == .reading {
+      guard let sample = output.copyNextSampleBuffer(),
+            let block = CMSampleBufferGetDataBuffer(sample) else {
+        continue
+      }
+
+      let length = CMBlockBufferGetDataLength(block)
+      var chunk = Data(count: length)
+      chunk.withUnsafeMutableBytes { pointer in
+        guard let base = pointer.baseAddress else { return }
+        CMBlockBufferCopyDataBytes(
+          block,
+          atOffset: 0,
+          dataLength: length,
+          destination: base
+        )
+      }
+
+      sampleBuffer.append(chunk)
+
+      while sampleBuffer.count >= bytesPerWindow {
+        let window = sampleBuffer.prefix(bytesPerWindow)
+        sampleBuffer.removeFirst(bytesPerWindow)
+
+        let windowStart = TimeInterval(windowIndex) * sampleWindowSeconds
+        let windowEnd = windowStart + sampleWindowSeconds
+
+        if rootMeanSquare(window) >= minimumRMS {
+          if firstSpeechTime == nil {
+            firstSpeechTime = windowStart
+          }
+          lastSpeechTime = windowEnd
+        }
+
+        windowIndex += 1
+      }
+    }
+
+    guard let firstSpeechTime,
+          let lastSpeechTime,
+          lastSpeechTime > firstSpeechTime else {
+      return nil
+    }
+
+    return SpeechBoundaries(
+      firstSpeechTime: firstSpeechTime,
+      lastSpeechTime: lastSpeechTime
     )
   }
 

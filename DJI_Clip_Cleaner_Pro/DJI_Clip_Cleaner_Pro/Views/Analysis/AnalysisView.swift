@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AnalysisView: View {
-    static let buildVersion = "1.2"
+    static let buildVersion = "1.3"
 
     @ObservedObject var cleanerViewModel: CleanerViewModel
     @Binding var selectedTab: Int
@@ -13,8 +13,15 @@ struct AnalysisView: View {
     @AppStorage("cleaningPreset")
     private var savedPreset = CleaningPreset.balanced.rawValue
 
+    @AppStorage("cleaningTrimMode")
+    private var savedTrimMode = CleaningTrimMode.edgesOnly.rawValue
+
     private var selectedPreset: CleaningPreset {
         CleaningPreset(rawValue: savedPreset) ?? .balanced
+    }
+
+    private var selectedTrimMode: CleaningTrimMode {
+        CleaningTrimMode(rawValue: savedTrimMode) ?? .edgesOnly
     }
 
     var body: some View {
@@ -43,7 +50,8 @@ struct AnalysisView: View {
             Button("Run Pipeline") {
                 viewModel.runPipeline(
                     cleanerViewModel: cleanerViewModel,
-                    preset: selectedPreset
+                    preset: selectedPreset,
+                    trimMode: selectedTrimMode
                 ) {
                     selectedTab = 0
                 }

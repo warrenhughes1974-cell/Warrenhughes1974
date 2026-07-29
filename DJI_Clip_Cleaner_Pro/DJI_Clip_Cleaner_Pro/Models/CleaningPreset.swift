@@ -1,5 +1,23 @@
 import Foundation
 
+enum CleaningTrimMode: String, CaseIterable, Identifiable {
+    case fullClip = "Full Clip"
+    case edgesOnly = "Start & End Only"
+
+    var id: String {
+        rawValue
+    }
+
+    var explanation: String {
+        switch self {
+        case .fullClip:
+            return "Trims silence throughout the entire clip, including pauses between sentences."
+        case .edgesOnly:
+            return "Trims dead air before you start talking and after you stop. Keeps natural pauses in the middle."
+        }
+    }
+}
+
 enum CleaningPreset: String, CaseIterable, Identifiable {
     case conservative = "Conservative"
     case balanced = "Balanced"
@@ -23,11 +41,11 @@ enum CleaningPreset: String, CaseIterable, Identifiable {
     var explanation: String {
         switch self {
         case .conservative:
-            return "Keeps more breathing room before and after detected audio."
+            return "Keeps more breathing room at the start and end of each clip."
         case .balanced:
-            return "A natural middle ground for most spoken video."
+            return "A natural middle ground for trimming clip edges."
         case .aggressive:
-            return "Cuts closer to detected audio and removes more quiet time."
+            return "Cuts dead air tight at the start and end of each clip."
         }
     }
 }
