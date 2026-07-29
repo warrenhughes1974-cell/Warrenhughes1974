@@ -26,6 +26,10 @@
 		1A2B3C4D5E6F4788990ABCDEF /* AnalysisSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3C4D5E6F7A48990ABCDEF /* AnalysisSettings.swift */; };
 		3C4D5E6F7A8B4900ABCDEF01 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5E6F7A8B9C4911ABCDEF01 /* SettingsView.swift */; };
 		C224B6DD985949F1A589DBF9 /* DateFormatter+LogTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */; };
+		C3D4E5F6A7B8488990ABCD002 /* AppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F6A7B8C9488990ABCD002 /* AppIdentity.swift */; };
+		E5F6A7B8C9D0488990ABCD002 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7B8C9D0E1488990ABCD002 /* AppTheme.swift */; };
+		A7B8C9D0E1F2488990ABCD002 /* AppManual.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F2A3488990ABCD002 /* AppManual.swift */; };
+		C9D0E1F2A3B4488990ABCD002 /* ManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E1F2A3B4C5488990ABCD002 /* ManualView.swift */; };
 		76371AAF57FB412DAB274AF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AE23DC4F179498E9C87B3CF /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -49,8 +53,12 @@
 		2B3C4D5E6F7A48990ABCDEF /* AnalysisSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisSettings.swift; sourceTree = "<group>"; };
 		4D5E6F7A8B9C4911ABCDEF01 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+LogTimestamp.swift"; sourceTree = "<group>"; };
+		D4E5F6A7B8C9488990ABCD002 /* AppIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIdentity.swift; sourceTree = "<group>"; };
+		F6A7B8C9D0E1488990ABCD002 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		B8C9D0E1F2A3488990ABCD002 /* AppManual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManual.swift; sourceTree = "<group>"; };
+		D0E1F2A3B4C5488990ABCD002 /* ManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualView.swift; sourceTree = "<group>"; };
 		8AE23DC4F179498E9C87B3CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		5CF9B53D2BA04BE1AB4A6069 /* DJI Clip Cleaner Pro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DJI Clip Cleaner Pro.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CF9B53D2BA04BE1AB4A6069 /* Hughes Hot Lap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hughes Hot Lap.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,7 +97,7 @@
 		28A178133289418495268EDD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5CF9B53D2BA04BE1AB4A6069 /* DJI Clip Cleaner Pro.app */,
+				5CF9B53D2BA04BE1AB4A6069 /* Hughes Hot Lap.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,6 +109,7 @@
 				A5A0637BBF2445A483EB7062 /* Cleaner */,
 				F806D89CAD0C4C4BB78CFCAB /* Analysis */,
 				B1C2D3E4F5A6478990ABCDEE /* Settings */,
+				E1F2A3B4C5D6488990ABCD002 /* Manual */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -112,6 +121,7 @@
 				528AD59BEF9D4A2594FB47E6 /* CleaningPreset.swift */,
 				36A947A874724426809D6CBA /* AnalysisResult.swift */,
 				2B3C4D5E6F7A48990ABCDEF /* AnalysisSettings.swift */,
+				B8C9D0E1F2A3488990ABCD002 /* AppManual.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -143,6 +153,8 @@
 			isa = PBXGroup;
 			children = (
 				7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */,
+				D4E5F6A7B8C9488990ABCD002 /* AppIdentity.swift */,
+				F6A7B8C9D0E1488990ABCD002 /* AppTheme.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -163,6 +175,14 @@
 			path = Analysis;
 			sourceTree = "<group>";
 		};
+		E1F2A3B4C5D6488990ABCD002 /* Manual */ = {
+			isa = PBXGroup;
+			children = (
+				D0E1F2A3B4C5488990ABCD002 /* ManualView.swift */,
+			);
+			path = Manual;
+			sourceTree = "<group>";
+		};
 		B1C2D3E4F5A6478990ABCDEE /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -174,9 +194,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3CABC5AFCDD6435DA10334DD /* DJI Clip Cleaner Pro */ = {
+		3CABC5AFCDD6435DA10334DD /* Hughes Hot Lap */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2B0213A03F4A478ABEAE2F89 /* Build configuration list for PBXNativeTarget "DJI Clip Cleaner Pro" */;
+			buildConfigurationList = 2B0213A03F4A478ABEAE2F89 /* Build configuration list for PBXNativeTarget "Hughes Hot Lap" */;
 			buildPhases = (
 				140F9525FEE548EFA997346C /* Sources */,
 				681E0E6F98A94061B60C1E22 /* Frameworks */,
@@ -186,9 +206,9 @@
 			);
 			dependencies = (
 			);
-			name = "DJI Clip Cleaner Pro";
-			productName = "DJI Clip Cleaner Pro";
-			productReference = 5CF9B53D2BA04BE1AB4A6069 /* DJI Clip Cleaner Pro.app */;
+			name = "Hughes Hot Lap";
+			productName = "Hughes Hot Lap";
+			productReference = 5CF9B53D2BA04BE1AB4A6069 /* Hughes Hot Lap.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -206,7 +226,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CE8190E66814432587C725EA /* Build configuration list for PBXProject "DJI Clip Cleaner Pro" */;
+			buildConfigurationList = CE8190E66814432587C725EA /* Build configuration list for PBXProject "Hughes Hot Lap" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -219,7 +239,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3CABC5AFCDD6435DA10334DD /* DJI Clip Cleaner Pro */,
+				3CABC5AFCDD6435DA10334DD /* Hughes Hot Lap */,
 			);
 		};
 /* End PBXProject section */
@@ -259,6 +279,10 @@
 				1A2B3C4D5E6F4788990ABCDEF /* AnalysisSettings.swift in Sources */,
 				3C4D5E6F7A8B4900ABCDEF01 /* SettingsView.swift in Sources */,
 				C224B6DD985949F1A589DBF9 /* DateFormatter+LogTimestamp.swift in Sources */,
+				C3D4E5F6A7B8488990ABCD002 /* AppIdentity.swift in Sources */,
+				E5F6A7B8C9D0488990ABCD002 /* AppTheme.swift in Sources */,
+				A7B8C9D0E1F2488990ABCD002 /* AppManual.swift in Sources */,
+				C9D0E1F2A3B4488990ABCD002 /* ManualView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,19 +331,20 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hughes Hot Lap";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -337,19 +362,20 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hughes Hot Lap";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -362,7 +388,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE8190E66814432587C725EA /* Build configuration list for PBXProject "DJI Clip Cleaner Pro" */ = {
+		CE8190E66814432587C725EA /* Build configuration list for PBXProject "Hughes Hot Lap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FFBF37B025A14D93AAF00519 /* Debug */,
@@ -371,7 +397,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2B0213A03F4A478ABEAE2F89 /* Build configuration list for PBXNativeTarget "DJI Clip Cleaner Pro" */ = {
+		2B0213A03F4A478ABEAE2F89 /* Build configuration list for PBXNativeTarget "Hughes Hot Lap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52EA7B5763FC43A38F9B745D /* Debug */,

@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct AnalysisView: View {
-    static let buildVersion = "1.4"
-
     @ObservedObject var cleanerViewModel: CleanerViewModel
     @Binding var selectedTab: Int
 
@@ -51,7 +49,7 @@ struct AnalysisView: View {
             footer
         }
         .padding(20)
-        .navigationTitle("Smart Analysis")
+        .navigationTitle("Scouting")
         .sheet(isPresented: $showingSettings) {
             SettingsView()
                 .frame(minWidth: 520, minHeight: 640)
@@ -89,15 +87,16 @@ struct AnalysisView: View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 10) {
-                    Text("Smart Analysis")
+                    Text("Scouting")
                         .font(.largeTitle.bold())
+                        .foregroundStyle(AppTheme.carbon)
 
-                    Text("v\(Self.buildVersion)")
+                    Text("v\(AppIdentity.version)")
                         .font(.caption.bold())
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(Color.blue.opacity(0.15))
-                        .foregroundStyle(.blue)
+                        .background(AppTheme.softOrange)
+                        .foregroundStyle(AppTheme.papaya)
                         .clipShape(Capsule())
                 }
 
@@ -110,9 +109,10 @@ struct AnalysisView: View {
             Button {
                 showingSettings = true
             } label: {
-                Label("Settings", systemImage: "gearshape")
+                Label("Garage Setup", systemImage: "wrench.and.screwdriver.fill")
             }
             .buttonStyle(.bordered)
+            .tint(AppTheme.mclarenBlue)
         }
     }
 
@@ -124,6 +124,7 @@ struct AnalysisView: View {
                 Label("Scan Folder", systemImage: "arrow.clockwise.circle.fill")
             }
             .buttonStyle(.borderedProminent)
+            .tint(AppTheme.papaya)
             .controlSize(.large)
 
             Button("Change Folder…") {
@@ -220,7 +221,7 @@ struct AnalysisView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Spacer()
-            Text("\(viewModel.results.count) clip(s) · v\(Self.buildVersion)")
+            Text("\(viewModel.results.count) clip(s) · v\(AppIdentity.version)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

@@ -353,7 +353,7 @@ final class CleanerViewModel: ObservableObject {
         appendLog(
             "=================================================="
         )
-        appendLog("DJI Clip Cleaner Pro")
+        appendLog(AppIdentity.name)
         appendLog(
             "=================================================="
         )
@@ -933,7 +933,7 @@ final class CleanerViewModel: ObservableObject {
 
         let logURL =
             outputFolderURL.appendingPathComponent(
-                "DJI_Clip_Cleaner_Log.txt"
+                "Hughes_Hot_Lap_Log.txt"
             )
 
         do {

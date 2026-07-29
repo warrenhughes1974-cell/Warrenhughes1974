@@ -59,7 +59,7 @@ struct CleanerView: View {
             }
         }
         .alert(
-            "DJI Clip Cleaner Pro",
+            AppIdentity.name,
             isPresented:
                 $viewModel.showingError
         ) {
@@ -78,25 +78,24 @@ struct CleanerView: View {
         HStack(spacing: 16) {
             Image(
                 systemName:
-                    "wand.and.stars.inverse"
+                    "flag.checkered.2.crossed"
             )
             .font(.system(size: 34))
-            .symbolRenderingMode(
-                .hierarchical
-            )
+            .foregroundStyle(AppTheme.papaya)
 
             VStack(
                 alignment: .leading,
                 spacing: 3
             ) {
                 Text(
-                    "DJI Clip Cleaner Pro"
+                    AppIdentity.name
                 )
                 .font(.largeTitle)
                 .fontWeight(.bold)
+                .foregroundStyle(AppTheme.carbon)
 
                 Text(
-                    "Batch-clean video clips while preserving the originals."
+                    AppIdentity.tagline
                 )
                 .foregroundStyle(
                     .secondary
@@ -141,6 +140,7 @@ struct CleanerView: View {
         }
         .padding(.horizontal, 28)
         .padding(.vertical, 22)
+        .background(AppTheme.softBlue)
     }
 
     private var folderSection: some View {
@@ -537,6 +537,7 @@ struct CleanerView: View {
                         .buttonStyle(
                             .borderedProminent
                         )
+                        .tint(AppTheme.papaya)
                         .disabled(
                             viewModel
                                 .selectedFolderURL

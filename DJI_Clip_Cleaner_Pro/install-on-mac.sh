@@ -1,10 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-# Installs or updates DJI Clip Cleaner Pro on your Desktop.
+# Installs or updates Hughes Hot Lap on your Desktop.
 
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
-DEST="$HOME/Desktop/DJI Clip Cleaner Pro"
+DEST="$HOME/Desktop/Hughes Hot Lap"
+OLD_DEST="$HOME/Desktop/DJI Clip Cleaner Pro"
 
 echo "Installing to:"
 echo "  $DEST"
@@ -50,5 +51,13 @@ else
 fi
 
 echo ""
+echo "Desktop app after install:"
+echo "  ~/Desktop/Hughes Hot Lap.app"
+echo ""
 echo "To update later, double-click:"
-echo "  Desktop/DJI Clip Cleaner Pro/Update.command"
+echo "  Desktop/Hughes Hot Lap/Update.command"
+echo ""
+if [[ -d "$OLD_DEST" ]]; then
+  echo "Note: your old DJI Clip Cleaner Pro folder is still on the Desktop."
+  echo "You can delete it after confirming Hughes Hot Lap works."
+fi

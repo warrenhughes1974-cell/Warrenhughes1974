@@ -8,7 +8,7 @@ struct MainTabView: View {
         TabView(selection: $selectedTab) {
             CleanerView(viewModel: cleanerViewModel)
                 .tabItem {
-                    Label("Clip Cleaner", systemImage: "sparkles")
+                    Label("Pit Lane", systemImage: "flag.checkered")
                 }
                 .tag(0)
 
@@ -17,16 +17,23 @@ struct MainTabView: View {
                 selectedTab: $selectedTab
             )
                 .tabItem {
-                    Label("Smart Analysis", systemImage: "waveform.badge.magnifyingglass")
+                    Label("Scouting", systemImage: "binoculars.fill")
                 }
                 .tag(1)
 
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape")
+                    Label("Garage Setup", systemImage: "wrench.and.screwdriver.fill")
                 }
                 .tag(2)
+
+            ManualView()
+                .tabItem {
+                    Label("Race Manual", systemImage: "book.fill")
+                }
+                .tag(3)
         }
+        .tint(AppTheme.papaya)
         .frame(
             minWidth: 900,
             idealWidth: 1_000,
