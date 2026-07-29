@@ -50,6 +50,6 @@ echo ""
 
 open "$DESKTOP_APP"
 
-osascript -e "display dialog \"Version ${APP_VERSION} is now on your Desktop.\n\nSet your brand in Settings, then use Generate Thumbnails in Smart Analysis for pink titled thumbnails.\" buttons {\"OK\"} with title \"Hughes Clip Prep\""
+osascript -e "display dialog \"Version ${APP_VERSION} is now on your Desktop.\n\nPick a series preset in Settings, then use Refresh Titles and Generate Thumbnails for a consistent brand.\" buttons {\"OK\"} with title \"Hughes Clip Prep\""
 
 osascript -e "display notification \"Version ${APP_VERSION} installed on Desktop.\" with title \"Hughes Clip Prep\""
