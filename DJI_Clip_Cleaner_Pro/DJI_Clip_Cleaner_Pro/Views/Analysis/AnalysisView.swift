@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct AnalysisView: View {
+    static let buildVersion = "1.2"
+
     @ObservedObject var cleanerViewModel: CleanerViewModel
     @Binding var selectedTab: Int
 
@@ -63,8 +65,19 @@ struct AnalysisView: View {
     private var header: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 6) {
-                Text("Smart Analysis")
-                    .font(.largeTitle.bold())
+                HStack(spacing: 10) {
+                    Text("Smart Analysis")
+                        .font(.largeTitle.bold())
+
+                    Text("v\(Self.buildVersion)")
+                        .font(.caption.bold())
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Color.blue.opacity(0.15))
+                        .foregroundStyle(.blue)
+                        .clipShape(Capsule())
+                }
+
                 Text("Scan a folder to detect talking, motion, and keep/review/discard recommendations.")
                     .foregroundStyle(.secondary)
             }
@@ -76,34 +89,42 @@ struct AnalysisView: View {
             } label: {
                 Label("Settings", systemImage: "gearshape")
             }
+            .buttonStyle(.bordered)
         }
     }
 
     private var toolbar: some View {
         HStack(spacing: 12) {
-            Button("Choose Folder") {
+            Button {
+                viewModel.rescan()
+            } label: {
+                Label("Scan Folder", systemImage: "arrow.clockwise.circle.fill")
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+
+            Button("Change Folder…") {
                 viewModel.chooseFolder()
             }
-
-            Button("Rescan") {
-                viewModel.rescan()
-            }
+            .buttonStyle(.bordered)
 
             Button("Export CSV") {
                 viewModel.exportReport()
             }
-            .disabled(!viewModel.canExportReport || viewModel.isScanning)
+            .buttonStyle(.bordered)
 
             Button("Run Pipeline") {
-                showingPipelineConfirm = true
+                if viewModel.prepareRunPipeline() {
+                    showingPipelineConfirm = true
+                }
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(!viewModel.canRunPipeline)
+            .buttonStyle(.bordered)
 
             if viewModel.isAnalyzing {
                 Button("Cancel", role: .destructive) {
                     viewModel.cancelAnalysis()
                 }
+                .buttonStyle(.bordered)
             }
 
             if viewModel.isScanning || viewModel.isAnalyzing {
@@ -176,7 +197,7 @@ struct AnalysisView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Spacer()
-            Text("\(viewModel.results.count) clip(s)")
+            Text("\(viewModel.results.count) clip(s) · v\(Self.buildVersion)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

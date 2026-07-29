@@ -10,7 +10,7 @@ PROJECT_DIR="$HOME/Desktop/DJI Clip Cleaner Pro"
 BUILD_SCRIPT="$PROJECT_DIR/Install App on Desktop.command"
 
 echo "=== DJI Clip Cleaner Pro — Update ==="
-echo "Downloading latest version (only the DJI app, not the whole repo)..."
+echo "Downloading latest version..."
 
 git clone --depth 1 --filter=blob:none --sparse "$REPO_URL" "$TEMP_REPO"
 cd "$TEMP_REPO"
@@ -23,5 +23,3 @@ echo ""
 echo "Building and installing the Desktop app..."
 chmod +x "$BUILD_SCRIPT"
 "$BUILD_SCRIPT"
-
-osascript -e 'display notification "DJI Clip Cleaner Pro updated on your Desktop." with title "DJI Clip Cleaner Pro"'

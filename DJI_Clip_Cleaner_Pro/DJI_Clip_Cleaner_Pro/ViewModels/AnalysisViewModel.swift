@@ -156,6 +156,32 @@ final class AnalysisViewModel {
         return "KEEP \(keep) · REVIEW \(review) · DISCARD \(discard)"
     }
 
+    func prepareRunPipeline() -> Bool {
+        guard canRunPipeline else {
+            errorMessage = pipelineBlockedMessage()
+            return false
+        }
+
+        errorMessage = nil
+        return true
+    }
+
+    private func pipelineBlockedMessage() -> String {
+        if isScanning || isAnalyzing {
+            return "Wait for the current scan to finish before running the pipeline."
+        }
+
+        if results.isEmpty {
+            return "Scan a folder first using the blue Scan Folder button."
+        }
+
+        if results.contains(where: { $0.recommendation == .pending }) {
+            return "Wait for analysis to finish on all clips."
+        }
+
+        return "The pipeline is not ready yet."
+    }
+
     func runPipeline(
         cleanerViewModel: CleanerViewModel,
         preset: CleaningPreset,
