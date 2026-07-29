@@ -22,6 +22,7 @@
 		C1D2E3F4A5B6478990ABCDEF /* MotionAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E2F3A4B5C6478990ABCDEF /* MotionAnalyzer.swift */; };
 		E1F2A3B4C5D6478990ABCDEF /* RecommendationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */; };
 		5E6F7A8B9C0D4922ABCDEF02 /* AnalysisReportExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7A8B9C0D1E4933ABCDEF02 /* AnalysisReportExporter.swift */; };
+		A2B3C4D5E6F7488990ABCD001 /* ProductionPassService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F6A7488990ABCD001 /* ProductionPassService.swift */; };
 		1A2B3C4D5E6F4788990ABCDEF /* AnalysisSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3C4D5E6F7A48990ABCDEF /* AnalysisSettings.swift */; };
 		3C4D5E6F7A8B4900ABCDEF01 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5E6F7A8B9C4911ABCDEF01 /* SettingsView.swift */; };
 		C224B6DD985949F1A589DBF9 /* DateFormatter+LogTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */; };
@@ -44,6 +45,7 @@
 		D1E2F3A4B5C6478990ABCDEF /* MotionAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionAnalyzer.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationEngine.swift; sourceTree = "<group>"; };
 		6F7A8B9C0D1E4933ABCDEF02 /* AnalysisReportExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisReportExporter.swift; sourceTree = "<group>"; };
+		B2C3D4E5F6A7488990ABCD001 /* ProductionPassService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductionPassService.swift; sourceTree = "<group>"; };
 		2B3C4D5E6F7A48990ABCDEF /* AnalysisSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisSettings.swift; sourceTree = "<group>"; };
 		4D5E6F7A8B9C4911ABCDEF01 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+LogTimestamp.swift"; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				D1E2F3A4B5C6478990ABCDEF /* MotionAnalyzer.swift */,
 				F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */,
 				6F7A8B9C0D1E4933ABCDEF02 /* AnalysisReportExporter.swift */,
+				B2C3D4E5F6A7488990ABCD001 /* ProductionPassService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 				C1D2E3F4A5B6478990ABCDEF /* MotionAnalyzer.swift in Sources */,
 				E1F2A3B4C5D6478990ABCDEF /* RecommendationEngine.swift in Sources */,
 				5E6F7A8B9C0D4922ABCDEF02 /* AnalysisReportExporter.swift in Sources */,
+				A2B3C4D5E6F7488990ABCD001 /* ProductionPassService.swift in Sources */,
 				1A2B3C4D5E6F4788990ABCDEF /* AnalysisSettings.swift in Sources */,
 				3C4D5E6F7A8B4900ABCDEF01 /* SettingsView.swift in Sources */,
 				C224B6DD985949F1A589DBF9 /* DateFormatter+LogTimestamp.swift in Sources */,
@@ -303,7 +307,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -315,7 +319,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -333,7 +337,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -345,7 +349,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

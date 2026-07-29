@@ -12,6 +12,13 @@ struct CleanerView: View {
     private var savedTrimMode =
         CleaningTrimMode.edgesOnly.rawValue
 
+    @AppStorage("productionPassEnabled")
+    private var productionPassEnabled = true
+
+    @AppStorage("productionPassLongPause")
+    private var productionPassLongPause =
+        ProductionPassSettings.defaultLongPauseSeconds
+
     private var selectedPreset: CleaningPreset {
         CleaningPreset(
             rawValue: savedPreset
@@ -22,6 +29,13 @@ struct CleanerView: View {
         CleaningTrimMode(
             rawValue: savedTrimMode
         ) ?? .edgesOnly
+    }
+
+    private var productionPassSettings: ProductionPassSettings {
+        ProductionPassSettings(
+            isEnabled: productionPassEnabled,
+            longPauseSeconds: productionPassLongPause
+        )
     }
 
     var body: some View {
@@ -105,6 +119,24 @@ struct CleanerView: View {
                         "exclamationmark.triangle.fill"
                 )
                 .foregroundStyle(.orange)
+            }
+
+            if productionPassEnabled {
+                if viewModel.ffmpegPath != nil {
+                    Label(
+                        "FFmpeg Ready",
+                        systemImage:
+                            "checkmark.circle.fill"
+                    )
+                    .foregroundStyle(.green)
+                } else {
+                    Label(
+                        "FFmpeg Missing",
+                        systemImage:
+                            "exclamationmark.triangle.fill"
+                    )
+                    .foregroundStyle(.orange)
+                }
             }
         }
         .padding(.horizontal, 28)
@@ -386,6 +418,57 @@ struct CleanerView: View {
 
                 Divider()
 
+                Toggle(
+                    "Production Pass",
+                    isOn: $productionPassEnabled
+                )
+                .disabled(
+                    viewModel.isProcessing
+                )
+
+                Text(
+                    "After edge trim: light denoise, loudness normalize, and remove awkward pauses longer than the threshold below."
+                )
+                .foregroundStyle(
+                    .secondary
+                )
+                .font(.callout)
+
+                if productionPassEnabled {
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text("Remove pauses longer than")
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Text(
+                                String(
+                                    format: "%.1f sec",
+                                    productionPassLongPause
+                                )
+                            )
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                        }
+
+                        Slider(
+                            value: $productionPassLongPause,
+                            in: 1.0...5.0,
+                            step: 0.5
+                        )
+                        .disabled(
+                            viewModel.isProcessing
+                        )
+
+                        Text(
+                            "Short natural pauses stay. Only long dead air in the middle gets cut."
+                        )
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    }
+                }
+
+                Divider()
+
                 Label(
                     "Original videos are never modified or deleted.",
                     systemImage:
@@ -440,7 +523,9 @@ struct CleanerView: View {
                                     using:
                                         selectedPreset,
                                     trimMode:
-                                        selectedTrimMode
+                                        selectedTrimMode,
+                                    productionPass:
+                                        productionPassSettings
                                 )
                         } label: {
                             Label(

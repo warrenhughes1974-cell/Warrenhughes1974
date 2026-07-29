@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AnalysisView: View {
-    static let buildVersion = "1.3"
+    static let buildVersion = "1.4"
 
     @ObservedObject var cleanerViewModel: CleanerViewModel
     @Binding var selectedTab: Int
@@ -16,12 +16,26 @@ struct AnalysisView: View {
     @AppStorage("cleaningTrimMode")
     private var savedTrimMode = CleaningTrimMode.edgesOnly.rawValue
 
+    @AppStorage("productionPassEnabled")
+    private var productionPassEnabled = true
+
+    @AppStorage("productionPassLongPause")
+    private var productionPassLongPause =
+        ProductionPassSettings.defaultLongPauseSeconds
+
     private var selectedPreset: CleaningPreset {
         CleaningPreset(rawValue: savedPreset) ?? .balanced
     }
 
     private var selectedTrimMode: CleaningTrimMode {
         CleaningTrimMode(rawValue: savedTrimMode) ?? .edgesOnly
+    }
+
+    private var productionPassSettings: ProductionPassSettings {
+        ProductionPassSettings(
+            isEnabled: productionPassEnabled,
+            longPauseSeconds: productionPassLongPause
+        )
     }
 
     var body: some View {
@@ -51,7 +65,8 @@ struct AnalysisView: View {
                 viewModel.runPipeline(
                     cleanerViewModel: cleanerViewModel,
                     preset: selectedPreset,
-                    trimMode: selectedTrimMode
+                    trimMode: selectedTrimMode,
+                    productionPass: productionPassSettings
                 ) {
                     selectedTab = 0
                 }

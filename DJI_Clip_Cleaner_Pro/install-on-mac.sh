@@ -32,6 +32,14 @@ else
 fi
 
 echo ""
+echo "Checking for FFmpeg..."
+if command -v ffmpeg >/dev/null 2>&1; then
+  echo "  FFmpeg found: $(command -v ffmpeg)"
+else
+  echo "  FFmpeg not installed. Run: brew install ffmpeg"
+fi
+
+echo ""
 if [[ "${SKIP_OPEN_XCODE:-}" == "1" ]]; then
   echo "Source files updated."
 else

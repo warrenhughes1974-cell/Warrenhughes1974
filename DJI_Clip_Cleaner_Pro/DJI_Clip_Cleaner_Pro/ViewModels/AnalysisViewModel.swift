@@ -186,6 +186,7 @@ final class AnalysisViewModel {
         cleanerViewModel: CleanerViewModel,
         preset: CleaningPreset,
         trimMode: CleaningTrimMode,
+        productionPass: ProductionPassSettings,
         switchToCleanerTab: () -> Void
     ) {
         guard canRunPipeline, let selectedFolderURL else {
@@ -224,7 +225,8 @@ final class AnalysisViewModel {
             switchToCleanerTab()
             cleanerViewModel.startProcessing(
                 using: preset,
-                trimMode: trimMode
+                trimMode: trimMode,
+                productionPass: productionPass
             )
 
             statusMessage = summary

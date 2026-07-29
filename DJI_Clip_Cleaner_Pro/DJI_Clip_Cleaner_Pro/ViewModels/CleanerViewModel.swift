@@ -35,6 +35,7 @@ final class CleanerViewModel: ObservableObject {
     private var processingQueue: [VideoFile] = []
     private var activePreset: CleaningPreset = .balanced
     private var activeTrimMode: CleaningTrimMode = .edgesOnly
+    private var activeProductionPass = ProductionPassSettings.enabledByDefault
     private var processingStartedAt: Date?
     private var elapsedTimer: Timer?
     private var cancellationRequested = false
@@ -58,6 +59,10 @@ final class CleanerViewModel: ObservableObject {
 
     var formattedElapsedTime: String {
         VideoFile.formatDuration(elapsedTime)
+    }
+
+    var ffmpegPath: String? {
+        ProductionPassService.ffmpegPath
     }
 
     var outputFolderURL: URL? {
@@ -255,7 +260,8 @@ final class CleanerViewModel: ObservableObject {
 
     func startProcessing(
         using preset: CleaningPreset,
-        trimMode: CleaningTrimMode
+        trimMode: CleaningTrimMode,
+        productionPass: ProductionPassSettings
     ) {
         guard !isProcessing else {
             return
@@ -272,6 +278,20 @@ final class CleanerViewModel: ObservableObject {
                 Open Terminal and confirm it is installed by running:
 
                 auto-editor --version
+                """
+            )
+
+            return
+        }
+
+        if productionPass.isEnabled, ffmpegPath == nil {
+            showError(
+                """
+                Production Pass needs FFmpeg.
+
+                Install it with:
+
+                brew install ffmpeg
                 """
             )
 
@@ -324,6 +344,7 @@ final class CleanerViewModel: ObservableObject {
         processingQueue = videos
         activePreset = preset
         activeTrimMode = trimMode
+        activeProductionPass = productionPass
         processingStartedAt = Date()
 
         startElapsedTimer()
@@ -351,6 +372,23 @@ final class CleanerViewModel: ObservableObject {
                 preset.marginSeconds
             )
         )
+        if productionPass.isEnabled {
+            appendLog("Production Pass: ON")
+            appendLog(
+                String(
+                    format: "Long pause trim: %.1f seconds",
+                    productionPass.longPauseSeconds
+                )
+            )
+            appendLog(
+                "Production tools: denoise, loudness normalize, long-pause trim"
+            )
+            if let ffmpegPath {
+                appendLog("FFmpeg: \(ffmpegPath)")
+            }
+        } else {
+            appendLog("Production Pass: OFF")
+        }
         appendLog(
             "Auto-Editor: \(autoEditorPath)"
         )
@@ -617,6 +655,47 @@ final class CleanerViewModel: ObservableObject {
 
                 if completedProcess.terminationStatus == 0,
                    outputExists {
+
+                    if self.activeProductionPass.isEnabled {
+                        self.appendLog(
+                            "[PRODUCTION] Polishing \(video.name)..."
+                        )
+
+                        do {
+                            try await ProductionPassService.apply(
+                                to: outputURL,
+                                settings: self.activeProductionPass
+                            )
+
+                            self.appendLog(
+                                "[PRODUCTION] Audio polish complete."
+                            )
+                        } catch {
+                            self.failedCount += 1
+                            self.removeIncompleteOutputIfNeeded()
+
+                            self.appendLog(
+                                "[FAILED] Production pass for \(video.name) — \(error.localizedDescription)"
+                            )
+
+                            self.currentIndex += 1
+                            self.progress =
+                                Double(self.currentIndex) /
+                                Double(
+                                    max(
+                                        self.processingQueue.count,
+                                        1
+                                    )
+                                )
+
+                            self.processNextVideo(
+                                autoEditorPath: autoEditorPath,
+                                outputFolder: outputFolder
+                            )
+
+                            return
+                        }
+                    }
 
                     self.processedCount += 1
 
