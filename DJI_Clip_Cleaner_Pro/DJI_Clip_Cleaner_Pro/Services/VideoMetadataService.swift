@@ -16,9 +16,7 @@ struct VideoMetadataService {
                     results.append(item)
                 }
             }
-            return results.sorted {
-                $0.name.localizedStandardCompare($1.name) == .orderedAscending
-            }
+            return VideoFile.sortByCaptureDate(results)
         }
     }
 

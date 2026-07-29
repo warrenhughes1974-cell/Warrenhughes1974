@@ -43,6 +43,6 @@ struct FolderScanner {
                 let values = try? url.resourceValues(forKeys: [.isRegularFileKey])
                 return values?.isRegularFile == true
             }
-            .sorted { $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending }
+            .sorted { VideoFile.isInCaptureOrder(url: $0, url: $1) }
     }
 }

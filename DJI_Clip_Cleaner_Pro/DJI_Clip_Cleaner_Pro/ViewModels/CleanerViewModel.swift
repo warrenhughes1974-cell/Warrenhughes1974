@@ -116,9 +116,7 @@ final class CleanerViewModel: ObservableObject {
 
         selectedFolderURL = folder
         selectedFolderPath = folder.path
-        self.videos = videos.sorted {
-            $0.name.localizedStandardCompare($1.name) == .orderedAscending
-        }
+        self.videos = VideoFile.sortByCaptureDate(videos)
 
         statusMessage =
             "\(videos.count) KEEP clip(s) loaded from Smart Analysis pipeline."
@@ -153,10 +151,7 @@ final class CleanerViewModel: ObservableObject {
             let discoveredVideos =
                 await loadVideos(from: folderURL)
 
-            videos = discoveredVideos.sorted {
-                $0.name.localizedStandardCompare($1.name)
-                    == .orderedAscending
-            }
+            videos = VideoFile.sortByCaptureDate(discoveredVideos)
 
             isScanning = false
 

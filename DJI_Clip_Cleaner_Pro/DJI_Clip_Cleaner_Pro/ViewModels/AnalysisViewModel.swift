@@ -46,7 +46,9 @@ final class AnalysisViewModel {
             }
 
             statusMessage = "Loading metadata for \(urls.count) clip(s)..."
-            let videos = await VideoMetadataService.loadVideoFiles(from: urls)
+            let videos = VideoFile.sortByCaptureDate(
+                await VideoMetadataService.loadVideoFiles(from: urls)
+            )
             results = videos.map { AnalysisResult(video: $0) }
             isScanning = false
 
@@ -309,7 +311,7 @@ enum ClipPipelineService {
             discardCount: discardCount
         )
 
-        return (pipeline, keepVideos)
+        return (pipeline, VideoFile.sortByCaptureDate(keepVideos))
     }
 }
 

@@ -139,6 +139,10 @@ struct AnalysisView: View {
                     TableColumn("Clip") { result in
                         Text(result.video.name)
                     }
+                    TableColumn("Recorded") { result in
+                        Text(result.video.formattedRecordedAt)
+                            .font(.caption)
+                    }
                     TableColumn("Duration") { result in
                         Text(result.video.formattedDuration)
                             .monospacedDigit()

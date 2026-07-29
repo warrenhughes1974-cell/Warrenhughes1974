@@ -186,7 +186,7 @@ struct CleanerView: View {
                             "Choose a folder containing MP4, MOV, or M4V files."
                         )
                     )
-                    .frame(height: 220)
+                    .frame(height: 260)
                 } else {
                     HStack {
                         statistic(
@@ -232,8 +232,14 @@ struct CleanerView: View {
                                 .secondary
                             )
 
-                            Text(video.name)
-                                .lineLimit(1)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(video.name)
+                                    .lineLimit(1)
+
+                                Text(video.formattedRecordedAt)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
 
                             Spacer()
 
@@ -262,7 +268,7 @@ struct CleanerView: View {
                             )
                         }
                     }
-                    .frame(height: 220)
+                    .frame(height: 260)
                 }
             }
         } label: {
