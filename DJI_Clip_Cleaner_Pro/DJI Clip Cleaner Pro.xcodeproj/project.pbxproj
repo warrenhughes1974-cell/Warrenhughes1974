@@ -23,6 +23,7 @@
 		E1F2A3B4C5D6478990ABCDEF /* RecommendationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */; };
 		5E6F7A8B9C0D4922ABCDEF02 /* AnalysisReportExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7A8B9C0D1E4933ABCDEF02 /* AnalysisReportExporter.swift */; };
 		A2B3C4D5E6F7488990ABCD001 /* ProductionPassService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F6A7488990ABCD001 /* ProductionPassService.swift */; };
+		D0E1F2A3B4C6488990ABCD003 /* StabilizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F2A3B4C5D7488990ABCD003 /* StabilizationService.swift */; };
 		1A2B3C4D5E6F4788990ABCDEF /* AnalysisSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3C4D5E6F7A48990ABCDEF /* AnalysisSettings.swift */; };
 		3C4D5E6F7A8B4900ABCDEF01 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5E6F7A8B9C4911ABCDEF01 /* SettingsView.swift */; };
 		C224B6DD985949F1A589DBF9 /* DateFormatter+LogTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */; };
@@ -278,6 +279,7 @@
 				E1F2A3B4C5D6478990ABCDEF /* RecommendationEngine.swift in Sources */,
 				5E6F7A8B9C0D4922ABCDEF02 /* AnalysisReportExporter.swift in Sources */,
 				A2B3C4D5E6F7488990ABCD001 /* ProductionPassService.swift in Sources */,
+				D0E1F2A3B4C6488990ABCD003 /* StabilizationService.swift in Sources */,
 				1A2B3C4D5E6F4788990ABCDEF /* AnalysisSettings.swift in Sources */,
 				3C4D5E6F7A8B4900ABCDEF01 /* SettingsView.swift in Sources */,
 				C224B6DD985949F1A589DBF9 /* DateFormatter+LogTimestamp.swift in Sources */,
