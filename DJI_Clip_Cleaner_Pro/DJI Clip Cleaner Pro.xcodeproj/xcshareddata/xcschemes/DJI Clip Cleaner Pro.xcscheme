@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3CABC5AFCDD6435DA10334DD"
-               BuildableName = "Hughes Hot Lap.app"
-               BlueprintName = "Hughes Hot Lap"
+               BuildableName = "Hughes Clip Prep.app"
+               BlueprintName = "Hughes Clip Prep"
                ReferencedContainer = "container:DJI Clip Cleaner Pro.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,8 +43,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3CABC5AFCDD6435DA10334DD"
-            BuildableName = "Hughes Hot Lap.app"
-            BlueprintName = "Hughes Hot Lap"
+            BuildableName = "Hughes Clip Prep.app"
+            BlueprintName = "Hughes Clip Prep"
             ReferencedContainer = "container:DJI Clip Cleaner Pro.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -60,8 +60,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3CABC5AFCDD6435DA10334DD"
-            BuildableName = "Hughes Hot Lap.app"
-            BlueprintName = "Hughes Hot Lap"
+            BuildableName = "Hughes Clip Prep.app"
+            BlueprintName = "Hughes Clip Prep"
             ReferencedContainer = "container:DJI Clip Cleaner Pro.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

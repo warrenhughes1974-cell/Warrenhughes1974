@@ -8,46 +8,61 @@ enum RecommendationEngine {
     settings: AnalysisSettingsValues
   ) -> (ClipRecommendation, String) {
     let duration = video.duration
+    let baseRecommendation: (ClipRecommendation, String)
 
     if duration < settings.minimumDurationSeconds {
-      return (.discard, "Too short — under \(Int(settings.minimumDurationSeconds)) seconds.")
-    }
-
-    if !speech.hasSpeech && motion.isStatic {
-      return (.discard, "Silent and static — dead footage.")
-    }
-
-    if speech.hasSpeech && speech.talkingPercent >= settings.minimumTalkingPercentForKeep {
+      baseRecommendation = (.discard, "Too short — under \(Int(settings.minimumDurationSeconds)) seconds.")
+    } else if !speech.hasSpeech && motion.isStatic {
+      baseRecommendation = (.discard, "Silent and static — dead footage.")
+    } else if speech.hasSpeech && speech.talkingPercent >= settings.minimumTalkingPercentForKeep {
       if motion.isStatic && duration < settings.maximumStaticTalkingDurationForKeep {
-        return (.review, "Talking but static — check framing and energy.")
+        baseRecommendation = (.review, "Talking but static — check framing and energy.")
+      } else if motion.isStatic && duration >= settings.longStaticClipReviewThreshold {
+        baseRecommendation = (.review, "Long static talking clip — may need trimming.")
+      } else if !motion.isStatic && speech.talkingPercent < settings.movingTalkingKeepThreshold {
+        baseRecommendation = (.review, "Talking while moving, but not consistently — verify audio.")
+      } else {
+        baseRecommendation = (.keep, "Strong talking footage.")
       }
-
-      if motion.isStatic && duration >= settings.longStaticClipReviewThreshold {
-        return (.review, "Long static talking clip — may need trimming.")
-      }
-
-      if !motion.isStatic && speech.talkingPercent < settings.movingTalkingKeepThreshold {
-        return (.review, "Talking while moving, but not consistently — verify audio.")
-      }
-
-      return (.keep, "Strong talking footage.")
-    }
-
-    if !speech.hasSpeech && !motion.isStatic {
+    } else if !speech.hasSpeech && !motion.isStatic {
       if motion.motionPercent >= settings.minimumMotionPercentForBRollKeep {
-        return (.review, "B-roll only — good movement, but no speech.")
+        baseRecommendation = (.review, "B-roll only — good movement, but no speech.")
+      } else {
+        baseRecommendation = (.discard, "Weak B-roll — not enough movement or speech.")
       }
-      return (.discard, "Weak B-roll — not enough movement or speech.")
+    } else if speech.talkingPercent > 0 && speech.talkingPercent < settings.minimumTalkingPercentForReview {
+      baseRecommendation = (.discard, "Almost no talking detected.")
+    } else if speech.hasSpeech && speech.talkingPercent < settings.minimumTalkingPercentForKeep {
+      baseRecommendation = (.review, "Some talking, but below \(Int(settings.minimumTalkingPercentForKeep))% — probably trim or cut.")
+    } else {
+      baseRecommendation = (.review, "Needs a quick manual look.")
     }
 
-    if speech.talkingPercent > 0 && speech.talkingPercent < settings.minimumTalkingPercentForReview {
-      return (.discard, "Almost no talking detected.")
+    return applyJerkReview(
+      baseRecommendation,
+      motion: motion
+    )
+  }
+
+  private static func applyJerkReview(
+    _ recommendation: (ClipRecommendation, String),
+    motion: MotionAnalysis
+  ) -> (ClipRecommendation, String) {
+    guard motion.hasSuddenMovement else {
+      return recommendation
     }
 
-    if speech.hasSpeech && speech.talkingPercent < settings.minimumTalkingPercentForKeep {
-      return (.review, "Some talking, but below \(Int(settings.minimumTalkingPercentForKeep))% — probably trim or cut.")
-    }
+    let jerkNote = motion.jerkSummary
 
-    return (.review, "Needs a quick manual look.")
+    switch recommendation.0 {
+    case .keep:
+      return (.review, "\(recommendation.1) \(jerkNote).")
+    case .review:
+      return (.review, "\(recommendation.1) \(jerkNote).")
+    case .discard:
+      return recommendation
+    default:
+      return (.review, jerkNote)
+    }
   }
 }

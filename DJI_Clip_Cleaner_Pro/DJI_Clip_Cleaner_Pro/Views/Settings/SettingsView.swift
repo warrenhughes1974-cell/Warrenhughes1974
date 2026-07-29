@@ -17,10 +17,10 @@ struct SettingsView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Garage Setup")
+            Text("Settings")
                 .font(.largeTitle.bold())
                 .foregroundStyle(AppTheme.carbon)
-            Text("Tune how Scouting scores your clips. Changes apply the next time you scan a folder.")
+            Text("Tune how Smart Analysis scores your clips. Changes apply the next time you scan a folder.")
                 .foregroundStyle(.secondary)
         }
     }
@@ -120,7 +120,7 @@ struct SettingsView: View {
     }
 
     private var footer: some View {
-        Text("Settings save automatically. Rescan a folder in Scouting to apply new rules.")
+        Text("Settings save automatically. Rescan a folder in Smart Analysis to apply new rules.")
             .font(.caption)
             .foregroundStyle(.secondary)
     }

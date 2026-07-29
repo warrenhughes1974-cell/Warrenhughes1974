@@ -50,6 +50,7 @@
 		F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationEngine.swift; sourceTree = "<group>"; };
 		6F7A8B9C0D1E4933ABCDEF02 /* AnalysisReportExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisReportExporter.swift; sourceTree = "<group>"; };
 		B2C3D4E5F6A7488990ABCD001 /* ProductionPassService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductionPassService.swift; sourceTree = "<group>"; };
+		E1F2A3B4C5D7488990ABCD003 /* StabilizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StabilizationService.swift; sourceTree = "<group>"; };
 		2B3C4D5E6F7A48990ABCDEF /* AnalysisSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisSettings.swift; sourceTree = "<group>"; };
 		4D5E6F7A8B9C4911ABCDEF01 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+LogTimestamp.swift"; sourceTree = "<group>"; };
@@ -58,7 +59,7 @@
 		B8C9D0E1F2A3488990ABCD002 /* AppManual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManual.swift; sourceTree = "<group>"; };
 		D0E1F2A3B4C5488990ABCD002 /* ManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualView.swift; sourceTree = "<group>"; };
 		8AE23DC4F179498E9C87B3CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		5CF9B53D2BA04BE1AB4A6069 /* Hughes Hot Lap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hughes Hot Lap.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CF9B53D2BA04BE1AB4A6069 /* Hughes Clip Prep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hughes Clip Prep.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +98,7 @@
 		28A178133289418495268EDD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5CF9B53D2BA04BE1AB4A6069 /* Hughes Hot Lap.app */,
+				5CF9B53D2BA04BE1AB4A6069 /* Hughes Clip Prep.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -145,6 +146,7 @@
 				F1A2B3C4D5E6478990ABCDEF /* RecommendationEngine.swift */,
 				6F7A8B9C0D1E4933ABCDEF02 /* AnalysisReportExporter.swift */,
 				B2C3D4E5F6A7488990ABCD001 /* ProductionPassService.swift */,
+				E1F2A3B4C5D7488990ABCD003 /* StabilizationService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -194,9 +196,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3CABC5AFCDD6435DA10334DD /* Hughes Hot Lap */ = {
+		3CABC5AFCDD6435DA10334DD /* Hughes Clip Prep */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2B0213A03F4A478ABEAE2F89 /* Build configuration list for PBXNativeTarget "Hughes Hot Lap" */;
+			buildConfigurationList = 2B0213A03F4A478ABEAE2F89 /* Build configuration list for PBXNativeTarget "Hughes Clip Prep" */;
 			buildPhases = (
 				140F9525FEE548EFA997346C /* Sources */,
 				681E0E6F98A94061B60C1E22 /* Frameworks */,
@@ -206,9 +208,9 @@
 			);
 			dependencies = (
 			);
-			name = "Hughes Hot Lap";
-			productName = "Hughes Hot Lap";
-			productReference = 5CF9B53D2BA04BE1AB4A6069 /* Hughes Hot Lap.app */;
+			name = "Hughes Clip Prep";
+			productName = "Hughes Clip Prep";
+			productReference = 5CF9B53D2BA04BE1AB4A6069 /* Hughes Clip Prep.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -226,7 +228,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CE8190E66814432587C725EA /* Build configuration list for PBXProject "Hughes Hot Lap" */;
+			buildConfigurationList = CE8190E66814432587C725EA /* Build configuration list for PBXProject "Hughes Clip Prep" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -239,7 +241,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3CABC5AFCDD6435DA10334DD /* Hughes Hot Lap */,
+				3CABC5AFCDD6435DA10334DD /* Hughes Clip Prep */,
 			);
 		};
 /* End PBXProject section */
@@ -331,20 +333,20 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Hughes Hot Lap";
+				INFOPLIST_KEY_CFBundleDisplayName = "Hughes Clip Prep";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -362,20 +364,20 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Hughes Hot Lap";
+				INFOPLIST_KEY_CFBundleDisplayName = "Hughes Clip Prep";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -388,7 +390,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE8190E66814432587C725EA /* Build configuration list for PBXProject "Hughes Hot Lap" */ = {
+		CE8190E66814432587C725EA /* Build configuration list for PBXProject "Hughes Clip Prep" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FFBF37B025A14D93AAF00519 /* Debug */,
@@ -397,7 +399,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2B0213A03F4A478ABEAE2F89 /* Build configuration list for PBXNativeTarget "Hughes Hot Lap" */ = {
+		2B0213A03F4A478ABEAE2F89 /* Build configuration list for PBXNativeTarget "Hughes Clip Prep" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52EA7B5763FC43A38F9B745D /* Debug */,

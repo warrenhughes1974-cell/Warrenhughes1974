@@ -21,6 +21,9 @@ struct AnalysisView: View {
     private var productionPassLongPause =
         ProductionPassSettings.defaultLongPauseSeconds
 
+    @AppStorage("stabilizationEnabled")
+    private var stabilizationEnabled = false
+
     private var selectedPreset: CleaningPreset {
         CleaningPreset(rawValue: savedPreset) ?? .balanced
     }
@@ -63,7 +66,8 @@ struct AnalysisView: View {
                     cleanerViewModel: cleanerViewModel,
                     preset: selectedPreset,
                     trimMode: selectedTrimMode,
-                    productionPass: productionPassSettings
+                    productionPass: productionPassSettings,
+                    stabilize: stabilizationEnabled
                 ) {
                     selectedTab = 0
                 }
@@ -86,7 +90,7 @@ struct AnalysisView: View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 10) {
-                    Text("Scouting")
+                    Text("Smart Analysis")
                         .font(.largeTitle.bold())
                         .foregroundStyle(AppTheme.carbon)
 
@@ -108,7 +112,7 @@ struct AnalysisView: View {
             Button {
                 showingSettings = true
             } label: {
-                Label("Garage Setup", systemImage: "wrench.and.screwdriver.fill")
+                Label("Settings", systemImage: "gearshape")
             }
             .buttonStyle(.bordered)
             .tint(AppTheme.mclarenBlue)

@@ -5,11 +5,18 @@ struct MotionAnalysis: Sendable {
     let motionPercent: Double
     let isStatic: Bool
     let summary: String
+    let jerkTimestamps: [TimeInterval]
+    let jerkSummary: String
+
+    var hasSuddenMovement: Bool {
+        !jerkTimestamps.isEmpty
+    }
 }
 
 enum MotionAnalyzer {
   private static let frameIntervalSeconds = 1.0
   private static let motionThreshold = 0.08
+  private static let jerkThreshold = 0.24
 
   static func analyze(videoURL: URL) async -> MotionAnalysis {
     let asset = AVURLAsset(url: videoURL)
@@ -24,17 +31,18 @@ enum MotionAnalyzer {
       let loadedDuration = try await asset.load(.duration)
       duration = CMTimeGetSeconds(loadedDuration)
     } catch {
-      return MotionAnalysis(motionPercent: 0, isStatic: true, summary: "Unreadable")
+      return emptyMotion(summary: "Unreadable")
     }
 
     guard duration.isFinite, duration > 0 else {
-      return MotionAnalysis(motionPercent: 0, isStatic: true, summary: "Unreadable")
+      return emptyMotion(summary: "Unreadable")
     }
 
     let frameCount = max(Int(duration / frameIntervalSeconds), 1)
     var previousHistogram: [Int]? = nil
     var movingFrames = 0
     var sampledFrames = 0
+    var jerkTimestamps: [TimeInterval] = []
 
     for index in 0..<frameCount {
       let seconds = min(Double(index) * frameIntervalSeconds, max(duration - 0.1, 0))
@@ -52,13 +60,25 @@ enum MotionAnalyzer {
         if difference >= motionThreshold {
           movingFrames += 1
         }
+
+        if difference >= jerkThreshold {
+          jerkTimestamps.append(seconds)
+        }
       }
 
       previousHistogram = histogram
     }
 
+    let jerkSummary = formatJerkSummary(jerkTimestamps)
+
     guard sampledFrames > 1 else {
-      return MotionAnalysis(motionPercent: 0, isStatic: true, summary: "Static")
+      return MotionAnalysis(
+        motionPercent: 0,
+        isStatic: true,
+        summary: "Static",
+        jerkTimestamps: jerkTimestamps,
+        jerkSummary: jerkSummary
+      )
     }
 
     let percent = (Double(movingFrames) / Double(sampledFrames - 1)) * 100
@@ -68,15 +88,50 @@ enum MotionAnalyzer {
       return MotionAnalysis(
         motionPercent: rounded,
         isStatic: true,
-        summary: "Static"
+        summary: jerkSummary.isEmpty ? "Static" : "Static · \(jerkSummary)",
+        jerkTimestamps: jerkTimestamps,
+        jerkSummary: jerkSummary
       )
     }
+
+    let motionSummary = jerkSummary.isEmpty
+      ? "Moving \(Int(rounded))%"
+      : "Moving \(Int(rounded))% · \(jerkSummary)"
 
     return MotionAnalysis(
       motionPercent: rounded,
       isStatic: false,
-      summary: "Moving \(Int(rounded))%"
+      summary: motionSummary,
+      jerkTimestamps: jerkTimestamps,
+      jerkSummary: jerkSummary
     )
+  }
+
+  private static func emptyMotion(summary: String) -> MotionAnalysis {
+    MotionAnalysis(
+      motionPercent: 0,
+      isStatic: true,
+      summary: summary,
+      jerkTimestamps: [],
+      jerkSummary: ""
+    )
+  }
+
+  private static func formatJerkSummary(_ timestamps: [TimeInterval]) -> String {
+    guard !timestamps.isEmpty else {
+      return ""
+    }
+
+    let formatted = timestamps.prefix(3).map(formatTimestamp).joined(separator: ", ")
+    let suffix = timestamps.count > 3 ? " +\(timestamps.count - 3) more" : ""
+    return "Sudden movement at \(formatted)\(suffix)"
+  }
+
+  private static func formatTimestamp(_ seconds: TimeInterval) -> String {
+    let totalSeconds = max(0, Int(seconds.rounded()))
+    let minutes = totalSeconds / 60
+    let remainder = totalSeconds % 60
+    return String(format: "%d:%02d", minutes, remainder)
   }
 
   private static func histogramForImage(_ image: CGImage) -> [Int] {

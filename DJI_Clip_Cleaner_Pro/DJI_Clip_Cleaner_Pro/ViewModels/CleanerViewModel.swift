@@ -36,6 +36,7 @@ final class CleanerViewModel: ObservableObject {
     private var activePreset: CleaningPreset = .balanced
     private var activeTrimMode: CleaningTrimMode = .edgesOnly
     private var activeProductionPass = ProductionPassSettings.enabledByDefault
+    private var activeStabilizationEnabled = false
     private var processingStartedAt: Date?
     private var elapsedTimer: Timer?
     private var cancellationRequested = false
@@ -261,7 +262,8 @@ final class CleanerViewModel: ObservableObject {
     func startProcessing(
         using preset: CleaningPreset,
         trimMode: CleaningTrimMode,
-        productionPass: ProductionPassSettings
+        productionPass: ProductionPassSettings,
+        stabilize: Bool
     ) {
         guard !isProcessing else {
             return
@@ -284,10 +286,10 @@ final class CleanerViewModel: ObservableObject {
             return
         }
 
-        if productionPass.isEnabled, ffmpegPath == nil {
+        if (productionPass.isEnabled || stabilize), ffmpegPath == nil {
             showError(
                 """
-                Production Pass needs FFmpeg.
+                Production Pass and stabilization need FFmpeg.
 
                 Install it with:
 
@@ -345,6 +347,7 @@ final class CleanerViewModel: ObservableObject {
         activePreset = preset
         activeTrimMode = trimMode
         activeProductionPass = productionPass
+        activeStabilizationEnabled = stabilize
         processingStartedAt = Date()
 
         startElapsedTimer()
@@ -389,6 +392,9 @@ final class CleanerViewModel: ObservableObject {
         } else {
             appendLog("Production Pass: OFF")
         }
+        appendLog(
+            "Stabilization: \(stabilize ? "ON" : "OFF")"
+        )
         appendLog(
             "Auto-Editor: \(autoEditorPath)"
         )
@@ -656,45 +662,31 @@ final class CleanerViewModel: ObservableObject {
                 if completedProcess.terminationStatus == 0,
                    outputExists {
 
-                    if self.activeProductionPass.isEnabled {
-                        self.appendLog(
-                            "[PRODUCTION] Polishing \(video.name)..."
+                    let postProcessingSucceeded = await self.runPostProcessing(
+                        video: video,
+                        outputURL: outputURL
+                    )
+
+                    if !postProcessingSucceeded {
+                        self.failedCount += 1
+                        self.removeIncompleteOutputIfNeeded()
+
+                        self.currentIndex += 1
+                        self.progress =
+                            Double(self.currentIndex) /
+                            Double(
+                                max(
+                                    self.processingQueue.count,
+                                    1
+                                )
+                            )
+
+                        self.processNextVideo(
+                            autoEditorPath: autoEditorPath,
+                            outputFolder: outputFolder
                         )
 
-                        do {
-                            try await ProductionPassService.apply(
-                                to: outputURL,
-                                settings: self.activeProductionPass
-                            )
-
-                            self.appendLog(
-                                "[PRODUCTION] Audio polish complete."
-                            )
-                        } catch {
-                            self.failedCount += 1
-                            self.removeIncompleteOutputIfNeeded()
-
-                            self.appendLog(
-                                "[FAILED] Production pass for \(video.name) — \(error.localizedDescription)"
-                            )
-
-                            self.currentIndex += 1
-                            self.progress =
-                                Double(self.currentIndex) /
-                                Double(
-                                    max(
-                                        self.processingQueue.count,
-                                        1
-                                    )
-                                )
-
-                            self.processNextVideo(
-                                autoEditorPath: autoEditorPath,
-                                outputFolder: outputFolder
-                            )
-
-                            return
-                        }
+                        return
                     }
 
                     self.processedCount += 1
@@ -764,6 +756,53 @@ final class CleanerViewModel: ObservableObject {
                 outputFolder: outputFolder
             )
         }
+    }
+
+    private func runPostProcessing(
+        video: VideoFile,
+        outputURL: URL
+    ) async -> Bool {
+        if activeProductionPass.isEnabled {
+            appendLog(
+                "[PRODUCTION] Polishing \(video.name)..."
+            )
+
+            do {
+                try await ProductionPassService.apply(
+                    to: outputURL,
+                    settings: activeProductionPass
+                )
+
+                appendLog(
+                    "[PRODUCTION] Audio polish complete."
+                )
+            } catch {
+                appendLog(
+                    "[FAILED] Production pass for \(video.name) — \(error.localizedDescription)"
+                )
+                return false
+            }
+        }
+
+        if activeStabilizationEnabled {
+            appendLog(
+                "[STABILIZE] Smoothing camera movement for \(video.name)..."
+            )
+
+            do {
+                try await StabilizationService.apply(to: outputURL)
+                appendLog(
+                    "[STABILIZE] Stabilization complete."
+                )
+            } catch {
+                appendLog(
+                    "[FAILED] Stabilization for \(video.name) — \(error.localizedDescription)"
+                )
+                return false
+            }
+        }
+
+        return true
     }
 
     func cancelProcessing() {
@@ -933,7 +972,7 @@ final class CleanerViewModel: ObservableObject {
 
         let logURL =
             outputFolderURL.appendingPathComponent(
-                "Hughes_Hot_Lap_Log.txt"
+                "Hughes_Clip_Prep_Log.txt"
             )
 
         do {

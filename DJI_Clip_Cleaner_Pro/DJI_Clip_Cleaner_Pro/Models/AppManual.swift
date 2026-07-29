@@ -18,12 +18,13 @@ enum AppManual {
 
     static let workflowSteps: [String] = [
         "Copy your DJI clips into one folder on your Mac.",
-        "Open Hughes Hot Lap and go to Smart Analysis.",
-        "Click the blue Scan Folder button and choose that folder.",
+        "Open Hughes Clip Prep and go to Smart Analysis.",
+        "Click Scan Folder and choose that folder.",
         "Wait for analysis to finish. Review KEEP, REVIEW, and DISCARD.",
-        "Click Run Pipeline to toss junk and auto-clean the keepers.",
+        "Check REVIEW clips for sudden camera movement notes.",
+        "Click Run Pipeline to move junk and process the keepers.",
         "Open the Processed folder and import the _CLEANED files into Filmora.",
-        "Do your creative edit in Filmora — titles, music, pacing, final polish."
+        "Finish your creative edit in Filmora — titles, music, pacing, and final polish."
     ]
 
     static let recommendedSettings: [ManualSection] = [
@@ -43,47 +44,60 @@ enum AppManual {
             body: "Leave this ON. It denoises audio, normalizes loudness, and removes awkward pauses longer than about 2 seconds."
         ),
         ManualSection(
+            icon: "camera.metering.center.weighted",
+            title: "Stabilization",
+            body: "Turn this ON for walking footage or clips flagged for sudden camera movement. It smooths shaky motion after trimming."
+        ),
+        ManualSection(
             icon: "folder.badge.gearshape",
             title: "Smart Analysis First",
-            body: "Run Smart Analysis before cleaning so obvious junk goes to _DISCARD and you do not waste time polishing clips you will never use."
+            body: "Run Smart Analysis before cleaning so obvious junk goes to _DISCARD and sudden camera jerks are flagged for review."
         )
     ]
 
     static let tabGuide: [ManualSection] = [
         ManualSection(
-            icon: "flag.checkered",
-            title: "Pit Lane",
+            icon: "scissors",
+            title: "Clip Cleaner",
             body: "Batch-trim and polish clips. Choose your folder, confirm settings, and start processing. Clean files land in Processed/."
         ),
         ManualSection(
-            icon: "binoculars.fill",
-            title: "Scouting",
-            body: "Scan a folder, score clips for talking and motion, and get KEEP / REVIEW / DISCARD recommendations."
+            icon: "waveform.badge.magnifyingglass",
+            title: "Smart Analysis",
+            body: "Scan a folder, score clips for talking and motion, detect sudden camera movement, and get KEEP / REVIEW / DISCARD recommendations."
         ),
         ManualSection(
-            icon: "wrench.and.screwdriver.fill",
-            title: "Garage Setup",
+            icon: "gearshape",
+            title: "Settings",
             body: "Tune Smart Analysis thresholds for your shooting style."
         ),
         ManualSection(
-            icon: "book.fill",
-            title: "Race Manual",
-            body: "This guide. It updates every time Hughes Hot Lap gets a meaningful new feature."
+            icon: "book",
+            title: "Guide",
+            body: "This workflow manual. It updates every time Hughes Clip Prep gets a meaningful new feature."
         )
     ]
 
     static let requirements: [String] = [
         "Auto-Editor — brew install auto-editor",
-        "FFmpeg — brew install ffmpeg (needed for Production Pass)",
+        "FFmpeg — brew install ffmpeg (Production Pass and stabilization)",
         "Filmora for final creative editing"
     ]
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.6",
+            highlights: [
+                "Renamed to Hughes Clip Prep with a professional workflow-focused design.",
+                "Sudden camera movement detection flags clips for REVIEW with timestamps.",
+                "Optional stabilization pass in Clip Cleaner for shaky footage."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.5",
             highlights: [
-                "Rebranded to Hughes Hot Lap with McLaren F1 colors.",
-                "Added Race Manual tab with workflow guide and changelog."
+                "Added in-app workflow guide and changelog.",
+                "Professional orange and blue interface theme."
             ]
         ),
         ManualChangelogEntry(
@@ -117,7 +131,7 @@ enum AppManual {
         ManualChangelogEntry(
             version: "1.0",
             highlights: [
-                "Smart Analysis, Run Pipeline, Clip Cleaner, and Settings tabs launched."
+                "Smart Analysis, Run Pipeline, Clip Cleaner, and Settings launched."
             ]
         )
     ]

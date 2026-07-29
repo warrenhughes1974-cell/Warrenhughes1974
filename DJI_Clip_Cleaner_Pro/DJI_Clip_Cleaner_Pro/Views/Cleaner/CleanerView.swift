@@ -12,6 +12,9 @@ struct CleanerView: View {
     private var savedTrimMode =
         CleaningTrimMode.edgesOnly.rawValue
 
+    @AppStorage("stabilizationEnabled")
+    private var stabilizationEnabled = false
+
     @AppStorage("productionPassEnabled")
     private var productionPassEnabled = true
 
@@ -78,7 +81,7 @@ struct CleanerView: View {
         HStack(spacing: 16) {
             Image(
                 systemName:
-                    "flag.checkered.2.crossed"
+                    "film.stack"
             )
             .font(.system(size: 34))
             .foregroundStyle(AppTheme.papaya)
@@ -467,6 +470,22 @@ struct CleanerView: View {
                     }
                 }
 
+                Toggle(
+                    "Stabilization",
+                    isOn: $stabilizationEnabled
+                )
+                .disabled(
+                    viewModel.isProcessing
+                )
+
+                Text(
+                    "Smooths shaky camera movement after trimming. Useful for walking footage or clips flagged for sudden movement in Smart Analysis."
+                )
+                .foregroundStyle(
+                    .secondary
+                )
+                .font(.callout)
+
                 Divider()
 
                 Label(
@@ -525,7 +544,9 @@ struct CleanerView: View {
                                     trimMode:
                                         selectedTrimMode,
                                     productionPass:
-                                        productionPassSettings
+                                        productionPassSettings,
+                                    stabilize:
+                                        stabilizationEnabled
                                 )
                         } label: {
                             Label(

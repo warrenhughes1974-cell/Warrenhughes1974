@@ -1,9 +1,9 @@
 import Foundation
 
 enum AppIdentity {
-    static let name = "Hughes Hot Lap"
-    static let tagline = "Grid-ready DJI clips before Filmora"
-    static let version = "1.5"
-    static let desktopFolderName = "Hughes Hot Lap"
-    static let desktopAppName = "Hughes Hot Lap.app"
+    static let name = "Hughes Clip Prep"
+    static let tagline = "Prepare DJI footage before editing"
+    static let version = "1.6"
+    static let desktopFolderName = "Hughes Clip Prep"
+    static let desktopAppName = "Hughes Clip Prep.app"
 }

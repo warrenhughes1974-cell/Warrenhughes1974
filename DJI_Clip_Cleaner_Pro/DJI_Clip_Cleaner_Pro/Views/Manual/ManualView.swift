@@ -20,12 +20,12 @@ struct ManualView: View {
     private var hero: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
-                Image(systemName: "flag.checkered.2.crossed")
+                Image(systemName: "book.closed.fill")
                     .font(.system(size: 34))
                     .foregroundStyle(AppTheme.papaya)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Race Manual")
+                    Text("Workflow Guide")
                         .font(.largeTitle.bold())
                         .foregroundStyle(AppTheme.carbon)
 
@@ -49,7 +49,7 @@ struct ManualView: View {
                 .foregroundStyle(.secondary)
 
             Text(
-                "Use this guide before every shoot folder. Hughes Hot Lap is your pit stop — it sorts junk, trims dead air, and polishes audio so Filmora gets cleaner raw material."
+                "Use this guide before every shoot folder. Hughes Clip Prep sorts junk, trims dead air, polishes audio, and can smooth shaky camera movement so Filmora gets cleaner source material."
             )
             .foregroundStyle(.secondary)
         }
@@ -66,7 +66,7 @@ struct ManualView: View {
 
     private var workflowSection: some View {
         manualGroup(
-            title: "How To Edit A Shoot Folder",
+            title: "How To Prepare A Shoot Folder",
             icon: "list.number"
         ) {
             VStack(alignment: .leading, spacing: 14) {
@@ -162,7 +162,7 @@ struct ManualView: View {
 
     private var footer: some View {
         Text(
-            "To update Hughes Hot Lap, double-click Update.command inside Desktop/\(AppIdentity.desktopFolderName)/. Look for the version badge in Scouting to confirm you are on the latest build."
+            "To update \(AppIdentity.name), double-click Update.command inside Desktop/\(AppIdentity.desktopFolderName)/. Look for the version badge in Smart Analysis to confirm you are on the latest build."
         )
         .font(.caption)
         .foregroundStyle(.secondary)

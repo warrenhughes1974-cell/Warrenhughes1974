@@ -1,15 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
-TEMP_REPO="$(mktemp -d /tmp/hughes-hot-lap-update.XXXXXX)"
+TEMP_REPO="$(mktemp -d /tmp/hughes-clip-prep-update.XXXXXX)"
 trap 'rm -rf "$TEMP_REPO"' EXIT
 
 REPO_URL="https://github.com/warrenhughes1974-cell/Warrenhughes1974.git"
 INSTALLER="$TEMP_REPO/DJI_Clip_Cleaner_Pro/install-on-mac.sh"
-PROJECT_DIR="$HOME/Desktop/Hughes Hot Lap"
+PROJECT_DIR="$HOME/Desktop/Hughes Clip Prep"
 BUILD_SCRIPT="$PROJECT_DIR/Install App on Desktop.command"
 
-echo "=== Hughes Hot Lap — Update ==="
+echo "=== Hughes Clip Prep — Update ==="
 echo "Downloading latest version..."
 
 git clone --depth 1 --filter=blob:none --sparse "$REPO_URL" "$TEMP_REPO"

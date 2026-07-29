@@ -1,11 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-# Installs or updates Hughes Hot Lap on your Desktop.
+# Installs or updates Hughes Clip Prep on your Desktop.
 
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
-DEST="$HOME/Desktop/Hughes Hot Lap"
-OLD_DEST="$HOME/Desktop/DJI Clip Cleaner Pro"
+DEST="$HOME/Desktop/Hughes Clip Prep"
+OLD_DEST_HOT_LAP="$HOME/Desktop/Hughes Hot Lap"
+OLD_DEST_DJI="$HOME/Desktop/DJI Clip Cleaner Pro"
 
 echo "Installing to:"
 echo "  $DEST"
@@ -13,7 +14,6 @@ echo "  $DEST"
 mkdir -p "$DEST"
 ditto "$REPO_ROOT" "$DEST"
 
-# Remove stale user-specific Xcode state from copied project.
 rm -rf "$DEST/DJI Clip Cleaner Pro.xcodeproj/xcuserdata"
 rm -rf "$DEST/DJI Clip Cleaner Pro.xcodeproj/project.xcworkspace/xcuserdata"
 
@@ -52,12 +52,12 @@ fi
 
 echo ""
 echo "Desktop app after install:"
-echo "  ~/Desktop/Hughes Hot Lap.app"
+echo "  ~/Desktop/Hughes Clip Prep.app"
 echo ""
 echo "To update later, double-click:"
-echo "  Desktop/Hughes Hot Lap/Update.command"
+echo "  Desktop/Hughes Clip Prep/Update.command"
 echo ""
-if [[ -d "$OLD_DEST" ]]; then
-  echo "Note: your old DJI Clip Cleaner Pro folder is still on the Desktop."
-  echo "You can delete it after confirming Hughes Hot Lap works."
+if [[ -d "$OLD_DEST_HOT_LAP" || -d "$OLD_DEST_DJI" ]]; then
+  echo "Note: older app folders may still be on your Desktop."
+  echo "You can delete them after confirming Hughes Clip Prep works."
 fi
