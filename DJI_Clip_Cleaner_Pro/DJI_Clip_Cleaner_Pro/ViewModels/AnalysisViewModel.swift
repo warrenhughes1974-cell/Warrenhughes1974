@@ -11,11 +11,16 @@ final class AnalysisViewModel {
     var statusMessage = "Choose a folder of DJI clips to analyze."
     var errorMessage: String?
 
+    private var scanTask: Task<Void, Never>?
     private var analysisTask: Task<Void, Never>?
 
-    func chooseFolder() {
-        guard !isScanning, !isAnalyzing else { return }
+    private static let lastFolderPathKey = "analysisLastFolderPath"
 
+    init() {
+        restoreLastFolderIfAvailable()
+    }
+
+    func chooseFolder() {
         let panel = NSOpenPanel()
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
@@ -23,13 +28,61 @@ final class AnalysisViewModel {
         panel.prompt = "Analyze Folder"
         panel.message = "Select a folder containing video clips."
 
+        if let selectedFolderURL {
+            panel.directoryURL = selectedFolderURL
+        } else if let lastPath = UserDefaults.standard.string(forKey: Self.lastFolderPathKey) {
+            panel.directoryURL = URL(fileURLWithPath: lastPath)
+        }
+
         guard panel.runModal() == .OK, let url = panel.url else { return }
+        rememberFolder(url)
+        startScan(for: url)
+    }
+
+    func rescan() {
+        if let selectedFolderURL {
+            startScan(for: selectedFolderURL)
+        } else {
+            chooseFolder()
+        }
+    }
+
+    private func rememberFolder(_ url: URL) {
         selectedFolderURL = url
-        Task { await scanFolder(url) }
+        UserDefaults.standard.set(url.path, forKey: Self.lastFolderPathKey)
+    }
+
+    private func restoreLastFolderIfAvailable() {
+        guard let path = UserDefaults.standard.string(forKey: Self.lastFolderPathKey) else {
+            return
+        }
+
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory),
+              isDirectory.boolValue else {
+            return
+        }
+
+        selectedFolderURL = URL(fileURLWithPath: path)
+        statusMessage = "Ready to rescan \(URL(fileURLWithPath: path).lastPathComponent)."
+    }
+
+    private func startScan(for folderURL: URL) {
+        scanTask?.cancel()
+        analysisTask?.cancel()
+        isAnalyzing = false
+
+        scanTask = Task {
+            await scanFolder(folderURL)
+        }
     }
 
     func scanFolder(_ folderURL: URL) async {
-        analysisTask?.cancel()
+        if Task.isCancelled {
+            return
+        }
+
+        rememberFolder(folderURL)
 
         isScanning = true
         isAnalyzing = false
@@ -39,6 +92,12 @@ final class AnalysisViewModel {
 
         do {
             let urls = try FolderScanner.scanVideos(in: folderURL)
+
+            if Task.isCancelled {
+                isScanning = false
+                return
+            }
+
             guard !urls.isEmpty else {
                 statusMessage = "No supported video files found in this folder."
                 isScanning = false
@@ -49,20 +108,26 @@ final class AnalysisViewModel {
             let videos = VideoFile.sortByCaptureDate(
                 await VideoMetadataService.loadVideoFiles(from: urls)
             )
+
+            if Task.isCancelled {
+                isScanning = false
+                return
+            }
+
             results = videos.map { AnalysisResult(video: $0) }
             isScanning = false
 
             await runAnalysis()
         } catch {
+            if Task.isCancelled {
+                isScanning = false
+                return
+            }
+
             errorMessage = error.localizedDescription
             statusMessage = "Scan failed."
             isScanning = false
         }
-    }
-
-    func rescan() {
-        guard let selectedFolderURL else { return }
-        Task { await scanFolder(selectedFolderURL) }
     }
 
     func cancelAnalysis() {

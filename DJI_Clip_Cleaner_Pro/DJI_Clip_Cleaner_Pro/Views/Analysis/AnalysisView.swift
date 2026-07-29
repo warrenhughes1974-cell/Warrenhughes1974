@@ -84,12 +84,10 @@ struct AnalysisView: View {
             Button("Choose Folder") {
                 viewModel.chooseFolder()
             }
-            .disabled(viewModel.isScanning || viewModel.isAnalyzing)
 
             Button("Rescan") {
                 viewModel.rescan()
             }
-            .disabled(viewModel.selectedFolderURL == nil || viewModel.isScanning || viewModel.isAnalyzing)
 
             Button("Export CSV") {
                 viewModel.exportReport()
