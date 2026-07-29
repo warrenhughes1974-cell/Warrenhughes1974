@@ -29,7 +29,8 @@ enum AppManual {
         "Click Generate Thumbnails to create 1280×720 images with pink titles in Thumbnails/.",
         "Click Run Pipeline to move junk and process the keepers.",
         "Open the Processed folder and import the _CLEANED files into Filmora.",
-        "Finish your creative edit in Filmora — titles, music, pacing, and final polish."
+        "Finish your creative edit in Filmora — titles, music, pacing, and final polish.",
+        "Go to YouTube Prep, choose your finished export, type your hook, and build the upload package."
     ]
 
     static let recommendedSettings: [ManualSection] = [
@@ -77,9 +78,14 @@ enum AppManual {
             body: "Scan a folder, score clips for talking and motion, detect sudden camera movement, and get KEEP / REVIEW / DISCARD recommendations."
         ),
         ManualSection(
+            icon: "square.and.arrow.up",
+            title: "YouTube Prep",
+            body: "Choose your finished Filmora export, type a hook, and generate thumbnail, description, tags, and an upload package folder."
+        ),
+        ManualSection(
             icon: "gearshape",
             title: "Settings",
-            body: "Tune Smart Analysis thresholds for your shooting style."
+            body: "Tune Smart Analysis thresholds and your brand style for titles and thumbnails."
         ),
         ManualSection(
             icon: "book",
@@ -95,6 +101,14 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.12",
+            highlights: [
+                "New YouTube Prep tab for finished Filmora exports.",
+                "Generate thumbnail, description, and tags from one video file.",
+                "Build Upload Package saves title, description, tags, and thumbnail into YouTube_Prep/."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.11",
             highlights: [

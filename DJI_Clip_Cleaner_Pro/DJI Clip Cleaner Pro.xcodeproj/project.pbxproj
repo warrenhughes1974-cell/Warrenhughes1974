@@ -36,6 +36,9 @@
 		D5E6F7A8B9C6488990ABCD004 /* ThumbnailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F7A8B9C0D6488990ABCD004 /* ThumbnailService.swift */; };
 		F7A8B9C0D1E6488990ABCD005 /* BrandPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B9C0D1E2F6488990ABCD005 /* BrandPreset.swift */; };
 		B9C0D1E2F3A6488990ABCD005 /* BrandThumbnailPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D1E2F3A4B6488990ABCD005 /* BrandThumbnailPreview.swift */; };
+		D1E2F3A4B5C6488990ABCD006 /* YouTubePrepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F3A4B5C6D6488990ABCD006 /* YouTubePrepView.swift */; };
+		F3A4B5C6D7E6488990ABCD006 /* YouTubePrepViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B5C6D7E8F6488990ABCD006 /* YouTubePrepViewModel.swift */; };
+		B5C6D7E8F9A6488990ABCD006 /* YouTubeMetadataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6D7E8F9A0B6488990ABCD006 /* YouTubeMetadataService.swift */; };
 		76371AAF57FB412DAB274AF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AE23DC4F179498E9C87B3CF /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +72,9 @@
 		E6F7A8B9C0D6488990ABCD004 /* ThumbnailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailService.swift; sourceTree = "<group>"; };
 		A8B9C0D1E2F6488990ABCD005 /* BrandPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandPreset.swift; sourceTree = "<group>"; };
 		C0D1E2F3A4B6488990ABCD005 /* BrandThumbnailPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandThumbnailPreview.swift; sourceTree = "<group>"; };
+		E2F3A4B5C6D6488990ABCD006 /* YouTubePrepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubePrepView.swift; sourceTree = "<group>"; };
+		A4B5C6D7E8F6488990ABCD006 /* YouTubePrepViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubePrepViewModel.swift; sourceTree = "<group>"; };
+		C6D7E8F9A0B6488990ABCD006 /* YouTubeMetadataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeMetadataService.swift; sourceTree = "<group>"; };
 		8AE23DC4F179498E9C87B3CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5CF9B53D2BA04BE1AB4A6069 /* Hughes Clip Prep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hughes Clip Prep.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -121,6 +127,7 @@
 				A5A0637BBF2445A483EB7062 /* Cleaner */,
 				F806D89CAD0C4C4BB78CFCAB /* Analysis */,
 				B1C2D3E4F5A6478990ABCDEE /* Settings */,
+				D7E8F9A0B1C6488990ABCD006 /* YouTubePrep */,
 				E1F2A3B4C5D6488990ABCD002 /* Manual */,
 			);
 			path = Views;
@@ -145,6 +152,7 @@
 			children = (
 				3927D2515C8F40CF8DB7C8C2 /* CleanerViewModel.swift */,
 				B3A7B92768624CABBAAB3134 /* AnalysisViewModel.swift */,
+				A4B5C6D7E8F6488990ABCD006 /* YouTubePrepViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -162,6 +170,7 @@
 				E1F2A3B4C5D7488990ABCD003 /* StabilizationService.swift */,
 				C4D5E6F7A8B6488990ABCD004 /* TitleSuggestionService.swift */,
 				E6F7A8B9C0D6488990ABCD004 /* ThumbnailService.swift */,
+				C6D7E8F9A0B6488990ABCD006 /* YouTubeMetadataService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -207,6 +216,14 @@
 				C0D1E2F3A4B6488990ABCD005 /* BrandThumbnailPreview.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		D7E8F9A0B1C6488990ABCD006 /* YouTubePrep */ = {
+			isa = PBXGroup;
+			children = (
+				E2F3A4B5C6D6488990ABCD006 /* YouTubePrepView.swift */,
+			);
+			path = YouTubePrep;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -307,6 +324,9 @@
 				D5E6F7A8B9C6488990ABCD004 /* ThumbnailService.swift in Sources */,
 				F7A8B9C0D1E6488990ABCD005 /* BrandPreset.swift in Sources */,
 				B9C0D1E2F3A6488990ABCD005 /* BrandThumbnailPreview.swift in Sources */,
+				D1E2F3A4B5C6488990ABCD006 /* YouTubePrepView.swift in Sources */,
+				F3A4B5C6D7E6488990ABCD006 /* YouTubePrepViewModel.swift in Sources */,
+				B5C6D7E8F9A6488990ABCD006 /* YouTubeMetadataService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,7 +388,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -399,7 +419,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
