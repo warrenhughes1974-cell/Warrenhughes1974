@@ -13,6 +13,12 @@ enum AppTheme {
         blue: 0.722
     )
 
+    static let brandPink = Color(
+        red: 1.0,
+        green: 0.30,
+        blue: 0.60
+    )
+
     static let carbon = Color(
         red: 0.07,
         green: 0.08,

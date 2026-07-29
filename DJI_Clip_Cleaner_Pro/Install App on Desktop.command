@@ -6,7 +6,7 @@ XCODEPROJ="$PROJECT_DIR/DJI Clip Cleaner Pro.xcodeproj"
 SCHEME="Hughes Clip Prep"
 BUILD_DIR="$HOME/Library/Application Support/HughesClipPrep/build"
 DESKTOP_APP="$HOME/Desktop/Hughes Clip Prep.app"
-APP_VERSION="1.6"
+APP_VERSION="1.8"
 
 echo "=== Building Hughes Clip Prep v${APP_VERSION} ==="
 echo "This may take a minute..."
@@ -50,6 +50,6 @@ echo ""
 
 open "$DESKTOP_APP"
 
-osascript -e "display dialog \"Version ${APP_VERSION} is now on your Desktop.\n\nOpen the Guide tab for the full editing workflow.\n\nNew: sudden movement detection and optional stabilization.\" buttons {\"OK\"} with title \"Hughes Clip Prep\""
+osascript -e "display dialog \"Version ${APP_VERSION} is now on your Desktop.\n\nSet your brand in Settings, then use Generate Thumbnails in Smart Analysis for pink titled thumbnails.\" buttons {\"OK\"} with title \"Hughes Clip Prep\""
 
 osascript -e "display notification \"Version ${APP_VERSION} installed on Desktop.\" with title \"Hughes Clip Prep\""

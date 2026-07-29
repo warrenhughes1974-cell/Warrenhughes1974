@@ -2,11 +2,13 @@ import SwiftUI
 
 struct SettingsView: View {
     @State private var settings = AnalysisSettings.shared
+    @State private var brand = BrandSettings.shared
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 header
+                brandSection
                 presetsSection
                 rulesSection
                 footer
@@ -20,8 +22,111 @@ struct SettingsView: View {
             Text("Settings")
                 .font(.largeTitle.bold())
                 .foregroundStyle(AppTheme.carbon)
-            Text("Tune how Smart Analysis scores your clips. Changes apply the next time you scan a folder.")
+            Text("Set your brand once, then every title and thumbnail follows the same pattern.")
                 .foregroundStyle(.secondary)
+        }
+    }
+
+    private var brandSection: some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Series Preset")
+                        .fontWeight(.semibold)
+
+                    Picker("Series Preset", selection: $brand.selectedPreset) {
+                        ForEach(BrandPreset.allCases) { preset in
+                            Text(preset.displayName).tag(preset)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: brand.selectedPreset) { _, newValue in
+                        if newValue != .custom {
+                            brand.seriesName = newValue.seriesName
+                        }
+                        brand.save()
+                    }
+
+                    Text("Pick a preset for consistent hooks, or choose Custom for your own series name.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Channel Prefix")
+                        .fontWeight(.semibold)
+                    TextField("Hughes", text: $brand.channelPrefix)
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit { brand.save() }
+                    Text("Your channel or creator name at the start of every title.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Series Name")
+                        .fontWeight(.semibold)
+                    TextField("Halloween Store Hunt", text: $brand.seriesName)
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit { brand.save() }
+                        .disabled(brand.selectedPreset != .custom)
+                    Text(
+                        brand.selectedPreset == .custom
+                            ? "Usually auto-filled from the folder name when you scan a shoot."
+                            : "Locked while a preset is selected. Switch to Custom to edit."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Title Format")
+                        .fontWeight(.semibold)
+
+                    Picker("Title Format", selection: $brand.titleFormat) {
+                        ForEach(BrandTitleFormat.allCases) { format in
+                            Text(format.displayName).tag(format)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .onChange(of: brand.titleFormat) { _, _ in
+                        brand.save()
+                    }
+                }
+
+                Toggle("Use pink titles on thumbnails", isOn: $brand.usePinkTitles)
+                    .onChange(of: brand.usePinkTitles) { _, _ in
+                        brand.save()
+                    }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Thumbnail Preview")
+                        .fontWeight(.semibold)
+
+                    BrandThumbnailPreview(
+                        title: brand.sampleTitle,
+                        usePinkTitles: brand.usePinkTitles,
+                        titlePinkRed: brand.titlePinkRed,
+                        titlePinkGreen: brand.titlePinkGreen,
+                        titlePinkBlue: brand.titlePinkBlue
+                    )
+                }
+
+                Text("Thumbnails save to a Thumbnails folder as 1280×720 JPEGs with your title along the bottom.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(4)
+            .onChange(of: brand.channelPrefix) { _, _ in brand.save() }
+            .onChange(of: brand.seriesName) { _, newValue in
+                if brand.selectedPreset == .custom, !newValue.isEmpty {
+                    brand.save()
+                }
+            }
+        } label: {
+            Label("Brand & Thumbnails", systemImage: "photo.on.rectangle.angled")
+                .font(.headline)
+                .foregroundStyle(AppTheme.mclarenBlue)
         }
     }
 
@@ -41,7 +146,7 @@ struct SettingsView: View {
             }
             .padding(4)
         } label: {
-            Label("Presets", systemImage: "slider.horizontal.3")
+            Label("Analysis Presets", systemImage: "slider.horizontal.3")
                 .font(.headline)
         }
     }
@@ -120,7 +225,7 @@ struct SettingsView: View {
     }
 
     private var footer: some View {
-        Text("Settings save automatically. Rescan a folder in Smart Analysis to apply new rules.")
+        Text("Settings save automatically. After changing your brand, use Refresh Titles in Smart Analysis to update every clip.")
             .font(.caption)
             .foregroundStyle(.secondary)
     }

@@ -21,7 +21,11 @@ enum AppManual {
         "Open Hughes Clip Prep and go to Smart Analysis.",
         "Click Scan Folder and choose that folder.",
         "Wait for analysis to finish. Review KEEP, REVIEW, and DISCARD.",
-        "Check REVIEW clips for sudden camera movement notes.",
+        "Check the pink Title column for each clip. Click any title to edit it before generating thumbnails.",
+        "Open Settings and pick a Series Preset (Halloween Hunt, Store Walk, Product Review) for consistent naming.",
+        "Set your Channel Prefix and Title Format once — every clip follows the same pattern.",
+        "Use Refresh Titles after changing brand settings to update every clip at once.",
+        "Click Generate Thumbnails to create 1280×720 images with pink titles in Thumbnails/.",
         "Click Run Pipeline to move junk and process the keepers.",
         "Open the Processed folder and import the _CLEANED files into Filmora.",
         "Finish your creative edit in Filmora — titles, music, pacing, and final polish."
@@ -47,6 +51,11 @@ enum AppManual {
             icon: "camera.metering.center.weighted",
             title: "Stabilization",
             body: "Turn this ON for walking footage or clips flagged for sudden camera movement. It smooths shaky motion after trimming."
+        ),
+        ManualSection(
+            icon: "photo.on.rectangle.angled",
+            title: "Brand & Thumbnails",
+            body: "Pick a series preset, set your channel prefix, and choose a title format. Hughes Clip Prep suggests titles and exports branded thumbnails with pink titles for YouTube."
         ),
         ManualSection(
             icon: "folder.badge.gearshape",
@@ -85,6 +94,23 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.8",
+            highlights: [
+                "Series presets for Halloween Hunt, Store Walk, Product Review, and Behind the Scenes.",
+                "Title format picker keeps every clip on the same Channel · Series · Hook pattern.",
+                "Editable titles in Smart Analysis plus Refresh Titles after brand changes.",
+                "Live thumbnail preview in Brand & Thumbnails settings."
+            ]
+        ),
+        ManualChangelogEntry(
+            version: "1.7",
+            highlights: [
+                "Suggested titles for each clip based on your brand, folder, and clip type.",
+                "Generate Thumbnails creates 1280×720 images with pink branded titles.",
+                "Brand & Thumbnails settings for channel prefix and series name."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.6",
             highlights: [

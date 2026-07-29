@@ -103,7 +103,7 @@ struct AnalysisView: View {
                         .clipShape(Capsule())
                 }
 
-                Text("Scan a folder to detect talking, motion, and keep/review/discard recommendations.")
+                Text("Scan a folder to detect talking, motion, and get branded title suggestions for each clip.")
                     .foregroundStyle(.secondary)
             }
 
@@ -139,6 +139,18 @@ struct AnalysisView: View {
                 viewModel.exportReport()
             }
             .buttonStyle(.bordered)
+
+            Button("Refresh Titles") {
+                viewModel.refreshSuggestedTitles()
+            }
+            .buttonStyle(.bordered)
+            .disabled(viewModel.results.isEmpty || viewModel.isScanning || viewModel.isAnalyzing)
+
+            Button("Generate Thumbnails") {
+                viewModel.generateThumbnails()
+            }
+            .buttonStyle(.bordered)
+            .disabled(!viewModel.canGenerateThumbnails)
 
             Button("Run Pipeline") {
                 if viewModel.prepareRunPipeline() {
@@ -204,6 +216,18 @@ struct AnalysisView: View {
                             result.motionSummary,
                             status: result.motionStatus
                         )
+                    }
+                    TableColumn("Title") { result in
+                        if result.recommendation == .pending {
+                            Text("—")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        } else {
+                            EditableTitleCell(
+                                resultID: result.id,
+                                viewModel: viewModel
+                            )
+                        }
                     }
                     TableColumn("Recommendation") { result in
                         recommendationText(result.recommendation)

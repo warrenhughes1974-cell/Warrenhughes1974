@@ -1,6 +1,10 @@
 import Foundation
 import Observation
 
+#if canImport(AppKit)
+import AppKit
+#endif
+
 @MainActor
 @Observable
 final class AnalysisViewModel {
@@ -50,6 +54,55 @@ final class AnalysisViewModel {
     private func rememberFolder(_ url: URL) {
         selectedFolderURL = url
         UserDefaults.standard.set(url.path, forKey: Self.lastFolderPathKey)
+
+        let folderName = url.lastPathComponent
+
+        if let preset = BrandPreset.suggested(from: folderName) {
+            BrandSettings.shared.applyPreset(preset)
+        } else {
+            BrandSettings.shared.seriesName = TitleSuggestionService.suggestedSeriesName(
+                from: folderName
+            )
+            BrandSettings.shared.selectedPreset = .custom
+            BrandSettings.shared.save()
+        }
+    }
+
+    func updateSuggestedTitle(for id: UUID, title: String) {
+        guard let index = results.firstIndex(where: { $0.id == id }) else {
+            return
+        }
+
+        results[index].suggestedTitle = title
+    }
+
+    func refreshSuggestedTitles() {
+        guard !results.isEmpty else {
+            errorMessage = "Scan a folder first to refresh titles."
+            return
+        }
+
+        let brand = BrandSettings.shared.values
+        let folderName = selectedFolderURL?.lastPathComponent
+
+        for index in results.indices {
+            guard results[index].recommendation != .pending else {
+                continue
+            }
+
+            results[index].suggestedTitle = TitleSuggestionService.suggest(
+                video: results[index].video,
+                speechSummary: results[index].speechSummary,
+                motionSummary: results[index].motionSummary,
+                recommendation: results[index].recommendation,
+                notes: results[index].notes,
+                brand: brand,
+                folderName: folderName
+            )
+        }
+
+        statusMessage = "Refreshed titles using your current brand settings."
+        errorMessage = nil
     }
 
     private func restoreLastFolderIfAvailable() {
@@ -140,6 +193,13 @@ final class AnalysisViewModel {
 
     var canExportReport: Bool {
         !results.isEmpty
+    }
+
+    var canGenerateThumbnails: Bool {
+        !results.isEmpty &&
+        !isScanning &&
+        !isAnalyzing &&
+        results.contains { $0.recommendation != .discard && $0.recommendation != .pending }
     }
 
     var canRunPipeline: Bool {
@@ -268,6 +328,96 @@ final class AnalysisViewModel {
         }
     }
 
+    func generateThumbnails() {
+        guard canGenerateThumbnails, let selectedFolderURL else {
+            errorMessage = "Run Smart Analysis first, then generate thumbnails for KEEP and REVIEW clips."
+            return
+        }
+
+        errorMessage = nil
+
+        Task {
+            let thumbnailFolder = selectedFolderURL.appendingPathComponent(
+                ThumbnailService.outputFolderName,
+                isDirectory: true
+            )
+
+            do {
+                try FileManager.default.createDirectory(
+                    at: thumbnailFolder,
+                    withIntermediateDirectories: true
+                )
+            } catch {
+                errorMessage = "Could not create Thumbnails folder: \(error.localizedDescription)"
+                return
+            }
+
+            let brand = BrandSettings.shared.values
+            var generated = 0
+            var failed = 0
+
+            statusMessage = "Generating branded thumbnails..."
+
+            for index in results.indices {
+                let result = results[index]
+
+                guard result.recommendation == .keep || result.recommendation == .review else {
+                    continue
+                }
+
+                let baseName = result.video.url
+                    .deletingPathExtension()
+                    .lastPathComponent
+
+                let outputURL = thumbnailFolder.appendingPathComponent(
+                    "\(baseName)_thumb.jpg"
+                )
+
+                let title = result.suggestedTitle.isEmpty
+                    ? TitleSuggestionService.suggest(
+                        video: result.video,
+                        speechSummary: result.speechSummary,
+                        motionSummary: result.motionSummary,
+                        recommendation: result.recommendation,
+                        notes: result.notes,
+                        brand: brand,
+                        folderName: selectedFolderURL.lastPathComponent
+                    )
+                    : result.suggestedTitle
+
+                do {
+                    try await ThumbnailService.generate(
+                        from: result.video.url,
+                        title: title,
+                        brand: brand,
+                        outputURL: outputURL
+                    )
+
+                    results[index].thumbnailPath = outputURL.path
+                    results[index].suggestedTitle = title
+                    generated += 1
+                } catch {
+                    failed += 1
+                }
+            }
+
+            if generated == 0 {
+                statusMessage = "No thumbnails were created."
+                errorMessage = failed > 0
+                    ? "Thumbnail generation failed for all selected clips."
+                    : "No KEEP or REVIEW clips were available for thumbnails."
+            } else {
+                statusMessage = "Created \(generated) branded thumbnail(s) in Thumbnails/."
+                if failed > 0 {
+                    errorMessage = "\(failed) thumbnail(s) could not be created."
+                }
+                #if canImport(AppKit)
+                NSWorkspace.shared.activateFileViewerSelecting([thumbnailFolder])
+                #endif
+            }
+        }
+    }
+
     private func runAnalysis() async {
         guard !results.isEmpty else { return }
 
@@ -308,6 +458,15 @@ final class AnalysisViewModel {
                 )
                 results[index].recommendation = recommendation.0
                 results[index].notes = recommendation.1
+                results[index].suggestedTitle = TitleSuggestionService.suggest(
+                    video: results[index].video,
+                    speechSummary: speechResult.summary,
+                    motionSummary: motionResult.summary,
+                    recommendation: recommendation.0,
+                    notes: recommendation.1,
+                    brand: BrandSettings.shared.values,
+                    folderName: selectedFolderURL?.lastPathComponent
+                )
             }
 
             if Task.isCancelled {
