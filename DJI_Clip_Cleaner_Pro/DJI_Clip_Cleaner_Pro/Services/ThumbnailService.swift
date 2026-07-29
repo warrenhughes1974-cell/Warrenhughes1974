@@ -164,21 +164,10 @@ enum ThumbnailService {
 
         let fontSize = fontSizeForTitle(displayTitle, canvasWidth: canvasSize.width)
         let font = NSFont.boldSystemFont(ofSize: fontSize)
-        let shadow = NSShadow()
-        shadow.shadowColor = NSColor.black.withAlphaComponent(0.75)
-        shadow.shadowBlurRadius = 8
-        shadow.shadowOffset = NSSize(width: 0, height: -2)
 
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .left
         paragraph.lineBreakMode = .byWordWrapping
-
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: font,
-            .foregroundColor: titleColor,
-            .shadow: shadow,
-            .paragraphStyle: paragraph
-        ]
 
         let inset: CGFloat = 36
         let textRect = CGRect(
@@ -188,13 +177,39 @@ enum ThumbnailService {
             height: barHeight - inset
         )
 
-        displayTitle.draw(
-            with: textRect,
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: attributes
+        drawOutlinedTitle(
+            displayTitle,
+            in: textRect,
+            font: font,
+            fillColor: titleColor,
+            paragraph: paragraph
         )
 
         return image
+    }
+
+    private static func drawOutlinedTitle(
+        _ title: String,
+        in rect: CGRect,
+        font: NSFont,
+        fillColor: NSColor,
+        paragraph: NSParagraphStyle
+    ) {
+        let outlineWidth = max(font.pointSize * 0.14, 4.0)
+
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: fillColor,
+            .strokeColor: NSColor.black,
+            .strokeWidth: -outlineWidth,
+            .paragraphStyle: paragraph
+        ]
+
+        title.draw(
+            with: rect,
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: attributes
+        )
     }
 
     private static func aspectFillRect(

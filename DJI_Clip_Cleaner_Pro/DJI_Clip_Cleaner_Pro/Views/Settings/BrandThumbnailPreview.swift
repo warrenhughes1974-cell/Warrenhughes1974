@@ -43,10 +43,7 @@ struct BrandThumbnailPreview: View {
             )
             .clipShape(RoundedRectangle(cornerRadius: 10))
 
-            Text(title)
-                .font(.headline.bold())
-                .foregroundStyle(titleColor)
-                .shadow(color: .black.opacity(0.75), radius: 6, y: 2)
+            outlinedTitle(title)
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -55,6 +52,51 @@ struct BrandThumbnailPreview: View {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(AppTheme.papaya.opacity(0.35), lineWidth: 1)
         )
+    }
+
+    @ViewBuilder
+    private func outlinedTitle(_ title: String) -> some View {
+        let font = Font.headline.bold()
+
+        ZStack {
+            Text(title)
+                .font(font)
+                .foregroundStyle(.black)
+                .offset(x: -2, y: 0)
+            Text(title)
+                .font(font)
+                .foregroundStyle(.black)
+                .offset(x: 2, y: 0)
+            Text(title)
+                .font(font)
+                .foregroundStyle(.black)
+                .offset(x: 0, y: -2)
+            Text(title)
+                .font(font)
+                .foregroundStyle(.black)
+                .offset(x: 0, y: 2)
+            Text(title)
+                .font(font)
+                .foregroundStyle(.black)
+                .offset(x: -1.5, y: -1.5)
+            Text(title)
+                .font(font)
+                .foregroundStyle(.black)
+                .offset(x: 1.5, y: -1.5)
+            Text(title)
+                .font(font)
+                .foregroundStyle(.black)
+                .offset(x: -1.5, y: 1.5)
+            Text(title)
+                .font(font)
+                .foregroundStyle(.black)
+                .offset(x: 1.5, y: 1.5)
+
+            Text(title)
+                .font(font)
+                .foregroundStyle(titleColor)
+        }
+        .multilineTextAlignment(.leading)
     }
 }
 

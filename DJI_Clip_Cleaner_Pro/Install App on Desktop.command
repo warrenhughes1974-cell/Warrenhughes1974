@@ -6,7 +6,7 @@ XCODEPROJ="$PROJECT_DIR/DJI Clip Cleaner Pro.xcodeproj"
 SCHEME="Hughes Clip Prep"
 BUILD_DIR="$HOME/Library/Application Support/HughesClipPrep/build"
 DESKTOP_APP="$HOME/Desktop/Hughes Clip Prep.app"
-APP_VERSION="1.8"
+APP_VERSION="1.9"
 
 echo "=== Building Hughes Clip Prep v${APP_VERSION} ==="
 echo "This may take a minute..."

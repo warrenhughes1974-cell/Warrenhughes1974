@@ -95,6 +95,13 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.9",
+            highlights: [
+                "Thumbnail titles now have a bold black outline so pink text pops on busy frames.",
+                "Settings preview matches the outlined thumbnail look."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.8",
             highlights: [
                 "Series presets for Halloween Hunt, Store Walk, Product Review, and Behind the Scenes.",
