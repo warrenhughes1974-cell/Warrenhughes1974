@@ -49,7 +49,6 @@ struct AnalysisView: View {
             footer
         }
         .padding(20)
-        .navigationTitle("Scouting")
         .sheet(isPresented: $showingSettings) {
             SettingsView()
                 .frame(minWidth: 520, minHeight: 640)
