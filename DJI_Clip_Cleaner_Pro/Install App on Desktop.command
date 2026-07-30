@@ -7,7 +7,7 @@ SCHEME="Hughes Clip Prep"
 BUILD_DIR="$HOME/Library/Application Support/HughesClipPrep/build"
 LOG_FILE="$HOME/Library/Application Support/HughesClipPrep/last-build.log"
 DESKTOP_APP="$HOME/Desktop/Hughes Clip Prep.app"
-APP_VERSION="1.29"
+APP_VERSION="1.30"
 
 echo "=== Building Hughes Clip Prep v${APP_VERSION} ==="
 echo "This may take a minute..."

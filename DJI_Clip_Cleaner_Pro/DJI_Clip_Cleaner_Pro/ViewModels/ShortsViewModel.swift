@@ -18,7 +18,7 @@ struct ShortExportResult: Identifiable, Sendable {
 final class ShortsViewModel {
     var selectedVideoURL: URL?
     var longFormTitle = ""
-    var targetLength: ShortsFinderService.TargetLength = .fullMinute
+    var targetLength: ShortsFinderService.TargetLength = .standard
     var transcript: Transcript?
     var burnCaptions = true
     var candidates: [ShortCandidate] = []
@@ -350,6 +350,13 @@ final class ShortsViewModel {
             lines.append("  Projected Retention: \(result.candidate.projectedRetention)")
             lines.append("  Best title: \(result.title)")
             lines.append("  Why it was picked: \(result.candidate.reason)")
+            lines.append("")
+            lines.append(
+                ShortsMetadataService.creativeBrief(
+                    for: result.candidate,
+                    preset: preset
+                ).notesBlock
+            )
         }
 
         try lines

@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.30",
+            highlights: [
+                "Each Short now comes with a creative brief: story beats (hook / build / button), music mood + search terms, mix tip, and Filmora/CapCut framing ideas.",
+                "Briefs also land in Shorts_upload_notes.txt after export so you can edit with a recipe, not just a raw clip.",
+                "Default Short length is back to 30 seconds."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.29",
             highlights: [
                 "Shorts length choices now go to 60s and 90s (default 60s) — not stuck at a 30-second tease.",

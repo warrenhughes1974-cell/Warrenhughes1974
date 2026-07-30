@@ -33,7 +33,7 @@ struct ShortsView: View {
                     .clipShape(Capsule())
             }
 
-            Text("This finds the best moments inside your finished long video and cuts each one into its own vertical Short (20–90 seconds) — not a shortened copy of the whole film.")
+            Text("Finds the strongest 20–90s moments in your finished video, exports each as a vertical Short, and gives you a story / music / Filmora edit recipe for each one.")
                 .foregroundStyle(.secondary)
         }
     }
@@ -98,7 +98,7 @@ struct ShortsView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    Text("Each export is one stand-alone Short you upload separately. Pick 60s or 90s if 30s feels too short.")
+                    Text("Each export is one stand-alone Short. Use 20s or 30s for punchy posts; open the creative brief under each moment for music and edit ideas.")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -229,6 +229,8 @@ struct ShortsView: View {
                         .foregroundStyle(.secondary)
                         .lineLimit(2)
                 }
+
+                creativeBriefBlock(for: candidate)
             }
         }
         .padding(12)
@@ -238,6 +240,62 @@ struct ShortsView: View {
                       ? AppTheme.papaya.opacity(0.14)
                       : AppTheme.softOrange.opacity(0.45))
         )
+    }
+
+    private func creativeBriefBlock(for candidate: ShortCandidate) -> some View {
+        let brief = ShortsMetadataService.creativeBrief(
+            for: candidate,
+            preset: BrandSettings.shared.selectedPreset
+        )
+
+        return VStack(alignment: .leading, spacing: 8) {
+            Text("How to build this Short")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(AppTheme.mclarenBlue)
+
+            Text(brief.storyShape)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            ForEach(Array(brief.beats.enumerated()), id: \.offset) { _, beat in
+                Text("• \(beat)")
+                    .font(.caption2)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Music")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Text(brief.musicMood)
+                    .font(.caption)
+                Text("Search: \(brief.musicSearch.joined(separator: ", "))")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                Text(brief.musicMixTip)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("In Filmora / CapCut")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                ForEach(Array(brief.framingTips.prefix(4).enumerated()), id: \.offset) { _, tip in
+                    Text("• \(tip)")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                Text("Ending: \(brief.endingMove)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppTheme.softBlue.opacity(0.55))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 
     private func scoreBadge(label: String, value: Int) -> some View {
@@ -275,7 +333,7 @@ struct ShortsView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
 
-                    Text("Shorts_upload_notes.txt in the same folder has the description and checklist for every clip.")
+                    Text("Shorts_upload_notes.txt has the description, checklist, and full edit/music recipe for every clip.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
