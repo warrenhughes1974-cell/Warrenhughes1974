@@ -124,7 +124,6 @@ enum ShortsFinderService {
         return scoreCandidates(
             energies: energies,
             motion: motion,
-            duration: duration,
             target: target,
             transcript: transcript,
             maximumResults: maximumResults
@@ -236,7 +235,6 @@ enum ShortsFinderService {
     private static func scoreCandidates(
         energies: [Float],
         motion: [(time: TimeInterval, level: Double)],
-        duration: TimeInterval,
         target: TimeInterval,
         transcript: Transcript?,
         maximumResults: Int
