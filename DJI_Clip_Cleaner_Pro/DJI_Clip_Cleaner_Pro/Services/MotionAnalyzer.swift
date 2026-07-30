@@ -48,7 +48,7 @@ enum MotionAnalyzer {
       let seconds = min(Double(index) * frameIntervalSeconds, max(duration - 0.1, 0))
       let time = CMTime(seconds: seconds, preferredTimescale: 600)
 
-      guard let cgImage = try? generator.copyCGImage(at: time, actualTime: nil) else {
+      guard let cgImage = try? await generator.image(at: time).image else {
         continue
       }
 

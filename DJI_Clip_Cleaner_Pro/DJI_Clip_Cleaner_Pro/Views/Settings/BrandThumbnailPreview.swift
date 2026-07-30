@@ -91,7 +91,7 @@ struct BrandThumbnailPreview: View {
             VStack {
                 HStack(spacing: 4) {
                     Spacer()
-                    ForEach(emojis.reversed(), id: \.self) { emoji in
+                    ForEach(Array(emojis.reversed()), id: \.self) { emoji in
                         Text(emoji).font(.system(size: emojiSize))
                     }
                 }

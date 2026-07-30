@@ -87,15 +87,7 @@ enum ThumbnailService {
         generator.requestedTimeToleranceBefore = CMTime(seconds: 0.5, preferredTimescale: 600)
         generator.requestedTimeToleranceAfter = CMTime(seconds: 0.5, preferredTimescale: 600)
 
-        return try await withCheckedThrowingContinuation { continuation in
-            generator.generateCGImageAsynchronously(for: time) { image, _, error in
-                if let image {
-                    continuation.resume(returning: image)
-                } else {
-                    continuation.resume(throwing: error ?? ServiceError.frameCaptureFailed)
-                }
-            }
-        }
+        return try await generator.image(at: time).image
     }
 
     #if canImport(AppKit)
@@ -109,144 +101,141 @@ enum ThumbnailService {
             height: CGFloat(thumbnailHeight)
         )
 
-        let image = NSImage(size: canvasSize)
-        image.lockFocus()
-
-        defer {
-            image.unlockFocus()
-        }
-
-        guard let context = NSGraphicsContext.current?.cgContext else {
-            return nil
-        }
-
-        let frameRect = aspectFillRect(
-            imageSize: CGSize(width: frame.width, height: frame.height),
-            in: CGRect(origin: .zero, size: canvasSize)
-        )
-
-        context.saveGState()
-        context.addRect(CGRect(origin: .zero, size: canvasSize))
-        context.clip()
-        context.draw(frame, in: frameRect)
-        context.restoreGState()
-
-        let displayTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        let emojis = Array(brand.thumbnailEmojis.prefix(ThumbnailEmojiOption.maximumSelection))
-
-        guard !displayTitle.isEmpty || !emojis.isEmpty else {
-            return image
-        }
-
-        let titleColor: NSColor
-        if brand.usePinkTitles {
-            titleColor = NSColor(
-                calibratedRed: brand.titlePinkRed,
-                green: brand.titlePinkGreen,
-                blue: brand.titlePinkBlue,
-                alpha: 1.0
-            )
-        } else {
-            titleColor = .white
-        }
-
-        let inset: CGFloat = 48
-        var availableWidth = canvasSize.width - (inset * 2)
-        var textSuffix = ""
-
-        // Beside-title placement appends the emoji so it sits with the letters.
-        if brand.emojiPosition == .besideTitle, !emojis.isEmpty {
-            textSuffix = " " + emojis.joined(separator: " ")
-        }
-
-        let composedTitle = displayTitle.isEmpty
-            ? textSuffix.trimmingCharacters(in: .whitespaces)
-            : displayTitle + textSuffix
-
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.alignment = .left
-        paragraph.lineBreakMode = .byWordWrapping
-
-        if !composedTitle.isEmpty {
-            let scale = CGFloat(min(max(brand.titleScale, 0.6), 1.6))
-
-            // Corner emojis need a little less width so long titles do not run
-            // underneath them when both are large.
-            if brand.emojiPosition != .besideTitle, !emojis.isEmpty {
-                availableWidth -= canvasSize.width * 0.12
+        let image = NSImage(size: canvasSize, flipped: false) { _ in
+            guard let context = NSGraphicsContext.current?.cgContext else {
+                return false
             }
 
-            let (font, textSize) = fittedFont(
-                for: composedTitle,
-                maxWidth: availableWidth,
-                maxHeight: canvasSize.height * min(0.42 * scale, 0.70),
-                canvasWidth: canvasSize.width,
-                scale: scale,
-                paragraph: paragraph
+            let frameRect = aspectFillRect(
+                imageSize: CGSize(width: frame.width, height: frame.height),
+                in: CGRect(origin: .zero, size: canvasSize)
             )
 
-            // Size the scrim to the text so short text gets a tight band and long
-            // text still stays readable instead of overflowing a fixed bar.
-            let barHeight = min(textSize.height + (inset * 1.6), canvasSize.height * 0.82)
-            let barRect = CGRect(
-                x: 0,
-                y: 0,
-                width: canvasSize.width,
-                height: barHeight
-            )
+            context.saveGState()
+            context.addRect(CGRect(origin: .zero, size: canvasSize))
+            context.clip()
+            context.draw(frame, in: frameRect)
+            context.restoreGState()
 
-            let gradientColors = [
-                NSColor.black.withAlphaComponent(0.0).cgColor,
-                NSColor.black.withAlphaComponent(0.88).cgColor
-            ] as CFArray
+            let displayTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+            let emojis = Array(brand.thumbnailEmojis.prefix(ThumbnailEmojiOption.maximumSelection))
 
-            if let gradient = CGGradient(
-                colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                colors: gradientColors,
-                locations: [0.0, 1.0]
-            ) {
-                context.saveGState()
-                context.clip(to: barRect)
-                context.drawLinearGradient(
-                    gradient,
-                    start: CGPoint(x: barRect.midX, y: barRect.maxY),
-                    end: CGPoint(x: barRect.midX, y: barRect.minY),
-                    options: []
+            guard !displayTitle.isEmpty || !emojis.isEmpty else {
+                return true
+            }
+
+            let titleColor: NSColor
+            if brand.usePinkTitles {
+                titleColor = NSColor(
+                    calibratedRed: brand.titlePinkRed,
+                    green: brand.titlePinkGreen,
+                    blue: brand.titlePinkBlue,
+                    alpha: 1.0
                 )
-                context.restoreGState()
+            } else {
+                titleColor = .white
             }
 
-            let textRect = CGRect(
-                x: inset,
-                y: (barHeight - textSize.height) / 2,
-                width: availableWidth,
-                height: textSize.height
-            )
+            let inset: CGFloat = 48
+            var availableWidth = canvasSize.width - (inset * 2)
+            var textSuffix = ""
 
-            drawOutlinedTitle(
-                composedTitle,
-                in: textRect,
-                font: font,
-                fillColor: titleColor,
-                paragraph: paragraph
-            )
+            // Beside-title placement appends the emoji so it sits with the letters.
+            if brand.emojiPosition == .besideTitle, !emojis.isEmpty {
+                textSuffix = " " + emojis.joined(separator: " ")
+            }
 
-            // Beside-title emojis are already drawn as part of composedTitle.
-            if brand.emojiPosition != .besideTitle {
+            let composedTitle = displayTitle.isEmpty
+                ? textSuffix.trimmingCharacters(in: .whitespaces)
+                : displayTitle + textSuffix
+
+            let paragraph = NSMutableParagraphStyle()
+            paragraph.alignment = .left
+            paragraph.lineBreakMode = .byWordWrapping
+
+            if !composedTitle.isEmpty {
+                let scale = CGFloat(min(max(brand.titleScale, 0.6), 1.6))
+
+                // Corner emojis need a little less width so long titles do not run
+                // underneath them when both are large.
+                if brand.emojiPosition != .besideTitle, !emojis.isEmpty {
+                    availableWidth -= canvasSize.width * 0.12
+                }
+
+                let (font, textSize) = fittedFont(
+                    for: composedTitle,
+                    maxWidth: availableWidth,
+                    maxHeight: canvasSize.height * min(0.42 * scale, 0.70),
+                    canvasWidth: canvasSize.width,
+                    scale: scale,
+                    paragraph: paragraph
+                )
+
+                // Size the scrim to the text so short text gets a tight band and long
+                // text still stays readable instead of overflowing a fixed bar.
+                let barHeight = min(textSize.height + (inset * 1.6), canvasSize.height * 0.82)
+                let barRect = CGRect(
+                    x: 0,
+                    y: 0,
+                    width: canvasSize.width,
+                    height: barHeight
+                )
+
+                let gradientColors = [
+                    NSColor.black.withAlphaComponent(0.0).cgColor,
+                    NSColor.black.withAlphaComponent(0.88).cgColor
+                ] as CFArray
+
+                if let gradient = CGGradient(
+                    colorsSpace: CGColorSpaceCreateDeviceRGB(),
+                    colors: gradientColors,
+                    locations: [0.0, 1.0]
+                ) {
+                    context.saveGState()
+                    context.clip(to: barRect)
+                    context.drawLinearGradient(
+                        gradient,
+                        start: CGPoint(x: barRect.midX, y: barRect.maxY),
+                        end: CGPoint(x: barRect.midX, y: barRect.minY),
+                        options: []
+                    )
+                    context.restoreGState()
+                }
+
+                let textRect = CGRect(
+                    x: inset,
+                    y: (barHeight - textSize.height) / 2,
+                    width: availableWidth,
+                    height: textSize.height
+                )
+
+                drawOutlinedTitle(
+                    composedTitle,
+                    in: textRect,
+                    font: font,
+                    fillColor: titleColor,
+                    paragraph: paragraph
+                )
+
+                // Beside-title emojis are already drawn as part of composedTitle.
+                if brand.emojiPosition != .besideTitle {
+                    drawCornerEmojis(
+                        emojis,
+                        position: brand.emojiPosition,
+                        canvasSize: canvasSize,
+                        scale: scale
+                    )
+                }
+            } else {
                 drawCornerEmojis(
                     emojis,
-                    position: brand.emojiPosition,
+                    position: brand.emojiPosition == .besideTitle ? .topRight : brand.emojiPosition,
                     canvasSize: canvasSize,
-                    scale: scale
+                    scale: CGFloat(min(max(brand.titleScale, 0.6), 1.6))
                 )
             }
-        } else {
-            drawCornerEmojis(
-                emojis,
-                position: brand.emojiPosition == .besideTitle ? .topRight : brand.emojiPosition,
-                canvasSize: canvasSize,
-                scale: CGFloat(min(max(brand.titleScale, 0.6), 1.6))
-            )
+
+            return true
         }
 
         return image

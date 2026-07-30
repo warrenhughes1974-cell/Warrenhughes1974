@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.24",
+            highlights: [
+                "Fixed the Xcode Release build that was failing after Update on newer macOS toolchains.",
+                "Thumbnail ranking progress updates stay on the main thread so Rank Thumbnails compiles cleanly.",
+                "Frame capture uses the current AVFoundation async API instead of the deprecated copy path."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.23",
             highlights: [
                 "Thumbnail Picks sit right under the video fields again — no more scrolling past ten titles to find them.",

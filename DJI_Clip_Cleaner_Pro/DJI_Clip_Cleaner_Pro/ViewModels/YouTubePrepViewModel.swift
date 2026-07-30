@@ -242,10 +242,8 @@ final class YouTubePrepViewModel {
                     brand: brand,
                     outputFolder: folder,
                     progress: { scanned, total in
-                        Task { @MainActor in
-                            self.thumbnailScanProgress = Double(scanned) / Double(max(total, 1))
-                            self.statusMessage = "Scoring frame \(scanned) of \(total)..."
-                        }
+                        self.thumbnailScanProgress = Double(scanned) / Double(max(total, 1))
+                        self.statusMessage = "Scoring frame \(scanned) of \(total)..."
                     }
                 )
 

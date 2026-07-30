@@ -398,7 +398,7 @@ struct YouTubePrepView: View {
             viewModel.selectThumbnail(option)
         } label: {
             VStack(alignment: .leading, spacing: 8) {
-                rankedThumbnailImage(path: option.imagePath, width: nil, height: 110)
+                rankedThumbnailImage(path: option.imagePath, height: 110)
 
                 HStack(alignment: .firstTextBaseline) {
                     Text(option.rankLabel)
@@ -443,10 +443,8 @@ struct YouTubePrepView: View {
     }
 
     @ViewBuilder
-    @ViewBuilder
     private func rankedThumbnailImage(
         path: String,
-        width: CGFloat? = 160,
         height: CGFloat = 90
     ) -> some View {
         #if canImport(AppKit)
@@ -464,14 +462,14 @@ struct YouTubePrepView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(width: width, height: height)
+        .frame(height: height)
         .clipped()
         .clipShape(RoundedRectangle(cornerRadius: 8))
         #else
         RoundedRectangle(cornerRadius: 8)
             .fill(AppTheme.carbon.opacity(0.6))
             .frame(maxWidth: .infinity)
-            .frame(width: width, height: height)
+            .frame(height: height)
         #endif
     }
 

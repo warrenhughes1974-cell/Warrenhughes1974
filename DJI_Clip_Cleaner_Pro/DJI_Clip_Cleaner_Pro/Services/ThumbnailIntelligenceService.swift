@@ -58,17 +58,18 @@ enum ThumbnailIntelligenceService {
     private static let sampleCount = 30
     private static let topCount = 8
 
-    /// Samples ~30 frames across the video, scores them, and returns the top 3
-    /// as branded JPEG previews the user can choose from.
+    /// Samples ~30 frames across the video, scores them, and returns the top
+    /// branded JPEG previews the user can choose from.
     ///
     /// `progress` reports (framesScanned, totalFrames) so a long scan does not
-    /// look like the app has stalled.
+    /// look like the app has stalled. It is MainActor-isolated so the YouTube
+    /// Prep UI can update a progress bar without Sendable/self-capture errors.
     static func rankFrames(
         videoURL: URL,
         thumbnailText: String,
         brand: BrandSettingsValues,
         outputFolder: URL,
-        progress: (@Sendable (Int, Int) -> Void)? = nil
+        progress: (@MainActor (Int, Int) -> Void)? = nil
     ) async throws -> [RankedThumbnailCandidate] {
         let asset = AVURLAsset(url: videoURL)
         let durationValue = try await asset.load(.duration)
@@ -101,7 +102,9 @@ enum ThumbnailIntelligenceService {
         var previousPixels: [UInt8]?
 
         for index in 0..<sampleCount {
-            progress?(index + 1, sampleCount)
+            if let progress {
+                await progress(index + 1, sampleCount)
+            }
 
             let fraction = sampleCount == 1 ? 0.5 : Double(index) / Double(sampleCount - 1)
             let seconds = usableStart + (span * fraction)
@@ -189,15 +192,7 @@ enum ThumbnailIntelligenceService {
         generator: AVAssetImageGenerator,
         at time: CMTime
     ) async throws -> CGImage {
-        try await withCheckedThrowingContinuation { continuation in
-            generator.generateCGImageAsynchronously(for: time) { image, _, error in
-                if let image {
-                    continuation.resume(returning: image)
-                } else {
-                    continuation.resume(throwing: error ?? ServiceError.noFrames)
-                }
-            }
-        }
+        try await generator.image(at: time).image
     }
 
     // MARK: - Scoring

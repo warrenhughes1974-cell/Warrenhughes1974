@@ -237,7 +237,7 @@ enum ShortsFinderService {
         while seconds < duration - 0.5 {
             let time = CMTime(seconds: seconds, preferredTimescale: 600)
 
-            guard let image = try? generator.copyCGImage(at: time, actualTime: nil) else {
+            guard let image = try? await generator.image(at: time).image else {
                 seconds += interval
                 continue
             }
