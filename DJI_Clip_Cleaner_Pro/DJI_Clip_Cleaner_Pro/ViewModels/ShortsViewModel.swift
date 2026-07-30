@@ -18,7 +18,7 @@ struct ShortExportResult: Identifiable, Sendable {
 final class ShortsViewModel {
     var selectedVideoURL: URL?
     var longFormTitle = ""
-    var targetLength: ShortsFinderService.TargetLength = .standard
+    var targetLength: ShortsFinderService.TargetLength = .fullMinute
     var transcript: Transcript?
     var burnCaptions = true
     var candidates: [ShortCandidate] = []

@@ -108,6 +108,13 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.29",
+            highlights: [
+                "Shorts length choices now go to 60s and 90s (default 60s) — not stuck at a 30-second tease.",
+                "Clearer Shorts tab copy: each export is one vertical moment from your long video, uploaded separately."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.28",
             highlights: [
                 "Shorts export no longer fails when FFmpeg is missing text filters (ass / drawtext).",

@@ -33,7 +33,7 @@ struct ShortsView: View {
                     .clipShape(Capsule())
             }
 
-            Text("Pull the strongest moments out of a finished video and export them vertical for YouTube Shorts.")
+            Text("This finds the best moments inside your finished long video and cuts each one into its own vertical Short (20–90 seconds) — not a shortened copy of the whole film.")
                 .foregroundStyle(.secondary)
         }
     }
@@ -84,7 +84,7 @@ struct ShortsView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Short Length")
+                    Text("How long should each Short be?")
                         .fontWeight(.semibold)
 
                     Picker("Short Length", selection: $viewModel.targetLength) {
@@ -96,6 +96,10 @@ struct ShortsView: View {
 
                     Text(viewModel.targetLength.guidance)
                         .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Text("Each export is one stand-alone Short you upload separately. Pick 60s or 90s if 30s feels too short.")
+                        .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
 
@@ -132,7 +136,7 @@ struct ShortsView: View {
         GroupBox {
             VStack(alignment: .leading, spacing: 12) {
                 if viewModel.candidates.isEmpty {
-                    Text("Choose a video and click Find Moments. Hughes Clip Prep ranks Shorts like an assistant — spoken hook, projected scores, and a best title for each.")
+                    Text("Choose a video, Transcribe, then Find Moments. Hughes Clip Prep ranks the strongest stretches for a Short — spoken hook, projected scores, and a best title. Then export the ones you want as vertical clips.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 } else {

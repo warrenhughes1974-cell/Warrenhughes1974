@@ -76,34 +76,44 @@ struct ShortCandidate: Identifiable, Sendable {
 }
 
 enum ShortsFinderService {
-    /// YouTube pushes Shorts wider at roughly 65% retention under 30 seconds and
-    /// 50% between 30 and 60, so the presets stay inside the easier bands.
+    /// YouTube Shorts can run up to 3 minutes. Shorter clips still retain
+    /// better, but creators often want a full beat — not just a 20–30s tease.
     enum TargetLength: Double, CaseIterable, Identifiable, Sendable {
         case punchy = 20
         case standard = 30
         case extended = 45
+        case fullMinute = 60
+        case story = 90
 
         var id: Double { rawValue }
 
         var displayName: String {
             switch self {
             case .punchy:
-                return "20 sec"
+                return "20s"
             case .standard:
-                return "30 sec"
+                return "30s"
             case .extended:
-                return "45 sec"
+                return "45s"
+            case .fullMinute:
+                return "60s"
+            case .story:
+                return "90s"
             }
         }
 
         var guidance: String {
             switch self {
             case .punchy:
-                return "Shortest and easiest to hold attention all the way through."
+                return "Quick hit — easiest to watch all the way through."
             case .standard:
-                return "Good default. Enough room for a hook and a payoff."
+                return "Classic Short length. Hook + one payoff."
             case .extended:
-                return "More story, but needs to stay interesting for longer."
+                return "Room for a little story before the payoff."
+            case .fullMinute:
+                return "A full minute — good default for store walks and hunts."
+            case .story:
+                return "Longer beat from the video. Needs strong talking throughout."
             }
         }
     }
@@ -387,6 +397,10 @@ enum ShortsFinderService {
         // Shorter Shorts are easier to retain all the way through.
         if duration <= 25 {
             retention += 8
+        } else if duration >= 80 {
+            retention -= 8
+        } else if duration >= 55 {
+            retention -= 5
         } else if duration >= 40 {
             retention -= 4
         }
