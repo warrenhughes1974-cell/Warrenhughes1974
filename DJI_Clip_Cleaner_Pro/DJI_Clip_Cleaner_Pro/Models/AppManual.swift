@@ -81,12 +81,12 @@ enum AppManual {
         ManualSection(
             icon: "rectangle.portrait.on.rectangle.portrait",
             title: "Shorts",
-            body: "Transcribe a finished video, then score talking, movement, and spoken lines to export vertical Shorts with burned-in captions."
+            body: "Transcribe a finished video, then get ranked Shorts with a spoken hook, projected hook/retention scores, and a best title for each moment."
         ),
         ManualSection(
             icon: "square.and.arrow.up",
             title: "YouTube Prep",
-            body: "Transcribe your finished Filmora export, then generate thumbnail, description, chapters, tags, captions, and an upload package folder."
+            body: "Transcribe your finished Filmora export, pick from ten CTR-ranked titles, rank about 30 thumbnail frames, then build the upload package."
         ),
         ManualSection(
             icon: "gearshape",
@@ -107,6 +107,14 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.16",
+            highlights: [
+                "Thumbnail Intelligence scores about 30 frames and shows Top / Second / Third picks to choose from.",
+                "Shorts now feel like an assistant — spoken hook, duration, projected hook & retention, and a best title per Short.",
+                "YouTube Prep generates ten CTR-ranked title options so you have real choices, not just three."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.15",
             highlights: [

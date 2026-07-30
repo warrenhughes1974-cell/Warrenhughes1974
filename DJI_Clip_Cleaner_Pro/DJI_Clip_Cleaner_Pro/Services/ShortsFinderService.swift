@@ -10,6 +10,9 @@ struct ShortCandidate: Identifiable, Sendable {
     let motionLevel: Double
     let startsOnSpeech: Bool
     let quote: String
+    let projectedHook: Int
+    let projectedRetention: Int
+    let bestTitle: String
 
     var endTime: TimeInterval {
         startTime + duration
@@ -19,8 +22,24 @@ struct ShortCandidate: Identifiable, Sendable {
         "\(ShortCandidate.timecode(startTime)) – \(ShortCandidate.timecode(endTime))"
     }
 
+    var formattedDuration: String {
+        "\(Int(duration.rounded())) sec"
+    }
+
     var scorePercent: Int {
         Int((score * 100).rounded())
+    }
+
+    var hookLine: String {
+        let cleaned = quote.trimmingCharacters(in: .whitespacesAndNewlines)
+        if cleaned.isEmpty {
+            return bestTitle
+        }
+
+        let words = cleaned.split(separator: " ").prefix(10).joined(separator: " ")
+        return words.hasSuffix("...") || words.count >= cleaned.count
+            ? words
+            : "\(words)..."
     }
 
     /// Plain-language explanation of why this moment was picked.
@@ -99,6 +118,9 @@ enum ShortsFinderService {
         in videoURL: URL,
         targetLength: TargetLength,
         transcript: Transcript? = nil,
+        brand: BrandSettingsValues,
+        preset: BrandPreset,
+        longFormTitle: String,
         maximumResults: Int = 5
     ) async -> [ShortCandidate] {
         let asset = AVURLAsset(url: videoURL)
@@ -126,6 +148,9 @@ enum ShortsFinderService {
             motion: motion,
             target: target,
             transcript: transcript,
+            brand: brand,
+            preset: preset,
+            longFormTitle: longFormTitle,
             maximumResults: maximumResults
         )
     }
@@ -237,6 +262,9 @@ enum ShortsFinderService {
         motion: [(time: TimeInterval, level: Double)],
         target: TimeInterval,
         transcript: Transcript?,
+        brand: BrandSettingsValues,
+        preset: BrandPreset,
+        longFormTitle: String,
         maximumResults: Int
     ) -> [ShortCandidate] {
         let peakEnergy = max(energies.max() ?? 0, 0.0001)
@@ -299,16 +327,34 @@ enum ShortsFinderService {
                 score += 0.05
             }
 
+            let clampedScore = min(score, 1.0)
+            let projections = projectionScores(
+                overall: clampedScore,
+                speechCoverage: coverage,
+                motionLevel: min(motionLevel, 1.0),
+                startsOnSpeech: startsOnSpeech,
+                quote: quote,
+                duration: target
+            )
+
             scored.append(
                 ShortCandidate(
                     id: UUID(),
                     startTime: startTime,
                     duration: target,
-                    score: min(score, 1.0),
+                    score: clampedScore,
                     speechCoverage: coverage,
                     motionLevel: min(motionLevel, 1.0),
                     startsOnSpeech: startsOnSpeech,
-                    quote: quote
+                    quote: quote,
+                    projectedHook: projections.hook,
+                    projectedRetention: projections.retention,
+                    bestTitle: ShortsMetadataService.bestTitle(
+                        quote: quote,
+                        longFormTitle: longFormTitle,
+                        brand: brand,
+                        preset: preset
+                    )
                 )
             )
 
@@ -316,6 +362,39 @@ enum ShortsFinderService {
         }
 
         return selectNonOverlapping(from: scored, limit: maximumResults)
+    }
+
+    private static func projectionScores(
+        overall: Double,
+        speechCoverage: Double,
+        motionLevel: Double,
+        startsOnSpeech: Bool,
+        quote: String,
+        duration: TimeInterval
+    ) -> (hook: Int, retention: Int) {
+        var hook = 52.0 + (overall * 28.0)
+        var retention = 48.0 + (speechCoverage * 30.0) + (motionLevel * 12.0)
+
+        if startsOnSpeech {
+            hook += 8
+            retention += 4
+        }
+
+        if !quote.isEmpty {
+            hook += 6
+        }
+
+        // Shorter Shorts are easier to retain all the way through.
+        if duration <= 25 {
+            retention += 8
+        } else if duration >= 40 {
+            retention -= 4
+        }
+
+        return (
+            min(max(Int(hook.rounded()), 1), 99),
+            min(max(Int(retention.rounded()), 1), 99)
+        )
     }
 
     /// Phrases that tend to hold attention in Shorts get a scoring bump.
@@ -359,7 +438,13 @@ enum ShortsFinderService {
             }
         }
 
-        return selected.sorted { $0.startTime < $1.startTime }
+        // Present strongest Short first so Short #1 feels like the assistant pick.
+        return selected.sorted {
+            if $0.projectedHook == $1.projectedHook {
+                return $0.score > $1.score
+            }
+            return $0.projectedHook > $1.projectedHook
+        }
     }
 
     // MARK: - Math helpers

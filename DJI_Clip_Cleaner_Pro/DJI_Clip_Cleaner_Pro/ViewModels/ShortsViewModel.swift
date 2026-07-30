@@ -156,12 +156,18 @@ final class ShortsViewModel {
 
         let length = targetLength
         let activeTranscript = transcript
+        let brand = BrandSettings.shared.values
+        let preset = BrandSettings.shared.selectedPreset
+        let longForm = longFormTitle
 
         Task {
             let found = await ShortsFinderService.findCandidates(
                 in: selectedVideoURL,
                 targetLength: length,
-                transcript: activeTranscript
+                transcript: activeTranscript,
+                brand: brand,
+                preset: preset,
+                longFormTitle: longForm
             )
 
             candidates = found
@@ -232,10 +238,12 @@ final class ShortsViewModel {
                             id: candidate.id,
                             candidate: candidate,
                             outputURL: outputURL,
-                            title: ShortsMetadataService.title(
-                                hook: longFormTitle,
-                                index: number
-                            )
+                            title: candidate.bestTitle.isEmpty
+                                ? ShortsMetadataService.title(
+                                    hook: longFormTitle,
+                                    index: number
+                                )
+                                : candidate.bestTitle
                         )
                     )
                 } catch {
@@ -325,7 +333,11 @@ final class ShortsViewModel {
             lines.append("")
             lines.append(result.outputURL.lastPathComponent)
             lines.append("  Source timecode: \(result.candidate.formattedRange)")
-            lines.append("  Suggested title: \(result.title)")
+            lines.append("  Duration: \(result.candidate.formattedDuration)")
+            lines.append("  Spoken hook: \(result.candidate.hookLine)")
+            lines.append("  Projected Hook: \(result.candidate.projectedHook)")
+            lines.append("  Projected Retention: \(result.candidate.projectedRetention)")
+            lines.append("  Best title: \(result.title)")
             lines.append("  Why it was picked: \(result.candidate.reason)")
         }
 

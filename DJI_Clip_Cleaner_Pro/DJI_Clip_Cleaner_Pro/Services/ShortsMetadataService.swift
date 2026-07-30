@@ -12,12 +12,52 @@ enum ShortsMetadataService {
             base += " — Part \(index)"
         }
 
-        let suffix = " #Shorts"
-        let limit = YouTubeMetadataService.recommendedTitleLimit - suffix.count
+        return withShortsHashtag(base)
+    }
 
-        let trimmed = base.count > limit
-            ? String(base.prefix(limit - 1)).trimmingCharacters(in: .whitespaces)
-            : base
+    /// Picks a Short-specific title from the spoken quote when available.
+    static func bestTitle(
+        quote: String,
+        longFormTitle: String,
+        brand: BrandSettingsValues,
+        preset: BrandPreset
+    ) -> String {
+        let spoken = quote.trimmingCharacters(in: .whitespacesAndNewlines)
+        let fallbackHook = longFormTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let seed: String
+        if spoken.split(separator: " ").count >= 4 {
+            seed = spoken
+                .split(separator: " ")
+                .prefix(9)
+                .joined(separator: " ")
+        } else if !fallbackHook.isEmpty {
+            seed = fallbackHook
+        } else {
+            seed = brand.seriesName.isEmpty ? "Quick Find" : brand.seriesName
+        }
+
+        let variants = TitleVariantService.generate(
+            hook: seed,
+            brand: brand,
+            preset: preset,
+            includeChannel: false
+        )
+
+        let best = variants.first?.title ?? seed
+        return withShortsHashtag(best)
+    }
+
+    private static func withShortsHashtag(_ title: String) -> String {
+        let suffix = " #Shorts"
+        let cleaned = title
+            .replacingOccurrences(of: "#Shorts", with: "", options: .caseInsensitive)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let limit = YouTubeMetadataService.recommendedTitleLimit - suffix.count
+        let trimmed = cleaned.count > limit
+            ? String(cleaned.prefix(limit - 1)).trimmingCharacters(in: .whitespaces)
+            : cleaned
 
         return trimmed + suffix
     }

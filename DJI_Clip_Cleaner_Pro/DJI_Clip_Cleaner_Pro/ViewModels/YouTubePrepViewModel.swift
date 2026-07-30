@@ -15,6 +15,11 @@ final class YouTubePrepViewModel {
     var includeChannelInTitle = false
     var transcript: Transcript?
     var isTranscribing = false
+    var titleVariants: [TitleVariant] = []
+    var selectedTitleID: UUID?
+    var rankedThumbnails: [RankedThumbnailCandidate] = []
+    var selectedThumbnailID: UUID?
+    var isRankingThumbnails = false
     var generatedDescription = ""
     var generatedTags: [String] = []
     var thumbnailPath = ""
@@ -35,11 +40,19 @@ final class YouTubePrepViewModel {
     }
 
     var canGenerate: Bool {
-        selectedVideoURL != nil && !trimmedHook.isEmpty && !isTranscribing
+        selectedVideoURL != nil && !trimmedHook.isEmpty && !isTranscribing && !isRankingThumbnails
     }
 
     var canTranscribe: Bool {
-        selectedVideoURL != nil && !isWorking && !isTranscribing
+        selectedVideoURL != nil && !isWorking && !isTranscribing && !isRankingThumbnails
+    }
+
+    var canRankThumbnails: Bool {
+        selectedVideoURL != nil &&
+        !resolvedThumbnailText.isEmpty &&
+        !isWorking &&
+        !isTranscribing &&
+        !isRankingThumbnails
     }
 
     var transcriptSummary: String {
@@ -53,11 +66,24 @@ final class YouTubePrepViewModel {
     }
 
     var generatedTitle: String {
-        YouTubeMetadataService.buildTitle(
+        if let selectedTitleID,
+           let selected = titleVariants.first(where: { $0.id == selectedTitleID }) {
+            return selected.title
+        }
+
+        return YouTubeMetadataService.buildTitle(
             hook: trimmedHook,
             brand: BrandSettings.shared.values,
             includeChannel: includeChannelInTitle
         )
+    }
+
+    var selectedRankedThumbnail: RankedThumbnailCandidate? {
+        guard let selectedThumbnailID else {
+            return rankedThumbnails.first
+        }
+
+        return rankedThumbnails.first(where: { $0.id == selectedThumbnailID }) ?? rankedThumbnails.first
     }
 
     var titleQuality: MetadataQuality {
@@ -90,6 +116,34 @@ final class YouTubePrepViewModel {
     func hookDidChange() {
         guard !hasEditedThumbnailText else { return }
         thumbnailText = YouTubeMetadataService.thumbnailText(from: trimmedHook)
+        refreshTitleVariants()
+    }
+
+    func refreshTitleVariants() {
+        guard !trimmedHook.isEmpty else {
+            titleVariants = []
+            selectedTitleID = nil
+            return
+        }
+
+        titleVariants = TitleVariantService.generate(
+            hook: trimmedHook,
+            brand: BrandSettings.shared.values,
+            preset: BrandSettings.shared.selectedPreset,
+            includeChannel: includeChannelInTitle
+        )
+        selectedTitleID = titleVariants.first?.id
+    }
+
+    func selectTitle(_ variant: TitleVariant) {
+        selectedTitleID = variant.id
+        statusMessage = "Selected title (\(variant.ctrScore) CTR score)."
+    }
+
+    func selectThumbnail(_ candidate: RankedThumbnailCandidate) {
+        selectedThumbnailID = candidate.id
+        thumbnailPath = candidate.imagePath
+        statusMessage = "Selected \(candidate.rankLabel.lowercased()) (\(candidate.score))."
     }
 
     /// `.onChange` also fires for the programmatic write in `hookDidChange()`,
@@ -123,6 +177,10 @@ final class YouTubePrepViewModel {
         errorMessage = nil
         thumbnailPath = ""
         transcript = nil
+        rankedThumbnails = []
+        selectedThumbnailID = nil
+        titleVariants = []
+        selectedTitleID = nil
 
         if trimmedHook.isEmpty {
             hook = YouTubeMetadataService.hookSuggestion(
@@ -136,9 +194,64 @@ final class YouTubePrepViewModel {
         #endif
     }
 
+    func rankThumbnailOptions() {
+        guard let selectedVideoURL, canRankThumbnails else {
+            errorMessage = "Choose a video and add thumbnail text first."
+            return
+        }
+
+        isRankingThumbnails = true
+        errorMessage = nil
+        rankedThumbnails = []
+        selectedThumbnailID = nil
+        statusMessage = "Scoring about 30 frames for the strongest thumbnails..."
+
+        Task {
+            do {
+                let brand = BrandSettings.shared.values
+                let folder = try thumbnailFolder(for: selectedVideoURL)
+                let ranked = try await ThumbnailIntelligenceService.rankFrames(
+                    videoURL: selectedVideoURL,
+                    thumbnailText: resolvedThumbnailText,
+                    brand: brand,
+                    outputFolder: folder
+                )
+
+                rankedThumbnails = ranked
+                selectedThumbnailID = ranked.first?.id
+                thumbnailPath = ranked.first?.imagePath ?? ""
+                statusMessage = "Top \(ranked.count) thumbnail options ready — pick your favorite."
+                #if canImport(AppKit)
+                if let first = ranked.first {
+                    NSWorkspace.shared.activateFileViewerSelecting(
+                        [URL(fileURLWithPath: first.imagePath)]
+                    )
+                }
+                #endif
+            } catch {
+                errorMessage = error.localizedDescription
+                statusMessage = "Thumbnail ranking failed."
+            }
+
+            isRankingThumbnails = false
+        }
+    }
+
     func generateThumbnail() {
         guard let selectedVideoURL, canGenerate else {
             errorMessage = "Choose a video and type a hook first."
+            return
+        }
+
+        // If the user already ranked frames, keep their chosen winner.
+        if let selected = selectedRankedThumbnail {
+            thumbnailPath = selected.imagePath
+            statusMessage = "Using \(selected.rankLabel.lowercased()) (\(selected.score))."
+            #if canImport(AppKit)
+            NSWorkspace.shared.activateFileViewerSelecting(
+                [URL(fileURLWithPath: selected.imagePath)]
+            )
+            #endif
             return
         }
 
@@ -276,14 +389,19 @@ final class YouTubePrepViewModel {
                 let brand = BrandSettings.shared.values
 
                 if thumbnailPath.isEmpty {
-                    let outputURL = try thumbnailOutputURL(for: selectedVideoURL)
-                    try await ThumbnailService.generate(
-                        from: selectedVideoURL,
-                        title: resolvedThumbnailText,
-                        brand: brand,
-                        outputURL: outputURL
-                    )
-                    thumbnailPath = outputURL.path
+                    if let selected = selectedRankedThumbnail {
+                        thumbnailPath = selected.imagePath
+                    } else {
+                        let outputURL = try thumbnailOutputURL(for: selectedVideoURL)
+                        try await ThumbnailService.generate(
+                            from: selectedVideoURL,
+                            title: resolvedThumbnailText,
+                            brand: brand,
+                            outputURL: outputURL,
+                            at: nil
+                        )
+                        thumbnailPath = outputURL.path
+                    }
                 }
 
                 let metadata = YouTubeMetadata(
@@ -340,17 +458,20 @@ final class YouTubePrepViewModel {
         #endif
     }
 
-    /// Matches the name the upload package uses so the folder holds exactly one
-    /// thumbnail rather than a stale duplicate.
-    private func thumbnailOutputURL(for videoURL: URL) throws -> URL {
+    private func thumbnailFolder(for videoURL: URL) throws -> URL {
         let folder = videoURL.deletingLastPathComponent().appendingPathComponent(
             YouTubeMetadataService.uploadFolderName,
             isDirectory: true
         )
 
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        return folder
+    }
 
-        return folder.appendingPathComponent(
+    /// Matches the name the upload package uses so the folder holds exactly one
+    /// thumbnail rather than a stale duplicate.
+    private func thumbnailOutputURL(for videoURL: URL) throws -> URL {
+        try thumbnailFolder(for: videoURL).appendingPathComponent(
             YouTubeMetadataService.thumbnailFilename(for: generatedTitle)
         )
     }

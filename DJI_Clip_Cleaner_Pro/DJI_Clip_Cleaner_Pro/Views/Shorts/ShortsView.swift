@@ -132,12 +132,12 @@ struct ShortsView: View {
         GroupBox {
             VStack(alignment: .leading, spacing: 12) {
                 if viewModel.candidates.isEmpty {
-                    Text("Choose a video and click Find Moments. Hughes Clip Prep scores the whole video for talking and movement, then picks the strongest non-overlapping moments.")
+                    Text("Choose a video and click Find Moments. Hughes Clip Prep ranks Shorts like an assistant — spoken hook, projected scores, and a best title for each.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 } else {
-                    ForEach(viewModel.candidates) { candidate in
-                        candidateRow(candidate)
+                    ForEach(Array(viewModel.candidates.enumerated()), id: \.element.id) { index, candidate in
+                        candidateRow(candidate, index: index + 1)
                     }
 
                     HStack {
@@ -165,7 +165,7 @@ struct ShortsView: View {
         }
     }
 
-    private func candidateRow(_ candidate: ShortCandidate) -> some View {
+    private func candidateRow(_ candidate: ShortCandidate, index: Int) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Toggle(
                 "",
@@ -175,39 +175,81 @@ struct ShortsView: View {
                 )
             )
             .labelsHidden()
+            .padding(.top, 4)
 
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 8) {
-                    Text(candidate.formattedRange)
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(alignment: .firstTextBaseline, spacing: 10) {
+                    Text("Short #\(index)")
                         .font(.headline)
-                        .monospacedDigit()
-                        .foregroundStyle(AppTheme.brandPink)
+                        .foregroundStyle(AppTheme.mclarenBlue)
 
-                    Text("\(candidate.scorePercent)% match")
-                        .font(.caption.bold())
+                    Text(candidate.formattedDuration)
+                        .font(.caption.weight(.bold))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 2)
-                        .background(AppTheme.softBlue)
+                        .background(AppTheme.papaya.opacity(0.22))
                         .clipShape(Capsule())
+
+                    Text(candidate.formattedRange)
+                        .font(.caption)
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
+
+                    Spacer()
                 }
 
-                Text(candidate.reason)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text(candidate.hookLine.isEmpty ? candidate.reason : "“\(candidate.hookLine)”")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(AppTheme.brandPink)
+                    .lineLimit(2)
 
-                if !candidate.quote.isEmpty {
-                    Text("“\(candidate.quote)”")
+                HStack(spacing: 16) {
+                    scoreBadge(label: "Projected Hook", value: candidate.projectedHook)
+                    scoreBadge(label: "Projected Retention", value: candidate.projectedRetention)
+                }
+
+                if !candidate.bestTitle.isEmpty {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Best title")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                        Text(candidate.bestTitle)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.primary)
+                    }
+                }
+
+                if !candidate.quote.isEmpty, candidate.quote != candidate.hookLine {
+                    Text(candidate.quote)
                         .font(.caption)
-                        .foregroundStyle(AppTheme.carbon)
+                        .foregroundStyle(.secondary)
                         .lineLimit(2)
                 }
             }
-
-            Spacer()
         }
-        .padding(10)
-        .background(AppTheme.softOrange.opacity(0.5))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(viewModel.isSelected(candidate)
+                      ? AppTheme.papaya.opacity(0.14)
+                      : AppTheme.softOrange.opacity(0.45))
+        )
+    }
+
+    private func scoreBadge(label: String, value: Int) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+            Text("\(value)")
+                .font(.title2.weight(.bold))
+                .monospacedDigit()
+                .foregroundStyle(value >= 90 ? AppTheme.papaya : AppTheme.mclarenBlue)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background(AppTheme.carbon.opacity(0.08))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
     @ViewBuilder

@@ -31,10 +31,19 @@ enum ThumbnailService {
         from videoURL: URL,
         title: String,
         brand: BrandSettingsValues,
+        outputURL: URL,
+        at timeSeconds: TimeInterval? = nil
+    ) async throws {
+        let frame = try await captureFrame(from: videoURL, at: timeSeconds)
+        try await generate(from: frame, title: title, brand: brand, outputURL: outputURL)
+    }
+
+    static func generate(
+        from frame: CGImage,
+        title: String,
+        brand: BrandSettingsValues,
         outputURL: URL
     ) async throws {
-        let frame = try await captureFrame(from: videoURL)
-
         #if canImport(AppKit)
         guard let image = renderBrandedThumbnail(
             frame: frame,
@@ -59,12 +68,18 @@ enum ThumbnailService {
         #endif
     }
 
-    private static func captureFrame(from videoURL: URL) async throws -> CGImage {
+    private static func captureFrame(
+        from videoURL: URL,
+        at timeSeconds: TimeInterval? = nil
+    ) async throws -> CGImage {
         let asset = AVURLAsset(url: videoURL)
         let duration = try await asset.load(.duration)
         let seconds = CMTimeGetSeconds(duration)
-        let sampleTime = max(seconds * 0.25, 0.5)
-        let time = CMTime(seconds: min(sampleTime, max(seconds - 0.1, 0)), preferredTimescale: 600)
+        let sampleTime = timeSeconds ?? max(seconds * 0.25, 0.5)
+        let time = CMTime(
+            seconds: min(max(sampleTime, 0), max(seconds - 0.1, 0)),
+            preferredTimescale: 600
+        )
 
         let generator = AVAssetImageGenerator(asset: asset)
         generator.appliesPreferredTrackTransform = true
