@@ -7,7 +7,13 @@ SCHEME="Hughes Clip Prep"
 BUILD_DIR="$HOME/Library/Application Support/HughesClipPrep/build"
 LOG_FILE="$HOME/Library/Application Support/HughesClipPrep/last-build.log"
 DESKTOP_APP="$HOME/Desktop/Hughes Clip Prep.app"
-APP_VERSION="1.31"
+IDENTITY_FILE="$PROJECT_DIR/DJI_Clip_Cleaner_Pro/Utilities/AppIdentity.swift"
+APP_VERSION="$(
+  sed -n 's/.*static let version = "\([^"]*\)".*/\1/p' "$IDENTITY_FILE" 2>/dev/null | head -1
+)"
+if [[ -z "${APP_VERSION}" ]]; then
+  APP_VERSION="unknown"
+fi
 
 echo "=== Building Hughes Clip Prep v${APP_VERSION} ==="
 echo "This may take a minute..."

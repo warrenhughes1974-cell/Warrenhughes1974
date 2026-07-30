@@ -108,6 +108,13 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.33",
+            highlights: [
+                "Update dialog now reads the real app version from the build (no more stale “Version 1.31” popup after installing newer code).",
+                "Same AAC 48 kHz / native encoder fix as 1.32 — re-run Update once so the dialog and Clip Cleaner both show 1.33."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.32",
             highlights: [
                 "Clip Cleaner now forces 48 kHz audio so DJI clips (often 96 kHz) stop failing with “AAC encoder only supports these samplerates…”.",
