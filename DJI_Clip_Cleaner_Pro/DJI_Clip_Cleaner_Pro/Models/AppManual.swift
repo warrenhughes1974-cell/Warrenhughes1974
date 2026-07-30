@@ -108,6 +108,13 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.32",
+            highlights: [
+                "Clip Cleaner now forces 48 kHz audio so DJI clips (often 96 kHz) stop failing with “AAC encoder only supports these samplerates…”.",
+                "Production Pass and Shorts export also resample AAC to 48 kHz for the same reason."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.31",
             highlights: [
                 "Shorts are rebuilt as story splices: HOOK + PAYOFF + BUTTON cut from different timestamps, not one continuous 30s slice.",

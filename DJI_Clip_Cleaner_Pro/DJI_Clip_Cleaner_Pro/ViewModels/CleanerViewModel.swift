@@ -514,12 +514,17 @@ final class CleanerViewModel: ObservableObject {
             activePreset.marginSeconds
         )
 
+        // DJI audio is often 96 kHz; AAC (auto-editor default) only accepts
+        // 48/44.1/32/24/22.05/16/12/11.025/8 kHz — force 48 kHz resample.
+        let sampleRateArgs = ["--sample-rate", "48000"]
+
         switch activeTrimMode {
         case .fullClip:
             return [
                 video.url.path,
                 "--margin",
-                margin,
+                margin
+            ] + sampleRateArgs + [
                 "--output",
                 outputURL.path
             ]
@@ -549,7 +554,8 @@ final class CleanerViewModel: ObservableObject {
                     "--margin",
                     margin,
                     "--set-action",
-                    protectedRange,
+                    protectedRange
+                ] + sampleRateArgs + [
                     "--output",
                     outputURL.path
                 ]
@@ -562,7 +568,8 @@ final class CleanerViewModel: ObservableObject {
             return [
                 video.url.path,
                 "--margin",
-                margin,
+                margin
+            ] + sampleRateArgs + [
                 "--output",
                 outputURL.path
             ]

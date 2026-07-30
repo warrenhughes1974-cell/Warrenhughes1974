@@ -89,6 +89,8 @@ enum ProductionPassService {
             "copy",
             "-c:a",
             "aac",
+            "-ar",
+            "48000",
             "-b:a",
             "192k",
             "-movflags",
