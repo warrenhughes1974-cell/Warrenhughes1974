@@ -9,6 +9,7 @@ struct ShortCandidate: Identifiable, Sendable {
     let speechCoverage: Double
     let motionLevel: Double
     let startsOnSpeech: Bool
+    let quote: String
 
     var endTime: TimeInterval {
         startTime + duration
@@ -25,6 +26,10 @@ struct ShortCandidate: Identifiable, Sendable {
     /// Plain-language explanation of why this moment was picked.
     var reason: String {
         var parts: [String] = []
+
+        if !quote.isEmpty {
+            parts.append("clear spoken line")
+        }
 
         if speechCoverage >= 0.75 {
             parts.append("talking throughout")
@@ -93,6 +98,7 @@ enum ShortsFinderService {
     static func findCandidates(
         in videoURL: URL,
         targetLength: TargetLength,
+        transcript: Transcript? = nil,
         maximumResults: Int = 5
     ) async -> [ShortCandidate] {
         let asset = AVURLAsset(url: videoURL)
@@ -120,6 +126,7 @@ enum ShortsFinderService {
             motion: motion,
             duration: duration,
             target: target,
+            transcript: transcript,
             maximumResults: maximumResults
         )
     }
@@ -231,6 +238,7 @@ enum ShortsFinderService {
         motion: [(time: TimeInterval, level: Double)],
         duration: TimeInterval,
         target: TimeInterval,
+        transcript: Transcript?,
         maximumResults: Int
     ) -> [ShortCandidate] {
         let peakEnergy = max(energies.max() ?? 0, 0.0001)
@@ -272,14 +280,25 @@ enum ShortsFinderService {
             let previousIsQuiet = index == 0 || energies[index - 1] < speechThreshold
             let startsOnSpeech = previousIsQuiet && (slice.first ?? 0) >= speechThreshold
 
+            let quote = transcript?
+                .text(overlapping: startTime, duration: target) ?? ""
+            let wordCount = quote.split(separator: " ").count
+            let transcriptBoost = transcriptBoost(for: quote)
+
             var score =
-                (coverage * 0.42) +
-                (min(meanEnergy, 1.0) * 0.22) +
-                (min(localPeak, 1.0) * 0.14) +
-                (min(motionLevel, 1.0) * 0.14)
+                (coverage * 0.34) +
+                (min(meanEnergy, 1.0) * 0.16) +
+                (min(localPeak, 1.0) * 0.10) +
+                (min(motionLevel, 1.0) * 0.12) +
+                transcriptBoost
 
             if startsOnSpeech {
                 score += 0.08
+            }
+
+            // Prefer windows with enough spoken content for captions.
+            if wordCount >= 8 {
+                score += 0.05
             }
 
             scored.append(
@@ -290,7 +309,8 @@ enum ShortsFinderService {
                     score: min(score, 1.0),
                     speechCoverage: coverage,
                     motionLevel: min(motionLevel, 1.0),
-                    startsOnSpeech: startsOnSpeech
+                    startsOnSpeech: startsOnSpeech,
+                    quote: quote
                 )
             )
 
@@ -298,6 +318,28 @@ enum ShortsFinderService {
         }
 
         return selectNonOverlapping(from: scored, limit: maximumResults)
+    }
+
+    /// Phrases that tend to hold attention in Shorts get a scoring bump.
+    private static func transcriptBoost(for quote: String) -> Double {
+        guard !quote.isEmpty else { return 0 }
+
+        let lower = quote.lowercased()
+        let hooks = [
+            "look at", "check this", "check out", "you need", "wait until",
+            "watch this", "oh my", "no way", "worth it", "don't buy",
+            "buy this", "so creepy", "so cool", "right here", "found this"
+        ]
+
+        if hooks.contains(where: { lower.contains($0) }) {
+            return 0.18
+        }
+
+        if quote.split(separator: " ").count >= 12 {
+            return 0.10
+        }
+
+        return 0.04
     }
 
     private static func selectNonOverlapping(

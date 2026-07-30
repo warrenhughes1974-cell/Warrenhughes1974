@@ -81,12 +81,12 @@ enum AppManual {
         ManualSection(
             icon: "rectangle.portrait.on.rectangle.portrait",
             title: "Shorts",
-            body: "Scores a finished video for talking and movement, suggests the strongest moments, and exports them as vertical 1080x1920 Shorts with a description and subscriber checklist."
+            body: "Transcribe a finished video, then score talking, movement, and spoken lines to export vertical Shorts with burned-in captions."
         ),
         ManualSection(
             icon: "square.and.arrow.up",
             title: "YouTube Prep",
-            body: "Choose your finished Filmora export, type a hook, and generate thumbnail, description, tags, and an upload package folder."
+            body: "Transcribe your finished Filmora export, then generate thumbnail, description, chapters, tags, captions, and an upload package folder."
         ),
         ManualSection(
             icon: "gearshape",
@@ -107,6 +107,14 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.15",
+            highlights: [
+                "On-device speech transcription for finished videos.",
+                "YouTube Prep builds real chapters, spoken-word descriptions, tags, and an .srt captions file.",
+                "Shorts picks moments from what you said and can burn large captions onto the vertical export."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.14",
             highlights: [

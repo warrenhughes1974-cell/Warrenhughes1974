@@ -19,6 +19,8 @@ final class ShortsViewModel {
     var selectedVideoURL: URL?
     var longFormTitle = ""
     var targetLength: ShortsFinderService.TargetLength = .standard
+    var transcript: Transcript?
+    var burnCaptions = true
     var candidates: [ShortCandidate] = []
     var selectedCandidateIDs: Set<UUID> = []
     var exported: [ShortExportResult] = []
@@ -26,6 +28,7 @@ final class ShortsViewModel {
     var errorMessage: String?
     var isAnalyzing = false
     var isExporting = false
+    var isTranscribing = false
 
     private static let lastVideoPathKey = "shortsLastVideoPath"
 
@@ -34,11 +37,24 @@ final class ShortsViewModel {
     }
 
     var canAnalyze: Bool {
-        selectedVideoURL != nil && !isAnalyzing && !isExporting
+        selectedVideoURL != nil && !isAnalyzing && !isExporting && !isTranscribing
+    }
+
+    var canTranscribe: Bool {
+        selectedVideoURL != nil && !isAnalyzing && !isExporting && !isTranscribing
     }
 
     var canExport: Bool {
-        !selectedCandidateIDs.isEmpty && !isAnalyzing && !isExporting
+        !selectedCandidateIDs.isEmpty && !isAnalyzing && !isExporting && !isTranscribing
+    }
+
+    var transcriptSummary: String {
+        guard let transcript else {
+            return "Optional but recommended: transcribe first so moments are picked from what you said, and captions burn onto the Shorts."
+        }
+
+        let words = transcript.fullText.split(separator: " ").count
+        return "Transcript ready · \(words) words · captions \(burnCaptions ? "ON" : "OFF")"
     }
 
     var ffmpegInstalled: Bool {
@@ -86,6 +102,7 @@ final class ShortsViewModel {
         candidates = []
         selectedCandidateIDs = []
         exported = []
+        transcript = nil
         errorMessage = nil
 
         if longFormTitle.isEmpty {
@@ -99,6 +116,30 @@ final class ShortsViewModel {
         #endif
     }
 
+    func transcribeVideo() {
+        guard let selectedVideoURL, canTranscribe else {
+            errorMessage = "Choose a finished video first."
+            return
+        }
+
+        isTranscribing = true
+        errorMessage = nil
+        statusMessage = "Transcribing speech for smarter Shorts picks and captions..."
+
+        Task {
+            do {
+                transcript = try await TranscriptionService.transcribe(videoURL: selectedVideoURL)
+                statusMessage = "Transcription complete. Find Moments will now use what you said."
+            } catch {
+                transcript = nil
+                errorMessage = error.localizedDescription
+                statusMessage = "Transcription failed. You can still Find Moments without it."
+            }
+
+            isTranscribing = false
+        }
+    }
+
     func findMoments() {
         guard let selectedVideoURL else {
             errorMessage = "Choose a finished video first."
@@ -109,14 +150,18 @@ final class ShortsViewModel {
         errorMessage = nil
         candidates = []
         selectedCandidateIDs = []
-        statusMessage = "Scanning for the strongest moments. This can take a minute on a long video..."
+        statusMessage = transcript == nil
+            ? "Scanning for the strongest moments. This can take a minute on a long video..."
+            : "Scoring moments with your transcript..."
 
         let length = targetLength
+        let activeTranscript = transcript
 
         Task {
             let found = await ShortsFinderService.findCandidates(
                 in: selectedVideoURL,
-                targetLength: length
+                targetLength: length,
+                transcript: activeTranscript
             )
 
             candidates = found
@@ -127,7 +172,9 @@ final class ShortsViewModel {
                 statusMessage = "No strong moments found."
                 errorMessage = "Try a shorter target length, or check that the video has clear talking."
             } else {
-                statusMessage = "Found \(found.count) moment(s). Uncheck any you don't want, then export."
+                statusMessage = activeTranscript == nil
+                    ? "Found \(found.count) moment(s). Tip: Transcribe first for captions and smarter picks."
+                    : "Found \(found.count) moment(s) using your speech. Uncheck any you don't want, then export."
             }
 
             isAnalyzing = false
@@ -176,7 +223,8 @@ final class ShortsViewModel {
                     let outputURL = try await ShortsExportService.export(
                         from: selectedVideoURL,
                         candidate: candidate,
-                        index: number
+                        index: number,
+                        transcript: burnCaptions ? transcript : nil
                     )
 
                     results.append(

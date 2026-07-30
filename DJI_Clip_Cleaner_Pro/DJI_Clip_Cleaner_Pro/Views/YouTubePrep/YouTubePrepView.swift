@@ -146,6 +146,26 @@ struct YouTubePrepView: View {
         GroupBox {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 12) {
+                    Button("Transcribe Speech") {
+                        viewModel.transcribeVideo()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppTheme.papaya)
+                    .disabled(!viewModel.canTranscribe)
+
+                    if viewModel.isTranscribing {
+                        ProgressView()
+                            .controlSize(.small)
+                    }
+
+                    Spacer()
+                }
+
+                Text(viewModel.transcriptSummary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                HStack(spacing: 12) {
                     Button("Generate Thumbnail") {
                         viewModel.generateThumbnail()
                     }
@@ -172,7 +192,7 @@ struct YouTubePrepView: View {
                     .disabled(!viewModel.canGenerate || viewModel.isWorking)
                 }
 
-                Text("Upload Package writes the thumbnail, title, description, tags, and step-by-step notes into a YouTube_Prep folder next to your video.")
+                Text("Transcribe once, then Build Upload Package. That saves thumbnail, title, description, tags, captions (.srt), and upload steps in YouTube_Prep/.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

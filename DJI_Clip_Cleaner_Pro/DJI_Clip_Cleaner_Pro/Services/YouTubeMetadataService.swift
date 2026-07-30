@@ -152,7 +152,8 @@ enum YouTubeMetadataService {
     static func generateDescription(
         hook: String,
         brand: BrandSettingsValues,
-        preset: BrandPreset
+        preset: BrandPreset,
+        transcript: Transcript? = nil
     ) -> String {
         let channel = brand.channelPrefix.trimmingCharacters(in: .whitespacesAndNewlines)
         let series = brand.seriesName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -164,11 +165,26 @@ enum YouTubeMetadataService {
         // keyword instead of repeating the title verbatim.
         lines.append(searchSnippet(hook: cleanHook, series: series, preset: preset))
         lines.append("")
-        lines.append(bodyCopy(hook: cleanHook, series: series, preset: preset))
+
+        if let transcript, !transcript.isEmpty {
+            lines.append(transcriptBody(from: transcript, hook: cleanHook))
+        } else {
+            lines.append(bodyCopy(hook: cleanHook, series: series, preset: preset))
+        }
+
         lines.append("")
         lines.append("CHAPTERS")
-        lines.append("0:00 Intro")
-        lines.append("(add your timestamps here — YouTube turns these into chapters)")
+
+        let chapters = transcript.map { TranscriptionService.chapters(from: $0) } ?? []
+        if chapters.count > 1 {
+            for chapter in chapters {
+                lines.append(chapter.formattedLine)
+            }
+        } else {
+            lines.append("0:00 Intro")
+            lines.append("(add your timestamps here — YouTube turns these into chapters)")
+        }
+
         lines.append("")
         lines.append(callToAction(for: preset, channel: channel))
         lines.append("")
@@ -185,6 +201,23 @@ enum YouTubeMetadataService {
         lines.append(hashtagLine(series: series, preset: preset))
 
         return lines.joined(separator: "\n")
+    }
+
+    private static func transcriptBody(from transcript: Transcript, hook: String) -> String {
+        let words = transcript.fullText
+            .split(separator: " ")
+            .prefix(70)
+            .joined(separator: " ")
+
+        let clipped = words.count < transcript.fullText.count ? "\(words)…" : words
+
+        return """
+        In this video I cover \(hook.lowercased()).
+
+        \(clipped)
+
+        Full walkthrough below — timestamps jump you to each section.
+        """
     }
 
     static func descriptionQuality(_ description: String) -> MetadataQuality {
@@ -216,7 +249,8 @@ enum YouTubeMetadataService {
     static func generateTags(
         hook: String,
         brand: BrandSettingsValues,
-        preset: BrandPreset
+        preset: BrandPreset,
+        transcript: Transcript? = nil
     ) -> [String] {
         let cleanHook = hook.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         let series = brand.seriesName.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -249,6 +283,10 @@ enum YouTubeMetadataService {
             append(series)
         }
 
+        for phrase in transcriptPhrases(from: transcript) {
+            append(phrase)
+        }
+
         for tag in presetTags(preset) {
             append(tag)
         }
@@ -258,6 +296,42 @@ enum YouTubeMetadataService {
         }
 
         return Array(tags.prefix(15))
+    }
+
+    /// Pulls the most repeated meaningful two-word phrases from what was said.
+    private static func transcriptPhrases(from transcript: Transcript?) -> [String] {
+        guard let transcript, !transcript.isEmpty else { return [] }
+
+        let filler: Set<String> = [
+            "a", "an", "the", "and", "or", "of", "in", "on", "at", "to",
+            "for", "with", "so", "uh", "um", "like", "just", "you", "i",
+            "we", "this", "that", "it", "is", "are", "was", "were", "my",
+            "me", "be", "do", "did", "have", "has", "had", "but", "if"
+        ]
+
+        let words = transcript.fullText
+            .lowercased()
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .filter { !$0.isEmpty && !filler.contains($0) && $0.count > 2 }
+
+        guard words.count >= 2 else { return [] }
+
+        var counts: [String: Int] = [:]
+
+        for index in 0..<(words.count - 1) {
+            let phrase = "\(words[index]) \(words[index + 1])"
+            counts[phrase, default: 0] += 1
+        }
+
+        return counts
+            .sorted { lhs, rhs in
+                if lhs.value == rhs.value {
+                    return lhs.key < rhs.key
+                }
+                return lhs.value > rhs.value
+            }
+            .prefix(6)
+            .map(\.key)
     }
 
     static func tagsQuality(_ tags: [String]) -> MetadataQuality {
@@ -380,6 +454,10 @@ enum YouTubeMetadataService {
 
     static func thumbnailFilename(for title: String) -> String {
         "\(safeFilename(from: title))_thumbnail.jpg"
+    }
+
+    static func packageBaseName(from title: String) -> String {
+        safeFilename(from: title)
     }
 
     // MARK: - Copy building blocks

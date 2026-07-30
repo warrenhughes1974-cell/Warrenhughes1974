@@ -29,7 +29,8 @@ enum ShortsExportService {
     static func export(
         from videoURL: URL,
         candidate: ShortCandidate,
-        index: Int
+        index: Int,
+        transcript: Transcript? = nil
     ) async throws -> URL {
         guard let ffmpegPath = ProductionPassService.ffmpegPath else {
             throw ServiceError.ffmpegMissing
@@ -54,16 +55,46 @@ enum ShortsExportService {
             .appendingPathComponent("HughesClipPrep-Shorts-\(UUID().uuidString).log")
         FileManager.default.createFile(atPath: logURL.path, contents: nil)
 
+        var assURL: URL?
+        if let transcript {
+            let cues = transcript.captionCues(
+                overlapping: candidate.startTime,
+                duration: candidate.duration
+            )
+
+            if !cues.isEmpty {
+                let captionsURL = FileManager.default.temporaryDirectory
+                    .appendingPathComponent("HughesClipPrep-Captions-\(UUID().uuidString).ass")
+                try writeASS(cues: cues, to: captionsURL)
+                assURL = captionsURL
+            }
+        }
+
+        defer {
+            if let assURL {
+                try? FileManager.default.removeItem(at: assURL)
+            }
+        }
+
         // Scale up to cover a 1080x1920 frame, then centre-crop. This handles
         // landscape, square, and already-vertical sources without special cases.
-        let videoFilter = [
+        var videoFilter = [
             "scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos",
             "crop=1080:1920",
             "setsar=1",
             // DJI D-Log and HLG footage arrives 10-bit, which VideoToolbox will
             // not accept for H.264 without this conversion.
             "format=yuv420p"
-        ].joined(separator: ",")
+        ]
+
+        if let assURL {
+            // Escape path characters FFmpeg's subtitles filter treats specially.
+            let escaped = assURL.path
+                .replacingOccurrences(of: "\\", with: "\\\\")
+                .replacingOccurrences(of: ":", with: "\\:")
+                .replacingOccurrences(of: "'", with: "\\'")
+            videoFilter.append("ass='\(escaped)'")
+        }
 
         let arguments = [
             "-hide_banner",
@@ -77,7 +108,7 @@ enum ShortsExportService {
             "-t",
             String(format: "%.3f", candidate.duration),
             "-vf",
-            videoFilter,
+            videoFilter.joined(separator: ","),
             // Shorts play loud; -14 LUFS matches what the platform targets.
             "-af",
             "loudnorm=I=-14:TP=-1.5:LRA=11",
@@ -120,6 +151,50 @@ enum ShortsExportService {
         }
 
         return outputURL
+    }
+
+    /// Big, high-contrast captions sized for phone screens with sound off.
+    private static func writeASS(
+        cues: [(start: TimeInterval, end: TimeInterval, text: String)],
+        to url: URL
+    ) throws {
+        var lines = [
+            "[Script Info]",
+            "ScriptType: v4.00+",
+            "PlayResX: 1080",
+            "PlayResY: 1920",
+            "WrapStyle: 0",
+            "",
+            "[V4+ Styles]",
+            "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
+            "Style: Shorts,Arial Black,72,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,5,0,2,60,60,220,1",
+            "",
+            "[Events]",
+            "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
+        ]
+
+        for cue in cues {
+            let text = cue.text
+                .replacingOccurrences(of: "\\", with: "\\\\")
+                .replacingOccurrences(of: "{", with: "\\{")
+                .replacingOccurrences(of: "}", with: "\\}")
+
+            lines.append(
+                "Dialogue: 0,\(assTime(cue.start)),\(assTime(cue.end)),Shorts,,0,0,0,,\(text)"
+            )
+        }
+
+        try lines.joined(separator: "\n").write(to: url, atomically: true, encoding: .utf8)
+    }
+
+    private static func assTime(_ seconds: TimeInterval) -> String {
+        let totalCentiseconds = max(Int((seconds * 100).rounded()), 0)
+        let hours = totalCentiseconds / 360_000
+        let minutes = (totalCentiseconds % 360_000) / 6_000
+        let secs = (totalCentiseconds % 6_000) / 100
+        let cents = totalCentiseconds % 100
+
+        return String(format: "%d:%02d:%02d.%02d", hours, minutes, secs, cents)
     }
 
     private static func runProcess(

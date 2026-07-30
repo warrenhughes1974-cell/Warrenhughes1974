@@ -44,6 +44,7 @@
 		B1C2D3E4F5A7488990ABCD007 /* ShortsMetadataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D3E4F5A6B7488990ABCD007 /* ShortsMetadataService.swift */; };
 		D3E4F5A6B7C7488990ABCD007 /* ShortsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F5A6B7C8D7488990ABCD007 /* ShortsViewModel.swift */; };
 		F5A6B7C8D9E7488990ABCD007 /* ShortsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B7C8D9E0F7488990ABCD007 /* ShortsView.swift */; };
+		B8C9D0E1F2A7488990ABCD008 /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D0E1F2A3B7488990ABCD008 /* TranscriptionService.swift */; };
 		76371AAF57FB412DAB274AF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AE23DC4F179498E9C87B3CF /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +86,7 @@
 		C2D3E4F5A6B7488990ABCD007 /* ShortsMetadataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsMetadataService.swift; sourceTree = "<group>"; };
 		E4F5A6B7C8D7488990ABCD007 /* ShortsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsViewModel.swift; sourceTree = "<group>"; };
 		A6B7C8D9E0F7488990ABCD007 /* ShortsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsView.swift; sourceTree = "<group>"; };
+		C9D0E1F2A3B7488990ABCD008 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
 		8AE23DC4F179498E9C87B3CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5CF9B53D2BA04BE1AB4A6069 /* Hughes Clip Prep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hughes Clip Prep.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -186,6 +188,7 @@
 				E8F9A0B1C2D7488990ABCD007 /* ShortsFinderService.swift */,
 				A0B1C2D3E4F7488990ABCD007 /* ShortsExportService.swift */,
 				C2D3E4F5A6B7488990ABCD007 /* ShortsMetadataService.swift */,
+				C9D0E1F2A3B7488990ABCD008 /* TranscriptionService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -355,6 +358,7 @@
 				B1C2D3E4F5A7488990ABCD007 /* ShortsMetadataService.swift in Sources */,
 				D3E4F5A6B7C7488990ABCD007 /* ShortsViewModel.swift in Sources */,
 				F5A6B7C8D9E7488990ABCD007 /* ShortsView.swift in Sources */,
+				B8C9D0E1F2A7488990ABCD008 /* TranscriptionService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,11 +416,12 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Hughes Clip Prep";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Hughes Clip Prep transcribes your finished videos on your Mac so it can build chapters, tags, Shorts captions, and descriptions from what you said.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.14;
+				MARKETING_VERSION = 1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -443,11 +448,12 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Hughes Clip Prep";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Hughes Clip Prep transcribes your finished videos on your Mac so it can build chapters, tags, Shorts captions, and descriptions from what you said.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.14;
+				MARKETING_VERSION = 1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

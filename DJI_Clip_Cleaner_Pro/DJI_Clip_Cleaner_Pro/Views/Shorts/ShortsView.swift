@@ -48,19 +48,32 @@ struct ShortsView: View {
                     .buttonStyle(.borderedProminent)
                     .tint(AppTheme.papaya)
 
+                    Button("Transcribe Speech") {
+                        viewModel.transcribeVideo()
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!viewModel.canTranscribe)
+
                     Button("Find Moments") {
                         viewModel.findMoments()
                     }
                     .buttonStyle(.bordered)
                     .disabled(!viewModel.canAnalyze)
 
-                    if viewModel.isAnalyzing || viewModel.isExporting {
+                    if viewModel.isAnalyzing || viewModel.isExporting || viewModel.isTranscribing {
                         ProgressView()
                             .controlSize(.small)
                     }
 
                     Spacer()
                 }
+
+                Text(viewModel.transcriptSummary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Toggle("Burn captions onto exported Shorts", isOn: $viewModel.burnCaptions)
+                    .disabled(viewModel.transcript == nil)
 
                 if let videoURL = viewModel.selectedVideoURL {
                     Text(videoURL.path)
@@ -181,6 +194,13 @@ struct ShortsView: View {
                 Text(candidate.reason)
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                if !candidate.quote.isEmpty {
+                    Text("“\(candidate.quote)”")
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.carbon)
+                        .lineLimit(2)
+                }
             }
 
             Spacer()

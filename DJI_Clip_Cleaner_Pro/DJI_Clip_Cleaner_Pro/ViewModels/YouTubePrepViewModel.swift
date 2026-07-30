@@ -13,6 +13,8 @@ final class YouTubePrepViewModel {
     var hook = ""
     var thumbnailText = ""
     var includeChannelInTitle = false
+    var transcript: Transcript?
+    var isTranscribing = false
     var generatedDescription = ""
     var generatedTags: [String] = []
     var thumbnailPath = ""
@@ -33,7 +35,21 @@ final class YouTubePrepViewModel {
     }
 
     var canGenerate: Bool {
-        selectedVideoURL != nil && !trimmedHook.isEmpty
+        selectedVideoURL != nil && !trimmedHook.isEmpty && !isTranscribing
+    }
+
+    var canTranscribe: Bool {
+        selectedVideoURL != nil && !isWorking && !isTranscribing
+    }
+
+    var transcriptSummary: String {
+        guard let transcript else {
+            return "No transcript yet. Transcribe once to unlock real chapters, better tags, and spoken-word descriptions."
+        }
+
+        let words = transcript.fullText.split(separator: " ").count
+        let mode = transcript.usedOnDevice ? "on-device" : "network"
+        return "Transcript ready · \(words) words · \(transcript.segments.count) timed words · \(mode)"
     }
 
     var generatedTitle: String {
@@ -106,6 +122,7 @@ final class YouTubePrepViewModel {
         UserDefaults.standard.set(url.path, forKey: Self.lastVideoPathKey)
         errorMessage = nil
         thumbnailPath = ""
+        transcript = nil
 
         if trimmedHook.isEmpty {
             hook = YouTubeMetadataService.hookSuggestion(
@@ -155,6 +172,37 @@ final class YouTubePrepViewModel {
         }
     }
 
+    func transcribeVideo() {
+        guard let selectedVideoURL, canTranscribe else {
+            errorMessage = "Choose a video first."
+            return
+        }
+
+        isTranscribing = true
+        errorMessage = nil
+        statusMessage = "Transcribing speech. Longer videos take a few minutes..."
+
+        Task {
+            do {
+                let result = try await TranscriptionService.transcribe(videoURL: selectedVideoURL)
+                transcript = result
+
+                if trimmedHook.isEmpty {
+                    hook = suggestedHook(from: result)
+                    hookDidChange()
+                }
+
+                statusMessage = "Transcription complete. Generate description and tags to use it."
+            } catch {
+                transcript = nil
+                errorMessage = error.localizedDescription
+                statusMessage = "Transcription failed."
+            }
+
+            isTranscribing = false
+        }
+    }
+
     func generateDescription() {
         guard canGenerate else {
             errorMessage = "Choose a video and type a hook first."
@@ -164,10 +212,13 @@ final class YouTubePrepViewModel {
         generatedDescription = YouTubeMetadataService.generateDescription(
             hook: trimmedHook,
             brand: BrandSettings.shared.values,
-            preset: BrandSettings.shared.selectedPreset
+            preset: BrandSettings.shared.selectedPreset,
+            transcript: transcript
         )
         errorMessage = nil
-        statusMessage = "Description ready. The first line is your search snippet."
+        statusMessage = transcript == nil
+            ? "Description ready. Transcribe first for real chapters from your speech."
+            : "Description ready with chapters pulled from your speech."
     }
 
     func generateTags() {
@@ -179,10 +230,27 @@ final class YouTubePrepViewModel {
         generatedTags = YouTubeMetadataService.generateTags(
             hook: trimmedHook,
             brand: BrandSettings.shared.values,
-            preset: BrandSettings.shared.selectedPreset
+            preset: BrandSettings.shared.selectedPreset,
+            transcript: transcript
         )
         errorMessage = nil
-        statusMessage = "Tags ready, most specific first."
+        statusMessage = transcript == nil
+            ? "Tags ready. Transcribe first to pull phrases you actually said."
+            : "Tags ready, including phrases from your transcript."
+    }
+
+    private func suggestedHook(from transcript: Transcript) -> String {
+        let words = transcript.fullText
+            .split(separator: " ")
+            .prefix(8)
+            .joined(separator: " ")
+
+        return words.isEmpty
+            ? YouTubeMetadataService.hookSuggestion(
+                from: selectedVideoURL ?? URL(fileURLWithPath: "/"),
+                fallbackSeries: BrandSettings.shared.seriesName
+            )
+            : words
     }
 
     func generateUploadPackage() {
@@ -230,6 +298,13 @@ final class YouTubePrepViewModel {
                     metadata: metadata,
                     thumbnailURL: URL(fileURLWithPath: thumbnailPath)
                 )
+
+                if let transcript {
+                    let srtURL = packageFolder.appendingPathComponent(
+                        "\(YouTubeMetadataService.packageBaseName(from: metadata.title))_captions.srt"
+                    )
+                    try TranscriptionService.writeSRT(transcript, to: srtURL)
+                }
 
                 statusMessage = "Upload package saved to YouTube_Prep/."
                 #if canImport(AppKit)
