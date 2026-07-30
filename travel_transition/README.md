@@ -2,6 +2,8 @@
 
 Broadcast-quality travel transition graphic for YouTube timelines.
 
+Dark cinematic documentary style — charcoal-navy gradient with vignette.
+
 ## Output
 
 **`Austin_to_Dallas_45_Minutes_Later.mp4`**
