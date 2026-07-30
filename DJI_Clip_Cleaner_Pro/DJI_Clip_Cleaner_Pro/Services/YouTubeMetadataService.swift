@@ -153,25 +153,39 @@ enum YouTubeMetadataService {
         hook: String,
         brand: BrandSettingsValues,
         preset: BrandPreset,
-        transcript: Transcript? = nil
+        transcript: Transcript? = nil,
+        extraPlaces: [String] = []
     ) -> String {
         let channel = brand.channelPrefix.trimmingCharacters(in: .whitespacesAndNewlines)
         let series = brand.seriesName.trimmingCharacters(in: .whitespacesAndNewlines)
         let cleanHook = titleCase(hook)
 
+        let places = mergedPlaces(detected: TranscriptKeywordService.places(from: transcript),
+                                  manual: extraPlaces)
+        let topics = TranscriptKeywordService.topics(from: transcript, limit: 8)
+
         var lines: [String] = []
 
         // First 150 characters become the search snippet, so lead with the
         // keyword instead of repeating the title verbatim.
-        lines.append(searchSnippet(hook: cleanHook, series: series, preset: preset))
+        lines.append(searchSnippet(hook: cleanHook, preset: preset, places: places))
         lines.append("")
 
-        lines.append(bodyCopy(hook: cleanHook, series: series, preset: preset))
+        // Written from what is actually in the video. The hook appears once, in
+        // the search snippet above, rather than as the subject of every sentence.
+        lines.append(bodyCopy(preset: preset, places: places, topics: topics))
 
-        let topics = TranscriptKeywordService.topics(from: transcript, limit: 8)
+        if !places.isEmpty {
+            lines.append("")
+            lines.append("STORES IN THIS VIDEO")
+            for place in places {
+                lines.append("· \(place)")
+            }
+        }
+
         if !topics.isEmpty {
             lines.append("")
-            lines.append("WHAT'S IN THIS VIDEO")
+            lines.append("WHAT WE FOUND")
             for topic in topics {
                 lines.append("· \(topic)")
             }
@@ -238,9 +252,12 @@ enum YouTubeMetadataService {
         hook: String,
         brand: BrandSettingsValues,
         preset: BrandPreset,
-        transcript: Transcript? = nil
+        transcript: Transcript? = nil,
+        extraPlaces: [String] = []
     ) -> [String] {
-        let cleanHook = hook.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        // A hook can be a full title with emoji and pipes; that is unusable as a
+        // tag, so it is reduced to the plain phrase underneath.
+        let cleanHook = tagSafe(hook)
         let series = brand.seriesName.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         let channel = brand.channelPrefix.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 
@@ -269,6 +286,20 @@ enum YouTubeMetadataService {
         if !series.isEmpty {
             append("\(cleanHook) \(series)")
             append(series)
+        }
+
+        // Store names are what viewers actually type, so they rank above both
+        // the transcript phrases and the preset copy.
+        let places = mergedPlaces(
+            detected: TranscriptKeywordService.places(from: transcript),
+            manual: extraPlaces
+        )
+
+        for place in places.prefix(3) {
+            let name = place.lowercased()
+            append("\(name) \(presetKeyword(preset))")
+            append("\(name) haul")
+            append("shop with me \(name)")
         }
 
         // What was actually said outranks generic preset copy.
@@ -323,11 +354,39 @@ enum YouTubeMetadataService {
 
     // MARK: - Hook suggestion
 
+    /// Export filenames carry timestamps, "(copy)", and camera prefixes. None of
+    /// that belongs in a title, so it is stripped before the name is offered as
+    /// a starting hook.
     static func hookSuggestion(from videoURL: URL, fallbackSeries: String = "") -> String {
         let baseName = videoURL.deletingPathExtension().lastPathComponent
-        let cleaned = baseName
+        var cleaned = baseName
             .replacingOccurrences(of: "_", with: " ")
             .replacingOccurrences(of: "-", with: " ")
+
+        let noise = [
+            "\\([^)]*copy[^)]*\\)",
+            "\\bcopy\\s*\\d*\\b",
+            "\\b\\d{4}[ ]\\d{2}[ ]\\d{2}\\b",
+            "\\b\\d{2}[ ]\\d{2}[ ]\\d{2}\\b",
+            "\\b\\d{8,}\\b",
+            "\\b(?:dji|gopr|gx|img|mvi|mov|vid|clip|seq)\\s*\\d*\\b",
+            "\\b(?:final|finished|export|render|edit|master|draft)\\b",
+            "\\bv\\d+\\b"
+        ]
+
+        for pattern in noise {
+            cleaned = cleaned.replacingOccurrences(
+                of: pattern,
+                with: " ",
+                options: [.regularExpression, .caseInsensitive]
+            )
+        }
+
+        // Anything left that is only digits was part of a stamp, not a topic.
+        cleaned = cleaned
+            .split(separator: " ")
+            .filter { !$0.allSatisfy(\.isNumber) }
+            .joined(separator: " ")
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
         guard !cleaned.isEmpty else {
@@ -335,6 +394,32 @@ enum YouTubeMetadataService {
         }
 
         return titleCase(cleaned)
+    }
+
+    /// A hook can be a full title with emoji and pipes. That reads fine above a
+    /// video and terribly as a tag, so tags get a plain-text version.
+    static func tagSafe(_ value: String) -> String {
+        let firstClause = value
+            .components(separatedBy: CharacterSet(charactersIn: "|—–:"))
+            .first ?? value
+
+        let letters = firstClause.unicodeScalars.filter { scalar in
+            CharacterSet.alphanumerics.contains(scalar) || scalar == " " || scalar == "'"
+        }
+
+        let cleaned = String(String.UnicodeScalarView(letters))
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+
+        // Beyond about five words a tag stops matching anything people type, and
+        // a bare number is left over from an export stamp rather than typed.
+        let words = cleaned
+            .split(separator: " ")
+            .filter { !$0.allSatisfy(\.isNumber) }
+            .prefix(5)
+
+        return words.joined(separator: " ")
     }
 
     // MARK: - Upload package
@@ -422,25 +507,58 @@ enum YouTubeMetadataService {
 
     // MARK: - Copy building blocks
 
+    /// Combines stores heard in the audio with any the user typed in, keeping
+    /// the user's spelling when both refer to the same place.
+    private static func mergedPlaces(detected: [String], manual: [String]) -> [String] {
+        var result: [String] = []
+
+        for value in manual + detected {
+            let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty else { continue }
+            guard !result.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else {
+                continue
+            }
+            result.append(trimmed)
+        }
+
+        return Array(result.prefix(6))
+    }
+
+    /// "A", "A and B", or "A, B, and C".
+    private static func sentenceList(_ items: [String]) -> String {
+        switch items.count {
+        case 0:
+            return ""
+        case 1:
+            return items[0]
+        case 2:
+            return "\(items[0]) and \(items[1])"
+        default:
+            return items.dropLast().joined(separator: ", ") + ", and \(items[items.count - 1])"
+        }
+    }
+
     private static func searchSnippet(
         hook: String,
-        series: String,
-        preset: BrandPreset
+        preset: BrandPreset,
+        places: [String]
     ) -> String {
-        let context = series.isEmpty ? "" : " \(series.lowercased())"
+        let atStores = places.isEmpty
+            ? ""
+            : " at \(sentenceList(Array(places.prefix(2))))"
 
         let snippet: String
         switch preset {
         case .halloweenHunt:
-            snippet = "\(hook) — hunting Halloween decorations and spooky store finds in this\(context)."
+            snippet = "\(hook) — Halloween decorations are already out\(atStores), and these are the finds worth the drive."
         case .storeWalk:
-            snippet = "\(hook) — walking the aisles to find what's new on the shelves in this\(context)."
+            snippet = "\(hook) — walking the aisles\(atStores) to see what is actually on the shelves right now."
         case .productReview:
             snippet = "\(hook) — an honest, hands-on look before you spend your money."
         case .behindTheScenes:
-            snippet = "\(hook) — a behind-the-scenes look at how this\(context) came together."
+            snippet = "\(hook) — a behind-the-scenes look at how this one came together."
         case .custom:
-            snippet = "\(hook) — everything worth seeing in this\(context)."
+            snippet = "\(hook) — everything worth seeing\(atStores)."
         }
 
         guard snippet.count > descriptionSnippetLimit else {
@@ -450,45 +568,57 @@ enum YouTubeMetadataService {
         return String(snippet.prefix(descriptionSnippetLimit - 1)).trimmingCharacters(in: .whitespaces) + "…"
     }
 
+    /// Built from the stores and subjects found in the video rather than from
+    /// the title, so the description describes the content instead of restating
+    /// the name of the upload.
     private static func bodyCopy(
-        hook: String,
-        series: String,
-        preset: BrandPreset
+        preset: BrandPreset,
+        places: [String],
+        topics: [String]
     ) -> String {
-        let seriesLabel = series.isEmpty ? "video" : series
+        var sentences: [String] = [openingLine(for: preset)]
 
+        if !places.isEmpty {
+            sentences.append("We stopped at \(sentenceList(places)) on this one.")
+        }
+
+        if !topics.isEmpty {
+            let found = sentenceList(topics.prefix(5).map { $0.lowercased() })
+            sentences.append("Along the way we found \(found).")
+        }
+
+        sentences.append(closingLine(for: preset))
+
+        return sentences.joined(separator: " ")
+    }
+
+    private static func openingLine(for preset: BrandPreset) -> String {
         switch preset {
         case .halloweenHunt:
-            return """
-            In this \(seriesLabel) we go looking for \(hook). Expect animatronics, seasonal displays, \
-            and the kind of Halloween decorations that are worth driving across town for.
-
-            If you are shopping for Halloween this year, this walkthrough shows what is actually on \
-            the shelves right now, what is worth the price, and what to skip.
-            """
+            return "Halloween is creeping into the stores early this year, so we went looking for the good stuff."
         case .storeWalk:
-            return """
-            This \(seriesLabel) is a full walk through the aisles looking at \(hook). \
-            New arrivals, clearance finds, and anything that stood out on the shelf.
-
-            If you want to see what is in stock before you make the trip, this walkthrough covers it.
-            """
+            return "A full walk through the aisles to see what actually made it onto the shelves."
         case .productReview:
-            return """
-            A hands-on look at \(hook). What it does well, where it falls short, and whether it is \
-            worth the money.
-
-            No sponsorship and no script — just an honest review after real use.
-            """
+            return "A hands-on look after real use — no script, no sponsorship."
         case .behindTheScenes:
-            return """
-            A behind-the-scenes look at \(hook). The setup, the gear, and how this \(seriesLabel) \
-            actually gets made.
-            """
+            return "A look at how this one actually got made."
         case .custom:
-            return """
-            This \(seriesLabel) covers \(hook). Watch through for the full walkthrough.
-            """
+            return "Here is the full walkthrough."
+        }
+    }
+
+    private static func closingLine(for preset: BrandPreset) -> String {
+        switch preset {
+        case .halloweenHunt:
+            return "If you are shopping for Halloween this year, this shows what is on the shelves right now, what is worth the price, and what to skip."
+        case .storeWalk:
+            return "If you want to know what is in stock before you make the trip, this covers it."
+        case .productReview:
+            return "Stay to the end for whether it is actually worth buying."
+        case .behindTheScenes:
+            return "Comment if you want a closer look at any part of the setup."
+        case .custom:
+            return "Watch through for the whole thing."
         }
     }
 
@@ -551,6 +681,22 @@ enum YouTubeMetadataService {
 
         // YouTube only surfaces the first three hashtags above the title.
         return tags.prefix(3).joined(separator: " ")
+    }
+
+    /// The word viewers pair with a store name when searching this kind of video.
+    private static func presetKeyword(_ preset: BrandPreset) -> String {
+        switch preset {
+        case .halloweenHunt:
+            return "halloween"
+        case .storeWalk:
+            return "shopping"
+        case .productReview:
+            return "review"
+        case .behindTheScenes:
+            return "behind the scenes"
+        case .custom:
+            return "finds"
+        }
     }
 
     private static func presetTags(_ preset: BrandPreset) -> [String] {

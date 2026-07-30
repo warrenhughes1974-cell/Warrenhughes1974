@@ -37,6 +37,37 @@ enum TranscriptKeywordService {
             .map { titleCase($0.phrase) }
     }
 
+    /// Stores and destinations named in the video. These are the most valuable
+    /// words in a store-walk description, so they are matched against a known
+    /// list first and only then guessed at from the name tagger.
+    static func places(from transcript: Transcript?, limit: Int = 6) -> [String] {
+        guard let transcript, !transcript.isEmpty else { return [] }
+
+        let haystack = " " + transcript.fullText
+            .lowercased()
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .joined(separator: " ")
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression) + " "
+
+        var found: [String] = []
+
+        for (needle, display) in knownPlaces {
+            guard haystack.contains(" \(needle) ") else { continue }
+            guard !found.contains(display) else { continue }
+            found.append(display)
+        }
+
+        for name in taggedNames(in: transcript.fullText) {
+            guard found.count < limit else { break }
+            guard !found.contains(where: { $0.caseInsensitiveCompare(name) == .orderedSame }) else {
+                continue
+            }
+            found.append(name)
+        }
+
+        return Array(found.prefix(limit))
+    }
+
     /// A readable title for one stretch of speech, or nil when that stretch has
     /// nothing worth naming. Callers should skip the chapter rather than fall
     /// back to raw transcript text.
@@ -98,7 +129,54 @@ enum TranscriptKeywordService {
             .map { TranscriptKeyword(phrase: $0.key, count: $0.value) }
             .sorted(by: strongestFirst)
 
-        return phrases + nouns
+        return spread(phrases + nouns)
+    }
+
+    /// Keeps one subject from swamping the list. Without this a Halloween video
+    /// returns "pumpkin spice", "halloween pumpkin", "bat pumpkin" and
+    /// "spice spice" as four separate topics.
+    private static func spread(_ keywords: [TranscriptKeyword]) -> [TranscriptKeyword] {
+        var timesUsed: [String: Int] = [:]
+        var kept: [TranscriptKeyword] = []
+
+        for keyword in keywords {
+            let words = keyword.phrase.split(separator: " ").map(String.init)
+
+            // "spice spice" is a stutter, not a subject.
+            if words.count == 2, words[0] == words[1] { continue }
+
+            guard words.allSatisfy({ (timesUsed[$0] ?? 0) < 2 }) else { continue }
+
+            for word in words {
+                timesUsed[word, default: 0] += 1
+            }
+            kept.append(keyword)
+        }
+
+        return kept
+    }
+
+    private static func taggedNames(in text: String) -> [String] {
+        var names: [String] = []
+        let tagger = NLTagger(tagSchemes: [.nameType])
+        tagger.string = text
+
+        tagger.enumerateTags(
+            in: text.startIndex..<text.endIndex,
+            unit: .word,
+            scheme: .nameType,
+            options: [.omitPunctuation, .omitWhitespace, .joinNames]
+        ) { tag, range in
+            guard tag == .organizationName || tag == .placeName else { return true }
+
+            let name = String(text[range]).trimmingCharacters(in: .whitespacesAndNewlines)
+            guard name.count >= 4, !names.contains(name) else { return true }
+
+            names.append(name)
+            return true
+        }
+
+        return names
     }
 
     private static func strongestFirst(
@@ -194,6 +272,57 @@ enum TranscriptKeywordService {
             .map { $0.prefix(1).uppercased() + $0.dropFirst() }
             .joined(separator: " ")
     }
+
+    /// Speech-to-text mangles brand names constantly, so each store is matched
+    /// on the spellings dictation actually produces. Keys must be lowercase and
+    /// space-separated to match the normalized transcript.
+    private static let knownPlaces: [(String, String)] = [
+        ("homegoods", "HomeGoods"),
+        ("home goods", "HomeGoods"),
+        ("homesense", "HomeSense"),
+        ("home sense", "HomeSense"),
+        ("tj maxx", "T.J. Maxx"),
+        ("tjmaxx", "T.J. Maxx"),
+        ("t j maxx", "T.J. Maxx"),
+        ("marshalls", "Marshalls"),
+        ("ross", "Ross"),
+        ("target", "Target"),
+        ("walmart", "Walmart"),
+        ("michaels", "Michaels"),
+        ("hobby lobby", "Hobby Lobby"),
+        ("at home", "At Home"),
+        ("big lots", "Big Lots"),
+        ("spirit halloween", "Spirit Halloween"),
+        ("dollar tree", "Dollar Tree"),
+        ("dollar general", "Dollar General"),
+        ("five below", "Five Below"),
+        ("kirklands", "Kirkland's"),
+        ("world market", "World Market"),
+        ("ikea", "IKEA"),
+        ("costco", "Costco"),
+        ("sams club", "Sam's Club"),
+        ("lowes", "Lowe's"),
+        ("home depot", "The Home Depot"),
+        ("party city", "Party City"),
+        ("burlington", "Burlington"),
+        ("trader joes", "Trader Joe's"),
+        ("whole foods", "Whole Foods"),
+        ("aldi", "Aldi"),
+        ("heb", "H-E-B"),
+        ("h e b", "H-E-B"),
+        ("kroger", "Kroger"),
+        ("bath and body works", "Bath & Body Works"),
+        ("barnes and noble", "Barnes & Noble"),
+        ("hallmark", "Hallmark"),
+        ("joann", "JOANN"),
+        ("ace hardware", "Ace Hardware"),
+        ("buc ees", "Buc-ee's"),
+        ("bucees", "Buc-ee's"),
+        ("cracker barrel", "Cracker Barrel"),
+        ("ikes love and sandwiches", "Ike's Love and Sandwiches"),
+        ("ikes love", "Ike's Love and Sandwiches"),
+        ("ikes sandwiches", "Ike's Love and Sandwiches")
+    ]
 
     // MARK: - Vocabulary
 

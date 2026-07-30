@@ -12,6 +12,7 @@ final class YouTubePrepViewModel {
     var selectedVideoURL: URL?
     var hook = ""
     var thumbnailText = ""
+    var placesText = ""
     var includeChannelInTitle = false
     var transcript: Transcript?
     var isTranscribing = false
@@ -39,6 +40,27 @@ final class YouTubePrepViewModel {
 
     var trimmedHook: String {
         hook.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// Stores the user typed in. Speech recognition misses a lot of brand names,
+    /// so this is the reliable way to get them into the description and tags.
+    var manualPlaces: [String] {
+        placesText
+            .split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
+
+    var detectedPlacesSummary: String {
+        let detected = TranscriptKeywordService.places(from: transcript)
+
+        guard !detected.isEmpty else {
+            return transcript == nil
+                ? "Transcribe first and stores you named out loud get picked up automatically."
+                : "No store names were recognized. Type them above so they reach the description and tags."
+        }
+
+        return "Heard in the video: \(detected.joined(separator: ", "))"
     }
 
     var canGenerate: Bool {
@@ -334,7 +356,8 @@ final class YouTubePrepViewModel {
             hook: trimmedHook,
             brand: BrandSettings.shared.values,
             preset: BrandSettings.shared.selectedPreset,
-            transcript: transcript
+            transcript: transcript,
+            extraPlaces: manualPlaces
         )
         errorMessage = nil
         statusMessage = transcript == nil
@@ -352,7 +375,8 @@ final class YouTubePrepViewModel {
             hook: trimmedHook,
             brand: BrandSettings.shared.values,
             preset: BrandSettings.shared.selectedPreset,
-            transcript: transcript
+            transcript: transcript,
+            extraPlaces: manualPlaces
         )
         errorMessage = nil
         statusMessage = transcript == nil

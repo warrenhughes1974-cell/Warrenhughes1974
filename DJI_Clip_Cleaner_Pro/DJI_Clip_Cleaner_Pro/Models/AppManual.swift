@@ -108,6 +108,16 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.19",
+            highlights: [
+                "Descriptions are written from what is in the video instead of repeating your title in every sentence.",
+                "Export filenames no longer leak into titles — no more \"2026 07 29 18 59 18(copy)\".",
+                "Store names are recognized and become the strongest tags, since that is what viewers search.",
+                "New Stores & Places field for names the microphone missed.",
+                "Repeated subjects are collapsed, so no more \"spice spice\" or three kinds of pumpkin."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.18",
             highlights: [
                 "Fixed thumbnail picks never appearing — Finder was opening on top of the app and hiding them.",

@@ -101,6 +101,22 @@ struct YouTubePrepView: View {
                         .foregroundStyle(.secondary)
                 }
 
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Stores & Places")
+                        .fontWeight(.semibold)
+
+                    TextField("HomeGoods, Ross, Ike's Love and Sandwiches", text: $viewModel.placesText)
+                        .textFieldStyle(.roundedBorder)
+
+                    Text("Separate with commas. Store names are the most searched part of a store walk, and the mic often misses them.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Text(viewModel.detectedPlacesSummary)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+
                 Toggle("Add channel name to the end of the title", isOn: $viewModel.includeChannelInTitle)
                     .onChange(of: viewModel.includeChannelInTitle) { _, _ in
                         viewModel.refreshTitleVariants()
