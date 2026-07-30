@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import UniformTypeIdentifiers
 
 #if canImport(AppKit)
 import AppKit
@@ -10,13 +11,16 @@ import AppKit
 final class YouTubePrepViewModel {
     var selectedVideoURL: URL?
     var hook = ""
-    var generatedTitle = ""
+    var thumbnailText = ""
+    var includeChannelInTitle = false
     var generatedDescription = ""
-    var generatedTags = ""
+    var generatedTags: [String] = []
     var thumbnailPath = ""
     var statusMessage = "Choose your finished Filmora video to start YouTube prep."
     var errorMessage: String?
     var isWorking = false
+
+    private var hasEditedThumbnailText = false
 
     private static let lastVideoPathKey = "youtubePrepLastVideoPath"
 
@@ -24,18 +28,60 @@ final class YouTubePrepViewModel {
         restoreLastVideoIfAvailable()
     }
 
-    var canGenerate: Bool {
-        selectedVideoURL != nil && !hook.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    var trimmedHook: String {
+        hook.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    var titlePreview: String {
-        let brand = BrandSettings.shared.values
-        let trimmedHook = hook.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedHook.isEmpty else {
-            return "Type a hook to preview your YouTube title."
-        }
+    var canGenerate: Bool {
+        selectedVideoURL != nil && !trimmedHook.isEmpty
+    }
 
-        return YouTubeMetadataService.buildTitle(hook: trimmedHook, brand: brand)
+    var generatedTitle: String {
+        YouTubeMetadataService.buildTitle(
+            hook: trimmedHook,
+            brand: BrandSettings.shared.values,
+            includeChannel: includeChannelInTitle
+        )
+    }
+
+    var titleQuality: MetadataQuality {
+        YouTubeMetadataService.titleQuality(generatedTitle)
+    }
+
+    var thumbnailTextQuality: MetadataQuality {
+        YouTubeMetadataService.thumbnailTextQuality(resolvedThumbnailText)
+    }
+
+    var descriptionQuality: MetadataQuality {
+        YouTubeMetadataService.descriptionQuality(generatedDescription)
+    }
+
+    var tagsQuality: MetadataQuality {
+        YouTubeMetadataService.tagsQuality(generatedTags)
+    }
+
+    var tagsLine: String {
+        generatedTags.joined(separator: ", ")
+    }
+
+    var resolvedThumbnailText: String {
+        let typed = thumbnailText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard typed.isEmpty else { return typed }
+
+        return YouTubeMetadataService.thumbnailText(from: trimmedHook)
+    }
+
+    func hookDidChange() {
+        guard !hasEditedThumbnailText else { return }
+        thumbnailText = YouTubeMetadataService.thumbnailText(from: trimmedHook)
+    }
+
+    /// `.onChange` also fires for the programmatic write in `hookDidChange()`,
+    /// so a value that still matches the derived text does not count as edited.
+    func thumbnailTextDidChange() {
+        let typed = thumbnailText.trimmingCharacters(in: .whitespacesAndNewlines)
+        hasEditedThumbnailText = !typed.isEmpty
+            && typed != YouTubeMetadataService.thumbnailText(from: trimmedHook)
     }
 
     func chooseVideo() {
@@ -59,12 +105,14 @@ final class YouTubePrepViewModel {
         selectedVideoURL = url
         UserDefaults.standard.set(url.path, forKey: Self.lastVideoPathKey)
         errorMessage = nil
+        thumbnailPath = ""
 
-        if hook.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if trimmedHook.isEmpty {
             hook = YouTubeMetadataService.hookSuggestion(
                 from: url,
                 fallbackSeries: BrandSettings.shared.seriesName
             )
+            hookDidChange()
         }
 
         statusMessage = "Ready to prep \(url.lastPathComponent) for YouTube."
@@ -84,18 +132,16 @@ final class YouTubePrepViewModel {
         Task {
             do {
                 let brand = BrandSettings.shared.values
-                let title = YouTubeMetadataService.buildTitle(hook: hook, brand: brand)
-                let outputURL = thumbnailOutputURL(for: selectedVideoURL, title: title)
+                let outputURL = try thumbnailOutputURL(for: selectedVideoURL)
 
                 try await ThumbnailService.generate(
                     from: selectedVideoURL,
-                    title: title,
+                    title: resolvedThumbnailText,
                     brand: brand,
                     outputURL: outputURL
                 )
 
                 thumbnailPath = outputURL.path
-                generatedTitle = title
                 statusMessage = "Thumbnail saved to \(outputURL.lastPathComponent)"
                 #if canImport(AppKit)
                 NSWorkspace.shared.activateFileViewerSelecting([outputURL])
@@ -115,19 +161,13 @@ final class YouTubePrepViewModel {
             return
         }
 
-        let brand = BrandSettings.shared.values
-        let preset = BrandSettings.shared.selectedPreset
-        let title = YouTubeMetadataService.buildTitle(hook: hook, brand: brand)
-
-        generatedTitle = title
         generatedDescription = YouTubeMetadataService.generateDescription(
-            title: title,
-            hook: hook,
-            brand: brand,
-            preset: preset
+            hook: trimmedHook,
+            brand: BrandSettings.shared.values,
+            preset: BrandSettings.shared.selectedPreset
         )
         errorMessage = nil
-        statusMessage = "Description ready. Copy it or generate the full upload package."
+        statusMessage = "Description ready. The first line is your search snippet."
     }
 
     func generateTags() {
@@ -136,16 +176,13 @@ final class YouTubePrepViewModel {
             return
         }
 
-        let brand = BrandSettings.shared.values
-        let preset = BrandSettings.shared.selectedPreset
-
         generatedTags = YouTubeMetadataService.generateTags(
-            hook: hook,
-            brand: brand,
-            preset: preset
+            hook: trimmedHook,
+            brand: BrandSettings.shared.values,
+            preset: BrandSettings.shared.selectedPreset
         )
         errorMessage = nil
-        statusMessage = "Tags ready. Copy them or generate the full upload package."
+        statusMessage = "Tags ready, most specific first."
     }
 
     func generateUploadPackage() {
@@ -169,26 +206,28 @@ final class YouTubePrepViewModel {
         Task {
             do {
                 let brand = BrandSettings.shared.values
-                let title = YouTubeMetadataService.buildTitle(hook: hook, brand: brand)
-                generatedTitle = title
 
                 if thumbnailPath.isEmpty {
-                    let outputURL = thumbnailOutputURL(for: selectedVideoURL, title: title)
+                    let outputURL = try thumbnailOutputURL(for: selectedVideoURL)
                     try await ThumbnailService.generate(
                         from: selectedVideoURL,
-                        title: title,
+                        title: resolvedThumbnailText,
                         brand: brand,
                         outputURL: outputURL
                     )
                     thumbnailPath = outputURL.path
                 }
 
+                let metadata = YouTubeMetadata(
+                    title: generatedTitle,
+                    thumbnailText: resolvedThumbnailText,
+                    description: generatedDescription,
+                    tags: generatedTags
+                )
+
                 let packageFolder = try YouTubeMetadataService.writeUploadPackage(
                     videoURL: selectedVideoURL,
-                    title: title,
-                    hook: hook,
-                    description: generatedDescription,
-                    tags: generatedTags,
+                    metadata: metadata,
                     thumbnailURL: URL(fileURLWithPath: thumbnailPath)
                 )
 
@@ -205,34 +244,40 @@ final class YouTubePrepViewModel {
         }
     }
 
+    func copyTitle() {
+        copyToPasteboard(generatedTitle, label: "Title")
+    }
+
     func copyDescription() {
-        #if canImport(AppKit)
-        guard !generatedDescription.isEmpty else { return }
-        NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(generatedDescription, forType: .string)
-        statusMessage = "Description copied to clipboard."
-        #endif
+        copyToPasteboard(generatedDescription, label: "Description")
     }
 
     func copyTags() {
+        copyToPasteboard(tagsLine, label: "Tags")
+    }
+
+    private func copyToPasteboard(_ value: String, label: String) {
         #if canImport(AppKit)
-        guard !generatedTags.isEmpty else { return }
+        guard !value.isEmpty else { return }
         NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(generatedTags, forType: .string)
-        statusMessage = "Tags copied to clipboard."
+        NSPasteboard.general.setString(value, forType: .string)
+        statusMessage = "\(label) copied to clipboard."
         #endif
     }
 
-    private func thumbnailOutputURL(for videoURL: URL, title: String) -> URL {
+    /// Matches the name the upload package uses so the folder holds exactly one
+    /// thumbnail rather than a stale duplicate.
+    private func thumbnailOutputURL(for videoURL: URL) throws -> URL {
         let folder = videoURL.deletingLastPathComponent().appendingPathComponent(
             YouTubeMetadataService.uploadFolderName,
             isDirectory: true
         )
 
-        try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
 
-        let baseName = videoURL.deletingPathExtension().lastPathComponent
-        return folder.appendingPathComponent("\(baseName)_thumbnail.jpg")
+        return folder.appendingPathComponent(
+            YouTubeMetadataService.thumbnailFilename(for: generatedTitle)
+        )
     }
 
     private func restoreLastVideoIfAvailable() {
@@ -248,7 +293,3 @@ final class YouTubePrepViewModel {
         statusMessage = "Ready to prep \(URL(fileURLWithPath: path).lastPathComponent) again."
     }
 }
-
-#if canImport(AppKit)
-import UniformTypeIdentifiers
-#endif

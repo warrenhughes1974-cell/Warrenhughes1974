@@ -116,7 +116,41 @@ enum ThumbnailService {
         context.draw(frame, in: frameRect)
         context.restoreGState()
 
-        let barHeight = canvasSize.height * 0.24
+        let displayTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !displayTitle.isEmpty else {
+            return image
+        }
+
+        let titleColor: NSColor
+        if brand.usePinkTitles {
+            titleColor = NSColor(
+                calibratedRed: brand.titlePinkRed,
+                green: brand.titlePinkGreen,
+                blue: brand.titlePinkBlue,
+                alpha: 1.0
+            )
+        } else {
+            titleColor = .white
+        }
+
+        let inset: CGFloat = 48
+        let availableWidth = canvasSize.width - (inset * 2)
+
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.alignment = .left
+        paragraph.lineBreakMode = .byWordWrapping
+
+        let (font, textSize) = fittedFont(
+            for: displayTitle,
+            maxWidth: availableWidth,
+            maxHeight: canvasSize.height * 0.42,
+            canvasWidth: canvasSize.width,
+            paragraph: paragraph
+        )
+
+        // Size the scrim to the text so short text gets a tight band and long
+        // text still stays readable instead of overflowing a fixed bar.
+        let barHeight = min(textSize.height + (inset * 1.6), canvasSize.height * 0.62)
         let barRect = CGRect(
             x: 0,
             y: 0,
@@ -126,7 +160,7 @@ enum ThumbnailService {
 
         let gradientColors = [
             NSColor.black.withAlphaComponent(0.0).cgColor,
-            NSColor.black.withAlphaComponent(0.82).cgColor
+            NSColor.black.withAlphaComponent(0.88).cgColor
         ] as CFArray
 
         if let gradient = CGGradient(
@@ -145,36 +179,11 @@ enum ThumbnailService {
             context.restoreGState()
         }
 
-        let displayTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !displayTitle.isEmpty else {
-            return image
-        }
-
-        let titleColor: NSColor
-        if brand.usePinkTitles {
-            titleColor = NSColor(
-                calibratedRed: brand.titlePinkRed,
-                green: brand.titlePinkGreen,
-                blue: brand.titlePinkBlue,
-                alpha: 1.0
-            )
-        } else {
-            titleColor = .white
-        }
-
-        let fontSize = fontSizeForTitle(displayTitle, canvasWidth: canvasSize.width)
-        let font = NSFont.boldSystemFont(ofSize: fontSize)
-
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.alignment = .left
-        paragraph.lineBreakMode = .byWordWrapping
-
-        let inset: CGFloat = 36
         let textRect = CGRect(
             x: inset,
-            y: inset * 0.55,
-            width: canvasSize.width - (inset * 2),
-            height: barHeight - inset
+            y: (barHeight - textSize.height) / 2,
+            width: availableWidth,
+            height: textSize.height
         )
 
         drawOutlinedTitle(
@@ -186,6 +195,52 @@ enum ThumbnailService {
         )
 
         return image
+    }
+
+    /// Starts large and steps down only until the text fits. Short thumbnail
+    /// text ends up big enough to read on a phone-sized preview.
+    private static func fittedFont(
+        for text: String,
+        maxWidth: CGFloat,
+        maxHeight: CGFloat,
+        canvasWidth: CGFloat,
+        paragraph: NSParagraphStyle
+    ) -> (NSFont, CGSize) {
+        let largestSize = canvasWidth * 0.135
+        let smallestSize = canvasWidth * 0.038
+        var size = largestSize
+        var font = NSFont.boldSystemFont(ofSize: size)
+        var measured = measure(text, font: font, maxWidth: maxWidth, paragraph: paragraph)
+
+        // Word wrapping cannot break inside a single long word, so width has to
+        // be checked too or that word renders past the canvas edge.
+        while size > smallestSize && (measured.height > maxHeight || measured.width > maxWidth) {
+            size -= canvasWidth * 0.004
+            font = NSFont.boldSystemFont(ofSize: size)
+            measured = measure(text, font: font, maxWidth: maxWidth, paragraph: paragraph)
+        }
+
+        return (font, measured)
+    }
+
+    private static func measure(
+        _ text: String,
+        font: NSFont,
+        maxWidth: CGFloat,
+        paragraph: NSParagraphStyle
+    ) -> CGSize {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .paragraphStyle: paragraph
+        ]
+
+        let bounds = (text as NSString).boundingRect(
+            with: CGSize(width: maxWidth, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: attributes
+        )
+
+        return CGSize(width: bounds.width, height: ceil(bounds.height))
     }
 
     private static func drawOutlinedTitle(
@@ -255,18 +310,5 @@ enum ThumbnailService {
         )
     }
 
-    private static func fontSizeForTitle(_ title: String, canvasWidth: CGFloat) -> CGFloat {
-        let length = title.count
-
-        if length > 70 {
-            return canvasWidth * 0.038
-        }
-
-        if length > 45 {
-            return canvasWidth * 0.045
-        }
-
-        return canvasWidth * 0.052
-    }
     #endif
 }

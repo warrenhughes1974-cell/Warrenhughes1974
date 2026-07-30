@@ -102,6 +102,16 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.13",
+            highlights: [
+                "YouTube titles now lead with your hook instead of your channel name, which is what search ranks on.",
+                "Separate short thumbnail text so the image stays readable on a phone.",
+                "Descriptions front-load a 150-character search snippet and include chapters.",
+                "Tags are keyword-first, multi-word, and capped to YouTube's 500-character budget.",
+                "Live quality checks warn when a title, thumbnail, or tag set will hurt reach."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.12",
             highlights: [
                 "New YouTube Prep tab for finished Filmora exports.",

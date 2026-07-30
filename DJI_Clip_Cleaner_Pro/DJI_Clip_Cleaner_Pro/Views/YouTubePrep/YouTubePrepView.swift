@@ -33,14 +33,14 @@ struct YouTubePrepView: View {
                     .clipShape(Capsule())
             }
 
-            Text("Point at your finished Filmora export and generate thumbnail, description, and tags before upload.")
+            Text("Point at your finished Filmora export and build a search-optimized title, thumbnail, description, and tags.")
                 .foregroundStyle(.secondary)
         }
     }
 
     private var videoSection: some View {
         GroupBox {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 12) {
                     Button("Choose Video…") {
                         viewModel.chooseVideo()
@@ -70,23 +70,68 @@ struct YouTubePrepView: View {
 
                     TextField("Creepy Aisle Find", text: $viewModel.hook)
                         .textFieldStyle(.roundedBorder)
+                        .onChange(of: viewModel.hook) { _, _ in
+                            viewModel.hookDidChange()
+                        }
 
-                    Text("Uses your brand settings for channel and series. Type the hook for this upload.")
+                    Text("What this video is actually about. This drives your title, thumbnail, and tags.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("YouTube Title")
+                    Text("Thumbnail Text")
                         .fontWeight(.semibold)
 
-                    Text(viewModel.titlePreview)
+                    TextField("CREEPY AISLE FIND", text: $viewModel.thumbnailText)
+                        .textFieldStyle(.roundedBorder)
+                        .onChange(of: viewModel.thumbnailText) { _, _ in
+                            viewModel.thumbnailTextDidChange()
+                        }
+
+                    qualityLabel(viewModel.thumbnailTextQuality)
+
+                    Text("Keep it to 3 or 4 words. Thumbnail text should add to the title, not repeat it.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Toggle("Add channel name to the end of the title", isOn: $viewModel.includeChannelInTitle)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Text("YouTube Title")
+                            .fontWeight(.semibold)
+                        Spacer()
+                        Button("Copy") {
+                            viewModel.copyTitle()
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(!viewModel.canGenerate)
+                    }
+
+                    Text(viewModel.generatedTitle.isEmpty ? "Type a hook to build your title." : viewModel.generatedTitle)
                         .font(.headline)
                         .foregroundStyle(AppTheme.brandPink)
                         .padding(12)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(AppTheme.carbon.opacity(0.92))
                         .clipShape(RoundedRectangle(cornerRadius: 10))
+
+                    qualityLabel(viewModel.titleQuality)
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Thumbnail Preview")
+                        .fontWeight(.semibold)
+
+                    BrandThumbnailPreview(
+                        title: viewModel.resolvedThumbnailText,
+                        usePinkTitles: brand.usePinkTitles,
+                        titlePinkRed: brand.titlePinkRed,
+                        titlePinkGreen: brand.titlePinkGreen,
+                        titlePinkBlue: brand.titlePinkBlue
+                    )
                 }
             }
             .padding(4)
@@ -127,7 +172,7 @@ struct YouTubePrepView: View {
                     .disabled(!viewModel.canGenerate || viewModel.isWorking)
                 }
 
-                Text("Upload Package creates a YouTube_Prep folder next to your video with thumbnail, title, description, and tags files.")
+                Text("Upload Package writes the thumbnail, title, description, tags, and step-by-step notes into a YouTube_Prep folder next to your video.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -153,6 +198,8 @@ struct YouTubePrepView: View {
                             .buttonStyle(.bordered)
                         }
 
+                        qualityLabel(viewModel.descriptionQuality)
+
                         Text(viewModel.generatedDescription)
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -176,7 +223,9 @@ struct YouTubePrepView: View {
                             .buttonStyle(.bordered)
                         }
 
-                        Text(viewModel.generatedTags)
+                        qualityLabel(viewModel.tagsQuality)
+
+                        Text(viewModel.tagsLine)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .textSelection(.enabled)
@@ -219,6 +268,34 @@ struct YouTubePrepView: View {
             Text(viewModel.statusMessage)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+        }
+    }
+
+    private func qualityLabel(_ quality: MetadataQuality) -> some View {
+        Label(quality.message, systemImage: qualityIcon(quality.level))
+            .font(.caption)
+            .foregroundStyle(qualityColor(quality.level))
+    }
+
+    private func qualityIcon(_ level: MetadataQualityLevel) -> String {
+        switch level {
+        case .good:
+            return "checkmark.circle.fill"
+        case .warning:
+            return "exclamationmark.triangle.fill"
+        case .problem:
+            return "xmark.circle.fill"
+        }
+    }
+
+    private func qualityColor(_ level: MetadataQualityLevel) -> Color {
+        switch level {
+        case .good:
+            return .green
+        case .warning:
+            return .orange
+        case .problem:
+            return .red
         }
     }
 }
