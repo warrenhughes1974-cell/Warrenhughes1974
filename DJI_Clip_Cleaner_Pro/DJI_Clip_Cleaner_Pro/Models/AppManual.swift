@@ -20,7 +20,7 @@ enum AppManual {
         "Copy your DJI clips into one folder on your Mac.",
         "Open Hughes Clip Prep and go to Smart Analysis.",
         "Click Scan Folder and choose that folder.",
-        "Wait for analysis to finish. Review KEEP, REVIEW, and DISCARD.",
+        "Wait for analysis to finish. Review KEEP, B-ROLL, REVIEW, and DISCARD.",
         "Check the pink Hook column for each clip. Click to type your own hook before generating thumbnails.",
         "Full Title updates automatically from Channel · Series · Hook.",
         "Open Settings and pick a Series Preset (Halloween Hunt, Store Walk, Product Review) for consistent naming.",
@@ -63,7 +63,7 @@ enum AppManual {
         ManualSection(
             icon: "folder.badge.gearshape",
             title: "Smart Analysis First",
-            body: "Run Smart Analysis before cleaning so obvious junk goes to _DISCARD and sudden camera jerks are flagged for review."
+            body: "Run Smart Analysis before cleaning so obvious junk goes to _DISCARD, B-roll is labeled separately, and sudden camera jerks are flagged for review."
         )
     ]
 
@@ -76,7 +76,7 @@ enum AppManual {
         ManualSection(
             icon: "waveform.badge.magnifyingglass",
             title: "Smart Analysis",
-            body: "Scan a folder, score clips for talking and motion, detect sudden camera movement, and get KEEP / REVIEW / DISCARD recommendations."
+            body: "Scan a folder, score clips for talking and motion, detect sudden camera movement, and get KEEP / B-ROLL / REVIEW / DISCARD recommendations. Silent clips with good movement are labeled B-ROLL."
         ),
         ManualSection(
             icon: "rectangle.portrait.on.rectangle.portrait",
@@ -107,6 +107,14 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.34",
+            highlights: [
+                "Smart Analysis now labels silent, moving clips as B-ROLL (blue) instead of dumping them into REVIEW.",
+                "Pipeline leaves B-ROLL in place with KEEP cleaned and DISCARD moved — summary counts show B-ROLL separately.",
+                "CSV report and thumbnails include B-ROLL clips; Settings slider renamed to “B-roll motion % for B-ROLL”."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.33",
             highlights: [

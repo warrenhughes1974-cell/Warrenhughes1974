@@ -227,8 +227,9 @@ final class AnalysisViewModel {
     var pipelineSummary: String {
         let keep = results.filter { $0.recommendation == .keep }.count
         let review = results.filter { $0.recommendation == .review }.count
+        let bRoll = results.filter { $0.recommendation == .bRoll }.count
         let discard = results.filter { $0.recommendation == .discard }.count
-        return "KEEP \(keep) · REVIEW \(review) · DISCARD \(discard)"
+        return "KEEP \(keep) · B-ROLL \(bRoll) · REVIEW \(review) · DISCARD \(discard)"
     }
 
     func prepareRunPipeline() -> Bool {
@@ -289,6 +290,7 @@ final class AnalysisViewModel {
 
             let summary =
                 "Moved \(pipeline.movedToDiscard) DISCARD clip(s) to _DISCARD. " +
+                "B-ROLL \(pipeline.bRollCount) left in place. " +
                 "REVIEW \(pipeline.reviewCount) left in place. " +
                 "Cleaning \(pipeline.keepCount) KEEP clip(s)."
 
@@ -345,7 +347,7 @@ final class AnalysisViewModel {
 
     func generateThumbnails() {
         guard canGenerateThumbnails, let selectedFolderURL else {
-            errorMessage = "Run Smart Analysis first, then generate thumbnails for KEEP and REVIEW clips."
+            errorMessage = "Run Smart Analysis first, then generate thumbnails for KEEP, B-ROLL, and REVIEW clips."
             return
         }
 
@@ -376,7 +378,9 @@ final class AnalysisViewModel {
             for index in results.indices {
                 let result = results[index]
 
-                guard result.recommendation == .keep || result.recommendation == .review else {
+                guard result.recommendation == .keep
+                    || result.recommendation == .review
+                    || result.recommendation == .bRoll else {
                     continue
                 }
 
@@ -429,7 +433,7 @@ final class AnalysisViewModel {
                 statusMessage = "No thumbnails were created."
                 errorMessage = failed > 0
                     ? "Thumbnail generation failed for all selected clips."
-                    : "No KEEP or REVIEW clips were available for thumbnails."
+                    : "No KEEP, B-ROLL, or REVIEW clips were available for thumbnails."
             } else {
                 statusMessage = "Created \(generated) branded thumbnail(s) in Thumbnails/."
                 if failed > 0 {
@@ -529,6 +533,7 @@ struct PipelineResult: Sendable {
     let skippedDiscard: Int
     let keepCount: Int
     let reviewCount: Int
+    let bRollCount: Int
     let discardCount: Int
 }
 
@@ -553,6 +558,7 @@ enum ClipPipelineService {
         var skipped = 0
         var keepVideos: [VideoFile] = []
         var reviewCount = 0
+        var bRollCount = 0
         var discardCount = 0
 
         for result in results {
@@ -584,6 +590,9 @@ enum ClipPipelineService {
             case .review:
                 reviewCount += 1
 
+            case .bRoll:
+                bRollCount += 1
+
             default:
                 break
             }
@@ -594,6 +603,7 @@ enum ClipPipelineService {
             skippedDiscard: skipped,
             keepCount: keepVideos.count,
             reviewCount: reviewCount,
+            bRollCount: bRollCount,
             discardCount: discardCount
         )
 

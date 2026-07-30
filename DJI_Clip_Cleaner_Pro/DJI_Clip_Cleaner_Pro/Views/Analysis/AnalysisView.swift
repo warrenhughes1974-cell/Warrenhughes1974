@@ -77,7 +77,7 @@ struct AnalysisView: View {
             Text(
                 """
                 1. Move DISCARD clips to _DISCARD folder
-                2. Leave REVIEW clips in place
+                2. Leave B-ROLL and REVIEW clips in place
                 3. Send KEEP clips to Clip Cleaner and start processing
 
                 \(viewModel.pipelineSummary)
@@ -103,7 +103,7 @@ struct AnalysisView: View {
                         .clipShape(Capsule())
                 }
 
-                Text("Scan a folder to detect talking, motion, and get branded title suggestions for each clip.")
+                Text("Scan a folder to detect talking, motion, and B-roll, plus branded title suggestions for each clip.")
                     .foregroundStyle(.secondary)
             }
 
@@ -288,6 +288,8 @@ struct AnalysisView: View {
         switch recommendation {
         case .keep:
             Text(recommendation.rawValue).foregroundStyle(.green).bold()
+        case .bRoll:
+            Text(recommendation.rawValue).foregroundStyle(AppTheme.mclarenBlue).bold()
         case .review:
             Text(recommendation.rawValue).foregroundStyle(.orange).bold()
         case .discard:

@@ -26,7 +26,7 @@ enum RecommendationEngine {
       }
     } else if !speech.hasSpeech && !motion.isStatic {
       if motion.motionPercent >= settings.minimumMotionPercentForBRollKeep {
-        baseRecommendation = (.review, "B-roll only — good movement, but no speech.")
+        baseRecommendation = (.bRoll, "B-roll — good movement, no speech (cutaway / scenic).")
       } else {
         baseRecommendation = (.discard, "Weak B-roll — not enough movement or speech.")
       }
@@ -57,6 +57,9 @@ enum RecommendationEngine {
     switch recommendation.0 {
     case .keep:
       return (.review, "\(recommendation.1) \(jerkNote).")
+    case .bRoll:
+      // Jerky cutaways still count as B-roll, but flag for a look.
+      return (.bRoll, "\(recommendation.1) \(jerkNote).")
     case .review:
       return (.review, "\(recommendation.1) \(jerkNote).")
     case .discard:
