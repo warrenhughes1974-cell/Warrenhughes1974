@@ -135,7 +135,17 @@ final class ShortsViewModel {
     }
 
     func exportSelected() {
-        guard let selectedVideoURL, canExport else {
+        guard let selectedVideoURL else {
+            errorMessage = "Choose a finished video first."
+            return
+        }
+
+        guard !isAnalyzing, !isExporting else {
+            errorMessage = "Wait for the current scan or export to finish."
+            return
+        }
+
+        guard !selectedCandidateIDs.isEmpty else {
             errorMessage = "Select at least one moment to export."
             return
         }
@@ -175,7 +185,7 @@ final class ShortsViewModel {
                             candidate: candidate,
                             outputURL: outputURL,
                             title: ShortsMetadataService.title(
-                                hook: longForm,
+                                hook: longFormTitle,
                                 index: number
                             )
                         )

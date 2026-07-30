@@ -39,9 +39,16 @@ enum ShortsExportService {
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
 
         let baseName = videoURL.deletingPathExtension().lastPathComponent
+        let position = String(format: "%02d", index)
+        let sourceSecond = Int(candidate.startTime.rounded())
+
+        // The source timecode keeps the name stable across runs, so re-exporting
+        // a different selection cannot overwrite an unrelated clip.
         let outputURL = folder.appendingPathComponent(
-            String(format: "%@_short_%02d.mp4", baseName, index)
+            "\(baseName)_short_\(position)_\(sourceSecond)s.mp4"
         )
+
+        let existedBeforeExport = FileManager.default.fileExists(atPath: outputURL.path)
 
         let logURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("HughesClipPrep-Shorts-\(UUID().uuidString).log")
@@ -52,7 +59,10 @@ enum ShortsExportService {
         let videoFilter = [
             "scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos",
             "crop=1080:1920",
-            "setsar=1"
+            "setsar=1",
+            // DJI D-Log and HLG footage arrives 10-bit, which VideoToolbox will
+            // not accept for H.264 without this conversion.
+            "format=yuv420p"
         ].joined(separator: ",")
 
         let arguments = [
@@ -97,7 +107,12 @@ enum ShortsExportService {
 
         guard exitCode == 0,
               FileManager.default.fileExists(atPath: outputURL.path) else {
-            try? FileManager.default.removeItem(at: outputURL)
+            // Only clean up a partial file this run created; a good clip from an
+            // earlier run must survive a later failure.
+            if !existedBeforeExport {
+                try? FileManager.default.removeItem(at: outputURL)
+            }
+
             throw ServiceError.processFailed(
                 exitCode,
                 logOutput.trimmingCharacters(in: .whitespacesAndNewlines)

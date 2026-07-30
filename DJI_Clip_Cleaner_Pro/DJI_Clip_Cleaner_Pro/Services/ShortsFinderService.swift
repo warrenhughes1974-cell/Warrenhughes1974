@@ -236,17 +236,17 @@ enum ShortsFinderService {
         let peakEnergy = max(energies.max() ?? 0, 0.0001)
         let peakMotion = max(motion.map(\.level).max() ?? 0, 0.0001)
 
-        let windowsPerCandidate = Int(target / windowSeconds)
+        let windowsPerCandidate = max(Int(target / windowSeconds), 1)
         let step = max(Int(candidateStepSeconds / windowSeconds), 1)
 
-        guard energies.count > windowsPerCandidate else {
+        guard energies.count >= windowsPerCandidate else {
             return []
         }
 
         var scored: [ShortCandidate] = []
         var index = 0
 
-        while index + windowsPerCandidate < energies.count {
+        while index + windowsPerCandidate <= energies.count {
             let slice = energies[index..<(index + windowsPerCandidate)]
             let startTime = Double(index) * windowSeconds
 

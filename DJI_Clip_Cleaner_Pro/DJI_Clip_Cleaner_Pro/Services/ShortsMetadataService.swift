@@ -4,7 +4,14 @@ enum ShortsMetadataService {
     /// YouTube only counts the first three hashtags, and #Shorts belongs there.
     static func title(hook: String, index: Int) -> String {
         let cleanHook = hook.trimmingCharacters(in: .whitespacesAndNewlines)
-        let base = cleanHook.isEmpty ? "Clip \(index)" : cleanHook
+        var base = cleanHook.isEmpty ? "Clip \(index)" : cleanHook
+
+        // Several Shorts come from one video, so anything after the first needs
+        // a distinct title rather than a duplicate.
+        if !cleanHook.isEmpty, index > 1 {
+            base += " — Part \(index)"
+        }
+
         let suffix = " #Shorts"
         let limit = YouTubeMetadataService.recommendedTitleLimit - suffix.count
 
