@@ -231,6 +231,70 @@ struct YouTubePrepView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Emoticons")
+                            .fontWeight(.semibold)
+                        Spacer()
+                        if !brand.thumbnailEmojis.isEmpty {
+                            Text(brand.thumbnailEmojis.joined(separator: " "))
+                        }
+                        Button("Clear") {
+                            brand.clearThumbnailEmojis()
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                        .disabled(brand.thumbnailEmojis.isEmpty)
+                    }
+
+                    LazyVGrid(
+                        columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8),
+                        spacing: 6
+                    ) {
+                        ForEach(ThumbnailEmojiOption.catalog) { option in
+                            let isSelected = brand.thumbnailEmojis.contains(option.symbol)
+
+                            Button {
+                                brand.toggleThumbnailEmoji(option.symbol)
+                            } label: {
+                                Text(option.symbol)
+                                    .font(.system(size: 22))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .fill(isSelected
+                                                  ? AppTheme.papaya.opacity(0.22)
+                                                  : AppTheme.softBlue.opacity(0.45))
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .stroke(
+                                                isSelected ? AppTheme.papaya : Color.clear,
+                                                lineWidth: 2
+                                            )
+                                    )
+                            }
+                            .buttonStyle(.plain)
+                            .help(option.name)
+                        }
+                    }
+
+                    Picker("Placement", selection: $brand.emojiPosition) {
+                        ForEach(ThumbnailEmojiPosition.allCases) { position in
+                            Text(position.displayName).tag(position)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: brand.emojiPosition) { _, _ in
+                        brand.save()
+                    }
+
+                    Text("Picks update after you Rank Thumbnails or Generate again — already-saved JPEGs keep the old look until you rebuild them.")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+
                 if viewModel.isRankingThumbnails {
                     VStack(alignment: .leading, spacing: 6) {
                         ProgressView(value: viewModel.thumbnailScanProgress)
@@ -276,10 +340,12 @@ struct YouTubePrepView: View {
                     titlePinkRed: brand.titlePinkRed,
                     titlePinkGreen: brand.titlePinkGreen,
                     titlePinkBlue: brand.titlePinkBlue,
-                    titleScale: brand.titleScale
+                    titleScale: brand.titleScale,
+                    emojis: brand.thumbnailEmojis,
+                    emojiPosition: brand.emojiPosition
                 )
 
-                Text("Change the color and size in Settings → Brand & Thumbnails.")
+                Text("Pick emoticons, color, and size in Settings → Brand & Thumbnails.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }

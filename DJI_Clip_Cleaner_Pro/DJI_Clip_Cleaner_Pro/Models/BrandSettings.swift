@@ -11,6 +11,8 @@ struct BrandSettingsValues: Sendable {
     let titlePinkGreen: Double
     let titlePinkBlue: Double
     let titleScale: Double
+    let thumbnailEmojis: [String]
+    let emojiPosition: ThumbnailEmojiPosition
 }
 
 /// One-click thumbnail text colors. Each one is bright enough to survive the
@@ -54,6 +56,10 @@ final class BrandSettings {
     /// app picks on its own; the range keeps text readable without overflowing.
     var titleScale = 1.0
 
+    /// Up to two emoji symbols drawn onto every branded thumbnail.
+    var thumbnailEmojis: [String] = []
+    var emojiPosition: ThumbnailEmojiPosition = .topRight
+
     static let minimumTitleScale = 0.6
     static let maximumTitleScale = 1.6
 
@@ -71,7 +77,9 @@ final class BrandSettings {
             titlePinkRed: titlePinkRed,
             titlePinkGreen: titlePinkGreen,
             titlePinkBlue: titlePinkBlue,
-            titleScale: titleScale
+            titleScale: titleScale,
+            thumbnailEmojis: Array(thumbnailEmojis.prefix(ThumbnailEmojiOption.maximumSelection)),
+            emojiPosition: emojiPosition
         )
     }
 
@@ -80,6 +88,25 @@ final class BrandSettings {
         titlePinkRed = swatch.red
         titlePinkGreen = swatch.green
         titlePinkBlue = swatch.blue
+        save()
+    }
+
+    func toggleThumbnailEmoji(_ symbol: String) {
+        if let index = thumbnailEmojis.firstIndex(of: symbol) {
+            thumbnailEmojis.remove(at: index)
+        } else if thumbnailEmojis.count < ThumbnailEmojiOption.maximumSelection {
+            thumbnailEmojis.append(symbol)
+        } else {
+            // Full — replace the oldest pick so a click always does something.
+            thumbnailEmojis.removeFirst()
+            thumbnailEmojis.append(symbol)
+        }
+
+        save()
+    }
+
+    func clearThumbnailEmojis() {
+        thumbnailEmojis = []
         save()
     }
 
@@ -130,7 +157,9 @@ final class BrandSettings {
             "titlePinkRed": titlePinkRed,
             "titlePinkGreen": titlePinkGreen,
             "titlePinkBlue": titlePinkBlue,
-            "titleScale": titleScale
+            "titleScale": titleScale,
+            "thumbnailEmojis": thumbnailEmojis,
+            "emojiPosition": emojiPosition.rawValue
         ]
 
         UserDefaults.standard.set(payload, forKey: Self.storageKey)
@@ -162,5 +191,18 @@ final class BrandSettings {
 
         let storedScale = payload["titleScale"] as? Double ?? titleScale
         titleScale = min(max(storedScale, Self.minimumTitleScale), Self.maximumTitleScale)
+
+        if let storedEmojis = payload["thumbnailEmojis"] as? [String] {
+            let allowed = Set(ThumbnailEmojiOption.catalog.map(\.symbol))
+            thumbnailEmojis = storedEmojis
+                .filter { allowed.contains($0) }
+                .prefix(ThumbnailEmojiOption.maximumSelection)
+                .map { $0 }
+        }
+
+        if let positionRaw = payload["emojiPosition"] as? String,
+           let position = ThumbnailEmojiPosition(rawValue: positionRaw) {
+            emojiPosition = position
+        }
     }
 }

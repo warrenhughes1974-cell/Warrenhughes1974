@@ -219,6 +219,79 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
 
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Text("Thumbnail Emoticons")
+                            .fontWeight(.semibold)
+                        Spacer()
+                        if !brand.thumbnailEmojis.isEmpty {
+                            Text(brand.thumbnailEmojis.joined(separator: " "))
+                                .font(.title3)
+                        }
+                    }
+
+                    Text("Pick up to \(ThumbnailEmojiOption.maximumSelection). Click again to remove. A third click replaces the oldest pick.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    LazyVGrid(
+                        columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 8),
+                        spacing: 8
+                    ) {
+                        ForEach(ThumbnailEmojiOption.catalog) { option in
+                            let isSelected = brand.thumbnailEmojis.contains(option.symbol)
+
+                            Button {
+                                brand.toggleThumbnailEmoji(option.symbol)
+                            } label: {
+                                Text(option.symbol)
+                                    .font(.system(size: 26))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(isSelected
+                                                  ? AppTheme.papaya.opacity(0.22)
+                                                  : AppTheme.softBlue.opacity(0.55))
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(
+                                                isSelected ? AppTheme.papaya : Color.clear,
+                                                lineWidth: 2
+                                            )
+                                    )
+                            }
+                            .buttonStyle(.plain)
+                            .help(option.name)
+                        }
+                    }
+
+                    HStack {
+                        Picker("Placement", selection: $brand.emojiPosition) {
+                            ForEach(ThumbnailEmojiPosition.allCases) { position in
+                                Text(position.displayName).tag(position)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .onChange(of: brand.emojiPosition) { _, _ in
+                            brand.save()
+                        }
+
+                        Button("Clear") {
+                            brand.clearThumbnailEmojis()
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(brand.thumbnailEmojis.isEmpty)
+
+                        Spacer()
+                    }
+
+                    Text(brand.emojiPosition.guidance)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Thumbnail Preview")
                         .fontWeight(.semibold)
@@ -229,7 +302,9 @@ struct SettingsView: View {
                         titlePinkRed: brand.titlePinkRed,
                         titlePinkGreen: brand.titlePinkGreen,
                         titlePinkBlue: brand.titlePinkBlue,
-                        titleScale: brand.titleScale
+                        titleScale: brand.titleScale,
+                        emojis: brand.thumbnailEmojis,
+                        emojiPosition: brand.emojiPosition
                     )
                 }
 

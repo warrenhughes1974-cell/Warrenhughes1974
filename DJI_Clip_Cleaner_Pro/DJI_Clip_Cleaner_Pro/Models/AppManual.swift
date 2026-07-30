@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.21",
+            highlights: [
+                "Pick up to two emoticons for thumbnails — pumpkin, ghost, bat, fire, sandwich, and more.",
+                "Choose where they land: top right, top left, both top corners, or beside the title.",
+                "Emoticon picker is in Settings and also on the YouTube Prep Thumbnail Picks section."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.20",
             highlights: [
                 "Pick any thumbnail text color with a color picker, plus one-click swatches for pink, papaya, yellow, lime, cyan, and blood red.",

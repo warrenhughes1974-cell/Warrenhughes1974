@@ -7,11 +7,17 @@ struct BrandThumbnailPreview: View {
     let titlePinkGreen: Double
     let titlePinkBlue: Double
     var titleScale: Double = 1.0
+    var emojis: [String] = []
+    var emojiPosition: ThumbnailEmojiPosition = .topRight
 
     /// Matches the proportions the renderer uses, so the preview tracks what
     /// actually lands in the JPEG rather than being a fixed mock.
     private var fontSize: CGFloat {
         18 * CGFloat(min(max(titleScale, 0.6), 1.6))
+    }
+
+    private var emojiSize: CGFloat {
+        28 * CGFloat(min(max(titleScale, 0.6), 1.6))
     }
 
     private var outlineWidth: CGFloat {
@@ -28,6 +34,14 @@ struct BrandThumbnailPreview: View {
         }
 
         return .white
+    }
+
+    private var displayTitle: String {
+        guard emojiPosition == .besideTitle, !emojis.isEmpty else {
+            return title
+        }
+
+        return title + " " + emojis.joined(separator: " ")
     }
 
     var body: some View {
@@ -54,15 +68,63 @@ struct BrandThumbnailPreview: View {
             )
             .clipShape(RoundedRectangle(cornerRadius: 10))
 
-            outlinedTitle(title)
+            outlinedTitle(displayTitle)
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
+
+            if emojiPosition != .besideTitle {
+                cornerEmojis
+                    .padding(12)
+            }
         }
         .frame(height: 160)
         .overlay(
             RoundedRectangle(cornerRadius: 10)
                 .stroke(AppTheme.papaya.opacity(0.35), lineWidth: 1)
         )
+    }
+
+    @ViewBuilder
+    private var cornerEmojis: some View {
+        switch emojiPosition {
+        case .topRight:
+            VStack {
+                HStack(spacing: 4) {
+                    Spacer()
+                    ForEach(emojis.reversed(), id: \.self) { emoji in
+                        Text(emoji).font(.system(size: emojiSize))
+                    }
+                }
+                Spacer()
+            }
+        case .topLeft:
+            VStack {
+                HStack(spacing: 4) {
+                    ForEach(emojis, id: \.self) { emoji in
+                        Text(emoji).font(.system(size: emojiSize))
+                    }
+                    Spacer()
+                }
+                Spacer()
+            }
+        case .bothTop:
+            VStack {
+                HStack {
+                    if let first = emojis.first {
+                        Text(first).font(.system(size: emojiSize))
+                    }
+                    Spacer()
+                    if emojis.count > 1 {
+                        Text(emojis[1]).font(.system(size: emojiSize))
+                    } else if let first = emojis.first {
+                        Text(first).font(.system(size: emojiSize))
+                    }
+                }
+                Spacer()
+            }
+        case .besideTitle:
+            EmptyView()
+        }
     }
 
     @ViewBuilder
@@ -154,7 +216,9 @@ struct EditableHookCell: View {
         titlePinkRed: 1.0,
         titlePinkGreen: 0.30,
         titlePinkBlue: 0.60,
-        titleScale: 1.0
+        titleScale: 1.0,
+        emojis: ["🎃", "👻"],
+        emojiPosition: .topRight
     )
     .padding()
     .frame(width: 420)
