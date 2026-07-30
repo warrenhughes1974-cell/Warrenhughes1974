@@ -108,6 +108,13 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.27",
+            highlights: [
+                "Shorts captions now burn with FFmpeg drawtext — works even when your FFmpeg was built without libass.",
+                "Fixes “No such filter: ass” on Export Selected Shorts."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.26",
             highlights: [
                 "Fixed Shorts export failing with FFmpeg exit code 234 when burning captions.",

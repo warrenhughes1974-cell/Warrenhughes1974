@@ -20,6 +20,15 @@ enum ShortsExportService {
 
     static let outputFolderName = "Shorts"
 
+    /// macOS font files that work with FFmpeg drawtext (no libass required).
+    private static let captionFontCandidates = [
+        "/System/Library/Fonts/Supplemental/Arial Black.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+        "/System/Library/Fonts/Supplemental/Impact.ttf",
+        "/Library/Fonts/Arial Bold.ttf",
+        "/System/Library/Fonts/Supplemental/Courier New Bold.ttf"
+    ]
+
     static func outputFolder(for videoURL: URL) -> URL {
         videoURL
             .deletingLastPathComponent()
@@ -57,30 +66,6 @@ enum ShortsExportService {
             .appendingPathComponent("HughesClipPrep-Shorts-\(UUID().uuidString).log")
         FileManager.default.createFile(atPath: logURL.path, contents: nil)
 
-        var assURL: URL?
-        if let transcript {
-            let cues = transcript.captionCues(
-                overlapping: candidate.startTime,
-                duration: candidate.duration
-            )
-
-            if !cues.isEmpty {
-                // Keep the temp path free of spaces and punctuation so FFmpeg's
-                // filtergraph parser never has to quote it.
-                let safeName = "hcp\(UUID().uuidString.replacingOccurrences(of: "-", with: "")).ass"
-                let captionsURL = FileManager.default.temporaryDirectory
-                    .appendingPathComponent(safeName)
-                try writeASS(cues: cues, to: captionsURL)
-                assURL = captionsURL
-            }
-        }
-
-        defer {
-            if let assURL {
-                try? FileManager.default.removeItem(at: assURL)
-            }
-        }
-
         // Scale up to cover a 1080x1920 frame, then centre-crop. This handles
         // landscape, square, and already-vertical sources without special cases.
         var videoFilter = [
@@ -92,10 +77,19 @@ enum ShortsExportService {
             "format=yuv420p"
         ]
 
-        if let assURL {
-            // Newer FFmpeg builds reject ass='/path' ("No option name near…").
-            // Pass filename= with filter-escaped path and no surrounding quotes.
-            videoFilter.append("ass=filename=\(escapeFilterPath(assURL.path))")
+        // Homebrew FFmpeg is often built without libass, so the `ass` /
+        // `subtitles` filters are missing. Burn captions with drawtext instead.
+        if let transcript {
+            let cues = transcript.captionCues(
+                overlapping: candidate.startTime,
+                duration: candidate.duration
+            )
+
+            if !cues.isEmpty {
+                videoFilter.append(
+                    contentsOf: drawTextCaptionFilters(cues: cues)
+                )
+            }
         }
 
         let arguments = [
@@ -155,38 +149,57 @@ enum ShortsExportService {
         return outputURL
     }
 
-    /// Big, high-contrast captions sized for phone screens with sound off.
-    private static func writeASS(
-        cues: [(start: TimeInterval, end: TimeInterval, text: String)],
-        to url: URL
-    ) throws {
-        var lines = [
-            "[Script Info]",
-            "ScriptType: v4.00+",
-            "PlayResX: 1080",
-            "PlayResY: 1920",
-            "WrapStyle: 0",
-            "",
-            "[V4+ Styles]",
-            "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-            "Style: Shorts,Arial Black,72,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,5,0,2,60,60,220,1",
-            "",
-            "[Events]",
-            "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
-        ]
-
-        for cue in cues {
-            let text = cue.text
-                .replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "{", with: "\\{")
-                .replacingOccurrences(of: "}", with: "\\}")
-
-            lines.append(
-                "Dialogue: 0,\(assTime(cue.start)),\(assTime(cue.end)),Shorts,,0,0,0,,\(text)"
-            )
+    /// One drawtext filter per cue. Cue times are already relative to the Short
+    /// window (0…duration), matching `-ss` before `-i`.
+    private static func drawTextCaptionFilters(
+        cues: [(start: TimeInterval, end: TimeInterval, text: String)]
+    ) -> [String] {
+        let fontFile = captionFontCandidates.first {
+            FileManager.default.fileExists(atPath: $0)
         }
 
-        try lines.joined(separator: "\n").write(to: url, atomically: true, encoding: .utf8)
+        // Cap cue count so a long chatty Short cannot explode the filtergraph.
+        return cues.prefix(48).compactMap { cue in
+            let text = escapeDrawText(cue.text)
+            guard !text.isEmpty else { return nil }
+
+            let start = max(cue.start, 0)
+            let end = max(cue.end, start + 0.15)
+            let startText = String(format: "%.2f", start)
+            let endText = String(format: "%.2f", end)
+
+            var options = [
+                "text='\(text)'",
+                "fontsize=68",
+                "fontcolor=white",
+                "borderw=5",
+                "bordercolor=black",
+                "x=(w-text_w)/2",
+                "y=h-240",
+                // Commas inside enable= must be filtergraph-escaped.
+                "enable='between(t\\,\(startText)\\,\(endText))'"
+            ]
+
+            if let fontFile {
+                options.insert(
+                    "fontfile=\(escapeFilterPath(fontFile))",
+                    at: 0
+                )
+            }
+
+            return "drawtext=\(options.joined(separator: ":"))"
+        }
+    }
+
+    /// Escape a caption string for drawtext's `text='…'` form.
+    private static func escapeDrawText(_ text: String) -> String {
+        text
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            // Straight apostrophe breaks the quoted option; use a typographic one.
+            .replacingOccurrences(of: "'", with: "\u{2019}")
+            .replacingOccurrences(of: ":", with: "\\:")
+            .replacingOccurrences(of: "%", with: "%%")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     /// Characters that break FFmpeg filter option values when left bare.
@@ -199,6 +212,7 @@ enum ShortsExportService {
             .replacingOccurrences(of: "]", with: "\\]")
             .replacingOccurrences(of: ",", with: "\\,")
             .replacingOccurrences(of: ";", with: "\\;")
+            .replacingOccurrences(of: " ", with: "\\ ")
     }
 
     /// Filmora / Finder names often include spaces and "(copy)" — fine for
@@ -219,16 +233,6 @@ enum ShortsExportService {
         )
 
         return collapsed.trimmingCharacters(in: CharacterSet(charactersIn: "._-"))
-    }
-
-    private static func assTime(_ seconds: TimeInterval) -> String {
-        let totalCentiseconds = max(Int((seconds * 100).rounded()), 0)
-        let hours = totalCentiseconds / 360_000
-        let minutes = (totalCentiseconds % 360_000) / 6_000
-        let secs = (totalCentiseconds % 6_000) / 100
-        let cents = totalCentiseconds % 100
-
-        return String(format: "%d:%02d:%02d.%02d", hours, minutes, secs, cents)
     }
 
     private static func runProcess(
