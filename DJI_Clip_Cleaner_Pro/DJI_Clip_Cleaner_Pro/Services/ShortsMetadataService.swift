@@ -126,36 +126,46 @@ enum ShortsMetadataService {
         ]
     }
 
-    /// Concrete edit recipe so a raw vertical clip becomes a real Short.
+    /// Concrete edit recipe so a spliced story becomes a finished Short.
     static func creativeBrief(
         for candidate: ShortCandidate,
         preset: BrandPreset
     ) -> ShortsCreativeBrief {
-        let duration = max(candidate.duration, 1)
-        let hookEnd = max(min(duration * 0.25, 5), 2)
-        let buildEnd = max(duration - 4, hookEnd + 1)
-        let hookCode = ShortCandidate.timecode(0) + "–" + ShortCandidate.timecode(hookEnd)
-        let buildCode = ShortCandidate.timecode(hookEnd) + "–" + ShortCandidate.timecode(buildEnd)
-        let endCode = ShortCandidate.timecode(buildEnd) + "–" + ShortCandidate.timecode(duration)
-
-        let spoken = candidate.hookLine.trimmingCharacters(in: .whitespacesAndNewlines)
-        let textIdea = spoken.isEmpty
-            ? onScreenFallback(preset: preset)
-            : spoken.uppercased()
-
         let music = musicIdeas(preset: preset)
+        let textIdea = candidate.hookLine.isEmpty
+            ? onScreenFallback(preset: preset)
+            : candidate.hookLine.uppercased()
+
+        var beats: [String] = []
+        var cursor: TimeInterval = 0
+        for beat in candidate.beats {
+            let startCode = ShortCandidate.timecode(cursor)
+            let endCode = ShortCandidate.timecode(cursor + beat.duration)
+            let spoken = beat.quote.split(separator: " ").prefix(8).joined(separator: " ")
+            let spokenBit = spoken.isEmpty ? "picture only" : "“\(spoken)”"
+            beats.append(
+                "\(startCode)–\(endCode) \(beat.role.label) from long-video \(beat.formattedRange) — \(spokenBit)"
+            )
+            cursor += beat.duration
+        }
+
+        if beats.isEmpty {
+            beats = ["Export the clip, then add text + music in Filmora."]
+        }
 
         return ShortsCreativeBrief(
-            storyShape: storyShape(preset: preset, duration: duration),
-            beats: [
-                "\(hookCode) HOOK — freeze or hard punch-in on the subject while the first line hits. Put big text on screen: “\(textIdea)”.",
-                "\(buildCode) BUILD — stay on the find. Cut out footsteps, shelves, and dead air. Keep your reaction if it sells the moment.",
-                "\(endCode) BUTTON — last 3–4 seconds: slight zoom, leave one question unanswered, say “full video on the channel.”"
-            ],
+            storyShape: candidate.storySummary.isEmpty
+                ? storyShape(preset: preset, duration: candidate.duration)
+                : candidate.storySummary,
+            beats: beats,
             musicMood: music.mood,
             musicSearch: music.search,
             musicMixTip: music.mixTip,
-            framingTips: framingTips(preset: preset, hasSpeech: !candidate.quote.isEmpty),
+            framingTips: framingTips(preset: preset, hasSpeech: !candidate.quote.isEmpty)
+                + [
+                    "Hard cut between beats — no dissolve. Shorts want snap edits.",
+                    "Optional: 2–4 frame flash of black between HOOK and PAYOFF for punch."
+                ],
             onScreenText: textIdea,
             endingMove: endingMove(preset: preset)
         )

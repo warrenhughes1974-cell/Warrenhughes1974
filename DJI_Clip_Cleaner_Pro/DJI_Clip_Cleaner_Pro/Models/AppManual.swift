@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.31",
+            highlights: [
+                "Shorts are rebuilt as story splices: HOOK + PAYOFF + BUTTON cut from different timestamps, not one continuous 30s slice.",
+                "Titles cleaned from the payoff find instead of dumping raw transcript junk.",
+                "UI and upload notes list each cut so you can see the mini-edit before you export."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.30",
             highlights: [
                 "Each Short now comes with a creative brief: story beats (hook / build / button), music mood + search terms, mix tip, and Filmora/CapCut framing ideas.",

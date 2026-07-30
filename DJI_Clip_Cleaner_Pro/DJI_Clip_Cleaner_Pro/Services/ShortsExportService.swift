@@ -84,17 +84,6 @@ enum ShortsExportService {
             .appendingPathComponent("HughesClipPrep-Shorts-\(UUID().uuidString).log")
         FileManager.default.createFile(atPath: logURL.path, contents: nil)
 
-        // Scale up to cover a 1080x1920 frame, then centre-crop. This handles
-        // landscape, square, and already-vertical sources without special cases.
-        var videoFilter = [
-            "scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos",
-            "crop=1080:1920",
-            "setsar=1",
-            // DJI D-Log and HLG footage arrives 10-bit, which VideoToolbox will
-            // not accept for H.264 without this conversion.
-            "format=yuv420p"
-        ]
-
         var captionsBurnedIn = false
         var captionsSidecarURL: URL?
         var assURL: URL?
@@ -105,77 +94,89 @@ enum ShortsExportService {
             }
         }
 
-        if let transcript {
-            let cues = transcript.captionCues(
-                overlapping: candidate.startTime,
-                duration: candidate.duration
-            )
+        let storyCues = remappedCaptionCues(
+            transcript: transcript,
+            beats: candidate.beats
+        )
 
-            if !cues.isEmpty {
-                let mode = captionBurnMode(ffmpegPath: ffmpegPath)
+        let mode = captionBurnMode(ffmpegPath: ffmpegPath)
+        var burnFilters: [String] = []
 
-                switch mode {
-                case .drawtext:
-                    videoFilter.append(contentsOf: drawTextCaptionFilters(cues: cues))
-                    captionsBurnedIn = true
+        if !storyCues.isEmpty {
+            switch mode {
+            case .drawtext:
+                burnFilters = drawTextCaptionFilters(cues: storyCues)
+                captionsBurnedIn = true
 
-                case .ass, .subtitles:
-                    let safeName = "hcp\(UUID().uuidString.replacingOccurrences(of: "-", with: "")).ass"
-                    let captionsURL = FileManager.default.temporaryDirectory
-                        .appendingPathComponent(safeName)
-                    try writeASS(cues: cues, to: captionsURL)
-                    assURL = captionsURL
-                    let escaped = escapeFilterPath(captionsURL.path)
-                    if mode == .ass {
-                        videoFilter.append("ass=filename=\(escaped)")
-                    } else {
-                        videoFilter.append("subtitles=filename=\(escaped)")
-                    }
-                    captionsBurnedIn = true
+            case .ass, .subtitles:
+                let safeName = "hcp\(UUID().uuidString.replacingOccurrences(of: "-", with: "")).ass"
+                let captionsURL = FileManager.default.temporaryDirectory
+                    .appendingPathComponent(safeName)
+                try writeASS(cues: storyCues, to: captionsURL)
+                assURL = captionsURL
+                let escaped = escapeFilterPath(captionsURL.path)
+                burnFilters = [
+                    mode == .ass
+                        ? "ass=filename=\(escaped)"
+                        : "subtitles=filename=\(escaped)"
+                ]
+                captionsBurnedIn = true
 
-                case .sidecarOnly:
-                    // Minimal FFmpeg builds ship without libass and without
-                    // freetype — still export the vertical clip, and drop an
-                    // .srt beside it so the words are not lost.
-                    let srtURL = folder.appendingPathComponent(
-                        "\(baseName)_short_\(position)_\(sourceSecond)s.srt"
-                    )
-                    try writeSRT(cues: cues, to: srtURL)
-                    captionsSidecarURL = srtURL
-                }
+            case .sidecarOnly:
+                let srtURL = folder.appendingPathComponent(
+                    "\(baseName)_short_\(position)_\(sourceSecond)s.srt"
+                )
+                try writeSRT(cues: storyCues, to: srtURL)
+                captionsSidecarURL = srtURL
             }
         }
 
-        let arguments = [
-            "-hide_banner",
-            "-loglevel",
-            "warning",
-            "-y",
-            "-ss",
-            String(format: "%.3f", candidate.startTime),
-            "-i",
-            videoURL.path,
-            "-t",
-            String(format: "%.3f", candidate.duration),
-            "-vf",
-            videoFilter.joined(separator: ","),
-            // Shorts play loud; -14 LUFS matches what the platform targets.
-            "-af",
-            "loudnorm=I=-14:TP=-1.5:LRA=11",
-            "-c:v",
-            "h264_videotoolbox",
-            "-b:v",
-            "8M",
-            "-r",
-            "30",
-            "-c:a",
-            "aac",
-            "-b:a",
-            "192k",
-            "-movflags",
-            "+faststart",
-            outputURL.path
-        ]
+        let arguments: [String]
+        if candidate.beats.count <= 1 {
+            let beat = candidate.beats.first
+            let start = beat?.startTime ?? candidate.startTime
+            let duration = beat?.duration ?? candidate.duration
+
+            var videoFilter = [
+                "scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos",
+                "crop=1080:1920",
+                "setsar=1",
+                "format=yuv420p"
+            ]
+            videoFilter.append(contentsOf: burnFilters)
+
+            arguments = [
+                "-hide_banner", "-loglevel", "warning", "-y",
+                "-ss", String(format: "%.3f", start),
+                "-i", videoURL.path,
+                "-t", String(format: "%.3f", duration),
+                "-vf", videoFilter.joined(separator: ","),
+                "-af", "loudnorm=I=-14:TP=-1.5:LRA=11",
+                "-c:v", "h264_videotoolbox", "-b:v", "8M", "-r", "30",
+                "-c:a", "aac", "-b:a", "192k",
+                "-movflags", "+faststart",
+                outputURL.path
+            ]
+        } else {
+            // Splice hook / payoff / button from different source times into one
+            // vertical Short. Captions (if any) burn after the concat.
+            let complex = spliceFilterComplex(
+                beats: candidate.beats,
+                burnFilters: burnFilters
+            )
+
+            arguments = [
+                "-hide_banner", "-loglevel", "warning", "-y",
+                "-i", videoURL.path,
+                "-filter_complex", complex.filter,
+                "-map", complex.videoMap,
+                "-map", complex.audioMap,
+                "-c:v", "h264_videotoolbox", "-b:v", "8M", "-r", "30",
+                "-c:a", "aac", "-b:a", "192k",
+                "-movflags", "+faststart",
+                outputURL.path
+            ]
+        }
 
         let exitCode = try await runProcess(
             executablePath: ffmpegPath,
@@ -188,8 +189,6 @@ enum ShortsExportService {
 
         guard exitCode == 0,
               FileManager.default.fileExists(atPath: outputURL.path) else {
-            // Only clean up a partial file this run created; a good clip from an
-            // earlier run must survive a later failure.
             if !existedBeforeExport {
                 try? FileManager.default.removeItem(at: outputURL)
             }
@@ -204,6 +203,76 @@ enum ShortsExportService {
             url: outputURL,
             captionsBurnedIn: captionsBurnedIn,
             captionsSidecarURL: captionsSidecarURL
+        )
+    }
+
+    /// Rebuild caption timings onto the spliced timeline (0…totalDuration).
+    private static func remappedCaptionCues(
+        transcript: Transcript?,
+        beats: [ShortBeat]
+    ) -> [(start: TimeInterval, end: TimeInterval, text: String)] {
+        guard let transcript, !beats.isEmpty else { return [] }
+
+        var offset: TimeInterval = 0
+        var cues: [(start: TimeInterval, end: TimeInterval, text: String)] = []
+
+        for beat in beats {
+            let local = transcript.captionCues(
+                overlapping: beat.startTime,
+                duration: beat.duration
+            )
+
+            for cue in local {
+                cues.append(
+                    (
+                        start: offset + cue.start,
+                        end: offset + cue.end,
+                        text: cue.text
+                    )
+                )
+            }
+
+            offset += beat.duration
+        }
+
+        return cues
+    }
+
+    private static func spliceFilterComplex(
+        beats: [ShortBeat],
+        burnFilters: [String]
+    ) -> (filter: String, videoMap: String, audioMap: String) {
+        var parts: [String] = []
+        var concatInputs = ""
+
+        for (index, beat) in beats.enumerated() {
+            let start = String(format: "%.3f", beat.startTime)
+            let duration = String(format: "%.3f", beat.duration)
+            parts.append(
+                "[0:v]trim=start=\(start):duration=\(duration),setpts=PTS-STARTPTS,"
+                    + "scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,"
+                    + "crop=1080:1920,setsar=1,format=yuv420p[v\(index)]"
+            )
+            parts.append(
+                "[0:a]atrim=start=\(start):duration=\(duration),asetpts=PTS-STARTPTS[a\(index)]"
+            )
+            concatInputs += "[v\(index)][a\(index)]"
+        }
+
+        let count = beats.count
+        let videoOut = burnFilters.isEmpty ? "[vout]" : "[vcat]"
+        parts.append("\(concatInputs)concat=n=\(count):v=1:a=1\(videoOut)[acat]")
+        parts.append("[acat]loudnorm=I=-14:TP=-1.5:LRA=11[aout]")
+
+        if !burnFilters.isEmpty {
+            // Burn after the story is assembled so timings match the Short.
+            parts.append("[vcat]\(burnFilters.joined(separator: ","))[vout]")
+        }
+
+        return (
+            filter: parts.joined(separator: ";"),
+            videoMap: "[vout]",
+            audioMap: "[aout]"
         )
     }
 

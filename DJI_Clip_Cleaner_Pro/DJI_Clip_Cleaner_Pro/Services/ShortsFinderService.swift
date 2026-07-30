@@ -1,72 +1,89 @@
 import AVFoundation
 import Foundation
 
-struct ShortCandidate: Identifiable, Sendable {
+/// One cut inside a spliced Short — hook, payoff, or button.
+struct ShortBeat: Identifiable, Sendable {
+    enum Role: String, Sendable {
+        case hook
+        case payoff
+        case button
+
+        var label: String {
+            switch self {
+            case .hook: return "HOOK"
+            case .payoff: return "PAYOFF"
+            case .button: return "BUTTON"
+            }
+        }
+    }
+
     let id: UUID
+    let role: Role
     let startTime: TimeInterval
     let duration: TimeInterval
+    let quote: String
+
+    var endTime: TimeInterval { startTime + duration }
+
+    var formattedRange: String {
+        "\(ShortCandidate.timecode(startTime))–\(ShortCandidate.timecode(endTime))"
+    }
+}
+
+/// A Short assembled by splicing 2–3 beats from different places in the long video.
+struct ShortCandidate: Identifiable, Sendable {
+    let id: UUID
+    let beats: [ShortBeat]
     let score: Double
     let speechCoverage: Double
     let motionLevel: Double
     let startsOnSpeech: Bool
-    let quote: String
     let projectedHook: Int
     let projectedRetention: Int
     let bestTitle: String
+    let storySummary: String
 
-    var endTime: TimeInterval {
-        startTime + duration
+    var startTime: TimeInterval { beats.first?.startTime ?? 0 }
+
+    var duration: TimeInterval {
+        beats.reduce(0) { $0 + $1.duration }
+    }
+
+    var endTime: TimeInterval { startTime + duration }
+
+    var quote: String {
+        beats
+            .map { $0.quote.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .joined(separator: " / ")
+    }
+
+    var hookLine: String {
+        let payoff = beats.first(where: { $0.role == .payoff })?.quote
+            ?? beats.first?.quote
+            ?? bestTitle
+        let cleaned = payoff.trimmingCharacters(in: .whitespacesAndNewlines)
+        let words = cleaned.split(separator: " ").prefix(8).joined(separator: " ")
+        return words.isEmpty ? bestTitle : words
     }
 
     var formattedRange: String {
-        "\(ShortCandidate.timecode(startTime)) – \(ShortCandidate.timecode(endTime))"
+        beats.map { "\($0.role.label) \($0.formattedRange)" }.joined(separator: " · ")
     }
 
     var formattedDuration: String {
-        "\(Int(duration.rounded())) sec"
+        "\(Int(duration.rounded())) sec · \(beats.count) cuts"
     }
 
     var scorePercent: Int {
         Int((score * 100).rounded())
     }
 
-    var hookLine: String {
-        let cleaned = quote.trimmingCharacters(in: .whitespacesAndNewlines)
-        if cleaned.isEmpty {
-            return bestTitle
-        }
-
-        let words = cleaned.split(separator: " ").prefix(10).joined(separator: " ")
-        return words.hasSuffix("...") || words.count >= cleaned.count
-            ? words
-            : "\(words)..."
-    }
-
-    /// Plain-language explanation of why this moment was picked.
     var reason: String {
-        var parts: [String] = []
-
-        if !quote.isEmpty {
-            parts.append("clear spoken line")
+        if beats.count >= 2 {
+            return "Spliced \(beats.map(\.role.label).joined(separator: " → ")) into one story"
         }
-
-        if speechCoverage >= 0.75 {
-            parts.append("talking throughout")
-        } else if speechCoverage >= 0.5 {
-            parts.append("mostly talking")
-        }
-
-        if motionLevel >= 0.6 {
-            parts.append("lots of movement")
-        } else if motionLevel >= 0.3 {
-            parts.append("some movement")
-        }
-
-        if startsOnSpeech {
-            parts.append("starts on a clean line")
-        }
-
-        return parts.isEmpty ? "Steady moment" : parts.joined(separator: ", ")
+        return "Single continuous moment"
     }
 
     static func timecode(_ seconds: TimeInterval) -> String {
@@ -76,8 +93,6 @@ struct ShortCandidate: Identifiable, Sendable {
 }
 
 enum ShortsFinderService {
-    /// YouTube Shorts can run up to 3 minutes. Shorter clips still retain
-    /// better, but creators often want a full beat — not just a 20–30s tease.
     enum TargetLength: Double, CaseIterable, Identifiable, Sendable {
         case punchy = 20
         case standard = 30
@@ -89,40 +104,32 @@ enum ShortsFinderService {
 
         var displayName: String {
             switch self {
-            case .punchy:
-                return "20s"
-            case .standard:
-                return "30s"
-            case .extended:
-                return "45s"
-            case .fullMinute:
-                return "60s"
-            case .story:
-                return "90s"
+            case .punchy: return "20s"
+            case .standard: return "30s"
+            case .extended: return "45s"
+            case .fullMinute: return "60s"
+            case .story: return "90s"
             }
         }
 
         var guidance: String {
             switch self {
             case .punchy:
-                return "Quick hit — easiest to watch all the way through."
+                return "Tight story: hook + payoff + quick button."
             case .standard:
-                return "Classic Short length. Hook + one payoff."
+                return "Best default. Three cuts spliced into one Short."
             case .extended:
-                return "Room for a little story before the payoff."
+                return "More room on the payoff find."
             case .fullMinute:
-                return "A full minute — good default for store walks and hunts."
+                return "Longer payoff — only if the find needs time."
             case .story:
-                return "Longer beat from the video. Needs strong talking throughout."
+                return "Extended assembly. Needs a strong transcript."
             }
         }
     }
 
     private static let windowSeconds = 0.5
     private static let speechThreshold: Float = 0.012
-    private static let candidateStepSeconds = 1.0
-    private static let minimumSpeechCoverage = 0.35
-    private static let minimumGapSeconds = 2.0
 
     static func findCandidates(
         in videoURL: URL,
@@ -142,22 +149,28 @@ enum ShortsFinderService {
         let duration = CMTimeGetSeconds(durationValue)
         let target = targetLength.rawValue
 
-        guard duration.isFinite, duration > target + 1 else {
+        guard duration.isFinite, duration > 12 else {
             return []
         }
 
-        let energies = await audioEnergyTimeline(asset: asset)
-        guard !energies.isEmpty else {
-            return []
+        // Story mode needs speech. Without a transcript we only have energy —
+        // fall back to continuous windows so the tab still does something.
+        if let transcript, !transcript.isEmpty {
+            return assembleStories(
+                transcript: transcript,
+                videoDuration: duration,
+                target: target,
+                brand: brand,
+                preset: preset,
+                longFormTitle: longFormTitle,
+                maximumResults: maximumResults
+            )
         }
 
-        let motion = await motionTimeline(asset: asset, duration: duration)
-
-        return scoreCandidates(
-            energies: energies,
-            motion: motion,
+        return await continuousFallbacks(
+            asset: asset,
+            duration: duration,
             target: target,
-            transcript: transcript,
             brand: brand,
             preset: preset,
             longFormTitle: longFormTitle,
@@ -165,60 +178,468 @@ enum ShortsFinderService {
         )
     }
 
-    // MARK: - Signals
+    // MARK: - Story assembly (transcript required)
+
+    private struct Phrase {
+        let start: TimeInterval
+        let end: TimeInterval
+        let text: String
+
+        var duration: TimeInterval { max(end - start, 0.4) }
+        var mid: TimeInterval { (start + end) / 2 }
+    }
+
+    private static func assembleStories(
+        transcript: Transcript,
+        videoDuration: TimeInterval,
+        target: TimeInterval,
+        brand: BrandSettingsValues,
+        preset: BrandPreset,
+        longFormTitle: String,
+        maximumResults: Int
+    ) -> [ShortCandidate] {
+        let phrases = buildPhrases(from: transcript)
+        guard phrases.count >= 2 else { return [] }
+
+        let scored = phrases.map { phrase -> (Phrase, Double, Double, Double) in
+            (
+                phrase,
+                hookScore(phrase.text, preset: preset),
+                findScore(phrase.text, preset: preset),
+                reactionScore(phrase.text, preset: preset)
+            )
+        }
+
+        let payoffs = scored
+            .filter { $0.2 >= 0.15 || $0.1 + $0.2 + $0.3 >= 0.35 }
+            .sorted { lhs, rhs in
+                (lhs.2 * 1.4 + lhs.1 * 0.4 + lhs.3 * 0.3) >
+                    (rhs.2 * 1.4 + rhs.1 * 0.4 + rhs.3 * 0.3)
+            }
+
+        var stories: [ShortCandidate] = []
+        var usedPayoffMids: [TimeInterval] = []
+
+        for (payoff, hookS, findS, reactS) in payoffs {
+            if usedPayoffMids.contains(where: { abs($0 - payoff.mid) < 25 }) {
+                continue
+            }
+
+            let hook = scored
+                .filter { $0.0.end <= payoff.start - 0.5 }
+                .filter { payoff.start - $0.0.end < 180 }
+                .max(by: { $0.1 < $1.1 })
+                ?? scored
+                    .filter { $0.0.end <= payoff.start - 0.5 }
+                    .max(by: { $0.1 + $0.2 < $1.1 + $1.2 })
+
+            let button = scored
+                .filter { $0.0.start >= payoff.end + 0.3 }
+                .filter { $0.0.start - payoff.end < 120 }
+                .max(by: { $0.3 < $1.3 })
+                ?? scored
+                    .filter { $0.0.start >= payoff.end + 0.3 }
+                    .max(by: { $0.2 + $0.3 < $1.2 + $1.3 })
+
+            guard let hook else { continue }
+
+            let budget = beatBudget(target: target)
+            var beats: [ShortBeat] = [
+                makeBeat(
+                    role: .hook,
+                    phrase: hook.0,
+                    desired: budget.hook,
+                    videoDuration: videoDuration
+                ),
+                makeBeat(
+                    role: .payoff,
+                    phrase: payoff,
+                    desired: budget.payoff,
+                    videoDuration: videoDuration
+                )
+            ]
+
+            if let button, button.0.start > payoff.end {
+                beats.append(
+                    makeBeat(
+                        role: .button,
+                        phrase: button.0,
+                        desired: budget.button,
+                        videoDuration: videoDuration
+                    )
+                )
+            }
+
+            let titleSeed = cleanTitleSeed(from: payoff.text, preset: preset, fallback: longFormTitle)
+            let title = ShortsMetadataService.bestTitle(
+                quote: titleSeed,
+                longFormTitle: longFormTitle,
+                brand: brand,
+                preset: preset
+            )
+
+            let total = beats.reduce(0.0) { $0 + $1.duration }
+            let overall = min((findS * 0.5) + (hookS * 0.25) + (reactS * 0.15) + 0.2, 1.0)
+            let summary = storySummary(beats: beats, preset: preset)
+
+            stories.append(
+                ShortCandidate(
+                    id: UUID(),
+                    beats: beats,
+                    score: overall,
+                    speechCoverage: 0.85,
+                    motionLevel: 0.45,
+                    startsOnSpeech: true,
+                    projectedHook: min(max(Int(70 + overall * 25), 1), 99),
+                    projectedRetention: min(max(Int(68 + overall * 22 - (total > 40 ? 4 : 0)), 1), 99),
+                    bestTitle: title,
+                    storySummary: summary
+                )
+            )
+
+            usedPayoffMids.append(payoff.mid)
+            if stories.count >= maximumResults {
+                break
+            }
+        }
+
+        return stories.sorted { $0.score > $1.score }
+    }
+
+    private static func beatBudget(target: TimeInterval) -> (hook: TimeInterval, payoff: TimeInterval, button: TimeInterval) {
+        let hook = min(max(target * 0.22, 3.0), 6.0)
+        let button = min(max(target * 0.18, 3.0), 5.5)
+        let payoff = max(target - hook - button, target * 0.45)
+        return (hook, payoff, button)
+    }
+
+    private static func makeBeat(
+        role: ShortBeat.Role,
+        phrase: Phrase,
+        desired: TimeInterval,
+        videoDuration: TimeInterval
+    ) -> ShortBeat {
+        // Center the cut on the spoken phrase, pad slightly for picture.
+        let pad = min(0.35, desired * 0.08)
+        var start = max(phrase.start - pad, 0)
+        var end = min(max(phrase.end + pad, start + 1.2), videoDuration)
+        var duration = end - start
+
+        if duration > desired {
+            let overflow = duration - desired
+            start += overflow * 0.35
+            end = start + desired
+            duration = desired
+        } else if duration < desired * 0.75 {
+            let need = desired - duration
+            start = max(start - need * 0.3, 0)
+            end = min(start + desired, videoDuration)
+            duration = end - start
+        }
+
+        return ShortBeat(
+            id: UUID(),
+            role: role,
+            startTime: start,
+            duration: duration,
+            quote: phrase.text
+        )
+    }
+
+    private static func buildPhrases(from transcript: Transcript) -> [Phrase] {
+        let segments = transcript.segments.sorted { $0.startTime < $1.startTime }
+        guard !segments.isEmpty else { return [] }
+
+        var phrases: [Phrase] = []
+        var bucket: [TranscriptSegment] = []
+
+        func flush() {
+            guard !bucket.isEmpty else { return }
+            let text = bucket.map(\.text).joined(separator: " ")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let start = bucket.first!.startTime
+            let end = bucket.last!.endTime
+            if !text.isEmpty, end > start {
+                phrases.append(Phrase(start: start, end: end, text: text))
+            }
+            bucket = []
+        }
+
+        for segment in segments {
+            if let last = bucket.last, segment.startTime - last.endTime > 0.85 {
+                flush()
+            }
+
+            bucket.append(segment)
+
+            let span = (bucket.last!.endTime) - (bucket.first!.startTime)
+            let words = bucket.map(\.text).joined(separator: " ").split(separator: " ").count
+            if span >= 6.5 || words >= 14 {
+                flush()
+            }
+        }
+
+        flush()
+        return phrases.filter { $0.duration >= 1.2 && $0.duration <= 14 }
+    }
+
+    private static func hookScore(_ text: String, preset: BrandPreset) -> Double {
+        let lower = text.lowercased()
+        let keys = [
+            "look at", "look at this", "check this", "check out", "wait until",
+            "wait till", "oh my", "oh wow", "holy", "yo ", "here we go",
+            "coming up", "next place", "headed to", "walk in"
+        ] + presetHookExtras(preset)
+        return keywordScore(lower, keys: keys)
+    }
+
+    private static func findScore(_ text: String, preset: BrandPreset) -> Double {
+        let lower = text.lowercased()
+        let keys = [
+            "candle", "halloween", "pumpkin", "skeleton", "spider", "witch",
+            "decor", "aisle", "shelf", "found", "this one", "these are",
+            "sandwich", "price", "dollars", "bucks", "display", "sign"
+        ] + presetFindExtras(preset)
+
+        var score = keywordScore(lower, keys: keys)
+        // Prefer phrases that name a concrete thing (has a longer content word).
+        let meaty = lower.split(separator: " ").filter { $0.count >= 5 }.count
+        score += min(Double(meaty) * 0.04, 0.2)
+        return min(score, 1.0)
+    }
+
+    private static func reactionScore(_ text: String, preset: BrandPreset) -> Double {
+        let lower = text.lowercased()
+        let keys = [
+            "gonna buy", "going to buy", "love this", "really good", "so good",
+            "creepy", "scary", "cute", "perfect", "need this", "taking this",
+            "that's crazy", "no way", "come on"
+        ] + presetReactionExtras(preset)
+        return keywordScore(lower, keys: keys)
+    }
+
+    private static func keywordScore(_ lower: String, keys: [String]) -> Double {
+        var score = 0.0
+        for key in keys where lower.contains(key) {
+            score += 0.18
+        }
+        return min(score, 1.0)
+    }
+
+    private static func presetHookExtras(_ preset: BrandPreset) -> [String] {
+        switch preset {
+        case .halloweenHunt: return ["spooky", "creepy aisle", "haunt"]
+        case .storeWalk: return ["aisle", "store", "walk"]
+        case .productReview: return ["first look", "unbox", "testing"]
+        case .behindTheScenes: return ["setup", "behind"]
+        case .custom: return []
+        }
+    }
+
+    private static func presetFindExtras(_ preset: BrandPreset) -> [String] {
+        switch preset {
+        case .halloweenHunt: return ["skull", "ghost", "bat", "fog", "animatronic"]
+        case .storeWalk: return ["clearance", "deal", "endcap"]
+        case .productReview: return ["feature", "quality", "build"]
+        case .behindTheScenes: return ["camera", "mic", "light"]
+        case .custom: return []
+        }
+    }
+
+    private static func presetReactionExtras(_ preset: BrandPreset) -> [String] {
+        switch preset {
+        case .halloweenHunt: return ["nightmare", "haunted", "terrifying"]
+        case .storeWalk: return ["steal", "worth it"]
+        case .productReview: return ["recommend", "skip", "buy"]
+        case .behindTheScenes: return ["done", "wrapped"]
+        case .custom: return []
+        }
+    }
+
+    private static func cleanTitleSeed(
+        from text: String,
+        preset: BrandPreset,
+        fallback: String
+    ) -> String {
+        var words = text
+            .split(separator: " ")
+            .map(String.init)
+            .filter { word in
+                let lower = word.lowercased()
+                if lower.allSatisfy(\.isNumber) { return false }
+                if ["we're", "gonna", "going", "just", "like", "this", "that", "have", "here"].contains(lower) {
+                    return false
+                }
+                return word.count > 1
+            }
+
+        // Keep the interesting middle of the phrase.
+        if words.count > 8 {
+            words = Array(words.prefix(8))
+        }
+
+        let joined = words.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+        if joined.split(separator: " ").count >= 3 {
+            return joined
+        }
+
+        if !fallback.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return fallback
+        }
+
+        switch preset {
+        case .halloweenHunt: return "Halloween aisle find"
+        case .storeWalk: return "Store walk find"
+        case .productReview: return "Honest product take"
+        case .behindTheScenes: return "Behind the scenes"
+        case .custom: return "Quick find"
+        }
+    }
+
+    private static func storySummary(beats: [ShortBeat], preset: BrandPreset) -> String {
+        let roles = beats.map(\.role.label).joined(separator: " → ")
+        switch preset {
+        case .halloweenHunt:
+            return "Halloween story cut: \(roles). Opens on curiosity, lands on the find, ends before the full hunt is spoiled."
+        case .storeWalk:
+            return "Store-walk story cut: \(roles). Walk-up, the item, then the reaction."
+        default:
+            return "Story cut: \(roles). Separate moments spliced into one Short."
+        }
+    }
+
+    // MARK: - Continuous fallback (no transcript)
+
+    private static func continuousFallbacks(
+        asset: AVURLAsset,
+        duration: TimeInterval,
+        target: TimeInterval,
+        brand: BrandSettingsValues,
+        preset: BrandPreset,
+        longFormTitle: String,
+        maximumResults: Int
+    ) async -> [ShortCandidate] {
+        guard duration > target + 1 else { return [] }
+
+        let energies = await audioEnergyTimeline(asset: asset)
+        guard !energies.isEmpty else { return [] }
+
+        let windowsPerCandidate = max(Int(target / windowSeconds), 1)
+        let step = max(Int(2.0 / windowSeconds), 1)
+        var scored: [(start: TimeInterval, score: Double, coverage: Double)] = []
+        var index = 0
+
+        while index + windowsPerCandidate <= energies.count {
+            let slice = energies[index..<(index + windowsPerCandidate)]
+            let startTime = Double(index) * windowSeconds
+            let active = slice.filter { $0 >= speechThreshold }.count
+            let coverage = Double(active) / Double(slice.count)
+            let mean = slice.reduce(0, +) / Float(slice.count)
+            let score = (coverage * 0.7) + (Double(min(mean, 1)) * 0.3)
+
+            if coverage >= 0.35 {
+                scored.append((startTime, score, coverage))
+            }
+            index += step
+        }
+
+        scored.sort { $0.score > $1.score }
+
+        var picks: [ShortCandidate] = []
+        var used: [TimeInterval] = []
+
+        for item in scored {
+            if used.contains(where: { abs($0 - item.start) < target * 0.8 }) {
+                continue
+            }
+
+            let title = ShortsMetadataService.bestTitle(
+                quote: "",
+                longFormTitle: longFormTitle,
+                brand: brand,
+                preset: preset
+            )
+
+            let beat = ShortBeat(
+                id: UUID(),
+                role: .payoff,
+                startTime: item.start,
+                duration: target,
+                quote: ""
+            )
+
+            picks.append(
+                ShortCandidate(
+                    id: UUID(),
+                    beats: [beat],
+                    score: item.score,
+                    speechCoverage: item.coverage,
+                    motionLevel: 0.3,
+                    startsOnSpeech: true,
+                    projectedHook: Int(60 + item.score * 25),
+                    projectedRetention: Int(58 + item.coverage * 25),
+                    bestTitle: title,
+                    storySummary: "Continuous fallback cut — transcribe the video to unlock real story splicing."
+                )
+            )
+            used.append(item.start)
+            if picks.count >= maximumResults { break }
+        }
+
+        return picks
+    }
 
     private static func audioEnergyTimeline(asset: AVURLAsset) async -> [Float] {
-        guard let audioTrack = try? await asset.loadTracks(withMediaType: .audio).first,
-              let reader = try? AVAssetReader(asset: asset) else {
+        guard let track = try? await asset.loadTracks(withMediaType: .audio).first else {
             return []
         }
 
-        let outputSettings: [String: Any] = [
-            AVFormatIDKey: kAudioFormatLinearPCM,
-            AVLinearPCMIsBigEndianKey: false,
-            AVLinearPCMIsFloatKey: false,
-            AVLinearPCMBitDepthKey: 16,
-            AVNumberOfChannelsKey: 1,
-            AVSampleRateKey: 16_000
-        ]
+        let reader: AVAssetReader
+        do {
+            reader = try AVAssetReader(asset: asset)
+        } catch {
+            return []
+        }
 
         let output = AVAssetReaderTrackOutput(
-            track: audioTrack,
-            outputSettings: outputSettings
+            track: track,
+            outputSettings: [
+                AVFormatIDKey: kAudioFormatLinearPCM,
+                AVLinearPCMBitDepthKey: 16,
+                AVLinearPCMIsBigEndianKey: false,
+                AVLinearPCMIsFloatKey: false,
+                AVLinearPCMIsNonInterleaved: false,
+                AVSampleRateKey: 16_000,
+                AVNumberOfChannelsKey: 1
+            ]
         )
         output.alwaysCopiesSampleData = false
-
-        guard reader.canAdd(output) else { return [] }
         reader.add(output)
+
         guard reader.startReading() else { return [] }
 
         var energies: [Float] = []
-        var sampleBuffer = Data()
         let bytesPerWindow = Int(16_000 * windowSeconds) * 2
+        var leftover = Data()
 
         while reader.status == .reading {
             guard let sample = output.copyNextSampleBuffer(),
                   let block = CMSampleBufferGetDataBuffer(sample) else {
-                continue
+                break
             }
 
             let length = CMBlockBufferGetDataLength(block)
-            var chunk = Data(count: length)
-            chunk.withUnsafeMutableBytes { pointer in
-                guard let base = pointer.baseAddress else { return }
-                CMBlockBufferCopyDataBytes(
-                    block,
-                    atOffset: 0,
-                    dataLength: length,
-                    destination: base
-                )
+            var data = Data(count: length)
+            data.withUnsafeMutableBytes { raw in
+                guard let base = raw.baseAddress else { return }
+                CMBlockBufferCopyDataBytes(block, atOffset: 0, dataLength: length, destination: base)
             }
 
-            sampleBuffer.append(chunk)
+            leftover.append(data)
 
-            while sampleBuffer.count >= bytesPerWindow {
-                let window = sampleBuffer.prefix(bytesPerWindow)
-                sampleBuffer.removeFirst(bytesPerWindow)
+            while leftover.count >= bytesPerWindow {
+                let window = leftover.prefix(bytesPerWindow)
+                leftover.removeFirst(bytesPerWindow)
                 energies.append(rootMeanSquare(window))
             }
         }
@@ -226,304 +647,21 @@ enum ShortsFinderService {
         return energies
     }
 
-    /// Sampled at an adaptive interval so a long export does not turn into
-    /// thousands of frame decodes.
-    private static func motionTimeline(
-        asset: AVURLAsset,
-        duration: TimeInterval
-    ) async -> [(time: TimeInterval, level: Double)] {
-        let interval = max(1.0, duration / 240.0)
-
-        let generator = AVAssetImageGenerator(asset: asset)
-        generator.appliesPreferredTrackTransform = true
-        generator.maximumSize = CGSize(width: 240, height: 135)
-        generator.requestedTimeToleranceBefore = CMTime(seconds: 0.3, preferredTimescale: 600)
-        generator.requestedTimeToleranceAfter = CMTime(seconds: 0.3, preferredTimescale: 600)
-
-        var samples: [(time: TimeInterval, level: Double)] = []
-        var previous: [Int]?
-        var seconds = 0.0
-
-        while seconds < duration - 0.5 {
-            let time = CMTime(seconds: seconds, preferredTimescale: 600)
-
-            guard let image = try? await generator.image(at: time).image else {
-                seconds += interval
-                continue
-            }
-
-            let histogram = luminanceHistogram(image)
-
-            if let previous {
-                samples.append((seconds, histogramDifference(previous, histogram)))
-            }
-
-            previous = histogram
-            seconds += interval
-        }
-
-        return samples
-    }
-
-    // MARK: - Scoring
-
-    private static func scoreCandidates(
-        energies: [Float],
-        motion: [(time: TimeInterval, level: Double)],
-        target: TimeInterval,
-        transcript: Transcript?,
-        brand: BrandSettingsValues,
-        preset: BrandPreset,
-        longFormTitle: String,
-        maximumResults: Int
-    ) -> [ShortCandidate] {
-        let peakEnergy = max(energies.max() ?? 0, 0.0001)
-        let peakMotion = max(motion.map(\.level).max() ?? 0, 0.0001)
-
-        let windowsPerCandidate = max(Int(target / windowSeconds), 1)
-        let step = max(Int(candidateStepSeconds / windowSeconds), 1)
-
-        guard energies.count >= windowsPerCandidate else {
-            return []
-        }
-
-        var scored: [ShortCandidate] = []
-        var index = 0
-
-        while index + windowsPerCandidate <= energies.count {
-            let slice = energies[index..<(index + windowsPerCandidate)]
-            let startTime = Double(index) * windowSeconds
-
-            let activeCount = slice.filter { $0 >= speechThreshold }.count
-            let coverage = Double(activeCount) / Double(slice.count)
-
-            if coverage < minimumSpeechCoverage {
-                index += step
-                continue
-            }
-
-            let meanEnergy = Double(slice.reduce(0, +)) / Double(slice.count) / Double(peakEnergy)
-            let localPeak = Double(slice.max() ?? 0) / Double(peakEnergy)
-
-            let endTime = startTime + target
-            let motionInRange = motion.filter { $0.time >= startTime && $0.time <= endTime }
-            let motionLevel = motionInRange.isEmpty
-                ? 0
-                : (motionInRange.map(\.level).reduce(0, +) / Double(motionInRange.count)) / peakMotion
-
-            // A Short that opens mid-sentence loses people immediately, so
-            // reward starts where silence turns into speech.
-            let previousIsQuiet = index == 0 || energies[index - 1] < speechThreshold
-            let startsOnSpeech = previousIsQuiet && (slice.first ?? 0) >= speechThreshold
-
-            let quote = transcript?
-                .text(overlapping: startTime, duration: target) ?? ""
-            let wordCount = quote.split(separator: " ").count
-            let transcriptBoost = transcriptBoost(for: quote)
-
-            var score =
-                (coverage * 0.34) +
-                (min(meanEnergy, 1.0) * 0.16) +
-                (min(localPeak, 1.0) * 0.10) +
-                (min(motionLevel, 1.0) * 0.12) +
-                transcriptBoost
-
-            if startsOnSpeech {
-                score += 0.08
-            }
-
-            // Prefer windows with enough spoken content for captions.
-            if wordCount >= 8 {
-                score += 0.05
-            }
-
-            let clampedScore = min(score, 1.0)
-            let projections = projectionScores(
-                overall: clampedScore,
-                speechCoverage: coverage,
-                motionLevel: min(motionLevel, 1.0),
-                startsOnSpeech: startsOnSpeech,
-                quote: quote,
-                duration: target
-            )
-
-            scored.append(
-                ShortCandidate(
-                    id: UUID(),
-                    startTime: startTime,
-                    duration: target,
-                    score: clampedScore,
-                    speechCoverage: coverage,
-                    motionLevel: min(motionLevel, 1.0),
-                    startsOnSpeech: startsOnSpeech,
-                    quote: quote,
-                    projectedHook: projections.hook,
-                    projectedRetention: projections.retention,
-                    bestTitle: ShortsMetadataService.bestTitle(
-                        quote: quote,
-                        longFormTitle: longFormTitle,
-                        brand: brand,
-                        preset: preset
-                    )
-                )
-            )
-
-            index += step
-        }
-
-        return selectNonOverlapping(from: scored, limit: maximumResults)
-    }
-
-    private static func projectionScores(
-        overall: Double,
-        speechCoverage: Double,
-        motionLevel: Double,
-        startsOnSpeech: Bool,
-        quote: String,
-        duration: TimeInterval
-    ) -> (hook: Int, retention: Int) {
-        var hook = 52.0 + (overall * 28.0)
-        var retention = 48.0 + (speechCoverage * 30.0) + (motionLevel * 12.0)
-
-        if startsOnSpeech {
-            hook += 8
-            retention += 4
-        }
-
-        if !quote.isEmpty {
-            hook += 6
-        }
-
-        // Shorter Shorts are easier to retain all the way through.
-        if duration <= 25 {
-            retention += 8
-        } else if duration >= 80 {
-            retention -= 8
-        } else if duration >= 55 {
-            retention -= 5
-        } else if duration >= 40 {
-            retention -= 4
-        }
-
-        return (
-            min(max(Int(hook.rounded()), 1), 99),
-            min(max(Int(retention.rounded()), 1), 99)
-        )
-    }
-
-    /// Phrases that tend to hold attention in Shorts get a scoring bump.
-    private static func transcriptBoost(for quote: String) -> Double {
-        guard !quote.isEmpty else { return 0 }
-
-        let lower = quote.lowercased()
-        let hooks = [
-            "look at", "check this", "check out", "you need", "wait until",
-            "watch this", "oh my", "no way", "worth it", "don't buy",
-            "buy this", "so creepy", "so cool", "right here", "found this"
-        ]
-
-        if hooks.contains(where: { lower.contains($0) }) {
-            return 0.18
-        }
-
-        if quote.split(separator: " ").count >= 12 {
-            return 0.10
-        }
-
-        return 0.04
-    }
-
-    private static func selectNonOverlapping(
-        from candidates: [ShortCandidate],
-        limit: Int
-    ) -> [ShortCandidate] {
-        var selected: [ShortCandidate] = []
-
-        for candidate in candidates.sorted(by: { $0.score > $1.score }) {
-            guard selected.count < limit else { break }
-
-            let overlaps = selected.contains { chosen in
-                candidate.startTime < chosen.endTime + minimumGapSeconds &&
-                chosen.startTime < candidate.endTime + minimumGapSeconds
-            }
-
-            if !overlaps {
-                selected.append(candidate)
-            }
-        }
-
-        // Present strongest Short first so Short #1 feels like the assistant pick.
-        return selected.sorted {
-            if $0.projectedHook == $1.projectedHook {
-                return $0.score > $1.score
-            }
-            return $0.projectedHook > $1.projectedHook
-        }
-    }
-
-    // MARK: - Math helpers
-
     private static func rootMeanSquare(_ data: Data) -> Float {
         guard data.count >= 2 else { return 0 }
 
         var sum: Float = 0
         var count = 0
-
-        data.withUnsafeBytes { rawBuffer in
-            let samples = rawBuffer.bindMemory(to: Int16.self)
+        data.withUnsafeBytes { raw in
+            let samples = raw.bindMemory(to: Int16.self)
             for sample in samples {
-                let normalized = Float(sample) / Float(Int16.max)
-                sum += normalized * normalized
+                let value = Float(sample) / Float(Int16.max)
+                sum += value * value
                 count += 1
             }
         }
 
         guard count > 0 else { return 0 }
         return sqrt(sum / Float(count))
-    }
-
-    private static func luminanceHistogram(_ image: CGImage) -> [Int] {
-        let width = image.width
-        let height = image.height
-        let bucketCount = 32
-
-        guard width > 0, height > 0 else {
-            return Array(repeating: 0, count: bucketCount)
-        }
-
-        var pixels = [UInt8](repeating: 0, count: width * height)
-        let colorSpace = CGColorSpaceCreateDeviceGray()
-
-        guard let context = CGContext(
-            data: &pixels,
-            width: width,
-            height: height,
-            bitsPerComponent: 8,
-            bytesPerRow: width,
-            space: colorSpace,
-            bitmapInfo: CGImageAlphaInfo.none.rawValue
-        ) else {
-            return Array(repeating: 0, count: bucketCount)
-        }
-
-        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
-
-        var histogram = Array(repeating: 0, count: bucketCount)
-        for pixel in pixels {
-            histogram[Int(pixel) * bucketCount / 256] += 1
-        }
-
-        return histogram
-    }
-
-    private static func histogramDifference(_ first: [Int], _ second: [Int]) -> Double {
-        let total = max(first.reduce(0, +), 1)
-        var difference = 0
-
-        for index in 0..<min(first.count, second.count) {
-            difference += abs(first[index] - second[index])
-        }
-
-        return Double(difference) / Double(total * 2)
     }
 }

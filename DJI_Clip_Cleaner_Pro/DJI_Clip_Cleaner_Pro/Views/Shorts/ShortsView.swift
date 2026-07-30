@@ -33,7 +33,7 @@ struct ShortsView: View {
                     .clipShape(Capsule())
             }
 
-            Text("Finds the strongest 20–90s moments in your finished video, exports each as a vertical Short, and gives you a story / music / Filmora edit recipe for each one.")
+            Text("Builds real Shorts by splicing a HOOK + PAYOFF + BUTTON from different parts of your long video — not one random 30-second slice.")
                 .foregroundStyle(.secondary)
         }
     }
@@ -136,7 +136,7 @@ struct ShortsView: View {
         GroupBox {
             VStack(alignment: .leading, spacing: 12) {
                 if viewModel.candidates.isEmpty {
-                    Text("Choose a video, Transcribe, then Find Moments. Hughes Clip Prep ranks the strongest stretches for a Short — spoken hook, projected scores, and a best title. Then export the ones you want as vertical clips.")
+                    Text("Choose a video, Transcribe (required for story splicing), then Find Moments. Each suggestion is a mini-edit with cuts from different timestamps.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 } else {
@@ -207,6 +207,29 @@ struct ShortsView: View {
                     .foregroundStyle(AppTheme.brandPink)
                     .lineLimit(2)
 
+                Text(candidate.storySummary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(candidate.beats) { beat in
+                        Text("\(beat.role.label)  \(beat.formattedRange)  ·  \(Int(beat.duration.rounded()))s")
+                            .font(.caption.weight(.semibold))
+                            .monospacedDigit()
+                        if !beat.quote.isEmpty {
+                            Text(beat.quote)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(2)
+                        }
+                    }
+                }
+                .padding(8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(AppTheme.carbon.opacity(0.06))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+
                 HStack(spacing: 16) {
                     scoreBadge(label: "Projected Hook", value: candidate.projectedHook)
                     scoreBadge(label: "Projected Retention", value: candidate.projectedRetention)
@@ -221,13 +244,6 @@ struct ShortsView: View {
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(.primary)
                     }
-                }
-
-                if !candidate.quote.isEmpty, candidate.quote != candidate.hookLine {
-                    Text(candidate.quote)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
                 }
 
                 creativeBriefBlock(for: candidate)

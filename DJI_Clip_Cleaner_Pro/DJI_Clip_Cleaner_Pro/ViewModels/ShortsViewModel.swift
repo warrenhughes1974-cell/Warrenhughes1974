@@ -151,8 +151,8 @@ final class ShortsViewModel {
         candidates = []
         selectedCandidateIDs = []
         statusMessage = transcript == nil
-            ? "Scanning for the strongest moments. This can take a minute on a long video..."
-            : "Scoring moments with your transcript..."
+            ? "Need a transcript to splice a real story. Transcribe first, then Find Moments."
+            : "Building Short stories by splicing hook + payoff + button..."
 
         let length = targetLength
         let activeTranscript = transcript
@@ -175,12 +175,15 @@ final class ShortsViewModel {
             selectedCandidateIDs = Set(found.map(\.id))
 
             if found.isEmpty {
-                statusMessage = "No strong moments found."
-                errorMessage = "Try a shorter target length, or check that the video has clear talking."
+                statusMessage = "No story assemblies found."
+                errorMessage = activeTranscript == nil
+                    ? "Transcribe Speech first — story splicing needs what you said."
+                    : "Try another length, or re-transcribe if speech was thin."
             } else {
-                statusMessage = activeTranscript == nil
-                    ? "Found \(found.count) moment(s). Tip: Transcribe first for captions and smarter picks."
-                    : "Found \(found.count) moment(s) using your speech. Uncheck any you don't want, then export."
+                let spliced = found.filter { $0.beats.count >= 2 }.count
+                statusMessage = spliced > 0
+                    ? "Built \(found.count) Short story(s) — \(spliced) are multi-cut splices. Uncheck any you don’t want, then export."
+                    : "Found \(found.count) moment(s). Transcribe for real multi-cut story splices."
             }
 
             isAnalyzing = false
@@ -350,6 +353,12 @@ final class ShortsViewModel {
             lines.append("  Projected Retention: \(result.candidate.projectedRetention)")
             lines.append("  Best title: \(result.title)")
             lines.append("  Why it was picked: \(result.candidate.reason)")
+            lines.append("  Story: \(result.candidate.storySummary)")
+            for beat in result.candidate.beats {
+                lines.append(
+                    "  \(beat.role.label): \(beat.formattedRange) (\(Int(beat.duration.rounded()))s) — \(beat.quote)"
+                )
+            }
             lines.append("")
             lines.append(
                 ShortsMetadataService.creativeBrief(
