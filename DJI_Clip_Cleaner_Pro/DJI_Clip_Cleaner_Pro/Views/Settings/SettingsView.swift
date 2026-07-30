@@ -388,12 +388,12 @@ struct SettingsView: View {
                 )
 
                 settingSlider(
-                    title: "B-roll motion % for REVIEW",
+                    title: "B-roll motion % for B-ROLL",
                     value: $settings.minimumMotionPercentForBRollKeep,
                     range: 10...90,
                     step: 5,
                     suffix: "%",
-                    help: "Silent clips need this much motion to avoid discard."
+                    help: "Silent clips with this much motion are labeled B-ROLL."
                 )
 
                 settingSlider(

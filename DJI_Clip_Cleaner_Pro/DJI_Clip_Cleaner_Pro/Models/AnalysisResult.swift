@@ -12,6 +12,7 @@ enum ClipRecommendation: String, Sendable {
     case pending = "Pending"
     case keep = "KEEP"
     case review = "REVIEW"
+    case bRoll = "B-ROLL"
     case discard = "DISCARD"
     case unknown = "—"
 }
