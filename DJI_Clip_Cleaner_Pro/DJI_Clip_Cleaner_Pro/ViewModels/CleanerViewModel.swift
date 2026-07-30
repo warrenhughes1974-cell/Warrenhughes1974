@@ -357,6 +357,7 @@ final class CleanerViewModel: ObservableObject {
             "=================================================="
         )
         appendLog(AppIdentity.name)
+        appendLog("Version: \(AppIdentity.version)")
         appendLog(
             "=================================================="
         )
@@ -397,6 +398,9 @@ final class CleanerViewModel: ObservableObject {
         )
         appendLog(
             "Auto-Editor: \(autoEditorPath)"
+        )
+        appendLog(
+            "Audio export: AAC @ 48000 Hz (DJI-safe)"
         )
         appendLog(
             "Output: \(outputFolder.path)"
@@ -514,12 +518,20 @@ final class CleanerViewModel: ObservableObject {
             activePreset.marginSeconds
         )
 
+        // DJI audio is often 96 kHz. macOS auto-editor defaults to aac_at,
+        // which rejects that rate. Force 48 kHz + native AAC encoder.
+        let sampleRateArgs = [
+            "--sample-rate", "48000",
+            "--audio-codec", "aac"
+        ]
+
         switch activeTrimMode {
         case .fullClip:
             return [
                 video.url.path,
                 "--margin",
-                margin,
+                margin
+            ] + sampleRateArgs + [
                 "--output",
                 outputURL.path
             ]
@@ -549,7 +561,8 @@ final class CleanerViewModel: ObservableObject {
                     "--margin",
                     margin,
                     "--set-action",
-                    protectedRange,
+                    protectedRange
+                ] + sampleRateArgs + [
                     "--output",
                     outputURL.path
                 ]
@@ -562,7 +575,8 @@ final class CleanerViewModel: ObservableObject {
             return [
                 video.url.path,
                 "--margin",
-                margin,
+                margin
+            ] + sampleRateArgs + [
                 "--output",
                 outputURL.path
             ]

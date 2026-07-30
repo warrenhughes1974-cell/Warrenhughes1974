@@ -153,7 +153,7 @@ enum ShortsExportService {
                 "-vf", videoFilter.joined(separator: ","),
                 "-af", "loudnorm=I=-14:TP=-1.5:LRA=11",
                 "-c:v", "h264_videotoolbox", "-b:v", "8M", "-r", "30",
-                "-c:a", "aac", "-b:a", "192k",
+                "-c:a", "aac", "-ar", "48000", "-b:a", "192k",
                 "-movflags", "+faststart",
                 outputURL.path
             ]
@@ -172,7 +172,7 @@ enum ShortsExportService {
                 "-map", complex.videoMap,
                 "-map", complex.audioMap,
                 "-c:v", "h264_videotoolbox", "-b:v", "8M", "-r", "30",
-                "-c:a", "aac", "-b:a", "192k",
+                "-c:a", "aac", "-ar", "48000", "-b:a", "192k",
                 "-movflags", "+faststart",
                 outputURL.path
             ]
