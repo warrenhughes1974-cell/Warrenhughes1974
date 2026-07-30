@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.26",
+            highlights: [
+                "Fixed Shorts export failing with FFmpeg exit code 234 when burning captions.",
+                "Caption filter now uses filename= path syntax that newer FFmpeg accepts.",
+                "Shorts file names strip spaces and “(copy)” so exports land cleanly in Finder."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.25",
             highlights: [
                 "Pick Your Thumbnail Picture sits directly above Generate — no more hunting past the title list.",

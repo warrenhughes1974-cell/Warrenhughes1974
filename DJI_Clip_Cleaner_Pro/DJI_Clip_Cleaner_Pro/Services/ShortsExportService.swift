@@ -39,7 +39,9 @@ enum ShortsExportService {
         let folder = outputFolder(for: videoURL)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
 
-        let baseName = videoURL.deletingPathExtension().lastPathComponent
+        let baseName = sanitizeFileName(
+            videoURL.deletingPathExtension().lastPathComponent
+        )
         let position = String(format: "%02d", index)
         let sourceSecond = Int(candidate.startTime.rounded())
 
@@ -63,8 +65,11 @@ enum ShortsExportService {
             )
 
             if !cues.isEmpty {
+                // Keep the temp path free of spaces and punctuation so FFmpeg's
+                // filtergraph parser never has to quote it.
+                let safeName = "hcp\(UUID().uuidString.replacingOccurrences(of: "-", with: "")).ass"
                 let captionsURL = FileManager.default.temporaryDirectory
-                    .appendingPathComponent("HughesClipPrep-Captions-\(UUID().uuidString).ass")
+                    .appendingPathComponent(safeName)
                 try writeASS(cues: cues, to: captionsURL)
                 assURL = captionsURL
             }
@@ -88,12 +93,9 @@ enum ShortsExportService {
         ]
 
         if let assURL {
-            // Escape path characters FFmpeg's subtitles filter treats specially.
-            let escaped = assURL.path
-                .replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: ":", with: "\\:")
-                .replacingOccurrences(of: "'", with: "\\'")
-            videoFilter.append("ass='\(escaped)'")
+            // Newer FFmpeg builds reject ass='/path' ("No option name near…").
+            // Pass filename= with filter-escaped path and no surrounding quotes.
+            videoFilter.append("ass=filename=\(escapeFilterPath(assURL.path))")
         }
 
         let arguments = [
@@ -185,6 +187,38 @@ enum ShortsExportService {
         }
 
         try lines.joined(separator: "\n").write(to: url, atomically: true, encoding: .utf8)
+    }
+
+    /// Characters that break FFmpeg filter option values when left bare.
+    private static func escapeFilterPath(_ path: String) -> String {
+        path
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: ":", with: "\\:")
+            .replacingOccurrences(of: "'", with: "\\'")
+            .replacingOccurrences(of: "[", with: "\\[")
+            .replacingOccurrences(of: "]", with: "\\]")
+            .replacingOccurrences(of: ",", with: "\\,")
+            .replacingOccurrences(of: ";", with: "\\;")
+    }
+
+    /// Filmora / Finder names often include spaces and "(copy)" — fine for
+    /// Process argv, but messy in Finder and sometimes trip older tooling.
+    private static func sanitizeFileName(_ name: String) -> String {
+        let cleaned = name
+            .replacingOccurrences(of: "(copy)", with: "", options: .caseInsensitive)
+            .replacingOccurrences(of: " ", with: "_")
+            .replacingOccurrences(of: "(", with: "")
+            .replacingOccurrences(of: ")", with: "")
+            .replacingOccurrences(of: "/", with: "-")
+            .replacingOccurrences(of: ":", with: "-")
+
+        let collapsed = cleaned.replacingOccurrences(
+            of: "_+",
+            with: "_",
+            options: .regularExpression
+        )
+
+        return collapsed.trimmingCharacters(in: CharacterSet(charactersIn: "._-"))
     }
 
     private static func assTime(_ seconds: TimeInterval) -> String {
