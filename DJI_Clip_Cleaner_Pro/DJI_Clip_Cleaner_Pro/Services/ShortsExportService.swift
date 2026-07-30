@@ -18,9 +18,25 @@ enum ShortsExportService {
         }
     }
 
+    /// What landed on disk after one Short export.
+    struct ExportProduct: Sendable {
+        let url: URL
+        /// True when captions were burned into the MP4 pixels.
+        let captionsBurnedIn: Bool
+        /// Sidecar `.srt` when burn-in was impossible (minimal FFmpeg).
+        let captionsSidecarURL: URL?
+    }
+
+    private enum CaptionBurnMode {
+        case drawtext
+        case ass
+        case subtitles
+        case sidecarOnly
+    }
+
     static let outputFolderName = "Shorts"
 
-    /// macOS font files that work with FFmpeg drawtext (no libass required).
+    /// macOS font files that work with FFmpeg drawtext.
     private static let captionFontCandidates = [
         "/System/Library/Fonts/Supplemental/Arial Black.ttf",
         "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
@@ -28,6 +44,8 @@ enum ShortsExportService {
         "/Library/Fonts/Arial Bold.ttf",
         "/System/Library/Fonts/Supplemental/Courier New Bold.ttf"
     ]
+
+    private static var cachedFilterNames: Set<String>?
 
     static func outputFolder(for videoURL: URL) -> URL {
         videoURL
@@ -40,7 +58,7 @@ enum ShortsExportService {
         candidate: ShortCandidate,
         index: Int,
         transcript: Transcript? = nil
-    ) async throws -> URL {
+    ) async throws -> ExportProduct {
         guard let ffmpegPath = ProductionPassService.ffmpegPath else {
             throw ServiceError.ffmpegMissing
         }
@@ -77,8 +95,16 @@ enum ShortsExportService {
             "format=yuv420p"
         ]
 
-        // Homebrew FFmpeg is often built without libass, so the `ass` /
-        // `subtitles` filters are missing. Burn captions with drawtext instead.
+        var captionsBurnedIn = false
+        var captionsSidecarURL: URL?
+        var assURL: URL?
+
+        defer {
+            if let assURL {
+                try? FileManager.default.removeItem(at: assURL)
+            }
+        }
+
         if let transcript {
             let cues = transcript.captionCues(
                 overlapping: candidate.startTime,
@@ -86,9 +112,37 @@ enum ShortsExportService {
             )
 
             if !cues.isEmpty {
-                videoFilter.append(
-                    contentsOf: drawTextCaptionFilters(cues: cues)
-                )
+                let mode = captionBurnMode(ffmpegPath: ffmpegPath)
+
+                switch mode {
+                case .drawtext:
+                    videoFilter.append(contentsOf: drawTextCaptionFilters(cues: cues))
+                    captionsBurnedIn = true
+
+                case .ass, .subtitles:
+                    let safeName = "hcp\(UUID().uuidString.replacingOccurrences(of: "-", with: "")).ass"
+                    let captionsURL = FileManager.default.temporaryDirectory
+                        .appendingPathComponent(safeName)
+                    try writeASS(cues: cues, to: captionsURL)
+                    assURL = captionsURL
+                    let escaped = escapeFilterPath(captionsURL.path)
+                    if mode == .ass {
+                        videoFilter.append("ass=filename=\(escaped)")
+                    } else {
+                        videoFilter.append("subtitles=filename=\(escaped)")
+                    }
+                    captionsBurnedIn = true
+
+                case .sidecarOnly:
+                    // Minimal FFmpeg builds ship without libass and without
+                    // freetype — still export the vertical clip, and drop an
+                    // .srt beside it so the words are not lost.
+                    let srtURL = folder.appendingPathComponent(
+                        "\(baseName)_short_\(position)_\(sourceSecond)s.srt"
+                    )
+                    try writeSRT(cues: cues, to: srtURL)
+                    captionsSidecarURL = srtURL
+                }
             }
         }
 
@@ -146,8 +200,77 @@ enum ShortsExportService {
             )
         }
 
-        return outputURL
+        return ExportProduct(
+            url: outputURL,
+            captionsBurnedIn: captionsBurnedIn,
+            captionsSidecarURL: captionsSidecarURL
+        )
     }
+
+    // MARK: - Caption strategy
+
+    /// Prefer burn-in filters when the installed FFmpeg has them; otherwise
+    /// fall back to a sidecar so export never hard-fails on missing filters.
+    private static func captionBurnMode(ffmpegPath: String) -> CaptionBurnMode {
+        let filters = probeFilters(ffmpegPath: ffmpegPath)
+
+        if filters.contains("drawtext") {
+            return .drawtext
+        }
+        if filters.contains("ass") {
+            return .ass
+        }
+        if filters.contains("subtitles") {
+            return .subtitles
+        }
+        return .sidecarOnly
+    }
+
+    private static func probeFilters(ffmpegPath: String) -> Set<String> {
+        if let cachedFilterNames {
+            return cachedFilterNames
+        }
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: ffmpegPath)
+        process.arguments = ["-hide_banner", "-filters"]
+
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = pipe
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+        } catch {
+            cachedFilterNames = []
+            return []
+        }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let text = String(data: data, encoding: .utf8) ?? ""
+
+        // Lines look like: " ... drawtext           V->V       Draw text on top of video"
+        var names = Set<String>()
+        for line in text.split(whereSeparator: \.isNewline) {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            guard trimmed.count > 4 else { continue }
+
+            let parts = trimmed.split(whereSeparator: \.isWhitespace)
+            guard parts.count >= 2 else { continue }
+
+            // First token is flags (T.C etc.); second is the filter name.
+            let candidate = String(parts[1])
+            if candidate.allSatisfy({ $0.isLetter || $0.isNumber || $0 == "_" }) {
+                names.insert(candidate)
+            }
+        }
+
+        cachedFilterNames = names
+        return names
+    }
+
+    // MARK: - drawtext burn-in
 
     /// One drawtext filter per cue. Cue times are already relative to the Short
     /// window (0…duration), matching `-ss` before `-i`.
@@ -190,6 +313,79 @@ enum ShortsExportService {
             return "drawtext=\(options.joined(separator: ":"))"
         }
     }
+
+    // MARK: - ASS / SRT writers
+
+    private static func writeASS(
+        cues: [(start: TimeInterval, end: TimeInterval, text: String)],
+        to url: URL
+    ) throws {
+        var lines = [
+            "[Script Info]",
+            "ScriptType: v4.00+",
+            "PlayResX: 1080",
+            "PlayResY: 1920",
+            "WrapStyle: 0",
+            "",
+            "[V4+ Styles]",
+            "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
+            "Style: Shorts,Arial Black,72,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,5,0,2,60,60,220,1",
+            "",
+            "[Events]",
+            "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
+        ]
+
+        for cue in cues {
+            let text = cue.text
+                .replacingOccurrences(of: "\\", with: "\\\\")
+                .replacingOccurrences(of: "{", with: "\\{")
+                .replacingOccurrences(of: "}", with: "\\}")
+
+            lines.append(
+                "Dialogue: 0,\(assTime(cue.start)),\(assTime(cue.end)),Shorts,,0,0,0,,\(text)"
+            )
+        }
+
+        try lines.joined(separator: "\n").write(to: url, atomically: true, encoding: .utf8)
+    }
+
+    private static func writeSRT(
+        cues: [(start: TimeInterval, end: TimeInterval, text: String)],
+        to url: URL
+    ) throws {
+        var lines: [String] = []
+
+        for (index, cue) in cues.enumerated() {
+            lines.append("\(index + 1)")
+            lines.append("\(srtTime(cue.start)) --> \(srtTime(cue.end))")
+            lines.append(cue.text)
+            lines.append("")
+        }
+
+        try lines.joined(separator: "\n").write(to: url, atomically: true, encoding: .utf8)
+    }
+
+    private static func assTime(_ seconds: TimeInterval) -> String {
+        let totalCentiseconds = max(Int((seconds * 100).rounded()), 0)
+        let hours = totalCentiseconds / 360_000
+        let minutes = (totalCentiseconds % 360_000) / 6_000
+        let secs = (totalCentiseconds % 6_000) / 100
+        let cents = totalCentiseconds % 100
+
+        return String(format: "%d:%02d:%02d.%02d", hours, minutes, secs, cents)
+    }
+
+    private static func srtTime(_ seconds: TimeInterval) -> String {
+        let totalMilliseconds = max(Int((seconds * 1_000).rounded()), 0)
+        let hours = totalMilliseconds / 3_600_000
+        let minutes = (totalMilliseconds % 3_600_000) / 60_000
+        let secs = (totalMilliseconds % 60_000) / 1_000
+        let millis = totalMilliseconds % 1_000
+
+        return String(format: "%02d:%02d:%02d,%03d", hours, minutes, secs, millis)
+    }
+
+    // MARK: - Escaping / naming
 
     /// Escape a caption string for drawtext's `text='…'` form.
     private static func escapeDrawText(_ text: String) -> String {

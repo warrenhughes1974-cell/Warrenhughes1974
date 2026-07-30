@@ -220,24 +220,29 @@ final class ShortsViewModel {
         Task {
             var results: [ShortExportResult] = []
             var failures = 0
+            var usedSidecarCaptions = false
 
             for (offset, candidate) in chosen.enumerated() {
                 let number = offset + 1
                 statusMessage = "Exporting Short \(number) of \(chosen.count)..."
 
                 do {
-                    let outputURL = try await ShortsExportService.export(
+                    let product = try await ShortsExportService.export(
                         from: selectedVideoURL,
                         candidate: candidate,
                         index: number,
                         transcript: burnCaptions ? transcript : nil
                     )
 
+                    if product.captionsSidecarURL != nil {
+                        usedSidecarCaptions = true
+                    }
+
                     results.append(
                         ShortExportResult(
                             id: candidate.id,
                             candidate: candidate,
-                            outputURL: outputURL,
+                            outputURL: product.url,
                             title: candidate.bestTitle.isEmpty
                                 ? ShortsMetadataService.title(
                                     hook: longFormTitle,
@@ -269,9 +274,15 @@ final class ShortsViewModel {
                     errorMessage = "Shorts exported, but the notes file could not be saved: \(error.localizedDescription)"
                 }
 
-                statusMessage = failures > 0
+                var summary = failures > 0
                     ? "Exported \(results.count) Short(s). \(failures) failed."
                     : "Exported \(results.count) Short(s) to the Shorts folder."
+
+                if usedSidecarCaptions {
+                    summary += " Captions saved as .srt files (this FFmpeg cannot burn text onto video). For burned-in captions run: brew reinstall ffmpeg"
+                }
+
+                statusMessage = summary
 
                 #if canImport(AppKit)
                 NSWorkspace.shared.activateFileViewerSelecting(

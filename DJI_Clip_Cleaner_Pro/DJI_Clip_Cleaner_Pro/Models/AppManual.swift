@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.28",
+            highlights: [
+                "Shorts export no longer fails when FFmpeg is missing text filters (ass / drawtext).",
+                "If captions cannot be burned in, the vertical MP4 still exports and a matching .srt is saved beside it.",
+                "Status tip explains how to reinstall a full FFmpeg for burned-in captions."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.27",
             highlights: [
                 "Shorts captions now burn with FFmpeg drawtext — works even when your FFmpeg was built without libass.",
