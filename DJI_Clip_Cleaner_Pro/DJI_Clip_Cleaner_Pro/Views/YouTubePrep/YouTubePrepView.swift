@@ -275,8 +275,13 @@ struct YouTubePrepView: View {
                     usePinkTitles: brand.usePinkTitles,
                     titlePinkRed: brand.titlePinkRed,
                     titlePinkGreen: brand.titlePinkGreen,
-                    titlePinkBlue: brand.titlePinkBlue
+                    titlePinkBlue: brand.titlePinkBlue,
+                    titleScale: brand.titleScale
                 )
+
+                Text("Change the color and size in Settings → Brand & Thumbnails.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
             }
             .padding(4)
         } label: {

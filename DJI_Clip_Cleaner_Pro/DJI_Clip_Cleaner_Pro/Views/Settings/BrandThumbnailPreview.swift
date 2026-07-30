@@ -6,6 +6,17 @@ struct BrandThumbnailPreview: View {
     let titlePinkRed: Double
     let titlePinkGreen: Double
     let titlePinkBlue: Double
+    var titleScale: Double = 1.0
+
+    /// Matches the proportions the renderer uses, so the preview tracks what
+    /// actually lands in the JPEG rather than being a fixed mock.
+    private var fontSize: CGFloat {
+        18 * CGFloat(min(max(titleScale, 0.6), 1.6))
+    }
+
+    private var outlineWidth: CGFloat {
+        max(fontSize * 0.19, 2.5)
+    }
 
     private var titleColor: Color {
         if usePinkTitles {
@@ -47,7 +58,7 @@ struct BrandThumbnailPreview: View {
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(height: 140)
+        .frame(height: 160)
         .overlay(
             RoundedRectangle(cornerRadius: 10)
                 .stroke(AppTheme.papaya.opacity(0.35), lineWidth: 1)
@@ -56,17 +67,18 @@ struct BrandThumbnailPreview: View {
 
     @ViewBuilder
     private func outlinedTitle(_ title: String) -> some View {
-        let font = Font.headline.bold()
+        let font = Font.system(size: fontSize, weight: .heavy)
 
         ZStack {
-            outlineLayer(title, font: font, color: .white, offset: 3.5)
-            outlineLayer(title, font: font, color: .black, offset: 2.0)
+            outlineLayer(title, font: font, color: .white, offset: outlineWidth)
+            outlineLayer(title, font: font, color: .black, offset: outlineWidth * 0.57)
 
             Text(title)
                 .font(font)
                 .foregroundStyle(titleColor)
         }
         .multilineTextAlignment(.leading)
+        .lineLimit(3)
     }
 
     @ViewBuilder
@@ -141,7 +153,8 @@ struct EditableHookCell: View {
         usePinkTitles: true,
         titlePinkRed: 1.0,
         titlePinkGreen: 0.30,
-        titlePinkBlue: 0.60
+        titlePinkBlue: 0.60,
+        titleScale: 1.0
     )
     .padding()
     .frame(width: 420)

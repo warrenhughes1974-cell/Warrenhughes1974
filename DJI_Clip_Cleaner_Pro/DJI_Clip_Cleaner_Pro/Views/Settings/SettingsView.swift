@@ -1,8 +1,41 @@
 import SwiftUI
 
+#if canImport(AppKit)
+import AppKit
+#endif
+
 struct SettingsView: View {
     @State private var settings = AnalysisSettings.shared
     @State private var brand = BrandSettings.shared
+
+    /// Bridges the stored RGB components to the system color picker.
+    private var titleColorBinding: Binding<Color> {
+        Binding(
+            get: {
+                Color(
+                    red: brand.titlePinkRed,
+                    green: brand.titlePinkGreen,
+                    blue: brand.titlePinkBlue
+                )
+            },
+            set: { newValue in
+                #if canImport(AppKit)
+                guard let resolved = NSColor(newValue).usingColorSpace(.sRGB) else { return }
+                brand.titlePinkRed = Double(resolved.redComponent)
+                brand.titlePinkGreen = Double(resolved.greenComponent)
+                brand.titlePinkBlue = Double(resolved.blueComponent)
+                brand.save()
+                #endif
+            }
+        )
+    }
+
+    private func isActiveSwatch(_ swatch: ThumbnailColorSwatch) -> Bool {
+        let tolerance = 0.02
+        return abs(brand.titlePinkRed - swatch.red) < tolerance
+            && abs(brand.titlePinkGreen - swatch.green) < tolerance
+            && abs(brand.titlePinkBlue - swatch.blue) < tolerance
+    }
 
     var body: some View {
         ScrollView {
@@ -105,10 +138,86 @@ struct SettingsView: View {
                     }
                 }
 
-                Toggle("Use pink titles on thumbnails", isOn: $brand.usePinkTitles)
-                    .onChange(of: brand.usePinkTitles) { _, _ in
-                        brand.save()
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Thumbnail Text Color")
+                        .fontWeight(.semibold)
+
+                    Toggle("Use a custom color", isOn: $brand.usePinkTitles)
+                        .onChange(of: brand.usePinkTitles) { _, _ in
+                            brand.save()
+                        }
+
+                    if brand.usePinkTitles {
+                        ColorPicker(
+                            "Pick any color",
+                            selection: titleColorBinding,
+                            supportsOpacity: false
+                        )
+
+                        HStack(spacing: 8) {
+                            ForEach(ThumbnailColorSwatch.all) { swatch in
+                                Button {
+                                    brand.applyColorSwatch(swatch)
+                                } label: {
+                                    Circle()
+                                        .fill(Color(red: swatch.red, green: swatch.green, blue: swatch.blue))
+                                        .frame(width: 26, height: 26)
+                                        .overlay(
+                                            Circle().stroke(
+                                                isActiveSwatch(swatch) ? AppTheme.papaya : Color.secondary.opacity(0.4),
+                                                lineWidth: isActiveSwatch(swatch) ? 3 : 1
+                                            )
+                                        )
+                                }
+                                .buttonStyle(.plain)
+                                .help(swatch.name)
+                            }
+
+                            Spacer()
+                        }
                     }
+
+                    Text("Titles always get a white outer outline and a black inner outline, so bright colors stay readable on busy shelves.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Thumbnail Text Size")
+                            .fontWeight(.semibold)
+                        Spacer()
+                        Text("\(Int(brand.titleScale * 100))%")
+                            .font(.caption)
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Slider(
+                        value: $brand.titleScale,
+                        in: BrandSettings.minimumTitleScale...BrandSettings.maximumTitleScale,
+                        step: 0.05
+                    ) { editing in
+                        if !editing {
+                            brand.save()
+                        }
+                    }
+
+                    HStack {
+                        Button("Reset to 100%") {
+                            brand.titleScale = 1.0
+                            brand.save()
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(abs(brand.titleScale - 1.0) < 0.001)
+
+                        Spacer()
+                    }
+
+                    Text("100% is the size the app picks on its own. Long titles still shrink to fit, so this raises the ceiling rather than forcing one size.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Thumbnail Preview")
@@ -119,7 +228,8 @@ struct SettingsView: View {
                         usePinkTitles: brand.usePinkTitles,
                         titlePinkRed: brand.titlePinkRed,
                         titlePinkGreen: brand.titlePinkGreen,
-                        titlePinkBlue: brand.titlePinkBlue
+                        titlePinkBlue: brand.titlePinkBlue,
+                        titleScale: brand.titleScale
                     )
                 }
 

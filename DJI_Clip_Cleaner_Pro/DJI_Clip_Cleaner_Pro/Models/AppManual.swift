@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.20",
+            highlights: [
+                "Pick any thumbnail text color with a color picker, plus one-click swatches for pink, papaya, yellow, lime, cyan, and blood red.",
+                "New text size slider from 60% to 160%, with a reset to 100%.",
+                "The Settings preview now matches the real color and size instead of showing a fixed sample."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.19",
             highlights: [
                 "Descriptions are written from what is in the video instead of repeating your title in every sentence.",

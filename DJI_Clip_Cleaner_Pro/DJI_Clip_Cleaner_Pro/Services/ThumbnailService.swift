@@ -155,17 +155,20 @@ enum ThumbnailService {
         paragraph.alignment = .left
         paragraph.lineBreakMode = .byWordWrapping
 
+        let scale = CGFloat(min(max(brand.titleScale, 0.6), 1.6))
+
         let (font, textSize) = fittedFont(
             for: displayTitle,
             maxWidth: availableWidth,
-            maxHeight: canvasSize.height * 0.42,
+            maxHeight: canvasSize.height * min(0.42 * scale, 0.70),
             canvasWidth: canvasSize.width,
+            scale: scale,
             paragraph: paragraph
         )
 
         // Size the scrim to the text so short text gets a tight band and long
         // text still stays readable instead of overflowing a fixed bar.
-        let barHeight = min(textSize.height + (inset * 1.6), canvasSize.height * 0.62)
+        let barHeight = min(textSize.height + (inset * 1.6), canvasSize.height * 0.82)
         let barRect = CGRect(
             x: 0,
             y: 0,
@@ -219,10 +222,11 @@ enum ThumbnailService {
         maxWidth: CGFloat,
         maxHeight: CGFloat,
         canvasWidth: CGFloat,
+        scale: CGFloat,
         paragraph: NSParagraphStyle
     ) -> (NSFont, CGSize) {
-        let largestSize = canvasWidth * 0.135
-        let smallestSize = canvasWidth * 0.038
+        let largestSize = canvasWidth * 0.135 * scale
+        let smallestSize = canvasWidth * 0.038 * scale
         var size = largestSize
         var font = NSFont.boldSystemFont(ofSize: size)
         var measured = measure(text, font: font, maxWidth: maxWidth, paragraph: paragraph)
