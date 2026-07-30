@@ -13,8 +13,10 @@ struct YouTubePrepView: View {
             VStack(alignment: .leading, spacing: 20) {
                 header
                 videoSection
-                thumbnailPicksSection
                 titleChoicesSection
+                // Sit directly above Generate so Rank Thumbnails is not hidden
+                // behind the long title list when you scroll down to build the package.
+                thumbnailPicksSection
                 metadataSection
                 outputSection
                 footer
@@ -225,6 +227,14 @@ struct YouTubePrepView: View {
     private var thumbnailPicksSection: some View {
         GroupBox {
             VStack(alignment: .leading, spacing: 12) {
+                Text("This is where you pick the picture. Click Rank Thumbnails, then click one of the scored frames below.")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(AppTheme.carbon)
+                    .padding(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(AppTheme.softOrange)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+
                 HStack(spacing: 12) {
                     Button("Rank Thumbnails") {
                         viewModel.rankThumbnailOptions()
@@ -247,7 +257,7 @@ struct YouTubePrepView: View {
                     }
                 }
 
-                Text("Scores about 30 frames, then shows the strongest pictures. Click any one to use it as your thumbnail.")
+                Text("Scores about 30 frames, then shows eight picture choices here. Click any one to use it as your thumbnail.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
@@ -385,7 +395,7 @@ struct YouTubePrepView: View {
             }
             .padding(4)
         } label: {
-            Label("Thumbnail Picks", systemImage: "photo.stack")
+            Label("Pick Your Thumbnail Picture", systemImage: "photo.stack")
                 .font(.headline)
                 .foregroundStyle(AppTheme.mclarenBlue)
         }
@@ -509,6 +519,13 @@ struct YouTubePrepView: View {
                     .foregroundStyle(.secondary)
 
                 HStack(spacing: 12) {
+                    Button("Rank Thumbnails") {
+                        viewModel.rankThumbnailOptions()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppTheme.papaya)
+                    .disabled(!viewModel.canRankThumbnails || viewModel.isWorking)
+
                     Button("Quick Thumbnail") {
                         viewModel.generateThumbnail()
                     }
@@ -535,7 +552,7 @@ struct YouTubePrepView: View {
                     .disabled(!viewModel.canGenerate || viewModel.isWorking)
                 }
 
-                Text("Tip: use Rank Thumbnails above for scored frame picks. Quick Thumbnail grabs one good mid-video frame.")
+                Text("Tip: Rank Thumbnails (orange) scores ~30 frames and shows picture choices in the box above. Quick Thumbnail grabs one mid-video frame.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
 

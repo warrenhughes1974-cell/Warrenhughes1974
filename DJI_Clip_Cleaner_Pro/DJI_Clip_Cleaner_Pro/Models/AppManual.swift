@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.25",
+            highlights: [
+                "Pick Your Thumbnail Picture sits directly above Generate — no more hunting past the title list.",
+                "Orange Rank Thumbnails button also appears in the Generate row next to Quick Thumbnail.",
+                "Clear callout explains: rank frames, then click a picture to select it."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.24",
             highlights: [
                 "Fixed the Xcode Release build that was failing after Update on newer macOS toolchains.",
