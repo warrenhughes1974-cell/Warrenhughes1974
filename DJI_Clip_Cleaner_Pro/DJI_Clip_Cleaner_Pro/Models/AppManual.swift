@@ -108,6 +108,15 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.18",
+            highlights: [
+                "Fixed thumbnail picks never appearing — Finder was opening on top of the app and hiding them.",
+                "Thumbnail Picks is now its own section near the top of YouTube Prep.",
+                "Live progress while scanning, so a long video no longer looks frozen.",
+                "Scanning is much faster: frames are scored at preview size and only the winners are rendered full quality."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.17",
             highlights: [
                 "Fixed junk tags — \"don know\" and \"they got\" came from splitting contractions and pairing words that were never spoken together.",

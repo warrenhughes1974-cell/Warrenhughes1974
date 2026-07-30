@@ -13,6 +13,7 @@ struct YouTubePrepView: View {
             VStack(alignment: .leading, spacing: 20) {
                 header
                 videoSection
+                thumbnailPicksSection
                 metadataSection
                 outputSection
                 footer
@@ -187,83 +188,6 @@ struct YouTubePrepView: View {
                     qualityLabel(viewModel.titleQuality)
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Thumbnail Intelligence")
-                            .fontWeight(.semibold)
-                        Spacer()
-                        Button("Rank Thumbnails") {
-                            viewModel.rankThumbnailOptions()
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(AppTheme.papaya)
-                        .disabled(!viewModel.canRankThumbnails)
-
-                        if viewModel.isRankingThumbnails {
-                            ProgressView()
-                                .controlSize(.small)
-                        }
-                    }
-
-                    Text("Samples about 30 frames, scores faces + sharpness + contrast, then shows the top picks. Click one to use it.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    if !viewModel.rankedThumbnails.isEmpty {
-                        ForEach(viewModel.rankedThumbnails) { option in
-                            Button {
-                                viewModel.selectThumbnail(option)
-                            } label: {
-                                HStack(spacing: 14) {
-                                    rankedThumbnailImage(path: option.imagePath)
-
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(option.rankLabel)
-                                            .font(.headline)
-                                            .foregroundStyle(AppTheme.mclarenBlue)
-
-                                        Text("\(option.score)")
-                                            .font(.system(size: 28, weight: .bold, design: .rounded))
-                                            .monospacedDigit()
-                                            .foregroundStyle(ctrColor(option.score))
-
-                                        Text(option.reasons.joined(separator: " · "))
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-
-                                        Text("Frame at \(option.formattedTime)")
-                                            .font(.caption2)
-                                            .foregroundStyle(.secondary)
-                                    }
-
-                                    Spacer()
-
-                                    if viewModel.selectedThumbnailID == option.id {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .font(.title2)
-                                            .foregroundStyle(AppTheme.papaya)
-                                    }
-                                }
-                                .padding(10)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(viewModel.selectedThumbnailID == option.id
-                                              ? AppTheme.papaya.opacity(0.16)
-                                              : AppTheme.carbon.opacity(0.88))
-                                )
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-
-                    BrandThumbnailPreview(
-                        title: viewModel.resolvedThumbnailText,
-                        usePinkTitles: brand.usePinkTitles,
-                        titlePinkRed: brand.titlePinkRed,
-                        titlePinkGreen: brand.titlePinkGreen,
-                        titlePinkBlue: brand.titlePinkBlue
-                    )
-                }
             }
             .padding(4)
         } label: {
@@ -271,6 +195,122 @@ struct YouTubePrepView: View {
                 .font(.headline)
                 .foregroundStyle(AppTheme.mclarenBlue)
         }
+    }
+
+    private var thumbnailPicksSection: some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 12) {
+                    Button("Rank Thumbnails") {
+                        viewModel.rankThumbnailOptions()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppTheme.papaya)
+                    .disabled(!viewModel.canRankThumbnails)
+
+                    Spacer()
+                }
+
+                Text("Scores about 30 frames on faces, sharpness, contrast, and lighting, then shows the strongest picks. Click one to use it.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                if viewModel.isRankingThumbnails {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ProgressView(value: viewModel.thumbnailScanProgress)
+                            .tint(AppTheme.papaya)
+                        Text("Scanning the video. A long export can take a minute.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                if !viewModel.rankedThumbnails.isEmpty {
+                    ForEach(viewModel.rankedThumbnails) { option in
+                        thumbnailOptionRow(option)
+                    }
+
+                    Text("Your pick is saved as the thumbnail in the upload package.")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                } else if viewModel.hasRankedThumbnails, !viewModel.isRankingThumbnails {
+                    Label(
+                        "No usable frames were found. Try Quick Thumbnail instead.",
+                        systemImage: "exclamationmark.triangle.fill"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+                } else if !viewModel.isRankingThumbnails {
+                    Text(viewModel.canRankThumbnails
+                         ? "Click Rank Thumbnails to see your top picks here."
+                         : "Choose a video and add thumbnail text to enable ranking.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Divider()
+
+                Text("Brand Preview")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+
+                BrandThumbnailPreview(
+                    title: viewModel.resolvedThumbnailText,
+                    usePinkTitles: brand.usePinkTitles,
+                    titlePinkRed: brand.titlePinkRed,
+                    titlePinkGreen: brand.titlePinkGreen,
+                    titlePinkBlue: brand.titlePinkBlue
+                )
+            }
+            .padding(4)
+        } label: {
+            Label("Thumbnail Picks", systemImage: "photo.stack")
+                .font(.headline)
+                .foregroundStyle(AppTheme.mclarenBlue)
+        }
+    }
+
+    private func thumbnailOptionRow(_ option: RankedThumbnailCandidate) -> some View {
+        let isSelected = viewModel.selectedThumbnailID == option.id
+
+        return Button {
+            viewModel.selectThumbnail(option)
+        } label: {
+            HStack(spacing: 14) {
+                rankedThumbnailImage(path: option.imagePath)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(option.rankLabel)
+                        .font(.headline)
+                        .foregroundStyle(AppTheme.mclarenBlue)
+
+                    Text("\(option.score)")
+                        .font(.system(size: 30, weight: .bold, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundStyle(scoreColor(option.score))
+
+                    Text(option.reasons.joined(separator: " · "))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Text("Frame at \(option.formattedTime)")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title2)
+                    .foregroundStyle(isSelected ? AppTheme.papaya : .secondary)
+            }
+            .padding(10)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? AppTheme.papaya.opacity(0.18) : AppTheme.softBlue.opacity(0.5))
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     @ViewBuilder
@@ -302,6 +342,12 @@ struct YouTubePrepView: View {
     private func ctrColor(_ score: Int) -> Color {
         if score >= 90 { return AppTheme.papaya }
         if score >= 80 { return AppTheme.mclarenBlue }
+        return .secondary
+    }
+
+    private func scoreColor(_ score: Int) -> Color {
+        if score >= 80 { return AppTheme.papaya }
+        if score >= 60 { return AppTheme.mclarenBlue }
         return .secondary
     }
 

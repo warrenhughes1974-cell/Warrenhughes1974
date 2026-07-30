@@ -20,6 +20,8 @@ final class YouTubePrepViewModel {
     var rankedThumbnails: [RankedThumbnailCandidate] = []
     var selectedThumbnailID: UUID?
     var isRankingThumbnails = false
+    var thumbnailScanProgress: Double = 0
+    var hasRankedThumbnails = false
     var generatedDescription = ""
     var generatedTags: [String] = []
     var thumbnailPath = ""
@@ -178,6 +180,7 @@ final class YouTubePrepViewModel {
         thumbnailPath = ""
         transcript = nil
         rankedThumbnails = []
+        hasRankedThumbnails = false
         selectedThumbnailID = nil
         titleVariants = []
         selectedTitleID = nil
@@ -204,6 +207,7 @@ final class YouTubePrepViewModel {
         errorMessage = nil
         rankedThumbnails = []
         selectedThumbnailID = nil
+        thumbnailScanProgress = 0
         statusMessage = "Scoring about 30 frames for the strongest thumbnails..."
 
         Task {
@@ -214,25 +218,29 @@ final class YouTubePrepViewModel {
                     videoURL: selectedVideoURL,
                     thumbnailText: resolvedThumbnailText,
                     brand: brand,
-                    outputFolder: folder
+                    outputFolder: folder,
+                    progress: { scanned, total in
+                        Task { @MainActor in
+                            self.thumbnailScanProgress = Double(scanned) / Double(max(total, 1))
+                            self.statusMessage = "Scoring frame \(scanned) of \(total)..."
+                        }
+                    }
                 )
 
                 rankedThumbnails = ranked
+                hasRankedThumbnails = true
                 selectedThumbnailID = ranked.first?.id
                 thumbnailPath = ranked.first?.imagePath ?? ""
-                statusMessage = "Top \(ranked.count) thumbnail options ready — pick your favorite."
-                #if canImport(AppKit)
-                if let first = ranked.first {
-                    NSWorkspace.shared.activateFileViewerSelecting(
-                        [URL(fileURLWithPath: first.imagePath)]
-                    )
-                }
-                #endif
+                statusMessage = "Top \(ranked.count) thumbnail options ready — pick your favorite below."
+                // Deliberately no Finder reveal here. This is an in-app picker,
+                // and activating Finder would cover the results the user is
+                // meant to choose from.
             } catch {
                 errorMessage = error.localizedDescription
                 statusMessage = "Thumbnail ranking failed."
             }
 
+            thumbnailScanProgress = 0
             isRankingThumbnails = false
         }
     }

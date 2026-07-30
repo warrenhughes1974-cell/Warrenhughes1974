@@ -56,11 +56,15 @@ enum ThumbnailIntelligenceService {
 
     /// Samples ~30 frames across the video, scores them, and returns the top 3
     /// as branded JPEG previews the user can choose from.
+    ///
+    /// `progress` reports (framesScanned, totalFrames) so a long scan does not
+    /// look like the app has stalled.
     static func rankFrames(
         videoURL: URL,
         thumbnailText: String,
         brand: BrandSettingsValues,
-        outputFolder: URL
+        outputFolder: URL,
+        progress: (@Sendable (Int, Int) -> Void)? = nil
     ) async throws -> [RankedThumbnailCandidate] {
         let asset = AVURLAsset(url: videoURL)
         let durationValue = try await asset.load(.duration)
@@ -75,26 +79,31 @@ enum ThumbnailIntelligenceService {
             withIntermediateDirectories: true
         )
 
-        let generator = AVAssetImageGenerator(asset: asset)
-        generator.appliesPreferredTrackTransform = true
-        generator.maximumSize = CGSize(width: 1_280, height: 720)
-        generator.requestedTimeToleranceBefore = CMTime(seconds: 0.15, preferredTimescale: 600)
-        generator.requestedTimeToleranceAfter = CMTime(seconds: 0.15, preferredTimescale: 600)
+        // Scoring only needs enough pixels to judge sharpness, contrast, and
+        // faces. Decoding the scan at preview size keeps 30 seeks through a long
+        // 4K export from taking minutes, and keeps 30 frames out of memory.
+        let scout = AVAssetImageGenerator(asset: asset)
+        scout.appliesPreferredTrackTransform = true
+        scout.maximumSize = CGSize(width: 640, height: 360)
+        scout.requestedTimeToleranceBefore = CMTime(seconds: 1.0, preferredTimescale: 600)
+        scout.requestedTimeToleranceAfter = CMTime(seconds: 1.0, preferredTimescale: 600)
 
         // Skip the very start and end — intros and outros are rarely the money shot.
         let usableStart = min(duration * 0.08, 4.0)
         let usableEnd = max(duration - min(duration * 0.08, 4.0), usableStart + 1.0)
         let span = usableEnd - usableStart
 
-        var scored: [(time: TimeInterval, score: Double, reasons: [String], image: CGImage)] = []
+        var scored: [(time: TimeInterval, score: Double, reasons: [String])] = []
         var previousPixels: [UInt8]?
 
         for index in 0..<sampleCount {
+            progress?(index + 1, sampleCount)
+
             let fraction = sampleCount == 1 ? 0.5 : Double(index) / Double(sampleCount - 1)
             let seconds = usableStart + (span * fraction)
             let time = CMTime(seconds: seconds, preferredTimescale: 600)
 
-            guard let image = try? await capture(generator: generator, at: time) else {
+            guard let image = try? await capture(generator: scout, at: time) else {
                 continue
             }
 
@@ -110,8 +119,7 @@ enum ThumbnailIntelligenceService {
                 (
                     time: seconds,
                     score: analysis.score,
-                    reasons: analysis.reasons,
-                    image: image
+                    reasons: analysis.reasons
                 )
             )
         }
@@ -124,16 +132,29 @@ enum ThumbnailIntelligenceService {
             .sorted { $0.score > $1.score }
             .prefix(topCount)
 
+        // Only the frames that actually won get decoded at full quality.
+        let full = AVAssetImageGenerator(asset: asset)
+        full.appliesPreferredTrackTransform = true
+        full.maximumSize = CGSize(width: 1_280, height: 720)
+        full.requestedTimeToleranceBefore = CMTime(seconds: 0.15, preferredTimescale: 600)
+        full.requestedTimeToleranceAfter = CMTime(seconds: 0.15, preferredTimescale: 600)
+
         var results: [RankedThumbnailCandidate] = []
 
         for (offset, item) in ranked.enumerated() {
             let rank = offset + 1
+            let time = CMTime(seconds: item.time, preferredTimescale: 600)
+
+            guard let frame = try? await capture(generator: full, at: time) else {
+                continue
+            }
+
             let outputURL = outputFolder.appendingPathComponent(
                 "ranked_\(rank)_\(Int(item.time.rounded()))s.jpg"
             )
 
             try await ThumbnailService.generate(
-                from: item.image,
+                from: frame,
                 title: thumbnailText,
                 brand: brand,
                 outputURL: outputURL
@@ -149,6 +170,10 @@ enum ThumbnailIntelligenceService {
                     imagePath: outputURL.path
                 )
             )
+        }
+
+        guard !results.isEmpty else {
+            throw ServiceError.noFrames
         }
 
         return results
