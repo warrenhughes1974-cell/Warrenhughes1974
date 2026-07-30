@@ -108,6 +108,15 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.17",
+            highlights: [
+                "Fixed junk tags — \"don know\" and \"they got\" came from splitting contractions and pairing words that were never spoken together.",
+                "Tags now come from real subjects in your speech, like \"halloween candles\" instead of filler.",
+                "Chapters are named after what you were actually talking about, and are skipped rather than guessed at.",
+                "Descriptions list what's in the video instead of dumping raw transcript text."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.16",
             highlights: [
                 "Thumbnail Intelligence scores about 30 frames and shows Top / Second / Third picks to choose from.",

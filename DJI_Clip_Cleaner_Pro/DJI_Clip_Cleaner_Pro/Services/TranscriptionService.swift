@@ -224,36 +224,58 @@ enum TranscriptionService {
         )
     }
 
+    /// YouTube needs at least three chapters, each 10 seconds or longer, and a
+    /// first chapter at 0:00. A window that contains no nameable subject is
+    /// skipped rather than titled with raw dictation.
     static func chapters(
         from transcript: Transcript,
-        targetSpacing: TimeInterval = 45
+        targetSpacing: TimeInterval? = nil
     ) -> [TranscriptChapter] {
-        guard !transcript.segments.isEmpty else { return [] }
+        guard let lastSegment = transcript.segments.last else { return [] }
+
+        let duration = lastSegment.endTime
+        guard duration > 120 else { return [] }
+
+        // Roughly ten chapters whatever the runtime, so a 25-minute walkthrough
+        // does not produce three dozen of them.
+        let spacing = targetSpacing ?? max(60, duration / 10)
 
         var chapters: [TranscriptChapter] = [
             TranscriptChapter(startTime: 0, title: "Intro")
         ]
-
-        var nextBoundary = targetSpacing
+        var usedTitles: Set<String> = ["intro"]
         var buffer: [String] = []
+        var bufferStart: TimeInterval = 0
+        var nextBoundary = spacing
 
         for segment in transcript.segments {
+            if buffer.isEmpty {
+                bufferStart = segment.startTime
+            }
+
             buffer.append(segment.text)
 
-            if segment.startTime >= nextBoundary, buffer.count >= 3 {
-                let title = chapterTitle(from: buffer)
-                if chapters.last?.title != title {
-                    chapters.append(
-                        TranscriptChapter(startTime: segment.startTime, title: title)
-                    )
-                }
+            guard segment.endTime >= nextBoundary, buffer.count >= 8 else { continue }
 
-                buffer = []
-                nextBoundary = segment.startTime + targetSpacing
+            let windowText = buffer.joined(separator: " ")
+            let previousStart = chapters.last?.startTime ?? 0
+
+            if let title = TranscriptKeywordService.chapterTitle(from: windowText),
+               !usedTitles.contains(title.lowercased()),
+               bufferStart - previousStart >= 10 {
+                chapters.append(
+                    TranscriptChapter(startTime: bufferStart, title: title)
+                )
+                usedTitles.insert(title.lowercased())
             }
+
+            buffer = []
+            nextBoundary = segment.endTime + spacing
         }
 
-        return chapters
+        // Below three, YouTube ignores them anyway — better to prompt the user
+        // to add their own than to ship a broken chapter list.
+        return chapters.count >= 3 ? chapters : []
     }
 
     static func writeSRT(
@@ -475,32 +497,6 @@ enum TranscriptionService {
 
             existing.append(segment)
         }
-    }
-
-    private static func chapterTitle(from words: [String]) -> String {
-        let filler: Set<String> = [
-            "a", "an", "the", "and", "or", "of", "in", "on", "at", "to",
-            "for", "with", "so", "uh", "um", "like", "just", "you", "i",
-            "we", "this", "that", "it", "is", "are", "was", "were"
-        ]
-
-        let meaningful = words
-            .map { $0.trimmingCharacters(in: .punctuationCharacters) }
-            .filter { !$0.isEmpty && !filler.contains($0.lowercased()) }
-
-        let chosen = Array((meaningful.isEmpty ? words : meaningful).prefix(5))
-        guard !chosen.isEmpty else { return "Next section" }
-
-        return chosen
-            .enumerated()
-            .map { index, word in
-                let lower = word.lowercased()
-                if index > 0, filler.contains(lower) {
-                    return lower
-                }
-                return lower.prefix(1).uppercased() + lower.dropFirst()
-            }
-            .joined(separator: " ")
     }
 
     private static func srtTimestamp(_ seconds: TimeInterval) -> String {

@@ -166,10 +166,15 @@ enum YouTubeMetadataService {
         lines.append(searchSnippet(hook: cleanHook, series: series, preset: preset))
         lines.append("")
 
-        if let transcript, !transcript.isEmpty {
-            lines.append(transcriptBody(from: transcript, hook: cleanHook))
-        } else {
-            lines.append(bodyCopy(hook: cleanHook, series: series, preset: preset))
+        lines.append(bodyCopy(hook: cleanHook, series: series, preset: preset))
+
+        let topics = TranscriptKeywordService.topics(from: transcript, limit: 8)
+        if !topics.isEmpty {
+            lines.append("")
+            lines.append("WHAT'S IN THIS VIDEO")
+            for topic in topics {
+                lines.append("· \(topic)")
+            }
         }
 
         lines.append("")
@@ -201,23 +206,6 @@ enum YouTubeMetadataService {
         lines.append(hashtagLine(series: series, preset: preset))
 
         return lines.joined(separator: "\n")
-    }
-
-    private static func transcriptBody(from transcript: Transcript, hook: String) -> String {
-        let words = transcript.fullText
-            .split(separator: " ")
-            .prefix(70)
-            .joined(separator: " ")
-
-        let clipped = words.count < transcript.fullText.count ? "\(words)…" : words
-
-        return """
-        In this video I cover \(hook.lowercased()).
-
-        \(clipped)
-
-        Full walkthrough below — timestamps jump you to each section.
-        """
     }
 
     static func descriptionQuality(_ description: String) -> MetadataQuality {
@@ -283,7 +271,8 @@ enum YouTubeMetadataService {
             append(series)
         }
 
-        for phrase in transcriptPhrases(from: transcript) {
+        // What was actually said outranks generic preset copy.
+        for phrase in TranscriptKeywordService.tagPhrases(from: transcript, limit: 8) {
             append(phrase)
         }
 
@@ -291,47 +280,18 @@ enum YouTubeMetadataService {
             append(tag)
         }
 
+        // Keeps the .custom preset useful without inventing junk like
+        // "new video upload", which nobody searches for.
+        if !cleanHook.isEmpty, cleanHook.split(separator: " ").count <= 4 {
+            append("\(cleanHook) walkthrough")
+            append("\(cleanHook) vlog")
+        }
+
         if !channel.isEmpty {
             append("\(channel) \(series.isEmpty ? "channel" : series)")
         }
 
         return Array(tags.prefix(15))
-    }
-
-    /// Pulls the most repeated meaningful two-word phrases from what was said.
-    private static func transcriptPhrases(from transcript: Transcript?) -> [String] {
-        guard let transcript, !transcript.isEmpty else { return [] }
-
-        let filler: Set<String> = [
-            "a", "an", "the", "and", "or", "of", "in", "on", "at", "to",
-            "for", "with", "so", "uh", "um", "like", "just", "you", "i",
-            "we", "this", "that", "it", "is", "are", "was", "were", "my",
-            "me", "be", "do", "did", "have", "has", "had", "but", "if"
-        ]
-
-        let words = transcript.fullText
-            .lowercased()
-            .components(separatedBy: CharacterSet.alphanumerics.inverted)
-            .filter { !$0.isEmpty && !filler.contains($0) && $0.count > 2 }
-
-        guard words.count >= 2 else { return [] }
-
-        var counts: [String: Int] = [:]
-
-        for index in 0..<(words.count - 1) {
-            let phrase = "\(words[index]) \(words[index + 1])"
-            counts[phrase, default: 0] += 1
-        }
-
-        return counts
-            .sorted { lhs, rhs in
-                if lhs.value == rhs.value {
-                    return lhs.key < rhs.key
-                }
-                return lhs.value > rhs.value
-            }
-            .prefix(6)
-            .map(\.key)
     }
 
     static func tagsQuality(_ tags: [String]) -> MetadataQuality {
@@ -630,11 +590,9 @@ enum YouTubeMetadataService {
                 "youtube creator tips"
             ]
         case .custom:
-            return [
-                "day in the life",
-                "vlog channel",
-                "new video upload"
-            ]
+            // Nothing generic is worth spending tag budget on here. The hook and
+            // the transcript carry this preset instead.
+            return []
         }
     }
 
