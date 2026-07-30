@@ -27,6 +27,10 @@ struct RankedThumbnailCandidate: Identifiable, Sendable {
             return "Second"
         case 3:
             return "Third"
+        case 4:
+            return "Fourth"
+        case 5:
+            return "Fifth"
         default:
             return "Option \(rank)"
         }
@@ -52,7 +56,7 @@ enum ThumbnailIntelligenceService {
     }
 
     private static let sampleCount = 30
-    private static let topCount = 3
+    private static let topCount = 8
 
     /// Samples ~30 frames across the video, scores them, and returns the top 3
     /// as branded JPEG previews the user can choose from.

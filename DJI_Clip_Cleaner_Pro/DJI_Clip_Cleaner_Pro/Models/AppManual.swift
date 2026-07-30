@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.23",
+            highlights: [
+                "Thumbnail Picks sit right under the video fields again — no more scrolling past ten titles to find them.",
+                "Rank Thumbnails now offers eight picture choices in a clickable grid, not just three.",
+                "Title Choices moved into their own section below the picture picker."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.22",
             highlights: [
                 "Stores are only recognized from a known retailer list — cities and misheard speech like \"medicine Bumgardner\" are no longer listed as stores.",

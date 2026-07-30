@@ -14,6 +14,7 @@ struct YouTubePrepView: View {
                 header
                 videoSection
                 thumbnailPicksSection
+                titleChoicesSection
                 metadataSection
                 outputSection
                 footer
@@ -121,93 +122,101 @@ struct YouTubePrepView: View {
                     .onChange(of: viewModel.includeChannelInTitle) { _, _ in
                         viewModel.refreshTitleVariants()
                     }
-
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Title Choices (CTR Ranked)")
-                            .fontWeight(.semibold)
-                        Spacer()
-                        Button("Refresh Titles") {
-                            viewModel.refreshTitleVariants()
-                        }
-                        .buttonStyle(.bordered)
-                        .disabled(viewModel.trimmedHook.isEmpty)
-
-                        Button("Copy Selected") {
-                            viewModel.copyTitle()
-                        }
-                        .buttonStyle(.bordered)
-                        .disabled(viewModel.generatedTitle.isEmpty)
-                    }
-
-                    Text("Ten title options, sorted by projected click-through. Click one to use it.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    if viewModel.titleVariants.isEmpty {
-                        Text(viewModel.generatedTitle.isEmpty ? "Type a hook to build your titles." : viewModel.generatedTitle)
-                            .font(.headline)
-                            .foregroundStyle(AppTheme.brandPink)
-                            .padding(12)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(AppTheme.carbon.opacity(0.92))
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                    } else {
-                        ForEach(Array(viewModel.titleVariants.enumerated()), id: \.element.id) { index, variant in
-                            let isSelected = viewModel.selectedTitleID == variant.id
-                            Button {
-                                viewModel.selectTitle(variant)
-                            } label: {
-                                HStack(spacing: 12) {
-                                    Text(String(format: "%02d", index + 1))
-                                        .font(.caption.weight(.bold))
-                                        .foregroundStyle(.secondary)
-                                        .frame(width: 22)
-
-                                    Text("\(variant.ctrScore)")
-                                        .font(.title3.weight(.bold))
-                                        .monospacedDigit()
-                                        .foregroundStyle(ctrColor(variant.ctrScore))
-                                        .frame(width: 36, alignment: .trailing)
-
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text(variant.title)
-                                            .font(.body.weight(isSelected ? .semibold : .regular))
-                                            .foregroundStyle(AppTheme.brandPink)
-                                            .multilineTextAlignment(.leading)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-
-                                        if !variant.reasons.isEmpty {
-                                            Text(variant.reasons.joined(separator: " · "))
-                                                .font(.caption2)
-                                                .foregroundStyle(.secondary)
-                                        }
-                                    }
-
-                                    if isSelected {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .foregroundStyle(AppTheme.papaya)
-                                    }
-                                }
-                                .padding(10)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(isSelected
-                                              ? AppTheme.papaya.opacity(0.18)
-                                              : AppTheme.carbon.opacity(0.92))
-                                )
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-
-                    qualityLabel(viewModel.titleQuality)
-                }
-
             }
             .padding(4)
         } label: {
             Label("Finished Video", systemImage: "play.rectangle")
+                .font(.headline)
+                .foregroundStyle(AppTheme.mclarenBlue)
+        }
+    }
+
+    private var titleChoicesSection: some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Title Choices (CTR Ranked)")
+                        .fontWeight(.semibold)
+                    Spacer()
+                    Button("Refresh Titles") {
+                        viewModel.refreshTitleVariants()
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(viewModel.trimmedHook.isEmpty)
+
+                    Button("Copy Selected") {
+                        viewModel.copyTitle()
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(viewModel.generatedTitle.isEmpty)
+                }
+
+                Text("Ten title options, sorted by projected click-through. Click one to use it.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                if viewModel.titleVariants.isEmpty {
+                    Text(viewModel.generatedTitle.isEmpty ? "Type a hook to build your titles." : viewModel.generatedTitle)
+                        .font(.headline)
+                        .foregroundStyle(AppTheme.brandPink)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(AppTheme.carbon.opacity(0.92))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                } else {
+                    ForEach(Array(viewModel.titleVariants.enumerated()), id: \.element.id) { index, variant in
+                        let isSelected = viewModel.selectedTitleID == variant.id
+                        Button {
+                            viewModel.selectTitle(variant)
+                        } label: {
+                            HStack(spacing: 12) {
+                                Text(String(format: "%02d", index + 1))
+                                    .font(.caption.weight(.bold))
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: 22)
+
+                                Text("\(variant.ctrScore)")
+                                    .font(.title3.weight(.bold))
+                                    .monospacedDigit()
+                                    .foregroundStyle(ctrColor(variant.ctrScore))
+                                    .frame(width: 36, alignment: .trailing)
+
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(variant.title)
+                                        .font(.body.weight(isSelected ? .semibold : .regular))
+                                        .foregroundStyle(AppTheme.brandPink)
+                                        .multilineTextAlignment(.leading)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                                    if !variant.reasons.isEmpty {
+                                        Text(variant.reasons.joined(separator: " · "))
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+
+                                if isSelected {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(AppTheme.papaya)
+                                }
+                            }
+                            .padding(10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(isSelected
+                                          ? AppTheme.papaya.opacity(0.18)
+                                          : AppTheme.carbon.opacity(0.92))
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                qualityLabel(viewModel.titleQuality)
+            }
+            .padding(4)
+        } label: {
+            Label("Title Choices", systemImage: "text.badge.star")
                 .font(.headline)
                 .foregroundStyle(AppTheme.mclarenBlue)
         }
@@ -224,12 +233,70 @@ struct YouTubePrepView: View {
                     .tint(AppTheme.papaya)
                     .disabled(!viewModel.canRankThumbnails)
 
+                    if viewModel.isRankingThumbnails {
+                        ProgressView()
+                            .controlSize(.small)
+                    }
+
                     Spacer()
+
+                    if let selected = viewModel.selectedRankedThumbnail {
+                        Text("Selected: \(selected.rankLabel) · \(selected.score)")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(AppTheme.papaya)
+                    }
                 }
 
-                Text("Scores about 30 frames on faces, sharpness, contrast, and lighting, then shows the strongest picks. Click one to use it.")
+                Text("Scores about 30 frames, then shows the strongest pictures. Click any one to use it as your thumbnail.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                if viewModel.isRankingThumbnails {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ProgressView(value: viewModel.thumbnailScanProgress)
+                            .tint(AppTheme.papaya)
+                        Text("Scanning the video. A long export can take a minute.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                if !viewModel.rankedThumbnails.isEmpty {
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.flexible(), spacing: 12),
+                            GridItem(.flexible(), spacing: 12)
+                        ],
+                        spacing: 12
+                    ) {
+                        ForEach(viewModel.rankedThumbnails) { option in
+                            thumbnailOptionCard(option)
+                        }
+                    }
+
+                    Text("Click a picture to select it. Your pick is saved into the upload package.")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                } else if viewModel.hasRankedThumbnails, !viewModel.isRankingThumbnails {
+                    Label(
+                        "No usable frames were found. Try Quick Thumbnail instead.",
+                        systemImage: "exclamationmark.triangle.fill"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+                } else if !viewModel.isRankingThumbnails {
+                    Text(viewModel.canRankThumbnails
+                         ? "Click Rank Thumbnails to see your picture choices here."
+                         : "Choose a video and add thumbnail text first.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(AppTheme.softOrange.opacity(0.45))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+
+                Divider()
 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
@@ -290,41 +357,8 @@ struct YouTubePrepView: View {
                         brand.save()
                     }
 
-                    Text("Picks update after you Rank Thumbnails or Generate again — already-saved JPEGs keep the old look until you rebuild them.")
+                    Text("After changing emoticons, Rank Thumbnails again so the pictures pick up the new look.")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
-
-                if viewModel.isRankingThumbnails {
-                    VStack(alignment: .leading, spacing: 6) {
-                        ProgressView(value: viewModel.thumbnailScanProgress)
-                            .tint(AppTheme.papaya)
-                        Text("Scanning the video. A long export can take a minute.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                if !viewModel.rankedThumbnails.isEmpty {
-                    ForEach(viewModel.rankedThumbnails) { option in
-                        thumbnailOptionRow(option)
-                    }
-
-                    Text("Your pick is saved as the thumbnail in the upload package.")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                } else if viewModel.hasRankedThumbnails, !viewModel.isRankingThumbnails {
-                    Label(
-                        "No usable frames were found. Try Quick Thumbnail instead.",
-                        systemImage: "exclamationmark.triangle.fill"
-                    )
-                    .font(.caption)
-                    .foregroundStyle(.orange)
-                } else if !viewModel.isRankingThumbnails {
-                    Text(viewModel.canRankThumbnails
-                         ? "Click Rank Thumbnails to see your top picks here."
-                         : "Choose a video and add thumbnail text to enable ranking.")
-                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
 
@@ -345,7 +379,7 @@ struct YouTubePrepView: View {
                     emojiPosition: brand.emojiPosition
                 )
 
-                Text("Pick emoticons, color, and size in Settings → Brand & Thumbnails.")
+                Text("Pick color and size in Settings → Brand & Thumbnails.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
@@ -357,72 +391,87 @@ struct YouTubePrepView: View {
         }
     }
 
-    private func thumbnailOptionRow(_ option: RankedThumbnailCandidate) -> some View {
+    private func thumbnailOptionCard(_ option: RankedThumbnailCandidate) -> some View {
         let isSelected = viewModel.selectedThumbnailID == option.id
 
         return Button {
             viewModel.selectThumbnail(option)
         } label: {
-            HStack(spacing: 14) {
-                rankedThumbnailImage(path: option.imagePath)
+            VStack(alignment: .leading, spacing: 8) {
+                rankedThumbnailImage(path: option.imagePath, width: nil, height: 110)
 
-                VStack(alignment: .leading, spacing: 4) {
+                HStack(alignment: .firstTextBaseline) {
                     Text(option.rankLabel)
-                        .font(.headline)
+                        .font(.subheadline.weight(.semibold))
                         .foregroundStyle(AppTheme.mclarenBlue)
-
+                    Spacer()
                     Text("\(option.score)")
-                        .font(.system(size: 30, weight: .bold, design: .rounded))
+                        .font(.title3.weight(.bold))
                         .monospacedDigit()
                         .foregroundStyle(scoreColor(option.score))
-
-                    Text(option.reasons.joined(separator: " · "))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    Text("Frame at \(option.formattedTime)")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
                 }
 
-                Spacer()
+                Text(option.reasons.joined(separator: " · "))
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
 
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .font(.title2)
-                    .foregroundStyle(isSelected ? AppTheme.papaya : .secondary)
+                Text("Frame at \(option.formattedTime)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+
+                HStack {
+                    Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                        .foregroundStyle(isSelected ? AppTheme.papaya : .secondary)
+                    Text(isSelected ? "Selected" : "Click to select")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(isSelected ? AppTheme.papaya : .secondary)
+                    Spacer()
+                }
             }
             .padding(10)
             .background(
                 RoundedRectangle(cornerRadius: 12)
                     .fill(isSelected ? AppTheme.papaya.opacity(0.18) : AppTheme.softBlue.opacity(0.5))
             )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isSelected ? AppTheme.papaya : Color.clear, lineWidth: 2)
+            )
         }
         .buttonStyle(.plain)
     }
 
     @ViewBuilder
-    private func rankedThumbnailImage(path: String) -> some View {
+    @ViewBuilder
+    private func rankedThumbnailImage(
+        path: String,
+        width: CGFloat? = 160,
+        height: CGFloat = 90
+    ) -> some View {
         #if canImport(AppKit)
-        if let image = NSImage(contentsOfFile: path) {
-            Image(nsImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 160, height: 90)
-                .clipped()
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-        } else {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(AppTheme.carbon.opacity(0.6))
-                .frame(width: 160, height: 90)
-                .overlay {
-                    Image(systemName: "photo")
-                        .foregroundStyle(.secondary)
-                }
+        Group {
+            if let image = NSImage(contentsOfFile: path) {
+                Image(nsImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } else {
+                AppTheme.carbon.opacity(0.6)
+                    .overlay {
+                        Image(systemName: "photo")
+                            .foregroundStyle(.secondary)
+                    }
+            }
         }
+        .frame(maxWidth: .infinity)
+        .frame(width: width, height: height)
+        .clipped()
+        .clipShape(RoundedRectangle(cornerRadius: 8))
         #else
         RoundedRectangle(cornerRadius: 8)
             .fill(AppTheme.carbon.opacity(0.6))
-            .frame(width: 160, height: 90)
+            .frame(maxWidth: .infinity)
+            .frame(width: width, height: height)
         #endif
     }
 

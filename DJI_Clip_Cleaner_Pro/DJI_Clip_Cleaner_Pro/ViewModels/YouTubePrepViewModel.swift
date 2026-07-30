@@ -253,7 +253,7 @@ final class YouTubePrepViewModel {
                 hasRankedThumbnails = true
                 selectedThumbnailID = ranked.first?.id
                 thumbnailPath = ranked.first?.imagePath ?? ""
-                statusMessage = "Top \(ranked.count) thumbnail options ready — pick your favorite below."
+                statusMessage = "Top \(ranked.count) thumbnail pictures ready — click one to select it."
                 // Deliberately no Finder reveal here. This is an in-app picker,
                 // and activating Finder would cover the results the user is
                 // meant to choose from.
