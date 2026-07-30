@@ -21,23 +21,29 @@ struct MainTabView: View {
                 }
                 .tag(1)
 
+            ShortsView()
+                .tabItem {
+                    Label("Shorts", systemImage: "rectangle.portrait.on.rectangle.portrait")
+                }
+                .tag(2)
+
             YouTubePrepView()
                 .tabItem {
                     Label("YouTube Prep", systemImage: "square.and.arrow.up")
                 }
-                .tag(2)
+                .tag(3)
 
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape")
                 }
-                .tag(3)
+                .tag(4)
 
             ManualView()
                 .tabItem {
                     Label("Guide", systemImage: "book")
                 }
-                .tag(4)
+                .tag(5)
         }
         .tint(AppTheme.papaya)
         .frame(

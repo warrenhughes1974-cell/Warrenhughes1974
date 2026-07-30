@@ -30,7 +30,8 @@ enum AppManual {
         "Click Run Pipeline to move junk and process the keepers.",
         "Open the Processed folder and import the _CLEANED files into Filmora.",
         "Finish your creative edit in Filmora — titles, music, pacing, and final polish.",
-        "Go to YouTube Prep, choose your finished export, type your hook, and build the upload package."
+        "Go to YouTube Prep, choose your finished export, type your hook, and build the upload package.",
+        "Open the Shorts tab, point at the same finished video, and export 1 to 2 vertical Shorts from it."
     ]
 
     static let recommendedSettings: [ManualSection] = [
@@ -78,6 +79,11 @@ enum AppManual {
             body: "Scan a folder, score clips for talking and motion, detect sudden camera movement, and get KEEP / REVIEW / DISCARD recommendations."
         ),
         ManualSection(
+            icon: "rectangle.portrait.on.rectangle.portrait",
+            title: "Shorts",
+            body: "Scores a finished video for talking and movement, suggests the strongest moments, and exports them as vertical 1080x1920 Shorts with a description and subscriber checklist."
+        ),
+        ManualSection(
             icon: "square.and.arrow.up",
             title: "YouTube Prep",
             body: "Choose your finished Filmora export, type a hook, and generate thumbnail, description, tags, and an upload package folder."
@@ -101,6 +107,14 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.14",
+            highlights: [
+                "New Shorts tab finds the strongest moments in a finished video automatically.",
+                "Exports vertical 1080x1920 clips at 20, 30, or 45 seconds with Shorts loudness.",
+                "Writes a notes file with titles, descriptions, and the steps that turn Shorts viewers into subscribers."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.13",
             highlights: [
