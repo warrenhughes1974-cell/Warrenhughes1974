@@ -108,7 +108,7 @@ struct YouTubePrepView: View {
                     TextField("HomeGoods, Ross, Ike's Love and Sandwiches", text: $viewModel.placesText)
                         .textFieldStyle(.roundedBorder)
 
-                    Text("Separate with commas. Store names are the most searched part of a store walk, and the mic often misses them.")
+                    Text("Separate with commas. Only known retailers are auto-detected from speech — type anything the mic missed (Ike's, a local shop, etc.).")
                         .font(.caption)
                         .foregroundStyle(.secondary)
 

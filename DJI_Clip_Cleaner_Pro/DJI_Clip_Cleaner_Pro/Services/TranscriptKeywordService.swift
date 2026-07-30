@@ -29,17 +29,34 @@ enum TranscriptKeywordService {
             .map(\.phrase)
     }
 
-    /// Subjects covered in the video, formatted for a written description. A
-    /// recurring single word is a fine bullet point even though it is a poor tag.
+    /// Subjects covered in the video, formatted for a written description.
+    /// Store names are kept out of this list — they have their own section.
     static func topics(from transcript: Transcript?, limit: Int = 8) -> [String] {
-        ranked(from: transcript)
+        let storeNames = knownStoreDisplayNames
+
+        return ranked(from: transcript)
+            .filter { keyword in
+                !storeNames.contains(keyword.phrase.lowercased())
+                    && !keyword.phrase.split(separator: " ").contains(where: {
+                        storeNames.contains($0.lowercased())
+                    })
+            }
+            // Prefer real finds ("halloween candles") over bare nouns ("sugar").
+            .sorted { lhs, rhs in
+                let leftPhrase = lhs.phrase.contains(" ")
+                let rightPhrase = rhs.phrase.contains(" ")
+                if leftPhrase != rightPhrase {
+                    return leftPhrase && !rightPhrase
+                }
+                return strongestFirst(lhs, rhs)
+            }
             .prefix(limit)
             .map { titleCase($0.phrase) }
     }
 
-    /// Stores and destinations named in the video. These are the most valuable
-    /// words in a store-walk description, so they are matched against a known
-    /// list first and only then guessed at from the name tagger.
+    /// Stores named in the video. Only the curated retailer list is trusted —
+    /// Apple's name tagger happily labels cities and misheard speech as stores
+    /// ("San Marcos", "medicine Bumgardner"), which must never reach YouTube.
     static func places(from transcript: Transcript?, limit: Int = 6) -> [String] {
         guard let transcript, !transcript.isEmpty else { return [] }
 
@@ -57,25 +74,23 @@ enum TranscriptKeywordService {
             found.append(display)
         }
 
-        for name in taggedNames(in: transcript.fullText) {
-            guard found.count < limit else { break }
-            guard !found.contains(where: { $0.caseInsensitiveCompare(name) == .orderedSame }) else {
-                continue
-            }
-            found.append(name)
-        }
-
         return Array(found.prefix(limit))
     }
 
     /// A readable title for one stretch of speech, or nil when that stretch has
     /// nothing worth naming. Callers should skip the chapter rather than fall
-    /// back to raw transcript text.
+    /// back to raw transcript text. Single nouns like "Sugar" are rejected —
+    /// a chapter needs a two-word subject.
     static func chapterTitle(from text: String) -> String? {
-        guard let phrase = bestPhrase(in: tokenize(text)) else { return nil }
+        guard let phrase = bestPhrase(in: tokenize(text), requireTwoWords: true) else {
+            return nil
+        }
 
         let title = titleCase(phrase)
-        return title.count <= maximumTitleLength ? title : nil
+        guard title.count <= maximumTitleLength else { return nil }
+        guard title.split(separator: " ").count >= 2 else { return nil }
+
+        return title
     }
 
     // MARK: - Ranking
@@ -145,7 +160,8 @@ enum TranscriptKeywordService {
             // "spice spice" is a stutter, not a subject.
             if words.count == 2, words[0] == words[1] { continue }
 
-            guard words.allSatisfy({ (timesUsed[$0] ?? 0) < 2 }) else { continue }
+            // One appearance of "pumpkin" across the whole list is enough.
+            guard words.allSatisfy({ (timesUsed[$0] ?? 0) < 1 }) else { continue }
 
             for word in words {
                 timesUsed[word, default: 0] += 1
@@ -154,29 +170,6 @@ enum TranscriptKeywordService {
         }
 
         return kept
-    }
-
-    private static func taggedNames(in text: String) -> [String] {
-        var names: [String] = []
-        let tagger = NLTagger(tagSchemes: [.nameType])
-        tagger.string = text
-
-        tagger.enumerateTags(
-            in: text.startIndex..<text.endIndex,
-            unit: .word,
-            scheme: .nameType,
-            options: [.omitPunctuation, .omitWhitespace, .joinNames]
-        ) { tag, range in
-            guard tag == .organizationName || tag == .placeName else { return true }
-
-            let name = String(text[range]).trimmingCharacters(in: .whitespacesAndNewlines)
-            guard name.count >= 4, !names.contains(name) else { return true }
-
-            names.append(name)
-            return true
-        }
-
-        return names
     }
 
     private static func strongestFirst(
@@ -189,9 +182,14 @@ enum TranscriptKeywordService {
         return lhs.count > rhs.count
     }
 
-    /// Picks the single most descriptive phrase in a short window of speech.
-    private static func bestPhrase(in tokens: [Token]) -> String? {
+    /// Picks the most descriptive phrase in a short window of speech.
+    /// When `requireTwoWords` is true (chapters), a lone noun is never enough.
+    private static func bestPhrase(
+        in tokens: [Token],
+        requireTwoWords: Bool = false
+    ) -> String? {
         var fallbackNoun: String?
+        var bestTwoWord: String?
 
         for index in tokens.indices {
             let current = tokens[index]
@@ -206,10 +204,24 @@ enum TranscriptKeywordService {
             guard next.isUsable, next.isNoun else { continue }
             guard current.isNoun || current.isAdjective else { continue }
 
-            return "\(current.text) \(next.text)"
+            let phrase = "\(current.text) \(next.text)"
+            if bestTwoWord == nil {
+                bestTwoWord = phrase
+            }
+
+            // Prefer a phrase that names a store or a longer product find.
+            if knownStoreDisplayNames.contains(current.text)
+                || knownStoreDisplayNames.contains(next.text)
+                || current.text.count + next.text.count >= 12 {
+                return phrase
+            }
         }
 
-        return fallbackNoun
+        if let bestTwoWord {
+            return bestTwoWord
+        }
+
+        return requireTwoWords ? nil : fallbackNoun
     }
 
     // MARK: - Tokenizing
@@ -276,6 +288,10 @@ enum TranscriptKeywordService {
     /// Speech-to-text mangles brand names constantly, so each store is matched
     /// on the spellings dictation actually produces. Keys must be lowercase and
     /// space-separated to match the normalized transcript.
+    ///
+    /// Only this list is ever treated as a store. Guessing from the name tagger
+    /// is deliberately not used — that path invented "San Marcos" (a city) and
+    /// "medicine Bumgardner" (misheard speech) as stores.
     private static let knownPlaces: [(String, String)] = [
         ("homegoods", "HomeGoods"),
         ("home goods", "HomeGoods"),
@@ -321,8 +337,21 @@ enum TranscriptKeywordService {
         ("cracker barrel", "Cracker Barrel"),
         ("ikes love and sandwiches", "Ike's Love and Sandwiches"),
         ("ikes love", "Ike's Love and Sandwiches"),
-        ("ikes sandwiches", "Ike's Love and Sandwiches")
+        ("ikes sandwiches", "Ike's Love and Sandwiches"),
+        ("ikes sandwich", "Ike's Love and Sandwiches"),
+        ("ike s love", "Ike's Love and Sandwiches"),
+        ("ike love", "Ike's Love and Sandwiches")
     ]
+
+    private static var knownStoreDisplayNames: Set<String> {
+        var names = Set(knownPlaces.map { $0.1.lowercased() })
+        // Single-token aliases so "ross" in a topic phrase is recognized as a store.
+        names.formUnion([
+            "homegoods", "homesense", "ross", "target", "walmart", "marshalls",
+            "michaels", "costco", "burlington", "aldi", "heb", "kroger", "ikea"
+        ])
+        return names
+    }
 
     // MARK: - Vocabulary
 

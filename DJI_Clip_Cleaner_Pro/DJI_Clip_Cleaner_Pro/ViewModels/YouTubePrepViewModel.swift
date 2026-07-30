@@ -56,8 +56,8 @@ final class YouTubePrepViewModel {
 
         guard !detected.isEmpty else {
             return transcript == nil
-                ? "Transcribe first and stores you named out loud get picked up automatically."
-                : "No store names were recognized. Type them above so they reach the description and tags."
+                ? "Transcribe first. Known store names you said out loud are picked up automatically."
+                : "No known store names were recognized. Type them above — cities and misheard words are never treated as stores."
         }
 
         return "Heard in the video: \(detected.joined(separator: ", "))"

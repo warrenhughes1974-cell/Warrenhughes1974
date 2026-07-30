@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.22",
+            highlights: [
+                "Stores are only recognized from a known retailer list — cities and misheard speech like \"medicine Bumgardner\" are no longer listed as stores.",
+                "Chapter titles now need a two-word subject, so lone words like \"Sugar\" are skipped.",
+                "WHAT WE FOUND no longer repeats the same subject or lists store names as finds."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.21",
             highlights: [
                 "Pick up to two emoticons for thumbnails — pumpkin, ghost, bat, fire, sandwich, and more.",

@@ -255,11 +255,12 @@ enum TranscriptionService {
 
             buffer.append(segment.text)
 
-            guard segment.endTime >= nextBoundary, buffer.count >= 8 else { continue }
+            guard segment.endTime >= nextBoundary, buffer.count >= 12 else { continue }
 
             let windowText = buffer.joined(separator: " ")
             let previousStart = chapters.last?.startTime ?? 0
 
+            // Skip windows that only have a weak single-word subject.
             if let title = TranscriptKeywordService.chapterTitle(from: windowText),
                !usedTitles.contains(title.lowercased()),
                bufferStart - previousStart >= 10 {
