@@ -177,7 +177,7 @@ struct SettingsView: View {
                         }
                     }
 
-                    Text("Titles get a thin white outer outline and a thin black inner outline so they stay readable without spiky letter edges.")
+                    Text("Titles use a clean shadow over a dark fade so they stay readable without pointed outline spikes.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

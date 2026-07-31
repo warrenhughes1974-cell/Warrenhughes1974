@@ -108,6 +108,15 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.37",
+            highlights: [
+                "A new transcript now replaces stale thumbnail text with the story phrase (for example DFW GROUND DELAYS), instead of preserving AMERICAN AIRLINES from an old run.",
+                "Story matching no longer pads eight slots with irrelevant food/soda frames; blurry frames and face-filling close-ups are rejected more aggressively.",
+                "Thumbnail text uses a clean shadow instead of stroked outlines, removing the pointed letter spikes; colors now follow the detected story.",
+                "Travel descriptions are shorter and natural, with no repeated STORY BEATS list and better missed-business-trip phrasing."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.36",
             highlights: [
                 "YouTube Prep is story-first: transcript builds a story brief (travel delay, cooking, F1, adventure, etc.) that drives description, tags, hashtags, and chapters.",

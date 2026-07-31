@@ -103,7 +103,14 @@ enum ThumbnailIntelligenceService {
         let span = usableEnd - usableStart
         let visualTargets = storyBrief?.visualTargets ?? []
 
-        var scored: [(time: TimeInterval, score: Double, reasons: [String])] = []
+        var scored: [
+            (
+                time: TimeInterval,
+                score: Double,
+                storyMatch: Double,
+                reasons: [String]
+            )
+        ] = []
         var previousPixels: [UInt8]?
 
         for index in 0..<sampleCount {
@@ -128,7 +135,7 @@ enum ThumbnailIntelligenceService {
             previousPixels = analysis.pixels
 
             // Hard reject mushy / motion-blur frames.
-            if analysis.sharpness < 0.28 {
+            if analysis.sharpness < 0.45 {
                 continue
             }
 
@@ -158,6 +165,7 @@ enum ThumbnailIntelligenceService {
                 (
                     time: seconds,
                     score: score,
+                    storyMatch: analysis.storyMatch,
                     reasons: reasons
                 )
             )
@@ -167,7 +175,24 @@ enum ThumbnailIntelligenceService {
             throw ServiceError.noFrames
         }
 
-        let ranked = scored
+        // For strongly visual stories, return fewer good choices instead of
+        // padding eight slots with soda shelves, food, or other irrelevant frames.
+        let storyMatched = scored.filter { $0.storyMatch >= 0.18 }
+        let candidatePool: [
+            (
+                time: TimeInterval,
+                score: Double,
+                storyMatch: Double,
+                reasons: [String]
+            )
+        ]
+        if storyBrief != nil, !storyMatched.isEmpty {
+            candidatePool = storyMatched
+        } else {
+            candidatePool = scored
+        }
+
+        let ranked = candidatePool
             .sorted { $0.score > $1.score }
             .prefix(topCount)
 
@@ -236,6 +261,7 @@ enum ThumbnailIntelligenceService {
         let similarityToPrevious: Double
         let sharpness: Double
         let faceAreaRatio: Double
+        let storyMatch: Double
     }
 
     private static func analyze(
@@ -330,7 +356,8 @@ enum ThumbnailIntelligenceService {
             pixels: pixels,
             similarityToPrevious: similarity,
             sharpness: sharpness,
-            faceAreaRatio: face.areaRatio
+            faceAreaRatio: face.areaRatio,
+            storyMatch: storyMatch.score
         )
     }
 

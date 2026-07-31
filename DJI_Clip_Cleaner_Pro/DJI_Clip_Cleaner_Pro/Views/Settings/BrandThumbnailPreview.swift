@@ -131,57 +131,12 @@ struct BrandThumbnailPreview: View {
     private func outlinedTitle(_ title: String) -> some View {
         let font = Font.system(size: fontSize, weight: .heavy)
 
-        ZStack {
-            outlineLayer(title, font: font, color: .white, offset: outlineWidth)
-            outlineLayer(title, font: font, color: .black, offset: outlineWidth * 0.57)
-
-            Text(title)
-                .font(font)
-                .foregroundStyle(titleColor)
-        }
+        Text(title)
+            .font(font)
+            .foregroundStyle(titleColor)
+            .shadow(color: .black.opacity(0.9), radius: outlineWidth, x: 1, y: 2)
         .multilineTextAlignment(.leading)
         .lineLimit(3)
-    }
-
-    @ViewBuilder
-    private func outlineLayer(
-        _ title: String,
-        font: Font,
-        color: Color,
-        offset: CGFloat
-    ) -> some View {
-        Text(title)
-            .font(font)
-            .foregroundStyle(color)
-            .offset(x: -offset, y: 0)
-        Text(title)
-            .font(font)
-            .foregroundStyle(color)
-            .offset(x: offset, y: 0)
-        Text(title)
-            .font(font)
-            .foregroundStyle(color)
-            .offset(x: 0, y: -offset)
-        Text(title)
-            .font(font)
-            .foregroundStyle(color)
-            .offset(x: 0, y: offset)
-        Text(title)
-            .font(font)
-            .foregroundStyle(color)
-            .offset(x: -offset * 0.75, y: -offset * 0.75)
-        Text(title)
-            .font(font)
-            .foregroundStyle(color)
-            .offset(x: offset * 0.75, y: -offset * 0.75)
-        Text(title)
-            .font(font)
-            .foregroundStyle(color)
-            .offset(x: -offset * 0.75, y: offset * 0.75)
-        Text(title)
-            .font(font)
-            .foregroundStyle(color)
-            .offset(x: offset * 0.75, y: offset * 0.75)
     }
 }
 

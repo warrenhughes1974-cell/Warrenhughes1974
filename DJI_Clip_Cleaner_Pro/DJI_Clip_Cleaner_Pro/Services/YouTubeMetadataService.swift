@@ -211,9 +211,11 @@ enum YouTubeMetadataService {
             }
         }
 
-        if !brief.beats.isEmpty {
+        // Product/store videos benefit from an item list. Story videos do not:
+        // the natural summary already explains the plot without repeating bullets.
+        if brief.domain == .retailHunt, !brief.beats.isEmpty {
             lines.append("")
-            lines.append(brief.domain == .retailHunt ? "WHAT WE FOUND" : "STORY BEATS")
+            lines.append("WHAT WE FOUND")
             for beat in brief.beats {
                 lines.append("· \(beat)")
             }
