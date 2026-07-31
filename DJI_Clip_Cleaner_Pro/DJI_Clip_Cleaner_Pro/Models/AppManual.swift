@@ -18,20 +18,16 @@ enum AppManual {
 
     static let workflowSteps: [String] = [
         "Copy your DJI clips into one folder on your Mac.",
-        "Open Hughes Clip Prep and go to Smart Analysis.",
-        "Click Scan Folder and choose that folder.",
-        "Wait for analysis to finish. Review KEEP, B-ROLL, REVIEW, and DISCARD.",
-        "Check the pink Hook column for each clip. Click to type your own hook before generating thumbnails.",
-        "Full Title updates automatically from Channel · Series · Hook.",
-        "Open Settings and pick a Series Preset (Halloween Hunt, Store Walk, Product Review) for consistent naming.",
-        "Set your Channel Prefix and Title Format once — every clip follows the same pattern.",
-        "Use Refresh Titles after changing brand settings to update every clip at once.",
-        "Click Generate Thumbnails to create 1280×720 images with pink titles in Thumbnails/.",
-        "Click Run Pipeline to move junk and process the keepers.",
-        "Open the Processed folder and import the _CLEANED files into Filmora.",
-        "Finish your creative edit in Filmora — titles, music, pacing, and final polish.",
-        "Go to YouTube Prep, choose your finished export, type your hook, and build the upload package.",
-        "Open the Shorts tab, point at the same finished video, and export 1 to 2 vertical Shorts from it."
+        "Open Settings once: Series Preset, Channel Prefix, Brand & Thumbnails, and OpenAI key if you use cloud AI.",
+        "Go to Smart Analysis → Scan Folder (sort the shoot — not the upload package yet).",
+        "Review KEEP, B-ROLL, REVIEW, and DISCARD. Optional AI Assist / cut hints run if enabled in Settings.",
+        "Optional: edit the pink Hook column for shoot-day labels, or Generate Thumbnails as a quick preview.",
+        "Click Run Pipeline to move junk and send KEEP clips to Clip Cleaner.",
+        "In Clip Cleaner, confirm trim/Production Pass settings and let KEEP clips polish into Processed/.",
+        "Import the _CLEANED files into Filmora and finish the creative edit.",
+        "Go to YouTube Prep (upload stage): choose the finished Filmora export → Transcribe & Analyze Story → Confirm Story.",
+        "In YouTube Prep, pick a title, Rank Thumbnails, Generate Description/Tags, then Build Upload Package.",
+        "Optional: Shorts tab — same finished video → export 1 to 2 vertical Shorts."
     ]
 
     static let recommendedSettings: [ManualSection] = [
@@ -76,7 +72,7 @@ enum AppManual {
         ManualSection(
             icon: "waveform.badge.magnifyingglass",
             title: "Smart Analysis",
-            body: "Scan a folder, score clips for talking and motion, detect sudden camera movement, and get KEEP / B-ROLL / REVIEW / DISCARD recommendations. Silent clips with good movement are labeled B-ROLL."
+            body: "Sort the shoot folder: talking/motion/jerk scoring, KEEP / B-ROLL / REVIEW / DISCARD, optional AI Assist + cut hints, then Run Pipeline. Shoot-day hooks/thumbs here are previews — the real upload pack is YouTube Prep."
         ),
         ManualSection(
             icon: "rectangle.portrait.on.rectangle.portrait",
@@ -86,12 +82,12 @@ enum AppManual {
         ManualSection(
             icon: "square.and.arrow.up",
             title: "YouTube Prep",
-            body: "Transcribe your finished Filmora export, pick from ten CTR-ranked titles, rank about 30 thumbnail frames, then build the upload package."
+            body: "Upload stage for your finished Filmora export: Story Review, titles, Rank Thumbnails, description/tags, captions, and Build Upload Package."
         ),
         ManualSection(
             icon: "gearshape",
             title: "Settings",
-            body: "Tune Smart Analysis thresholds and your brand style for titles and thumbnails."
+            body: "One place for analysis thresholds, brand/thumbnail look (including emoticons), and OpenAI toggles."
         ),
         ManualSection(
             icon: "book",
@@ -107,6 +103,13 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.51",
+            highlights: [
+                "Cleanup: removed duplicate Settings sheet on Smart Analysis, duplicate Rank Thumbnails button, and the second emoticon picker on YouTube Prep (edit brand in Settings only).",
+                "Guide/README clarify shoot-day Smart Analysis vs upload-stage YouTube Prep; legacy Update And Open.command now runs the same Update.command flow."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.50",
             highlights: [

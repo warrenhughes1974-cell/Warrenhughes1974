@@ -5,7 +5,6 @@ struct AnalysisView: View {
     @Binding var selectedTab: Int
 
     @State private var viewModel = AnalysisViewModel()
-    @State private var showingSettings = false
     @State private var showingPipelineConfirm = false
 
     @AppStorage("cleaningPreset")
@@ -52,10 +51,6 @@ struct AnalysisView: View {
             footer
         }
         .padding(20)
-        .sheet(isPresented: $showingSettings) {
-            SettingsView()
-                .frame(minWidth: 520, minHeight: 640)
-        }
         .confirmationDialog(
             "Run Pipeline?",
             isPresented: $showingPipelineConfirm,
@@ -103,19 +98,11 @@ struct AnalysisView: View {
                         .clipShape(Capsule())
                 }
 
-                Text("Scan a folder to detect talking, motion, and B-roll, plus branded title suggestions. Optional OpenAI AI Assist / cut hints live in Settings.")
+                Text("Sort the shoot: talking, motion, B-roll, and KEEP/DISCARD. Optional AI Assist / cut hints are in the Settings tab. Upload titles & thumbs happen later in YouTube Prep.")
                     .foregroundStyle(.secondary)
             }
 
             Spacer()
-
-            Button {
-                showingSettings = true
-            } label: {
-                Label("Settings", systemImage: "gearshape")
-            }
-            .buttonStyle(.bordered)
-            .tint(AppTheme.mclarenBlue)
         }
     }
 
@@ -276,9 +263,6 @@ struct AnalysisView: View {
         case .failed:
             Text(summary)
                 .foregroundStyle(.red)
-        case .notImplemented:
-            Text(summary)
-                .foregroundStyle(.secondary)
         case .complete:
             if summary.contains("Silent") || summary.contains("Static") {
                 Text(summary)

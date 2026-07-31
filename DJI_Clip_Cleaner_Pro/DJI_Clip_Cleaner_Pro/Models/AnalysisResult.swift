@@ -3,7 +3,6 @@ import Foundation
 enum AnalysisStatus: String, Sendable {
     case pending = "Pending"
     case running = "Detecting..."
-    case notImplemented = "Not Yet Implemented"
     case complete = "Complete"
     case failed = "Failed"
 }

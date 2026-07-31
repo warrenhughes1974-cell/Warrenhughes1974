@@ -495,92 +495,40 @@ struct YouTubePrepView: View {
 
                 Divider()
 
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Emoticons")
-                            .fontWeight(.semibold)
-                        Spacer()
-                        if !brand.thumbnailEmojis.isEmpty {
-                            Text(brand.thumbnailEmojis.joined(separator: " "))
-                        }
-                        Button("Clear") {
-                            brand.clearThumbnailEmojis()
-                        }
-                        .buttonStyle(.bordered)
-                        .controlSize(.small)
-                        .disabled(brand.thumbnailEmojis.isEmpty)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Brand from Settings")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+
+                    HStack(spacing: 8) {
+                        Text(
+                            brand.thumbnailEmojis.isEmpty
+                                ? "No emoticons selected"
+                                : brand.thumbnailEmojis.joined(separator: " ")
+                        )
+                        .font(.title3)
+                        Text("· \(brand.emojiPosition.displayName)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
 
-                    LazyVGrid(
-                        columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8),
-                        spacing: 6
-                    ) {
-                        ForEach(ThumbnailEmojiOption.catalog) { option in
-                            let isSelected = brand.thumbnailEmojis.contains(option.symbol)
+                    BrandThumbnailPreview(
+                        title: viewModel.resolvedThumbnailText,
+                        usePinkTitles: brand.usePinkTitles,
+                        titlePinkRed: brand.titlePinkRed,
+                        titlePinkGreen: brand.titlePinkGreen,
+                        titlePinkBlue: brand.titlePinkBlue,
+                        titleScale: brand.titleScale,
+                        emojis: brand.thumbnailEmojis,
+                        emojiPosition: brand.emojiPosition,
+                        titleFont: brand.titleFont,
+                        useTextOutline: brand.useTextOutline
+                    )
 
-                            Button {
-                                brand.toggleThumbnailEmoji(option.symbol)
-                            } label: {
-                                Text(option.symbol)
-                                    .font(.system(size: 22))
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 6)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .fill(isSelected
-                                                  ? AppTheme.papaya.opacity(0.22)
-                                                  : AppTheme.softBlue.opacity(0.45))
-                                    )
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .stroke(
-                                                isSelected ? AppTheme.papaya : Color.clear,
-                                                lineWidth: 2
-                                            )
-                                    )
-                            }
-                            .buttonStyle(.plain)
-                            .help(option.name)
-                        }
-                    }
-
-                    Picker("Placement", selection: $brand.emojiPosition) {
-                        ForEach(ThumbnailEmojiPosition.allCases) { position in
-                            Text(position.displayName).tag(position)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .onChange(of: brand.emojiPosition) { _, _ in
-                        brand.save()
-                    }
-
-                    Text("After changing emoticons, Rank Thumbnails again so the pictures pick up the new look.")
+                    Text("Edit font, color, outline, emoticons, and placement in Settings → Brand & Thumbnails, then Rank Thumbnails again.")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
-
-                Divider()
-
-                Text("Brand Preview")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
-
-                BrandThumbnailPreview(
-                    title: viewModel.resolvedThumbnailText,
-                    usePinkTitles: brand.usePinkTitles,
-                    titlePinkRed: brand.titlePinkRed,
-                    titlePinkGreen: brand.titlePinkGreen,
-                    titlePinkBlue: brand.titlePinkBlue,
-                    titleScale: brand.titleScale,
-                    emojis: brand.thumbnailEmojis,
-                    emojiPosition: brand.emojiPosition,
-                    titleFont: brand.titleFont,
-                    useTextOutline: brand.useTextOutline
-                )
-
-                Text("Pick font, color, outline, and size in Settings → Brand & Thumbnails.")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
             }
             .padding(4)
         } label: {
@@ -688,13 +636,6 @@ struct YouTubePrepView: View {
         GroupBox {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 12) {
-                    Button("Rank Thumbnails") {
-                        viewModel.rankThumbnailOptions()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.papaya)
-                    .disabled(!viewModel.canRankThumbnails || viewModel.isWorking)
-
                     Button("Quick Thumbnail") {
                         viewModel.generateThumbnail()
                     }
@@ -727,11 +668,11 @@ struct YouTubePrepView: View {
                     .disabled(!viewModel.canGenerate || viewModel.isWorking)
                 }
 
-                Text("Tip: Confirm Story first. Rank Thumbnails punches up frames; with Vision enabled it also suggests overlay text from what’s actually in the shot.")
+                Text("Tip: Confirm Story first. Use Rank Thumbnails in Pick Your Thumbnail Picture (above). Generate Description writes from confirmed story fields.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
 
-                Text("Generate Description writes from your confirmed story fields. Copy ChatGPT Pack pastes those facts + transcript for a stronger cloud rewrite without inventing cast.")
+                Text("Copy ChatGPT Pack pastes those facts + transcript for a stronger cloud rewrite without inventing cast.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
