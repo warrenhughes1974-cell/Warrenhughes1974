@@ -495,7 +495,6 @@ final class YouTubePrepViewModel {
     }
 
     func confirmStoryReview() {
-        storyWarnings = validateStoryAnalysis()
         guard canConfirmStory, var analysis = storyAnalysis else {
             errorMessage = "Add a subject, summary, title idea, and thumbnail text before confirming."
             return
@@ -525,6 +524,7 @@ final class YouTubePrepViewModel {
             .filter { (2...4).contains($0.split(separator: " ").count) }
         analysis.tags = cleanCompletePhrases(analysis.tags)
         storyAnalysis = analysis
+        storyWarnings = validateStoryAnalysis()
 
         guard let firstTitle = analysis.titleIdeas.first,
               let firstThumbnail = analysis.thumbnailTextIdeas.first else {
@@ -563,10 +563,14 @@ final class YouTubePrepViewModel {
             warnings.append("Low confidence: verify every relationship against the transcript.")
         }
         if analysis.evidence.isEmpty {
-            warnings.append("No timestamp evidence was returned; verify the story manually.")
+            warnings.append("No model evidence matched the transcript exactly. Treat every generated relationship as unverified.")
         }
         if analysis.outcome.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             warnings.append("Outcome is unknown — add what ultimately happened.")
+        }
+        let effectiveChapters = parseChapters(storyChaptersText)
+        if effectiveChapters.isEmpty {
+            warnings.append("Generated chapter timing failed validation; add real timestamps or leave chapters blank.")
         }
         if analysis.domain == .travelDelay,
            !analysis.problemLocation.isEmpty,
@@ -761,6 +765,7 @@ final class YouTubePrepViewModel {
 
         return BrandSettingsValues(
             channelPrefix: base.channelPrefix,
+            channelContext: base.channelContext,
             seriesName: base.seriesName,
             defaultHook: base.defaultHook,
             titleFormat: base.titleFormat,

@@ -108,6 +108,15 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.39",
+            highlights: [
+                "Apple Intelligence evidence is now checked against the literal transcript; invented quotes/speaker labels are removed and confidence is capped.",
+                "Settings now stores private on-device Channel Context for correct names and pet roles (Coco is a dog; Brianna is a coworker) without assuming who traveled.",
+                "Story prompts explicitly separate travelers from family/pets mentioned as support, and use channel context only for identity/spelling.",
+                "Fake compressed chapter timelines are rejected instead of turning an 11-minute video into 0:00–1:20 chapters."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.38",
             highlights: [
                 "Apple Intelligence now analyzes each transcript entirely on-device into subject, goal, obstacle, origin, problem location, destination, outcome, evidence, and confidence.",
