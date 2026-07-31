@@ -107,6 +107,7 @@ enum OnDeviceStoryAnalysisService {
                     was in a location merely because it was mentioned. Distinguish
                     origin, destination, problem location, goal, obstacle, and
                     outcome. Preserve timestamps and explicitly mark unknown facts.
+                    Never invent dialogue or speaker labels.
                     """
                 )
 
@@ -116,6 +117,10 @@ enum OnDeviceStoryAnalysisService {
                     Extract only supported story events, location roles, goals,
                     obstacles, outcomes, people, and visual moments. Keep timestamp
                     evidence. Do not write YouTube copy yet. Stay under 120 words.
+
+                    Stable channel context (identity/spelling only; it is not proof
+                    that someone participated in this video):
+                    \(brand.channelContext)
 
                     \(section)
                     """
@@ -166,13 +171,21 @@ enum OnDeviceStoryAnalysisService {
                 Existing filename/hook (may be stale; use only if supported):
                 \(existingHook)
 
+                Stable channel context (use for identity, pet type, and correct
+                spelling only; never use it as evidence that someone traveled):
+                \(brand.channelContext)
+
                 Section summaries:
                 \(finalSummaries.enumerated().map { "SECTION \($0.offset + 1):\n\($0.element)" }.joined(separator: "\n\n"))
 
                 Requirements:
                 - Identify subject, goal, obstacle, origin, problem location,
                   destination, and outcome separately.
-                - Every important claim needs timestamp evidence.
+                - Evidence must be a verbatim transcript excerpt with its real
+                  timestamp. Never write reconstructed dialogue or speaker labels.
+                - Name a traveler only when the transcript explicitly says that
+                  person is joining/taking the trip. A person or pet mentioned as
+                  emotional support, at home, or in a car is not a traveler.
                 - Confidence is 0–100 based on transcript support.
                 - Give 4–6 visual targets that could be seen in this video.
                 - Give 3–5 factual title ideas.
@@ -184,7 +197,10 @@ enum OnDeviceStoryAnalysisService {
                 generating: GeneratedStoryAnalysis.self
             )
 
-            return response.content.storyAnalysis
+            return validated(
+                response.content.storyAnalysis,
+                against: transcript
+            )
         }
         #endif
 
@@ -234,7 +250,9 @@ enum OnDeviceStoryAnalysisService {
 
     private static func timedTranscriptSections(_ transcript: Transcript) -> [String] {
         let duration = transcript.segments.last?.endTime ?? 0
-        let window: TimeInterval = 90
+        // Fine-grained windows give the model real evidence/chapter timestamps
+        // instead of one coarse timestamp for a 90-second block.
+        let window: TimeInterval = 20
         var lines: [String] = []
         var start: TimeInterval = 0
 
@@ -270,6 +288,128 @@ enum OnDeviceStoryAnalysisService {
         }
 
         return sections
+    }
+
+    private static func validated(
+        _ proposed: StoryAnalysis,
+        against transcript: Transcript
+    ) -> StoryAnalysis {
+        var result = proposed
+        let transcriptText = normalized(transcript.fullText)
+        result.evidence = proposed.evidence.filter {
+            evidenceIsSupported(
+                $0,
+                transcriptText: transcriptText,
+                transcript: transcript
+            )
+        }
+
+        // Fabricated evidence is a strong signal that all semantic roles need
+        // human review. Keep the draft editable, but remove false confidence.
+        if result.evidence.isEmpty {
+            result.confidence = min(result.confidence, 35)
+        } else if result.evidence.count < proposed.evidence.count {
+            result.confidence = min(result.confidence, 55)
+        }
+
+        let duration = transcript.segments.last?.endTime ?? 0
+        result.chapters = proposed.chapters
+            .filter {
+                $0.startTime >= 0
+                    && $0.startTime <= duration
+                    && !$0.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    && chapterIsSupported($0, transcript: transcript)
+            }
+            .sorted { $0.startTime < $1.startTime }
+
+        // Reject a fake compressed timeline (for example all chapters in the
+        // first 80 seconds of an 11-minute video).
+        if duration >= 300,
+           (result.chapters.last?.startTime ?? 0) < duration * 0.35 {
+            result.chapters = []
+            result.confidence = min(result.confidence, 55)
+        }
+
+        return result
+    }
+
+    private static func evidenceIsSupported(
+        _ evidence: String,
+        transcriptText: String,
+        transcript: Transcript? = nil
+    ) -> Bool {
+        guard let timestamp = evidenceTimestamp(evidence) else { return false }
+        let quote = evidence
+            .replacingOccurrences(
+                of: #"\[?\d{1,2}:\d{2}(?::\d{2})?\]?"#,
+                with: " ",
+                options: .regularExpression
+            )
+        let normalizedQuote = normalized(quote)
+        guard normalizedQuote.split(separator: " ").count >= 5 else {
+            return false
+        }
+
+        guard let transcript else {
+            return transcriptText.contains(normalizedQuote)
+        }
+        let nearby = normalized(
+            transcript.text(
+                overlapping: max(timestamp - 8, 0),
+                duration: 30
+            )
+        )
+        return nearby.contains(normalizedQuote)
+    }
+
+    private static func evidenceTimestamp(_ evidence: String) -> TimeInterval? {
+        guard let match = evidence.range(
+            of: #"\d{1,2}:\d{2}(?::\d{2})?"#,
+            options: .regularExpression
+        ) else { return nil }
+
+        let parts = evidence[match].split(separator: ":").compactMap { Double($0) }
+        if parts.count == 2 {
+            return (parts[0] * 60) + parts[1]
+        }
+        if parts.count == 3 {
+            return (parts[0] * 3_600) + (parts[1] * 60) + parts[2]
+        }
+        return nil
+    }
+
+    private static func chapterIsSupported(
+        _ chapter: StoryChapterCandidate,
+        transcript: Transcript
+    ) -> Bool {
+        let nearby = normalized(
+            transcript.text(
+                overlapping: max(chapter.startTime - 12, 0),
+                duration: 45
+            )
+        )
+        guard !nearby.isEmpty else { return false }
+
+        let generic: Set<String> = [
+            "the", "a", "an", "and", "or", "to", "from", "at", "in",
+            "our", "my", "we", "first", "second", "next", "final"
+        ]
+        let nearbyWords = Set(nearby.split(separator: " ").map(String.init))
+        let titleWords = normalized(chapter.title)
+            .split(separator: " ")
+            .map(String.init)
+            .filter { $0.count >= 4 && !generic.contains($0) }
+
+        guard !titleWords.isEmpty else { return false }
+        return titleWords.contains { nearbyWords.contains($0) }
+    }
+
+    private static func normalized(_ value: String) -> String {
+        value
+            .lowercased()
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
     }
 }
 
@@ -341,7 +481,7 @@ private struct GeneratedStoryAnalysis {
     @Guide(description: "Natural two-to-four sentence story summary")
     var summary: String
 
-    @Guide(description: "Short timestamped transcript quotes supporting important facts")
+    @Guide(description: "Verbatim timestamped transcript excerpts; never reconstructed dialogue or speaker labels")
     var evidence: [String]
 
     @Guide(description: "Overall factual confidence from 0 through 100")

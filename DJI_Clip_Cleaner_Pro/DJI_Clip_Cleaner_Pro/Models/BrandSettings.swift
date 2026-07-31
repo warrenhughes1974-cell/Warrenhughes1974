@@ -3,6 +3,7 @@ import Observation
 
 struct BrandSettingsValues: Sendable {
     let channelPrefix: String
+    let channelContext: String
     let seriesName: String
     let defaultHook: String
     let titleFormat: BrandTitleFormat
@@ -43,6 +44,9 @@ final class BrandSettings {
     private static let storageKey = "HughesClipPrep.BrandSettings"
 
     var channelPrefix = "Hughes"
+    var channelContext = """
+    Fun Now Run Later is Warren and Tina's family channel. Gabie and Domi are family members. Coco, Penny, Ramsey, Sadie, Alani, and Ryder are pets/dogs, not human travelers. Brianna is Warren's coworker. Never assume a person or pet is traveling unless the transcript explicitly says so.
+    """
     var seriesName = ""
     var defaultHook = ""
     var selectedPreset: BrandPreset = .custom
@@ -70,6 +74,7 @@ final class BrandSettings {
     var values: BrandSettingsValues {
         BrandSettingsValues(
             channelPrefix: channelPrefix.trimmingCharacters(in: .whitespacesAndNewlines),
+            channelContext: channelContext.trimmingCharacters(in: .whitespacesAndNewlines),
             seriesName: seriesName.trimmingCharacters(in: .whitespacesAndNewlines),
             defaultHook: defaultHook.trimmingCharacters(in: .whitespacesAndNewlines),
             titleFormat: titleFormat,
@@ -149,6 +154,7 @@ final class BrandSettings {
     func save() {
         let payload: [String: Any] = [
             "channelPrefix": channelPrefix,
+            "channelContext": channelContext,
             "seriesName": seriesName,
             "defaultHook": defaultHook,
             "selectedPreset": selectedPreset.rawValue,
@@ -171,6 +177,7 @@ final class BrandSettings {
         }
 
         channelPrefix = payload["channelPrefix"] as? String ?? channelPrefix
+        channelContext = payload["channelContext"] as? String ?? channelContext
         seriesName = payload["seriesName"] as? String ?? seriesName
         defaultHook = payload["defaultHook"] as? String ?? defaultHook
 

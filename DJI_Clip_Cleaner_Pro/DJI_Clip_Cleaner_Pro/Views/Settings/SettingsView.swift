@@ -97,6 +97,22 @@ struct SettingsView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
+                    Text("Channel Context — People, Pets & Name Corrections")
+                        .fontWeight(.semibold)
+                    TextEditor(text: $brand.channelContext)
+                        .frame(minHeight: 90)
+                        .padding(6)
+                        .background(AppTheme.softBlue)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .onChange(of: brand.channelContext) { _, _ in
+                            brand.save()
+                        }
+                    Text("Used only by Apple Intelligence on this Mac. Add stable facts such as “Coco is a dog” and correct spellings such as “Brianna.” It must never decide who traveled without transcript evidence.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
                     Text("Series Name")
                         .fontWeight(.semibold)
                     TextField("Halloween Store Hunt", text: $brand.seriesName)
