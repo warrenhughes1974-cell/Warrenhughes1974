@@ -361,10 +361,10 @@ enum ThumbnailService {
         ]
 
         if useOutline {
-            // Offset-ring outlines avoid miter “spike” corners from strokeWidth.
-            let blackRadius = max(font.pointSize * 0.12, 3.5)
-            let redRadius = max(font.pointSize * 0.07, 2.0)
-            let red = NSColor(calibratedRed: 0.85, green: 0.10, blue: 0.12, alpha: 1.0)
+            // Thick YouTube-style outline: wide black outer ring, then white
+            // inner ring, then the fill color. Offset rings avoid miter spikes.
+            let blackRadius = max(font.pointSize * 0.22, 8.0)
+            let whiteRadius = max(font.pointSize * 0.12, 4.5)
 
             drawTitleRing(
                 title,
@@ -379,8 +379,8 @@ enum ThumbnailService {
                 title,
                 in: rect,
                 font: font,
-                color: red,
-                radius: redRadius,
+                color: .white,
+                radius: whiteRadius,
                 paragraph: paragraph,
                 options: drawOptions
             )
@@ -423,8 +423,8 @@ enum ThumbnailService {
             .paragraphStyle: paragraph
         ]
 
-        // Dense enough for a solid outline without looking stepped.
-        let steps = 24
+        // More steps for thick outlines so the ring stays solid, not faceted.
+        let steps = max(36, Int(radius * 4))
         for step in 0..<steps {
             let angle = (CGFloat(step) / CGFloat(steps)) * CGFloat.pi * 2
             let offsetRect = rect.offsetBy(

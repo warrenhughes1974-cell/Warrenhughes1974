@@ -23,7 +23,7 @@ struct BrandThumbnailPreview: View {
     }
 
     private var outlineWidth: CGFloat {
-        max(fontSize * 0.10, 1.8)
+        max(fontSize * 0.20, 3.2)
     }
 
     private var titleColor: Color {
@@ -157,9 +157,9 @@ struct BrandThumbnailPreview: View {
 
         if useTextOutline {
             ZStack {
-                // Approximate black + red rings in the SwiftUI preview.
-                ForEach(0..<12, id: \.self) { step in
-                    let angle = Double(step) / 12.0 * Double.pi * 2
+                // Approximate thick black outer + white inner rings in preview.
+                ForEach(0..<16, id: \.self) { step in
+                    let angle = Double(step) / 16.0 * Double.pi * 2
                     base
                         .foregroundStyle(.black)
                         .offset(
@@ -167,11 +167,11 @@ struct BrandThumbnailPreview: View {
                             y: CGFloat(sin(angle)) * outlineWidth
                         )
                 }
-                ForEach(0..<12, id: \.self) { step in
-                    let angle = Double(step) / 12.0 * Double.pi * 2
+                ForEach(0..<16, id: \.self) { step in
+                    let angle = Double(step) / 16.0 * Double.pi * 2
                     let radius = outlineWidth * 0.55
                     base
-                        .foregroundStyle(Color(red: 0.85, green: 0.10, blue: 0.12))
+                        .foregroundStyle(.white)
                         .offset(
                             x: CGFloat(cos(angle)) * radius,
                             y: CGFloat(sin(angle)) * radius

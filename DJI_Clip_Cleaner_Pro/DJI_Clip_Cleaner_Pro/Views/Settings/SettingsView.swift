@@ -290,13 +290,13 @@ struct SettingsView: View {
                         }
                     }
 
-                    Toggle("Black + red text outline", isOn: $brand.useTextOutline)
+                    Toggle("Thick black + white text outline", isOn: $brand.useTextOutline)
                         .onChange(of: brand.useTextOutline) { _, _ in
                             brand.save()
                         }
 
                     Text(brand.useTextOutline
-                         ? "Fill uses your color above. Outline is black outside with a red inner ring — the classic pop look."
+                         ? "Fill uses your color above. Outline is a thick black outer ring with a white inner ring."
                          : "Outline off: soft black shadow over the dark fade only.")
                         .font(.caption)
                         .foregroundStyle(.secondary)

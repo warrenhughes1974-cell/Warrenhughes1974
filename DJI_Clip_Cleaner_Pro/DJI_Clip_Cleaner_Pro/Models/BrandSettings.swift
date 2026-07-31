@@ -66,7 +66,7 @@ final class BrandSettings {
     var thumbnailEmojis: [String] = []
     var emojiPosition: ThumbnailEmojiPosition = .topRight
     var titleFont: ThumbnailTitleFont = .impact
-    /// Classic YouTube look: black outer ring + red inner ring around fill color.
+    /// Classic YouTube look: thick black outer ring + white inner ring around fill.
     var useTextOutline = true
 
     static let minimumTitleScale = 0.6
