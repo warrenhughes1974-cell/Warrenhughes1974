@@ -108,6 +108,8 @@ struct SettingsView: View {
                     .onChange(of: openAI.useCloudStory) { _, _ in openAI.save() }
                 Toggle("Use OpenAI for description / tags / title polish", isOn: $openAI.useCloudCopy)
                     .onChange(of: openAI.useCloudCopy) { _, _ in openAI.save() }
+                Toggle("Use OpenAI Vision for thumbnail picks + overlay text", isOn: $openAI.useVisionThumbnails)
+                    .onChange(of: openAI.useVisionThumbnails) { _, _ in openAI.save() }
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Chat model")
@@ -126,7 +128,7 @@ struct SettingsView: View {
                 )
                 .font(.caption)
 
-                Text("Uses your OpenAI account billing. Transcripts and story text are sent to OpenAI when these toggles are on.")
+                Text("Uses your OpenAI account billing. Transcripts, story text, and thumbnail frames are sent to OpenAI when these toggles are on.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }

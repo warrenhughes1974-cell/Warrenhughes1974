@@ -305,7 +305,12 @@ final class YouTubePrepViewModel {
         rankedThumbnails = []
         selectedThumbnailID = nil
         thumbnailScanProgress = 0
-        statusMessage = "Scoring about 60 frames for story matches and sharp alternatives..."
+
+        let openAI = OpenAISettings.shared
+        let useVision = openAI.useVisionThumbnails && openAI.hasAPIKey
+        statusMessage = useVision
+            ? "Scoring frames, then OpenAI Vision picks the clickiest thumbnails…"
+            : "Scoring about 60 frames for story matches and sharp alternatives..."
 
         Task {
             do {
@@ -324,9 +329,17 @@ final class YouTubePrepViewModel {
                     brand: brand,
                     outputFolder: folder,
                     storyBrief: brief,
+                    storySummary: storyAnalysis?.summary ?? brief.summary,
+                    openAIAPIKey: useVision ? openAI.apiKey() : nil,
+                    useVisionRerank: useVision,
+                    openAIModel: openAI.values.model,
                     progress: { scanned, total in
                         self.thumbnailScanProgress = Double(scanned) / Double(max(total, 1))
-                        self.statusMessage = "Scoring frame \(scanned) of \(total)..."
+                        if useVision, scanned >= total {
+                            self.statusMessage = "OpenAI Vision is ranking thumbnail frames…"
+                        } else {
+                            self.statusMessage = "Scoring frame \(scanned) of \(total)..."
+                        }
                     }
                 )
 
@@ -334,7 +347,21 @@ final class YouTubePrepViewModel {
                 hasRankedThumbnails = true
                 selectedThumbnailID = ranked.first?.id
                 thumbnailPath = ranked.first?.imagePath ?? ""
-                statusMessage = "Top \(ranked.count) story-matched thumbnails ready — click one to select it."
+
+                if let overlayLine = ranked.first?.reasons.first(where: {
+                    $0.hasPrefix("Overlay: ")
+                }) {
+                    let overlay = String(overlayLine.dropFirst("Overlay: ".count))
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !overlay.isEmpty {
+                        thumbnailText = overlay
+                        hasEditedThumbnailText = true
+                    }
+                }
+
+                statusMessage = useVision
+                    ? "Top \(ranked.count) Vision-ranked thumbnails ready — punchier frames + AI overlay text."
+                    : "Top \(ranked.count) story-matched thumbnails ready — click one to select it."
                 // Deliberately no Finder reveal here. This is an in-app picker,
                 // and activating Finder would cover the results the user is
                 // meant to choose from.

@@ -1,4 +1,5 @@
 import AVFoundation
+import CoreImage
 import Foundation
 
 #if canImport(AppKit)
@@ -106,15 +107,20 @@ enum ThumbnailService {
                 return false
             }
 
+            // Mild contrast/saturation/sharpen so Filmora stills don't look flat.
+            let punched = punchUp(frame)
+
+            // Slight zoom-in for a tighter YouTube composition.
             let frameRect = aspectFillRect(
-                imageSize: CGSize(width: frame.width, height: frame.height),
-                in: CGRect(origin: .zero, size: canvasSize)
+                imageSize: CGSize(width: punched.width, height: punched.height),
+                in: CGRect(origin: .zero, size: canvasSize),
+                zoom: 1.14
             )
 
             context.saveGState()
             context.addRect(CGRect(origin: .zero, size: canvasSize))
             context.clip()
-            context.draw(frame, in: frameRect)
+            context.draw(punched, in: frameRect)
             context.restoreGState()
 
             let displayTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -172,9 +178,8 @@ enum ThumbnailService {
                     titleFont: brand.titleFont
                 )
 
-                // Size the scrim to the text so short text gets a tight band and long
-                // text still stays readable instead of overflowing a fixed bar.
-                let barHeight = min(textSize.height + (inset * 1.6), canvasSize.height * 0.82)
+                // Keep the fade tight to the text so more of the hero shot shows.
+                let barHeight = min(textSize.height + (inset * 1.35), canvasSize.height * 0.52)
                 let barRect = CGRect(
                     x: 0,
                     y: 0,
@@ -184,7 +189,7 @@ enum ThumbnailService {
 
                 let gradientColors = [
                     NSColor.black.withAlphaComponent(0.0).cgColor,
-                    NSColor.black.withAlphaComponent(0.88).cgColor
+                    NSColor.black.withAlphaComponent(0.62).cgColor
                 ] as CFArray
 
                 if let gradient = CGGradient(
@@ -437,7 +442,8 @@ enum ThumbnailService {
 
     private static func aspectFillRect(
         imageSize: CGSize,
-        in bounds: CGRect
+        in bounds: CGRect,
+        zoom: CGFloat = 1.0
     ) -> CGRect {
         guard imageSize.width > 0, imageSize.height > 0 else {
             return bounds
@@ -445,7 +451,7 @@ enum ThumbnailService {
 
         let widthScale = bounds.width / imageSize.width
         let heightScale = bounds.height / imageSize.height
-        let scale = max(widthScale, heightScale)
+        let scale = max(widthScale, heightScale) * max(zoom, 1.0)
 
         let scaledSize = CGSize(
             width: imageSize.width * scale,
@@ -458,6 +464,27 @@ enum ThumbnailService {
             width: scaledSize.width,
             height: scaledSize.height
         )
+    }
+
+    /// Mild YouTube-style punch: contrast, saturation, and luminance sharpen.
+    private static func punchUp(_ image: CGImage) -> CGImage {
+        let input = CIImage(cgImage: image)
+        guard let color = CIFilter(name: "CIColorControls") else { return image }
+        color.setValue(input, forKey: kCIInputImageKey)
+        color.setValue(0.03, forKey: kCIInputBrightnessKey)
+        color.setValue(1.14, forKey: kCIInputContrastKey)
+        color.setValue(1.22, forKey: kCIInputSaturationKey)
+
+        guard let colored = color.outputImage,
+              let sharpen = CIFilter(name: "CISharpenLuminance") else {
+            return image
+        }
+        sharpen.setValue(colored, forKey: kCIInputImageKey)
+        sharpen.setValue(0.55, forKey: kCIInputSharpnessKey)
+
+        guard let sharp = sharpen.outputImage else { return image }
+        let context = CIContext(options: [.useSoftwareRenderer: false])
+        return context.createCGImage(sharp, from: sharp.extent) ?? image
     }
 
     #endif

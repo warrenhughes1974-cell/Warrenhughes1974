@@ -4,6 +4,7 @@ struct OpenAISettingsValues: Sendable {
     let useWhisper: Bool
     let useCloudStory: Bool
     let useCloudCopy: Bool
+    let useVisionThumbnails: Bool
     let model: String
 }
 
@@ -18,6 +19,8 @@ final class OpenAISettings {
     var useWhisper = true
     var useCloudStory = true
     var useCloudCopy = true
+    /// GPT Vision reranks thumbnail frames and suggests overlay text.
+    var useVisionThumbnails = true
     /// Cheap default; user can switch to gpt-4o in Settings for stronger copy.
     var model = "gpt-4o-mini"
 
@@ -33,6 +36,7 @@ final class OpenAISettings {
             useWhisper: useWhisper,
             useCloudStory: useCloudStory,
             useCloudCopy: useCloudCopy,
+            useVisionThumbnails: useVisionThumbnails,
             model: model.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                 ? "gpt-4o-mini"
                 : model.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -79,6 +83,7 @@ final class OpenAISettings {
             "useWhisper": useWhisper,
             "useCloudStory": useCloudStory,
             "useCloudCopy": useCloudCopy,
+            "useVisionThumbnails": useVisionThumbnails,
             "model": model
         ]
         UserDefaults.standard.set(payload, forKey: Self.storageKey)
@@ -91,6 +96,7 @@ final class OpenAISettings {
         useWhisper = payload["useWhisper"] as? Bool ?? useWhisper
         useCloudStory = payload["useCloudStory"] as? Bool ?? useCloudStory
         useCloudCopy = payload["useCloudCopy"] as? Bool ?? useCloudCopy
+        useVisionThumbnails = payload["useVisionThumbnails"] as? Bool ?? useVisionThumbnails
         model = payload["model"] as? String ?? model
     }
 }

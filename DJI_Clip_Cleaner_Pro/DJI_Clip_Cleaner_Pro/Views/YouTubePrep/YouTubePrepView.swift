@@ -86,7 +86,7 @@ struct YouTubePrepView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                Text("Tip: Add an OpenAI API key in Settings to use Whisper + GPT inside this tab. Without a key, Apple on-device tools are used.")
+                Text("Tip: Add an OpenAI API key in Settings for Whisper, GPT story/description, and Vision thumbnail picks. Without a key, Apple on-device tools are used.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
 
@@ -414,7 +414,7 @@ struct YouTubePrepView: View {
     private var thumbnailPicksSection: some View {
         GroupBox {
             VStack(alignment: .leading, spacing: 12) {
-                Text("This is where you pick the picture. Click Rank Thumbnails, then click one of the scored frames below.")
+                Text("This is where you pick the picture. Rank Thumbnails punches up the frame; with OpenAI Vision on, it also reranks picks and suggests overlay text.")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(AppTheme.carbon)
                     .padding(10)
@@ -727,7 +727,7 @@ struct YouTubePrepView: View {
                     .disabled(!viewModel.canGenerate || viewModel.isWorking)
                 }
 
-                Text("Tip: Confirm Story first. Rank Thumbnails shows story matches first while preserving additional sharp choices.")
+                Text("Tip: Confirm Story first. Rank Thumbnails punches up frames; with Vision enabled it also suggests overlay text from what’s actually in the shot.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
 

@@ -13,6 +13,17 @@ struct OpenAIUploadCopy: Sendable {
     let thumbnailText: String
 }
 
+struct OpenAIVisionThumbnailPick: Sendable {
+    /// Index into the candidate list that was sent to Vision (0-based).
+    let localIndex: Int
+    let overlayText: String
+    let reason: String
+}
+
+struct OpenAIVisionThumbnailPlan: Sendable {
+    let picks: [OpenAIVisionThumbnailPick]
+}
+
 /// Cloud OpenAI helpers for Whisper transcription and GPT story/copy.
 /// Requires a user-provided API key stored in Keychain.
 enum OpenAIClient {
@@ -190,6 +201,79 @@ enum OpenAIClient {
         return try decodeUploadCopy(from: content)
     }
 
+    // MARK: - Vision thumbnails
+
+    /// Reranks local thumbnail candidates and suggests 2–4 word overlays that
+    /// match what is actually visible in each frame.
+    static func rankThumbnailFrames(
+        jpegImages: [Data],
+        storySummary: String,
+        domain: String,
+        currentOverlay: String,
+        model: String,
+        apiKey: String
+    ) async throws -> OpenAIVisionThumbnailPlan {
+        guard !apiKey.isEmpty else { throw ServiceError.missingAPIKey }
+        guard !jpegImages.isEmpty else { throw ServiceError.emptyResult }
+
+        var content: [[String: Any]] = [
+            [
+                "type": "text",
+                "text": """
+                You are a YouTube thumbnail director for a real travel/vlog channel.
+                Rank these \(jpegImages.count) frames from best to worst click-through.
+                Prefer emotion, clear subject, strong composition, and story fit.
+                Avoid blurry, dull, empty, or face-filling frames.
+
+                Story type: \(domain)
+                Story summary: \(storySummary)
+                Current overlay idea: \(currentOverlay)
+
+                Return ONLY JSON:
+                {
+                  "picks": [
+                    {
+                      "index": 0,
+                      "overlayText": "2 TO 4 WORDS",
+                      "reason": "short reason"
+                    }
+                  ]
+                }
+                - index is 0-based into the images below (image 1 = index 0).
+                - Include every image exactly once, best first.
+                - overlayText must match what is visible + the story. Uppercase OK.
+                - Never invent people who are not on this trip.
+                """
+            ]
+        ]
+
+        for (offset, jpeg) in jpegImages.enumerated() {
+            let base64 = jpeg.base64EncodedString()
+            content.append([
+                "type": "text",
+                "text": "Image \(offset + 1) (index \(offset)):"
+            ])
+            content.append([
+                "type": "image_url",
+                "image_url": [
+                    "url": "data:image/jpeg;base64,\(base64)",
+                    "detail": "low"
+                ]
+            ])
+        }
+
+        // Vision needs a model that accepts images; fall back to gpt-4o-mini.
+        let visionModel = model.lowercased().contains("gpt-4o") ? model : "gpt-4o-mini"
+        let raw = try await chatCompletion(
+            model: visionModel,
+            apiKey: apiKey,
+            system: "You pick clickable YouTube thumbnails. JSON only.",
+            userContent: content,
+            jsonMode: true
+        )
+        return try decodeVisionPlan(from: raw, imageCount: jpegImages.count)
+    }
+
     // MARK: - HTTP
 
     private static func chatCompletion(
@@ -199,18 +283,34 @@ enum OpenAIClient {
         user: String,
         jsonMode: Bool
     ) async throws -> String {
+        try await chatCompletion(
+            model: model,
+            apiKey: apiKey,
+            system: system,
+            userContent: [["type": "text", "text": user]],
+            jsonMode: jsonMode
+        )
+    }
+
+    private static func chatCompletion(
+        model: String,
+        apiKey: String,
+        system: String,
+        userContent: [[String: Any]],
+        jsonMode: Bool
+    ) async throws -> String {
         var request = URLRequest(url: chatURL)
         request.httpMethod = "POST"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.timeoutInterval = 120
+        request.timeoutInterval = 180
 
         var body: [String: Any] = [
             "model": model,
             "temperature": 0.3,
             "messages": [
                 ["role": "system", "content": system],
-                ["role": "user", "content": user]
+                ["role": "user", "content": userContent]
             ]
         ]
         if jsonMode {
@@ -388,6 +488,49 @@ enum OpenAIClient {
             hashtags: stringArray(root["hashtags"]),
             thumbnailText: stringValue(root["thumbnailText"])
         )
+    }
+
+    private static func decodeVisionPlan(
+        from json: String,
+        imageCount: Int
+    ) throws -> OpenAIVisionThumbnailPlan {
+        guard let data = json.data(using: .utf8),
+              let root = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let picksJSON = root["picks"] as? [[String: Any]] else {
+            throw ServiceError.decodingFailed
+        }
+
+        var seen = Set<Int>()
+        var picks: [OpenAIVisionThumbnailPick] = []
+        for item in picksJSON {
+            let index = intValue(item["index"]) ?? -1
+            guard index >= 0, index < imageCount, !seen.contains(index) else { continue }
+            seen.insert(index)
+            let overlay = stringValue(item["overlayText"]).uppercased()
+            let words = overlay.split(separator: " ").count
+            let safeOverlay = (2...4).contains(words) ? overlay : stringValue(item["overlayText"])
+            picks.append(
+                OpenAIVisionThumbnailPick(
+                    localIndex: index,
+                    overlayText: safeOverlay,
+                    reason: stringValue(item["reason"])
+                )
+            )
+        }
+
+        // Append any missing indices so we never drop local winners.
+        for index in 0..<imageCount where !seen.contains(index) {
+            picks.append(
+                OpenAIVisionThumbnailPick(
+                    localIndex: index,
+                    overlayText: "",
+                    reason: "Kept as local alternative"
+                )
+            )
+        }
+
+        guard !picks.isEmpty else { throw ServiceError.emptyResult }
+        return OpenAIVisionThumbnailPlan(picks: picks)
     }
 
     private static func stringValue(_ any: Any?) -> String {

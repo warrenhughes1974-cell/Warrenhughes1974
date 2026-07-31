@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.47",
+            highlights: [
+                "Thumbnails get a local punch-up (contrast/saturation/sharpen), tighter crop, and a lighter bottom fade so the picture pops more.",
+                "OpenAI Vision can rerank Rank Thumbnails picks and suggest overlay text that matches what’s actually in the frame (Settings toggle).",
+                "Winner frames decode at 1920 before branding for a sharper 1280×720 JPEG."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.46",
             highlights: [
                 "Thumbnail outline is now a thick black outer ring plus a thick white inner ring around your fill color — much heavier YouTube-style pop."

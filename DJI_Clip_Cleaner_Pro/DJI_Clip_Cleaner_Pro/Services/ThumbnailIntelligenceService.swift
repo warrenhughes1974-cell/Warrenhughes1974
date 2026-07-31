@@ -61,6 +61,10 @@ enum ThumbnailIntelligenceService {
         brand: BrandSettingsValues,
         outputFolder: URL,
         storyBrief: StoryBrief? = nil,
+        storySummary: String = "",
+        openAIAPIKey: String? = nil,
+        useVisionRerank: Bool = false,
+        openAIModel: String = "gpt-4o-mini",
         progress: (@MainActor (Int, Int) -> Void)? = nil
     ) async throws -> [RankedThumbnailCandidate] {
         let asset = AVURLAsset(url: videoURL)
@@ -201,16 +205,105 @@ enum ThumbnailIntelligenceService {
             if ranked.count >= topCount { break }
         }
 
-        // Only the frames that actually won get decoded at full quality.
+        // Decode winners larger than 1280 so punch-up/downscale stays sharp.
         let full = AVAssetImageGenerator(asset: asset)
         full.appliesPreferredTrackTransform = true
-        full.maximumSize = CGSize(width: 1_280, height: 720)
+        full.maximumSize = CGSize(width: 1_920, height: 1_080)
         full.requestedTimeToleranceBefore = CMTime(seconds: 0.15, preferredTimescale: 600)
         full.requestedTimeToleranceAfter = CMTime(seconds: 0.15, preferredTimescale: 600)
 
+        // Optional OpenAI Vision rerank + overlay suggestions on the local top picks.
+        var orderedForRender = ranked
+        var overlayByIndex: [Int: String] = [:]
+        var visionReasonsByIndex: [Int: String] = [:]
+
+        if useVisionRerank,
+           let apiKey = openAIAPIKey,
+           !apiKey.isEmpty,
+           !ranked.isEmpty {
+            if let progress {
+                await progress(sampleCount, sampleCount)
+            }
+
+            var jpegPayloads: [Data] = []
+            var validLocal: [
+                (
+                    time: TimeInterval,
+                    score: Double,
+                    storyMatch: Double,
+                    reasons: [String]
+                )
+            ] = []
+
+            for item in ranked.prefix(6) {
+                let time = CMTime(seconds: item.time, preferredTimescale: 600)
+                guard let frame = try? await capture(generator: scout, at: time),
+                      let jpeg = jpegData(from: frame, quality: 0.72) else {
+                    continue
+                }
+                jpegPayloads.append(jpeg)
+                validLocal.append(item)
+            }
+
+            if jpegPayloads.count >= 2 {
+                do {
+                    let plan = try await OpenAIClient.rankThumbnailFrames(
+                        jpegImages: jpegPayloads,
+                        storySummary: storySummary.isEmpty
+                            ? (storyBrief?.summary ?? thumbnailText)
+                            : storySummary,
+                        domain: storyBrief?.domain.displayName ?? "General",
+                        currentOverlay: thumbnailText,
+                        model: openAIModel,
+                        apiKey: apiKey
+                    )
+
+                    var remapped: [
+                        (
+                            time: TimeInterval,
+                            score: Double,
+                            storyMatch: Double,
+                            reasons: [String]
+                        )
+                    ] = []
+                    for (pickOffset, pick) in plan.picks.enumerated() {
+                        guard pick.localIndex >= 0,
+                              pick.localIndex < validLocal.count else { continue }
+                        let source = validLocal[pick.localIndex]
+                        var reasons = source.reasons
+                        if !pick.reason.isEmpty {
+                            reasons = ["AI: \(pick.reason)"] + reasons
+                        }
+                        remapped.append(
+                            (
+                                time: source.time,
+                                score: source.score,
+                                storyMatch: source.storyMatch,
+                                reasons: reasons
+                            )
+                        )
+                        if !pick.overlayText.isEmpty {
+                            overlayByIndex[pickOffset] = pick.overlayText
+                        }
+                        visionReasonsByIndex[pickOffset] = pick.reason
+                    }
+                    if remapped.count == validLocal.count {
+                        // Keep any local winners Vision didn't see (beyond top 6).
+                        let keptTimes = Set(remapped.map(\.time))
+                        for leftover in ranked where !keptTimes.contains(leftover.time) {
+                            remapped.append(leftover)
+                        }
+                        orderedForRender = remapped
+                    }
+                } catch {
+                    // Vision is a boost, not a hard dependency.
+                }
+            }
+        }
+
         var results: [RankedThumbnailCandidate] = []
 
-        for (offset, item) in ranked.enumerated() {
+        for (offset, item) in orderedForRender.enumerated() {
             let rank = offset + 1
             let time = CMTime(seconds: item.time, preferredTimescale: 600)
 
@@ -222,12 +315,24 @@ enum ThumbnailIntelligenceService {
                 "ranked_\(rank)_\(Int(item.time.rounded()))s.jpg"
             )
 
+            let overlay = overlayByIndex[offset]?.trimmingCharacters(in: .whitespacesAndNewlines)
+            let titleForFrame = (overlay?.isEmpty == false) ? overlay! : thumbnailText
+
             try await ThumbnailService.generate(
                 from: frame,
-                title: thumbnailText,
+                title: titleForFrame,
                 brand: brand,
                 outputURL: outputURL
             )
+
+            var reasons = item.reasons
+            if let visionReason = visionReasonsByIndex[offset], !visionReason.isEmpty,
+               !reasons.contains(where: { $0.hasPrefix("AI:") }) {
+                reasons.insert("AI: \(visionReason)", at: 0)
+            }
+            if overlay?.isEmpty == false {
+                reasons.insert("Overlay: \(titleForFrame)", at: 0)
+            }
 
             results.append(
                 RankedThumbnailCandidate(
@@ -235,7 +340,7 @@ enum ThumbnailIntelligenceService {
                     rank: rank,
                     score: Int((item.score * 100).rounded()),
                     timeSeconds: item.time,
-                    reasons: item.reasons,
+                    reasons: reasons,
                     imagePath: outputURL.path,
                     isStoryMatch: item.storyMatch >= 0.18
                 )
@@ -248,6 +353,23 @@ enum ThumbnailIntelligenceService {
 
         return results
     }
+
+    #if canImport(AppKit)
+    private static func jpegData(from image: CGImage, quality: CGFloat) -> Data? {
+        let nsImage = NSImage(
+            cgImage: image,
+            size: NSSize(width: image.width, height: image.height)
+        )
+        guard let tiff = nsImage.tiffRepresentation,
+              let rep = NSBitmapImageRep(data: tiff) else {
+            return nil
+        }
+        return rep.representation(
+            using: .jpeg,
+            properties: [.compressionFactor: quality]
+        )
+    }
+    #endif
 
     // MARK: - Capture
 
