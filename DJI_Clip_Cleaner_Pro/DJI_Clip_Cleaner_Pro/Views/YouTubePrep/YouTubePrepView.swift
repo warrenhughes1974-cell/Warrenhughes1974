@@ -707,6 +707,12 @@ struct YouTubePrepView: View {
                     .buttonStyle(.bordered)
                     .disabled(!viewModel.canGenerate)
 
+                    Button("Copy ChatGPT Pack") {
+                        viewModel.copyChatGPTPack()
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!viewModel.canGenerate)
+
                     Button("Build Upload Package") {
                         viewModel.generateUploadPackage()
                     }
@@ -717,6 +723,10 @@ struct YouTubePrepView: View {
 
                 Text("Tip: Confirm Story first. Rank Thumbnails shows story matches first while preserving additional sharp choices.")
                     .font(.caption2)
+                    .foregroundStyle(.secondary)
+
+                Text("Generate Description writes from your confirmed story fields. Copy ChatGPT Pack pastes those facts + transcript for a stronger cloud rewrite without inventing cast.")
+                    .font(.caption)
                     .foregroundStyle(.secondary)
 
                 Text("Build Upload Package saves the confirmed story's thumbnail, title, description, tags, captions (.srt), and upload steps in YouTube_Prep/.")

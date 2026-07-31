@@ -820,12 +820,28 @@ final class YouTubePrepViewModel {
             preset: BrandSettings.shared.selectedPreset,
             transcript: transcript,
             extraPlaces: manualPlaces,
-            confirmedBrief: brief
+            confirmedBrief: brief,
+            confirmedAnalysis: storyAnalysis
         )
         errorMessage = nil
-        statusMessage = transcript == nil
-            ? "Description ready. Transcribe first for real chapters from your speech."
-            : "Description ready with chapters pulled from your speech."
+        statusMessage = "Description built from your confirmed Story Review facts."
+    }
+
+    func copyChatGPTPack() {
+        guard canGenerate, let analysis = storyAnalysis, isStoryConfirmed else {
+            errorMessage = "Confirm the story first, then copy the ChatGPT pack."
+            return
+        }
+
+        let pack = YouTubeMetadataService.chatGPTPack(
+            analysis: analysis,
+            title: generatedTitle,
+            brand: BrandSettings.shared.values,
+            transcript: transcript,
+            extraPlaces: manualPlaces
+        )
+        copyToPasteboard(pack, label: "ChatGPT pack")
+        errorMessage = nil
     }
 
     func generateTags() {

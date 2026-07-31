@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.43",
+            highlights: [
+                "YouTube descriptions are built from confirmed Story Review fields in plain English — no more mid-sentence stubs like “and experienced delayed flights…”.",
+                "Generic place lists (Office/Airport/Hotel) are de-emphasized when specific places exist; empty chapter stubs are omitted.",
+                "New Copy ChatGPT Pack button pastes confirmed facts + transcript for a stronger cloud rewrite without inventing cast."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.42",
             highlights: [
                 "Cast rules: people mentioned as at home / not coming / seen later are stripped from traveler summaries — no more Warren & Tina on a coworker trip.",

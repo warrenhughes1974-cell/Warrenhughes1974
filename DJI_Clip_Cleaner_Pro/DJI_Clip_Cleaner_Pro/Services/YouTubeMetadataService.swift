@@ -184,7 +184,8 @@ enum YouTubeMetadataService {
         preset: BrandPreset,
         transcript: Transcript? = nil,
         extraPlaces: [String] = [],
-        confirmedBrief: StoryBrief? = nil
+        confirmedBrief: StoryBrief? = nil,
+        confirmedAnalysis: StoryAnalysis? = nil
     ) -> String {
         let channel = brand.channelPrefix.trimmingCharacters(in: .whitespacesAndNewlines)
         let series = brand.seriesName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -197,17 +198,26 @@ enum YouTubeMetadataService {
             extraPlaces: extraPlaces
         )
 
+        let narrative = confirmedAnalysis.map(narrativeBody(from:))
+            ?? cleanedNarrative(brief.summary)
+        let snippet = searchSnippet(
+            from: confirmedAnalysis,
+            fallbackHeadline: brief.headline,
+            hook: cleanHook
+        )
+
         var lines: [String] = []
 
-        // Search snippet = story headline (trimmed to YouTube's visible window).
-        lines.append(trimmedSnippet(brief.headline))
+        // Search snippet = first visible lines in YouTube search.
+        lines.append(trimmedSnippet(snippet))
         lines.append("")
-        lines.append(brief.summary)
+        lines.append(narrative)
 
-        if !brief.places.isEmpty {
+        let places = descriptionPlaces(brief.places)
+        if !places.isEmpty {
             lines.append("")
             lines.append(brief.domain == .retailHunt ? "STORES IN THIS VIDEO" : "PLACES IN THIS VIDEO")
-            for place in brief.places {
+            for place in places {
                 lines.append("· \(place)")
             }
         }
@@ -222,21 +232,17 @@ enum YouTubeMetadataService {
             }
         }
 
-        lines.append("")
-        lines.append("CHAPTERS")
-
         let chapters = !brief.chapters.isEmpty
             ? brief.chapters
             : transcript.map {
                 TranscriptionService.chapters(from: $0, storyDomain: brief.domain)
             } ?? []
         if chapters.count > 1 {
+            lines.append("")
+            lines.append("CHAPTERS")
             for chapter in chapters {
                 lines.append(chapter.formattedLine)
             }
-        } else {
-            lines.append("0:00 Intro")
-            lines.append("(add your timestamps here — YouTube turns these into chapters)")
         }
 
         lines.append("")
@@ -252,10 +258,190 @@ enum YouTubeMetadataService {
 
         lines.append("GEAR & WORKFLOW")
         lines.append("Filmed on DJI · Edited in Filmora")
-        lines.append("")
-        lines.append(brief.hashtags.joined(separator: " "))
+
+        let hashtags = brief.hashtags.isEmpty
+            ? []
+            : brief.hashtags
+        if !hashtags.isEmpty {
+            lines.append("")
+            lines.append(hashtags.joined(separator: " "))
+        }
 
         return lines.joined(separator: "\n")
+    }
+
+    /// Paste-ready brief for ChatGPT/Grok so cloud models polish copy without
+    /// inventing cast, places, or outcomes beyond the confirmed story.
+    static func chatGPTPack(
+        analysis: StoryAnalysis,
+        title: String,
+        brand: BrandSettingsValues,
+        transcript: Transcript?,
+        extraPlaces: [String] = []
+    ) -> String {
+        let places = descriptionPlaces(uniquePlaces(
+            origin: analysis.origin,
+            problemLocation: analysis.problemLocation,
+            destination: analysis.destination,
+            extra: extraPlaces
+        ))
+        let chapters = analysis.chapters
+            .sorted { $0.startTime < $1.startTime }
+            .map { chapter in
+                let stamp = TranscriptChapter.timecode(chapter.startTime)
+                return "\(stamp) \(chapter.title)"
+            }
+
+        var lines: [String] = [
+            "You are helping write YouTube metadata for a real video.",
+            "Use ONLY the confirmed facts below. Do not invent travelers, pets on the trip, places, or outcomes.",
+            "If a fact is missing, leave it out or keep it vague — never guess.",
+            "",
+            "CHANNEL: \(brand.channelPrefix.isEmpty ? "Fun Now Run Later" : brand.channelPrefix)",
+            "STORY TYPE: \(analysis.domain.displayName)",
+            "",
+            "PREFERRED TITLE:",
+            title.isEmpty ? analysis.titleIdeas.first ?? analysis.subject : title,
+            "",
+            "TITLE IDEAS:",
+        ]
+
+        let titles = analysis.titleIdeas.isEmpty ? [analysis.subject] : analysis.titleIdeas
+        for idea in titles.prefix(6) {
+            lines.append("- \(idea)")
+        }
+
+        lines.append("")
+        lines.append("CONFIRMED STORY FACTS:")
+        lines.append("- Subject: \(blankToUnknown(analysis.subject))")
+        lines.append("- Goal: \(blankToUnknown(analysis.goal))")
+        lines.append("- Obstacle: \(blankToUnknown(analysis.obstacle))")
+        lines.append("- Origin: \(blankToUnknown(analysis.origin))")
+        lines.append("- Problem happened at: \(blankToUnknown(analysis.problemLocation))")
+        lines.append("- Destination: \(blankToUnknown(analysis.destination))")
+        lines.append("- Outcome: \(blankToUnknown(analysis.outcome))")
+        lines.append("- Summary: \(blankToUnknown(analysis.summary))")
+
+        if !places.isEmpty {
+            lines.append("")
+            lines.append("PLACES:")
+            for place in places {
+                lines.append("- \(place)")
+            }
+        }
+
+        if !analysis.tags.isEmpty {
+            lines.append("")
+            lines.append("TAG IDEAS:")
+            for tag in analysis.tags.prefix(12) {
+                lines.append("- \(tag)")
+            }
+        }
+
+        if !analysis.hashtags.isEmpty {
+            lines.append("")
+            lines.append("HASHTAGS: \(analysis.hashtags.joined(separator: " "))")
+        }
+
+        if !chapters.isEmpty {
+            lines.append("")
+            lines.append("CHAPTERS:")
+            for chapter in chapters.prefix(12) {
+                lines.append("- \(chapter)")
+            }
+        }
+
+        lines.append("")
+        lines.append("WRITE:")
+        lines.append("1) One strong YouTube title (under 70 characters)")
+        lines.append("2) A natural description: 2–4 sentence story hook, then optional Places / Chapters / CTA / hashtags")
+        lines.append("3) Keep American conversational voice — not corporate, not clickbait spam")
+        lines.append("4) Do not mention anyone who is not supported as being on this trip/event")
+
+        if let transcript, !transcript.isEmpty {
+            let text = transcript.fullText.trimmingCharacters(in: .whitespacesAndNewlines)
+            let clipped = text.count > 6_000
+                ? String(text.prefix(6_000)) + "\n…[transcript truncated]…"
+                : text
+            lines.append("")
+            lines.append("TRANSCRIPT (for wording/tone only; facts above still win on conflicts):")
+            lines.append(clipped)
+        }
+
+        return lines.joined(separator: "\n")
+    }
+
+    /// Builds a complete description paragraph from confirmed Story Review fields.
+    /// Prefers a usable edited summary; otherwise synthesizes plain English from slots.
+    static func narrativeBody(from analysis: StoryAnalysis) -> String {
+        let summary = cleanedNarrative(analysis.summary)
+        if isUsableNarrative(summary) {
+            return ensureSentenceEnding(summary)
+        }
+
+        var sentences: [String] = []
+        let subject = cleanPhrase(analysis.subject)
+        let goal = cleanPhrase(analysis.goal)
+        let obstacle = cleanPhrase(analysis.obstacle)
+        let origin = cleanPhrase(analysis.origin)
+        let problem = cleanPhrase(analysis.problemLocation)
+        let destination = cleanPhrase(analysis.destination)
+        let outcome = cleanPhrase(analysis.outcome)
+
+        switch analysis.domain {
+        case .travelDelay:
+            if !origin.isEmpty && !destination.isEmpty {
+                sentences.append("I was headed from \(origin) to \(destination).")
+            } else if !destination.isEmpty {
+                sentences.append("I was headed to \(destination).")
+            } else if !subject.isEmpty {
+                sentences.append(ensureSentenceEnding(subject))
+            }
+
+            if !obstacle.isEmpty && !problem.isEmpty {
+                sentences.append("\(capitalizeFirst(obstacle)) hit at \(problem).")
+            } else if !obstacle.isEmpty {
+                sentences.append(ensureSentenceEnding(capitalizeFirst(obstacle)))
+            } else if !problem.isEmpty {
+                sentences.append("Things went sideways at \(problem).")
+            }
+
+            if !outcome.isEmpty {
+                sentences.append(ensureSentenceEnding(capitalizeFirst(outcome)))
+            } else if !goal.isEmpty {
+                sentences.append(ensureSentenceEnding(capitalizeFirst(goal)))
+            }
+
+        default:
+            if !subject.isEmpty {
+                sentences.append(ensureSentenceEnding(capitalizeFirst(subject)))
+            }
+            if !goal.isEmpty {
+                sentences.append(ensureSentenceEnding(capitalizeFirst(goal)))
+            }
+            if !obstacle.isEmpty {
+                sentences.append(ensureSentenceEnding(capitalizeFirst(obstacle)))
+            }
+            if !origin.isEmpty || !problem.isEmpty || !destination.isEmpty {
+                var placeBits: [String] = []
+                if !origin.isEmpty { placeBits.append("started in \(origin)") }
+                if !problem.isEmpty { placeBits.append("key moment at \(problem)") }
+                if !destination.isEmpty { placeBits.append("headed for \(destination)") }
+                if !placeBits.isEmpty {
+                    sentences.append(ensureSentenceEnding(capitalizeFirst(placeBits.joined(separator: ", "))))
+                }
+            }
+            if !outcome.isEmpty {
+                sentences.append(ensureSentenceEnding(capitalizeFirst(outcome)))
+            }
+        }
+
+        let joined = sentences.joined(separator: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if joined.isEmpty {
+            return "Confirm the story details above, then generate the description again."
+        }
+        return joined
     }
 
     private static func trimmedSnippet(_ snippet: String) -> String {
@@ -264,6 +450,120 @@ enum YouTubeMetadataService {
         }
         return String(snippet.prefix(descriptionSnippetLimit - 1))
             .trimmingCharacters(in: .whitespaces) + "…"
+    }
+
+    private static func searchSnippet(
+        from analysis: StoryAnalysis?,
+        fallbackHeadline: String,
+        hook: String
+    ) -> String {
+        if let analysis {
+            let obstacle = cleanPhrase(analysis.obstacle)
+            let problem = cleanPhrase(analysis.problemLocation)
+            let destination = cleanPhrase(analysis.destination)
+            let subject = cleanPhrase(analysis.subject)
+
+            if !problem.isEmpty && !destination.isEmpty {
+                let lead = obstacle.isEmpty ? (subject.isEmpty ? "Travel day" : subject) : obstacle
+                return "\(capitalizeFirst(lead)) at \(problem) — headed to \(destination)"
+            }
+            if !obstacle.isEmpty && !problem.isEmpty {
+                return "\(capitalizeFirst(obstacle)) at \(problem)"
+            }
+            if let title = analysis.titleIdeas.first, isUsableNarrative(title) || title.split(separator: " ").count >= 4 {
+                return title
+            }
+            if !subject.isEmpty, subject.split(separator: " ").count >= 3 {
+                return capitalizeFirst(subject)
+            }
+        }
+
+        let headline = cleanPhrase(fallbackHeadline)
+        if !headline.isEmpty, headline.split(separator: " ").count >= 3 {
+            return headline
+        }
+        let hookClean = cleanPhrase(hook)
+        if !hookClean.isEmpty {
+            return titleCase(hookClean)
+        }
+        return headline.isEmpty ? "Video story" : headline
+    }
+
+    private static func cleanedNarrative(_ value: String) -> String {
+        var text = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Scrub common broken openings left after cast removal.
+        while let match = text.range(
+            of: #"^(and|or|but|so)\s+"#,
+            options: [.regularExpression, .caseInsensitive]
+        ) {
+            text = String(text[match.upperBound...])
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        return text
+    }
+
+    private static func isUsableNarrative(_ value: String) -> Bool {
+        let text = cleanedNarrative(value)
+        guard text.count >= 40 else { return false }
+        guard text.first?.isLetter == true else { return false }
+        let lower = text.lowercased()
+        let badStarts = ["goal:", "obstacle:", "outcome:", "subject:"]
+        if badStarts.contains(where: { lower.hasPrefix($0) }) {
+            return false
+        }
+        return text.split(separator: " ").count >= 8
+    }
+
+    private static func descriptionPlaces(_ places: [String]) -> [String] {
+        let generic: Set<String> = [
+            "airport", "hotel", "office", "terminal", "gate", "plane", "flight"
+        ]
+        let specific = places.filter { !generic.contains($0.lowercased()) }
+        // Prefer specific places (DFW, Omaha). Fall back to generics only if that
+        // is all the confirmed story has.
+        return specific.isEmpty ? places : specific
+    }
+
+    private static func uniquePlaces(
+        origin: String,
+        problemLocation: String,
+        destination: String,
+        extra: [String]
+    ) -> [String] {
+        var output: [String] = []
+        for value in [origin, problemLocation, destination] + extra {
+            let clean = value.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !clean.isEmpty else { continue }
+            guard !output.contains(where: { $0.caseInsensitiveCompare(clean) == .orderedSame }) else {
+                continue
+            }
+            output.append(clean)
+        }
+        return output
+    }
+
+    private static func blankToUnknown(_ value: String) -> String {
+        let clean = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return clean.isEmpty ? "(unknown)" : clean
+    }
+
+    private static func cleanPhrase(_ value: String) -> String {
+        value.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private static func ensureSentenceEnding(_ value: String) -> String {
+        let clean = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !clean.isEmpty else { return "" }
+        if let last = clean.last, ".!?".contains(last) {
+            return clean
+        }
+        return clean + "."
+    }
+
+    private static func capitalizeFirst(_ value: String) -> String {
+        let clean = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let first = clean.first else { return "" }
+        return first.uppercased() + clean.dropFirst()
     }
 
     static func descriptionQuality(_ description: String) -> MetadataQuality {
