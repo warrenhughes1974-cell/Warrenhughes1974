@@ -9,6 +9,8 @@ struct BrandThumbnailPreview: View {
     var titleScale: Double = 1.0
     var emojis: [String] = []
     var emojiPosition: ThumbnailEmojiPosition = .topRight
+    var titleFont: ThumbnailTitleFont = .impact
+    var useTextOutline: Bool = true
 
     /// Matches the proportions the renderer uses, so the preview tracks what
     /// actually lands in the JPEG rather than being a fixed mock.
@@ -21,7 +23,7 @@ struct BrandThumbnailPreview: View {
     }
 
     private var outlineWidth: CGFloat {
-        max(fontSize * 0.07, 1.8)
+        max(fontSize * 0.10, 1.8)
     }
 
     private var titleColor: Color {
@@ -42,6 +44,25 @@ struct BrandThumbnailPreview: View {
         }
 
         return title + " " + emojis.joined(separator: " ")
+    }
+
+    private var previewFont: Font {
+        switch titleFont {
+        case .systemBold:
+            return .system(size: fontSize, weight: .heavy)
+        case .impact:
+            return .custom("Impact", size: fontSize)
+        case .arialBlack:
+            return .custom("Arial-Black", size: fontSize)
+        case .avenirHeavy:
+            return .custom("AvenirNext-Heavy", size: fontSize)
+        case .futuraBold:
+            return .custom("Futura-Bold", size: fontSize)
+        case .helveticaBold:
+            return .custom("Helvetica-Bold", size: fontSize)
+        case .georgiaBold:
+            return .custom("Georgia-Bold", size: fontSize)
+        }
     }
 
     var body: some View {
@@ -129,14 +150,40 @@ struct BrandThumbnailPreview: View {
 
     @ViewBuilder
     private func outlinedTitle(_ title: String) -> some View {
-        let font = Font.system(size: fontSize, weight: .heavy)
+        let base = Text(title)
+            .font(previewFont)
+            .multilineTextAlignment(.leading)
+            .lineLimit(3)
 
-        Text(title)
-            .font(font)
-            .foregroundStyle(titleColor)
-            .shadow(color: .black.opacity(0.9), radius: outlineWidth, x: 1, y: 2)
-        .multilineTextAlignment(.leading)
-        .lineLimit(3)
+        if useTextOutline {
+            ZStack {
+                // Approximate black + red rings in the SwiftUI preview.
+                ForEach(0..<12, id: \.self) { step in
+                    let angle = Double(step) / 12.0 * Double.pi * 2
+                    base
+                        .foregroundStyle(.black)
+                        .offset(
+                            x: CGFloat(cos(angle)) * outlineWidth,
+                            y: CGFloat(sin(angle)) * outlineWidth
+                        )
+                }
+                ForEach(0..<12, id: \.self) { step in
+                    let angle = Double(step) / 12.0 * Double.pi * 2
+                    let radius = outlineWidth * 0.55
+                    base
+                        .foregroundStyle(Color(red: 0.85, green: 0.10, blue: 0.12))
+                        .offset(
+                            x: CGFloat(cos(angle)) * radius,
+                            y: CGFloat(sin(angle)) * radius
+                        )
+                }
+                base.foregroundStyle(titleColor)
+            }
+        } else {
+            base
+                .foregroundStyle(titleColor)
+                .shadow(color: .black.opacity(0.9), radius: outlineWidth, x: 1, y: 2)
+        }
     }
 }
 
@@ -173,7 +220,9 @@ struct EditableHookCell: View {
         titlePinkBlue: 0.60,
         titleScale: 1.0,
         emojis: ["🎃", "👻"],
-        emojiPosition: .topRight
+        emojiPosition: .topRight,
+        titleFont: .impact,
+        useTextOutline: true
     )
     .padding()
     .frame(width: 420)

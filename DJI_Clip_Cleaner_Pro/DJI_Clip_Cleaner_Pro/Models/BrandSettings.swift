@@ -14,6 +14,8 @@ struct BrandSettingsValues: Sendable {
     let titleScale: Double
     let thumbnailEmojis: [String]
     let emojiPosition: ThumbnailEmojiPosition
+    let titleFont: ThumbnailTitleFont
+    let useTextOutline: Bool
 }
 
 /// One-click thumbnail text colors. Each one is bright enough to survive the
@@ -63,6 +65,9 @@ final class BrandSettings {
     /// Up to two emoji symbols drawn onto every branded thumbnail.
     var thumbnailEmojis: [String] = []
     var emojiPosition: ThumbnailEmojiPosition = .topRight
+    var titleFont: ThumbnailTitleFont = .impact
+    /// Classic YouTube look: black outer ring + red inner ring around fill color.
+    var useTextOutline = true
 
     static let minimumTitleScale = 0.6
     static let maximumTitleScale = 1.6
@@ -84,7 +89,9 @@ final class BrandSettings {
             titlePinkBlue: titlePinkBlue,
             titleScale: titleScale,
             thumbnailEmojis: Array(thumbnailEmojis.prefix(ThumbnailEmojiOption.maximumSelection)),
-            emojiPosition: emojiPosition
+            emojiPosition: emojiPosition,
+            titleFont: titleFont,
+            useTextOutline: useTextOutline
         )
     }
 
@@ -165,7 +172,9 @@ final class BrandSettings {
             "titlePinkBlue": titlePinkBlue,
             "titleScale": titleScale,
             "thumbnailEmojis": thumbnailEmojis,
-            "emojiPosition": emojiPosition.rawValue
+            "emojiPosition": emojiPosition.rawValue,
+            "titleFont": titleFont.rawValue,
+            "useTextOutline": useTextOutline
         ]
 
         UserDefaults.standard.set(payload, forKey: Self.storageKey)
@@ -211,5 +220,12 @@ final class BrandSettings {
            let position = ThumbnailEmojiPosition(rawValue: positionRaw) {
             emojiPosition = position
         }
+
+        if let fontRaw = payload["titleFont"] as? String,
+           let font = ThumbnailTitleFont(rawValue: fontRaw) {
+            titleFont = font
+        }
+
+        useTextOutline = payload["useTextOutline"] as? Bool ?? useTextOutline
     }
 }

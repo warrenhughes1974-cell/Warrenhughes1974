@@ -573,10 +573,12 @@ struct YouTubePrepView: View {
                     titlePinkBlue: brand.titlePinkBlue,
                     titleScale: brand.titleScale,
                     emojis: brand.thumbnailEmojis,
-                    emojiPosition: brand.emojiPosition
+                    emojiPosition: brand.emojiPosition,
+                    titleFont: brand.titleFont,
+                    useTextOutline: brand.useTextOutline
                 )
 
-                Text("Pick color and size in Settings → Brand & Thumbnails.")
+                Text("Pick font, color, outline, and size in Settings → Brand & Thumbnails.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }

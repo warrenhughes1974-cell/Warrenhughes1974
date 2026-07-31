@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.45",
+            highlights: [
+                "Thumbnail Settings stick again: YouTube Prep no longer overrides your fill color for travel/story videos.",
+                "Black + red text outline is back (toggle in Settings), drawn with offset rings so letter corners don’t spike.",
+                "New Thumbnail Font picker (Impact, Arial Black, Avenir Heavy, Futura, Helvetica, Georgia, System Bold)."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.44",
             highlights: [
                 "OpenAI integration: save an API key in Settings and Hughes Clip Prep can use Whisper for transcripts plus GPT for Story Review and YouTube descriptions — one place, stronger copy.",

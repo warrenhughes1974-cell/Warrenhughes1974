@@ -854,44 +854,10 @@ final class YouTubePrepViewModel {
         base: BrandSettingsValues,
         brief: StoryBrief
     ) -> BrandSettingsValues {
-        let color: (red: Double, green: Double, blue: Double)
-        switch brief.domain {
-        case .travelDelay, .cruise:
-            color = (1.0, 1.0, 1.0)
-        case .cooking:
-            color = (1.0, 0.62, 0.18)
-        case .motorsport:
-            color = (1.0, 0.22, 0.18)
-        case .adventure:
-            color = (1.0, 0.86, 0.15)
-        case .themePark:
-            color = (1.0, 0.38, 0.70)
-        case .family, .general:
-            color = (1.0, 1.0, 1.0)
-        case .retailHunt:
-            color = (
-                base.titlePinkRed,
-                base.titlePinkGreen,
-                base.titlePinkBlue
-            )
-        }
-
-        return BrandSettingsValues(
-            channelPrefix: base.channelPrefix,
-            channelContext: base.channelContext,
-            seriesName: base.seriesName,
-            defaultHook: base.defaultHook,
-            titleFormat: base.titleFormat,
-            usePinkTitles: true,
-            titlePinkRed: color.red,
-            titlePinkGreen: color.green,
-            titlePinkBlue: color.blue,
-            titleScale: min(base.titleScale, 1.0),
-            thumbnailEmojis: (brief.domain == .retailHunt && brief.seriesFits)
-                ? base.thumbnailEmojis
-                : [],
-            emojiPosition: base.emojiPosition
-        )
+        // Always honor Settings for color, font, outline, size, and emojis.
+        // Story domain used to force white/etc. and ignore the user's brand look.
+        _ = brief
+        return base
     }
 
     func generateDescription() {

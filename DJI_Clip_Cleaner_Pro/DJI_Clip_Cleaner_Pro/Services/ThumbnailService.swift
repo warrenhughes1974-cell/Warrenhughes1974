@@ -168,7 +168,8 @@ enum ThumbnailService {
                     maxHeight: canvasSize.height * min(0.42 * scale, 0.70),
                     canvasWidth: canvasSize.width,
                     scale: scale,
-                    paragraph: paragraph
+                    paragraph: paragraph,
+                    titleFont: brand.titleFont
                 )
 
                 // Size the scrim to the text so short text gets a tight band and long
@@ -214,7 +215,8 @@ enum ThumbnailService {
                     in: textRect,
                     font: font,
                     fillColor: titleColor,
-                    paragraph: paragraph
+                    paragraph: paragraph,
+                    useOutline: brand.useTextOutline
                 )
 
                 // Beside-title emojis are already drawn as part of composedTitle.
@@ -305,19 +307,20 @@ enum ThumbnailService {
         maxHeight: CGFloat,
         canvasWidth: CGFloat,
         scale: CGFloat,
-        paragraph: NSParagraphStyle
+        paragraph: NSParagraphStyle,
+        titleFont: ThumbnailTitleFont
     ) -> (NSFont, CGSize) {
         let largestSize = canvasWidth * 0.105 * scale
         let smallestSize = canvasWidth * 0.038 * scale
         var size = largestSize
-        var font = NSFont.boldSystemFont(ofSize: size)
+        var font = titleFont.nsFont(size: size)
         var measured = measure(text, font: font, maxWidth: maxWidth, paragraph: paragraph)
 
         // Word wrapping cannot break inside a single long word, so width has to
         // be checked too or that word renders past the canvas edge.
         while size > smallestSize && (measured.height > maxHeight || measured.width > maxWidth) {
             size -= canvasWidth * 0.004
-            font = NSFont.boldSystemFont(ofSize: size)
+            font = titleFont.nsFont(size: size)
             measured = measure(text, font: font, maxWidth: maxWidth, paragraph: paragraph)
         }
 
@@ -349,12 +352,47 @@ enum ThumbnailService {
         in rect: CGRect,
         font: NSFont,
         fillColor: NSColor,
-        paragraph: NSParagraphStyle
+        paragraph: NSParagraphStyle,
+        useOutline: Bool
     ) {
         let drawOptions: NSString.DrawingOptions = [
             .usesLineFragmentOrigin,
             .usesFontLeading
         ]
+
+        if useOutline {
+            // Offset-ring outlines avoid miter “spike” corners from strokeWidth.
+            let blackRadius = max(font.pointSize * 0.12, 3.5)
+            let redRadius = max(font.pointSize * 0.07, 2.0)
+            let red = NSColor(calibratedRed: 0.85, green: 0.10, blue: 0.12, alpha: 1.0)
+
+            drawTitleRing(
+                title,
+                in: rect,
+                font: font,
+                color: .black,
+                radius: blackRadius,
+                paragraph: paragraph,
+                options: drawOptions
+            )
+            drawTitleRing(
+                title,
+                in: rect,
+                font: font,
+                color: red,
+                radius: redRadius,
+                paragraph: paragraph,
+                options: drawOptions
+            )
+
+            let fillAttributes: [NSAttributedString.Key: Any] = [
+                .font: font,
+                .foregroundColor: fillColor,
+                .paragraphStyle: paragraph
+            ]
+            title.draw(with: rect, options: drawOptions, attributes: fillAttributes)
+            return
+        }
 
         let shadow = NSShadow()
         shadow.shadowColor = NSColor.black.withAlphaComponent(0.9)
@@ -367,10 +405,34 @@ enum ThumbnailService {
             .shadow: shadow,
             .paragraphStyle: paragraph
         ]
-
-        // No text strokes: mitered font corners created the white “spikes”
-        // around M/A/V. The dark scrim + soft shadow keeps this readable.
         title.draw(with: rect, options: drawOptions, attributes: fillAttributes)
+    }
+
+    private static func drawTitleRing(
+        _ title: String,
+        in rect: CGRect,
+        font: NSFont,
+        color: NSColor,
+        radius: CGFloat,
+        paragraph: NSParagraphStyle,
+        options: NSString.DrawingOptions
+    ) {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: color,
+            .paragraphStyle: paragraph
+        ]
+
+        // Dense enough for a solid outline without looking stepped.
+        let steps = 24
+        for step in 0..<steps {
+            let angle = (CGFloat(step) / CGFloat(steps)) * CGFloat.pi * 2
+            let offsetRect = rect.offsetBy(
+                dx: cos(angle) * radius,
+                dy: sin(angle) * radius
+            )
+            title.draw(with: offsetRect, options: options, attributes: attributes)
+        }
     }
 
     private static func aspectFillRect(

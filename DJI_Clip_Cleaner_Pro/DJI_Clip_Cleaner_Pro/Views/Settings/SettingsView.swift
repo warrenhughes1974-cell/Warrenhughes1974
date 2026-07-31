@@ -233,6 +233,25 @@ struct SettingsView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 10) {
+                    Text("Thumbnail Font")
+                        .fontWeight(.semibold)
+
+                    Picker("Thumbnail Font", selection: $brand.titleFont) {
+                        ForEach(ThumbnailTitleFont.allCases) { font in
+                            Text(font.displayName).tag(font)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .onChange(of: brand.titleFont) { _, _ in
+                        brand.save()
+                    }
+
+                    Text("Used for burned-in thumbnail titles (Impact is the classic YouTube look).")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                VStack(alignment: .leading, spacing: 10) {
                     Text("Thumbnail Text Color")
                         .fontWeight(.semibold)
 
@@ -271,7 +290,14 @@ struct SettingsView: View {
                         }
                     }
 
-                    Text("Titles use a clean shadow over a dark fade so they stay readable without pointed outline spikes.")
+                    Toggle("Black + red text outline", isOn: $brand.useTextOutline)
+                        .onChange(of: brand.useTextOutline) { _, _ in
+                            brand.save()
+                        }
+
+                    Text(brand.useTextOutline
+                         ? "Fill uses your color above. Outline is black outside with a red inner ring — the classic pop look."
+                         : "Outline off: soft black shadow over the dark fade only.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -398,7 +424,9 @@ struct SettingsView: View {
                         titlePinkBlue: brand.titlePinkBlue,
                         titleScale: brand.titleScale,
                         emojis: brand.thumbnailEmojis,
-                        emojiPosition: brand.emojiPosition
+                        emojiPosition: brand.emojiPosition,
+                        titleFont: brand.titleFont,
+                        useTextOutline: brand.useTextOutline
                     )
                 }
 
