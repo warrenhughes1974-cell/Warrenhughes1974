@@ -81,6 +81,32 @@ enum OnDeviceStoryAnalysisService {
         return .unavailable("Requires macOS 26 with Apple Intelligence enabled")
     }
 
+    /// Applies Channel Context spelling fixes (for example Brian → Brianna) only
+    /// when the correct name is listed in context and the ASR alias appears.
+    static func applyingChannelNameCorrections(
+        _ transcript: Transcript,
+        brand: BrandSettingsValues
+    ) -> Transcript {
+        let corrections = spellingCorrections(from: brand)
+        guard !corrections.isEmpty else { return transcript }
+
+        let fullText = applySpellingCorrections(transcript.fullText, corrections: corrections)
+        let segments = transcript.segments.map { segment in
+            TranscriptSegment(
+                id: segment.id,
+                text: applySpellingCorrections(segment.text, corrections: corrections),
+                startTime: segment.startTime,
+                duration: segment.duration
+            )
+        }
+        return Transcript(
+            fullText: fullText,
+            segments: segments,
+            languageCode: transcript.languageCode,
+            usedOnDevice: transcript.usedOnDevice
+        )
+    }
+
     static func analyze(
         transcript: Transcript,
         existingHook: String,
@@ -90,13 +116,15 @@ enum OnDeviceStoryAnalysisService {
             throw ServiceError.emptyTranscript
         }
 
+        let working = applyingChannelNameCorrections(transcript, brand: brand)
+
         #if canImport(FoundationModels)
         if #available(macOS 26.0, *) {
             guard case .available = SystemLanguageModel.default.availability else {
                 throw ServiceError.modelUnavailable(availability.message)
             }
 
-            let transcriptSections = timedTranscriptSections(transcript)
+            let transcriptSections = timedTranscriptSections(working)
             var sectionSummaries: [String] = []
 
             // Keep each request inside the on-device model's context window.
@@ -109,6 +137,8 @@ enum OnDeviceStoryAnalysisService {
                     outcome. Preserve timestamps and explicitly mark unknown facts.
                     Never invent dialogue or speaker labels. Prefer empty/unknown
                     over any guess. Channel identity notes are spelling only.
+                    People mentioned as at home, not coming, or seen later are not
+                    travelers. Pets are not travelers unless explicitly on the trip.
                     """
                 )
 
@@ -119,6 +149,7 @@ enum OnDeviceStoryAnalysisService {
                     obstacles, outcomes, people, and visual moments. Keep timestamp
                     evidence. Do not write YouTube copy yet. Stay under 120 words.
                     If a fact is not explicit in this section, omit it.
+                    Do not cast channel hosts as travelers from context alone.
 
                     Stable channel context (identity/spelling only; it is not proof
                     that someone participated in this video, traveled, or is on camera):
@@ -164,6 +195,8 @@ enum OnDeviceStoryAnalysisService {
                 specific, never generic clickbait such as “Is HERE” or “Don't Skip
                 This.” Thumbnail text is 2–4 words. Chapters follow actual events.
                 Tags and hashtags must come from words actually spoken.
+                Never name channel hosts as travelers unless the transcript says
+                they are on this trip. Home/support mentions are not cast.
                 """
             )
 
@@ -188,9 +221,11 @@ enum OnDeviceStoryAnalysisService {
                   destination, and outcome separately. Leave unknown fields empty.
                 - Evidence must be a verbatim transcript excerpt with its real
                   timestamp. Never write reconstructed dialogue or speaker labels.
-                - Name a person only when the transcript explicitly places them in
-                  this video's events. Pets/family named only as support are not
-                  cast members or travelers.
+                - Name a person only when the transcript explicitly places them on
+                  this trip/event (coworker joining, traveling with, left from…).
+                  Mentions like at home, not coming, seeing them later, own bed,
+                  or drive home are NOT travelers. Pets are not travelers.
+                - Prefer “I / coworker” over inventing a host couple from context.
                 - Do not choose a family domain unless the transcript clearly shows
                   a family or pet lifestyle story.
                 - Confidence is 0–100 based on transcript support.
@@ -207,7 +242,8 @@ enum OnDeviceStoryAnalysisService {
 
             return validated(
                 response.content.storyAnalysis,
-                against: transcript
+                against: working,
+                brand: brand
             )
         }
         #endif
@@ -222,8 +258,9 @@ enum OnDeviceStoryAnalysisService {
         hook: String,
         brand: BrandSettingsValues
     ) -> StoryAnalysis {
+        let working = applyingChannelNameCorrections(transcript, brand: brand)
         let brief = StoryBriefService.build(
-            from: transcript,
+            from: working,
             hook: hook,
             brand: brand
         )
@@ -252,7 +289,7 @@ enum OnDeviceStoryAnalysisService {
             hashtags: brief.hashtags,
             source: .deterministicFallback
         )
-        return validated(draft, against: transcript)
+        return validated(draft, against: working, brand: brand)
     }
 
     // MARK: - Transcript preparation
@@ -301,14 +338,23 @@ enum OnDeviceStoryAnalysisService {
 
     private static func validated(
         _ proposed: StoryAnalysis,
-        against transcript: Transcript
+        against transcript: Transcript,
+        brand: BrandSettingsValues
     ) -> StoryAnalysis {
-        var result = proposed
+        let corrections = spellingCorrections(from: brand)
+        var result = corrections.isEmpty
+            ? proposed
+            : applySpellingCorrections(to: proposed, corrections: corrections)
         let transcriptText = normalized(transcript.fullText)
         let transcriptBag = " \(transcriptText) "
+        let rawTranscript = transcript.fullText
+        let allowedTravelers = allowedTravelerNames(
+            rawTranscript: rawTranscript,
+            brand: brand
+        )
         var clearedUnsupportedField = false
 
-        result.evidence = proposed.evidence.filter {
+        result.evidence = result.evidence.filter {
             evidenceIsSupported(
                 $0,
                 transcriptText: transcriptText,
@@ -365,10 +411,26 @@ enum OnDeviceStoryAnalysisService {
         result.problemLocation = groundedProblem
         result.destination = groundedDestination
 
-        let groundedGoal = groundedPhraseOrEmpty(result.goal, in: transcriptBag, minimumCoverage: 0.5)
-        let groundedObstacle = groundedPhraseOrEmpty(result.obstacle, in: transcriptBag, minimumCoverage: 0.5)
-        let groundedOutcome = groundedPhraseOrEmpty(result.outcome, in: transcriptBag, minimumCoverage: 0.5)
-        var groundedSubject = groundedPhraseOrEmpty(result.subject, in: transcriptBag, minimumCoverage: 0.4)
+        let groundedGoal = scrubDisallowedCast(
+            groundedPhraseOrEmpty(result.goal, in: transcriptBag, minimumCoverage: 0.5),
+            allowedTravelers: allowedTravelers,
+            brand: brand
+        )
+        let groundedObstacle = scrubDisallowedCast(
+            groundedPhraseOrEmpty(result.obstacle, in: transcriptBag, minimumCoverage: 0.5),
+            allowedTravelers: allowedTravelers,
+            brand: brand
+        )
+        let groundedOutcome = scrubDisallowedCast(
+            groundedPhraseOrEmpty(result.outcome, in: transcriptBag, minimumCoverage: 0.5),
+            allowedTravelers: allowedTravelers,
+            brand: brand
+        )
+        var groundedSubject = scrubDisallowedCast(
+            groundedPhraseOrEmpty(result.subject, in: transcriptBag, minimumCoverage: 0.4),
+            allowedTravelers: allowedTravelers,
+            brand: brand
+        )
         if groundedGoal != result.goal
             || groundedObstacle != result.obstacle
             || groundedOutcome != result.outcome
@@ -378,6 +440,11 @@ enum OnDeviceStoryAnalysisService {
         if groundedSubject.isEmpty {
             groundedSubject = TranscriptKeywordService.topics(from: transcript, limit: 1).first
                 ?? result.subject.trimmingCharacters(in: .whitespacesAndNewlines)
+            groundedSubject = scrubDisallowedCast(
+                groundedSubject,
+                allowedTravelers: allowedTravelers,
+                brand: brand
+            )
         }
         result.goal = groundedGoal
         result.obstacle = groundedObstacle
@@ -390,7 +457,9 @@ enum OnDeviceStoryAnalysisService {
             subject: result.subject,
             goal: result.goal,
             obstacle: result.obstacle,
-            outcome: result.outcome
+            outcome: result.outcome,
+            allowedTravelers: allowedTravelers,
+            brand: brand
         )
         if cleanedSummary != result.summary.trimmingCharacters(in: .whitespacesAndNewlines) {
             clearedUnsupportedField = true
@@ -398,7 +467,12 @@ enum OnDeviceStoryAnalysisService {
         result.summary = cleanedSummary
 
         result.titleIdeas = result.titleIdeas.compactMap {
-            groundedTitleIdea($0, in: transcriptBag)
+            groundedTitleIdea(
+                $0,
+                in: transcriptBag,
+                allowedTravelers: allowedTravelers,
+                brand: brand
+            )
         }
         if result.titleIdeas.isEmpty, !result.subject.isEmpty {
             result.titleIdeas = [result.subject]
@@ -409,13 +483,20 @@ enum OnDeviceStoryAnalysisService {
         }
         result.visualTargets = result.visualTargets.filter {
             phraseIsGrounded($0, in: transcriptBag, minimumCoverage: 0.5)
+                && !containsDisallowedCast(
+                    $0,
+                    allowedTravelers: allowedTravelers,
+                    brand: brand
+                )
         }
 
         let groundedTagList = groundedTags(
             result.tags,
             transcript: transcript,
             transcriptBag: transcriptBag
-        )
+        ).map {
+            scrubDisallowedCast($0, allowedTravelers: allowedTravelers, brand: brand)
+        }.filter { !$0.isEmpty }
         if groundedTagList != result.tags {
             clearedUnsupportedField = true
         }
@@ -424,9 +505,15 @@ enum OnDeviceStoryAnalysisService {
             result.hashtags,
             transcriptBag: transcriptBag,
             tags: result.tags
-        )
+        ).filter {
+            !containsDisallowedCast(
+                $0,
+                allowedTravelers: allowedTravelers,
+                brand: brand
+            )
+        }
 
-        if clearedUnsupportedField {
+        if clearedUnsupportedField || allowedTravelers.isEmpty {
             result.confidence = min(result.confidence, 55)
         }
 
@@ -528,7 +615,9 @@ enum OnDeviceStoryAnalysisService {
         subject: String,
         goal: String,
         obstacle: String,
-        outcome: String
+        outcome: String,
+        allowedTravelers: Set<String>,
+        brand: BrandSettingsValues
     ) -> String {
         let trimmed = summary.trimmingCharacters(in: .whitespacesAndNewlines)
         let sentences = trimmed
@@ -536,10 +625,26 @@ enum OnDeviceStoryAnalysisService {
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
 
-        let kept = sentences.filter { sentence in
-            !looksLikeInventedDialogue(sentence)
-                && phraseIsGrounded(sentence, in: transcriptBag, minimumCoverage: 0.5)
-                && !isUnsupportedThemeSentence(sentence, transcriptBag: transcriptBag)
+        let kept = sentences.compactMap { sentence -> String? in
+            guard !looksLikeInventedDialogue(sentence) else { return nil }
+            guard phraseIsGrounded(sentence, in: transcriptBag, minimumCoverage: 0.5) else {
+                return nil
+            }
+            guard !isUnsupportedThemeSentence(sentence, transcriptBag: transcriptBag) else {
+                return nil
+            }
+            let scrubbed = scrubDisallowedCast(
+                sentence,
+                allowedTravelers: allowedTravelers,
+                brand: brand
+            )
+            guard !scrubbed.isEmpty else { return nil }
+            guard !containsDisallowedCast(
+                scrubbed,
+                allowedTravelers: allowedTravelers,
+                brand: brand
+            ) else { return nil }
+            return scrubbed
         }
 
         if !kept.isEmpty {
@@ -572,15 +677,31 @@ enum OnDeviceStoryAnalysisService {
         return false
     }
 
-    private static func groundedTitleIdea(_ title: String, in transcriptBag: String) -> String? {
+    private static func groundedTitleIdea(
+        _ title: String,
+        in transcriptBag: String,
+        allowedTravelers: Set<String>,
+        brand: BrandSettingsValues
+    ) -> String? {
         let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
         guard !looksLikeInventedDialogue(trimmed) else { return nil }
         guard !isUnsupportedThemeSentence(trimmed, transcriptBag: transcriptBag) else {
             return nil
         }
-        return phraseIsGrounded(trimmed, in: transcriptBag, minimumCoverage: 0.4)
-            ? trimmed
+        let scrubbed = scrubDisallowedCast(
+            trimmed,
+            allowedTravelers: allowedTravelers,
+            brand: brand
+        )
+        guard !scrubbed.isEmpty else { return nil }
+        guard !containsDisallowedCast(
+            scrubbed,
+            allowedTravelers: allowedTravelers,
+            brand: brand
+        ) else { return nil }
+        return phraseIsGrounded(scrubbed, in: transcriptBag, minimumCoverage: 0.4)
+            ? scrubbed
             : nil
     }
 
@@ -783,6 +904,324 @@ enum OnDeviceStoryAnalysisService {
             .components(separatedBy: CharacterSet.alphanumerics.inverted)
             .filter { !$0.isEmpty }
             .joined(separator: " ")
+    }
+
+    // MARK: - Spelling corrections + cast rules
+
+    private static func spellingCorrections(
+        from brand: BrandSettingsValues
+    ) -> [(alias: String, correct: String)] {
+        let context = " \(normalized(brand.channelContext)) "
+        let pairs: [(correct: String, aliases: [String])] = [
+            ("brianna", ["brian", "briana", "breeanna"]),
+            ("gabie", ["gabby", "gabbi", "gaby"]),
+            ("domi", ["domy", "domie"])
+        ]
+
+        var corrections: [(alias: String, correct: String)] = []
+        for pair in pairs {
+            guard context.contains(" \(pair.correct) ") else { continue }
+            for alias in pair.aliases {
+                corrections.append((alias, pair.correct))
+            }
+        }
+        return corrections
+    }
+
+    private static func applySpellingCorrections(
+        _ text: String,
+        corrections: [(alias: String, correct: String)]
+    ) -> String {
+        guard !text.isEmpty, !corrections.isEmpty else { return text }
+        var result = text
+        for correction in corrections {
+            let display = correction.correct.prefix(1).uppercased()
+                + correction.correct.dropFirst()
+            let pattern = "\\b\(NSRegularExpression.escapedPattern(for: correction.alias))\\b"
+            guard let regex = try? NSRegularExpression(
+                pattern: pattern,
+                options: [.caseInsensitive]
+            ) else { continue }
+            let range = NSRange(result.startIndex..<result.endIndex, in: result)
+            result = regex.stringByReplacingMatches(
+                in: result,
+                options: [],
+                range: range,
+                withTemplate: display
+            )
+        }
+        return result
+    }
+
+    private static func applySpellingCorrections(
+        to analysis: StoryAnalysis,
+        corrections: [(alias: String, correct: String)]
+    ) -> StoryAnalysis {
+        var result = analysis
+        result.subject = applySpellingCorrections(result.subject, corrections: corrections)
+        result.goal = applySpellingCorrections(result.goal, corrections: corrections)
+        result.obstacle = applySpellingCorrections(result.obstacle, corrections: corrections)
+        result.origin = applySpellingCorrections(result.origin, corrections: corrections)
+        result.problemLocation = applySpellingCorrections(
+            result.problemLocation,
+            corrections: corrections
+        )
+        result.destination = applySpellingCorrections(result.destination, corrections: corrections)
+        result.outcome = applySpellingCorrections(result.outcome, corrections: corrections)
+        result.summary = applySpellingCorrections(result.summary, corrections: corrections)
+        result.evidence = result.evidence.map {
+            applySpellingCorrections($0, corrections: corrections)
+        }
+        result.visualTargets = result.visualTargets.map {
+            applySpellingCorrections($0, corrections: corrections)
+        }
+        result.titleIdeas = result.titleIdeas.map {
+            applySpellingCorrections($0, corrections: corrections)
+        }
+        result.thumbnailTextIdeas = result.thumbnailTextIdeas.map {
+            applySpellingCorrections($0, corrections: corrections)
+        }
+        result.tags = result.tags.map {
+            applySpellingCorrections($0, corrections: corrections)
+        }
+        result.hashtags = result.hashtags.map {
+            applySpellingCorrections($0, corrections: corrections)
+        }
+        result.chapters = result.chapters.map {
+            StoryChapterCandidate(
+                startTime: $0.startTime,
+                title: applySpellingCorrections($0.title, corrections: corrections)
+            )
+        }
+        return result
+    }
+
+    private static func personRoster(brand: BrandSettingsValues) -> [String] {
+        var names: Set<String> = [
+            "warren", "tina", "brianna", "brian", "gabie", "gabby", "domi",
+            "coco", "penny", "ramsey", "sadie", "alani", "ryder"
+        ]
+        // Capitalized tokens in Channel Context are treated as name candidates.
+        for token in brand.channelContext.split(whereSeparator: { !$0.isLetter }) {
+            let word = String(token)
+            guard word.count >= 3, word.first?.isUppercase == true else { continue }
+            names.insert(word.lowercased())
+        }
+        return Array(names).sorted()
+    }
+
+    private static func canonicalPersonName(_ name: String) -> String {
+        switch name.lowercased() {
+        case "brian", "briana", "breeanna": return "brianna"
+        case "gabby", "gabbi", "gaby": return "gabie"
+        case "domy", "domie": return "domi"
+        default: return name.lowercased()
+        }
+    }
+
+    private static func allowedTravelerNames(
+        rawTranscript: String,
+        brand: BrandSettingsValues
+    ) -> Set<String> {
+        let lower = rawTranscript.lowercased()
+        var allowed: Set<String> = []
+        for name in personRoster(brand: brand) {
+            let canonical = canonicalPersonName(name)
+            guard lower.contains(name) || lower.contains(canonical) else { continue }
+            let probe = lower.contains(canonical) ? canonical : name
+            if nameIsTravelerSupported(probe, rawTranscript: lower) {
+                allowed.insert(canonical)
+            }
+        }
+        return allowed
+    }
+
+    private static func nameIsTravelerSupported(
+        _ name: String,
+        rawTranscript: String
+    ) -> Bool {
+        let needle = name.lowercased()
+        guard !needle.isEmpty else { return false }
+
+        var searchStart = rawTranscript.startIndex
+        var hasClearTravelerOccurrence = false
+
+        while let range = rawTranscript.range(
+            of: needle,
+            range: searchStart..<rawTranscript.endIndex
+        ) {
+            // Require a rough word boundary so "alani" doesn't match inside noise.
+            let beforeOK = range.lowerBound == rawTranscript.startIndex
+                || !rawTranscript[rawTranscript.index(before: range.lowerBound)].isLetter
+            let afterOK = range.upperBound == rawTranscript.endIndex
+                || !rawTranscript[range.upperBound].isLetter
+            if beforeOK && afterOK {
+                let around = textWindow(around: range, in: rawTranscript, radius: 55)
+                // Negation is scored only after the name so Brianna's "joining me"
+                // line is not killed by "Tina … or not" later in the same breath.
+                let after = textWindowAfter(range, in: rawTranscript, radius: 48)
+                let traveler = windowMatchesTravelerCue(around)
+                let home = windowMatchesHomeCue(around)
+                let negated = windowHasStrongHomeNegation(after)
+                if traveler && !negated && (!home || windowMatchesTravelerCue(after)) {
+                    hasClearTravelerOccurrence = true
+                }
+            }
+            searchStart = range.upperBound
+        }
+
+        return hasClearTravelerOccurrence
+    }
+
+    private static func textWindowAfter(
+        _ range: Range<String.Index>,
+        in text: String,
+        radius: Int
+    ) -> String {
+        let end = text.index(
+            range.upperBound,
+            offsetBy: radius,
+            limitedBy: text.endIndex
+        ) ?? text.endIndex
+        return String(text[range.upperBound..<end])
+    }
+
+    private static func windowHasStrongHomeNegation(_ window: String) -> Bool {
+        let cues = [
+            "or not", "are not", "aren't", "arent", "not coming",
+            "at home", "staying home", "left at home"
+        ]
+        return cues.contains { window.contains($0) }
+    }
+
+    private static func textWindow(
+        around range: Range<String.Index>,
+        in text: String,
+        radius: Int
+    ) -> String {
+        let start = text.index(
+            range.lowerBound,
+            offsetBy: -radius,
+            limitedBy: text.startIndex
+        ) ?? text.startIndex
+        let end = text.index(
+            range.upperBound,
+            offsetBy: radius,
+            limitedBy: text.endIndex
+        ) ?? text.endIndex
+        return String(text[start..<end])
+    }
+
+    private static func windowMatchesTravelerCue(_ window: String) -> Bool {
+        let cues = [
+            "coworker", "co-worker", "joining me", "joining with", "joining",
+            "traveling with", "travelling with", "with me", "left from",
+            "coming with", "on the trip", "on this trip", "business trip"
+        ]
+        return cues.contains { window.contains($0) }
+    }
+
+    private static func windowMatchesHomeCue(_ window: String) -> Bool {
+        let cues = [
+            "at home", "are not", "aren't", "arent", "or not", "not coming",
+            "staying home", "left at home", "go home", "going home", "own bed",
+            "seeing ", "makes this drive", "drive a little", "sleep in your",
+            "get to go home", "wanna go home", "want to go home"
+        ]
+        return cues.contains { window.contains($0) }
+    }
+
+    private static func personNamesMentioned(
+        in text: String,
+        brand: BrandSettingsValues
+    ) -> [String] {
+        let lower = " \(normalized(text)) "
+        var found: [String] = []
+        for name in personRoster(brand: brand) {
+            let canonical = canonicalPersonName(name)
+            if lower.contains(" \(name) ") || lower.contains(" \(canonical) ") {
+                if !found.contains(canonical) {
+                    found.append(canonical)
+                }
+            }
+        }
+        return found
+    }
+
+    private static func containsDisallowedCast(
+        _ text: String,
+        allowedTravelers: Set<String>,
+        brand: BrandSettingsValues
+    ) -> Bool {
+        let mentioned = personNamesMentioned(in: text, brand: brand)
+        guard !mentioned.isEmpty else { return false }
+        return mentioned.contains { !allowedTravelers.contains($0) }
+    }
+
+    private static func scrubDisallowedCast(
+        _ text: String,
+        allowedTravelers: Set<String>,
+        brand: BrandSettingsValues
+    ) -> String {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return "" }
+        if !containsDisallowedCast(
+            trimmed,
+            allowedTravelers: allowedTravelers,
+            brand: brand
+        ) {
+            return trimmed
+        }
+
+        // Drop the whole phrase when it casts a home/context person as on-trip.
+        // Blank is better than “Warren and Tina travel…”.
+        if looksLikeCastClaim(trimmed) {
+            return ""
+        }
+
+        var result = trimmed
+        for name in personNamesMentioned(in: trimmed, brand: brand)
+        where !allowedTravelers.contains(name) {
+            let pattern = "\\b\(NSRegularExpression.escapedPattern(for: name))\\b"
+            if let regex = try? NSRegularExpression(
+                pattern: pattern,
+                options: [.caseInsensitive]
+            ) {
+                let range = NSRange(result.startIndex..<result.endIndex, in: result)
+                result = regex.stringByReplacingMatches(
+                    in: result,
+                    options: [],
+                    range: range,
+                    withTemplate: ""
+                )
+            }
+        }
+
+        result = result
+            .replacingOccurrences(of: #"\s{2,}"#, with: " ", options: .regularExpression)
+            .replacingOccurrences(of: #"\s+,"#, with: ",", options: .regularExpression)
+            .replacingOccurrences(of: #"\band\s+and\b"#, with: "and", options: .regularExpression)
+            .trimmingCharacters(in: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters))
+
+        if containsDisallowedCast(
+            result,
+            allowedTravelers: allowedTravelers,
+            brand: brand
+        ) || looksLikeCastClaim(result) {
+            return ""
+        }
+        return result
+    }
+
+    private static func looksLikeCastClaim(_ text: String) -> Bool {
+        let lower = text.lowercased()
+        let castVerbs = ["travel", "travels", "traveling", "travelling", "fly", "flies", "flying", "join", "joins", "joining"]
+        let hasPersonPair = lower.range(
+            of: #"\b[a-z]{3,}\s+and\s+[a-z]{3,}\b"#,
+            options: .regularExpression
+        ) != nil
+        let hasCastVerb = castVerbs.contains { lower.contains($0) }
+        return hasPersonPair && hasCastVerb
     }
 }
 

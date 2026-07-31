@@ -414,9 +414,15 @@ final class YouTubePrepViewModel {
                     isTranscribing = false
                     return
                 }
-                transcript = result
+                // Spelling-only Channel Context fixes (Brian → Brianna) so Story
+                // Review and the visible transcript agree.
+                let corrected = OnDeviceStoryAnalysisService.applyingChannelNameCorrections(
+                    result,
+                    brand: BrandSettings.shared.values
+                )
+                transcript = corrected
                 isTranscribing = false
-                await analyzeStory(transcript: result)
+                await analyzeStory(transcript: corrected)
             } catch {
                 transcript = nil
                 storyAnalysis = nil
@@ -567,6 +573,10 @@ final class YouTubePrepViewModel {
         }
         if analysis.origin.isEmpty && analysis.problemLocation.isEmpty && analysis.destination.isEmpty {
             warnings.append("No place roles were transcript-supported — leave them blank or type only places you can prove.")
+        }
+        if analysis.summary.localizedCaseInsensitiveContains("tina")
+            || analysis.summary.localizedCaseInsensitiveContains("warren and") {
+            warnings.append("Double-check the cast — home/support names should not appear as travelers.")
         }
         if analysis.tags.isEmpty {
             warnings.append("Unsupported theme tags were removed. Add tags only from words actually spoken.")

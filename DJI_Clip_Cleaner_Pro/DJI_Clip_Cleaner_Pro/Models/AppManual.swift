@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.42",
+            highlights: [
+                "Cast rules: people mentioned as at home / not coming / seen later are stripped from traveler summaries — no more Warren & Tina on a coworker trip.",
+                "Channel Context spelling corrections now fix ASR aliases in the transcript and story fields (Brian → Brianna, Gabby → Gabie) when those names are listed in Settings.",
+                "Story prompts prefer coworker/on-trip cues over host-couple assumptions from Channel Context."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.41",
             highlights: [
                 "View Full Transcript in Story Review is a real toggle button now — the old disclosure control often did nothing when clicked inside the scrolling page."
