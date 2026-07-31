@@ -66,7 +66,7 @@ struct SettingsView: View {
     private var openAISection: some View {
         GroupBox {
             VStack(alignment: .leading, spacing: 14) {
-                Text("Paste an OpenAI API key once. Hughes Clip Prep can then use Whisper for transcripts and GPT for story/copy inside this app.")
+                Text("Paste an OpenAI API key once (starts with sk-). Hughes Clip Prep can then use Whisper, GPT, and Vision inside this app.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
@@ -80,7 +80,7 @@ struct SettingsView: View {
                 HStack(spacing: 10) {
                     Button("Save API Key") {
                         if openAI.saveAPIKeyFromDraft() {
-                            openAIKeyMessage = "API key saved in Keychain on this Mac."
+                            openAIKeyMessage = "API key saved on this Mac (no Keychain password needed)."
                         } else {
                             openAIKeyMessage = "Key should start with sk- and look like a real OpenAI secret key."
                         }
@@ -101,6 +101,10 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+
+                Text("If macOS asks for a Keychain password: click Deny, Update to v1.48+, then paste your OpenAI key again and Save. That old Keychain prompt is no longer used.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
 
                 Toggle("Use OpenAI Whisper for transcription", isOn: $openAI.useWhisper)
                     .onChange(of: openAI.useWhisper) { _, _ in openAI.save() }

@@ -108,6 +108,12 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.48",
+            highlights: [
+                "OpenAI API key no longer uses macOS Keychain (that password dialog often blocked Desktop Update installs). Keys are stored in a locked local app file instead — click Deny on any leftover Keychain prompt, then paste your sk- key again and Save."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.47",
             highlights: [
                 "Thumbnails get a local punch-up (contrast/saturation/sharpen), tighter crop, and a lighter bottom fade so the picture pops more.",

@@ -8,7 +8,8 @@ struct OpenAISettingsValues: Sendable {
     let model: String
 }
 
-/// Cloud AI preferences. The API key itself lives in Keychain, not UserDefaults.
+/// Cloud AI preferences. The API key lives in a locked local file
+/// (Application Support), not UserDefaults or Keychain.
 @MainActor
 @Observable
 final class OpenAISettings {
@@ -27,8 +28,12 @@ final class OpenAISettings {
     /// Draft field for the Settings SecureField (not persisted as plain text).
     var apiKeyDraft = ""
 
+    /// In-memory cache so UI / prep steps do not re-hit disk on every read.
+    private var cachedAPIKey: String?
+
     private init() {
         load()
+        cachedAPIKey = KeychainStore.get(service: KeychainStore.Service.openAIAPIKey)
     }
 
     var values: OpenAISettingsValues {
@@ -44,19 +49,18 @@ final class OpenAISettings {
     }
 
     var hasAPIKey: Bool {
-        !(KeychainStore.get(service: KeychainStore.Service.openAIAPIKey) ?? "").isEmpty
+        !(resolvedAPIKey() ?? "").isEmpty
     }
 
     var apiKeyPreview: String {
-        guard let key = KeychainStore.get(service: KeychainStore.Service.openAIAPIKey),
-              key.count > 8 else {
+        guard let key = resolvedAPIKey(), key.count > 8 else {
             return "No key saved"
         }
         return "Saved · \(key.prefix(7))…\(key.suffix(4))"
     }
 
     func apiKey() -> String? {
-        KeychainStore.get(service: KeychainStore.Service.openAIAPIKey)
+        resolvedAPIKey()
     }
 
     func saveAPIKeyFromDraft() -> Bool {
@@ -66,6 +70,7 @@ final class OpenAISettings {
         }
         let ok = KeychainStore.set(trimmed, service: KeychainStore.Service.openAIAPIKey)
         if ok {
+            cachedAPIKey = trimmed
             apiKeyDraft = ""
             save()
         }
@@ -74,6 +79,7 @@ final class OpenAISettings {
 
     func clearAPIKey() {
         KeychainStore.delete(service: KeychainStore.Service.openAIAPIKey)
+        cachedAPIKey = nil
         apiKeyDraft = ""
         save()
     }
@@ -87,6 +93,15 @@ final class OpenAISettings {
             "model": model
         ]
         UserDefaults.standard.set(payload, forKey: Self.storageKey)
+    }
+
+    private func resolvedAPIKey() -> String? {
+        if let cachedAPIKey, !cachedAPIKey.isEmpty {
+            return cachedAPIKey
+        }
+        let loaded = KeychainStore.get(service: KeychainStore.Service.openAIAPIKey)
+        cachedAPIKey = loaded
+        return loaded
     }
 
     private func load() {
