@@ -450,7 +450,11 @@ final class AnalysisViewModel {
         guard !results.isEmpty else { return }
 
         isAnalyzing = true
-        statusMessage = "Analyzing \(results.count) clip(s)..."
+        let openAIEnabled = OpenAISettings.shared.useAIAssistAnalysis
+            && OpenAISettings.shared.hasAPIKey
+        statusMessage = openAIEnabled
+            ? "Analyzing \(results.count) clip(s) with AI Assist…"
+            : "Analyzing \(results.count) clip(s)..."
         let settings = AnalysisSettings.shared.values
 
         analysisTask = Task {
@@ -478,12 +482,44 @@ final class AnalysisViewModel {
                 results[index].speechSummary = speechResult.summary
                 results[index].motionSummary = motionResult.summary
 
-                let recommendation = RecommendationEngine.recommend(
+                var recommendation = RecommendationEngine.recommend(
                     video: results[index].video,
                     speech: speechResult,
                     motion: motionResult,
                     settings: settings
                 )
+
+                // Optional OpenAI second opinion: demote junk / confirm only.
+                let openAI = OpenAISettings.shared
+                if openAI.useAIAssistAnalysis,
+                   openAI.hasAPIKey,
+                   let apiKey = openAI.apiKey(),
+                   recommendation.0 != .discard {
+                    statusMessage = "AI Assist \(index + 1) of \(results.count): \(results[index].video.name)"
+                    do {
+                        let assist = try await OpenAIClient.assistClipRecommendation(
+                            fileName: results[index].video.name,
+                            local: recommendation.0,
+                            localNotes: recommendation.1,
+                            talkingPercent: speechResult.talkingPercent,
+                            motionPercent: motionResult.motionPercent,
+                            durationSeconds: results[index].video.duration,
+                            jerkSummary: motionResult.jerkSummary,
+                            transcriptSnippet: nil,
+                            model: openAI.values.model,
+                            apiKey: apiKey
+                        )
+                        recommendation = RecommendationEngine.mergeAIAssist(
+                            local: recommendation.0,
+                            localNotes: recommendation.1,
+                            aiLabel: assist.label,
+                            aiReason: assist.reason
+                        )
+                    } catch {
+                        // Fail soft — local recommendation stands.
+                    }
+                }
+
                 results[index].recommendation = recommendation.0
                 results[index].notes = recommendation.1
 

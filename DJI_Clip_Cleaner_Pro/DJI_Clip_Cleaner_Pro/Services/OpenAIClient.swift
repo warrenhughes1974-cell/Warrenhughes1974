@@ -24,6 +24,11 @@ struct OpenAIVisionThumbnailPlan: Sendable {
     let picks: [OpenAIVisionThumbnailPick]
 }
 
+struct OpenAIClipAssist: Sendable {
+    let label: ClipRecommendation
+    let reason: String
+}
+
 /// Cloud OpenAI helpers for Whisper transcription and GPT story/copy.
 /// Requires a user-provided API key stored in Keychain.
 enum OpenAIClient {
@@ -199,6 +204,61 @@ enum OpenAIClient {
         )
 
         return try decodeUploadCopy(from: content)
+    }
+
+    // MARK: - Smart Analysis AI Assist
+
+    /// Second-opinion triage for one clip using local metrics only (no invent).
+    /// Caller merges with local rules via `RecommendationEngine.mergeAIAssist`.
+    static func assistClipRecommendation(
+        fileName: String,
+        local: ClipRecommendation,
+        localNotes: String,
+        talkingPercent: Double,
+        motionPercent: Double,
+        durationSeconds: Double,
+        jerkSummary: String,
+        transcriptSnippet: String?,
+        model: String,
+        apiKey: String
+    ) async throws -> OpenAIClipAssist {
+        guard !apiKey.isEmpty else { throw ServiceError.missingAPIKey }
+
+        let snippet = (transcriptSnippet ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let snippetBlock = snippet.isEmpty
+            ? "(no transcript snippet)"
+            : String(snippet.prefix(700))
+
+        let prompt = """
+        You triage one DJI/travel vlog clip for KEEP / B-ROLL / REVIEW / DISCARD.
+        Use ONLY the numbers and notes below. Never invent people, places, or plot.
+
+        File: \(fileName)
+        Duration seconds: \(String(format: "%.1f", durationSeconds))
+        Talking percent (loudness proxy): \(String(format: "%.1f", talkingPercent))
+        Motion percent: \(String(format: "%.1f", motionPercent))
+        Sudden movement: \(jerkSummary.isEmpty ? "none noted" : jerkSummary)
+        Local label: \(local.rawValue)
+        Local notes: \(localNotes)
+        Transcript snippet: \(snippetBlock)
+
+        Prefer demoting obvious junk (camera on table, dead hallway, almost no useful content).
+        Do not upgrade weak clips to KEEP without strong talking evidence in the numbers.
+        B-ROLL = useful silent cutaway/scenic motion. DISCARD = not worth editing.
+
+        Return ONLY JSON:
+        { "label": "KEEP"|"B-ROLL"|"REVIEW"|"DISCARD", "reason": "short factual reason" }
+        """
+
+        let raw = try await chatCompletion(
+            model: model,
+            apiKey: apiKey,
+            system: "You are a clip triage assistant. JSON only. Never invent facts.",
+            user: prompt,
+            jsonMode: true
+        )
+        return try decodeClipAssist(from: raw)
     }
 
     // MARK: - Vision thumbnails
@@ -487,6 +547,33 @@ enum OpenAIClient {
             tags: stringArray(root["tags"]),
             hashtags: stringArray(root["hashtags"]),
             thumbnailText: stringValue(root["thumbnailText"])
+        )
+    }
+
+    private static func decodeClipAssist(from json: String) throws -> OpenAIClipAssist {
+        guard let data = json.data(using: .utf8),
+              let root = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw ServiceError.decodingFailed
+        }
+
+        let rawLabel = stringValue(root["label"]).uppercased()
+        let label: ClipRecommendation
+        switch rawLabel {
+        case "KEEP":
+            label = .keep
+        case "B-ROLL", "BROLL", "B ROLL":
+            label = .bRoll
+        case "REVIEW":
+            label = .review
+        case "DISCARD":
+            label = .discard
+        default:
+            throw ServiceError.decodingFailed
+        }
+
+        return OpenAIClipAssist(
+            label: label,
+            reason: stringValue(root["reason"])
         )
     }
 

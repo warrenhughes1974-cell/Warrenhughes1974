@@ -108,6 +108,12 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.49",
+            highlights: [
+                "Smart Analysis AI Assist (optional, Settings → OpenAI): after local KEEP/B-ROLL/REVIEW rules, OpenAI can demote obvious junk or confirm a label. It never upgrades weak clips to KEEP. Clip Cleaner / auto-editor unchanged."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.48",
             highlights: [
                 "OpenAI API key no longer uses macOS Keychain (that password dialog often blocked Desktop Update installs). Keys are stored in a locked local app file instead — click Deny on any leftover Keychain prompt, then paste your sk- key again and Save."

@@ -114,6 +114,8 @@ struct SettingsView: View {
                     .onChange(of: openAI.useCloudCopy) { _, _ in openAI.save() }
                 Toggle("Use OpenAI Vision for thumbnail picks + overlay text", isOn: $openAI.useVisionThumbnails)
                     .onChange(of: openAI.useVisionThumbnails) { _, _ in openAI.save() }
+                Toggle("Use OpenAI AI Assist on Smart Analysis (demote junk / confirm labels)", isOn: $openAI.useAIAssistAnalysis)
+                    .onChange(of: openAI.useAIAssistAnalysis) { _, _ in openAI.save() }
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Chat model")
@@ -132,13 +134,13 @@ struct SettingsView: View {
                 )
                 .font(.caption)
 
-                Text("Uses your OpenAI account billing. Transcripts, story text, and thumbnail frames are sent to OpenAI when these toggles are on.")
+                Text("Uses your OpenAI account billing. Transcripts, story text, thumbnail frames, and Smart Analysis clip metrics are sent to OpenAI when these toggles are on. AI Assist never upgrades weak clips to KEEP.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
             .padding(4)
         } label: {
-            Label("OpenAI (Cloud) — One-Place YouTube Prep", systemImage: "cloud.fill")
+            Label("OpenAI (Cloud)", systemImage: "cloud.fill")
                 .font(.headline)
                 .foregroundStyle(AppTheme.mclarenBlue)
         }

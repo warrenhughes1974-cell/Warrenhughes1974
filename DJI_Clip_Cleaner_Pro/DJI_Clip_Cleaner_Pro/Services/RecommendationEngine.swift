@@ -68,4 +68,53 @@ enum RecommendationEngine {
       return (.review, jerkNote)
     }
   }
+
+  /// Phase-1 AI Assist merge: demote junk or confirm local labels only.
+  /// Never upgrades a weaker local label to KEEP (no inventing “good” clips).
+  static func mergeAIAssist(
+    local: ClipRecommendation,
+    localNotes: String,
+    aiLabel: ClipRecommendation,
+    aiReason: String
+  ) -> (ClipRecommendation, String) {
+    let reason = aiReason.trimmingCharacters(in: .whitespacesAndNewlines)
+    let localSeverity = severity(local)
+    let aiSeverity = severity(aiLabel)
+
+    guard localSeverity >= 0, aiSeverity >= 0 else {
+      return (local, localNotes)
+    }
+
+    if aiSeverity > localSeverity {
+      let note: String
+      if reason.isEmpty {
+        note = localNotes.isEmpty
+          ? "AI demoted to \(aiLabel.rawValue)."
+          : "\(localNotes) AI demoted to \(aiLabel.rawValue)."
+      } else if localNotes.isEmpty {
+        note = "AI: \(reason)"
+      } else {
+        note = "\(localNotes) AI: \(reason)"
+      }
+      return (aiLabel, note)
+    }
+
+    if aiLabel == local, !reason.isEmpty {
+      let note = localNotes.isEmpty ? "AI: \(reason)" : "\(localNotes) AI: \(reason)"
+      return (local, note)
+    }
+
+    return (local, localNotes)
+  }
+
+  /// Higher = more junk. Returns -1 for non-triage labels.
+  private static func severity(_ label: ClipRecommendation) -> Int {
+    switch label {
+    case .keep: return 0
+    case .bRoll: return 1
+    case .review: return 2
+    case .discard: return 3
+    case .pending, .unknown: return -1
+    }
+  }
 }

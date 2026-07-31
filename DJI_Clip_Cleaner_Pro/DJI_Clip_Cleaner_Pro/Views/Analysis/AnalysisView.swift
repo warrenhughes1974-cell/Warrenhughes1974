@@ -103,7 +103,7 @@ struct AnalysisView: View {
                         .clipShape(Capsule())
                 }
 
-                Text("Scan a folder to detect talking, motion, and B-roll, plus branded title suggestions for each clip.")
+                Text("Scan a folder to detect talking, motion, and B-roll, plus branded title suggestions for each clip. Optional OpenAI AI Assist (Settings) can demote junk labels.")
                     .foregroundStyle(.secondary)
             }
 
@@ -241,7 +241,7 @@ struct AnalysisView: View {
                     TableColumn("Reason") { result in
                         Text(result.notes)
                             .foregroundStyle(.secondary)
-                            .lineLimit(2)
+                            .lineLimit(4)
                     }
                 }
             }
