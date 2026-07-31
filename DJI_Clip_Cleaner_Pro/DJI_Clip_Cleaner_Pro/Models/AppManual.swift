@@ -108,6 +108,12 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.50",
+            highlights: [
+                "Smart Analysis cut hints (optional, Settings → OpenAI): for KEEP / REVIEW / B-ROLL clips, Whisper + GPT suggest KEEP/CUT time ranges shown in the Cut hints column and CSV. Suggestions only — Clip Cleaner does not auto-cut."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.49",
             highlights: [
                 "Smart Analysis AI Assist (optional, Settings → OpenAI): after local KEEP/B-ROLL/REVIEW rules, OpenAI can demote obvious junk or confirm a label. It never upgrades weak clips to KEEP. Clip Cleaner / auto-editor unchanged."

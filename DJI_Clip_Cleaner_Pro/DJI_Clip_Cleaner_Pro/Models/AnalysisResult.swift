@@ -26,6 +26,8 @@ struct AnalysisResult: Identifiable {
     var motionSummary: String
     var recommendation: ClipRecommendation
     var notes: String
+    /// Suggested KEEP/CUT ranges from optional OpenAI cut hints (display string).
+    var cutHints: String
     var suggestedHook: String
     var suggestedTitle: String
     var thumbnailPath: String
@@ -39,6 +41,7 @@ struct AnalysisResult: Identifiable {
         self.motionSummary = "Pending"
         self.recommendation = .pending
         self.notes = ""
+        self.cutHints = ""
         self.suggestedHook = ""
         self.suggestedTitle = ""
         self.thumbnailPath = ""

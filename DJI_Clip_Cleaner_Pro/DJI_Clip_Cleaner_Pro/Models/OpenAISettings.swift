@@ -6,6 +6,7 @@ struct OpenAISettingsValues: Sendable {
     let useCloudCopy: Bool
     let useVisionThumbnails: Bool
     let useAIAssistAnalysis: Bool
+    let useAICutHints: Bool
     let model: String
 }
 
@@ -25,6 +26,8 @@ final class OpenAISettings {
     var useVisionThumbnails = true
     /// Optional Smart Analysis post-pass: demote junk / confirm local KEEP labels.
     var useAIAssistAnalysis = false
+    /// Optional Smart Analysis: Whisper + GPT suggests KEEP/CUT time ranges (hints only).
+    var useAICutHints = false
     /// Cheap default; user can switch to gpt-4o in Settings for stronger copy.
     var model = "gpt-4o-mini"
 
@@ -46,6 +49,7 @@ final class OpenAISettings {
             useCloudCopy: useCloudCopy,
             useVisionThumbnails: useVisionThumbnails,
             useAIAssistAnalysis: useAIAssistAnalysis,
+            useAICutHints: useAICutHints,
             model: model.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                 ? "gpt-4o-mini"
                 : model.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -95,6 +99,7 @@ final class OpenAISettings {
             "useCloudCopy": useCloudCopy,
             "useVisionThumbnails": useVisionThumbnails,
             "useAIAssistAnalysis": useAIAssistAnalysis,
+            "useAICutHints": useAICutHints,
             "model": model
         ]
         UserDefaults.standard.set(payload, forKey: Self.storageKey)
@@ -118,6 +123,7 @@ final class OpenAISettings {
         useCloudCopy = payload["useCloudCopy"] as? Bool ?? useCloudCopy
         useVisionThumbnails = payload["useVisionThumbnails"] as? Bool ?? useVisionThumbnails
         useAIAssistAnalysis = payload["useAIAssistAnalysis"] as? Bool ?? useAIAssistAnalysis
+        useAICutHints = payload["useAICutHints"] as? Bool ?? useAICutHints
         model = payload["model"] as? String ?? model
     }
 }

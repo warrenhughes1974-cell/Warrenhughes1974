@@ -29,6 +29,41 @@ struct OpenAIClipAssist: Sendable {
     let reason: String
 }
 
+struct OpenAICutHintRange: Sendable {
+    enum Action: String, Sendable {
+        case keep = "KEEP"
+        case cut = "CUT"
+    }
+
+    let action: Action
+    let startSeconds: TimeInterval
+    let endSeconds: TimeInterval
+    let reason: String
+}
+
+struct OpenAICutHints: Sendable {
+    let summary: String
+    let ranges: [OpenAICutHintRange]
+
+    /// Compact table/CSV string, e.g. `KEEP 0:08–0:41 talking · CUT 0:00–0:07 dead air`.
+    var displayString: String {
+        let parts = ranges.map { range in
+            let start = TranscriptChapter.timecode(range.startSeconds)
+            let end = TranscriptChapter.timecode(range.endSeconds)
+            let reason = range.reason.trimmingCharacters(in: .whitespacesAndNewlines)
+            if reason.isEmpty {
+                return "\(range.action.rawValue) \(start)–\(end)"
+            }
+            return "\(range.action.rawValue) \(start)–\(end) \(reason)"
+        }
+        let joined = parts.joined(separator: " · ")
+        let head = summary.trimmingCharacters(in: .whitespacesAndNewlines)
+        if head.isEmpty { return joined }
+        if joined.isEmpty { return head }
+        return "\(head) | \(joined)"
+    }
+}
+
 /// Cloud OpenAI helpers for Whisper transcription and GPT story/copy.
 /// Requires a user-provided API key stored in Keychain.
 enum OpenAIClient {
@@ -259,6 +294,60 @@ enum OpenAIClient {
             jsonMode: true
         )
         return try decodeClipAssist(from: raw)
+    }
+
+    /// Suggest KEEP/CUT time ranges from a timed transcript. Hints only — no export edits.
+    static func suggestCutHints(
+        fileName: String,
+        recommendation: ClipRecommendation,
+        durationSeconds: Double,
+        transcript: Transcript,
+        model: String,
+        apiKey: String
+    ) async throws -> OpenAICutHints {
+        guard !apiKey.isEmpty else { throw ServiceError.missingAPIKey }
+        guard durationSeconds > 1 else { throw ServiceError.emptyResult }
+
+        let timed = timedTranscriptBlock(from: transcript, maxChars: 2_800)
+        guard !timed.isEmpty else { throw ServiceError.emptyResult }
+
+        let prompt = """
+        You are an editor assistant for a travel/vlog channel.
+        Suggest KEEP and CUT time ranges inside ONE clip so the human can trim faster in Filmora.
+        Do NOT invent people, places, or plot. Use ONLY the timed transcript.
+
+        File: \(fileName)
+        Clip duration seconds: \(String(format: "%.1f", durationSeconds))
+        Local recommendation: \(recommendation.rawValue)
+
+        Timed transcript:
+        \(timed)
+
+        Rules:
+        - Prefer 1–2 KEEP ranges for usable talking or strong silent B-roll.
+        - CUT dead air, false starts, "wait hold on", packing/table noise, walking with no story.
+        - Times must be within 0 … \(String(format: "%.1f", durationSeconds)).
+        - startSeconds < endSeconds.
+        - Max 6 ranges total.
+        - Reasons short and factual.
+
+        Return ONLY JSON:
+        {
+          "summary": "one short line",
+          "hints": [
+            { "action": "KEEP"|"CUT", "startSeconds": 0, "endSeconds": 10, "reason": "short" }
+          ]
+        }
+        """
+
+        let raw = try await chatCompletion(
+            model: model,
+            apiKey: apiKey,
+            system: "You suggest edit cut hints from transcripts. JSON only. Never invent facts.",
+            user: prompt,
+            jsonMode: true
+        )
+        return try decodeCutHints(from: raw, durationSeconds: durationSeconds)
     }
 
     // MARK: - Vision thumbnails
@@ -575,6 +664,87 @@ enum OpenAIClient {
             label: label,
             reason: stringValue(root["reason"])
         )
+    }
+
+    private static func decodeCutHints(
+        from json: String,
+        durationSeconds: Double
+    ) throws -> OpenAICutHints {
+        guard let data = json.data(using: .utf8),
+              let root = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw ServiceError.decodingFailed
+        }
+
+        let hintsJSON = (root["hints"] as? [[String: Any]])
+            ?? (root["ranges"] as? [[String: Any]])
+            ?? []
+
+        var ranges: [OpenAICutHintRange] = []
+        for item in hintsJSON.prefix(6) {
+            let actionRaw = stringValue(item["action"]).uppercased()
+            let action: OpenAICutHintRange.Action?
+            switch actionRaw {
+            case "KEEP", "USE", "KEEP_RANGE":
+                action = .keep
+            case "CUT", "TRIM", "REMOVE", "CUT_OUT":
+                action = .cut
+            default:
+                action = nil
+            }
+            guard let action else { continue }
+
+            let start = doubleValue(item["startSeconds"]) ?? doubleValue(item["start"]) ?? -1
+            let end = doubleValue(item["endSeconds"]) ?? doubleValue(item["end"]) ?? -1
+            guard start >= 0, end > start else { continue }
+
+            let clampedStart = min(max(start, 0), durationSeconds)
+            let clampedEnd = min(max(end, clampedStart + 0.2), durationSeconds)
+            guard clampedEnd > clampedStart else { continue }
+
+            ranges.append(
+                OpenAICutHintRange(
+                    action: action,
+                    startSeconds: clampedStart,
+                    endSeconds: clampedEnd,
+                    reason: stringValue(item["reason"])
+                )
+            )
+        }
+
+        let summary = stringValue(root["summary"])
+        guard !ranges.isEmpty || !summary.isEmpty else {
+            throw ServiceError.emptyResult
+        }
+
+        return OpenAICutHints(summary: summary, ranges: ranges)
+    }
+
+    private static func timedTranscriptBlock(
+        from transcript: Transcript,
+        maxChars: Int
+    ) -> String {
+        var lines: [String] = []
+        var used = 0
+        for segment in transcript.segments {
+            let text = segment.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !text.isEmpty else { continue }
+            let line = "[\(TranscriptChapter.timecode(segment.startTime))-\(TranscriptChapter.timecode(segment.endTime))] \(text)"
+            if used + line.count + 1 > maxChars { break }
+            lines.append(line)
+            used += line.count + 1
+        }
+        if lines.isEmpty {
+            let full = transcript.fullText.trimmingCharacters(in: .whitespacesAndNewlines)
+            return String(full.prefix(maxChars))
+        }
+        return lines.joined(separator: "\n")
+    }
+
+    private static func doubleValue(_ any: Any?) -> Double? {
+        if let value = any as? Double { return value }
+        if let value = any as? Int { return Double(value) }
+        if let value = any as? String { return Double(value) }
+        return nil
     }
 
     private static func decodeVisionPlan(

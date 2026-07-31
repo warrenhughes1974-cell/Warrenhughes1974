@@ -116,6 +116,8 @@ struct SettingsView: View {
                     .onChange(of: openAI.useVisionThumbnails) { _, _ in openAI.save() }
                 Toggle("Use OpenAI AI Assist on Smart Analysis (demote junk / confirm labels)", isOn: $openAI.useAIAssistAnalysis)
                     .onChange(of: openAI.useAIAssistAnalysis) { _, _ in openAI.save() }
+                Toggle("Use OpenAI cut hints on Smart Analysis (KEEP/CUT time ranges)", isOn: $openAI.useAICutHints)
+                    .onChange(of: openAI.useAICutHints) { _, _ in openAI.save() }
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Chat model")
@@ -134,7 +136,7 @@ struct SettingsView: View {
                 )
                 .font(.caption)
 
-                Text("Uses your OpenAI account billing. Transcripts, story text, thumbnail frames, and Smart Analysis clip metrics are sent to OpenAI when these toggles are on. AI Assist never upgrades weak clips to KEEP.")
+                Text("Uses your OpenAI account billing. Transcripts, story text, thumbnail frames, Smart Analysis metrics, and KEEP/REVIEW/B-ROLL clip audio (for cut hints) are sent when those toggles are on. Cut hints are suggestions only — Clip Cleaner does not auto-apply them. AI Assist never upgrades weak clips to KEEP.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }

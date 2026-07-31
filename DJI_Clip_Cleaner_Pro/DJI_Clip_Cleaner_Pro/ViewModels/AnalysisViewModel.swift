@@ -450,11 +450,18 @@ final class AnalysisViewModel {
         guard !results.isEmpty else { return }
 
         isAnalyzing = true
-        let openAIEnabled = OpenAISettings.shared.useAIAssistAnalysis
-            && OpenAISettings.shared.hasAPIKey
-        statusMessage = openAIEnabled
-            ? "Analyzing \(results.count) clip(s) with AI Assist…"
-            : "Analyzing \(results.count) clip(s)..."
+        let openAISettings = OpenAISettings.shared
+        let cloudAssist = openAISettings.useAIAssistAnalysis && openAISettings.hasAPIKey
+        let cloudCutHints = openAISettings.useAICutHints && openAISettings.hasAPIKey
+        if cloudAssist && cloudCutHints {
+            statusMessage = "Analyzing \(results.count) clip(s) with AI Assist + cut hints…"
+        } else if cloudAssist {
+            statusMessage = "Analyzing \(results.count) clip(s) with AI Assist…"
+        } else if cloudCutHints {
+            statusMessage = "Analyzing \(results.count) clip(s) with AI cut hints…"
+        } else {
+            statusMessage = "Analyzing \(results.count) clip(s)..."
+        }
         let settings = AnalysisSettings.shared.values
 
         analysisTask = Task {
@@ -465,6 +472,7 @@ final class AnalysisViewModel {
                 results[index].motionStatus = .running
                 results[index].speechSummary = "Detecting..."
                 results[index].motionSummary = "Detecting..."
+                results[index].cutHints = ""
                 statusMessage = "Analyzing \(index + 1) of \(results.count): \(results[index].video.name)"
 
                 let videoURL = results[index].video.url
@@ -491,6 +499,37 @@ final class AnalysisViewModel {
 
                 // Optional OpenAI second opinion: demote junk / confirm only.
                 let openAI = OpenAISettings.shared
+                var clipTranscript: Transcript?
+
+                // Cut hints need a timed transcript; reuse snippet for AI Assist when present.
+                if openAI.useAICutHints,
+                   openAI.hasAPIKey,
+                   let apiKey = openAI.apiKey(),
+                   recommendation.0 == .keep
+                    || recommendation.0 == .review
+                    || recommendation.0 == .bRoll {
+                    statusMessage = "Cut-hint transcript \(index + 1) of \(results.count): \(results[index].video.name)"
+                    do {
+                        if openAI.useWhisper {
+                            clipTranscript = try await OpenAIClient.transcribeWithWhisper(
+                                videoURL: videoURL,
+                                apiKey: apiKey
+                            )
+                        } else {
+                            clipTranscript = try await TranscriptionService.transcribe(
+                                videoURL: videoURL
+                            )
+                        }
+                    } catch {
+                        // Fall back to on-device if Whisper fails.
+                        if openAI.useWhisper {
+                            clipTranscript = try? await TranscriptionService.transcribe(
+                                videoURL: videoURL
+                            )
+                        }
+                    }
+                }
+
                 if openAI.useAIAssistAnalysis,
                    openAI.hasAPIKey,
                    let apiKey = openAI.apiKey(),
@@ -505,7 +544,7 @@ final class AnalysisViewModel {
                             motionPercent: motionResult.motionPercent,
                             durationSeconds: results[index].video.duration,
                             jerkSummary: motionResult.jerkSummary,
-                            transcriptSnippet: nil,
+                            transcriptSnippet: clipTranscript?.fullText,
                             model: openAI.values.model,
                             apiKey: apiKey
                         )
@@ -522,6 +561,30 @@ final class AnalysisViewModel {
 
                 results[index].recommendation = recommendation.0
                 results[index].notes = recommendation.1
+
+                if openAI.useAICutHints,
+                   openAI.hasAPIKey,
+                   let apiKey = openAI.apiKey(),
+                   let transcript = clipTranscript,
+                   !transcript.isEmpty,
+                   recommendation.0 == .keep
+                    || recommendation.0 == .review
+                    || recommendation.0 == .bRoll {
+                    statusMessage = "AI cut hints \(index + 1) of \(results.count): \(results[index].video.name)"
+                    do {
+                        let hints = try await OpenAIClient.suggestCutHints(
+                            fileName: results[index].video.name,
+                            recommendation: recommendation.0,
+                            durationSeconds: results[index].video.duration,
+                            transcript: transcript,
+                            model: openAI.values.model,
+                            apiKey: apiKey
+                        )
+                        results[index].cutHints = hints.displayString
+                    } catch {
+                        // Fail soft — leave cutHints empty.
+                    }
+                }
 
                 let hook = TitleSuggestionService.suggestHook(
                     video: results[index].video,

@@ -103,7 +103,7 @@ struct AnalysisView: View {
                         .clipShape(Capsule())
                 }
 
-                Text("Scan a folder to detect talking, motion, and B-roll, plus branded title suggestions for each clip. Optional OpenAI AI Assist (Settings) can demote junk labels.")
+                Text("Scan a folder to detect talking, motion, and B-roll, plus branded title suggestions. Optional OpenAI AI Assist / cut hints live in Settings.")
                     .foregroundStyle(.secondary)
             }
 
@@ -242,6 +242,13 @@ struct AnalysisView: View {
                         Text(result.notes)
                             .foregroundStyle(.secondary)
                             .lineLimit(4)
+                    }
+                    TableColumn("Cut hints") { result in
+                        Text(result.cutHints.isEmpty ? "—" : result.cutHints)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(3)
+                            .font(.caption)
+                            .help(result.cutHints.isEmpty ? "No cut hints" : result.cutHints)
                     }
                 }
             }
