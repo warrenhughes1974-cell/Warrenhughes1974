@@ -196,8 +196,18 @@ final class YouTubePrepViewModel {
     /// so a value that still matches the derived text does not count as edited.
     func thumbnailTextDidChange() {
         let typed = thumbnailText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let derived: String
+        if let transcript {
+            derived = StoryBriefService.build(
+                from: transcript,
+                hook: trimmedHook,
+                brand: BrandSettings.shared.values
+            ).thumbnailText
+        } else {
+            derived = YouTubeMetadataService.thumbnailText(from: trimmedHook)
+        }
         hasEditedThumbnailText = !typed.isEmpty
-            && typed != YouTubeMetadataService.thumbnailText(from: trimmedHook)
+            && typed != derived
     }
 
     func chooseVideo() {
@@ -223,6 +233,8 @@ final class YouTubePrepViewModel {
         errorMessage = nil
         thumbnailPath = ""
         transcript = nil
+        thumbnailText = ""
+        hasEditedThumbnailText = false
         rankedThumbnails = []
         hasRankedThumbnails = false
         selectedThumbnailID = nil
@@ -262,22 +274,7 @@ final class YouTubePrepViewModel {
                     hook: trimmedHook,
                     brand: baseBrand
                 )
-                // Story branding: don't burn Halloween emoji onto unrelated videos.
-                let brand = BrandSettingsValues(
-                    channelPrefix: baseBrand.channelPrefix,
-                    seriesName: baseBrand.seriesName,
-                    defaultHook: baseBrand.defaultHook,
-                    titleFormat: baseBrand.titleFormat,
-                    usePinkTitles: baseBrand.usePinkTitles,
-                    titlePinkRed: baseBrand.titlePinkRed,
-                    titlePinkGreen: baseBrand.titlePinkGreen,
-                    titlePinkBlue: baseBrand.titlePinkBlue,
-                    titleScale: baseBrand.titleScale,
-                    thumbnailEmojis: (brief.domain == .retailHunt && brief.seriesFits)
-                        ? baseBrand.thumbnailEmojis
-                        : [],
-                    emojiPosition: baseBrand.emojiPosition
-                )
+                let brand = storyBrand(base: baseBrand, brief: brief)
                 let folder = try thumbnailFolder(for: selectedVideoURL)
                 let thumbText = resolvedThumbnailText.isEmpty
                     ? brief.thumbnailText
@@ -336,12 +333,20 @@ final class YouTubePrepViewModel {
 
         Task {
             do {
-                let brand = BrandSettings.shared.values
+                let baseBrand = BrandSettings.shared.values
+                let brief = StoryBriefService.build(
+                    from: transcript,
+                    hook: trimmedHook,
+                    brand: baseBrand
+                )
+                let brand = storyBrand(base: baseBrand, brief: brief)
                 let outputURL = try thumbnailOutputURL(for: selectedVideoURL)
 
                 try await ThumbnailService.generate(
                     from: selectedVideoURL,
-                    title: resolvedThumbnailText,
+                    title: brief.thumbnailText.isEmpty
+                        ? resolvedThumbnailText
+                        : brief.thumbnailText,
                     brand: brand,
                     outputURL: outputURL
                 )
@@ -375,12 +380,19 @@ final class YouTubePrepViewModel {
                 let result = try await TranscriptionService.transcribe(videoURL: selectedVideoURL)
                 transcript = result
 
-                if trimmedHook.isEmpty {
+                if trimmedHook.isEmpty || isWeakAutomaticHook(trimmedHook) {
                     hook = suggestedHook(from: result)
                 }
-                // Rebuild thumbnail text from the story brief when the user
-                // hasn't hand-edited it.
-                hookDidChange()
+                // A new transcript is a new source of truth. Replace stale text
+                // carried from a previous run; edits made after this remain manual.
+                let brief = StoryBriefService.build(
+                    from: result,
+                    hook: trimmedHook,
+                    brand: BrandSettings.shared.values
+                )
+                hasEditedThumbnailText = false
+                thumbnailText = brief.thumbnailText
+                refreshTitleVariants()
 
                 statusMessage = "Transcription complete. Generate description and tags to use the story."
             } catch {
@@ -391,6 +403,67 @@ final class YouTubePrepViewModel {
 
             isTranscribing = false
         }
+    }
+
+    private func isWeakAutomaticHook(_ value: String) -> Bool {
+        let lower = value.lowercased()
+        let weakPhrases = [
+            "don't skip this",
+            "dont skip this",
+            "everything worth seeing",
+            "processed update",
+            "new video"
+        ]
+        if weakPhrases.contains(where: { lower.contains($0) }) {
+            return true
+        }
+        let meaningful = lower
+            .split(separator: " ")
+            .filter { !["american", "airline", "airlines", "video"].contains(String($0)) }
+        return meaningful.isEmpty
+    }
+
+    private func storyBrand(
+        base: BrandSettingsValues,
+        brief: StoryBrief
+    ) -> BrandSettingsValues {
+        let color: (red: Double, green: Double, blue: Double)
+        switch brief.domain {
+        case .travelDelay, .cruise:
+            color = (1.0, 1.0, 1.0)
+        case .cooking:
+            color = (1.0, 0.62, 0.18)
+        case .motorsport:
+            color = (1.0, 0.22, 0.18)
+        case .adventure:
+            color = (1.0, 0.86, 0.15)
+        case .themePark:
+            color = (1.0, 0.38, 0.70)
+        case .family, .general:
+            color = (1.0, 1.0, 1.0)
+        case .retailHunt:
+            color = (
+                base.titlePinkRed,
+                base.titlePinkGreen,
+                base.titlePinkBlue
+            )
+        }
+
+        return BrandSettingsValues(
+            channelPrefix: base.channelPrefix,
+            seriesName: base.seriesName,
+            defaultHook: base.defaultHook,
+            titleFormat: base.titleFormat,
+            usePinkTitles: true,
+            titlePinkRed: color.red,
+            titlePinkGreen: color.green,
+            titlePinkBlue: color.blue,
+            titleScale: min(base.titleScale, 1.0),
+            thumbnailEmojis: (brief.domain == .retailHunt && brief.seriesFits)
+                ? base.thumbnailEmojis
+                : [],
+            emojiPosition: base.emojiPosition
+        )
     }
 
     func generateDescription() {

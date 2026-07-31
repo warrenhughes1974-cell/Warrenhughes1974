@@ -307,7 +307,7 @@ enum ThumbnailService {
         scale: CGFloat,
         paragraph: NSParagraphStyle
     ) -> (NSFont, CGSize) {
-        let largestSize = canvasWidth * 0.135 * scale
+        let largestSize = canvasWidth * 0.105 * scale
         let smallestSize = canvasWidth * 0.038 * scale
         var size = largestSize
         var font = NSFont.boldSystemFont(ofSize: size)
@@ -356,33 +356,20 @@ enum ThumbnailService {
             .usesFontLeading
         ]
 
-        let whiteOutlineWidth = max(font.pointSize * 0.08, 2.5)
-        let blackOutlineWidth = max(font.pointSize * 0.045, 1.5)
-
-        let whiteOutlineAttributes: [NSAttributedString.Key: Any] = [
-            .font: font,
-            .foregroundColor: NSColor.clear,
-            .strokeColor: NSColor.white,
-            .strokeWidth: whiteOutlineWidth,
-            .paragraphStyle: paragraph
-        ]
-
-        let blackOutlineAttributes: [NSAttributedString.Key: Any] = [
-            .font: font,
-            .foregroundColor: NSColor.clear,
-            .strokeColor: NSColor.black,
-            .strokeWidth: blackOutlineWidth,
-            .paragraphStyle: paragraph
-        ]
+        let shadow = NSShadow()
+        shadow.shadowColor = NSColor.black.withAlphaComponent(0.9)
+        shadow.shadowBlurRadius = max(font.pointSize * 0.06, 3.0)
+        shadow.shadowOffset = NSSize(width: 2, height: -3)
 
         let fillAttributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .foregroundColor: fillColor,
+            .shadow: shadow,
             .paragraphStyle: paragraph
         ]
 
-        title.draw(with: rect, options: drawOptions, attributes: whiteOutlineAttributes)
-        title.draw(with: rect, options: drawOptions, attributes: blackOutlineAttributes)
+        // No text strokes: mitered font corners created the white “spikes”
+        // around M/A/V. The dark scrim + soft shadow keeps this readable.
         title.draw(with: rect, options: drawOptions, attributes: fillAttributes)
     }
 

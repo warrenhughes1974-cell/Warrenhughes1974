@@ -166,19 +166,19 @@ enum StoryBriefService {
 
         switch domain {
         case .travelDelay:
+            let missedTrip = indicatesMissedTrip(text)
             if text.contains("ground") && (text.contains("delay") || text.contains("stop")) {
                 beats.append("Nationwide ground delays")
             } else if text.contains("delay") {
                 beats.append("Flight delays")
             }
-            if text.contains("missed") || text.contains("miss my") {
+            if missedTrip {
                 beats.append("Missed business trip")
+            } else if text.contains("business") && text.contains("trip") {
+                beats.append("Business trip derailed")
             }
             if places.contains(where: { $0.uppercased() == "DFW" }) || text.contains("dfw") {
                 beats.append("Stuck at DFW")
-            }
-            for place in places where place.uppercased() != "DFW" {
-                beats.append(place)
             }
             if text.contains("american") {
                 beats.append("American Airlines chaos")
@@ -248,13 +248,17 @@ enum StoryBriefService {
 
         switch domain {
         case .travelDelay:
-            if text.contains("missed") {
-                return "Missed our business trip after ground delays\(placeBit)."
+            let airline = text.contains("american") ? "American Airlines " : ""
+            if indicatesMissedTrip(text) {
+                return "\(airline)ground delays made us miss our business trip."
+            }
+            if text.contains("business") && text.contains("trip") {
+                return "\(airline)ground delays derailed our business trip."
             }
             if !hook.isEmpty, hook.split(separator: " ").count <= 6 {
                 return "\(titleCase(hook)) — ground delays\(placeBit) turned this trip upside down."
             }
-            return "Ground delays\(placeBit) turned this travel day upside down."
+            return "\(airline)ground delays\(placeBit) turned this trip upside down."
 
         case .retailHunt:
             return hook.isEmpty
@@ -304,16 +308,29 @@ enum StoryBriefService {
 
         switch domain {
         case .travelDelay:
-            sentences.append(
-                "This video is about the travel day going sideways — delays, waiting, and a plan that fell apart."
-            )
-            if !places.isEmpty {
-                sentences.append("Most of the chaos centered around \(sentenceList(places)).")
+            let hasDFW = places.contains { $0.uppercased() == "DFW" }
+            let destinations = places.filter { $0.uppercased() != "DFW" }
+            if indicatesMissedTrip(text) {
+                if hasDFW, let destination = destinations.first {
+                    sentences.append(
+                        "Massive ground delays at DFW kept us from making our business trip to \(destination)."
+                    )
+                } else {
+                    sentences.append(
+                        "Massive ground delays kept us from making our business trip."
+                    )
+                }
+            } else if text.contains("business") && text.contains("trip") {
+                sentences.append(
+                    "What should have been a business trip became hours of delays and waiting."
+                )
+            } else {
+                sentences.append(
+                    "This travel day went sideways — delays, waiting, and a plan that fell apart."
+                )
             }
-            if text.contains("missed") {
-                sentences.append("The delays cost the business trip.")
-            } else if text.contains("delay") {
-                sentences.append("Ground delays wrecked the schedule.")
+            if hasDFW {
+                sentences.append("The problem started at DFW as delays spread across the system.")
             }
 
         case .retailHunt:
@@ -341,13 +358,7 @@ enum StoryBriefService {
             sentences.append("A real day-in-the-life video — what happened, in order.")
         }
 
-        if !beats.isEmpty, domain != .retailHunt {
-            // Beats already carry the story; don’t append snack lists.
-            let meaningful = beats.filter { !isNoiseBeat($0) }
-            if !meaningful.isEmpty {
-                sentences.append("Story beats: \(sentenceList(meaningful)).")
-            }
-        } else if domain == .retailHunt, !beats.isEmpty {
+        if domain == .retailHunt, !beats.isEmpty {
             sentences.append("Along the way we found \(sentenceList(beats.map { $0.lowercased() })).")
         }
 
@@ -369,7 +380,7 @@ enum StoryBriefService {
                 "gate", "delay", "flight", "baggage", "tarmac"
             ]
             if text.contains("american") {
-                targets += ["american", "airlines", "aa"]
+                targets += ["american", "airlines"]
             }
             targets += places.map { $0.lowercased() }
 
@@ -418,7 +429,7 @@ enum StoryBriefService {
 
         switch domain {
         case .travelDelay:
-            if text.contains("missed") {
+            if indicatesMissedTrip(text) {
                 return "MISSED OUR FLIGHT"
             }
             if places.contains(where: { $0.uppercased() == "DFW" }) || text.contains("dfw") {
@@ -523,6 +534,24 @@ enum StoryBriefService {
         }
 
         return Array(tags.prefix(15))
+    }
+
+    private static func indicatesMissedTrip(_ text: String) -> Bool {
+        let phrases = [
+            "missed",
+            "miss my",
+            "miss our",
+            "didn't make",
+            "didnt make",
+            "never made",
+            "not going to make",
+            "couldn't get",
+            "couldnt get",
+            "had to cancel",
+            "trip was canceled",
+            "trip was cancelled"
+        ]
+        return phrases.contains { text.contains($0) }
     }
 
     private static func makeHashtags(domain: StoryDomain, places: [String]) -> [String] {
