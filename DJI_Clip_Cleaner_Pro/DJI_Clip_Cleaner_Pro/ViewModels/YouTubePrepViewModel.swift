@@ -440,8 +440,14 @@ final class YouTubePrepViewModel {
             return
         }
 
+        let corrected = OnDeviceStoryAnalysisService.applyingChannelNameCorrections(
+            transcript,
+            brand: BrandSettings.shared.values
+        )
+        self.transcript = corrected
+
         Task {
-            await analyzeStory(transcript: transcript)
+            await analyzeStory(transcript: corrected)
         }
     }
 
