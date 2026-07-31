@@ -49,6 +49,7 @@
 		C3D4E5F6A7B6488990ABCD009 /* TitleVariantService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F6A7B8C6488990ABCD009 /* TitleVariantService.swift */; };
 		E5F6A7B8C9D6488990ABCD010 /* TranscriptKeywordService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7B8C9D0E6488990ABCD010 /* TranscriptKeywordService.swift */; };
 		C1D2E3F4A5B6488990ABCD012 /* StoryBriefService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3F4A5B6C6488990ABCD012 /* StoryBriefService.swift */; };
+		E3F4A5B6C7D6488990ABCD013 /* OnDeviceStoryAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A5B6C7D8E6488990ABCD013 /* OnDeviceStoryAnalysisService.swift */; };
 		A7B8C9D0E1F6488990ABCD011 /* ThumbnailEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F2A6488990ABCD011 /* ThumbnailEmoji.swift */; };
 		76371AAF57FB412DAB274AF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AE23DC4F179498E9C87B3CF /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -96,6 +97,7 @@
 		D4E5F6A7B8C6488990ABCD009 /* TitleVariantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleVariantService.swift; sourceTree = "<group>"; };
 		F6A7B8C9D0E6488990ABCD010 /* TranscriptKeywordService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptKeywordService.swift; sourceTree = "<group>"; };
 		D2E3F4A5B6C6488990ABCD012 /* StoryBriefService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryBriefService.swift; sourceTree = "<group>"; };
+		F4A5B6C7D8E6488990ABCD013 /* OnDeviceStoryAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeviceStoryAnalysisService.swift; sourceTree = "<group>"; };
 		B8C9D0E1F2A6488990ABCD011 /* ThumbnailEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailEmoji.swift; sourceTree = "<group>"; };
 		8AE23DC4F179498E9C87B3CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5CF9B53D2BA04BE1AB4A6069 /* Hughes Clip Prep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hughes Clip Prep.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -204,6 +206,7 @@
 				C9D0E1F2A3B7488990ABCD008 /* TranscriptionService.swift */,
 				F6A7B8C9D0E6488990ABCD010 /* TranscriptKeywordService.swift */,
 				D2E3F4A5B6C6488990ABCD012 /* StoryBriefService.swift */,
+				F4A5B6C7D8E6488990ABCD013 /* OnDeviceStoryAnalysisService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				C3D4E5F6A7B6488990ABCD009 /* TitleVariantService.swift in Sources */,
 				E5F6A7B8C9D6488990ABCD010 /* TranscriptKeywordService.swift in Sources */,
 				C1D2E3F4A5B6488990ABCD012 /* StoryBriefService.swift in Sources */,
+				E3F4A5B6C7D6488990ABCD013 /* OnDeviceStoryAnalysisService.swift in Sources */,
 				A7B8C9D0E1F6488990ABCD011 /* ThumbnailEmoji.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -441,7 +445,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.37;
+				MARKETING_VERSION = 1.38;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -474,7 +478,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.37;
+				MARKETING_VERSION = 1.38;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

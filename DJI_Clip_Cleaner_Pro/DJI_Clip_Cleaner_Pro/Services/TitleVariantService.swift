@@ -20,6 +20,61 @@ struct TitleVariant: Identifiable, Sendable, Equatable {
 }
 
 enum TitleVariantService {
+    /// Titles supplied by the confirmed semantic story review. This path avoids
+    /// preset leakage and generic clickbait templates.
+    static func generateStoryTitles(
+        ideas: [String],
+        channel: String,
+        includeChannel: Bool
+    ) -> [TitleVariant] {
+        var unique: [String] = []
+
+        for idea in ideas {
+            var title = idea.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !title.isEmpty else { continue }
+            guard !hasDanglingConjunction(title) else { continue }
+            guard title.count <= YouTubeMetadataService.hardTitleLimit else { continue }
+
+            if includeChannel, !channel.isEmpty,
+               !title.localizedCaseInsensitiveContains(channel) {
+                let candidate = "\(title) | \(channel)"
+                if candidate.count <= YouTubeMetadataService.hardTitleLimit {
+                    title = candidate
+                }
+            }
+
+            guard !unique.contains(where: {
+                $0.caseInsensitiveCompare(title) == .orderedSame
+            }) else { continue }
+            unique.append(title)
+        }
+
+        return unique.prefix(6).map { title in
+            let length = title.count
+            let score: Int
+            if (35...60).contains(length) {
+                score = 92
+            } else if (28...70).contains(length) {
+                score = 84
+            } else {
+                score = 72
+            }
+
+            return TitleVariant(
+                title: title,
+                ctrScore: score,
+                reasons: ["confirmed story", "factual"]
+            )
+        }
+    }
+
+    private static func hasDanglingConjunction(_ value: String) -> Bool {
+        guard let last = value.lowercased().split(separator: " ").last else {
+            return true
+        }
+        return ["and", "or", "but", "at", "to", "from", "with"].contains(String(last))
+    }
+
     /// Builds ten distinct title options and sorts them by a CTR-oriented score.
     static func generate(
         hook: String,

@@ -13,6 +13,7 @@ struct YouTubePrepView: View {
             VStack(alignment: .leading, spacing: 20) {
                 header
                 videoSection
+                storyReviewSection
                 titleChoicesSection
                 // Sit directly above Generate so Rank Thumbnails is not hidden
                 // behind the long title list when you scroll down to build the package.
@@ -55,8 +56,16 @@ struct YouTubePrepView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(AppTheme.papaya)
+                    .disabled(viewModel.isBusyForVideoChange)
 
-                    if viewModel.isWorking {
+                    Button("Transcribe & Analyze Story") {
+                        viewModel.transcribeVideo()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppTheme.mclarenBlue)
+                    .disabled(!viewModel.canTranscribe)
+
+                    if viewModel.isWorking || viewModel.isTranscribing || viewModel.isAnalyzingStory {
                         ProgressView()
                             .controlSize(.small)
                     }
@@ -71,6 +80,10 @@ struct YouTubePrepView: View {
                         .lineLimit(2)
                         .truncationMode(.middle)
                 }
+
+                Text(viewModel.transcriptSummary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Hook")
@@ -111,7 +124,7 @@ struct YouTubePrepView: View {
                     TextField("HomeGoods, Ross, Ike's Love and Sandwiches", text: $viewModel.placesText)
                         .textFieldStyle(.roundedBorder)
 
-                    Text("Separate with commas. Only known retailers are auto-detected from speech — type anything the mic missed (Ike's, a local shop, etc.).")
+                    Text("Separate with commas. Add any place the transcript missed; Story Review assigns origin, problem location, and destination separately.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
@@ -133,18 +146,168 @@ struct YouTubePrepView: View {
         }
     }
 
+    private var storyReviewSection: some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("The app will not generate metadata or thumbnails until you confirm these facts.")
+                            .font(.subheadline.weight(.semibold))
+                        Text(viewModel.storyModelStatus)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    if viewModel.isStoryConfirmed {
+                        Label("Confirmed", systemImage: "checkmark.seal.fill")
+                            .foregroundStyle(.green)
+                    }
+                }
+
+                if viewModel.isAnalyzingStory {
+                    ProgressView("Analyzing goal, obstacle, locations, outcome, and visual ideas…")
+                } else if let analysis = viewModel.storyAnalysis {
+                    Picker("Story Type", selection: storyDomainBinding) {
+                        ForEach(StoryDomain.allCases) { domain in
+                            Text(domain.displayName).tag(domain)
+                        }
+                    }
+                    .pickerStyle(.menu)
+
+                    storyTextField("Subject", \.subject)
+                    storyTextField("Goal — what were you trying to do?", \.goal)
+                    storyTextField("Obstacle — what got in the way?", \.obstacle)
+
+                    HStack(spacing: 12) {
+                        storyTextField("Origin", \.origin)
+                        storyTextField("Problem happened at", \.problemLocation)
+                        storyTextField("Destination", \.destination)
+                    }
+
+                    storyTextField("Outcome — what ultimately happened?", \.outcome)
+
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Natural Story Summary")
+                            .fontWeight(.semibold)
+                        TextEditor(text: storyTextBinding(\.summary))
+                            .font(.body)
+                            .frame(minHeight: 90)
+                            .padding(6)
+                            .background(AppTheme.softBlue)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
+
+                    HStack(alignment: .top, spacing: 12) {
+                        storyListEditor(
+                            "Title Ideas (one per line)",
+                            text: $viewModel.storyTitleIdeasText,
+                            minimumHeight: 100
+                        )
+                        storyListEditor(
+                            "Thumbnail Text Ideas (2–4 words)",
+                            text: $viewModel.storyThumbnailIdeasText,
+                            minimumHeight: 100
+                        )
+                    }
+
+                    HStack(alignment: .top, spacing: 12) {
+                        storyListEditor(
+                            "Visual Targets (plane, gate, food, car…)",
+                            text: $viewModel.storyVisualTargetsText,
+                            minimumHeight: 80
+                        )
+                        storyListEditor(
+                            "Tags (one per line)",
+                            text: $viewModel.storyTagsText,
+                            minimumHeight: 80
+                        )
+                    }
+
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Chapters (timecode + title, one per line)")
+                            .fontWeight(.semibold)
+                        TextEditor(text: $viewModel.storyChaptersText)
+                            .font(.system(.caption, design: .monospaced))
+                            .frame(minHeight: 80)
+                            .padding(6)
+                            .background(AppTheme.softOrange.opacity(0.45))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .onChange(of: viewModel.storyChaptersText) { _, _ in
+                                viewModel.storyEditorDidChange()
+                            }
+                    }
+
+                    if !analysis.evidence.isEmpty {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Transcript Evidence")
+                                .fontWeight(.semibold)
+                            ForEach(analysis.evidence, id: \.self) { evidence in
+                                Text("• \(evidence)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+
+                    if let transcript = viewModel.transcript {
+                        DisclosureGroup("View Full Transcript") {
+                            ScrollView {
+                                Text(transcript.fullText)
+                                    .font(.caption)
+                                    .textSelection(.enabled)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(10)
+                            }
+                            .frame(maxHeight: 220)
+                            .background(AppTheme.softBlue)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                    }
+
+                    ForEach(viewModel.storyWarnings, id: \.self) { warning in
+                        Label(warning, systemImage: "exclamationmark.triangle.fill")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    }
+
+                    HStack {
+                        Button("Analyze Again On Device") {
+                            viewModel.reanalyzeStory()
+                        }
+                        .buttonStyle(.bordered)
+
+                        Button("Confirm Story") {
+                            viewModel.confirmStoryReview()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(AppTheme.papaya)
+                        .disabled(!viewModel.canConfirmStory)
+                    }
+                } else {
+                    Text("Choose a video, then click Transcribe & Analyze Story.")
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .padding(4)
+        } label: {
+            Label("Story Review — Confirm Before Generating", systemImage: "doc.text.magnifyingglass")
+                .font(.headline)
+                .foregroundStyle(AppTheme.mclarenBlue)
+        }
+    }
+
     private var titleChoicesSection: some View {
         GroupBox {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("Title Choices (CTR Ranked)")
+                    Text("Titles From Confirmed Story")
                         .fontWeight(.semibold)
                     Spacer()
                     Button("Refresh Titles") {
                         viewModel.refreshTitleVariants()
                     }
                     .buttonStyle(.bordered)
-                    .disabled(viewModel.trimmedHook.isEmpty)
+                    .disabled(!viewModel.isStoryConfirmed)
 
                     Button("Copy Selected") {
                         viewModel.copyTitle()
@@ -153,7 +316,7 @@ struct YouTubePrepView: View {
                     .disabled(viewModel.generatedTitle.isEmpty)
                 }
 
-                Text("Ten title options, sorted by projected click-through. Click one to use it.")
+                Text("Factual title ideas from the on-device story analysis. Click one to use it.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
@@ -257,7 +420,7 @@ struct YouTubePrepView: View {
                     }
                 }
 
-                Text("Scores about 30 frames, then shows eight picture choices here. Click any one to use it as your thumbnail.")
+                Text("Scores about 60 frames, shows story matches first, then additional sharp choices. Click any one to use it.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
@@ -499,26 +662,6 @@ struct YouTubePrepView: View {
         GroupBox {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 12) {
-                    Button("Transcribe Speech") {
-                        viewModel.transcribeVideo()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.papaya)
-                    .disabled(!viewModel.canTranscribe)
-
-                    if viewModel.isTranscribing {
-                        ProgressView()
-                            .controlSize(.small)
-                    }
-
-                    Spacer()
-                }
-
-                Text(viewModel.transcriptSummary)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                HStack(spacing: 12) {
                     Button("Rank Thumbnails") {
                         viewModel.rankThumbnailOptions()
                     }
@@ -552,11 +695,11 @@ struct YouTubePrepView: View {
                     .disabled(!viewModel.canGenerate || viewModel.isWorking)
                 }
 
-                Text("Tip: Rank Thumbnails (orange) scores ~30 frames and shows picture choices in the box above. Quick Thumbnail grabs one mid-video frame.")
+                Text("Tip: Confirm Story first. Rank Thumbnails shows story matches first while preserving additional sharp choices.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
 
-                Text("Transcribe once, then Build Upload Package. That saves thumbnail, title, description, tags, captions (.srt), and upload steps in YouTube_Prep/.")
+                Text("Build Upload Package saves the confirmed story's thumbnail, title, description, tags, captions (.srt), and upload steps in YouTube_Prep/.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -653,6 +796,56 @@ struct YouTubePrepView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
+    }
+
+    private var storyDomainBinding: Binding<StoryDomain> {
+        Binding(
+            get: { viewModel.storyAnalysis?.domain ?? .general },
+            set: { viewModel.updateStoryDomain($0) }
+        )
+    }
+
+    private func storyTextBinding(
+        _ keyPath: WritableKeyPath<StoryAnalysis, String>
+    ) -> Binding<String> {
+        Binding(
+            get: { viewModel.storyAnalysis?[keyPath: keyPath] ?? "" },
+            set: { viewModel.updateStoryText(keyPath, value: $0) }
+        )
+    }
+
+    private func storyTextField(
+        _ label: String,
+        _ keyPath: WritableKeyPath<StoryAnalysis, String>
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(label)
+                .fontWeight(.semibold)
+            TextField(label, text: storyTextBinding(keyPath))
+                .textFieldStyle(.roundedBorder)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func storyListEditor(
+        _ label: String,
+        text: Binding<String>,
+        minimumHeight: CGFloat
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(label)
+                .fontWeight(.semibold)
+            TextEditor(text: text)
+                .font(.caption)
+                .frame(minHeight: minimumHeight)
+                .padding(6)
+                .background(AppTheme.softBlue)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .onChange(of: text.wrappedValue) { _, _ in
+                    viewModel.storyEditorDidChange()
+                }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func qualityLabel(_ quality: MetadataQuality) -> some View {

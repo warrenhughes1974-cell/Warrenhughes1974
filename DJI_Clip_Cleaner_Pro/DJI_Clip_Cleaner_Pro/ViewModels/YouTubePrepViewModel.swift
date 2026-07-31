@@ -6,6 +6,14 @@ import UniformTypeIdentifiers
 import AppKit
 #endif
 
+private enum StoryReviewError: LocalizedError {
+    case notConfirmed
+
+    var errorDescription: String? {
+        "Review and confirm the story before generating YouTube assets."
+    }
+}
+
 @MainActor
 @Observable
 final class YouTubePrepViewModel {
@@ -16,6 +24,15 @@ final class YouTubePrepViewModel {
     var includeChannelInTitle = false
     var transcript: Transcript?
     var isTranscribing = false
+    var storyAnalysis: StoryAnalysis?
+    var isAnalyzingStory = false
+    var isStoryConfirmed = false
+    var storyWarnings: [String] = []
+    var storyTitleIdeasText = ""
+    var storyThumbnailIdeasText = ""
+    var storyVisualTargetsText = ""
+    var storyTagsText = ""
+    var storyChaptersText = ""
     var titleVariants: [TitleVariant] = []
     var selectedTitleID: UUID?
     var rankedThumbnails: [RankedThumbnailCandidate] = []
@@ -56,26 +73,43 @@ final class YouTubePrepViewModel {
 
         guard !detected.isEmpty else {
             return transcript == nil
-                ? "Transcribe first. Known store names you said out loud are picked up automatically."
-                : "No known store names were recognized. Type them above — cities and misheard words are never treated as stores."
+                ? "Transcribe first. Recognized places will appear in Story Review."
+                : "No known places were recognized. Type any missing place above."
         }
 
         return "Heard in the video: \(detected.joined(separator: ", "))"
     }
 
     var canGenerate: Bool {
-        selectedVideoURL != nil && !trimmedHook.isEmpty && !isTranscribing && !isRankingThumbnails
+        selectedVideoURL != nil &&
+        transcript != nil &&
+        isStoryConfirmed &&
+        !trimmedHook.isEmpty &&
+        !isTranscribing &&
+        !isAnalyzingStory &&
+        !isRankingThumbnails
     }
 
     var canTranscribe: Bool {
-        selectedVideoURL != nil && !isWorking && !isTranscribing && !isRankingThumbnails
+        selectedVideoURL != nil &&
+        !isWorking &&
+        !isTranscribing &&
+        !isAnalyzingStory &&
+        !isRankingThumbnails
+    }
+
+    var isBusyForVideoChange: Bool {
+        isWorking || isTranscribing || isAnalyzingStory || isRankingThumbnails
     }
 
     var canRankThumbnails: Bool {
         selectedVideoURL != nil &&
+        transcript != nil &&
+        isStoryConfirmed &&
         !resolvedThumbnailText.isEmpty &&
         !isWorking &&
         !isTranscribing &&
+        !isAnalyzingStory &&
         !isRankingThumbnails
     }
 
@@ -87,6 +121,25 @@ final class YouTubePrepViewModel {
         let words = transcript.fullText.split(separator: " ").count
         let mode = transcript.usedOnDevice ? "on-device" : "network"
         return "Transcript ready · \(words) words · \(transcript.segments.count) timed words · \(mode)"
+    }
+
+    var storyModelStatus: String {
+        if isAnalyzingStory {
+            return "Apple Intelligence is analyzing the story on this Mac…"
+        }
+        if let storyAnalysis {
+            return "\(storyAnalysis.source.rawValue) · confidence \(storyAnalysis.confidence)%"
+        }
+        return OnDeviceStoryAnalysisService.availability.message
+    }
+
+    var canConfirmStory: Bool {
+        guard let storyAnalysis else { return false }
+        return !storyAnalysis.subject.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && !storyAnalysis.summary.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && !parseLines(storyTitleIdeasText).isEmpty
+            && !parseLines(storyThumbnailIdeasText).isEmpty
+            && !isAnalyzingStory
     }
 
     var generatedTitle: String {
@@ -134,15 +187,10 @@ final class YouTubePrepViewModel {
         let typed = thumbnailText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard typed.isEmpty else { return typed }
 
-        if let transcript {
-            let brief = StoryBriefService.build(
-                from: transcript,
-                hook: trimmedHook,
-                brand: BrandSettings.shared.values
-            )
-            if !brief.thumbnailText.isEmpty {
-                return brief.thumbnailText
-            }
+        if let storyAnalysis,
+           let first = storyAnalysis.thumbnailTextIdeas.first,
+           !first.isEmpty {
+            return first
         }
 
         return YouTubeMetadataService.thumbnailText(from: trimmedHook)
@@ -150,15 +198,10 @@ final class YouTubePrepViewModel {
 
     func hookDidChange() {
         guard !hasEditedThumbnailText else { return }
-        if let transcript {
-            let brief = StoryBriefService.build(
-                from: transcript,
-                hook: trimmedHook,
-                brand: BrandSettings.shared.values
-            )
-            thumbnailText = brief.thumbnailText.isEmpty
-                ? YouTubeMetadataService.thumbnailText(from: trimmedHook)
-                : brief.thumbnailText
+        if let storyAnalysis,
+           let first = storyAnalysis.thumbnailTextIdeas.first,
+           !first.isEmpty {
+            thumbnailText = first
         } else {
             thumbnailText = YouTubeMetadataService.thumbnailText(from: trimmedHook)
         }
@@ -166,16 +209,15 @@ final class YouTubePrepViewModel {
     }
 
     func refreshTitleVariants() {
-        guard !trimmedHook.isEmpty else {
+        guard isStoryConfirmed, let storyAnalysis else {
             titleVariants = []
             selectedTitleID = nil
             return
         }
 
-        titleVariants = TitleVariantService.generate(
-            hook: trimmedHook,
-            brand: BrandSettings.shared.values,
-            preset: BrandSettings.shared.selectedPreset,
+        titleVariants = TitleVariantService.generateStoryTitles(
+            ideas: storyAnalysis.titleIdeas,
+            channel: BrandSettings.shared.channelPrefix,
             includeChannel: includeChannelInTitle
         )
         selectedTitleID = titleVariants.first?.id
@@ -197,12 +239,8 @@ final class YouTubePrepViewModel {
     func thumbnailTextDidChange() {
         let typed = thumbnailText.trimmingCharacters(in: .whitespacesAndNewlines)
         let derived: String
-        if let transcript {
-            derived = StoryBriefService.build(
-                from: transcript,
-                hook: trimmedHook,
-                brand: BrandSettings.shared.values
-            ).thumbnailText
+        if let storyAnalysis {
+            derived = storyAnalysis.thumbnailTextIdeas.first ?? ""
         } else {
             derived = YouTubeMetadataService.thumbnailText(from: trimmedHook)
         }
@@ -233,6 +271,10 @@ final class YouTubePrepViewModel {
         errorMessage = nil
         thumbnailPath = ""
         transcript = nil
+        storyAnalysis = nil
+        isStoryConfirmed = false
+        storyWarnings = []
+        clearStoryEditorText()
         thumbnailText = ""
         hasEditedThumbnailText = false
         rankedThumbnails = []
@@ -241,13 +283,7 @@ final class YouTubePrepViewModel {
         titleVariants = []
         selectedTitleID = nil
 
-        if trimmedHook.isEmpty {
-            hook = YouTubeMetadataService.hookSuggestion(
-                from: url,
-                fallbackSeries: BrandSettings.shared.seriesName
-            )
-            hookDidChange()
-        }
+        hook = ""
 
         statusMessage = "Ready to prep \(url.lastPathComponent) for YouTube."
         #endif
@@ -264,16 +300,14 @@ final class YouTubePrepViewModel {
         rankedThumbnails = []
         selectedThumbnailID = nil
         thumbnailScanProgress = 0
-        statusMessage = "Scoring about 30 frames for the strongest thumbnails..."
+        statusMessage = "Scoring about 60 frames for story matches and sharp alternatives..."
 
         Task {
             do {
                 let baseBrand = BrandSettings.shared.values
-                let brief = StoryBriefService.build(
-                    from: transcript,
-                    hook: trimmedHook,
-                    brand: baseBrand
-                )
+                guard let brief = reviewedStoryBrief else {
+                    throw StoryReviewError.notConfirmed
+                }
                 let brand = storyBrand(base: baseBrand, brief: brief)
                 let folder = try thumbnailFolder(for: selectedVideoURL)
                 let thumbText = resolvedThumbnailText.isEmpty
@@ -334,19 +368,15 @@ final class YouTubePrepViewModel {
         Task {
             do {
                 let baseBrand = BrandSettings.shared.values
-                let brief = StoryBriefService.build(
-                    from: transcript,
-                    hook: trimmedHook,
-                    brand: baseBrand
-                )
+                guard let brief = reviewedStoryBrief else {
+                    throw StoryReviewError.notConfirmed
+                }
                 let brand = storyBrand(base: baseBrand, brief: brief)
                 let outputURL = try thumbnailOutputURL(for: selectedVideoURL)
 
                 try await ThumbnailService.generate(
                     from: selectedVideoURL,
-                    title: brief.thumbnailText.isEmpty
-                        ? resolvedThumbnailText
-                        : brief.thumbnailText,
+                    title: resolvedThumbnailText,
                     brand: brand,
                     outputURL: outputURL
                 )
@@ -370,6 +400,7 @@ final class YouTubePrepViewModel {
             errorMessage = "Choose a video first."
             return
         }
+        let requestedVideoURL = selectedVideoURL
 
         isTranscribing = true
         errorMessage = nil
@@ -377,26 +408,17 @@ final class YouTubePrepViewModel {
 
         Task {
             do {
-                let result = try await TranscriptionService.transcribe(videoURL: selectedVideoURL)
-                transcript = result
-
-                if trimmedHook.isEmpty || isWeakAutomaticHook(trimmedHook) {
-                    hook = suggestedHook(from: result)
+                let result = try await TranscriptionService.transcribe(videoURL: requestedVideoURL)
+                guard self.selectedVideoURL == requestedVideoURL else {
+                    isTranscribing = false
+                    return
                 }
-                // A new transcript is a new source of truth. Replace stale text
-                // carried from a previous run; edits made after this remain manual.
-                let brief = StoryBriefService.build(
-                    from: result,
-                    hook: trimmedHook,
-                    brand: BrandSettings.shared.values
-                )
-                hasEditedThumbnailText = false
-                thumbnailText = brief.thumbnailText
-                refreshTitleVariants()
-
-                statusMessage = "Transcription complete. Generate description and tags to use the story."
+                transcript = result
+                isTranscribing = false
+                await analyzeStory(transcript: result)
             } catch {
                 transcript = nil
+                storyAnalysis = nil
                 errorMessage = error.localizedDescription
                 statusMessage = "Transcription failed."
             }
@@ -405,22 +427,303 @@ final class YouTubePrepViewModel {
         }
     }
 
-    private func isWeakAutomaticHook(_ value: String) -> Bool {
-        let lower = value.lowercased()
-        let weakPhrases = [
-            "don't skip this",
-            "dont skip this",
-            "everything worth seeing",
-            "processed update",
-            "new video"
-        ]
-        if weakPhrases.contains(where: { lower.contains($0) }) {
+    func reanalyzeStory() {
+        guard let transcript else {
+            errorMessage = "Transcribe the video first."
+            return
+        }
+
+        Task {
+            await analyzeStory(transcript: transcript)
+        }
+    }
+
+    private func analyzeStory(transcript: Transcript) async {
+        isAnalyzingStory = true
+        isStoryConfirmed = false
+        errorMessage = nil
+        statusMessage = "Apple Intelligence is analyzing the story on this Mac…"
+
+        let brand = BrandSettings.shared.values
+        do {
+            storyAnalysis = try await OnDeviceStoryAnalysisService.analyze(
+                transcript: transcript,
+                existingHook: trimmedHook,
+                brand: brand
+            )
+            syncStoryEditorText()
+            statusMessage = "Story analysis ready. Review the facts, then click Confirm Story."
+        } catch {
+            storyAnalysis = OnDeviceStoryAnalysisService.fallback(
+                transcript: transcript,
+                hook: trimmedHook,
+                brand: brand
+            )
+            syncStoryEditorText()
+            statusMessage = "\(error.localizedDescription) A local fallback draft is ready; review every field."
+        }
+
+        storyWarnings = validateStoryAnalysis()
+        titleVariants = []
+        selectedTitleID = nil
+        rankedThumbnails = []
+        selectedThumbnailID = nil
+        hasRankedThumbnails = false
+        isAnalyzingStory = false
+    }
+
+    func updateStoryText(
+        _ keyPath: WritableKeyPath<StoryAnalysis, String>,
+        value: String
+    ) {
+        guard var analysis = storyAnalysis else { return }
+        analysis[keyPath: keyPath] = value
+        storyAnalysis = analysis
+        storyDidChange()
+    }
+
+    func updateStoryDomain(_ domain: StoryDomain) {
+        guard var analysis = storyAnalysis else { return }
+        analysis.domain = domain
+        storyAnalysis = analysis
+        storyDidChange()
+    }
+
+    func storyEditorDidChange() {
+        storyDidChange()
+    }
+
+    func confirmStoryReview() {
+        storyWarnings = validateStoryAnalysis()
+        guard canConfirmStory, var analysis = storyAnalysis else {
+            errorMessage = "Add a subject, summary, title idea, and thumbnail text before confirming."
+            return
+        }
+
+        analysis.titleIdeas = parseLines(storyTitleIdeasText)
+        analysis.thumbnailTextIdeas = parseLines(storyThumbnailIdeasText)
+        analysis.visualTargets = parseLines(storyVisualTargetsText)
+        analysis.tags = parseLines(storyTagsText)
+        analysis.chapters = parseChapters(storyChaptersText)
+
+        if analysis.domain == .travelDelay,
+           !analysis.problemLocation.isEmpty,
+           analysis.problemLocation.caseInsensitiveCompare(analysis.destination) == .orderedSame {
+            errorMessage = "Problem location and destination are the same. Correct them before confirming."
+            return
+        }
+
+        analysis.titleIdeas = cleanCompletePhrases(analysis.titleIdeas)
+            .filter { $0.count <= YouTubeMetadataService.hardTitleLimit }
+        analysis.thumbnailTextIdeas = analysis.thumbnailTextIdeas
+            .map { $0.uppercased() }
+            .filter { (2...4).contains($0.split(separator: " ").count) }
+        analysis.tags = cleanCompletePhrases(analysis.tags)
+        storyAnalysis = analysis
+
+        guard let firstTitle = analysis.titleIdeas.first,
+              let firstThumbnail = analysis.thumbnailTextIdeas.first else {
+            errorMessage = "Add at least one complete title and one 2–4 word thumbnail idea."
+            return
+        }
+
+        hook = firstTitle
+        hasEditedThumbnailText = false
+        thumbnailText = firstThumbnail
+        isStoryConfirmed = true
+        errorMessage = nil
+        refreshTitleVariants()
+        statusMessage = "Story confirmed. Titles, metadata, and thumbnails now use these facts."
+    }
+
+    private func storyDidChange() {
+        isStoryConfirmed = false
+        storyWarnings = validateStoryAnalysis()
+        titleVariants = []
+        selectedTitleID = nil
+        generatedDescription = ""
+        generatedTags = []
+        rankedThumbnails = []
+        selectedThumbnailID = nil
+        thumbnailPath = ""
+        hasRankedThumbnails = false
+        statusMessage = "Story changed — review and confirm again."
+    }
+
+    private func validateStoryAnalysis() -> [String] {
+        guard let analysis = storyAnalysis else { return [] }
+        var warnings: [String] = []
+
+        if analysis.confidence < 60 {
+            warnings.append("Low confidence: verify every relationship against the transcript.")
+        }
+        if analysis.evidence.isEmpty {
+            warnings.append("No timestamp evidence was returned; verify the story manually.")
+        }
+        if analysis.outcome.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            warnings.append("Outcome is unknown — add what ultimately happened.")
+        }
+        if analysis.domain == .travelDelay,
+           !analysis.problemLocation.isEmpty,
+           analysis.problemLocation.caseInsensitiveCompare(analysis.destination) == .orderedSame {
+            warnings.append("Problem location and destination cannot be assumed to be the same.")
+        }
+        if analysis.titleIdeas.contains(where: { hasDanglingConjunction($0) })
+            || analysis.tags.contains(where: { hasDanglingConjunction($0) }) {
+            warnings.append("A title or tag ends with an incomplete conjunction.")
+        }
+        return warnings
+    }
+
+    private var reviewedStoryBrief: StoryBrief? {
+        guard isStoryConfirmed, let analysis = storyAnalysis else { return nil }
+
+        let places = uniqueNonempty([
+            analysis.origin,
+            analysis.problemLocation,
+            analysis.destination
+        ] + manualPlaces)
+        let beats = uniqueNonempty([
+            analysis.goal,
+            analysis.obstacle,
+            analysis.outcome
+        ])
+        let chapters = normalizedChapters(analysis.chapters)
+
+        return StoryBrief(
+            domain: analysis.domain,
+            headline: analysis.titleIdeas.first ?? analysis.subject,
+            summary: analysis.summary,
+            places: places,
+            beats: beats,
+            visualTargets: analysis.visualTargets,
+            thumbnailText: analysis.thumbnailTextIdeas.first ?? "",
+            tags: cleanCompletePhrases(analysis.tags),
+            hashtags: analysis.hashtags,
+            chapters: chapters,
+            seriesFits: false
+        )
+    }
+
+    private func cleanCompletePhrases(_ values: [String]) -> [String] {
+        var result: [String] = []
+        for value in values {
+            let clean = value.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !clean.isEmpty, !hasDanglingConjunction(clean) else { continue }
+            guard !result.contains(where: { $0.caseInsensitiveCompare(clean) == .orderedSame }) else {
+                continue
+            }
+            result.append(clean)
+        }
+        return result
+    }
+
+    private func hasDanglingConjunction(_ value: String) -> Bool {
+        guard let last = value.lowercased().split(separator: " ").last else {
             return true
         }
-        let meaningful = lower
-            .split(separator: " ")
-            .filter { !["american", "airline", "airlines", "video"].contains(String($0)) }
-        return meaningful.isEmpty
+        return ["and", "or", "but", "at", "to", "from", "with"].contains(String(last))
+    }
+
+    private func uniqueNonempty(_ values: [String]) -> [String] {
+        var output: [String] = []
+        for value in values {
+            let clean = value.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !clean.isEmpty else { continue }
+            guard !output.contains(where: { $0.caseInsensitiveCompare(clean) == .orderedSame }) else {
+                continue
+            }
+            output.append(clean)
+        }
+        return output
+    }
+
+    private func parseTimecode(_ value: String) -> TimeInterval? {
+        let parts = value.split(separator: ":").compactMap { Double($0) }
+        if parts.count == 2 {
+            return (parts[0] * 60) + parts[1]
+        }
+        if parts.count == 3 {
+            return (parts[0] * 3_600) + (parts[1] * 60) + parts[2]
+        }
+        return nil
+    }
+
+    private func syncStoryEditorText() {
+        guard let analysis = storyAnalysis else {
+            clearStoryEditorText()
+            return
+        }
+        storyTitleIdeasText = analysis.titleIdeas.joined(separator: "\n")
+        storyThumbnailIdeasText = analysis.thumbnailTextIdeas.joined(separator: "\n")
+        storyVisualTargetsText = analysis.visualTargets.joined(separator: "\n")
+        storyTagsText = analysis.tags.joined(separator: "\n")
+        storyChaptersText = analysis.chapters
+            .sorted { $0.startTime < $1.startTime }
+            .map {
+                "\(TranscriptChapter.timecode($0.startTime)) \($0.title)"
+            }
+            .joined(separator: "\n")
+    }
+
+    private func clearStoryEditorText() {
+        storyTitleIdeasText = ""
+        storyThumbnailIdeasText = ""
+        storyVisualTargetsText = ""
+        storyTagsText = ""
+        storyChaptersText = ""
+    }
+
+    private func parseLines(_ value: String) -> [String] {
+        value
+            .split(separator: "\n")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
+
+    private func parseChapters(_ value: String) -> [StoryChapterCandidate] {
+        value
+            .split(separator: "\n")
+            .compactMap { line in
+                let parts = line.split(separator: " ", maxSplits: 1)
+                guard parts.count == 2,
+                      let seconds = parseTimecode(String(parts[0])) else {
+                    return nil
+                }
+                return StoryChapterCandidate(
+                    startTime: seconds,
+                    title: String(parts[1])
+                )
+            }
+    }
+
+    private func normalizedChapters(
+        _ candidates: [StoryChapterCandidate]
+    ) -> [TranscriptChapter] {
+        let ordered = candidates
+            .filter { !$0.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+            .sorted { $0.startTime < $1.startTime }
+
+        var result: [TranscriptChapter] = []
+        for candidate in ordered {
+            let start = result.isEmpty ? 0 : candidate.startTime
+            if let previous = result.last, start - previous.startTime < 10 {
+                continue
+            }
+            result.append(
+                TranscriptChapter(startTime: start, title: candidate.title)
+            )
+        }
+
+        if result.count >= 3 {
+            return result
+        }
+
+        guard let transcript else { return [] }
+        return TranscriptionService.chapters(
+            from: transcript,
+            storyDomain: storyAnalysis?.domain ?? .general
+        )
     }
 
     private func storyBrand(
@@ -468,7 +771,12 @@ final class YouTubePrepViewModel {
 
     func generateDescription() {
         guard canGenerate else {
-            errorMessage = "Choose a video and type a hook first."
+            errorMessage = "Transcribe, review, and confirm the story first."
+            return
+        }
+
+        guard let brief = reviewedStoryBrief else {
+            errorMessage = StoryReviewError.notConfirmed.localizedDescription
             return
         }
 
@@ -477,7 +785,8 @@ final class YouTubePrepViewModel {
             brand: BrandSettings.shared.values,
             preset: BrandSettings.shared.selectedPreset,
             transcript: transcript,
-            extraPlaces: manualPlaces
+            extraPlaces: manualPlaces,
+            confirmedBrief: brief
         )
         errorMessage = nil
         statusMessage = transcript == nil
@@ -487,7 +796,12 @@ final class YouTubePrepViewModel {
 
     func generateTags() {
         guard canGenerate else {
-            errorMessage = "Choose a video and type a hook first."
+            errorMessage = "Transcribe, review, and confirm the story first."
+            return
+        }
+
+        guard let brief = reviewedStoryBrief else {
+            errorMessage = StoryReviewError.notConfirmed.localizedDescription
             return
         }
 
@@ -496,7 +810,8 @@ final class YouTubePrepViewModel {
             brand: BrandSettings.shared.values,
             preset: BrandSettings.shared.selectedPreset,
             transcript: transcript,
-            extraPlaces: manualPlaces
+            extraPlaces: manualPlaces,
+            confirmedBrief: brief
         )
         errorMessage = nil
         statusMessage = transcript == nil
@@ -533,7 +848,11 @@ final class YouTubePrepViewModel {
 
         Task {
             do {
-                let brand = BrandSettings.shared.values
+                let baseBrand = BrandSettings.shared.values
+                guard let brief = reviewedStoryBrief else {
+                    throw StoryReviewError.notConfirmed
+                }
+                let brand = storyBrand(base: baseBrand, brief: brief)
 
                 if thumbnailPath.isEmpty {
                     if let selected = selectedRankedThumbnail {
