@@ -7,6 +7,7 @@ import AppKit
 struct YouTubePrepView: View {
     @State private var viewModel = YouTubePrepViewModel()
     @State private var brand = BrandSettings.shared
+    @State private var showFullTranscript = false
 
     var body: some View {
         ScrollView {
@@ -255,17 +256,31 @@ struct YouTubePrepView: View {
                     }
 
                     if let transcript = viewModel.transcript {
-                        DisclosureGroup("View Full Transcript") {
-                            ScrollView {
-                                Text(transcript.fullText)
-                                    .font(.caption)
-                                    .textSelection(.enabled)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(10)
+                        // DisclosureGroup inside the page ScrollView often eats
+                        // clicks on macOS and never expands — use an explicit toggle.
+                        Button {
+                            showFullTranscript.toggle()
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: showFullTranscript ? "chevron.down" : "chevron.right")
+                                Text(showFullTranscript ? "Hide Full Transcript" : "View Full Transcript")
+                                    .fontWeight(.semibold)
+                                Spacer()
                             }
-                            .frame(maxHeight: 220)
-                            .background(AppTheme.softBlue)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(AppTheme.mclarenBlue)
+
+                        if showFullTranscript {
+                            Text(transcript.fullText.isEmpty
+                                  ? "(Transcript is empty.)"
+                                  : transcript.fullText)
+                                .font(.caption)
+                                .textSelection(.enabled)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(10)
+                                .background(AppTheme.softBlue)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                     }
 

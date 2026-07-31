@@ -108,6 +108,12 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.41",
+            highlights: [
+                "View Full Transcript in Story Review is a real toggle button now — the old disclosure control often did nothing when clicked inside the scrolling page."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.40",
             highlights: [
                 "Invent-nothing Story Review: unsupported people, places, summaries, titles, tags, and hashtags are cleared in code when they are not grounded in the transcript.",
