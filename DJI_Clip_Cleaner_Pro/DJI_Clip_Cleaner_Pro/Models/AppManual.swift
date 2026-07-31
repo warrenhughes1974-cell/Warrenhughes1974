@@ -54,7 +54,7 @@ enum AppManual {
         ManualSection(
             icon: "photo.on.rectangle.angled",
             title: "Brand & Thumbnails",
-            body: "Pick a series preset, set your channel prefix, and choose a title format. Hughes Clip Prep suggests titles and exports branded thumbnails with pink titles for YouTube."
+            body: "Open Settings → Series Preset (dropdown) and pick the lifestyle series for this shoot — travel, food, parks, shopping, family, and more. Set channel prefix and brand/thumbnail look once."
         ),
         ManualSection(
             icon: "folder.badge.gearshape",
@@ -103,6 +103,12 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.52",
+            highlights: [
+                "Series Preset is a dropdown with a full lifestyle set: Day In The Life, Family, Travel, Work Travel, Road Trip, Cruise, Hotel, Theme Park, Adventure, Beach, Food, Cooking, Store Walk, Shopping Haul, Product Review, Unboxing, Pet Life, Halloween, Holiday, Concert, Sports, Fashion, DIY, Behind the Scenes, and Custom."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.51",
             highlights: [

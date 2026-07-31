@@ -157,41 +157,7 @@ enum TitleVariantService {
             "\(hook) Changed Everything"
         ]
 
-        switch preset {
-        case .halloweenHunt:
-            list += [
-                "Halloween Merch is HERE!",
-                "\(hook) at the Store Already?!",
-                "Spooky Season Find: \(hook)",
-                "Code Orange: \(hook)",
-                "I Found the BEST Halloween Decor"
-            ]
-        case .storeWalk:
-            list += [
-                "Store Walk: \(hook)",
-                "What's New: \(hook)",
-                "Aisle Find — \(hook)",
-                "I Walked In and Found \(hook)"
-            ]
-        case .productReview:
-            list += [
-                "\(hook) Review — Worth It?",
-                "Honest Take: \(hook)",
-                "Don't Buy \(hook) Until You Watch",
-                "\(hook) First Look"
-            ]
-        case .behindTheScenes:
-            list += [
-                "Behind the Scenes: \(hook)",
-                "How I Shot \(hook)",
-                "BTS — \(hook)"
-            ]
-        case .custom:
-            list += [
-                "New Video: \(hook)",
-                "Today's Find: \(hook)"
-            ]
-        }
+        list += preset.titleVariants(hook: hook)
 
         if !seriesBit.isEmpty {
             list += [
@@ -259,26 +225,12 @@ enum TitleVariantService {
             reasons.append("series cue")
         }
 
-        switch preset {
-        case .halloweenHunt:
-            if lower.contains("halloween") || lower.contains("spooky") || lower.contains("code orange") {
-                points += 5
+        let boosts = preset.scoreBoostKeywords
+        if !boosts.isEmpty, boosts.contains(where: { lower.contains($0) }) {
+            points += preset == .halloweenHunt ? 5 : 4
+            if preset == .halloweenHunt {
                 reasons.append("seasonal")
             }
-        case .storeWalk:
-            if lower.contains("store") || lower.contains("aisle") || lower.contains("found") {
-                points += 4
-            }
-        case .productReview:
-            if lower.contains("review") || lower.contains("worth") {
-                points += 4
-            }
-        case .behindTheScenes:
-            if lower.contains("behind") || lower.contains("bts") {
-                points += 4
-            }
-        case .custom:
-            break
         }
 
         // Soft penalty for all-caps shouting whole titles.

@@ -176,53 +176,11 @@ enum ShortsMetadataService {
             ? "Keep it one idea only."
             : "One idea, but you have room for a tiny setup before the payoff."
 
-        switch preset {
-        case .halloweenHunt:
-            return "Curiosity → creepy reveal → open loop. \(lengthNote)"
-        case .storeWalk:
-            return "Walk-up → spot the item → react / price / why it matters. \(lengthNote)"
-        case .productReview:
-            return "Claim → proof in-hand → honest verdict tease. \(lengthNote)"
-        case .behindTheScenes:
-            return "Setup → the interesting beat → invite to the full video. \(lengthNote)"
-        case .custom:
-            return "Hook → payoff → invite. \(lengthNote)"
-        }
+        return preset.storyShape(lengthNote: lengthNote)
     }
 
     private static func musicIdeas(preset: BrandPreset) -> (mood: String, search: [String], mixTip: String) {
-        switch preset {
-        case .halloweenHunt:
-            return (
-                "Yes — put tense / eerie music under it. Sparse, not a full song with vocals.",
-                ["dark ambient", "horror tension", "eerie piano", "halloween suspense"],
-                "Duck music under your voice (−12 to −18 dB). Let a riser hit on the reveal, then cut music for the last spoken CTA."
-            )
-        case .storeWalk:
-            return (
-                "Yes — light upbeat or quirky shop beat behind the walk. Keep it playful.",
-                ["lofi shop", "quirky ukulele", "upbeat casual", "retail vlog"],
-                "Music stays low under talking. Bump it 2–3 dB in silent walking gaps, then drop again when you speak."
-            )
-        case .productReview:
-            return (
-                "Yes — clean modern bed, no big drops that fight your verdict.",
-                ["modern corporate light", "tech review ambient", "soft electronic"],
-                "Hold music flat under speech. A short hit on the product close-up is enough."
-            )
-        case .behindTheScenes:
-            return (
-                "Optional — soft ambient if the room tone is thin; skip music if tools/noise already fill it.",
-                ["soft ambient", "workshop chill", "documentary bed"],
-                "If you use music, keep it quieter than usual so real sound sells the BTS feel."
-            )
-        case .custom:
-            return (
-                "Yes — match the mood of the moment (tense, funny, or chill).",
-                ["vlog beat", "cinematic tension", "funny comedy sting"],
-                "Voice first. Music supports; it should never bury what you said."
-            )
-        }
+        preset.musicIdeas
     }
 
     private static func framingTips(preset: BrandPreset, hasSpeech: Bool) -> [String] {
@@ -237,81 +195,30 @@ enum ShortsMetadataService {
             tips.append("Prefer your spoken line as the on-screen hook instead of inventing new wording.")
         }
 
-        switch preset {
-        case .halloweenHunt:
-            tips.append("Hold an extra half-second on the spooky item after you name it — that silence sells the scare.")
-        case .storeWalk:
-            tips.append("Show the shelf tag / price if it’s readable; viewers love that detail.")
-        case .productReview:
-            tips.append("Insert one tight product insert (label, texture, button) mid-clip.")
-        case .behindTheScenes:
-            tips.append("If you’re talking to camera, keep eyes near the top third.")
-        case .custom:
-            break
+        if let tip = preset.framingExtraTip {
+            tips.append(tip)
         }
 
         return tips
     }
 
     private static func onScreenFallback(preset: BrandPreset) -> String {
-        switch preset {
-        case .halloweenHunt:
-            return "WAIT FOR IT"
-        case .storeWalk:
-            return "FOUND THIS"
-        case .productReview:
-            return "HONEST TAKE"
-        case .behindTheScenes:
-            return "BEHIND THE SCENES"
-        case .custom:
-            return "WATCH THIS"
-        }
+        preset.onScreenFallback
     }
 
     private static func endingMove(preset: BrandPreset) -> String {
-        switch preset {
-        case .halloweenHunt:
-            return "Freeze on the item, text “Full hunt on the channel,” soft whoosh out."
-        case .storeWalk:
-            return "Quick zoom on the find + “More aisle finds in the full video.”"
-        case .productReview:
-            return "Hold the product, text “Full review on the channel,” don’t give the final score here."
-        case .behindTheScenes:
-            return "Cut to a smile / wave and “Full video linked.”"
-        case .custom:
-            return "End on a question or unfinished beat so they tap the related long-form video."
-        }
+        preset.endingMove
     }
 
     private static func teaser(preset: BrandPreset) -> String {
-        switch preset {
-        case .halloweenHunt:
-            return "One of the best finds from this Halloween hunt."
-        case .storeWalk:
-            return "A quick look at what I found walking the aisles."
-        case .productReview:
-            return "The part of the review everyone asks about."
-        case .behindTheScenes:
-            return "A quick behind-the-scenes moment."
-        case .custom:
-            return "A quick moment from the full video."
-        }
+        preset.teaser
     }
 
     private static func hashtags(series: String, preset: BrandPreset) -> String {
         var tags = ["#Shorts"]
 
-        switch preset {
-        case .halloweenHunt:
-            tags.append("#halloween")
-        case .storeWalk:
-            tags.append("#shopwithme")
-        case .productReview:
-            tags.append("#review")
-        case .behindTheScenes:
-            tags.append("#behindthescenes")
-        case .custom:
-            break
+        if let tag = preset.shortHashtag {
+            tags.append(tag)
         }
 
         let compactSeries = series

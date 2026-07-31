@@ -427,33 +427,15 @@ enum ShortsFinderService {
     }
 
     private static func presetHookExtras(_ preset: BrandPreset) -> [String] {
-        switch preset {
-        case .halloweenHunt: return ["spooky", "creepy aisle", "haunt"]
-        case .storeWalk: return ["aisle", "store", "walk"]
-        case .productReview: return ["first look", "unbox", "testing"]
-        case .behindTheScenes: return ["setup", "behind"]
-        case .custom: return []
-        }
+        preset.hookExtras
     }
 
     private static func presetFindExtras(_ preset: BrandPreset) -> [String] {
-        switch preset {
-        case .halloweenHunt: return ["skull", "ghost", "bat", "fog", "animatronic"]
-        case .storeWalk: return ["clearance", "deal", "endcap"]
-        case .productReview: return ["feature", "quality", "build"]
-        case .behindTheScenes: return ["camera", "mic", "light"]
-        case .custom: return []
-        }
+        preset.findExtras
     }
 
     private static func presetReactionExtras(_ preset: BrandPreset) -> [String] {
-        switch preset {
-        case .halloweenHunt: return ["nightmare", "haunted", "terrifying"]
-        case .storeWalk: return ["steal", "worth it"]
-        case .productReview: return ["recommend", "skip", "buy"]
-        case .behindTheScenes: return ["done", "wrapped"]
-        case .custom: return []
-        }
+        preset.reactionExtras
     }
 
     private static func cleanTitleSeed(
@@ -487,13 +469,7 @@ enum ShortsFinderService {
             return fallback
         }
 
-        switch preset {
-        case .halloweenHunt: return "Halloween aisle find"
-        case .storeWalk: return "Store walk find"
-        case .productReview: return "Honest product take"
-        case .behindTheScenes: return "Behind the scenes"
-        case .custom: return "Quick find"
-        }
+        return preset.fallbackShortTitle
     }
 
     private static func storySummary(beats: [ShortBeat], preset: BrandPreset) -> String {
@@ -501,8 +477,14 @@ enum ShortsFinderService {
         switch preset {
         case .halloweenHunt:
             return "Halloween story cut: \(roles). Opens on curiosity, lands on the find, ends before the full hunt is spoiled."
-        case .storeWalk:
+        case .storeWalk, .shoppingHaul:
             return "Store-walk story cut: \(roles). Walk-up, the item, then the reaction."
+        case .travelDay, .workTravel:
+            return "Travel story cut: \(roles). Plan, obstacle, payoff tease."
+        case .themeParkDay:
+            return "Park-day story cut: \(roles). Arrive, highlight, reaction."
+        case .foodRestaurants:
+            return "Food story cut: \(roles). Order, bite, verdict tease."
         default:
             return "Story cut: \(roles). Separate moments spliced into one Short."
         }

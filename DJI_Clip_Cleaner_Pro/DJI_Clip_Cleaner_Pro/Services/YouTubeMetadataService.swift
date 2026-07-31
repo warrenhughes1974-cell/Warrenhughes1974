@@ -881,16 +881,7 @@ enum YouTubeMetadataService {
             : " at \(sentenceList(Array(places.prefix(2))))"
 
         let snippet: String
-        switch preset {
-        case .halloweenHunt:
-            snippet = "\(hook) — Halloween decorations are already out\(atStores), and these are the finds worth the drive."
-        case .storeWalk:
-            snippet = "\(hook) — walking the aisles\(atStores) to see what is actually on the shelves right now."
-        case .productReview:
-            snippet = "\(hook) — an honest, hands-on look before you spend your money."
-        case .behindTheScenes:
-            snippet = "\(hook) — a behind-the-scenes look at how this one came together."
-        case .custom:
+        if preset == .custom {
             if looksLikeTravelStory(hook: hook, places: places, topics: topics, transcript: transcript) {
                 let whereAt = places.isEmpty ? "" : " at \(sentenceList(Array(places.prefix(2))))"
                 snippet = "\(hook) — ground delays\(whereAt) turned this business trip upside down."
@@ -898,8 +889,10 @@ enum YouTubeMetadataService {
                 let focus = sentenceList(Array(topics.prefix(2)).map { $0.lowercased() })
                 snippet = "\(hook) — \(focus), and the rest of the story from this shoot."
             } else {
-                snippet = "\(hook) — the full story from this shoot."
+                snippet = preset.searchSnippet(hook: hook, atStores: atStores)
             }
+        } else {
+            snippet = preset.searchSnippet(hook: hook, atStores: atStores)
         }
 
         guard snippet.count > descriptionSnippetLimit else {
@@ -960,33 +953,11 @@ enum YouTubeMetadataService {
     }
 
     private static func openingLine(for preset: BrandPreset) -> String {
-        switch preset {
-        case .halloweenHunt:
-            return "Halloween is creeping into the stores early this year, so we went looking for the good stuff."
-        case .storeWalk:
-            return "A full walk through the aisles to see what actually made it onto the shelves."
-        case .productReview:
-            return "A hands-on look after real use — no script, no sponsorship."
-        case .behindTheScenes:
-            return "A look at how this one actually got made."
-        case .custom:
-            return "Here is what actually happened in this video."
-        }
+        preset.openingLine
     }
 
     private static func closingLine(for preset: BrandPreset) -> String {
-        switch preset {
-        case .halloweenHunt:
-            return "If you are shopping for Halloween this year, this shows what is on the shelves right now, what is worth the price, and what to skip."
-        case .storeWalk:
-            return "If you want to know what is in stock before you make the trip, this covers it."
-        case .productReview:
-            return "Stay to the end for whether it is actually worth buying."
-        case .behindTheScenes:
-            return "Comment if you want a closer look at any part of the setup."
-        case .custom:
-            return "Watch through for how the day actually unfolded."
-        }
+        preset.closingLine
     }
 
     private static func callToAction(channel: String, domain: StoryDomain) -> String {
@@ -1034,20 +1005,7 @@ enum YouTubeMetadataService {
             tags.append(tag)
         }
 
-        switch preset {
-        case .halloweenHunt:
-            append("halloween")
-            append("halloweenhunt")
-        case .storeWalk:
-            append("storewalk")
-            append("shopwithme")
-        case .productReview:
-            append("review")
-            append("honestreview")
-        case .behindTheScenes:
-            append("behindthescenes")
-            append("bts")
-        case .custom:
+        if preset == .custom {
             if looksLikeTravelStory(hook: hook, places: places, topics: topics, transcript: nil) {
                 append("flightdelay")
                 append("travelvlog")
@@ -1065,6 +1023,10 @@ enum YouTubeMetadataService {
             if tags.isEmpty {
                 append("vlog")
             }
+        } else {
+            for seed in preset.hashtagSeeds.prefix(2) {
+                append(seed)
+            }
         }
 
         if !series.isEmpty,
@@ -1079,27 +1041,11 @@ enum YouTubeMetadataService {
 
     /// The word viewers pair with a store name when searching this kind of video.
     private static func presetKeyword(_ preset: BrandPreset) -> String {
-        switch preset {
-        case .halloweenHunt:
-            return "halloween"
-        case .storeWalk:
-            return "shopping"
-        case .productReview:
-            return "review"
-        case .behindTheScenes:
-            return "behind the scenes"
-        case .custom:
-            return "vlog"
-        }
+        preset.searchKeyword
     }
 
     private static func isRetailPreset(_ preset: BrandPreset) -> Bool {
-        switch preset {
-        case .halloweenHunt, .storeWalk, .productReview:
-            return true
-        case .behindTheScenes, .custom:
-            return false
-        }
+        preset.isRetail
     }
 
     private static func looksLikeTravelStory(
@@ -1166,46 +1112,7 @@ enum YouTubeMetadataService {
     }
 
     private static func presetTags(_ preset: BrandPreset) -> [String] {
-        switch preset {
-        case .halloweenHunt:
-            return [
-                "halloween store hunt",
-                "halloween decorations 2026",
-                "spooky season shopping",
-                "halloween animatronics",
-                "seasonal store walkthrough",
-                "halloween haul"
-            ]
-        case .storeWalk:
-            return [
-                "store walk through",
-                "shop with me",
-                "new arrivals in stores",
-                "retail walkthrough",
-                "shelf finds",
-                "clearance finds"
-            ]
-        case .productReview:
-            return [
-                "honest product review",
-                "hands on review",
-                "is it worth it",
-                "first impressions review",
-                "buy or skip"
-            ]
-        case .behindTheScenes:
-            return [
-                "behind the scenes",
-                "creator workflow",
-                "video editing setup",
-                "how i film",
-                "youtube creator tips"
-            ]
-        case .custom:
-            // Nothing generic is worth spending tag budget on here. The hook and
-            // the transcript carry this preset instead.
-            return []
-        }
+        preset.searchTags
     }
 
     private static func titleCase(_ value: String) -> String {

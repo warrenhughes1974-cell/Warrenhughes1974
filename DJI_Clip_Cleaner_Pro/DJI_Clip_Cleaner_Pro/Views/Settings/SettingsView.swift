@@ -160,7 +160,8 @@ struct SettingsView: View {
                             Text(preset.displayName).tag(preset)
                         }
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(.menu)
+                    .frame(maxWidth: 320, alignment: .leading)
                     .onChange(of: brand.selectedPreset) { _, newValue in
                         if newValue != .custom {
                             brand.seriesName = newValue.seriesName
@@ -168,7 +169,7 @@ struct SettingsView: View {
                         brand.save()
                     }
 
-                    Text("Pick a preset for consistent hooks, or choose Custom for your own series name.")
+                    Text("Dropdown of lifestyle series labels (travel, food, parks, shopping, etc.). Pick the series this shoot belongs to — or Custom for your own name. Episode facts still come from Story Review.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
