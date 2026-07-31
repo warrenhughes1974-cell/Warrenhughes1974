@@ -120,8 +120,12 @@ final class YouTubePrepViewModel {
         }
 
         let words = transcript.fullText.split(separator: " ").count
-        let mode = transcript.usedOnDevice ? "on-device" : "network"
-        return "Transcript ready · \(words) words · \(transcript.segments.count) timed words · \(mode)"
+        let mode = transcript.usedOnDevice
+            ? "Apple on-device"
+            : (OpenAISettings.shared.useWhisper && OpenAISettings.shared.hasAPIKey
+               ? "OpenAI Whisper / cloud"
+               : "Apple network")
+        return "Transcript ready · \(words) words · \(transcript.segments.count) timed segments · \(mode)"
     }
 
     var storyModelStatus: String {
@@ -405,11 +409,35 @@ final class YouTubePrepViewModel {
 
         isTranscribing = true
         errorMessage = nil
-        statusMessage = "Transcribing speech. Longer videos take a few minutes..."
+
+        let openAI = OpenAISettings.shared
+        let useWhisper = openAI.useWhisper && openAI.hasAPIKey
+        statusMessage = useWhisper
+            ? "Transcribing with OpenAI Whisper…"
+            : "Transcribing speech. Longer videos take a few minutes..."
 
         Task {
             do {
-                let result = try await TranscriptionService.transcribe(videoURL: requestedVideoURL)
+                let result: Transcript
+                if useWhisper, let apiKey = openAI.apiKey() {
+                    do {
+                        result = try await OpenAIClient.transcribeWithWhisper(
+                            videoURL: requestedVideoURL,
+                            apiKey: apiKey
+                        )
+                    } catch {
+                        // Fall back so a billing/network glitch doesn't block prep.
+                        statusMessage = "Whisper failed — falling back to Apple Speech…"
+                        result = try await TranscriptionService.transcribe(
+                            videoURL: requestedVideoURL
+                        )
+                    }
+                } else {
+                    result = try await TranscriptionService.transcribe(
+                        videoURL: requestedVideoURL
+                    )
+                }
+
                 guard self.selectedVideoURL == requestedVideoURL else {
                     isTranscribing = false
                     return
@@ -455,9 +483,45 @@ final class YouTubePrepViewModel {
         isAnalyzingStory = true
         isStoryConfirmed = false
         errorMessage = nil
-        statusMessage = "Apple Intelligence is analyzing the story on this Mac…"
 
         let brand = BrandSettings.shared.values
+        let openAI = OpenAISettings.shared
+        let useCloud = openAI.useCloudStory && openAI.hasAPIKey
+
+        statusMessage = useCloud
+            ? "OpenAI is drafting the story…"
+            : "Apple Intelligence is analyzing the story on this Mac…"
+
+        if useCloud, let apiKey = openAI.apiKey() {
+            do {
+                let drafted = try await OpenAIClient.analyzeStory(
+                    transcript: transcript,
+                    existingHook: trimmedHook,
+                    brand: brand,
+                    model: openAI.values.model,
+                    apiKey: apiKey
+                )
+                storyAnalysis = OnDeviceStoryAnalysisService.sanitize(
+                    drafted,
+                    against: transcript,
+                    brand: brand
+                )
+                // Keep OpenAI attribution even after local sanitize.
+                if var analysis = storyAnalysis {
+                    analysis.source = .openAI
+                    storyAnalysis = analysis
+                }
+                syncStoryEditorText()
+                maybeReplaceBrokenHook()
+                statusMessage = "OpenAI story draft ready. Review the facts, then click Confirm Story."
+                finishAnalyzeStory()
+                return
+            } catch {
+                statusMessage = "OpenAI story failed — trying on-device analysis…"
+                // Fall through to Apple / local path.
+            }
+        }
+
         do {
             storyAnalysis = try await OnDeviceStoryAnalysisService.analyze(
                 transcript: transcript,
@@ -465,6 +529,7 @@ final class YouTubePrepViewModel {
                 brand: brand
             )
             syncStoryEditorText()
+            maybeReplaceBrokenHook()
             statusMessage = "Story analysis ready. Review the facts, then click Confirm Story."
         } catch {
             storyAnalysis = OnDeviceStoryAnalysisService.fallback(
@@ -473,9 +538,14 @@ final class YouTubePrepViewModel {
                 brand: brand
             )
             syncStoryEditorText()
+            maybeReplaceBrokenHook()
             statusMessage = "\(error.localizedDescription) A local fallback draft is ready; review every field."
         }
 
+        finishAnalyzeStory()
+    }
+
+    private func finishAnalyzeStory() {
         storyWarnings = validateStoryAnalysis()
         titleVariants = []
         selectedTitleID = nil
@@ -483,6 +553,27 @@ final class YouTubePrepViewModel {
         selectedThumbnailID = nil
         hasRankedThumbnails = false
         isAnalyzingStory = false
+    }
+
+    /// Drops garbage hooks left behind by cast scrubbing ("and 's Omaha…").
+    private func maybeReplaceBrokenHook() {
+        let current = trimmedHook
+        let broken = current.lowercased().contains("and 's")
+            || current.lowercased().contains("and ’s")
+            || current.hasPrefix("and ")
+            || current.hasPrefix("'s")
+        guard broken, let analysis = storyAnalysis else { return }
+        if let title = analysis.titleIdeas.first,
+           !title.lowercased().contains("and 's"),
+           !title.hasPrefix("and ") {
+            hook = title
+            return
+        }
+        if !analysis.subject.isEmpty,
+           !analysis.subject.lowercased().contains("and 's"),
+           !analysis.subject.hasPrefix("and ") {
+            hook = analysis.subject
+        }
     }
 
     func updateStoryText(
@@ -809,8 +900,55 @@ final class YouTubePrepViewModel {
             return
         }
 
-        guard let brief = reviewedStoryBrief else {
+        guard let brief = reviewedStoryBrief, let analysis = storyAnalysis else {
             errorMessage = StoryReviewError.notConfirmed.localizedDescription
+            return
+        }
+
+        let openAI = OpenAISettings.shared
+        if openAI.useCloudCopy, openAI.hasAPIKey, let apiKey = openAI.apiKey() {
+            statusMessage = "OpenAI is writing the YouTube description…"
+            isWorking = true
+            Task {
+                do {
+                    let pack = try await OpenAIClient.generateUploadCopy(
+                        analysis: analysis,
+                        title: generatedTitle,
+                        brand: BrandSettings.shared.values,
+                        transcript: transcript,
+                        model: openAI.values.model,
+                        apiKey: apiKey
+                    )
+                    generatedDescription = pack.description
+                    if !pack.tags.isEmpty {
+                        generatedTags = pack.tags
+                    }
+                    if !pack.thumbnailText.isEmpty {
+                        thumbnailText = pack.thumbnailText
+                        hasEditedThumbnailText = true
+                    }
+                    if !pack.title.isEmpty {
+                        hook = pack.title
+                        refreshTitleVariants()
+                    }
+                    errorMessage = nil
+                    statusMessage = "OpenAI description ready. Edit anything before upload."
+                } catch {
+                    // Local fallback keeps the user unblocked.
+                    generatedDescription = YouTubeMetadataService.generateDescription(
+                        hook: trimmedHook,
+                        brand: BrandSettings.shared.values,
+                        preset: BrandSettings.shared.selectedPreset,
+                        transcript: transcript,
+                        extraPlaces: manualPlaces,
+                        confirmedBrief: brief,
+                        confirmedAnalysis: analysis
+                    )
+                    errorMessage = nil
+                    statusMessage = "OpenAI copy failed (\(error.localizedDescription)). Used local description instead."
+                }
+                isWorking = false
+            }
             return
         }
 
@@ -821,7 +959,7 @@ final class YouTubePrepViewModel {
             transcript: transcript,
             extraPlaces: manualPlaces,
             confirmedBrief: brief,
-            confirmedAnalysis: storyAnalysis
+            confirmedAnalysis: analysis
         )
         errorMessage = nil
         statusMessage = "Description built from your confirmed Story Review facts."

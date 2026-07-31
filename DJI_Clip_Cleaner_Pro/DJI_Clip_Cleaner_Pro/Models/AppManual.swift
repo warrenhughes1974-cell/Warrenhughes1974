@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.44",
+            highlights: [
+                "OpenAI integration: save an API key in Settings and Hughes Clip Prep can use Whisper for transcripts plus GPT for Story Review and YouTube descriptions — one place, stronger copy.",
+                "Toggles for Whisper / cloud story / cloud description with automatic fallback to Apple tools if a request fails.",
+                "API key is stored in the Mac Keychain; possessive debris like “and 's …” is scrubbed from story fields."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.43",
             highlights: [
                 "YouTube descriptions are built from confirmed Story Review fields in plain English — no more mid-sentence stubs like “and experienced delayed flights…”.",

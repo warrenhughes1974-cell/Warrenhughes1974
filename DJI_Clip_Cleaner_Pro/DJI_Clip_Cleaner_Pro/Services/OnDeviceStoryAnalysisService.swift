@@ -6,6 +6,7 @@ import FoundationModels
 
 enum StoryAnalysisSource: String, Sendable {
     case appleIntelligence = "Apple Intelligence (On Device)"
+    case openAI = "OpenAI (Cloud)"
     case deterministicFallback = "Local Fallback — Review Required"
 }
 
@@ -336,6 +337,15 @@ enum OnDeviceStoryAnalysisService {
         return sections
     }
 
+    /// Public sanitize entry so cloud drafts get the same invent-nothing gates.
+    static func sanitize(
+        _ proposed: StoryAnalysis,
+        against transcript: Transcript,
+        brand: BrandSettingsValues
+    ) -> StoryAnalysis {
+        validated(proposed, against: transcript, brand: brand)
+    }
+
     private static func validated(
         _ proposed: StoryAnalysis,
         against transcript: Transcript,
@@ -517,7 +527,49 @@ enum OnDeviceStoryAnalysisService {
             result.confidence = min(result.confidence, 55)
         }
 
+        result.subject = scrubPossessiveDebris(result.subject)
+        result.summary = scrubPossessiveDebris(result.summary)
+        result.titleIdeas = result.titleIdeas.map(scrubPossessiveDebris).filter { !$0.isEmpty }
+        result.thumbnailTextIdeas = result.thumbnailTextIdeas
+            .map(scrubPossessiveDebris)
+            .filter { !$0.isEmpty }
+
         return result
+    }
+
+    /// Removes debris like "and 's Omaha Airport Saga" left after name deletion.
+    private static func scrubPossessiveDebris(_ value: String) -> String {
+        var text = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return "" }
+        text = text.replacingOccurrences(
+            of: #"\band\s+['’]s\b"#,
+            with: "",
+            options: [.regularExpression, .caseInsensitive]
+        )
+        text = text.replacingOccurrences(
+            of: #"^['’]s\b"#,
+            with: "",
+            options: [.regularExpression, .caseInsensitive]
+        )
+        text = text.replacingOccurrences(
+            of: #"\s{2,}"#,
+            with: " ",
+            options: .regularExpression
+        )
+        text = text.trimmingCharacters(
+            in: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
+        )
+        // If scrubbing left only junk, clear it.
+        let lower = text.lowercased()
+        if lower.isEmpty || lower == "and" || lower == "s" || lower.hasPrefix("and 's") {
+            return ""
+        }
+        return capitalizeDebris(text)
+    }
+
+    private static func capitalizeDebris(_ value: String) -> String {
+        guard let first = value.first else { return "" }
+        return first.uppercased() + value.dropFirst()
     }
 
     // MARK: - Invent-nothing gates

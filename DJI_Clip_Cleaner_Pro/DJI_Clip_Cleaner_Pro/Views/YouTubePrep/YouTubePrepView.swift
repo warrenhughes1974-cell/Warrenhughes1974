@@ -86,6 +86,10 @@ struct YouTubePrepView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
+                Text("Tip: Add an OpenAI API key in Settings to use Whisper + GPT inside this tab. Without a key, Apple on-device tools are used.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Hook")
                         .fontWeight(.semibold)

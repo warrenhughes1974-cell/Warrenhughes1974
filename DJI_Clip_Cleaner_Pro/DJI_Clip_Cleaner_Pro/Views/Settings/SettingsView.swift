@@ -7,6 +7,8 @@ import AppKit
 struct SettingsView: View {
     @State private var settings = AnalysisSettings.shared
     @State private var brand = BrandSettings.shared
+    @State private var openAI = OpenAISettings.shared
+    @State private var openAIKeyMessage: String?
 
     /// Bridges the stored RGB components to the system color picker.
     private var titleColorBinding: Binding<Color> {
@@ -41,6 +43,7 @@ struct SettingsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 header
+                openAISection
                 brandSection
                 presetsSection
                 rulesSection
@@ -57,6 +60,81 @@ struct SettingsView: View {
                 .foregroundStyle(AppTheme.carbon)
             Text("Set your brand once, then every title and thumbnail follows the same pattern.")
                 .foregroundStyle(.secondary)
+        }
+    }
+
+    private var openAISection: some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Paste an OpenAI API key once. Hughes Clip Prep can then use Whisper for transcripts and GPT for story/copy inside this app.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Text(openAI.apiKeyPreview)
+                    .font(.caption.monospaced())
+                    .foregroundStyle(openAI.hasAPIKey ? AppTheme.mclarenBlue : .secondary)
+
+                SecureField("sk-...", text: $openAI.apiKeyDraft)
+                    .textFieldStyle(.roundedBorder)
+
+                HStack(spacing: 10) {
+                    Button("Save API Key") {
+                        if openAI.saveAPIKeyFromDraft() {
+                            openAIKeyMessage = "API key saved in Keychain on this Mac."
+                        } else {
+                            openAIKeyMessage = "Key should start with sk- and look like a real OpenAI secret key."
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppTheme.papaya)
+
+                    Button("Clear Key") {
+                        openAI.clearAPIKey()
+                        openAIKeyMessage = "API key removed."
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!openAI.hasAPIKey)
+                }
+
+                if let openAIKeyMessage {
+                    Text(openAIKeyMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Toggle("Use OpenAI Whisper for transcription", isOn: $openAI.useWhisper)
+                    .onChange(of: openAI.useWhisper) { _, _ in openAI.save() }
+                Toggle("Use OpenAI for Story Review draft", isOn: $openAI.useCloudStory)
+                    .onChange(of: openAI.useCloudStory) { _, _ in openAI.save() }
+                Toggle("Use OpenAI for description / tags / title polish", isOn: $openAI.useCloudCopy)
+                    .onChange(of: openAI.useCloudCopy) { _, _ in openAI.save() }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Chat model")
+                        .fontWeight(.semibold)
+                    Picker("Chat model", selection: $openAI.model) {
+                        Text("gpt-4o-mini (cheaper)").tag("gpt-4o-mini")
+                        Text("gpt-4o (stronger)").tag("gpt-4o")
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: openAI.model) { _, _ in openAI.save() }
+                }
+
+                Link(
+                    "Get an API key at platform.openai.com/api-keys",
+                    destination: URL(string: "https://platform.openai.com/api-keys")!
+                )
+                .font(.caption)
+
+                Text("Uses your OpenAI account billing. Transcripts and story text are sent to OpenAI when these toggles are on.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(4)
+        } label: {
+            Label("OpenAI (Cloud) — One-Place YouTube Prep", systemImage: "cloud.fill")
+                .font(.headline)
+                .foregroundStyle(AppTheme.mclarenBlue)
         }
     }
 

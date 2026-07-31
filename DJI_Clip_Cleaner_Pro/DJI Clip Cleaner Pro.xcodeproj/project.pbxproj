@@ -50,6 +50,9 @@
 		E5F6A7B8C9D6488990ABCD010 /* TranscriptKeywordService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7B8C9D0E6488990ABCD010 /* TranscriptKeywordService.swift */; };
 		C1D2E3F4A5B6488990ABCD012 /* StoryBriefService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3F4A5B6C6488990ABCD012 /* StoryBriefService.swift */; };
 		E3F4A5B6C7D6488990ABCD013 /* OnDeviceStoryAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A5B6C7D8E6488990ABCD013 /* OnDeviceStoryAnalysisService.swift */; };
+		A9010FEA1CE4C4A1A0000001 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000001 /* KeychainStore.swift */; };
+		A9010FEA1CE4C4A1A0000002 /* OpenAISettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000002 /* OpenAISettings.swift */; };
+		A9010FEA1CE4C4A1A0000003 /* OpenAIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000003 /* OpenAIClient.swift */; };
 		A7B8C9D0E1F6488990ABCD011 /* ThumbnailEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F2A6488990ABCD011 /* ThumbnailEmoji.swift */; };
 		76371AAF57FB412DAB274AF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AE23DC4F179498E9C87B3CF /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -98,6 +101,9 @@
 		F6A7B8C9D0E6488990ABCD010 /* TranscriptKeywordService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptKeywordService.swift; sourceTree = "<group>"; };
 		D2E3F4A5B6C6488990ABCD012 /* StoryBriefService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryBriefService.swift; sourceTree = "<group>"; };
 		F4A5B6C7D8E6488990ABCD013 /* OnDeviceStoryAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeviceStoryAnalysisService.swift; sourceTree = "<group>"; };
+		A9110FEA1CE4C4A1A0000001 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		A9110FEA1CE4C4A1A0000002 /* OpenAISettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAISettings.swift; sourceTree = "<group>"; };
+		A9110FEA1CE4C4A1A0000003 /* OpenAIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIClient.swift; sourceTree = "<group>"; };
 		B8C9D0E1F2A6488990ABCD011 /* ThumbnailEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailEmoji.swift; sourceTree = "<group>"; };
 		8AE23DC4F179498E9C87B3CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5CF9B53D2BA04BE1AB4A6069 /* Hughes Clip Prep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hughes Clip Prep.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +175,7 @@
 				A2B3C4D5E6F6488990ABCD004 /* BrandSettings.swift */,
 				A8B9C0D1E2F6488990ABCD005 /* BrandPreset.swift */,
 				B8C9D0E1F2A6488990ABCD011 /* ThumbnailEmoji.swift */,
+				A9110FEA1CE4C4A1A0000002 /* OpenAISettings.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -207,6 +214,7 @@
 				F6A7B8C9D0E6488990ABCD010 /* TranscriptKeywordService.swift */,
 				D2E3F4A5B6C6488990ABCD012 /* StoryBriefService.swift */,
 				F4A5B6C7D8E6488990ABCD013 /* OnDeviceStoryAnalysisService.swift */,
+				A9110FEA1CE4C4A1A0000003 /* OpenAIClient.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -217,6 +225,7 @@
 				7A15D0E9DCC44C5885E97639 /* DateFormatter+LogTimestamp.swift */,
 				D4E5F6A7B8C9488990ABCD002 /* AppIdentity.swift */,
 				F6A7B8C9D0E1488990ABCD002 /* AppTheme.swift */,
+				A9110FEA1CE4C4A1A0000001 /* KeychainStore.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -382,6 +391,9 @@
 				E5F6A7B8C9D6488990ABCD010 /* TranscriptKeywordService.swift in Sources */,
 				C1D2E3F4A5B6488990ABCD012 /* StoryBriefService.swift in Sources */,
 				E3F4A5B6C7D6488990ABCD013 /* OnDeviceStoryAnalysisService.swift in Sources */,
+				A9010FEA1CE4C4A1A0000001 /* KeychainStore.swift in Sources */,
+				A9010FEA1CE4C4A1A0000002 /* OpenAISettings.swift in Sources */,
+				A9010FEA1CE4C4A1A0000003 /* OpenAIClient.swift in Sources */,
 				A7B8C9D0E1F6488990ABCD011 /* ThumbnailEmoji.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -445,7 +457,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.43;
+				MARKETING_VERSION = 1.44;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -478,7 +490,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.43;
+				MARKETING_VERSION = 1.44;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
