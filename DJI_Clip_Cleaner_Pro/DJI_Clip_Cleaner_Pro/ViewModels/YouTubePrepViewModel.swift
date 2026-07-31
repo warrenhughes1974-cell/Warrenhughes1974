@@ -565,6 +565,12 @@ final class YouTubePrepViewModel {
         if analysis.evidence.isEmpty {
             warnings.append("No model evidence matched the transcript exactly. Treat every generated relationship as unverified.")
         }
+        if analysis.origin.isEmpty && analysis.problemLocation.isEmpty && analysis.destination.isEmpty {
+            warnings.append("No place roles were transcript-supported — leave them blank or type only places you can prove.")
+        }
+        if analysis.tags.isEmpty {
+            warnings.append("Unsupported theme tags were removed. Add tags only from words actually spoken.")
+        }
         if analysis.outcome.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             warnings.append("Outcome is unknown — add what ultimately happened.")
         }

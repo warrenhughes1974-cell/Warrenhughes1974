@@ -107,7 +107,7 @@ struct SettingsView: View {
                         .onChange(of: brand.channelContext) { _, _ in
                             brand.save()
                         }
-                    Text("Used only by Apple Intelligence on this Mac. Add stable facts such as “Coco is a dog” and correct spellings such as “Brianna.” It must never decide who traveled without transcript evidence.")
+                    Text("Used only by Apple Intelligence on this Mac for identity and spelling (for example “Coco is a dog”, “Brianna”). It never proves who is in the video. Prefer a short name list over “family channel” wording so the model does not invent lifestyle themes.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

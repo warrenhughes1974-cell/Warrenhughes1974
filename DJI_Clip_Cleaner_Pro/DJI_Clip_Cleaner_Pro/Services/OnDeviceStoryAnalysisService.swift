@@ -107,7 +107,8 @@ enum OnDeviceStoryAnalysisService {
                     was in a location merely because it was mentioned. Distinguish
                     origin, destination, problem location, goal, obstacle, and
                     outcome. Preserve timestamps and explicitly mark unknown facts.
-                    Never invent dialogue or speaker labels.
+                    Never invent dialogue or speaker labels. Prefer empty/unknown
+                    over any guess. Channel identity notes are spelling only.
                     """
                 )
 
@@ -117,9 +118,10 @@ enum OnDeviceStoryAnalysisService {
                     Extract only supported story events, location roles, goals,
                     obstacles, outcomes, people, and visual moments. Keep timestamp
                     evidence. Do not write YouTube copy yet. Stay under 120 words.
+                    If a fact is not explicit in this section, omit it.
 
                     Stable channel context (identity/spelling only; it is not proof
-                    that someone participated in this video):
+                    that someone participated in this video, traveled, or is on camera):
                     \(brand.channelContext)
 
                     \(section)
@@ -156,10 +158,12 @@ enum OnDeviceStoryAnalysisService {
                 You are a factual story editor for a reusable video-preparation app.
                 Produce natural American English. Use only supplied transcript
                 evidence. Empty string means unknown. Do not invent location roles,
-                outcomes, people, or causal relationships. A destination is not the
-                place where a delay happened. Titles must be grammatical and
+                outcomes, people, themes, or causal relationships. Do not assume a
+                family trip, family vlog, or pet travel theme. A destination is not
+                the place where a delay happened. Titles must be grammatical and
                 specific, never generic clickbait such as “Is HERE” or “Don't Skip
                 This.” Thumbnail text is 2–4 words. Chapters follow actual events.
+                Tags and hashtags must come from words actually spoken.
                 """
             )
 
@@ -172,7 +176,8 @@ enum OnDeviceStoryAnalysisService {
                 \(existingHook)
 
                 Stable channel context (use for identity, pet type, and correct
-                spelling only; never use it as evidence that someone traveled):
+                spelling only; never as evidence that someone traveled, appeared,
+                or that this is a family/lifestyle video):
                 \(brand.channelContext)
 
                 Section summaries:
@@ -180,19 +185,22 @@ enum OnDeviceStoryAnalysisService {
 
                 Requirements:
                 - Identify subject, goal, obstacle, origin, problem location,
-                  destination, and outcome separately.
+                  destination, and outcome separately. Leave unknown fields empty.
                 - Evidence must be a verbatim transcript excerpt with its real
                   timestamp. Never write reconstructed dialogue or speaker labels.
-                - Name a traveler only when the transcript explicitly says that
-                  person is joining/taking the trip. A person or pet mentioned as
-                  emotional support, at home, or in a car is not a traveler.
+                - Name a person only when the transcript explicitly places them in
+                  this video's events. Pets/family named only as support are not
+                  cast members or travelers.
+                - Do not choose a family domain unless the transcript clearly shows
+                  a family or pet lifestyle story.
                 - Confidence is 0–100 based on transcript support.
-                - Give 4–6 visual targets that could be seen in this video.
-                - Give 3–5 factual title ideas.
+                - Give 4–6 visual targets grounded in spoken content.
+                - Give 3–5 factual title ideas using spoken facts only.
                 - Give 3–5 thumbnail text ideas, each 2–4 words.
                 - Give useful event chapters with timestamps in seconds.
-                - Give complete searchable tag phrases; never truncate a phrase.
-                - Give no more than 3 hashtags.
+                - Tags must be complete phrases supported by spoken words.
+                - Hashtags (max 3) must compact spoken topics only — never invent
+                  #FamilyTravel / #FamilyVlog without those words being earned.
                 """,
                 generating: GeneratedStoryAnalysis.self
             )
@@ -220,7 +228,7 @@ enum OnDeviceStoryAnalysisService {
             brand: brand
         )
 
-        return StoryAnalysis(
+        let draft = StoryAnalysis(
             domain: brief.domain,
             subject: brief.headline,
             goal: "",
@@ -244,6 +252,7 @@ enum OnDeviceStoryAnalysisService {
             hashtags: brief.hashtags,
             source: .deterministicFallback
         )
+        return validated(draft, against: transcript)
     }
 
     // MARK: - Transcript preparation
@@ -296,6 +305,9 @@ enum OnDeviceStoryAnalysisService {
     ) -> StoryAnalysis {
         var result = proposed
         let transcriptText = normalized(transcript.fullText)
+        let transcriptBag = " \(transcriptText) "
+        var clearedUnsupportedField = false
+
         result.evidence = proposed.evidence.filter {
             evidenceIsSupported(
                 $0,
@@ -330,7 +342,368 @@ enum OnDeviceStoryAnalysisService {
             result.confidence = min(result.confidence, 55)
         }
 
+        // Family domain must be earned by spoken lifestyle/family/pet signals.
+        if result.domain == .family && !transcriptSupportsFamilySignals(transcriptBag) {
+            result.domain = .general
+            clearedUnsupportedField = true
+        }
+
+        let groundedOrigin = placeRoleOrEmpty(result.origin, in: transcriptBag)
+        let groundedProblem = placeRoleOrEmpty(result.problemLocation, in: transcriptBag)
+        var groundedDestination = placeRoleOrEmpty(result.destination, in: transcriptBag)
+        if groundedOrigin != result.origin
+            || groundedProblem != result.problemLocation
+            || groundedDestination != result.destination {
+            clearedUnsupportedField = true
+        }
+        if !groundedProblem.isEmpty,
+           groundedProblem.caseInsensitiveCompare(groundedDestination) == .orderedSame {
+            groundedDestination = ""
+            clearedUnsupportedField = true
+        }
+        result.origin = groundedOrigin
+        result.problemLocation = groundedProblem
+        result.destination = groundedDestination
+
+        let groundedGoal = groundedPhraseOrEmpty(result.goal, in: transcriptBag, minimumCoverage: 0.5)
+        let groundedObstacle = groundedPhraseOrEmpty(result.obstacle, in: transcriptBag, minimumCoverage: 0.5)
+        let groundedOutcome = groundedPhraseOrEmpty(result.outcome, in: transcriptBag, minimumCoverage: 0.5)
+        var groundedSubject = groundedPhraseOrEmpty(result.subject, in: transcriptBag, minimumCoverage: 0.4)
+        if groundedGoal != result.goal
+            || groundedObstacle != result.obstacle
+            || groundedOutcome != result.outcome
+            || groundedSubject != result.subject {
+            clearedUnsupportedField = true
+        }
+        if groundedSubject.isEmpty {
+            groundedSubject = TranscriptKeywordService.topics(from: transcript, limit: 1).first
+                ?? result.subject.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        result.goal = groundedGoal
+        result.obstacle = groundedObstacle
+        result.outcome = groundedOutcome
+        result.subject = groundedSubject
+
+        let cleanedSummary = groundedSummary(
+            result.summary,
+            in: transcriptBag,
+            subject: result.subject,
+            goal: result.goal,
+            obstacle: result.obstacle,
+            outcome: result.outcome
+        )
+        if cleanedSummary != result.summary.trimmingCharacters(in: .whitespacesAndNewlines) {
+            clearedUnsupportedField = true
+        }
+        result.summary = cleanedSummary
+
+        result.titleIdeas = result.titleIdeas.compactMap {
+            groundedTitleIdea($0, in: transcriptBag)
+        }
+        if result.titleIdeas.isEmpty, !result.subject.isEmpty {
+            result.titleIdeas = [result.subject]
+        }
+
+        result.thumbnailTextIdeas = result.thumbnailTextIdeas.compactMap {
+            groundedThumbnailIdea($0, in: transcriptBag)
+        }
+        result.visualTargets = result.visualTargets.filter {
+            phraseIsGrounded($0, in: transcriptBag, minimumCoverage: 0.5)
+        }
+
+        let groundedTagList = groundedTags(
+            result.tags,
+            transcript: transcript,
+            transcriptBag: transcriptBag
+        )
+        if groundedTagList != result.tags {
+            clearedUnsupportedField = true
+        }
+        result.tags = groundedTagList
+        result.hashtags = groundedHashtags(
+            result.hashtags,
+            transcriptBag: transcriptBag,
+            tags: result.tags
+        )
+
+        if clearedUnsupportedField {
+            result.confidence = min(result.confidence, 55)
+        }
+
         return result
+    }
+
+    // MARK: - Invent-nothing gates
+
+    private static let stopWords: Set<String> = [
+        "the", "a", "an", "and", "or", "to", "from", "at", "in", "on", "of",
+        "for", "with", "our", "my", "we", "you", "they", "their", "this",
+        "that", "was", "were", "are", "is", "be", "been", "as", "by", "into",
+        "about", "over", "after", "before", "than", "then", "just", "very",
+        "really", "here", "there", "what", "when", "where", "who", "how",
+        "not", "no", "yes", "up", "out", "off", "so", "if", "but", "all",
+        "get", "got", "getting", "have", "had", "has", "do", "did", "does",
+        "will", "would", "could", "should", "can", "cant", "dont", "didnt",
+        "im", "ive", "its", "our", "ours", "your", "video", "vlog", "day"
+    ]
+
+    private static func contentWords(_ value: String) -> [String] {
+        normalized(value)
+            .split(separator: " ")
+            .map(String.init)
+            .filter { $0.count >= 3 && !stopWords.contains($0) }
+    }
+
+    private static func transcriptContainsWord(_ word: String, in transcriptBag: String) -> Bool {
+        transcriptBag.contains(" \(word) ")
+    }
+
+    private static func phraseIsGrounded(
+        _ phrase: String,
+        in transcriptBag: String,
+        minimumCoverage: Double
+    ) -> Bool {
+        let words = contentWords(phrase)
+        guard !words.isEmpty else { return false }
+        let hits = words.filter { transcriptContainsWord($0, in: transcriptBag) }.count
+        return Double(hits) / Double(words.count) >= minimumCoverage
+    }
+
+    private static func groundedPhraseOrEmpty(
+        _ value: String,
+        in transcriptBag: String,
+        minimumCoverage: Double
+    ) -> String {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return "" }
+        guard !looksLikeInventedDialogue(trimmed) else { return "" }
+        return phraseIsGrounded(trimmed, in: transcriptBag, minimumCoverage: minimumCoverage)
+            ? trimmed
+            : ""
+    }
+
+    private static func placeRoleOrEmpty(_ value: String, in transcriptBag: String) -> String {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return "" }
+        let words = contentWords(trimmed)
+        // Short place tokens like "dfw" / "omaha" must all appear.
+        let tokens = words.isEmpty
+            ? normalized(trimmed).split(separator: " ").map(String.init).filter { $0.count >= 2 }
+            : words
+        guard !tokens.isEmpty else { return "" }
+        guard tokens.allSatisfy({ transcriptContainsWord($0, in: transcriptBag) }) else {
+            return ""
+        }
+        return trimmed
+    }
+
+    private static func transcriptSupportsFamilySignals(_ transcriptBag: String) -> Bool {
+        let signals = [
+            "family", "kids", "kid", "daughter", "son", "wife", "husband",
+            "mom", "dad", "parent", "parents", "gabie", "domi", "puppy",
+            "puppies", "dog", "dogs", "pet", "pets", "coco", "penny",
+            "ramsey", "sadie", "alani", "ryder"
+        ]
+        return signals.contains { transcriptContainsWord($0, in: transcriptBag) }
+    }
+
+    private static func looksLikeInventedDialogue(_ value: String) -> Bool {
+        let lower = value.lowercased()
+        if value.contains("\"") || value.contains("“") || value.contains("”") {
+            return true
+        }
+        if lower.contains(" said ") || lower.contains(" says ") || lower.contains(" asked ") {
+            return true
+        }
+        // "Coco:" / "Warren:" style speaker labels
+        if lower.range(of: #"\b[a-z]{2,}:\s"#, options: .regularExpression) != nil {
+            return true
+        }
+        return false
+    }
+
+    private static func groundedSummary(
+        _ summary: String,
+        in transcriptBag: String,
+        subject: String,
+        goal: String,
+        obstacle: String,
+        outcome: String
+    ) -> String {
+        let trimmed = summary.trimmingCharacters(in: .whitespacesAndNewlines)
+        let sentences = trimmed
+            .components(separatedBy: CharacterSet(charactersIn: ".!?"))
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+
+        let kept = sentences.filter { sentence in
+            !looksLikeInventedDialogue(sentence)
+                && phraseIsGrounded(sentence, in: transcriptBag, minimumCoverage: 0.5)
+                && !isUnsupportedThemeSentence(sentence, transcriptBag: transcriptBag)
+        }
+
+        if !kept.isEmpty {
+            return kept.joined(separator: ". ") + "."
+        }
+
+        var parts: [String] = []
+        if !subject.isEmpty { parts.append(subject) }
+        if !goal.isEmpty { parts.append("Goal: \(goal)") }
+        if !obstacle.isEmpty { parts.append("Obstacle: \(obstacle)") }
+        if !outcome.isEmpty { parts.append("Outcome: \(outcome)") }
+        if parts.isEmpty {
+            return "Review the transcript and fill in only facts you can confirm."
+        }
+        return parts.joined(separator: ". ") + "."
+    }
+
+    private static func isUnsupportedThemeSentence(
+        _ sentence: String,
+        transcriptBag: String
+    ) -> Bool {
+        let words = Set(contentWords(sentence))
+        let familyThemes = ["family", "families"]
+        let hasFamilyTheme = familyThemes.contains { words.contains($0) }
+        // Saying “family” in the summary requires the word in the transcript.
+        // Pet/support mentions are not a license to write a family-trip story.
+        if hasFamilyTheme && !transcriptContainsWord("family", in: transcriptBag) {
+            return true
+        }
+        return false
+    }
+
+    private static func groundedTitleIdea(_ title: String, in transcriptBag: String) -> String? {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        guard !looksLikeInventedDialogue(trimmed) else { return nil }
+        guard !isUnsupportedThemeSentence(trimmed, transcriptBag: transcriptBag) else {
+            return nil
+        }
+        return phraseIsGrounded(trimmed, in: transcriptBag, minimumCoverage: 0.4)
+            ? trimmed
+            : nil
+    }
+
+    private static func groundedThumbnailIdea(_ text: String, in transcriptBag: String) -> String? {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        let wordCount = trimmed.split(separator: " ").count
+        guard (2...4).contains(wordCount) else { return nil }
+        return phraseIsGrounded(trimmed, in: transcriptBag, minimumCoverage: 0.5)
+            ? trimmed.uppercased()
+            : nil
+    }
+
+    private static func groundedTags(
+        _ proposed: [String],
+        transcript: Transcript,
+        transcriptBag: String
+    ) -> [String] {
+        var tags: [String] = []
+
+        func add(_ raw: String) {
+            let cleaned = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !cleaned.isEmpty else { return }
+            let key = cleaned.lowercased()
+            guard !tags.contains(where: { $0.lowercased() == key }) else { return }
+            guard phraseIsGrounded(cleaned, in: transcriptBag, minimumCoverage: 0.67) else { return }
+            guard !isUnsupportedThemeTag(cleaned, transcriptBag: transcriptBag) else { return }
+            tags.append(cleaned)
+        }
+
+        for tag in proposed {
+            add(tag)
+        }
+        for phrase in TranscriptKeywordService.tagPhrases(from: transcript, limit: 8) {
+            add(phrase)
+        }
+        for place in TranscriptKeywordService.places(from: transcript, limit: 4) {
+            add(place)
+        }
+
+        return Array(tags.prefix(15))
+    }
+
+    private static func isUnsupportedThemeTag(_ tag: String, transcriptBag: String) -> Bool {
+        let compact = tag
+            .lowercased()
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .joined()
+        // Pet mentions alone must not unlock #FamilyTravel / #FamilyVlog.
+        let familyCompacts = ["family", "familyvlog", "familytravel", "familytrip", "familylife"]
+        if familyCompacts.contains(where: { compact.contains($0) }) {
+            return !transcriptContainsWord("family", in: transcriptBag)
+        }
+        return false
+    }
+
+    private static func groundedHashtags(
+        _ proposed: [String],
+        transcriptBag: String,
+        tags: [String]
+    ) -> [String] {
+        var hashtags: [String] = []
+
+        func addCompact(_ body: String) {
+            let compact = body
+                .lowercased()
+                .components(separatedBy: CharacterSet.alphanumerics.inverted)
+                .joined()
+            guard compact.count >= 3 else { return }
+            let tag = "#\(compact)"
+            guard !hashtags.contains(tag) else { return }
+            guard hashtagBodyIsSupported(compact, transcriptBag: transcriptBag, tags: tags) else {
+                return
+            }
+            hashtags.append(tag)
+        }
+
+        for raw in proposed {
+            let body = raw.hasPrefix("#") ? String(raw.dropFirst()) : raw
+            addCompact(body)
+        }
+        for tag in tags.prefix(5) {
+            addCompact(tag)
+        }
+
+        return Array(hashtags.prefix(3))
+    }
+
+    private static func hashtagBodyIsSupported(
+        _ body: String,
+        transcriptBag: String,
+        tags: [String]
+    ) -> Bool {
+        if isUnsupportedThemeTag(body, transcriptBag: transcriptBag) {
+            return false
+        }
+        if tags.contains(where: {
+            $0.lowercased()
+                .components(separatedBy: CharacterSet.alphanumerics.inverted)
+                .joined() == body
+        }) {
+            return true
+        }
+        if transcriptContainsWord(body, in: transcriptBag) {
+            return true
+        }
+        // Accept multi-word spoken support when the hashtag concatenates them.
+        let words = contentWords(body)
+        if !words.isEmpty,
+           words.allSatisfy({ transcriptContainsWord($0, in: transcriptBag) }) {
+            return true
+        }
+        // Common delay compounds earned by spoken delay/airport words.
+        let earnedCompounds: [String: [String]] = [
+            "flightdelay": ["flight", "delay", "delayed", "delays"],
+            "travelvlog": ["travel", "flight", "airport", "trip"],
+            "grounddelay": ["ground", "delay", "delayed"],
+            "airportdelay": ["airport", "delay", "delayed"]
+        ]
+        if let needles = earnedCompounds[body] {
+            return needles.contains { transcriptContainsWord($0, in: transcriptBag) }
+        }
+        return false
     }
 
     private static func evidenceIsSupported(

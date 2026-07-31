@@ -162,7 +162,13 @@ enum StoryBriefService {
             return best.0
         }
 
-        if !text.isEmpty {
+        // Family is a real domain only when lifestyle/family/pet language is present.
+        // Never default unclassified videos to family — that invents #FamilyVlog themes.
+        let familyHits = countHits(haystack, [
+            "family", "kids", "daughter", "son", "wife", "husband", "mom", "dad",
+            "dog", "dogs", "puppy", "puppies", "pet", "pets"
+        ])
+        if familyHits >= 2 {
             return .family
         }
         return .general
@@ -537,9 +543,12 @@ enum StoryBriefService {
             add("disney family")
         case .cruise:
             add("cruise vlog")
-        case .family, .general:
+        case .family:
             add("family vlog")
             add("day in the life")
+        case .general:
+            // No canned lifestyle tags — only hook/places/beats below.
+            break
         }
 
         for place in places.prefix(3) {
@@ -601,8 +610,11 @@ enum StoryBriefService {
             add("disney"); add("themepark")
         case .cruise:
             add("cruise"); add("cruiselife")
-        case .family, .general:
-            add("familyvlog"); add("travel")
+        case .family:
+            add("familyvlog")
+        case .general:
+            // Hashtags come from spoken places only — never invent #travel/#familyvlog.
+            break
         }
 
         for place in places.prefix(1) {

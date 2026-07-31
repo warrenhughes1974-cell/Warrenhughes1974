@@ -108,6 +108,15 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.40",
+            highlights: [
+                "Invent-nothing Story Review: unsupported people, places, summaries, titles, tags, and hashtags are cleared in code when they are not grounded in the transcript.",
+                "Tags/hashtags are rebuilt from spoken phrases — #FamilyTravel / #FamilyVlog cannot appear unless the transcript earns them.",
+                "Unclassified videos no longer default to a Family domain (that was inventing lifestyle packaging).",
+                "Channel Context default text is identity/spelling only and must not supply plot, cast, or trip themes."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.39",
             highlights: [
                 "Apple Intelligence evidence is now checked against the literal transcript; invented quotes/speaker labels are removed and confidence is capped.",

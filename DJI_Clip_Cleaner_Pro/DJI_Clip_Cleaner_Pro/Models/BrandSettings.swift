@@ -45,7 +45,7 @@ final class BrandSettings {
 
     var channelPrefix = "Hughes"
     var channelContext = """
-    Fun Now Run Later is Warren and Tina's family channel. Gabie and Domi are family members. Coco, Penny, Ramsey, Sadie, Alani, and Ryder are pets/dogs, not human travelers. Brianna is Warren's coworker. Never assume a person or pet is traveling unless the transcript explicitly says so.
+    Identity/spelling only — not plot evidence. Warren and Tina host Fun Now Run Later. Gabie and Domi are family names. Coco, Penny, Ramsey, Sadie, Alani, and Ryder are pets/dogs (not people). Brianna is Warren's coworker (spelling). Never cast anyone as on-camera, traveling, or part of this video unless the transcript explicitly says so. Never invent a family-trip or lifestyle theme from these notes.
     """
     var seriesName = ""
     var defaultHook = ""
