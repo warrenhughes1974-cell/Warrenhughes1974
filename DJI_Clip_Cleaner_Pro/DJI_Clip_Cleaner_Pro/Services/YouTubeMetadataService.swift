@@ -505,7 +505,8 @@ enum YouTubeMetadataService {
     private static func isUsableNarrative(_ value: String) -> Bool {
         let text = cleanedNarrative(value)
         guard text.count >= 40 else { return false }
-        guard text.first?.isLetter == true else { return false }
+        // Fragments left after cast scrubbing often start lowercase ("and experienced…").
+        guard let first = text.first, first.isUppercase else { return false }
         let lower = text.lowercased()
         let badStarts = ["goal:", "obstacle:", "outcome:", "subject:"]
         if badStarts.contains(where: { lower.hasPrefix($0) }) {
