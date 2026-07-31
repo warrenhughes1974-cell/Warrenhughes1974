@@ -108,24 +108,53 @@ enum YouTubeMetadataService {
 
     /// Thumbnail text should complement the title, not repeat it. Three or four
     /// large words read on a phone; a full sentence does not.
+    /// Prefer story/payoff words (delay, missed, stuck) over leading brand names.
     static func thumbnailText(from hook: String) -> String {
         let filler: Set<String> = [
             "a", "an", "the", "and", "or", "of", "in", "on", "at",
             "to", "for", "with", "my", "our", "this", "that", "is", "was"
         ]
+        let brandLeaders: Set<String> = [
+            "american", "airlines", "airline", "southwest", "delta", "united",
+            "spirit", "frontier", "jetblue"
+        ]
+        let payoff: Set<String> = [
+            "delay", "delays", "delayed", "missed", "stuck", "cancelled",
+            "canceled", "hours", "late", "dfw", "ground", "trip", "business",
+            "chaos", "ruined", "nightmare"
+        ]
 
         let words = hook
-            .split(whereSeparator: { $0 == " " || $0 == "·" || $0 == "|" })
+            .split(whereSeparator: { $0 == " " || $0 == "·" || $0 == "|" || $0 == "—" || $0 == "-" })
             .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
 
         guard !words.isEmpty else { return "" }
 
         let meaningful = words.filter { !filler.contains($0.lowercased()) }
-        let chosen = meaningful.isEmpty ? words : meaningful
+        let pool = meaningful.isEmpty ? words : meaningful
+
+        let payoffWords = pool.filter { payoff.contains($0.lowercased()) }
+        let nonBrand = pool.filter { !brandLeaders.contains($0.lowercased()) }
+
+        let chosen: ArraySlice<String>
+        if payoffWords.count >= 2 {
+            chosen = payoffWords.prefix(maxThumbnailWords)
+        } else if payoffWords.count == 1, nonBrand.count >= 2 {
+            // e.g. "DFW" + "DELAYS" from a longer hook that starts with a brand.
+            var mixed = payoffWords
+            for word in nonBrand where !payoff.contains(word.lowercased()) {
+                mixed.append(word)
+                if mixed.count >= maxThumbnailWords { break }
+            }
+            chosen = mixed.prefix(maxThumbnailWords)
+        } else if nonBrand.count >= 2 {
+            chosen = nonBrand.prefix(maxThumbnailWords)
+        } else {
+            chosen = pool.prefix(maxThumbnailWords)
+        }
 
         return chosen
-            .prefix(maxThumbnailWords)
             .map { $0.uppercased() }
             .joined(separator: " ")
     }
@@ -168,16 +197,17 @@ enum YouTubeMetadataService {
 
         // First 150 characters become the search snippet, so lead with the
         // keyword instead of repeating the title verbatim.
-        lines.append(searchSnippet(hook: cleanHook, preset: preset, places: places))
+        lines.append(searchSnippet(hook: cleanHook, preset: preset, places: places, topics: topics, transcript: transcript))
         lines.append("")
 
         // Written from what is actually in the video. The hook appears once, in
         // the search snippet above, rather than as the subject of every sentence.
-        lines.append(bodyCopy(preset: preset, places: places, topics: topics))
+        lines.append(bodyCopy(preset: preset, places: places, topics: topics, transcript: transcript))
 
         if !places.isEmpty {
             lines.append("")
-            lines.append("STORES IN THIS VIDEO")
+            let placeHeader = isRetailPreset(preset) ? "STORES IN THIS VIDEO" : "PLACES IN THIS VIDEO"
+            lines.append(placeHeader)
             for place in places {
                 lines.append("· \(place)")
             }
@@ -185,7 +215,10 @@ enum YouTubeMetadataService {
 
         if !topics.isEmpty {
             lines.append("")
-            lines.append("WHAT WE FOUND")
+            let topicHeader = looksLikeTravelStory(hook: cleanHook, places: places, topics: topics, transcript: transcript)
+                ? "IN THIS VIDEO"
+                : "WHAT WE FOUND"
+            lines.append(topicHeader)
             for topic in topics {
                 lines.append("· \(topic)")
             }
@@ -217,7 +250,7 @@ enum YouTubeMetadataService {
         lines.append("GEAR & WORKFLOW")
         lines.append("Filmed on DJI · Edited in Filmora")
         lines.append("")
-        lines.append(hashtagLine(series: series, preset: preset))
+        lines.append(hashtagLine(series: series, preset: preset, hook: cleanHook, places: places, topics: topics))
 
         return lines.joined(separator: "\n")
     }
@@ -298,8 +331,13 @@ enum YouTubeMetadataService {
         for place in places.prefix(3) {
             let name = place.lowercased()
             append("\(name) \(presetKeyword(preset))")
-            append("\(name) haul")
-            append("shop with me \(name)")
+            if isRetailPreset(preset) {
+                append("\(name) haul")
+                append("shop with me \(name)")
+            } else {
+                append("\(name) delay")
+                append("\(name) travel vlog")
+            }
         }
 
         // What was actually said outranks generic preset copy.
@@ -311,9 +349,14 @@ enum YouTubeMetadataService {
             append(tag)
         }
 
-        // Keeps the .custom preset useful without inventing junk like
-        // "new video upload", which nobody searches for.
-        if !cleanHook.isEmpty, cleanHook.split(separator: " ").count <= 4 {
+        // Travel / delay vlogs need searchable story phrases, not "walkthrough".
+        if looksLikeTravelStory(hook: cleanHook, places: places, topics: [], transcript: transcript) {
+            append("flight delay")
+            append("airport delay")
+            append("missed flight")
+            append("ground delay")
+            append("travel vlog")
+        } else if !cleanHook.isEmpty, cleanHook.split(separator: " ").count <= 4 {
             append("\(cleanHook) walkthrough")
             append("\(cleanHook) vlog")
         }
@@ -541,7 +584,9 @@ enum YouTubeMetadataService {
     private static func searchSnippet(
         hook: String,
         preset: BrandPreset,
-        places: [String]
+        places: [String],
+        topics: [String],
+        transcript: Transcript?
     ) -> String {
         let atStores = places.isEmpty
             ? ""
@@ -558,7 +603,15 @@ enum YouTubeMetadataService {
         case .behindTheScenes:
             snippet = "\(hook) — a behind-the-scenes look at how this one came together."
         case .custom:
-            snippet = "\(hook) — everything worth seeing\(atStores)."
+            if looksLikeTravelStory(hook: hook, places: places, topics: topics, transcript: transcript) {
+                let whereAt = places.isEmpty ? "" : " at \(sentenceList(Array(places.prefix(2))))"
+                snippet = "\(hook) — ground delays\(whereAt) turned this business trip upside down."
+            } else if !topics.isEmpty {
+                let focus = sentenceList(Array(topics.prefix(2)).map { $0.lowercased() })
+                snippet = "\(hook) — \(focus), and the rest of the story from this shoot."
+            } else {
+                snippet = "\(hook) — the full story from this shoot."
+            }
         }
 
         guard snippet.count > descriptionSnippetLimit else {
@@ -574,8 +627,30 @@ enum YouTubeMetadataService {
     private static func bodyCopy(
         preset: BrandPreset,
         places: [String],
-        topics: [String]
+        topics: [String],
+        transcript: Transcript?
     ) -> String {
+        if preset == .custom,
+           looksLikeTravelStory(hook: "", places: places, topics: topics, transcript: transcript) {
+            var sentences: [String] = [
+                "This one is about the travel day going sideways — not a store walk."
+            ]
+            if !places.isEmpty {
+                sentences.append("We were dealing with chaos around \(sentenceList(places)).")
+            }
+            if transcriptMentions(transcript, anyOf: ["missed", "miss my", "missed my"]) {
+                sentences.append("The delays cost me the business trip.")
+            } else if transcriptMentions(transcript, anyOf: ["delay", "delayed", "ground"]) {
+                sentences.append("Nationwide ground delays wrecked the schedule.")
+            }
+            if !topics.isEmpty {
+                let focus = sentenceList(topics.prefix(4).map { $0.lowercased() })
+                sentences.append("Along the way: \(focus).")
+            }
+            sentences.append("Watch through for how the day actually unfolded.")
+            return sentences.joined(separator: " ")
+        }
+
         var sentences: [String] = [openingLine(for: preset)]
 
         if !places.isEmpty {
@@ -584,7 +659,11 @@ enum YouTubeMetadataService {
 
         if !topics.isEmpty {
             let found = sentenceList(topics.prefix(5).map { $0.lowercased() })
-            sentences.append("Along the way we found \(found).")
+            if preset == .custom {
+                sentences.append("This video covers \(found).")
+            } else {
+                sentences.append("Along the way we found \(found).")
+            }
         }
 
         sentences.append(closingLine(for: preset))
@@ -603,7 +682,7 @@ enum YouTubeMetadataService {
         case .behindTheScenes:
             return "A look at how this one actually got made."
         case .custom:
-            return "Here is the full walkthrough."
+            return "Here is what actually happened in this video."
         }
     }
 
@@ -618,7 +697,7 @@ enum YouTubeMetadataService {
         case .behindTheScenes:
             return "Comment if you want a closer look at any part of the setup."
         case .custom:
-            return "Watch through for the whole thing."
+            return "Watch through for how the day actually unfolded."
         }
     }
 
@@ -641,7 +720,10 @@ enum YouTubeMetadataService {
 
     private static func hashtagLine(
         series: String,
-        preset: BrandPreset
+        preset: BrandPreset,
+        hook: String = "",
+        places: [String] = [],
+        topics: [String] = []
     ) -> String {
         var tags: [String] = []
 
@@ -650,7 +732,7 @@ enum YouTubeMetadataService {
                 .components(separatedBy: CharacterSet.alphanumerics.inverted)
                 .joined()
 
-            guard !compact.isEmpty else { return }
+            guard compact.count >= 3 else { return }
 
             let tag = "#\(compact.lowercased())"
             guard !tags.contains(tag) else { return }
@@ -672,10 +754,28 @@ enum YouTubeMetadataService {
             append("behindthescenes")
             append("bts")
         case .custom:
-            append("vlog")
+            if looksLikeTravelStory(hook: hook, places: places, topics: topics, transcript: nil) {
+                append("flightdelay")
+                append("travelvlog")
+                for place in places.prefix(2) {
+                    append(place)
+                }
+            } else {
+                for topic in topics.prefix(2) {
+                    append(topic)
+                }
+                for word in hook.split(separator: " ").prefix(2) {
+                    append(String(word))
+                }
+            }
+            if tags.isEmpty {
+                append("vlog")
+            }
         }
 
-        if !series.isEmpty {
+        if !series.isEmpty,
+           series.lowercased() != "processed",
+           series.lowercased() != "custom" {
             append(series)
         }
 
@@ -695,8 +795,94 @@ enum YouTubeMetadataService {
         case .behindTheScenes:
             return "behind the scenes"
         case .custom:
-            return "finds"
+            return "vlog"
         }
+    }
+
+    private static func isRetailPreset(_ preset: BrandPreset) -> Bool {
+        switch preset {
+        case .halloweenHunt, .storeWalk, .productReview:
+            return true
+        case .behindTheScenes, .custom:
+            return false
+        }
+    }
+
+    private static func looksLikeTravelStory(
+        hook: String,
+        places: [String],
+        topics: [String],
+        transcript: Transcript?
+    ) -> Bool {
+        let haystack = (
+            [hook]
+                + places
+                + topics
+                + [transcript?.fullText ?? ""]
+        )
+            .joined(separator: " ")
+            .lowercased()
+
+        let signals = [
+            "delay", "delayed", "delays", "flight", "airport", "airline",
+            "dfw", "gate", "missed", "boarding", "canceled", "cancelled",
+            "layover", "terminal", "ground stop", "baggage", "omaha", "austin"
+        ]
+
+        return signals.contains { haystack.contains($0) }
+    }
+
+    private static func transcriptMentions(_ transcript: Transcript?, anyOf needles: [String]) -> Bool {
+        guard let text = transcript?.fullText.lowercased(), !text.isEmpty else {
+            return false
+        }
+        return needles.contains { text.contains($0) }
+    }
+
+    /// Prefer a story-shaped hook from the transcript over the first eight
+    /// mumbled words (which often dump a brand name with no payoff).
+    static func storyHookSuggestion(
+        from transcript: Transcript,
+        fallbackURL: URL?,
+        fallbackSeries: String
+    ) -> String {
+        let places = placesMergedForHook(from: transcript)
+        let topics = TranscriptKeywordService.topics(from: transcript, limit: 5)
+        let text = transcript.fullText.lowercased()
+
+        let hasDelay = ["delay", "delayed", "delays", "ground delay", "ground stop"]
+            .contains { text.contains($0) }
+        let hasMissed = ["missed", "miss my", "missed my"].contains { text.contains($0) }
+        let hasDFW = text.contains("dfw") || places.contains(where: { $0.uppercased() == "DFW" })
+
+        if hasDelay, hasMissed {
+            if hasDFW {
+                return "Missed My Business Trip After DFW Delays"
+            }
+            return "Missed My Business Trip After Flight Delays"
+        }
+
+        if hasDelay, hasDFW {
+            return "DFW Ground Delays Nearly Ruined This Trip"
+        }
+
+        if hasDelay {
+            return "Flight Delays Turned This Trip Upside Down"
+        }
+
+        if let top = topics.first, top.split(separator: " ").count >= 2 {
+            return top
+        }
+
+        if let fallbackURL {
+            return hookSuggestion(from: fallbackURL, fallbackSeries: fallbackSeries)
+        }
+
+        return fallbackSeries.isEmpty ? "New Video" : "\(fallbackSeries) Video"
+    }
+
+    private static func placesMergedForHook(from transcript: Transcript) -> [String] {
+        TranscriptKeywordService.places(from: transcript)
     }
 
     private static func presetTags(_ preset: BrandPreset) -> [String] {

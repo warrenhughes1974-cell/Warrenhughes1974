@@ -383,17 +383,11 @@ final class YouTubePrepViewModel {
     }
 
     private func suggestedHook(from transcript: Transcript) -> String {
-        let words = transcript.fullText
-            .split(separator: " ")
-            .prefix(8)
-            .joined(separator: " ")
-
-        return words.isEmpty
-            ? YouTubeMetadataService.hookSuggestion(
-                from: selectedVideoURL ?? URL(fileURLWithPath: "/"),
-                fallbackSeries: BrandSettings.shared.seriesName
-            )
-            : words
+        YouTubeMetadataService.storyHookSuggestion(
+            from: transcript,
+            fallbackURL: selectedVideoURL,
+            fallbackSeries: BrandSettings.shared.seriesName
+        )
     }
 
     func generateUploadPackage() {

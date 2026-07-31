@@ -108,6 +108,15 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.35",
+            highlights: [
+                "YouTube Prep descriptions follow the real story for travel/delay videos instead of fake “walkthrough / what we found” store copy.",
+                "Drops junk topics like “flight flights”, prefers delay/airport chapter titles, and builds real tags/hashtags (#flightdelay, DFW, etc.).",
+                "Thumbnail ranking skips much more of the intro/outro so house outros and end cards stop winning.",
+                "Auto hook suggests delay/missed-trip phrasing from the transcript instead of the first eight mumbled words."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.34",
             highlights: [
                 "Smart Analysis now labels silent, moving clips as B-ROLL (blue) instead of dumping them into REVIEW.",

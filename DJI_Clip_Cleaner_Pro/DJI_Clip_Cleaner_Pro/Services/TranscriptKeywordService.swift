@@ -40,9 +40,16 @@ enum TranscriptKeywordService {
                     && !keyword.phrase.split(separator: " ").contains(where: {
                         storeNames.contains($0.lowercased())
                     })
+                    && !isWeakTopic(keyword.phrase)
             }
             // Prefer real finds ("halloween candles") over bare nouns ("sugar").
+            // Story/travel phrases outrank generic bigrams when both appear.
             .sorted { lhs, rhs in
+                let leftStory = storySignalScore(lhs.phrase)
+                let rightStory = storySignalScore(rhs.phrase)
+                if leftStory != rightStory {
+                    return leftStory > rightStory
+                }
                 let leftPhrase = lhs.phrase.contains(" ")
                 let rightPhrase = rhs.phrase.contains(" ")
                 if leftPhrase != rightPhrase {
@@ -157,19 +164,60 @@ enum TranscriptKeywordService {
         for keyword in keywords {
             let words = keyword.phrase.split(separator: " ").map(String.init)
 
-            // "spice spice" is a stutter, not a subject.
-            if words.count == 2, words[0] == words[1] { continue }
+            // "spice spice" / "flight flights" are stutters or ASR doubles, not subjects.
+            if words.count == 2 {
+                if words[0] == words[1] { continue }
+                if wordStem(words[0]) == wordStem(words[1]) { continue }
+            }
 
             // One appearance of "pumpkin" across the whole list is enough.
-            guard words.allSatisfy({ (timesUsed[$0] ?? 0) < 1 }) else { continue }
+            // Same stem ("flight"/"flights") also blocks a second near-duplicate.
+            guard words.allSatisfy({ word in
+                (timesUsed[word] ?? 0) < 1 && (timesUsed[wordStem(word)] ?? 0) < 1
+            }) else { continue }
 
             for word in words {
                 timesUsed[word, default: 0] += 1
+                timesUsed[wordStem(word), default: 0] += 1
             }
             kept.append(keyword)
         }
 
         return kept
+    }
+
+    /// Rough singular/plural stem so "flight flights" collapses.
+    private static func wordStem(_ word: String) -> String {
+        if word.count <= 3 { return word }
+        if word.hasSuffix("ies"), word.count > 4 {
+            return String(word.dropLast(3)) + "y"
+        }
+        if word.hasSuffix("sses") || word.hasSuffix("xes") || word.hasSuffix("zes") {
+            return String(word.dropLast(2))
+        }
+        if word.hasSuffix("s"), !word.hasSuffix("ss") {
+            return String(word.dropLast())
+        }
+        return word
+    }
+
+    private static func isWeakTopic(_ phrase: String) -> Bool {
+        let words = phrase.lowercased().split(separator: " ").map(String.init)
+        if words.isEmpty { return true }
+        // Lone ultra-generic nouns never belong in WHAT WE FOUND / chapters.
+        if words.count == 1 {
+            return weakTopicWords.contains(words[0])
+        }
+        // Both sides weak → junk ("downstairs area", "entire schedule").
+        return words.allSatisfy { weakTopicWords.contains($0) }
+    }
+
+    private static func storySignalScore(_ phrase: String) -> Int {
+        phrase
+            .lowercased()
+            .split(separator: " ")
+            .map { storyBoostWords[String($0)] ?? 0 }
+            .reduce(0, +)
     }
 
     private static func strongestFirst(
@@ -190,12 +238,14 @@ enum TranscriptKeywordService {
     ) -> String? {
         var fallbackNoun: String?
         var bestTwoWord: String?
+        var bestScore = Int.min
 
         for index in tokens.indices {
             let current = tokens[index]
             guard current.isUsable else { continue }
 
-            if current.isNoun, current.text.count >= 4, fallbackNoun == nil {
+            if current.isNoun, current.text.count >= 4, fallbackNoun == nil,
+               !weakTopicWords.contains(current.text) {
                 fallbackNoun = current.text
             }
 
@@ -204,16 +254,27 @@ enum TranscriptKeywordService {
             guard next.isUsable, next.isNoun else { continue }
             guard current.isNoun || current.isAdjective else { continue }
 
+            // Skip ASR doubles ("flight flights") and weak pairings.
+            if wordStem(current.text) == wordStem(next.text) { continue }
             let phrase = "\(current.text) \(next.text)"
-            if bestTwoWord == nil {
-                bestTwoWord = phrase
+            if isWeakTopic(phrase) { continue }
+
+            var score = current.text.count + next.text.count
+            score += storySignalScore(phrase) * 8
+
+            if knownStoreDisplayNames.contains(current.text)
+                || knownStoreDisplayNames.contains(next.text) {
+                score += 12
             }
 
-            // Prefer a phrase that names a store or a longer product find.
-            if knownStoreDisplayNames.contains(current.text)
-                || knownStoreDisplayNames.contains(next.text)
-                || current.text.count + next.text.count >= 12 {
-                return phrase
+            // Role + misheard first name ("coworker Brian") is weak chapter bait.
+            if personRoleWords.contains(current.text) {
+                score -= 10
+            }
+
+            if score > bestScore {
+                bestScore = score
+                bestTwoWord = phrase
             }
         }
 
@@ -340,7 +401,20 @@ enum TranscriptKeywordService {
         ("ikes sandwiches", "Ike's Love and Sandwiches"),
         ("ikes sandwich", "Ike's Love and Sandwiches"),
         ("ike s love", "Ike's Love and Sandwiches"),
-        ("ike love", "Ike's Love and Sandwiches")
+        ("ike love", "Ike's Love and Sandwiches"),
+        // Travel / airports — needed for delay/trip vlogs, not retail hunts.
+        ("dfw", "DFW"),
+        ("dallas fort worth", "DFW"),
+        ("dallas/fort worth", "DFW"),
+        ("american airlines", "American Airlines"),
+        ("american airline", "American Airlines"),
+        ("southwest airlines", "Southwest Airlines"),
+        ("delta airlines", "Delta"),
+        ("united airlines", "United"),
+        ("omaha", "Omaha"),
+        ("austin", "Austin"),
+        ("austin bergstrom", "Austin"),
+        ("bag claim", "Baggage Claim")
     ]
 
     private static var knownStoreDisplayNames: Set<String> {
@@ -391,5 +465,30 @@ enum TranscriptKeywordService {
         "were", "weren", "what", "whats", "when", "where", "which", "while",
         "who", "why", "will", "with", "without", "won", "wont", "would",
         "wouldn", "wow", "yeah", "yep", "yes", "yet", "you", "your", "youre"
+    ]
+
+    /// Words that look like topics but never describe the story by themselves.
+    private static let weakTopicWords: Set<String> = [
+        "area", "brand", "downstairs", "entire", "ground", "internet",
+        "nationwide", "schedule", "short", "speed", "ups", "update",
+        "video", "walkthrough", "upstairs", "section", "moment", "minutes"
+    ]
+
+    private static let personRoleWords: Set<String> = [
+        "coworker", "colleague", "friend", "boss", "manager", "husband",
+        "wife", "boyfriend", "girlfriend"
+    ]
+
+    /// Travel / conflict lexicon — boost these for topics and chapter titles.
+    private static let storyBoostWords: [String: Int] = [
+        "delay": 5, "delayed": 5, "delays": 5,
+        "missed": 5, "miss": 4,
+        "cancelled": 5, "canceled": 5, "cancellation": 4,
+        "flight": 3, "flights": 3, "airline": 3, "airlines": 3,
+        "airport": 4, "terminal": 3, "gate": 3,
+        "boarding": 3, "baggage": 2, "luggage": 2,
+        "trip": 3, "business": 3, "ground": 2, "stop": 2,
+        "dfw": 5, "omaha": 3, "austin": 2,
+        "hours": 3, "late": 3, "stuck": 4
     ]
 }

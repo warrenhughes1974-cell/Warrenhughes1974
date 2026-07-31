@@ -262,12 +262,20 @@ enum TranscriptionService {
 
             // Skip windows that only have a weak single-word subject.
             if let title = TranscriptKeywordService.chapterTitle(from: windowText),
-               !usedTitles.contains(title.lowercased()),
-               bufferStart - previousStart >= 10 {
-                chapters.append(
-                    TranscriptChapter(startTime: bufferStart, title: title)
-                )
-                usedTitles.insert(title.lowercased())
+               !usedTitles.contains(title.lowercased()) {
+                // Rename the required 0:00 chapter when the opening window
+                // actually names the story (instead of leaving a blank "Intro").
+                if chapters.count == 1,
+                   chapters[0].title == "Intro",
+                   bufferStart < 25 {
+                    chapters[0] = TranscriptChapter(startTime: 0, title: title)
+                    usedTitles = [title.lowercased()]
+                } else if bufferStart - previousStart >= 10 {
+                    chapters.append(
+                        TranscriptChapter(startTime: bufferStart, title: title)
+                    )
+                    usedTitles.insert(title.lowercased())
+                }
             }
 
             buffer = []

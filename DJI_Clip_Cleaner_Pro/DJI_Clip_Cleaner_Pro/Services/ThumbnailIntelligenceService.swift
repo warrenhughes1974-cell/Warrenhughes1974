@@ -93,9 +93,12 @@ enum ThumbnailIntelligenceService {
         scout.requestedTimeToleranceBefore = CMTime(seconds: 1.0, preferredTimescale: 600)
         scout.requestedTimeToleranceAfter = CMTime(seconds: 1.0, preferredTimescale: 600)
 
-        // Skip the very start and end — intros and outros are rarely the money shot.
-        let usableStart = min(duration * 0.08, 4.0)
-        let usableEnd = max(duration - min(duration * 0.08, 4.0), usableStart + 1.0)
+        // Skip intros and outros. Cap used to be 4s, which left house outros /
+        // bag-claim endings inside long videos — sample the middle story instead.
+        let leadSkip = max(min(duration * 0.12, 45.0), min(20.0, duration * 0.2))
+        let trailSkip = max(min(duration * 0.18, 60.0), min(30.0, duration * 0.25))
+        let usableStart = min(leadSkip, duration * 0.3)
+        let usableEnd = max(duration - trailSkip, usableStart + 1.0)
         let span = usableEnd - usableStart
 
         var scored: [(time: TimeInterval, score: Double, reasons: [String])] = []
@@ -122,11 +125,23 @@ enum ThumbnailIntelligenceService {
                 continue
             }
 
+            var score = analysis.score
+            var reasons = analysis.reasons
+            let position = seconds / duration
+
+            // Soft-penalize leftover early/late frames that still sneak in.
+            if position > 0.82 {
+                score *= 0.55
+                reasons.append("late in video")
+            } else if position < 0.12 {
+                score *= 0.75
+            }
+
             scored.append(
                 (
                     time: seconds,
-                    score: analysis.score,
-                    reasons: analysis.reasons
+                    score: score,
+                    reasons: reasons
                 )
             )
         }
