@@ -108,6 +108,15 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.38",
+            highlights: [
+                "Apple Intelligence now analyzes each transcript entirely on-device into subject, goal, obstacle, origin, problem location, destination, outcome, evidence, and confidence.",
+                "A new editable Story Review must be confirmed before titles, descriptions, tags, chapters, or thumbnails can be generated.",
+                "Metadata consumes only the confirmed story; preset clickbait templates and unsupported location relationships no longer drive YouTube Prep.",
+                "Thumbnail ranking scans about 60 frames, puts story matches first, preserves sharp alternatives, removes conflicting food/beverage frames for travel stories, and avoids duplicate moments."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.37",
             highlights: [
                 "A new transcript now replaces stale thumbnail text with the story phrase (for example DFW GROUND DELAYS), instead of preserving AMERICAN AIRLINES from an old run.",

@@ -183,13 +183,14 @@ enum YouTubeMetadataService {
         brand: BrandSettingsValues,
         preset: BrandPreset,
         transcript: Transcript? = nil,
-        extraPlaces: [String] = []
+        extraPlaces: [String] = [],
+        confirmedBrief: StoryBrief? = nil
     ) -> String {
         let channel = brand.channelPrefix.trimmingCharacters(in: .whitespacesAndNewlines)
         let series = brand.seriesName.trimmingCharacters(in: .whitespacesAndNewlines)
         let cleanHook = titleCase(hook)
 
-        let brief = StoryBriefService.build(
+        let brief = confirmedBrief ?? StoryBriefService.build(
             from: transcript,
             hook: cleanHook,
             brand: brand,
@@ -224,9 +225,11 @@ enum YouTubeMetadataService {
         lines.append("")
         lines.append("CHAPTERS")
 
-        let chapters = transcript.map {
-            TranscriptionService.chapters(from: $0, storyDomain: brief.domain)
-        } ?? []
+        let chapters = !brief.chapters.isEmpty
+            ? brief.chapters
+            : transcript.map {
+                TranscriptionService.chapters(from: $0, storyDomain: brief.domain)
+            } ?? []
         if chapters.count > 1 {
             for chapter in chapters {
                 lines.append(chapter.formattedLine)
@@ -294,11 +297,12 @@ enum YouTubeMetadataService {
         brand: BrandSettingsValues,
         preset: BrandPreset,
         transcript: Transcript? = nil,
-        extraPlaces: [String] = []
+        extraPlaces: [String] = [],
+        confirmedBrief: StoryBrief? = nil
     ) -> [String] {
         let cleanHook = tagSafe(hook)
         let channel = brand.channelPrefix.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        let brief = StoryBriefService.build(
+        let brief = confirmedBrief ?? StoryBriefService.build(
             from: transcript,
             hook: hook,
             brand: brand,

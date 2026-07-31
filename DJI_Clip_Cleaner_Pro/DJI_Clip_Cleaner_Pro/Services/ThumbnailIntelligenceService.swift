@@ -13,6 +13,7 @@ struct RankedThumbnailCandidate: Identifiable, Sendable {
     let timeSeconds: TimeInterval
     let reasons: [String]
     let imagePath: String
+    let isStoryMatch: Bool
 
     var formattedTime: String {
         let total = Int(timeSeconds.rounded())
@@ -20,20 +21,10 @@ struct RankedThumbnailCandidate: Identifiable, Sendable {
     }
 
     var rankLabel: String {
-        switch rank {
-        case 1:
-            return "Top Thumbnail"
-        case 2:
-            return "Second"
-        case 3:
-            return "Third"
-        case 4:
-            return "Fourth"
-        case 5:
-            return "Fifth"
-        default:
-            return "Option \(rank)"
+        if isStoryMatch {
+            return rank == 1 ? "Top Story Match" : "Story Match \(rank)"
         }
+        return rank == 1 ? "Top Sharp Option" : "Sharp Alternative \(rank)"
     }
 }
 
@@ -55,7 +46,7 @@ enum ThumbnailIntelligenceService {
         }
     }
 
-    private static let sampleCount = 30
+    private static let sampleCount = 60
     private static let topCount = 8
 
     /// Samples ~30 frames across the video, scores them, and returns the top
@@ -149,6 +140,12 @@ enum ThumbnailIntelligenceService {
                 continue
             }
 
+            // A food/beverage close-up is not an alternate for an airport-delay
+            // story. Preserve sharp alternatives, but remove clear conflicts.
+            if analysis.storyConflict {
+                continue
+            }
+
             var score = analysis.score
             var reasons = analysis.reasons
             let position = seconds / duration
@@ -175,26 +172,34 @@ enum ThumbnailIntelligenceService {
             throw ServiceError.noFrames
         }
 
-        // For strongly visual stories, return fewer good choices instead of
-        // padding eight slots with soda shelves, food, or other irrelevant frames.
-        let storyMatched = scored.filter { $0.storyMatch >= 0.18 }
-        let candidatePool: [
+        // Story matches first, then additional sharp choices. Do not remove the
+        // user's ability to pick an alternate frame.
+        let ordered = scored.sorted { lhs, rhs in
+            let leftMatch = lhs.storyMatch >= 0.18
+            let rightMatch = rhs.storyMatch >= 0.18
+            if leftMatch != rightMatch {
+                return leftMatch && !rightMatch
+            }
+            return lhs.score > rhs.score
+        }
+
+        // Avoid nearly identical moments from a static shot filling the picker.
+        let minimumSeparation = max(duration / 90, 4.0)
+        var ranked: [
             (
                 time: TimeInterval,
                 score: Double,
                 storyMatch: Double,
                 reasons: [String]
             )
-        ]
-        if storyBrief != nil, !storyMatched.isEmpty {
-            candidatePool = storyMatched
-        } else {
-            candidatePool = scored
+        ] = []
+        for candidate in ordered {
+            guard ranked.allSatisfy({
+                abs($0.time - candidate.time) >= minimumSeparation
+            }) else { continue }
+            ranked.append(candidate)
+            if ranked.count >= topCount { break }
         }
-
-        let ranked = candidatePool
-            .sorted { $0.score > $1.score }
-            .prefix(topCount)
 
         // Only the frames that actually won get decoded at full quality.
         let full = AVAssetImageGenerator(asset: asset)
@@ -231,7 +236,8 @@ enum ThumbnailIntelligenceService {
                     score: Int((item.score * 100).rounded()),
                     timeSeconds: item.time,
                     reasons: item.reasons,
-                    imagePath: outputURL.path
+                    imagePath: outputURL.path,
+                    isStoryMatch: item.storyMatch >= 0.18
                 )
             )
         }
@@ -262,6 +268,7 @@ enum ThumbnailIntelligenceService {
         let sharpness: Double
         let faceAreaRatio: Double
         let storyMatch: Double
+        let storyConflict: Bool
     }
 
     private static func analyze(
@@ -357,7 +364,10 @@ enum ThumbnailIntelligenceService {
             similarityToPrevious: similarity,
             sharpness: sharpness,
             faceAreaRatio: face.areaRatio,
-            storyMatch: storyMatch.score
+            storyMatch: storyMatch.score,
+            storyConflict: domain == .travelDelay
+                && storyMatch.conflictsWithTravel
+                && storyMatch.score < 0.18
         )
     }
 
@@ -460,9 +470,9 @@ enum ThumbnailIntelligenceService {
     private static func storyMatchScore(
         image: CGImage,
         targets: [String]
-    ) -> (score: Double, reasons: [String]) {
+    ) -> (score: Double, reasons: [String], conflictsWithTravel: Bool) {
         guard !targets.isEmpty else {
-            return (0.2, [])
+            return (0, [], false)
         }
 
         let loweredTargets = targets.map { $0.lowercased() }
@@ -479,7 +489,7 @@ enum ThumbnailIntelligenceService {
         do {
             try handler.perform([textRequest, classifyRequest])
         } catch {
-            return (0.15, [])
+            return (0.15, [], false)
         }
 
         let ocrText = (textRequest.results ?? [])
@@ -493,11 +503,17 @@ enum ThumbnailIntelligenceService {
             }
         }
 
-        let identifiers = (classifyRequest.results ?? [])
+        let classifications = (classifyRequest.results ?? [])
             .prefix(8)
-            .map { $0.identifier.lowercased() }
+            .map {
+                (
+                    identifier: $0.identifier.lowercased(),
+                    confidence: $0.confidence
+                )
+            }
 
-        for identifier in identifiers {
+        for classification in classifications where classification.confidence >= 0.2 {
+            let identifier = classification.identifier
             for target in loweredTargets where identifier.contains(target) || target.contains(identifier) {
                 if !hits.contains(target) {
                     hits.append(target)
@@ -509,7 +525,9 @@ enum ThumbnailIntelligenceService {
         // Common Vision labels for airport/plane scenes even when targets are short.
         let travelLabels = ["airplane", "aircraft", "airport", "jet", "airliner", "terminal"]
         if loweredTargets.contains(where: { travelLabels.contains($0) }) {
-            for label in travelLabels where identifiers.contains(where: { $0.contains(label) }) {
+            for label in travelLabels where classifications.contains(where: {
+                $0.confidence >= 0.2 && $0.identifier.contains(label)
+            }) {
                 if !hits.contains(label) {
                     hits.append(label)
                 }
@@ -522,7 +540,18 @@ enum ThumbnailIntelligenceService {
             reasons.append("matches story (\(hits.prefix(2).joined(separator: ", ")))")
         }
 
-        return (min(score, 1.0), reasons)
+        let travelConflicts = [
+            "food", "dish", "salad", "vegetable", "beverage", "bottle",
+            "soft drink", "grocery", "meal"
+        ]
+        let conflictsWithTravel = classifications.contains { classification in
+            classification.confidence >= 0.45
+                && travelConflicts.contains {
+                    classification.identifier.contains($0)
+                }
+        }
+
+        return (min(score, 1.0), reasons, conflictsWithTravel)
     }
 
     private static func pixelSimilarity(_ first: [UInt8], _ second: [UInt8]) -> Double {

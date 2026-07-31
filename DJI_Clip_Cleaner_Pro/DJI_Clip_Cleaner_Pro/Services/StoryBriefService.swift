@@ -2,7 +2,7 @@ import Foundation
 
 /// High-level story family for one finished video. Branding, copy, and
 /// thumbnail targets follow this — not a fixed channel “look.”
-enum StoryDomain: String, Sendable {
+enum StoryDomain: String, CaseIterable, Identifiable, Sendable {
     case travelDelay
     case retailHunt
     case cooking
@@ -12,6 +12,22 @@ enum StoryDomain: String, Sendable {
     case cruise
     case family
     case general
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .travelDelay: return "Travel / Delay"
+        case .retailHunt: return "Retail / Shopping"
+        case .cooking: return "Cooking / Food"
+        case .motorsport: return "Motorsport / F1"
+        case .adventure: return "Adventure"
+        case .themePark: return "Theme Park"
+        case .cruise: return "Cruise"
+        case .family: return "Family / Lifestyle"
+        case .general: return "General Story"
+        }
+    }
 }
 
 struct StoryBrief: Sendable {
@@ -29,6 +45,7 @@ struct StoryBrief: Sendable {
     let thumbnailText: String
     let tags: [String]
     let hashtags: [String]
+    let chapters: [TranscriptChapter]
     /// Only set when a Settings series actually fits this story.
     let seriesFits: Bool
 }
@@ -85,6 +102,9 @@ enum StoryBriefService {
             thumbnailText: thumb,
             tags: tagList,
             hashtags: hashes,
+            chapters: transcript.map {
+                TranscriptionService.chapters(from: $0, storyDomain: domain)
+            } ?? [],
             seriesFits: seriesFits
         )
     }
