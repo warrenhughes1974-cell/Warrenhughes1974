@@ -221,6 +221,11 @@ struct YouTubePrepView: View {
                             text: $viewModel.storyTagsText,
                             minimumHeight: 80
                         )
+                        storyListEditor(
+                            "Hashtags (maximum 3)",
+                            text: $viewModel.storyHashtagsText,
+                            minimumHeight: 80
+                        )
                     }
 
                     VStack(alignment: .leading, spacing: 5) {

@@ -32,6 +32,7 @@ final class YouTubePrepViewModel {
     var storyThumbnailIdeasText = ""
     var storyVisualTargetsText = ""
     var storyTagsText = ""
+    var storyHashtagsText = ""
     var storyChaptersText = ""
     var titleVariants: [TitleVariant] = []
     var selectedTitleID: UUID?
@@ -504,6 +505,10 @@ final class YouTubePrepViewModel {
         analysis.thumbnailTextIdeas = parseLines(storyThumbnailIdeasText)
         analysis.visualTargets = parseLines(storyVisualTargetsText)
         analysis.tags = parseLines(storyTagsText)
+        analysis.hashtags = parseLines(storyHashtagsText)
+            .map { $0.hasPrefix("#") ? $0 : "#\($0)" }
+            .prefix(3)
+            .map { $0 }
         analysis.chapters = parseChapters(storyChaptersText)
 
         if analysis.domain == .travelDelay,
@@ -658,6 +663,7 @@ final class YouTubePrepViewModel {
         storyThumbnailIdeasText = analysis.thumbnailTextIdeas.joined(separator: "\n")
         storyVisualTargetsText = analysis.visualTargets.joined(separator: "\n")
         storyTagsText = analysis.tags.joined(separator: "\n")
+        storyHashtagsText = analysis.hashtags.joined(separator: "\n")
         storyChaptersText = analysis.chapters
             .sorted { $0.startTime < $1.startTime }
             .map {
@@ -671,6 +677,7 @@ final class YouTubePrepViewModel {
         storyThumbnailIdeasText = ""
         storyVisualTargetsText = ""
         storyTagsText = ""
+        storyHashtagsText = ""
         storyChaptersText = ""
     }
 

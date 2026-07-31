@@ -126,16 +126,18 @@ enum OnDeviceStoryAnalysisService {
             // Long videos may produce many section summaries. Condense in
             // factual batches instead of silently dropping the ending.
             var finalSummaries = sectionSummaries
-            while finalSummaries.joined(separator: "\n\n").count > 18_000 {
+            // Foundation Models shares a 4,096-token window between prompt,
+            // generated schema, and response. Keep final factual notes compact.
+            while finalSummaries.joined(separator: "\n\n").count > 7_000 {
                 var condensed: [String] = []
-                for start in stride(from: 0, to: finalSummaries.count, by: 6) {
-                    let end = min(start + 6, finalSummaries.count)
+                for start in stride(from: 0, to: finalSummaries.count, by: 4) {
+                    let end = min(start + 4, finalSummaries.count)
                     let batch = finalSummaries[start..<end].joined(separator: "\n\n")
                     let session = LanguageModelSession(
                         instructions: """
                         Condense factual transcript notes without dropping goals,
                         obstacles, location roles, outcomes, or timestamps. Do not
-                        infer anything new. Stay under 500 words.
+                        infer anything new. Stay under 250 words.
                         """
                     )
                     let response = try await session.respond(to: batch)
