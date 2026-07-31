@@ -356,8 +356,8 @@ enum ThumbnailService {
             .usesFontLeading
         ]
 
-        let whiteOutlineWidth = max(font.pointSize * 0.24, 7.0)
-        let blackOutlineWidth = max(font.pointSize * 0.14, 4.0)
+        let whiteOutlineWidth = max(font.pointSize * 0.08, 2.5)
+        let blackOutlineWidth = max(font.pointSize * 0.045, 1.5)
 
         let whiteOutlineAttributes: [NSAttributedString.Key: Any] = [
             .font: font,

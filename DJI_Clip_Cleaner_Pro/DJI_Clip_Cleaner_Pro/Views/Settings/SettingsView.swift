@@ -177,7 +177,7 @@ struct SettingsView: View {
                         }
                     }
 
-                    Text("Titles always get a white outer outline and a black inner outline, so bright colors stay readable on busy shelves.")
+                    Text("Titles get a thin white outer outline and a thin black inner outline so they stay readable without spiky letter edges.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

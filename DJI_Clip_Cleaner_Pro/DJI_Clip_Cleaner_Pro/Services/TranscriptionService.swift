@@ -229,7 +229,8 @@ enum TranscriptionService {
     /// skipped rather than titled with raw dictation.
     static func chapters(
         from transcript: Transcript,
-        targetSpacing: TimeInterval? = nil
+        targetSpacing: TimeInterval? = nil,
+        storyDomain: StoryDomain = .general
     ) -> [TranscriptChapter] {
         guard let lastSegment = transcript.segments.last else { return [] }
 
@@ -262,7 +263,8 @@ enum TranscriptionService {
 
             // Skip windows that only have a weak single-word subject.
             if let title = TranscriptKeywordService.chapterTitle(from: windowText),
-               !usedTitles.contains(title.lowercased()) {
+               !usedTitles.contains(title.lowercased()),
+               isUsableChapterTitle(title, domain: storyDomain) {
                 // Rename the required 0:00 chapter when the opening window
                 // actually names the story (instead of leaving a blank "Intro").
                 if chapters.count == 1,
@@ -285,6 +287,24 @@ enum TranscriptionService {
         // Below three, YouTube ignores them anyway — better to prompt the user
         // to add their own than to ship a broken chapter list.
         return chapters.count >= 3 ? chapters : []
+    }
+
+    /// Travel stories should not get “Coworker Brian” style chapter bait.
+    private static func isUsableChapterTitle(_ title: String, domain: StoryDomain) -> Bool {
+        let lower = title.lowercased()
+        let weakPrefixes = ["coworker ", "colleague ", "friend ", "boss "]
+        if weakPrefixes.contains(where: { lower.hasPrefix($0) }) {
+            return domain == .family || domain == .general
+        }
+
+        let weakExact: Set<String> = [
+            "short flight", "internet speed", "brand ups", "downstairs area",
+            "entire schedule", "close flights", "actual terminal"
+        ]
+        if weakExact.contains(lower) {
+            return false
+        }
+        return true
     }
 
     static func writeSRT(
