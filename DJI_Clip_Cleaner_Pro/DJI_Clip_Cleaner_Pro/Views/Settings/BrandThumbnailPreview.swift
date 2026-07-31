@@ -21,7 +21,7 @@ struct BrandThumbnailPreview: View {
     }
 
     private var outlineWidth: CGFloat {
-        max(fontSize * 0.19, 2.5)
+        max(fontSize * 0.07, 1.8)
     }
 
     private var titleColor: Color {

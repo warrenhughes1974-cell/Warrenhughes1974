@@ -189,45 +189,42 @@ enum YouTubeMetadataService {
         let series = brand.seriesName.trimmingCharacters(in: .whitespacesAndNewlines)
         let cleanHook = titleCase(hook)
 
-        let places = mergedPlaces(detected: TranscriptKeywordService.places(from: transcript),
-                                  manual: extraPlaces)
-        let topics = TranscriptKeywordService.topics(from: transcript, limit: 8)
+        let brief = StoryBriefService.build(
+            from: transcript,
+            hook: cleanHook,
+            brand: brand,
+            extraPlaces: extraPlaces
+        )
 
         var lines: [String] = []
 
-        // First 150 characters become the search snippet, so lead with the
-        // keyword instead of repeating the title verbatim.
-        lines.append(searchSnippet(hook: cleanHook, preset: preset, places: places, topics: topics, transcript: transcript))
+        // Search snippet = story headline (trimmed to YouTube's visible window).
+        lines.append(trimmedSnippet(brief.headline))
         lines.append("")
+        lines.append(brief.summary)
 
-        // Written from what is actually in the video. The hook appears once, in
-        // the search snippet above, rather than as the subject of every sentence.
-        lines.append(bodyCopy(preset: preset, places: places, topics: topics, transcript: transcript))
-
-        if !places.isEmpty {
+        if !brief.places.isEmpty {
             lines.append("")
-            let placeHeader = isRetailPreset(preset) ? "STORES IN THIS VIDEO" : "PLACES IN THIS VIDEO"
-            lines.append(placeHeader)
-            for place in places {
+            lines.append(brief.domain == .retailHunt ? "STORES IN THIS VIDEO" : "PLACES IN THIS VIDEO")
+            for place in brief.places {
                 lines.append("· \(place)")
             }
         }
 
-        if !topics.isEmpty {
+        if !brief.beats.isEmpty {
             lines.append("")
-            let topicHeader = looksLikeTravelStory(hook: cleanHook, places: places, topics: topics, transcript: transcript)
-                ? "IN THIS VIDEO"
-                : "WHAT WE FOUND"
-            lines.append(topicHeader)
-            for topic in topics {
-                lines.append("· \(topic)")
+            lines.append(brief.domain == .retailHunt ? "WHAT WE FOUND" : "STORY BEATS")
+            for beat in brief.beats {
+                lines.append("· \(beat)")
             }
         }
 
         lines.append("")
         lines.append("CHAPTERS")
 
-        let chapters = transcript.map { TranscriptionService.chapters(from: $0) } ?? []
+        let chapters = transcript.map {
+            TranscriptionService.chapters(from: $0, storyDomain: brief.domain)
+        } ?? []
         if chapters.count > 1 {
             for chapter in chapters {
                 lines.append(chapter.formattedLine)
@@ -238,10 +235,11 @@ enum YouTubeMetadataService {
         }
 
         lines.append("")
-        lines.append(callToAction(for: preset, channel: channel))
+        lines.append(callToAction(channel: channel, domain: brief.domain))
         lines.append("")
 
-        if !series.isEmpty {
+        // Only advertise a playlist when the series fits *this* story.
+        if brief.seriesFits, !series.isEmpty {
             lines.append("MORE FROM THIS SERIES")
             lines.append("Watch the full \(series) playlist on the channel.")
             lines.append("")
@@ -250,9 +248,17 @@ enum YouTubeMetadataService {
         lines.append("GEAR & WORKFLOW")
         lines.append("Filmed on DJI · Edited in Filmora")
         lines.append("")
-        lines.append(hashtagLine(series: series, preset: preset, hook: cleanHook, places: places, topics: topics))
+        lines.append(brief.hashtags.joined(separator: " "))
 
         return lines.joined(separator: "\n")
+    }
+
+    private static func trimmedSnippet(_ snippet: String) -> String {
+        guard snippet.count > descriptionSnippetLimit else {
+            return snippet
+        }
+        return String(snippet.prefix(descriptionSnippetLimit - 1))
+            .trimmingCharacters(in: .whitespaces) + "…"
     }
 
     static func descriptionQuality(_ description: String) -> MetadataQuality {
@@ -288,16 +294,17 @@ enum YouTubeMetadataService {
         transcript: Transcript? = nil,
         extraPlaces: [String] = []
     ) -> [String] {
-        // A hook can be a full title with emoji and pipes; that is unusable as a
-        // tag, so it is reduced to the plain phrase underneath.
         let cleanHook = tagSafe(hook)
-        let series = brand.seriesName.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         let channel = brand.channelPrefix.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let brief = StoryBriefService.build(
+            from: transcript,
+            hook: hook,
+            brand: brand,
+            extraPlaces: extraPlaces
+        )
 
         var tags: [String] = []
 
-        // `allowSingleWord` exists only for the exact-match hook. Every other
-        // tag must be a phrase, because bare single words are too broad to rank.
         func append(_ value: String, allowSingleWord: Bool = false) {
             let trimmed = value
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -313,56 +320,30 @@ enum YouTubeMetadataService {
             tags.append(trimmed)
         }
 
-        // Exact match first — this is the highest-weighted slot.
         append(cleanHook, allowSingleWord: true)
 
-        if !series.isEmpty {
-            append("\(cleanHook) \(series)")
-            append(series)
-        }
-
-        // Store names are what viewers actually type, so they rank above both
-        // the transcript phrases and the preset copy.
-        let places = mergedPlaces(
-            detected: TranscriptKeywordService.places(from: transcript),
-            manual: extraPlaces
-        )
-
-        for place in places.prefix(3) {
-            let name = place.lowercased()
-            append("\(name) \(presetKeyword(preset))")
-            if isRetailPreset(preset) {
-                append("\(name) haul")
-                append("shop with me \(name)")
-            } else {
-                append("\(name) delay")
-                append("\(name) travel vlog")
-            }
-        }
-
-        // What was actually said outranks generic preset copy.
-        for phrase in TranscriptKeywordService.tagPhrases(from: transcript, limit: 8) {
-            append(phrase)
-        }
-
-        for tag in presetTags(preset) {
+        // Story tags first — never Halloween Hunt on a delay video.
+        for tag in brief.tags {
             append(tag)
         }
 
-        // Travel / delay vlogs need searchable story phrases, not "walkthrough".
-        if looksLikeTravelStory(hook: cleanHook, places: places, topics: [], transcript: transcript) {
-            append("flight delay")
-            append("airport delay")
-            append("missed flight")
-            append("ground delay")
-            append("travel vlog")
-        } else if !cleanHook.isEmpty, cleanHook.split(separator: " ").count <= 4 {
-            append("\(cleanHook) walkthrough")
-            append("\(cleanHook) vlog")
+        if brief.seriesFits {
+            let series = brand.seriesName.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            if !series.isEmpty {
+                append("\(cleanHook) \(series)")
+                append(series)
+            }
+        }
+
+        // Retail presets can still add store-hunt phrases when the *story* is retail.
+        if brief.domain == .retailHunt {
+            for tag in presetTags(preset) {
+                append(tag)
+            }
         }
 
         if !channel.isEmpty {
-            append("\(channel) \(series.isEmpty ? "channel" : series)")
+            append("\(channel) vlog")
         }
 
         return Array(tags.prefix(15))
@@ -701,20 +682,26 @@ enum YouTubeMetadataService {
         }
     }
 
-    private static func callToAction(for preset: BrandPreset, channel: String) -> String {
+    private static func callToAction(channel: String, domain: StoryDomain) -> String {
         let name = channel.isEmpty ? "the channel" : channel
 
-        switch preset {
-        case .halloweenHunt:
-            return "Subscribe to \(name) for more Halloween hunts, and tell me in the comments which find you would take home."
-        case .storeWalk:
-            return "Subscribe to \(name) for more store walks, and comment which store you want me to check next."
-        case .productReview:
-            return "Subscribe to \(name) for more honest reviews, and comment what you want reviewed next."
-        case .behindTheScenes:
-            return "Subscribe to \(name) for more behind-the-scenes videos, and comment what you want to see next."
-        case .custom:
-            return "Subscribe to \(name) for more videos, and let me know in the comments what you want to see next."
+        switch domain {
+        case .travelDelay:
+            return "Subscribe to \(name) for more travel days — and tell me your worst delay story in the comments."
+        case .retailHunt:
+            return "Subscribe to \(name) for more store finds, and comment which store you want checked next."
+        case .cooking:
+            return "Subscribe to \(name) for more kitchen videos, and comment what you want cooked next."
+        case .motorsport:
+            return "Subscribe to \(name) for more race-day videos, and comment what track you want next."
+        case .adventure:
+            return "Subscribe to \(name) for more adventures, and comment what you want to see next."
+        case .themePark:
+            return "Subscribe to \(name) for more park days, and comment your favorite ride."
+        case .cruise:
+            return "Subscribe to \(name) for more cruise videos, and comment where we should sail next."
+        case .family, .general:
+            return "Subscribe to \(name) for more real-life adventures, and let me know in the comments what you want to see next."
         }
     }
 
@@ -844,34 +831,24 @@ enum YouTubeMetadataService {
     static func storyHookSuggestion(
         from transcript: Transcript,
         fallbackURL: URL?,
-        fallbackSeries: String
+        fallbackSeries: String,
+        brand: BrandSettingsValues
     ) -> String {
-        let places = placesMergedForHook(from: transcript)
-        let topics = TranscriptKeywordService.topics(from: transcript, limit: 5)
-        let text = transcript.fullText.lowercased()
+        let brief = StoryBriefService.build(
+            from: transcript,
+            hook: "",
+            brand: brand
+        )
 
-        let hasDelay = ["delay", "delayed", "delays", "ground delay", "ground stop"]
-            .contains { text.contains($0) }
-        let hasMissed = ["missed", "miss my", "missed my"].contains { text.contains($0) }
-        let hasDFW = text.contains("dfw") || places.contains(where: { $0.uppercased() == "DFW" })
-
-        if hasDelay, hasMissed {
-            if hasDFW {
-                return "Missed My Business Trip After DFW Delays"
-            }
-            return "Missed My Business Trip After Flight Delays"
+        // Headline without trailing period for title use.
+        let headline = brief.headline
+            .trimmingCharacters(in: CharacterSet(charactersIn: "."))
+        if headline.count >= 12, headline.count <= 70 {
+            return headline
         }
 
-        if hasDelay, hasDFW {
-            return "DFW Ground Delays Nearly Ruined This Trip"
-        }
-
-        if hasDelay {
-            return "Flight Delays Turned This Trip Upside Down"
-        }
-
-        if let top = topics.first, top.split(separator: " ").count >= 2 {
-            return top
+        if !brief.thumbnailText.isEmpty {
+            return titleCase(brief.thumbnailText.lowercased())
         }
 
         if let fallbackURL {
@@ -879,10 +856,6 @@ enum YouTubeMetadataService {
         }
 
         return fallbackSeries.isEmpty ? "New Video" : "\(fallbackSeries) Video"
-    }
-
-    private static func placesMergedForHook(from transcript: Transcript) -> [String] {
-        TranscriptKeywordService.places(from: transcript)
     }
 
     private static func presetTags(_ preset: BrandPreset) -> [String] {

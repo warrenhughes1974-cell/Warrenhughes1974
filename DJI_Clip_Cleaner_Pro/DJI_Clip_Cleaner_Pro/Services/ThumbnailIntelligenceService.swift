@@ -69,6 +69,7 @@ enum ThumbnailIntelligenceService {
         thumbnailText: String,
         brand: BrandSettingsValues,
         outputFolder: URL,
+        storyBrief: StoryBrief? = nil,
         progress: (@MainActor (Int, Int) -> Void)? = nil
     ) async throws -> [RankedThumbnailCandidate] {
         let asset = AVURLAsset(url: videoURL)
@@ -100,6 +101,7 @@ enum ThumbnailIntelligenceService {
         let usableStart = min(leadSkip, duration * 0.3)
         let usableEnd = max(duration - trailSkip, usableStart + 1.0)
         let span = usableEnd - usableStart
+        let visualTargets = storyBrief?.visualTargets ?? []
 
         var scored: [(time: TimeInterval, score: Double, reasons: [String])] = []
         var previousPixels: [UInt8]?
@@ -117,11 +119,26 @@ enum ThumbnailIntelligenceService {
                 continue
             }
 
-            let analysis = analyze(image: image, previousPixels: previousPixels)
+            let analysis = analyze(
+                image: image,
+                previousPixels: previousPixels,
+                visualTargets: visualTargets,
+                domain: storyBrief?.domain
+            )
             previousPixels = analysis.pixels
+
+            // Hard reject mushy / motion-blur frames.
+            if analysis.sharpness < 0.28 {
+                continue
+            }
 
             // Near-duplicates of a previous frame rarely help the ranking.
             if analysis.similarityToPrevious > 0.92 {
+                continue
+            }
+
+            // Idiot-selfie close-ups — face fills the frame.
+            if analysis.faceAreaRatio > 0.32 {
                 continue
             }
 
@@ -217,11 +234,15 @@ enum ThumbnailIntelligenceService {
         let reasons: [String]
         let pixels: [UInt8]
         let similarityToPrevious: Double
+        let sharpness: Double
+        let faceAreaRatio: Double
     }
 
     private static func analyze(
         image: CGImage,
-        previousPixels: [UInt8]?
+        previousPixels: [UInt8]?,
+        visualTargets: [String] = [],
+        domain: StoryDomain? = nil
     ) -> FrameAnalysis {
         let width = min(image.width, 320)
         let height = max(Int(Double(width) * Double(image.height) / Double(max(image.width, 1))), 1)
@@ -249,12 +270,16 @@ enum ThumbnailIntelligenceService {
         let contrast = contrastScore(pixels)
         let exposure = exposureScore(pixels)
         let face = faceScore(image: image)
+        let storyMatch = storyMatchScore(image: image, targets: visualTargets)
 
+        // Story match + sharpness first. Faces are a light bonus only when they
+        // do not dominate the frame — never the whole strategy.
         var score =
             (sharpness * 0.34) +
-            (contrast * 0.22) +
-            (exposure * 0.16) +
-            (face.score * 0.28)
+            (contrast * 0.18) +
+            (exposure * 0.12) +
+            (storyMatch.score * 0.28) +
+            (face.score * 0.08)
 
         var reasons: [String] = []
 
@@ -267,12 +292,25 @@ enum ThumbnailIntelligenceService {
         if exposure >= 0.7 {
             reasons.append("good lighting")
         }
-        if face.count > 0 {
-            reasons.append(face.count == 1 ? "clear face" : "\(face.count) faces")
+        if storyMatch.score >= 0.45 {
+            reasons.append(contentsOf: storyMatch.reasons)
+        }
+
+        // Soft face presence is fine; giant selfie faces already hard-rejected.
+        if face.count > 0, face.areaRatio < 0.18 {
+            reasons.append(face.count == 1 ? "person in scene" : "\(face.count) people")
             if face.centered {
-                reasons.append("well framed")
-                score += 0.04
+                score += 0.02
             }
+        } else if face.areaRatio >= 0.18 {
+            score *= 0.7
+            reasons.append("face too close")
+        }
+
+        // Delay stories without any airport/plane cue get a soft demotion so
+        // random shelves don't win by sharpness alone.
+        if domain == .travelDelay, storyMatch.score < 0.2 {
+            score *= 0.82
         }
 
         if reasons.isEmpty {
@@ -290,7 +328,9 @@ enum ThumbnailIntelligenceService {
             score: min(max(score, 0), 1),
             reasons: reasons,
             pixels: pixels,
-            similarityToPrevious: similarity
+            similarityToPrevious: similarity,
+            sharpness: sharpness,
+            faceAreaRatio: face.areaRatio
         )
     }
 
@@ -350,19 +390,19 @@ enum ThumbnailIntelligenceService {
         return max(1.0 - distance, 0)
     }
 
-    private static func faceScore(image: CGImage) -> (score: Double, count: Int, centered: Bool) {
+    private static func faceScore(image: CGImage) -> (score: Double, count: Int, centered: Bool, areaRatio: Double) {
         let request = VNDetectFaceRectanglesRequest()
         let handler = VNImageRequestHandler(cgImage: image, options: [:])
 
         do {
             try handler.perform([request])
         } catch {
-            return (0.15, 0, false)
+            return (0.15, 0, false, 0)
         }
 
         let faces = request.results ?? []
         guard !faces.isEmpty else {
-            return (0.18, 0, false)
+            return (0.18, 0, false, 0)
         }
 
         let largest = faces.max(by: {
@@ -375,10 +415,87 @@ enum ThumbnailIntelligenceService {
         let centerY = largest?.boundingBox.midY ?? 0.5
         let centered = abs(centerX - 0.5) < 0.22 && abs(centerY - 0.55) < 0.28
 
-        let sizeScore = min(area / 0.18, 1.0)
-        let score = 0.45 + (sizeScore * 0.45) + (centered ? 0.1 : 0)
+        // Medium face in scene = mild bonus. Giant close-up = low score.
+        let sizeScore: Double
+        if area > 0.28 {
+            sizeScore = 0.15
+        } else if area > 0.12 {
+            sizeScore = 0.45
+        } else {
+            sizeScore = min(area / 0.12, 1.0) * 0.7
+        }
+        let score = 0.25 + (sizeScore * 0.5) + (centered ? 0.05 : 0)
 
-        return (min(score, 1.0), faces.count, centered)
+        return (min(score, 1.0), faces.count, centered, area)
+    }
+
+    /// OCR + image classification against story visual targets (plane, gate, etc.).
+    private static func storyMatchScore(
+        image: CGImage,
+        targets: [String]
+    ) -> (score: Double, reasons: [String]) {
+        guard !targets.isEmpty else {
+            return (0.2, [])
+        }
+
+        let loweredTargets = targets.map { $0.lowercased() }
+        var hits: [String] = []
+        var score = 0.0
+
+        let textRequest = VNRecognizeTextRequest()
+        textRequest.recognitionLevel = .fast
+        textRequest.usesLanguageCorrection = false
+
+        let classifyRequest = VNClassifyImageRequest()
+        let handler = VNImageRequestHandler(cgImage: image, options: [:])
+
+        do {
+            try handler.perform([textRequest, classifyRequest])
+        } catch {
+            return (0.15, [])
+        }
+
+        let ocrText = (textRequest.results ?? [])
+            .compactMap { $0.topCandidates(1).first?.string.lowercased() }
+            .joined(separator: " ")
+
+        for target in loweredTargets {
+            if !target.isEmpty, ocrText.contains(target) {
+                hits.append(target)
+                score += 0.22
+            }
+        }
+
+        let identifiers = (classifyRequest.results ?? [])
+            .prefix(8)
+            .map { $0.identifier.lowercased() }
+
+        for identifier in identifiers {
+            for target in loweredTargets where identifier.contains(target) || target.contains(identifier) {
+                if !hits.contains(target) {
+                    hits.append(target)
+                }
+                score += 0.18
+            }
+        }
+
+        // Common Vision labels for airport/plane scenes even when targets are short.
+        let travelLabels = ["airplane", "aircraft", "airport", "jet", "airliner", "terminal"]
+        if loweredTargets.contains(where: { travelLabels.contains($0) }) {
+            for label in travelLabels where identifiers.contains(where: { $0.contains(label) }) {
+                if !hits.contains(label) {
+                    hits.append(label)
+                }
+                score += 0.2
+            }
+        }
+
+        var reasons: [String] = []
+        if !hits.isEmpty {
+            reasons.append("matches story (\(hits.prefix(2).joined(separator: ", ")))")
+        }
+
+        return (min(score, 1.0), reasons)
     }
 
     private static func pixelSimilarity(_ first: [UInt8], _ second: [UInt8]) -> Double {

@@ -108,6 +108,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.36",
+            highlights: [
+                "YouTube Prep is story-first: transcript builds a story brief (travel delay, cooking, F1, adventure, etc.) that drives description, tags, hashtags, and chapters.",
+                "Series/playlist and Halloween emoji only appear when they fit *this* story — leftover Halloween Hunt no longer pollutes delay vlogs.",
+                "Thumbnails rank by story visuals (plane/gate/OCR) with hard rejects for blur and face-filling close-ups; title outline is thinner (no spike letters)."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.35",
             highlights: [
                 "YouTube Prep descriptions follow the real story for travel/delay videos instead of fake “walkthrough / what we found” store copy.",

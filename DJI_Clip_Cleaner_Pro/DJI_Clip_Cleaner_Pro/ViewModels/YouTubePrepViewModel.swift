@@ -134,12 +134,34 @@ final class YouTubePrepViewModel {
         let typed = thumbnailText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard typed.isEmpty else { return typed }
 
+        if let transcript {
+            let brief = StoryBriefService.build(
+                from: transcript,
+                hook: trimmedHook,
+                brand: BrandSettings.shared.values
+            )
+            if !brief.thumbnailText.isEmpty {
+                return brief.thumbnailText
+            }
+        }
+
         return YouTubeMetadataService.thumbnailText(from: trimmedHook)
     }
 
     func hookDidChange() {
         guard !hasEditedThumbnailText else { return }
-        thumbnailText = YouTubeMetadataService.thumbnailText(from: trimmedHook)
+        if let transcript {
+            let brief = StoryBriefService.build(
+                from: transcript,
+                hook: trimmedHook,
+                brand: BrandSettings.shared.values
+            )
+            thumbnailText = brief.thumbnailText.isEmpty
+                ? YouTubeMetadataService.thumbnailText(from: trimmedHook)
+                : brief.thumbnailText
+        } else {
+            thumbnailText = YouTubeMetadataService.thumbnailText(from: trimmedHook)
+        }
         refreshTitleVariants()
     }
 
@@ -234,13 +256,38 @@ final class YouTubePrepViewModel {
 
         Task {
             do {
-                let brand = BrandSettings.shared.values
+                let baseBrand = BrandSettings.shared.values
+                let brief = StoryBriefService.build(
+                    from: transcript,
+                    hook: trimmedHook,
+                    brand: baseBrand
+                )
+                // Story branding: don't burn Halloween emoji onto unrelated videos.
+                let brand = BrandSettingsValues(
+                    channelPrefix: baseBrand.channelPrefix,
+                    seriesName: baseBrand.seriesName,
+                    defaultHook: baseBrand.defaultHook,
+                    titleFormat: baseBrand.titleFormat,
+                    usePinkTitles: baseBrand.usePinkTitles,
+                    titlePinkRed: baseBrand.titlePinkRed,
+                    titlePinkGreen: baseBrand.titlePinkGreen,
+                    titlePinkBlue: baseBrand.titlePinkBlue,
+                    titleScale: baseBrand.titleScale,
+                    thumbnailEmojis: (brief.domain == .retailHunt && brief.seriesFits)
+                        ? baseBrand.thumbnailEmojis
+                        : [],
+                    emojiPosition: baseBrand.emojiPosition
+                )
                 let folder = try thumbnailFolder(for: selectedVideoURL)
+                let thumbText = resolvedThumbnailText.isEmpty
+                    ? brief.thumbnailText
+                    : resolvedThumbnailText
                 let ranked = try await ThumbnailIntelligenceService.rankFrames(
                     videoURL: selectedVideoURL,
-                    thumbnailText: resolvedThumbnailText,
+                    thumbnailText: thumbText,
                     brand: brand,
                     outputFolder: folder,
+                    storyBrief: brief,
                     progress: { scanned, total in
                         self.thumbnailScanProgress = Double(scanned) / Double(max(total, 1))
                         self.statusMessage = "Scoring frame \(scanned) of \(total)..."
@@ -251,7 +298,7 @@ final class YouTubePrepViewModel {
                 hasRankedThumbnails = true
                 selectedThumbnailID = ranked.first?.id
                 thumbnailPath = ranked.first?.imagePath ?? ""
-                statusMessage = "Top \(ranked.count) thumbnail pictures ready — click one to select it."
+                statusMessage = "Top \(ranked.count) story-matched thumbnails ready — click one to select it."
                 // Deliberately no Finder reveal here. This is an in-app picker,
                 // and activating Finder would cover the results the user is
                 // meant to choose from.
@@ -330,10 +377,12 @@ final class YouTubePrepViewModel {
 
                 if trimmedHook.isEmpty {
                     hook = suggestedHook(from: result)
-                    hookDidChange()
                 }
+                // Rebuild thumbnail text from the story brief when the user
+                // hasn't hand-edited it.
+                hookDidChange()
 
-                statusMessage = "Transcription complete. Generate description and tags to use it."
+                statusMessage = "Transcription complete. Generate description and tags to use the story."
             } catch {
                 transcript = nil
                 errorMessage = error.localizedDescription
@@ -386,7 +435,8 @@ final class YouTubePrepViewModel {
         YouTubeMetadataService.storyHookSuggestion(
             from: transcript,
             fallbackURL: selectedVideoURL,
-            fallbackSeries: BrandSettings.shared.seriesName
+            fallbackSeries: BrandSettings.shared.seriesName,
+            brand: BrandSettings.shared.values
         )
     }
 
