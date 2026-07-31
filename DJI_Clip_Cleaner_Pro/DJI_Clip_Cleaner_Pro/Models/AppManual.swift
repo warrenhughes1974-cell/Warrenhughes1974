@@ -108,6 +108,12 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.46",
+            highlights: [
+                "Thumbnail outline is now a thick black outer ring plus a thick white inner ring around your fill color — much heavier YouTube-style pop."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.45",
             highlights: [
                 "Thumbnail Settings stick again: YouTube Prep no longer overrides your fill color for travel/story videos.",
