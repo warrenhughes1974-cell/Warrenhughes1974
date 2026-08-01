@@ -10,6 +10,7 @@ enum CloudAIClient {
         case invalidResponse
         case ffmpegMissing
         case audioExtractFailed
+        case audioTooLarge
 
         var errorDescription: String? {
             switch self {
@@ -27,6 +28,8 @@ enum CloudAIClient {
                 return "FFmpeg was not found. Install it with: brew install ffmpeg"
             case .audioExtractFailed:
                 return "Could not extract audio for cloud transcription."
+            case .audioTooLarge:
+                return "Audio is too large for Gemini inline transcription."
             }
         }
     }
@@ -284,7 +287,7 @@ enum GeminiClient {
         guard !data.isEmpty else { throw CloudAIClient.ServiceError.audioExtractFailed }
         guard data.count <= maxInlineBytes else {
             // Too big for inline upload — caller should fall back to Apple Speech.
-            throw CloudAIClient.ServiceError.audioExtractFailed
+            throw CloudAIClient.ServiceError.audioTooLarge
         }
 
         let prompt = """
