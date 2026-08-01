@@ -134,6 +134,8 @@ struct SettingsView: View {
                     .onChange(of: openAI.useAIAssistAnalysis) { _, _ in openAI.save() }
                 Toggle("Use cloud cut hints on Smart Analysis (KEEP/CUT time ranges)", isOn: $openAI.useAICutHints)
                     .onChange(of: openAI.useAICutHints) { _, _ in openAI.save() }
+                Toggle("Use cloud Shorts refine (reorder moments + polish titles)", isOn: $openAI.useCloudShortsRefine)
+                    .onChange(of: openAI.useCloudShortsRefine) { _, _ in openAI.save() }
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Model")
@@ -169,7 +171,7 @@ struct SettingsView: View {
                     .font(.caption)
                 }
 
-                Text("Only the selected provider is used. Transcripts, story text, thumbnail frames, and cut-hint audio are sent when those toggles are on. Gemini often has a generous free daily quota; OpenAI is pay-as-you-go. AI Assist never upgrades weak clips to KEEP.")
+                Text("Only the selected provider is used. Transcripts, story text, thumbnail frames, cut-hint audio, and Shorts titles are sent when those toggles are on. Gemini often has a generous free daily quota; OpenAI is pay-as-you-go. AI Assist never upgrades weak clips to KEEP. Shorts refine never changes cut times.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }

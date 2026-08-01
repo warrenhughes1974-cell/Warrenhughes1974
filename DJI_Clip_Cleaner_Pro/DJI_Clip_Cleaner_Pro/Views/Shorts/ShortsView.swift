@@ -35,6 +35,10 @@ struct ShortsView: View {
 
             Text("Builds real Shorts by splicing a HOOK + PAYOFF + BUTTON from different parts of your long video — not one random 30-second slice.")
                 .foregroundStyle(.secondary)
+
+            Text("Tip: Turn on cloud transcription + Shorts refine in Settings (OpenAI or Gemini) for clearer speech and stronger titles. You still pick which Shorts to export.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -136,7 +140,7 @@ struct ShortsView: View {
         GroupBox {
             VStack(alignment: .leading, spacing: 12) {
                 if viewModel.candidates.isEmpty {
-                    Text("Choose a video, Transcribe (required for story splicing), then Find Moments. Each suggestion is a mini-edit with cuts from different timestamps.")
+                    Text("Choose a video, Transcribe (required for story splicing), then Find Moments. Each suggestion is a mini-edit with cuts from different timestamps. With Cloud AI Shorts refine on, titles get a second pass after local splicing.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 } else {

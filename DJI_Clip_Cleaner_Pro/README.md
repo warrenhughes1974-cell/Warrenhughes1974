@@ -15,7 +15,7 @@ Prepare DJI footage before editing — sort junk, trim dead air, polish audio, a
 |-----|----------------|
 | **Clip Cleaner** | Batch trim, Production Pass, and optional stabilization |
 | **Smart Analysis** | KEEP / B-ROLL / REVIEW / DISCARD scoring, optional AI Assist + cut hints, Run Pipeline |
-| **Shorts** | Ranked vertical Shorts from a finished Filmora export |
+| **Shorts** | Ranked vertical Shorts from a finished Filmora export (optional cloud transcript + title refine) |
 | **YouTube Prep** | Story Review, titles, Rank Thumbnails, description/tags, upload package |
 | **Settings** | Analysis thresholds, brand/thumbnails, OpenAI |
 | **Guide** | Step-by-step workflow manual and changelog |

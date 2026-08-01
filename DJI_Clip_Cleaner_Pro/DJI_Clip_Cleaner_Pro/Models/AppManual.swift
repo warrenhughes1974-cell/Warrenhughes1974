@@ -77,7 +77,7 @@ enum AppManual {
         ManualSection(
             icon: "rectangle.portrait.on.rectangle.portrait",
             title: "Shorts",
-            body: "Transcribe a finished video, then get ranked Shorts with a spoken hook, projected hook/retention scores, and a best title for each moment."
+            body: "Transcribe a finished video (cloud or Apple Speech), then get ranked Shorts with a spoken hook, projected hook/retention scores, and a best title for each moment. Optional cloud refine reorders picks and polishes titles without changing cut times."
         ),
         ManualSection(
             icon: "square.and.arrow.up",
@@ -87,7 +87,7 @@ enum AppManual {
         ManualSection(
             icon: "gearshape",
             title: "Settings",
-            body: "One place for analysis thresholds, brand/thumbnail look (including emoticons), and OpenAI toggles."
+            body: "One place for analysis thresholds, brand/thumbnail look (including emoticons), and Cloud AI toggles (OpenAI or Gemini)."
         ),
         ManualSection(
             icon: "book",
@@ -103,6 +103,12 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.54",
+            highlights: [
+                "Shorts uses Cloud AI when enabled: Transcribe Speech follows the same OpenAI/Gemini cloud transcription path as YouTube Prep (Apple Speech fallback), and Find Moments can reorder suggestions and polish titles via a new Settings toggle — cut times stay local."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.53",
             highlights: [

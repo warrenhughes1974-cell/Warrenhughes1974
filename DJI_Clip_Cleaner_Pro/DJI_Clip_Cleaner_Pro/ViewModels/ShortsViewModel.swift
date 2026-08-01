@@ -50,11 +50,20 @@ final class ShortsViewModel {
 
     var transcriptSummary: String {
         guard let transcript else {
-            return "Optional but recommended: transcribe first so moments are picked from what you said, and captions burn onto the Shorts."
+            return "Transcribe first so moments splice from what you said, captions can burn on, and cloud AI (if enabled) can polish titles."
         }
 
         let words = transcript.fullText.split(separator: " ").count
-        return "Transcript ready · \(words) words · captions \(burnCaptions ? "ON" : "OFF")"
+        let cloud = OpenAISettings.shared
+        let cloudNote: String
+        if cloud.useWhisper && cloud.hasAPIKey {
+            cloudNote = " · \(cloud.provider.displayName) transcript"
+        } else if transcript.usedOnDevice {
+            cloudNote = " · Apple Speech"
+        } else {
+            cloudNote = ""
+        }
+        return "Transcript ready · \(words) words\(cloudNote) · captions \(burnCaptions ? "ON" : "OFF")"
     }
 
     var ffmpegInstalled: Bool {
@@ -121,14 +130,48 @@ final class ShortsViewModel {
             errorMessage = "Choose a finished video first."
             return
         }
+        let requestedVideoURL = selectedVideoURL
 
         isTranscribing = true
         errorMessage = nil
-        statusMessage = "Transcribing speech for smarter Shorts picks and captions..."
+
+        let openAI = OpenAISettings.shared
+        let useCloudTranscript = openAI.useWhisper && openAI.hasAPIKey
+        statusMessage = useCloudTranscript
+            ? "Transcribing with \(openAI.provider.displayName) for Shorts…"
+            : "Transcribing speech for smarter Shorts picks and captions…"
 
         Task {
             do {
-                transcript = try await TranscriptionService.transcribe(videoURL: selectedVideoURL)
+                let result: Transcript
+                if useCloudTranscript, let apiKey = openAI.apiKey() {
+                    do {
+                        result = try await CloudAIClient.transcribe(
+                            videoURL: requestedVideoURL,
+                            provider: openAI.provider,
+                            apiKey: apiKey
+                        )
+                    } catch {
+                        statusMessage = "Cloud transcription failed — falling back to Apple Speech…"
+                        result = try await TranscriptionService.transcribe(
+                            videoURL: requestedVideoURL
+                        )
+                    }
+                } else {
+                    result = try await TranscriptionService.transcribe(
+                        videoURL: requestedVideoURL
+                    )
+                }
+
+                guard self.selectedVideoURL == requestedVideoURL else {
+                    isTranscribing = false
+                    return
+                }
+
+                transcript = OnDeviceStoryAnalysisService.applyingChannelNameCorrections(
+                    result,
+                    brand: BrandSettings.shared.values
+                )
                 statusMessage = "Transcription complete. Find Moments will now use what you said."
             } catch {
                 transcript = nil
@@ -159,9 +202,11 @@ final class ShortsViewModel {
         let brand = BrandSettings.shared.values
         let preset = BrandSettings.shared.selectedPreset
         let longForm = longFormTitle
+        let openAI = OpenAISettings.shared
+        let useCloudRefine = openAI.useCloudShortsRefine && openAI.hasAPIKey && activeTranscript != nil
 
         Task {
-            let found = await ShortsFinderService.findCandidates(
+            var found = await ShortsFinderService.findCandidates(
                 in: selectedVideoURL,
                 targetLength: length,
                 transcript: activeTranscript,
@@ -169,6 +214,30 @@ final class ShortsViewModel {
                 preset: preset,
                 longFormTitle: longForm
             )
+
+            var cloudNote = ""
+            if useCloudRefine,
+               let apiKey = openAI.apiKey(),
+               let activeTranscript,
+               !found.isEmpty {
+                statusMessage = "\(openAI.provider.displayName) is ranking Shorts and polishing titles…"
+                do {
+                    found = try await CloudAIClient.refineShortCandidates(
+                        candidates: found,
+                        transcript: activeTranscript,
+                        longFormTitle: longForm,
+                        brand: brand,
+                        preset: preset,
+                        provider: openAI.provider,
+                        model: openAI.activeModel,
+                        apiKey: apiKey
+                    )
+                    cloudNote = " Cloud AI reordered titles."
+                } catch {
+                    // Local splices still usable — refine is polish only.
+                    cloudNote = " (Cloud refine skipped: \(error.localizedDescription))"
+                }
+            }
 
             candidates = found
             // Pre-select everything so the common case is one more click.
@@ -182,8 +251,8 @@ final class ShortsViewModel {
             } else {
                 let spliced = found.filter { $0.beats.count >= 2 }.count
                 statusMessage = spliced > 0
-                    ? "Built \(found.count) Short story(s) — \(spliced) are multi-cut splices. Uncheck any you don’t want, then export."
-                    : "Found \(found.count) moment(s). Transcribe for real multi-cut story splices."
+                    ? "Built \(found.count) Short story(s) — \(spliced) are multi-cut splices.\(cloudNote) Uncheck any you don’t want, then export."
+                    : "Found \(found.count) moment(s). Transcribe for real multi-cut story splices.\(cloudNote)"
             }
 
             isAnalyzing = false

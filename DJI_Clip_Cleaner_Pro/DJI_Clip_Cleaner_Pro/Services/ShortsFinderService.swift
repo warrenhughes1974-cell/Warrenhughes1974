@@ -86,6 +86,22 @@ struct ShortCandidate: Identifiable, Sendable {
         return "Single continuous moment"
     }
 
+    /// Copy with optional title/score updates (cloud refine keeps the same beats).
+    func updating(bestTitle: String? = nil, score: Double? = nil) -> ShortCandidate {
+        ShortCandidate(
+            id: id,
+            beats: beats,
+            score: score ?? self.score,
+            speechCoverage: speechCoverage,
+            motionLevel: motionLevel,
+            startsOnSpeech: startsOnSpeech,
+            projectedHook: projectedHook,
+            projectedRetention: projectedRetention,
+            bestTitle: bestTitle ?? self.bestTitle,
+            storySummary: storySummary
+        )
+    }
+
     static func timecode(_ seconds: TimeInterval) -> String {
         let total = Int(seconds.rounded())
         return String(format: "%d:%02d", total / 60, total % 60)

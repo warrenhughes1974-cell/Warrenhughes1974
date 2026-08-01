@@ -54,6 +54,7 @@
 		A9010FEA1CE4C4A1A0000002 /* OpenAISettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000002 /* OpenAISettings.swift */; };
 		A9010FEA1CE4C4A1A0000003 /* OpenAIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000003 /* OpenAIClient.swift */; };
 		A9010FEA1CE4C4A1A0000004 /* CloudAIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000004 /* CloudAIClient.swift */; };
+		A9010FEA1CE4C4A1A0000020 /* ShortsCloudRefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000020 /* ShortsCloudRefine.swift */; };
 		A9010FEA1CE4C4A1A0000010 /* ThumbnailTitleFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000010 /* ThumbnailTitleFont.swift */; };
 		A7B8C9D0E1F6488990ABCD011 /* ThumbnailEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F2A6488990ABCD011 /* ThumbnailEmoji.swift */; };
 		76371AAF57FB412DAB274AF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AE23DC4F179498E9C87B3CF /* Assets.xcassets */; };
@@ -107,6 +108,7 @@
 		A9110FEA1CE4C4A1A0000002 /* OpenAISettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAISettings.swift; sourceTree = "<group>"; };
 		A9110FEA1CE4C4A1A0000003 /* OpenAIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIClient.swift; sourceTree = "<group>"; };
 		A9110FEA1CE4C4A1A0000004 /* CloudAIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAIClient.swift; sourceTree = "<group>"; };
+		A9110FEA1CE4C4A1A0000020 /* ShortsCloudRefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsCloudRefine.swift; sourceTree = "<group>"; };
 		A9110FEA1CE4C4A1A0000010 /* ThumbnailTitleFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailTitleFont.swift; sourceTree = "<group>"; };
 		B8C9D0E1F2A6488990ABCD011 /* ThumbnailEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailEmoji.swift; sourceTree = "<group>"; };
 		8AE23DC4F179498E9C87B3CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 				E8F9A0B1C2D7488990ABCD007 /* ShortsFinderService.swift */,
 				A0B1C2D3E4F7488990ABCD007 /* ShortsExportService.swift */,
 				C2D3E4F5A6B7488990ABCD007 /* ShortsMetadataService.swift */,
+				A9110FEA1CE4C4A1A0000020 /* ShortsCloudRefine.swift */,
 				C9D0E1F2A3B7488990ABCD008 /* TranscriptionService.swift */,
 				F6A7B8C9D0E6488990ABCD010 /* TranscriptKeywordService.swift */,
 				D2E3F4A5B6C6488990ABCD012 /* StoryBriefService.swift */,
@@ -401,6 +404,7 @@
 				A9010FEA1CE4C4A1A0000002 /* OpenAISettings.swift in Sources */,
 				A9010FEA1CE4C4A1A0000003 /* OpenAIClient.swift in Sources */,
 				A9010FEA1CE4C4A1A0000004 /* CloudAIClient.swift in Sources */,
+				A9010FEA1CE4C4A1A0000020 /* ShortsCloudRefine.swift in Sources */,
 				A9010FEA1CE4C4A1A0000010 /* ThumbnailTitleFont.swift in Sources */,
 				A7B8C9D0E1F6488990ABCD011 /* ThumbnailEmoji.swift in Sources */,
 			);
@@ -451,7 +455,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -465,7 +469,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.53;
+				MARKETING_VERSION = 1.54;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -484,7 +488,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -498,7 +502,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.53;
+				MARKETING_VERSION = 1.54;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

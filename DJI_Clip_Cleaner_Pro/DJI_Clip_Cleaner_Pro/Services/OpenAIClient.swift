@@ -48,6 +48,7 @@ struct OpenAICutHints: Sendable {
     /// Compact table/CSV string, e.g. `KEEP 0:08–0:41 talking · CUT 0:00–0:07 dead air`.
     var displayString: String {
         let parts = ranges.map { range in
+
             let start = TranscriptChapter.timecode(range.startSeconds)
             let end = TranscriptChapter.timecode(range.endSeconds)
             let reason = range.reason.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -348,6 +349,39 @@ enum OpenAIClient {
             jsonMode: true
         )
         return try decodeCutHints(from: raw, durationSeconds: durationSeconds)
+    }
+
+    // MARK: - Shorts refine
+
+    /// Reorders local Short candidates and rewrites clickable titles. Never changes cut times.
+    static func refineShortCandidates(
+        candidates: [ShortCandidate],
+        transcript: Transcript,
+        longFormTitle: String,
+        brand: BrandSettingsValues,
+        preset: BrandPreset,
+        model: String,
+        apiKey: String
+    ) async throws -> [ShortCandidate] {
+        guard !apiKey.isEmpty else { throw ServiceError.missingAPIKey }
+        guard !candidates.isEmpty else { return candidates }
+
+        let prompt = ShortsCloudRefine.prompt(
+            candidates: candidates,
+            transcript: transcript,
+            longFormTitle: longFormTitle,
+            brand: brand,
+            preset: preset
+        )
+
+        let raw = try await chatCompletion(
+            model: model,
+            apiKey: apiKey,
+            system: "You rank YouTube Shorts moments and write titles. JSON only. Never invent cast or places. Never change cut times.",
+            user: prompt,
+            jsonMode: true
+        )
+        return try ShortsCloudRefine.apply(json: raw, to: candidates)
     }
 
     // MARK: - Vision thumbnails

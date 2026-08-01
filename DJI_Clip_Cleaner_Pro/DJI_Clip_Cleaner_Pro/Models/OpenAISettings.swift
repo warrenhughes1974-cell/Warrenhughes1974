@@ -22,6 +22,7 @@ struct OpenAISettingsValues: Sendable {
     let useVisionThumbnails: Bool
     let useAIAssistAnalysis: Bool
     let useAICutHints: Bool
+    let useCloudShortsRefine: Bool
     let model: String
 }
 
@@ -42,6 +43,8 @@ final class OpenAISettings {
     var useVisionThumbnails = true
     var useAIAssistAnalysis = false
     var useAICutHints = false
+    /// After local Shorts splicing, reorder moments and polish titles via cloud AI.
+    var useCloudShortsRefine = true
 
     /// OpenAI chat model when provider == .openAI
     var model = "gpt-4o-mini"
@@ -68,6 +71,7 @@ final class OpenAISettings {
             useVisionThumbnails: useVisionThumbnails,
             useAIAssistAnalysis: useAIAssistAnalysis,
             useAICutHints: useAICutHints,
+            useCloudShortsRefine: useCloudShortsRefine,
             model: activeModel
         )
     }
@@ -152,6 +156,7 @@ final class OpenAISettings {
             "useVisionThumbnails": useVisionThumbnails,
             "useAIAssistAnalysis": useAIAssistAnalysis,
             "useAICutHints": useAICutHints,
+            "useCloudShortsRefine": useCloudShortsRefine,
             "model": model,
             "geminiModel": geminiModel
         ]
@@ -186,6 +191,7 @@ final class OpenAISettings {
         useVisionThumbnails = payload["useVisionThumbnails"] as? Bool ?? useVisionThumbnails
         useAIAssistAnalysis = payload["useAIAssistAnalysis"] as? Bool ?? useAIAssistAnalysis
         useAICutHints = payload["useAICutHints"] as? Bool ?? useAICutHints
+        useCloudShortsRefine = payload["useCloudShortsRefine"] as? Bool ?? useCloudShortsRefine
         model = payload["model"] as? String ?? model
         geminiModel = payload["geminiModel"] as? String ?? geminiModel
     }

@@ -79,7 +79,8 @@ enum ShortsMetadataService {
         return withShortsHashtag(best)
     }
 
-    private static func withShortsHashtag(_ title: String) -> String {
+    /// Ensures `#Shorts` is present and the title fits YouTube’s recommended length.
+    static func withShortsHashtag(_ title: String) -> String {
         let suffix = " #Shorts"
         let cleaned = title
             .replacingOccurrences(of: "#Shorts", with: "", options: .caseInsensitive)

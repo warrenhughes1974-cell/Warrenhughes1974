@@ -190,6 +190,43 @@ enum CloudAIClient {
         }
     }
 
+    // MARK: - Shorts
+
+    /// Reorders local Short candidates and rewrites titles. Cut times stay unchanged.
+    static func refineShortCandidates(
+        candidates: [ShortCandidate],
+        transcript: Transcript,
+        longFormTitle: String,
+        brand: BrandSettingsValues,
+        preset: BrandPreset,
+        provider: CloudAIProvider,
+        model: String,
+        apiKey: String
+    ) async throws -> [ShortCandidate] {
+        switch provider {
+        case .openAI:
+            return try await OpenAIClient.refineShortCandidates(
+                candidates: candidates,
+                transcript: transcript,
+                longFormTitle: longFormTitle,
+                brand: brand,
+                preset: preset,
+                model: model,
+                apiKey: apiKey
+            )
+        case .gemini:
+            return try await GeminiClient.refineShortCandidates(
+                candidates: candidates,
+                transcript: transcript,
+                longFormTitle: longFormTitle,
+                brand: brand,
+                preset: preset,
+                model: model,
+                apiKey: apiKey
+            )
+        }
+    }
+
     // MARK: - Vision
 
     static func rankThumbnailFrames(
@@ -268,6 +305,35 @@ enum GeminiClient {
             ]
         )
         return try decodeTranscript(from: raw)
+    }
+
+    static func refineShortCandidates(
+        candidates: [ShortCandidate],
+        transcript: Transcript,
+        longFormTitle: String,
+        brand: BrandSettingsValues,
+        preset: BrandPreset,
+        model: String,
+        apiKey: String
+    ) async throws -> [ShortCandidate] {
+        guard !apiKey.isEmpty else { throw CloudAIClient.ServiceError.missingAPIKey }
+        guard !candidates.isEmpty else { return candidates }
+
+        let prompt = ShortsCloudRefine.prompt(
+            candidates: candidates,
+            transcript: transcript,
+            longFormTitle: longFormTitle,
+            brand: brand,
+            preset: preset
+        )
+        let raw = try await generateJSON(
+            model: model,
+            apiKey: apiKey,
+            system: "You rank YouTube Shorts moments and write titles. JSON only. Never invent cast or places. Never change cut times.",
+            userText: prompt,
+            inlineParts: []
+        )
+        return try ShortsCloudRefine.apply(json: raw, to: candidates)
     }
 
     static func analyzeStory(
