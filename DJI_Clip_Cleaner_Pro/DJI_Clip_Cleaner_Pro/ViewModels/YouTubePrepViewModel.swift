@@ -120,10 +120,11 @@ final class YouTubePrepViewModel {
         }
 
         let words = transcript.fullText.split(separator: " ").count
+        let cloud = OpenAISettings.shared
         let mode = transcript.usedOnDevice
             ? "Apple on-device"
-            : (OpenAISettings.shared.useWhisper && OpenAISettings.shared.hasAPIKey
-               ? "OpenAI Whisper / cloud"
+            : (cloud.useWhisper && cloud.hasAPIKey
+               ? "\(cloud.provider.displayName) cloud"
                : "Apple network")
         return "Transcript ready · \(words) words · \(transcript.segments.count) timed segments · \(mode)"
     }
