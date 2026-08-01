@@ -149,9 +149,9 @@ struct SettingsView: View {
                         .onChange(of: openAI.model) { _, _ in openAI.save() }
                     } else {
                         Picker("Gemini model", selection: $openAI.geminiModel) {
-                            Text("gemini-3-flash-preview (matches AI Studio)").tag("gemini-3-flash-preview")
-                            Text("gemini-2.5-flash (fast)").tag("gemini-2.5-flash")
-                            Text("gemini-2.5-pro (stronger)").tag("gemini-2.5-pro")
+                            Text("gemini-2.5-flash (best free transcription)").tag("gemini-2.5-flash")
+                            Text("gemini-3-flash-preview (AI Studio / text)").tag("gemini-3-flash-preview")
+                            Text("gemini-2.5-pro (stronger, fewer free requests)").tag("gemini-2.5-pro")
                         }
                         .pickerStyle(.menu)
                         .onChange(of: openAI.geminiModel) { _, _ in openAI.save() }

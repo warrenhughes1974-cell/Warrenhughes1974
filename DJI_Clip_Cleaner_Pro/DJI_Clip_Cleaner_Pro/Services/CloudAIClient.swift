@@ -283,8 +283,8 @@ enum GeminiClient {
         let data = try Data(contentsOf: audioURL)
         guard !data.isEmpty else { throw CloudAIClient.ServiceError.audioExtractFailed }
         guard data.count <= maxInlineBytes else {
-            // Long files: fall back to on-device rather than failing the whole run.
-            return try await TranscriptionService.transcribe(videoURL: videoURL)
+            // Too big for inline upload — caller should fall back to Apple Speech.
+            throw CloudAIClient.ServiceError.audioExtractFailed
         }
 
         let prompt = """
@@ -299,16 +299,42 @@ enum GeminiClient {
         Use short segments with real timestamps. Do not invent words that were not spoken.
         """
 
-        let raw = try await generateJSON(
-            model: model,
-            apiKey: apiKey,
-            system: "You are a precise transcription engine. JSON only.",
-            userText: prompt,
-            inlineParts: [
-                (mimeType: "audio/mpeg", data: data)
-            ]
-        )
-        return try decodeTranscript(from: raw)
+        // Preview models sometimes 404 on audio/multimodal even when text works.
+        // Try the Settings model first, then stable Flash IDs.
+        var modelsToTry = [model.trimmingCharacters(in: .whitespacesAndNewlines)]
+        for fallback in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-3-flash-preview"] {
+            if !fallback.isEmpty, !modelsToTry.contains(fallback) {
+                modelsToTry.append(fallback)
+            }
+        }
+
+        var lastError: Error?
+        for candidateModel in modelsToTry where !candidateModel.isEmpty {
+            do {
+                let raw = try await generateJSON(
+                    model: candidateModel,
+                    apiKey: apiKey,
+                    system: "You are a precise transcription engine. JSON only.",
+                    userText: prompt,
+                    inlineParts: [
+                        (mimeType: "audio/mpeg", data: data)
+                    ]
+                )
+                return try decodeTranscript(from: raw)
+            } catch CloudAIClient.ServiceError.httpStatus(let code, _) where code == 404 {
+                lastError = CloudAIClient.ServiceError.httpStatus(
+                    code,
+                    "Model \(candidateModel) not found for transcription"
+                )
+                continue
+            } catch {
+                lastError = error
+                // Non-404 failures (quota, decode, etc.) — don't burn more models.
+                throw error
+            }
+        }
+
+        throw lastError ?? CloudAIClient.ServiceError.emptyResult
     }
 
     static func refineShortCandidates(

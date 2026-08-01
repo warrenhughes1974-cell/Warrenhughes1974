@@ -104,6 +104,13 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.56",
+            highlights: [
+                "Gemini audio transcription retries stable Flash models when a preview model returns 404 (common: text refine works, transcript falls back to Apple Speech).",
+                "Defaults Gemini to gemini-2.5-flash for reliable free-tier transcription; Shorts shows a clear error when Gemini fails and Apple Speech is used."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.55",
             highlights: [
                 "Gemini transcription now uses the model you pick in Settings (no longer hard-locked to gemini-2.5-flash).",

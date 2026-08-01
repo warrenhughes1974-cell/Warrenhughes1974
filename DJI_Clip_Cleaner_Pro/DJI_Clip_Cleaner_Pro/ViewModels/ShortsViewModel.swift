@@ -143,6 +143,7 @@ final class ShortsViewModel {
         Task {
             do {
                 let result: Transcript
+                var cloudFailedReason: String?
                 if useCloudTranscript, let apiKey = openAI.apiKey() {
                     do {
                         result = try await CloudAIClient.transcribe(
@@ -152,7 +153,8 @@ final class ShortsViewModel {
                             model: openAI.activeModel
                         )
                     } catch {
-                        statusMessage = "Cloud transcription failed — falling back to Apple Speech…"
+                        cloudFailedReason = error.localizedDescription
+                        statusMessage = "Gemini transcription failed — falling back to Apple Speech…"
                         result = try await TranscriptionService.transcribe(
                             videoURL: requestedVideoURL
                         )
@@ -172,7 +174,15 @@ final class ShortsViewModel {
                     result,
                     brand: BrandSettings.shared.values
                 )
-                statusMessage = "Transcription complete. Find Moments will now use what you said."
+                if let cloudFailedReason {
+                    // Keep this visible — Settings being "on" does not mean Gemini transcribed.
+                    errorMessage = "Gemini did not transcribe this video (\(cloudFailedReason)). Using Apple Speech instead."
+                    statusMessage = "Apple Speech transcript ready. Fix Gemini (model/quota), then Transcribe again for Google Gemini transcript."
+                } else if result.usedOnDevice {
+                    statusMessage = "Apple Speech transcript ready. Find Moments will now use what you said."
+                } else {
+                    statusMessage = "Google Gemini transcript ready. Find Moments will now use what you said."
+                }
             } catch {
                 transcript = nil
                 errorMessage = error.localizedDescription

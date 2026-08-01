@@ -50,7 +50,8 @@ final class OpenAISettings {
     /// OpenAI chat model when provider == .openAI
     var model = "gpt-4o-mini"
     /// Gemini model when provider == .gemini
-    var geminiModel = "gemini-3-flash-preview"
+    /// 2.5 Flash is the most reliable free-tier choice for audio transcription.
+    var geminiModel = "gemini-2.5-flash"
 
     var apiKeyDraft = ""
 
@@ -85,7 +86,7 @@ final class OpenAISettings {
                 : model.trimmingCharacters(in: .whitespacesAndNewlines)
         case .gemini:
             return geminiModel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                ? "gemini-3-flash-preview"
+                ? "gemini-2.5-flash"
                 : geminiModel.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
@@ -196,14 +197,22 @@ final class OpenAISettings {
         model = payload["model"] as? String ?? model
         geminiModel = payload["geminiModel"] as? String ?? geminiModel
 
-        // One-time: old installs defaulted to gemini-2.5-flash, which 404s for many
-        // AI Studio keys that now expose gemini-3-flash-preview.
+        // One-time: move people off gemini-3-flash-preview for transcription.
+        // That preview id often 404s on audio even when text refine works.
         if !UserDefaults.standard.bool(forKey: Self.geminiFlashMigrationKey) {
-            if geminiModel == "gemini-2.5-flash" {
-                geminiModel = "gemini-3-flash-preview"
+            if geminiModel == "gemini-3-flash-preview" || geminiModel == "gemini-2.5-flash" {
+                geminiModel = "gemini-2.5-flash"
             }
             UserDefaults.standard.set(true, forKey: Self.geminiFlashMigrationKey)
             save()
+        } else if geminiModel == "gemini-3-flash-preview" {
+            // Second nudge for installs already migrated to 3-flash in v1.55.
+            let audioFixKey = "HughesClipPrep.MigratedGeminiDefaultTo25FlashForAudio"
+            if !UserDefaults.standard.bool(forKey: audioFixKey) {
+                geminiModel = "gemini-2.5-flash"
+                UserDefaults.standard.set(true, forKey: audioFixKey)
+                save()
+            }
         }
     }
 }
