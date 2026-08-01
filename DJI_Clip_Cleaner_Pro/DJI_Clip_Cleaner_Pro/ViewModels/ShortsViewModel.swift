@@ -54,14 +54,13 @@ final class ShortsViewModel {
         }
 
         let words = transcript.fullText.split(separator: " ").count
-        let cloud = OpenAISettings.shared
         let cloudNote: String
-        if cloud.useWhisper && cloud.hasAPIKey {
-            cloudNote = " · \(cloud.provider.displayName) transcript"
-        } else if transcript.usedOnDevice {
+        if transcript.usedOnDevice {
             cloudNote = " · Apple Speech"
         } else {
-            cloudNote = ""
+            // Cloud path (OpenAI Whisper or Gemini) sets usedOnDevice = false.
+            let provider = OpenAISettings.shared.provider.displayName
+            cloudNote = " · \(provider) transcript"
         }
         return "Transcript ready · \(words) words\(cloudNote) · captions \(burnCaptions ? "ON" : "OFF")"
     }
@@ -149,7 +148,8 @@ final class ShortsViewModel {
                         result = try await CloudAIClient.transcribe(
                             videoURL: requestedVideoURL,
                             provider: openAI.provider,
-                            apiKey: apiKey
+                            apiKey: apiKey,
+                            model: openAI.activeModel
                         )
                     } catch {
                         statusMessage = "Cloud transcription failed — falling back to Apple Speech…"

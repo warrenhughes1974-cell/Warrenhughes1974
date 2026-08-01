@@ -454,7 +454,8 @@ final class YouTubePrepViewModel {
                         result = try await CloudAIClient.transcribe(
                             videoURL: requestedVideoURL,
                             provider: openAI.provider,
-                            apiKey: apiKey
+                            apiKey: apiKey,
+                            model: openAI.activeModel
                         )
                     } catch {
                         // Fall back so a billing/network glitch doesn't block prep.

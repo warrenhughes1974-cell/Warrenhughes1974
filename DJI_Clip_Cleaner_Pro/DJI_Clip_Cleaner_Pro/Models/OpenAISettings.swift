@@ -33,6 +33,7 @@ final class OpenAISettings {
     static let shared = OpenAISettings()
 
     private static let storageKey = "HughesClipPrep.OpenAISettings"
+    private static let geminiFlashMigrationKey = "HughesClipPrep.MigratedGeminiDefaultTo3Flash"
 
     /// Which cloud brain to use for toggles below.
     var provider: CloudAIProvider = .openAI
@@ -49,7 +50,7 @@ final class OpenAISettings {
     /// OpenAI chat model when provider == .openAI
     var model = "gpt-4o-mini"
     /// Gemini model when provider == .gemini
-    var geminiModel = "gemini-2.5-flash"
+    var geminiModel = "gemini-3-flash-preview"
 
     var apiKeyDraft = ""
 
@@ -84,7 +85,7 @@ final class OpenAISettings {
                 : model.trimmingCharacters(in: .whitespacesAndNewlines)
         case .gemini:
             return geminiModel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                ? "gemini-2.5-flash"
+                ? "gemini-3-flash-preview"
                 : geminiModel.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
@@ -194,5 +195,15 @@ final class OpenAISettings {
         useCloudShortsRefine = payload["useCloudShortsRefine"] as? Bool ?? useCloudShortsRefine
         model = payload["model"] as? String ?? model
         geminiModel = payload["geminiModel"] as? String ?? geminiModel
+
+        // One-time: old installs defaulted to gemini-2.5-flash, which 404s for many
+        // AI Studio keys that now expose gemini-3-flash-preview.
+        if !UserDefaults.standard.bool(forKey: Self.geminiFlashMigrationKey) {
+            if geminiModel == "gemini-2.5-flash" {
+                geminiModel = "gemini-3-flash-preview"
+            }
+            UserDefaults.standard.set(true, forKey: Self.geminiFlashMigrationKey)
+            save()
+        }
     }
 }

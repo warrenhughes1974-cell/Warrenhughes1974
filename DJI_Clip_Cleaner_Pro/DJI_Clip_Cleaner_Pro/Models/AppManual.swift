@@ -104,6 +104,14 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.55",
+            highlights: [
+                "Gemini transcription now uses the model you pick in Settings (no longer hard-locked to gemini-2.5-flash).",
+                "Adds gemini-3-flash-preview to match Google AI Studio; migrates the old 2.5-flash default once to stop common 404 NotFound errors.",
+                "Shorts transcript status shows Apple Speech vs cloud based on the real transcript source."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.54",
             highlights: [
                 "Shorts uses Cloud AI when enabled: Transcribe Speech follows the same OpenAI/Gemini cloud transcription path as YouTube Prep (Apple Speech fallback), and Find Moments can reorder suggestions and polish titles via a new Settings toggle — cut times stay local."

@@ -514,7 +514,8 @@ final class AnalysisViewModel {
                             clipTranscript = try await CloudAIClient.transcribe(
                                 videoURL: videoURL,
                                 provider: openAI.provider,
-                                apiKey: apiKey
+                                apiKey: apiKey,
+                                model: openAI.activeModel
                             )
                         } else {
                             clipTranscript = try await TranscriptionService.transcribe(

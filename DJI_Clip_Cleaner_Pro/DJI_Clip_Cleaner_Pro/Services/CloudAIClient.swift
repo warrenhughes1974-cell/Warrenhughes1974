@@ -36,7 +36,8 @@ enum CloudAIClient {
     static func transcribe(
         videoURL: URL,
         provider: CloudAIProvider,
-        apiKey: String
+        apiKey: String,
+        model: String = ""
     ) async throws -> Transcript {
         switch provider {
         case .openAI:
@@ -45,10 +46,13 @@ enum CloudAIClient {
                 apiKey: apiKey
             )
         case .gemini:
+            let geminiModel = model.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                ? "gemini-3-flash-preview"
+                : model.trimmingCharacters(in: .whitespacesAndNewlines)
             return try await GeminiClient.transcribe(
                 videoURL: videoURL,
                 apiKey: apiKey,
-                model: "gemini-2.5-flash"
+                model: geminiModel
             )
         }
     }
