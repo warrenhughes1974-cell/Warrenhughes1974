@@ -53,6 +53,7 @@
 		A9010FEA1CE4C4A1A0000001 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000001 /* KeychainStore.swift */; };
 		A9010FEA1CE4C4A1A0000002 /* OpenAISettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000002 /* OpenAISettings.swift */; };
 		A9010FEA1CE4C4A1A0000003 /* OpenAIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000003 /* OpenAIClient.swift */; };
+		A9010FEA1CE4C4A1A0000004 /* CloudAIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000004 /* CloudAIClient.swift */; };
 		A9010FEA1CE4C4A1A0000010 /* ThumbnailTitleFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9110FEA1CE4C4A1A0000010 /* ThumbnailTitleFont.swift */; };
 		A7B8C9D0E1F6488990ABCD011 /* ThumbnailEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F2A6488990ABCD011 /* ThumbnailEmoji.swift */; };
 		76371AAF57FB412DAB274AF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AE23DC4F179498E9C87B3CF /* Assets.xcassets */; };
@@ -105,6 +106,7 @@
 		A9110FEA1CE4C4A1A0000001 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		A9110FEA1CE4C4A1A0000002 /* OpenAISettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAISettings.swift; sourceTree = "<group>"; };
 		A9110FEA1CE4C4A1A0000003 /* OpenAIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIClient.swift; sourceTree = "<group>"; };
+		A9110FEA1CE4C4A1A0000004 /* CloudAIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAIClient.swift; sourceTree = "<group>"; };
 		A9110FEA1CE4C4A1A0000010 /* ThumbnailTitleFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailTitleFont.swift; sourceTree = "<group>"; };
 		B8C9D0E1F2A6488990ABCD011 /* ThumbnailEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailEmoji.swift; sourceTree = "<group>"; };
 		8AE23DC4F179498E9C87B3CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				D2E3F4A5B6C6488990ABCD012 /* StoryBriefService.swift */,
 				F4A5B6C7D8E6488990ABCD013 /* OnDeviceStoryAnalysisService.swift */,
 				A9110FEA1CE4C4A1A0000003 /* OpenAIClient.swift */,
+				A9110FEA1CE4C4A1A0000004 /* CloudAIClient.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 				A9010FEA1CE4C4A1A0000001 /* KeychainStore.swift in Sources */,
 				A9010FEA1CE4C4A1A0000002 /* OpenAISettings.swift in Sources */,
 				A9010FEA1CE4C4A1A0000003 /* OpenAIClient.swift in Sources */,
+				A9010FEA1CE4C4A1A0000004 /* CloudAIClient.swift in Sources */,
 				A9010FEA1CE4C4A1A0000010 /* ThumbnailTitleFont.swift in Sources */,
 				A7B8C9D0E1F6488990ABCD011 /* ThumbnailEmoji.swift in Sources */,
 			);
@@ -461,7 +465,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.52;
+				MARKETING_VERSION = 1.53;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -494,7 +498,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.52;
+				MARKETING_VERSION = 1.53;
 				PRODUCT_BUNDLE_IDENTIFIER = com.warrenhughes.DJIClipCleanerPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

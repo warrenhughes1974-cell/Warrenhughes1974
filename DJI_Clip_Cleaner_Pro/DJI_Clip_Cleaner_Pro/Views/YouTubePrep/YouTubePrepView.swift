@@ -86,7 +86,7 @@ struct YouTubePrepView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                Text("Tip: Add an OpenAI API key in Settings for Whisper, GPT story/description, and Vision thumbnail picks. Without a key, Apple on-device tools are used.")
+                Text("Tip: In Settings → Cloud AI, pick OpenAI or Gemini and save that provider’s API key for cloud transcription, story, description, and Vision thumbs. Without a key, Apple on-device tools are used.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
 

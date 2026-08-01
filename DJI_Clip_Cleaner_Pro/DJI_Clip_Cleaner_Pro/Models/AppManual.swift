@@ -104,6 +104,12 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.53",
+            highlights: [
+                "Cloud AI provider picker: choose OpenAI or Google Gemini (2.5 Flash / Pro) in Settings. Same toggles for transcription, Story Review, copy, Vision thumbs, AI Assist, and cut hints — only the selected provider’s key is used."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.52",
             highlights: [
                 "Series Preset is a dropdown with a full lifestyle set: Day In The Life, Family, Travel, Work Travel, Road Trip, Cruise, Hotel, Theme Park, Adventure, Beach, Food, Cooking, Store Walk, Shopping Haul, Product Review, Unboxing, Pet Life, Halloween, Holiday, Concert, Sports, Fashion, DIY, Behind the Scenes, and Custom."

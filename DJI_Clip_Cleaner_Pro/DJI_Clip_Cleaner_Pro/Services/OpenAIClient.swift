@@ -577,7 +577,7 @@ enum OpenAIClient {
 
     // MARK: - Decoding
 
-    private static func decodeStoryAnalysis(from json: String) throws -> StoryAnalysis {
+    static func decodeStoryAnalysis(from json: String) throws -> StoryAnalysis {
         guard let data = json.data(using: .utf8),
               let root = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
             throw ServiceError.decodingFailed
@@ -620,7 +620,7 @@ enum OpenAIClient {
         )
     }
 
-    private static func decodeUploadCopy(from json: String) throws -> OpenAIUploadCopy {
+    static func decodeUploadCopy(from json: String) throws -> OpenAIUploadCopy {
         guard let data = json.data(using: .utf8),
               let root = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
             throw ServiceError.decodingFailed
@@ -639,7 +639,7 @@ enum OpenAIClient {
         )
     }
 
-    private static func decodeClipAssist(from json: String) throws -> OpenAIClipAssist {
+    static func decodeClipAssist(from json: String) throws -> OpenAIClipAssist {
         guard let data = json.data(using: .utf8),
               let root = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
             throw ServiceError.decodingFailed
@@ -666,7 +666,7 @@ enum OpenAIClient {
         )
     }
 
-    private static func decodeCutHints(
+    static func decodeCutHints(
         from json: String,
         durationSeconds: Double
     ) throws -> OpenAICutHints {
@@ -719,7 +719,7 @@ enum OpenAIClient {
         return OpenAICutHints(summary: summary, ranges: ranges)
     }
 
-    private static func timedTranscriptBlock(
+    static func timedTranscriptBlock(
         from transcript: Transcript,
         maxChars: Int
     ) -> String {
@@ -740,14 +740,14 @@ enum OpenAIClient {
         return lines.joined(separator: "\n")
     }
 
-    private static func doubleValue(_ any: Any?) -> Double? {
+    static func doubleValue(_ any: Any?) -> Double? {
         if let value = any as? Double { return value }
         if let value = any as? Int { return Double(value) }
         if let value = any as? String { return Double(value) }
         return nil
     }
 
-    private static func decodeVisionPlan(
+    static func decodeVisionPlan(
         from json: String,
         imageCount: Int
     ) throws -> OpenAIVisionThumbnailPlan {
@@ -790,11 +790,11 @@ enum OpenAIClient {
         return OpenAIVisionThumbnailPlan(picks: picks)
     }
 
-    private static func stringValue(_ any: Any?) -> String {
+    static func stringValue(_ any: Any?) -> String {
         (any as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
 
-    private static func stringArray(_ any: Any?) -> [String] {
+    static func stringArray(_ any: Any?) -> [String] {
         (any as? [Any] ?? []).compactMap { item in
             let value = (item as? String)?
                 .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -802,7 +802,7 @@ enum OpenAIClient {
         }
     }
 
-    private static func intValue(_ any: Any?) -> Int? {
+    static func intValue(_ any: Any?) -> Int? {
         if let value = any as? Int { return value }
         if let value = any as? Double { return Int(value) }
         if let value = any as? String { return Int(value) }
@@ -811,7 +811,7 @@ enum OpenAIClient {
 
     // MARK: - Audio helpers
 
-    private static func extractCompressedAudio(from videoURL: URL) async throws -> URL {
+    static func extractCompressedAudio(from videoURL: URL) async throws -> URL {
         guard let ffmpegPath = ProductionPassService.ffmpegPath else {
             throw ServiceError.ffmpegMissing
         }

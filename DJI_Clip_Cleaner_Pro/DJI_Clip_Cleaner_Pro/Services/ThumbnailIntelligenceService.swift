@@ -65,6 +65,7 @@ enum ThumbnailIntelligenceService {
         openAIAPIKey: String? = nil,
         useVisionRerank: Bool = false,
         openAIModel: String = "gpt-4o-mini",
+        cloudProvider: CloudAIProvider = .openAI,
         progress: (@MainActor (Int, Int) -> Void)? = nil
     ) async throws -> [RankedThumbnailCandidate] {
         let asset = AVURLAsset(url: videoURL)
@@ -247,13 +248,14 @@ enum ThumbnailIntelligenceService {
 
             if jpegPayloads.count >= 2 {
                 do {
-                    let plan = try await OpenAIClient.rankThumbnailFrames(
+                    let plan = try await CloudAIClient.rankThumbnailFrames(
                         jpegImages: jpegPayloads,
                         storySummary: storySummary.isEmpty
                             ? (storyBrief?.summary ?? thumbnailText)
                             : storySummary,
                         domain: storyBrief?.domain.displayName ?? "General",
                         currentOverlay: thumbnailText,
+                        provider: cloudProvider,
                         model: openAIModel,
                         apiKey: apiKey
                     )

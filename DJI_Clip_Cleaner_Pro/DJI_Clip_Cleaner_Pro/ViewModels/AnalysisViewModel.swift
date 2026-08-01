@@ -511,8 +511,9 @@ final class AnalysisViewModel {
                     statusMessage = "Cut-hint transcript \(index + 1) of \(results.count): \(results[index].video.name)"
                     do {
                         if openAI.useWhisper {
-                            clipTranscript = try await OpenAIClient.transcribeWithWhisper(
+                            clipTranscript = try await CloudAIClient.transcribe(
                                 videoURL: videoURL,
+                                provider: openAI.provider,
                                 apiKey: apiKey
                             )
                         } else {
@@ -521,7 +522,7 @@ final class AnalysisViewModel {
                             )
                         }
                     } catch {
-                        // Fall back to on-device if Whisper fails.
+                        // Fall back to on-device if cloud transcription fails.
                         if openAI.useWhisper {
                             clipTranscript = try? await TranscriptionService.transcribe(
                                 videoURL: videoURL
@@ -536,7 +537,7 @@ final class AnalysisViewModel {
                    recommendation.0 != .discard {
                     statusMessage = "AI Assist \(index + 1) of \(results.count): \(results[index].video.name)"
                     do {
-                        let assist = try await OpenAIClient.assistClipRecommendation(
+                        let assist = try await CloudAIClient.assistClipRecommendation(
                             fileName: results[index].video.name,
                             local: recommendation.0,
                             localNotes: recommendation.1,
@@ -545,6 +546,7 @@ final class AnalysisViewModel {
                             durationSeconds: results[index].video.duration,
                             jerkSummary: motionResult.jerkSummary,
                             transcriptSnippet: clipTranscript?.fullText,
+                            provider: openAI.provider,
                             model: openAI.values.model,
                             apiKey: apiKey
                         )
@@ -572,11 +574,12 @@ final class AnalysisViewModel {
                     || recommendation.0 == .bRoll {
                     statusMessage = "AI cut hints \(index + 1) of \(results.count): \(results[index].video.name)"
                     do {
-                        let hints = try await OpenAIClient.suggestCutHints(
+                        let hints = try await CloudAIClient.suggestCutHints(
                             fileName: results[index].video.name,
                             recommendation: recommendation.0,
                             durationSeconds: results[index].video.duration,
                             transcript: transcript,
+                            provider: openAI.provider,
                             model: openAI.values.model,
                             apiKey: apiKey
                         )

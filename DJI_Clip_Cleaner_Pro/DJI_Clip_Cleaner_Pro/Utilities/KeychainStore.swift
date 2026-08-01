@@ -10,6 +10,7 @@ import Security
 enum KeychainStore {
     enum Service {
         static let openAIAPIKey = "HughesClipPrep.OpenAI.APIKey"
+        static let geminiAPIKey = "HughesClipPrep.Gemini.APIKey"
     }
 
     private static var supportDirectory: URL {
@@ -25,6 +26,8 @@ enum KeychainStore {
         switch service {
         case Service.openAIAPIKey:
             name = "openai_api_key"
+        case Service.geminiAPIKey:
+            name = "gemini_api_key"
         default:
             name = service.replacingOccurrences(of: ".", with: "_")
         }

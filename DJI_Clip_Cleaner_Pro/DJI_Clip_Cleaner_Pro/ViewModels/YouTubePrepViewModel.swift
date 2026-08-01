@@ -308,8 +308,9 @@ final class YouTubePrepViewModel {
 
         let openAI = OpenAISettings.shared
         let useVision = openAI.useVisionThumbnails && openAI.hasAPIKey
+        let providerName = openAI.provider.displayName
         statusMessage = useVision
-            ? "Scoring frames, then OpenAI Vision picks the clickiest thumbnails…"
+            ? "Scoring frames, then \(providerName) Vision picks the clickiest thumbnails…"
             : "Scoring about 60 frames for story matches and sharp alternatives..."
 
         Task {
@@ -333,10 +334,11 @@ final class YouTubePrepViewModel {
                     openAIAPIKey: useVision ? openAI.apiKey() : nil,
                     useVisionRerank: useVision,
                     openAIModel: openAI.values.model,
+                    cloudProvider: openAI.provider,
                     progress: { scanned, total in
                         self.thumbnailScanProgress = Double(scanned) / Double(max(total, 1))
                         if useVision, scanned >= total {
-                            self.statusMessage = "OpenAI Vision is ranking thumbnail frames…"
+                            self.statusMessage = "\(providerName) Vision is ranking thumbnail frames…"
                         } else {
                             self.statusMessage = "Scoring frame \(scanned) of \(total)..."
                         }
@@ -438,23 +440,24 @@ final class YouTubePrepViewModel {
         errorMessage = nil
 
         let openAI = OpenAISettings.shared
-        let useWhisper = openAI.useWhisper && openAI.hasAPIKey
-        statusMessage = useWhisper
-            ? "Transcribing with OpenAI Whisper…"
+        let useCloudTranscript = openAI.useWhisper && openAI.hasAPIKey
+        statusMessage = useCloudTranscript
+            ? "Transcribing with \(openAI.provider.displayName)…"
             : "Transcribing speech. Longer videos take a few minutes..."
 
         Task {
             do {
                 let result: Transcript
-                if useWhisper, let apiKey = openAI.apiKey() {
+                if useCloudTranscript, let apiKey = openAI.apiKey() {
                     do {
-                        result = try await OpenAIClient.transcribeWithWhisper(
+                        result = try await CloudAIClient.transcribe(
                             videoURL: requestedVideoURL,
+                            provider: openAI.provider,
                             apiKey: apiKey
                         )
                     } catch {
                         // Fall back so a billing/network glitch doesn't block prep.
-                        statusMessage = "Whisper failed — falling back to Apple Speech…"
+                        statusMessage = "Cloud transcription failed — falling back to Apple Speech…"
                         result = try await TranscriptionService.transcribe(
                             videoURL: requestedVideoURL
                         )
@@ -516,15 +519,16 @@ final class YouTubePrepViewModel {
         let useCloud = openAI.useCloudStory && openAI.hasAPIKey
 
         statusMessage = useCloud
-            ? "OpenAI is drafting the story…"
+            ? "\(openAI.provider.displayName) is drafting the story…"
             : "Apple Intelligence is analyzing the story on this Mac…"
 
         if useCloud, let apiKey = openAI.apiKey() {
             do {
-                let drafted = try await OpenAIClient.analyzeStory(
+                let drafted = try await CloudAIClient.analyzeStory(
                     transcript: transcript,
                     existingHook: trimmedHook,
                     brand: brand,
+                    provider: openAI.provider,
                     model: openAI.values.model,
                     apiKey: apiKey
                 )
@@ -900,15 +904,16 @@ final class YouTubePrepViewModel {
 
         let openAI = OpenAISettings.shared
         if openAI.useCloudCopy, openAI.hasAPIKey, let apiKey = openAI.apiKey() {
-            statusMessage = "OpenAI is writing the YouTube description…"
+            statusMessage = "\(openAI.provider.displayName) is writing the YouTube description…"
             isWorking = true
             Task {
                 do {
-                    let pack = try await OpenAIClient.generateUploadCopy(
+                    let pack = try await CloudAIClient.generateUploadCopy(
                         analysis: analysis,
                         title: generatedTitle,
                         brand: BrandSettings.shared.values,
                         transcript: transcript,
+                        provider: openAI.provider,
                         model: openAI.values.model,
                         apiKey: apiKey
                     )
@@ -925,7 +930,7 @@ final class YouTubePrepViewModel {
                         refreshTitleVariants()
                     }
                     errorMessage = nil
-                    statusMessage = "OpenAI description ready. Edit anything before upload."
+                    statusMessage = "\(openAI.provider.displayName) description ready. Edit anything before upload."
                 } catch {
                     // Local fallback keeps the user unblocked.
                     generatedDescription = YouTubeMetadataService.generateDescription(

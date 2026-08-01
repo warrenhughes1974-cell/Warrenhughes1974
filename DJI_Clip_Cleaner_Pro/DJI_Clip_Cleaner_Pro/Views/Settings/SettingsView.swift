@@ -66,23 +66,43 @@ struct SettingsView: View {
     private var openAISection: some View {
         GroupBox {
             VStack(alignment: .leading, spacing: 14) {
-                Text("Paste an OpenAI API key once (starts with sk-). Hughes Clip Prep can then use Whisper, GPT, and Vision inside this app.")
+                Text("Pick OpenAI or Google Gemini, paste that provider’s API key, then turn on the cloud features you want.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Provider")
+                        .fontWeight(.semibold)
+                    Picker("Provider", selection: $openAI.provider) {
+                        ForEach(CloudAIProvider.allCases) { provider in
+                            Text(provider.displayName).tag(provider)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: openAI.provider) { _, _ in
+                        openAI.apiKeyDraft = ""
+                        openAI.save()
+                    }
+                }
 
                 Text(openAI.apiKeyPreview)
                     .font(.caption.monospaced())
                     .foregroundStyle(openAI.hasAPIKey ? AppTheme.mclarenBlue : .secondary)
 
-                SecureField("sk-...", text: $openAI.apiKeyDraft)
-                    .textFieldStyle(.roundedBorder)
+                SecureField(
+                    openAI.provider == .openAI ? "sk-..." : "AIza... (Gemini API key)",
+                    text: $openAI.apiKeyDraft
+                )
+                .textFieldStyle(.roundedBorder)
 
                 HStack(spacing: 10) {
                     Button("Save API Key") {
                         if openAI.saveAPIKeyFromDraft() {
-                            openAIKeyMessage = "API key saved on this Mac (no Keychain password needed)."
+                            openAIKeyMessage = "\(openAI.provider.displayName) key saved on this Mac."
+                        } else if openAI.provider == .openAI {
+                            openAIKeyMessage = "OpenAI key should start with sk- and look like a real secret key."
                         } else {
-                            openAIKeyMessage = "Key should start with sk- and look like a real OpenAI secret key."
+                            openAIKeyMessage = "Paste a full Gemini API key from Google AI Studio (usually starts with AIza)."
                         }
                     }
                     .buttonStyle(.borderedProminent)
@@ -90,7 +110,7 @@ struct SettingsView: View {
 
                     Button("Clear Key") {
                         openAI.clearAPIKey()
-                        openAIKeyMessage = "API key removed."
+                        openAIKeyMessage = "\(openAI.provider.displayName) key removed."
                     }
                     .buttonStyle(.bordered)
                     .disabled(!openAI.hasAPIKey)
@@ -102,47 +122,60 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Text("If macOS asks for a Keychain password: click Deny, Update to v1.48+, then paste your OpenAI key again and Save. That old Keychain prompt is no longer used.")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-
-                Toggle("Use OpenAI Whisper for transcription", isOn: $openAI.useWhisper)
+                Toggle("Use cloud transcription", isOn: $openAI.useWhisper)
                     .onChange(of: openAI.useWhisper) { _, _ in openAI.save() }
-                Toggle("Use OpenAI for Story Review draft", isOn: $openAI.useCloudStory)
+                Toggle("Use cloud Story Review draft", isOn: $openAI.useCloudStory)
                     .onChange(of: openAI.useCloudStory) { _, _ in openAI.save() }
-                Toggle("Use OpenAI for description / tags / title polish", isOn: $openAI.useCloudCopy)
+                Toggle("Use cloud description / tags / title polish", isOn: $openAI.useCloudCopy)
                     .onChange(of: openAI.useCloudCopy) { _, _ in openAI.save() }
-                Toggle("Use OpenAI Vision for thumbnail picks + overlay text", isOn: $openAI.useVisionThumbnails)
+                Toggle("Use cloud Vision for thumbnail picks + overlay text", isOn: $openAI.useVisionThumbnails)
                     .onChange(of: openAI.useVisionThumbnails) { _, _ in openAI.save() }
-                Toggle("Use OpenAI AI Assist on Smart Analysis (demote junk / confirm labels)", isOn: $openAI.useAIAssistAnalysis)
+                Toggle("Use cloud AI Assist on Smart Analysis (demote junk / confirm labels)", isOn: $openAI.useAIAssistAnalysis)
                     .onChange(of: openAI.useAIAssistAnalysis) { _, _ in openAI.save() }
-                Toggle("Use OpenAI cut hints on Smart Analysis (KEEP/CUT time ranges)", isOn: $openAI.useAICutHints)
+                Toggle("Use cloud cut hints on Smart Analysis (KEEP/CUT time ranges)", isOn: $openAI.useAICutHints)
                     .onChange(of: openAI.useAICutHints) { _, _ in openAI.save() }
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Chat model")
+                    Text("Model")
                         .fontWeight(.semibold)
-                    Picker("Chat model", selection: $openAI.model) {
-                        Text("gpt-4o-mini (cheaper)").tag("gpt-4o-mini")
-                        Text("gpt-4o (stronger)").tag("gpt-4o")
+                    if openAI.provider == .openAI {
+                        Picker("Chat model", selection: $openAI.model) {
+                            Text("gpt-4o-mini (cheaper)").tag("gpt-4o-mini")
+                            Text("gpt-4o (stronger)").tag("gpt-4o")
+                        }
+                        .pickerStyle(.segmented)
+                        .onChange(of: openAI.model) { _, _ in openAI.save() }
+                    } else {
+                        Picker("Gemini model", selection: $openAI.geminiModel) {
+                            Text("gemini-2.5-flash (fast/free tier)").tag("gemini-2.5-flash")
+                            Text("gemini-2.5-pro (stronger)").tag("gemini-2.5-pro")
+                        }
+                        .pickerStyle(.menu)
+                        .onChange(of: openAI.geminiModel) { _, _ in openAI.save() }
                     }
-                    .pickerStyle(.segmented)
-                    .onChange(of: openAI.model) { _, _ in openAI.save() }
                 }
 
-                Link(
-                    "Get an API key at platform.openai.com/api-keys",
-                    destination: URL(string: "https://platform.openai.com/api-keys")!
-                )
-                .font(.caption)
+                if openAI.provider == .openAI {
+                    Link(
+                        "Get an OpenAI key at platform.openai.com/api-keys",
+                        destination: URL(string: "https://platform.openai.com/api-keys")!
+                    )
+                    .font(.caption)
+                } else {
+                    Link(
+                        "Get a Gemini key at aistudio.google.com/apikey",
+                        destination: URL(string: "https://aistudio.google.com/apikey")!
+                    )
+                    .font(.caption)
+                }
 
-                Text("Uses your OpenAI account billing. Transcripts, story text, thumbnail frames, Smart Analysis metrics, and KEEP/REVIEW/B-ROLL clip audio (for cut hints) are sent when those toggles are on. Cut hints are suggestions only — Clip Cleaner does not auto-apply them. AI Assist never upgrades weak clips to KEEP.")
+                Text("Only the selected provider is used. Transcripts, story text, thumbnail frames, and cut-hint audio are sent when those toggles are on. Gemini often has a generous free daily quota; OpenAI is pay-as-you-go. AI Assist never upgrades weak clips to KEEP.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
             .padding(4)
         } label: {
-            Label("OpenAI (Cloud)", systemImage: "cloud.fill")
+            Label("Cloud AI (OpenAI or Gemini)", systemImage: "cloud.fill")
                 .font(.headline)
                 .foregroundStyle(AppTheme.mclarenBlue)
         }
