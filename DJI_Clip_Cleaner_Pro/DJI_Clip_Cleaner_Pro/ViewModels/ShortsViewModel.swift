@@ -18,6 +18,8 @@ struct ShortExportResult: Identifiable, Sendable {
 final class ShortsViewModel {
     var selectedVideoURL: URL?
     var longFormTitle = ""
+    /// What this Short should express — steers local picks and cloud title refine.
+    var themeBrief = ""
     var targetLength: ShortsFinderService.TargetLength = .standard
     var transcript: Transcript?
     var burnCaptions = true
@@ -212,6 +214,7 @@ final class ShortsViewModel {
         let brand = BrandSettings.shared.values
         let preset = BrandSettings.shared.selectedPreset
         let longForm = longFormTitle
+        let theme = themeBrief
         let openAI = OpenAISettings.shared
         let useCloudRefine = openAI.useCloudShortsRefine && openAI.hasAPIKey && activeTranscript != nil
 
@@ -222,7 +225,8 @@ final class ShortsViewModel {
                 transcript: activeTranscript,
                 brand: brand,
                 preset: preset,
-                longFormTitle: longForm
+                longFormTitle: longForm,
+                themeBrief: theme
             )
 
             var cloudNote = ""
@@ -230,19 +234,22 @@ final class ShortsViewModel {
                let apiKey = openAI.apiKey(),
                let activeTranscript,
                !found.isEmpty {
-                statusMessage = "\(openAI.provider.displayName) is ranking Shorts and polishing titles…"
+                statusMessage = "\(openAI.provider.displayName) is ranking Shorts using your theme…"
                 do {
                     found = try await CloudAIClient.refineShortCandidates(
                         candidates: found,
                         transcript: activeTranscript,
                         longFormTitle: longForm,
+                        themeBrief: theme,
                         brand: brand,
                         preset: preset,
                         provider: openAI.provider,
                         model: openAI.activeModel,
                         apiKey: apiKey
                     )
-                    cloudNote = " Cloud AI reordered titles."
+                    cloudNote = theme.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        ? " Cloud AI reordered titles."
+                        : " Cloud AI ranked to your theme."
                 } catch {
                     // Local splices still usable — refine is polish only.
                     cloudNote = " (Cloud refine skipped: \(error.localizedDescription))"
@@ -350,7 +357,8 @@ final class ShortsViewModel {
                         videoURL: selectedVideoURL,
                         brand: brand,
                         preset: preset,
-                        longFormTitle: longForm
+                        longFormTitle: longForm,
+                        themeBrief: themeBrief
                     )
                 } catch {
                     errorMessage = "Shorts exported, but the notes file could not be saved: \(error.localizedDescription)"
@@ -396,7 +404,8 @@ final class ShortsViewModel {
         videoURL: URL,
         brand: BrandSettingsValues,
         preset: BrandPreset,
-        longFormTitle: String
+        longFormTitle: String,
+        themeBrief: String
     ) throws {
         let folder = ShortsExportService.outputFolder(for: videoURL)
         let description = ShortsMetadataService.description(
@@ -408,9 +417,17 @@ final class ShortsViewModel {
         var lines: [String] = [
             "SHORTS UPLOAD NOTES",
             "From: \(videoURL.lastPathComponent)",
-            "",
-            "POST-UPLOAD CHECKLIST"
+            ""
         ]
+
+        let theme = themeBrief.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !theme.isEmpty {
+            lines.append("SHORT THEME / INTENT")
+            lines.append(theme)
+            lines.append("")
+        }
+
+        lines.append("POST-UPLOAD CHECKLIST")
 
         for item in ShortsMetadataService.bridgeChecklist(longFormTitle: longFormTitle) {
             lines.append("- \(item)")

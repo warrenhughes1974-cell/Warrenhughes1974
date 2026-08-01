@@ -36,7 +36,7 @@ struct ShortsView: View {
             Text("Builds real Shorts by splicing a HOOK + PAYOFF + BUTTON from different parts of your long video — not one random 30-second slice.")
                 .foregroundStyle(.secondary)
 
-            Text("Tip: Turn on cloud transcription + Shorts refine in Settings (OpenAI or Gemini) for clearer speech and stronger titles. You still pick which Shorts to export.")
+            Text("Tip: Write what the Short should express below, then Transcribe + Find Moments. Cloud transcription + Shorts refine in Settings make the theme even stronger. Keep one finished Filmora export as the source.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -115,6 +115,23 @@ struct ShortsView: View {
                         .textFieldStyle(.roundedBorder)
 
                     Text("Used in each Short's description so viewers can find the full video.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("What should this Short express?")
+                        .fontWeight(.semibold)
+
+                    TextEditor(text: $viewModel.themeBrief)
+                        .font(.body)
+                        .frame(minHeight: 72, maxHeight: 120)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(Color.secondary.opacity(0.35), lineWidth: 1)
+                        )
+
+                    Text("Optional theme for Find Moments — e.g. “Airport stress, gate change, then relief when we board.” Local picks and Cloud AI Shorts refine use this.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

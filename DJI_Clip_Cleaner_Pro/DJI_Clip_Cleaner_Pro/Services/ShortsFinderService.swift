@@ -154,6 +154,7 @@ enum ShortsFinderService {
         brand: BrandSettingsValues,
         preset: BrandPreset,
         longFormTitle: String,
+        themeBrief: String = "",
         maximumResults: Int = 5
     ) async -> [ShortCandidate] {
         let asset = AVURLAsset(url: videoURL)
@@ -179,6 +180,7 @@ enum ShortsFinderService {
                 brand: brand,
                 preset: preset,
                 longFormTitle: longFormTitle,
+                themeBrief: themeBrief,
                 maximumResults: maximumResults
             )
         }
@@ -212,31 +214,35 @@ enum ShortsFinderService {
         brand: BrandSettingsValues,
         preset: BrandPreset,
         longFormTitle: String,
+        themeBrief: String,
         maximumResults: Int
     ) -> [ShortCandidate] {
         let phrases = buildPhrases(from: transcript)
         guard phrases.count >= 2 else { return [] }
 
-        let scored = phrases.map { phrase -> (Phrase, Double, Double, Double) in
+        let themeKeys = themeKeywords(from: themeBrief)
+
+        let scored = phrases.map { phrase -> (Phrase, Double, Double, Double, Double) in
             (
                 phrase,
                 hookScore(phrase.text, preset: preset),
                 findScore(phrase.text, preset: preset),
-                reactionScore(phrase.text, preset: preset)
+                reactionScore(phrase.text, preset: preset),
+                themeMatchScore(phrase.text, keys: themeKeys)
             )
         }
 
         let payoffs = scored
-            .filter { $0.2 >= 0.15 || $0.1 + $0.2 + $0.3 >= 0.35 }
+            .filter { $0.2 >= 0.15 || $0.1 + $0.2 + $0.3 >= 0.35 || $0.4 >= 0.25 }
             .sorted { lhs, rhs in
-                (lhs.2 * 1.4 + lhs.1 * 0.4 + lhs.3 * 0.3) >
-                    (rhs.2 * 1.4 + rhs.1 * 0.4 + rhs.3 * 0.3)
+                (lhs.2 * 1.4 + lhs.1 * 0.4 + lhs.3 * 0.3 + lhs.4 * 1.2) >
+                    (rhs.2 * 1.4 + rhs.1 * 0.4 + rhs.3 * 0.3 + rhs.4 * 1.2)
             }
 
         var stories: [ShortCandidate] = []
         var usedPayoffMids: [TimeInterval] = []
 
-        for (payoff, hookS, findS, reactS) in payoffs {
+        for (payoff, hookS, findS, reactS, themeS) in payoffs {
             if usedPayoffMids.contains(where: { abs($0 - payoff.mid) < 25 }) {
                 continue
             }
@@ -244,18 +250,18 @@ enum ShortsFinderService {
             let hook = scored
                 .filter { $0.0.end <= payoff.start - 0.5 }
                 .filter { payoff.start - $0.0.end < 180 }
-                .max(by: { $0.1 < $1.1 })
+                .max(by: { ($0.1 + $0.4 * 0.6) < ($1.1 + $1.4 * 0.6) })
                 ?? scored
                     .filter { $0.0.end <= payoff.start - 0.5 }
-                    .max(by: { $0.1 + $0.2 < $1.1 + $1.2 })
+                    .max(by: { $0.1 + $0.2 + $0.4 < $1.1 + $1.2 + $1.4 })
 
             let button = scored
                 .filter { $0.0.start >= payoff.end + 0.3 }
                 .filter { $0.0.start - payoff.end < 120 }
-                .max(by: { $0.3 < $1.3 })
+                .max(by: { ($0.3 + $0.4 * 0.5) < ($1.3 + $1.4 * 0.5) })
                 ?? scored
                     .filter { $0.0.start >= payoff.end + 0.3 }
-                    .max(by: { $0.2 + $0.3 < $1.2 + $1.3 })
+                    .max(by: { $0.2 + $0.3 + $0.4 < $1.2 + $1.3 + $1.4 })
 
             guard let hook else { continue }
 
@@ -295,8 +301,12 @@ enum ShortsFinderService {
             )
 
             let total = beats.reduce(0.0) { $0 + $1.duration }
-            let overall = min((findS * 0.5) + (hookS * 0.25) + (reactS * 0.15) + 0.2, 1.0)
-            let summary = storySummary(beats: beats, preset: preset)
+            let themeBoost = (themeS * 0.5) + (hook.4 * 0.25) + ((button?.4 ?? 0) * 0.15)
+            let overall = min(
+                (findS * 0.45) + (hookS * 0.2) + (reactS * 0.12) + (themeBoost * 0.35) + 0.18,
+                1.0
+            )
+            let summary = storySummary(beats: beats, preset: preset, themeBrief: themeBrief)
 
             stories.append(
                 ShortCandidate(
@@ -442,6 +452,32 @@ enum ShortsFinderService {
         return min(score, 1.0)
     }
 
+    /// Content words from the Short theme box (airport, stress, relief…).
+    private static func themeKeywords(from brief: String) -> [String] {
+        let stop: Set<String> = [
+            "the", "and", "for", "that", "this", "with", "from", "into", "then",
+            "when", "what", "want", "should", "about", "have", "just", "like",
+            "your", "our", "their", "them", "they", "short", "video", "show",
+            "make", "feel", "feels", "really", "very", "also", "onto", "over"
+        ]
+        return brief
+            .lowercased()
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { $0.count >= 4 && !stop.contains($0) }
+    }
+
+    private static func themeMatchScore(_ text: String, keys: [String]) -> Double {
+        guard !keys.isEmpty else { return 0 }
+        let lower = text.lowercased()
+        var hits = 0
+        for key in keys where lower.contains(key) {
+            hits += 1
+        }
+        guard hits > 0 else { return 0 }
+        return min(0.2 + Double(hits) * 0.22, 1.0)
+    }
+
     private static func presetHookExtras(_ preset: BrandPreset) -> [String] {
         preset.hookExtras
     }
@@ -488,22 +524,33 @@ enum ShortsFinderService {
         return preset.fallbackShortTitle
     }
 
-    private static func storySummary(beats: [ShortBeat], preset: BrandPreset) -> String {
+    private static func storySummary(
+        beats: [ShortBeat],
+        preset: BrandPreset,
+        themeBrief: String = ""
+    ) -> String {
         let roles = beats.map(\.role.label).joined(separator: " → ")
+        let theme = themeBrief.trimmingCharacters(in: .whitespacesAndNewlines)
+        let themeNote = theme.isEmpty
+            ? ""
+            : " Theme: \(String(theme.prefix(90)))."
+
+        let base: String
         switch preset {
         case .halloweenHunt:
-            return "Halloween story cut: \(roles). Opens on curiosity, lands on the find, ends before the full hunt is spoiled."
+            base = "Halloween story cut: \(roles). Opens on curiosity, lands on the find, ends before the full hunt is spoiled."
         case .storeWalk, .shoppingHaul:
-            return "Store-walk story cut: \(roles). Walk-up, the item, then the reaction."
+            base = "Store-walk story cut: \(roles). Walk-up, the item, then the reaction."
         case .travelDay, .workTravel:
-            return "Travel story cut: \(roles). Plan, obstacle, payoff tease."
+            base = "Travel story cut: \(roles). Plan, obstacle, payoff tease."
         case .themeParkDay:
-            return "Park-day story cut: \(roles). Arrive, highlight, reaction."
+            base = "Park-day story cut: \(roles). Arrive, highlight, reaction."
         case .foodRestaurants:
-            return "Food story cut: \(roles). Order, bite, verdict tease."
+            base = "Food story cut: \(roles). Order, bite, verdict tease."
         default:
-            return "Story cut: \(roles). Separate moments spliced into one Short."
+            base = "Story cut: \(roles). Separate moments spliced into one Short."
         }
+        return base + themeNote
     }
 
     // MARK: - Continuous fallback (no transcript)

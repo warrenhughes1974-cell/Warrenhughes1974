@@ -6,17 +6,21 @@ enum ShortsCloudRefine {
         candidates: [ShortCandidate],
         transcript: Transcript,
         longFormTitle: String,
+        themeBrief: String = "",
         brand: BrandSettingsValues,
         preset: BrandPreset
     ) -> String {
         var lines: [String] = []
         lines.append("You refine YouTube Shorts suggestions for a lifestyle/travel channel.")
         lines.append("Local splicing already chose the cut times — do NOT change start/end times or beats.")
-        lines.append("Reorder the candidates by click-worthiness and rewrite each bestTitle.")
+        lines.append("Reorder the candidates by how well they match the creator's theme, then click-worthiness.")
+        lines.append("Rewrite each bestTitle to match that theme when the spoken quote supports it.")
         lines.append("")
         lines.append("Channel: \(brand.channelPrefix.isEmpty ? brand.seriesName : brand.channelPrefix)")
         lines.append("Series preset: \(preset.displayName)")
         lines.append("Long-form title: \(longFormTitle.isEmpty ? "(none)" : longFormTitle)")
+        let theme = themeBrief.trimmingCharacters(in: .whitespacesAndNewlines)
+        lines.append("Short theme / intent: \(theme.isEmpty ? "(none — rank by general Shorts strength)" : theme)")
         lines.append("Channel context (spelling/identity only): \(brand.channelContext)")
         lines.append("")
         lines.append("Candidates (keep every id exactly once in your response):")
@@ -42,11 +46,13 @@ enum ShortsCloudRefine {
             """
             Rules:
             - Return EVERY candidate id exactly once, best first.
+            - Prefer candidates whose quote/story match the Short theme / intent when one is provided.
             - bestTitle: short, punchy, grammatical, first person when the speaker is the traveler.
+            - Titles may echo the theme only if the spoken quote supports it.
             - Do not invent people, pets on the trip, or places not supported by the quote/transcript.
             - Include #Shorts in each title (or it will be added for you).
             - Keep titles under ~90 characters before #Shorts.
-            - rankScore is 0.0–1.0 (higher = better Short).
+            - rankScore is 0.0–1.0 (higher = better Short for this theme).
 
             Return ONLY JSON:
             {

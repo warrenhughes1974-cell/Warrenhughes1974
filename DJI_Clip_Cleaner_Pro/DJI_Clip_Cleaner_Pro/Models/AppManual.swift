@@ -77,7 +77,7 @@ enum AppManual {
         ManualSection(
             icon: "rectangle.portrait.on.rectangle.portrait",
             title: "Shorts",
-            body: "Transcribe a finished video (cloud or Apple Speech), then get ranked Shorts with a spoken hook, projected hook/retention scores, and a best title for each moment. Optional cloud refine reorders picks and polishes titles without changing cut times."
+            body: "Transcribe a finished video (cloud or Apple Speech), optionally write what the Short should express, then get ranked Shorts with a spoken hook, projected hook/retention scores, and a best title for each moment. Optional cloud refine reorders picks to your theme and polishes titles without changing cut times."
         ),
         ManualSection(
             icon: "square.and.arrow.up",
@@ -103,6 +103,12 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.57",
+            highlights: [
+                "Shorts theme box: describe what the Short should express; Find Moments boosts matching spoken beats, and Cloud AI Shorts refine ranks/titles to that intent. Still one finished Filmora export as the source."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.56",
             highlights: [

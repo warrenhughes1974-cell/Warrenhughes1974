@@ -358,6 +358,7 @@ enum OpenAIClient {
         candidates: [ShortCandidate],
         transcript: Transcript,
         longFormTitle: String,
+        themeBrief: String = "",
         brand: BrandSettingsValues,
         preset: BrandPreset,
         model: String,
@@ -370,6 +371,7 @@ enum OpenAIClient {
             candidates: candidates,
             transcript: transcript,
             longFormTitle: longFormTitle,
+            themeBrief: themeBrief,
             brand: brand,
             preset: preset
         )
