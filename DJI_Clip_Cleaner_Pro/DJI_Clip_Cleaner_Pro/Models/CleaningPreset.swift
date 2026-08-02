@@ -38,7 +38,7 @@ enum CleaningPreset: String, CaseIterable, Identifiable {
         case .balanced:
             return 0.50
         case .aggressive:
-            return 0.25
+            return 0.10
         }
     }
 
@@ -49,7 +49,7 @@ enum CleaningPreset: String, CaseIterable, Identifiable {
         case .balanced:
             return "A natural middle ground for trimming clip edges."
         case .aggressive:
-            return "Cuts dead air tight at the start and end of each clip."
+            return "Cuts dead air very tight at the start and end (0.10s margin)."
         }
     }
 }

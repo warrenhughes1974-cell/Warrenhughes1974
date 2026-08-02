@@ -104,6 +104,12 @@ enum AppManual {
 
     static let changelog: [ManualChangelogEntry] = [
         ManualChangelogEntry(
+            version: "1.59",
+            highlights: [
+                "Aggressive cutting style edge margin tightened from 0.25s to 0.10s for less leftover dead air at the start/end (use with Full + Edges)."
+            ]
+        ),
+        ManualChangelogEntry(
             version: "1.58",
             highlights: [
                 "Run Pipeline renames REVIEW clips with NEEDS_REVIEW_ (they stay in the shoot folder); DISCARD still moves to _DISCARD.",
