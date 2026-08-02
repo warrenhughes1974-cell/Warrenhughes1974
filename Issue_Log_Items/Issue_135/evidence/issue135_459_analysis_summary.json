@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-08-02T20:36:28Z",
+  "issue": 135,
+  "analysis_label": "ANALYSIS_ONLY_NOT_PRODUCTION",
+  "population": "MISSING_ERIC_SUPPLY",
+  "population_n": 459,
+  "category_counts": {
+    "NO_PACTG_HISTORY": 308,
+    "DERIVED_HIGH": 142,
+    "HOLD_INCOMPLETE_SOURCE": 9
+  },
+  "with_pactg": 151,
+  "no_pactg": 308,
+  "with_prelsa": 151,
+  "with_prelsa_payee_roles": 151,
+  "derived_n": 142,
+  "derived_cso_match_n": 142,
+  "derived_cso_mismatch_n": 0,
+  "confidence_bands": {
+    "0": 308,
+    "1-39": 9,
+    "40-69": 0,
+    "70-89": 0,
+    "90-100": 142
+  },
+  "pactg_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\PACTG_Accounting_Extract20260630.csv",
+  "prelsa_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\RelationshipNameAddress_Extract_20260630.csv",
+  "premise": {
+    "premise_claim_in_prior_docs": "MISSING_ERIC_SUPPLY labeled as Eric supply gap / awaiting source; sometimes described as absent from CSO join",
+    "challenge_finding": "These 459 are PRESENT in the CSO Total_Paid workbook (policy-level control exists) and ABSENT from current Output quikclms (no policy row). Prior recon pactg_row_count=0 is an artifact of --pactg-scope=available, which excluded MISSING_ERIC_SUPPLY from the PACTG stream \u2014 not proof of no history.",
+    "counts": {
+      "gap_policies": 459,
+      "in_cso_with_total_paid_gt0": 459,
+      "in_current_output_any_row": 0,
+      "in_current_output_death_header": 0,
+      "prior_recon_pactg_row_count_zero": 459
+    },
+    "grain": "CSO Total_Paid is policy-level; one control row per mpolicy; no claim number",
+    "failure_label": "Do NOT call these conversion failures solely because they are absent from Output; they lack Output representation. Whether they are extract/population gaps vs engine omissions requires PACTG/PRELSA presence (measured in this analysis)."
+  },
+  "grok_validation_overall": "PASS",
+  "higher_model_recommendation": "No higher model required for this analysis pass. Remaining blockers are source gaps (NO_PACTG_HISTORY=308, HOLD_INCOMPLETE=9) or ambiguous chains (0), not arithmetic failures.",
+  "explicit_separations": {
+    "accounting_derived_candidate": "derived_amount when category starts with DERIVED_",
+    "cso_crosscheck_match": "cso_validation_status=CSO_CROSSCHECK_MATCH",
+    "cso_validated_production_settlement": "NONE in this pass \u2014 not production"
+  }
+}

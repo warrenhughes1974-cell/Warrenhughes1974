@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-08-02T20:59:25.029675+00:00",
+  "engine": "v58.57",
+  "overlay": "issue134_after_issue135",
+  "stats": {
+    "pnote_b_policies": 1501,
+    "rows_updated": 142,
+    "policies_updated": 142,
+    "orphan_b_policies": 150,
+    "death_rows_seen": 1687
+  },
+  "marker_before": 308,
+  "marker_after": 308,
+  "money_changed": {
+    "MPAID": 0,
+    "MFACE": 0,
+    "NETDB": 0,
+    "MINTAMT": 0
+  },
+  "clms_rows": 6044,
+  "clmp_rows": 5497,
+  "orphan_audit": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Reports\\issue134_pnote_b_orphan_audit.csv",
+  "moved_artifacts": [
+    {
+      "from": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\Migration_Audit_Log.txt",
+      "to": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Logs\\Migration_Audit_Log.txt"
+    },
+    {
+      "from": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\cso_mortality_crosswalk_qa.csv",
+      "to": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Reports\\cso_mortality_crosswalk_qa.csv"
+    },
+    {
+      "from": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\variation_code_audit.csv",
+      "to": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Reports\\variation_code_audit.csv"
+    }
+  ],
+  "test_validation_published": [
+    "quikclms.csv",
+    "quikclmp.csv"
+  ]
+}

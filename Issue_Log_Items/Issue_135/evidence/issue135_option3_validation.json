@@ -1,0 +1,11 @@
+{
+  "issue": 135,
+  "phase": "OPTION3_OVERLAY_VALIDATION",
+  "status": "PASS",
+  "corrected_candidates": 43,
+  "candidate_holds": 2,
+  "overlay_clms": 43,
+  "overlay_clmp": 51,
+  "production_output_mutated": false,
+  "errors": []
+}

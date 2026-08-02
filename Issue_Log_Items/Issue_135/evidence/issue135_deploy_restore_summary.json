@@ -1,0 +1,48 @@
+{
+  "generated_at": "20260802T224218Z",
+  "action": "restore_verified_tv_package_to_output_for_deploy",
+  "engine": "v58.60",
+  "before": {
+    "out_clms": 5594,
+    "out_clmp": 5366,
+    "out_clms_sha": "c009688ac482786e94a5776237e33cad719b914d6c2b63bb9208b9d4f0563e3d",
+    "out_clmp_sha": "2cfceeb442e894d8c18b59ce26c6fb4f7a63995d0b8b03a7adf19812c9533fee",
+    "tv_clms": 6044,
+    "tv_clmp": 5495,
+    "tv_clms_sha": "d5a95c6fb844fcced8aab413677f18ac6a7d08538081df66e5064cbc2e274486",
+    "tv_clmp_sha": "5dd6d9da57134da17a81382c58e8cdb2fd3f161a8c99475d780104b778bff0fc"
+  },
+  "after": {
+    "out_clms": 6044,
+    "out_clmp": 5495,
+    "tv_clms": 6044,
+    "tv_clmp": 5495,
+    "out_clms_sha": "d5a95c6fb844fcced8aab413677f18ac6a7d08538081df66e5064cbc2e274486",
+    "out_clmp_sha": "5dd6d9da57134da17a81382c58e8cdb2fd3f161a8c99475d780104b778bff0fc",
+    "out_eq_tv_clms": true,
+    "out_eq_tv_clmp": true,
+    "out_clmp_matches_expected_post_sha": true
+  },
+  "archive_output_clms": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\quikclms_pre_issue135_deploy_20260802T224218Z.csv",
+  "archive_output_clmp": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\quikclmp_pre_issue135_deploy_20260802T224218Z.csv",
+  "archive_staging_dir": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\claims_uat_dbf_pre_issue135_deploy_20260802T224218Z",
+  "staging_archived_files": [
+    "claims_uat_dbf_alignment_manifest.csv",
+    "claims_uat_dbf_alignment_summary.txt",
+    "claims_uat_dbf_execution_log.txt",
+    "claims_uat_dbf_generation_summary.txt",
+    "claims_uat_dbf_manifest.csv",
+    "QUIKCLMP.DBF",
+    "QUIKCLMS.DBF",
+    "QUIKCLMS.DBT",
+    "rollback_snapshot_reference.txt"
+  ],
+  "archive_q_dir": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\Q_CSO_Test_6_30_2026_pre_issue135_deploy_20260802T224218Z",
+  "q_archived_files": [
+    "QUIKCLMS.DBF",
+    "QUIKCLMS.DBT",
+    "QUIKCLMP.DBF"
+  ],
+  "source": "Output/Test_Validation verified 6044/5495 (post zero-payee SHA)",
+  "promotion_ok": true
+}

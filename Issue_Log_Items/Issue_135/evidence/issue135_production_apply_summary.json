@@ -1,0 +1,18 @@
+{
+  "applied": true,
+  "option3_headers_updated": 43,
+  "derived_headers_emitted": 142,
+  "derived_payees_emitted": 0,
+  "derived_payee_holds": 142,
+  "header_only_308_emitted": 308,
+  "holds_9": 9,
+  "skipped_duplicates": 0,
+  "reason": "",
+  "clms_rows_after": 2387,
+  "clmp_rows_after": 1644,
+  "marker_field": "MEMOTEXT(+evidence_audit)",
+  "marker_value": "CSO_CONTROLLED_NO_PACTG_HISTORY",
+  "marker_note": "CAUSE is C(3) and cannot hold the marker; MEMOTEXT carries CSO_CONTROLLED_NO_PACTG_HISTORY and issue134 preserves it on PNOTE-B replace",
+  "claimstat_convention": "2_DEATH_PAID_IN_FULL_post_issue79",
+  "generated_at": "20260802T214115Z"
+}

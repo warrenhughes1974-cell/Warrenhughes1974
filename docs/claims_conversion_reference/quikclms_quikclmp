@@ -1,4 +1,4 @@
-Claims	QUIKCLMS.DBF	MPOLICY	CHARACTER	10	Policy number
+Claims	QUIKCLMS.DBF	MPOLICY	CHARACTER	11	Policy number
 Claims	QUIKCLMS.DBF	MPHASE	NUMERIC	2	Phase of coverage
 Claims	QUIKCLMS.DBF	CLAIMNUM	CHARACTER	20	Claim number
 Claims	QUIKCLMS.DBF	CLAIMSTAT	NUMERIC	2	Claim status (Pending - 1; Paid in Full - 2; Settled - 3; Denied - 4, Matured - 98; Surrenders - 99)
@@ -31,7 +31,7 @@ Claims	QUIKCLMS.DBF	MCLMPNDLTR	NUMERIC	3	Pending claim notice number of days
 Claims	QUIKCLMS.DBF	MFACPMT	LOGICAL	1	MedSupp - facility payment code
 Claims	QUIKCLMS.DBF	MPHPAIDTO	DATE	8	Phase paid-to date
 					
-Claims	QUIKCLMP.DBF	MPOLICY	CHARACTER	10	Policy number
+Claims	QUIKCLMP.DBF	MPOLICY	CHARACTER	11	Policy number
 Claims	QUIKCLMP.DBF	MPHASE	NUMERIC	2	Phase of coverage
 Claims	QUIKCLMP.DBF	MCHECKNO	NUMERIC	7	Check number
 Claims	QUIKCLMP.DBF	MAMOUNT	NUMERIC	12	Payee amount

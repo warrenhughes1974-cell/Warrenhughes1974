@@ -256,6 +256,8 @@ def apply_claims_emit_enhancements(
             out["ORIGSTTUS"] = iswl_stat
         if not str(out.get("MSEQ", "")).strip():
             out["MSEQ"] = str(cfg.get("default_mseq", "0")).strip() or "0"
+        # Issue #135 Phase A: client does not need claim interest on emit.
+        out["MINTAMT"] = "0.00"
     elif table_key == "quikclmp":
         if not str(out.get("MSEQ", "")).strip():
             out["MSEQ"] = str(cfg.get("default_mseq", "0")).strip() or "0"

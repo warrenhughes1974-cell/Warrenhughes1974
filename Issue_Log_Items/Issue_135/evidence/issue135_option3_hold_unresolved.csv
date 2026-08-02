@@ -1,0 +1,19 @@
+mpolicy,evidence_class,hold_flag,option3_status,rule_reasons,cso_total_paid,death_mpaid,overlay_note,policy_digits,prior_hold_flag,current_death_mpaid,current_payee_sum,corrected_mpaid,corrected_payee_sum,corrected_payee_n,loop_dates_excluded,needs_payee_identity
+9010376540C,CLEARING_DUPLICATION_SUSPECT,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,5896.15,17517.37,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9010454002C,LOAN_RESIDUAL_SHORTFALL,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,6869.42,6809.47,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9010768069C,HEADER_PAYEE_MISALIGN_BOTH_OFF,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,5006.36,8010.2,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9010780003C,HEADER_PAYEE_MISALIGN_BOTH_OFF,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,6096.53,9120.66,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9010783502C,HEADER_PAYEE_MISALIGN_BOTH_OFF,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,7168.54,21316.36,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9010834719C,CLEARING_DUPLICATION_SUSPECT,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,50000.0,227457.2,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9010836057C,CLEARING_DUPLICATION_SUSPECT,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,15813.6,18976.32,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9010840780C,CLEARING_DUPLICATION_SUSPECT,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,6176.57,8235.43,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9010847570C,INTEREST_IN_CHECK_RESIDUAL,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,0.0,28834.15,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9011000854C,CLEARING_DUPLICATION_SUSPECT,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,26997.89,32378.29,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9011186904C,CLEARING_DUPLICATION_SUSPECT,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,12021.15,18031.72,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9011188426C,CLEARING_DUPLICATION_SUSPECT,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,3177.94,4766.91,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9011194064C,CLEARING_DUPLICATION_SUSPECT,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,15026.84,21277.76,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9011212602C,LOAN_RESIDUAL_SHORTFALL,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,13665.61,6077.68,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9011261439C,CLEARING_DUPLICATION_SUSPECT,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,25105.73,36794.3,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9011261618C,CLEARING_DUPLICATION_SUSPECT,HOLD,HOLD_PRIOR,HOLD_PRIOR_EVIDENCE_CLASS,10107.84,15202.18,Unresolved residual / clearing / loan / interest — not force-fit,,,,,,,,,
+9010786152C,MISSING_DEATH_MPAID_BUT_PACTG_PAYOUT,HOLD,HOLD,EXCLUDE_REINSTATEMENT_ENDOW_LOOP|EXCLUDE_INTRACO_UNAPPLIED_LOOP|HOLD_NO_CSO_MATCHING_SUBSET,7935.67,,no_payee_subset_sums_to_cso remaining_sum=1086.00,9010786152,CANDIDATE,0.0,1086.0,,,0.0,20220621,N
+9011090414C,MULTIPLICITY_X3_REINSTATEMENT,HOLD,HOLD,EXCLUDE_REINSTATEMENT_ENDOW_LOOP|EXCLUDE_INTRACO_UNAPPLIED_LOOP|HOLD_MISSING_NO_PACTG_CSO_MATCH,4998.4,,no_pactg_economic_match keys=[],9011090414,CANDIDATE,15028.28,0.0,,,0.0,20220126,N

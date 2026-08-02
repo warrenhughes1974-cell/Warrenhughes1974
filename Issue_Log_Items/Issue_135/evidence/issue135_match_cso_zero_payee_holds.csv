@@ -1,0 +1,4 @@
+mpolicy,policy_digits,mpaid,cso_total_paid,live_payee_rows,claimstat,class,reason,eco_n,eco_sum,payee_n,selection_rule,payee_evidence
+9010792038C,9010792038,12421.63,12421.63,0,2,HOLD_INCOMPLETE,missing_rna_for_payee rela='PE' seq='1' pe_keys=[] b1_keys=[],1,12421.63,0,eco_full_sum_match,
+9011062307C,9011062307,100188.08,100188.08,0,2,HOLD_INCOMPLETE,missing_rna_for_payee rela='PE' seq='1' pe_keys=[] b1_keys=[],1,100188.08,0,eco_full_sum_match,
+9015000341C,9015000341,5201.97,5201.97,0,2,HOLD_INCOMPLETE,missing_rna_for_payee rela='PE' seq='1' pe_keys=[] b1_keys=[],1,5201.97,0,eco_full_sum_match,

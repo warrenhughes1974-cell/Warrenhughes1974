@@ -23,6 +23,19 @@ from qla_core.quikmemo_converter import (
     format_pnote_b_claim_memotext,
 )
 
+# Issue #135 header-only marker — preserve when replacing MEMOTEXT with PNOTE-B
+_CSO_NO_PACTG_MARKER = "CSO_CONTROLLED_NO_PACTG_HISTORY"
+
+
+def _preserve_cso_no_pactg_marker(old_memo: str, new_memo: str) -> str:
+    old = _strip(old_memo)
+    new = _strip(new_memo)
+    if _CSO_NO_PACTG_MARKER in old and _CSO_NO_PACTG_MARKER not in new:
+        if new:
+            return f"{new}\n---\n{_CSO_NO_PACTG_MARKER}"
+        return _CSO_NO_PACTG_MARKER
+    return new_memo
+
 
 def _is_death_claim_row(row: pd.Series) -> bool:
     """Identify life death-claim headers without requiring health QuikHcmm."""
@@ -116,7 +129,7 @@ def apply_issue134_claim_memos(
         mpolicy = _strip(row.get("MPOLICY", ""))
         memo = _strip(row.get("MEMOTEXT", ""))
         if mpolicy in b_memos and _is_death_claim_row(row):
-            new_text = b_memos[mpolicy]
+            new_text = _preserve_cso_no_pactg_marker(memo, b_memos[mpolicy])
             if memo != new_text:
                 stats["rows_updated"] += 1
                 updated_policies.add(mpolicy)

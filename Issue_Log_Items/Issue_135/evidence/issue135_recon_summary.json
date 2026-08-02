@@ -1,0 +1,43 @@
+{
+  "generated_at": "2026-08-02T20:10:23Z",
+  "issue": 135,
+  "hard_control": "CSO Total_Paid is policy-level; no claim number; do not sum death+PS",
+  "eric_gap_note": "MISSING_ERIC_SUPPLY policies are absent because Eric has not supplied all policies yet; not treated as current conversion failure",
+  "cso_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\docs\\Claims\\CSO Life claims summary - 2017 - 2025.xlsx",
+  "clms_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\quikclms.csv",
+  "clmp_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\quikclmp.csv",
+  "pactg_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\PACTG_Accounting_Extract20260630.csv",
+  "pactg_scope": "available",
+  "pactg_policies_pulled": 1201,
+  "cso_policies": 1656,
+  "available_match": 1104,
+  "available_mismatch": 61,
+  "in_output_no_death": 32,
+  "missing_eric_supply": 459,
+  "available_represented": 1197,
+  "teacher_death": [
+    "9011156098C",
+    "9010914301C",
+    "9010391359C",
+    "9010150740C",
+    "9010402010C",
+    "9010429064C",
+    "9010430296C"
+  ],
+  "surrender_examples": [
+    "9010360289C",
+    "9010753675C",
+    "9010429711C",
+    "9010746846C"
+  ],
+  "proposed_rule_counts_mismatch": {
+    "INTEREST_IN_CHECK_REVIEW": 7,
+    "REINSTATEMENT_TRIPLE_COUNT": 22,
+    "MISSING_DEATH_MPAID_BUT_PACTG_PAYOUT": 6,
+    "DUPLICATE_PAYOUT": 17,
+    "HEADER_PAYEE_MISALIGN": 3,
+    "INTRACO_OR_REINSTATE_REVIEW": 2,
+    "UNEXPLAINED_RESIDUAL": 4
+  },
+  "mintamt_nonzero_death_rows": 0
+}

@@ -1,0 +1,16 @@
+{
+  "policy": "9011156655C",
+  "reason": "MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE",
+  "before_clmp_rows": 5497,
+  "after_clmp_rows": 5501,
+  "before_policy_payee_rows": 0,
+  "after_policy_payee_rows": 4,
+  "rows_added": 4,
+  "pre_archive": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\quikclmp_pre_issue135_9011156655C_20260802T213539Z.csv",
+  "evidence_archive": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\quikclmp_pre_issue135_9011156655C_20260802T213539Z.csv",
+  "pre_sha256": "b373e6ada469c5bbd0fd7f4c82e674d760b8693c126965b0985b435c142437be",
+  "post_sha256": "25d5c54f393c576f6e58228dcb4f9467c6bf54dd38705a6fa99198ba6bdb8a6e",
+  "test_validation": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\Test_Validation\\quikclmp.csv",
+  "quikclms_mutated": false,
+  "header_money_unchanged": true
+}

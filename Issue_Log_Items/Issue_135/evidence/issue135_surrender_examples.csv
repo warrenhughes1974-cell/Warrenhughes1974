@@ -1,0 +1,5 @@
+mpolicy,in_output,families,row_count,mpaid_sum_all_families,claimstats,note
+9010360289C,Y,SURRENDER,1,3129.06,99,Surrender workstream — not CSO Total_Paid hard control; do not sum with death
+9010753675C,Y,SURRENDER,1,26155.88,99,Surrender workstream — not CSO Total_Paid hard control; do not sum with death
+9010429711C,Y,SURRENDER,1,5347.75,99,Surrender workstream — not CSO Total_Paid hard control; do not sum with death
+9010746846C,Y,PARTIAL_SURRENDER,7,1897.0,99,Surrender workstream — not CSO Total_Paid hard control; do not sum with death

@@ -1,0 +1,49 @@
+{
+  "output_root_non_quik_count": 3,
+  "output_root_non_quik_sample": [
+    "claims_cross_table_validation_report.csv",
+    "claims_emit_enhancement_validation.csv",
+    "claims_review_hold_manifest.csv"
+  ],
+  "clms_rows": 6044,
+  "clmp_rows": 5495,
+  "head_clms_rows": 5594,
+  "head_clmp_rows": 6422,
+  "clmp_row_delta": -927,
+  "mintamt_nonzero_current": 3657,
+  "mintamt_nonzero_head": 4144,
+  "clms_keys_only_cur": 450,
+  "clms_keys_only_head": 0,
+  "clms_keys_common": 5594,
+  "field_diffs_common_rows": {
+    "MPAID": 266,
+    "MFACE": 465,
+    "NETDB": 328,
+    "MINTAMT": 487,
+    "PDDATE": 190
+  },
+  "mint_only_changed_rows": 44,
+  "mixed_drift_rows": 675,
+  "phase_a_only_reconstructable": false,
+  "sim_head_mint0_vs_cur_diffs_top": {
+    "MINTAMT": 3657,
+    "MFACE": 465,
+    "NETDB": 328,
+    "MPAID": 266,
+    "PDDATE": 190
+  },
+  "test_validation": {
+    "tv_clmp_exists": true,
+    "tv_clms_exists": true,
+    "tv_clmp_rows": 5495,
+    "out_clmp_rows": 5495,
+    "tv_clmp_cols_match": true,
+    "tv_clmp_equal": true,
+    "tv_clms_rows": 6044,
+    "out_clms_rows": 6044,
+    "tv_mintamt_nonzero": 0,
+    "tv_clms_common": 6044,
+    "tv_vs_out_mintamt_diff": 3657
+  },
+  "verdict": "DRIFT_IS_DOCUMENTED_BASELINE_LIMITATION"
+}

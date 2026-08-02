@@ -1,0 +1,49 @@
+{
+  "generated_at": "20260802T210607Z",
+  "action": "promote_test_validation_to_output",
+  "before": {
+    "out_clms": 5594,
+    "out_clmp": 5366,
+    "tv_clms": 6044,
+    "tv_clmp": 5497,
+    "out_clms_md5": "7fa03a3f5cd2d9ce62307cb073b15c10",
+    "out_clmp_md5": "9a6bac4fc414c412d3e42c83cf0820fa",
+    "tv_clms_md5": "939bd4a76ef208555cf31cee93afebc9",
+    "tv_clmp_md5": "cbbfde3d708885efd0fb22ce2fbf3123"
+  },
+  "after": {
+    "out_clms": 6044,
+    "out_clmp": 5497,
+    "tv_clms": 6044,
+    "tv_clmp": 5497,
+    "out_eq_tv_clms": true,
+    "out_eq_tv_clmp": true,
+    "out_matches_pre_tv_md5_clms": true,
+    "out_matches_pre_tv_md5_clmp": true
+  },
+  "archive_clms": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\quikclms_pre_issue135_reconcile_20260802T210607Z.csv",
+  "archive_clmp": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\quikclmp_pre_issue135_reconcile_20260802T210607Z.csv",
+  "moved_artifacts": [
+    {
+      "from": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\claims_cross_table_validation_report.csv",
+      "to": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Reports\\claims_cross_table_validation_report_reconcile_20260802T210607Z.csv"
+    },
+    {
+      "from": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\claims_cross_table_validation_summary.txt",
+      "to": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Reports\\claims_cross_table_validation_summary_reconcile_20260802T210607Z.txt"
+    },
+    {
+      "from": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\claims_emit_enhancement_validation.csv",
+      "to": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Reports\\claims_emit_enhancement_validation_reconcile_20260802T210607Z.csv"
+    },
+    {
+      "from": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\claims_emit_enhancement_validation_summary.txt",
+      "to": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Reports\\claims_emit_enhancement_validation_summary_reconcile_20260802T210607Z.txt"
+    },
+    {
+      "from": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\claims_review_hold_manifest.csv",
+      "to": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Reports\\claims_review_hold_manifest_reconcile_20260802T210607Z.csv"
+    }
+  ],
+  "promotion_ok": true
+}

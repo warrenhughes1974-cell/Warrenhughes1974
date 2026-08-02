@@ -1,0 +1,60 @@
+{
+  "issue": 135,
+  "task": "claims_dbf_mpolicy_c11_schema_correction",
+  "status": "PASS",
+  "issue_closed": false,
+  "generated_at": "20260802T225200Z",
+  "root_cause": "QUIKCLMS/QUIKCLMP DBF layout used MPOLICY C(10), truncating 9011156655C to 9011156655 and breaking QLAdmin join to QUIKMSTR C(11).",
+  "fix": "Claims DBF layout source only: MPOLICY CHARACTER length 10 -> 11 for QUIKCLMS and QUIKCLMP. All other fields/order/types preserved.",
+  "changed_files": [
+    "claims_analysis/config/prototype_dbf_generation_rules.json",
+    "docs/claims_conversion_reference/quikclms_quikclmp",
+    "Issue_Log_Items/Issue_135/tools/_validate_claims_uat_dbf_rerun.py",
+    "Issue_Log_Items/Issue_135/tools/_copy_claims_dbf_to_q.py",
+    "Issue_Log_Items/Issue_135/tools/_grok_second_pass_deploy_package.py"
+  ],
+  "archives": {
+    "staging_pre_overwrite": "QLA_Migration/Archive/claims_uat_dbf_pre_mpolicy_c11_20260802T175033Z",
+    "q_pre_overwrite": "QLA_Migration/Archive/q_claims_pre_mpolicy_c11_20260802T175033Z"
+  },
+  "source_csv": {
+    "quikclms_rows": 6044,
+    "quikclmp_rows": 5495,
+    "mintamt_nonzero": 0
+  },
+  "staging_dbf": {
+    "dir": "QLA_Migration/Staging/claims_uat_dbf",
+    "quikclms_rows": 6044,
+    "quikclmp_rows": 5495,
+    "mpolicy_spec": "C(11)",
+    "policy_9011156655C": {
+      "MPOLICY": "9011156655C",
+      "MPAID": 5145.67,
+      "MFACE": 5000.0,
+      "NETDB": 5000.0,
+      "MINTAMT": 0.0,
+      "payee_count": 4,
+      "payee_sum": 5145.67
+    }
+  },
+  "q_destination": {
+    "path": "Q:\\CSO\\CSO_Test_6_30_2026",
+    "copied": ["QUIKCLMS.DBF", "QUIKCLMS.DBT", "QUIKCLMP.DBF"],
+    "no_quikclmp_dbt": true,
+    "mpolicy_c11": true,
+    "rows_clms": 6044,
+    "rows_clmp": 5495,
+    "policy_key_preserved": "9011156655C",
+    "verify_pass": true
+  },
+  "validators": {
+    "claims_uat_dbf_rerun": "PASS",
+    "deploy_grok_second_pass": "PASS",
+    "validate_issue135_mintamt": "PASS"
+  },
+  "index_action_required": "Close/reopen QLAdmin on Q:\\CSO\\CSO_Test_6_30_2026 and rebuild claims indexes (QUIKCLMS.ntx, QUIKCLMP.ntx; also QUIKCLMB.ntx / QUIKCLMBI.ntx if claims browser uses them). Record length changed with MPOLICY C(11); existing NTX files from prior C(10) deploy are stale.",
+  "user_action": "After reindex, reopen/refresh policy 9011156655C in QLAdmin; claim/payee detail should join and display.",
+  "production_code_changed": false,
+  "app_version_bump": false,
+  "commit": false
+}

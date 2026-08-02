@@ -1,0 +1,17 @@
+{
+  "reason": "MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE_COHORT",
+  "pass": true,
+  "fails": [],
+  "notes": [
+    "cohort_classified=140 safe=137 holds=3",
+    "issue134_marker_hits=308"
+  ],
+  "safe_n": 137,
+  "hold_n": 3,
+  "policies_backfilled": 137,
+  "rows_added": 194,
+  "golden_payees": 4,
+  "issue135_status": "NOT closed; prior 9 HOLDs remain; 3 residual zero-payee holds",
+  "confidence": "HIGH",
+  "higher_model_needed": false
+}

@@ -1,10 +1,31 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.47
-# Date:        2026-08-01
+# Version:     v58.60
+# Date:        2026-08-02
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v58.47 — Issue #134: PNOTE FILE_TYPE=B → quikclms.MEMOTEXT (Claims Tab memo);
+# Change Note: v58.60 — Issue #135: evidence-gated MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE
+#              cohort quikclmp backfill (SAFE_BACKFILL via 2032->1058 + PE/B1; holds residual).
+#              v58.59 — Issue #135: allowlisted MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE
+#              quikclmp backfill for 9011156655C only (4 PE payees; header money unchanged).
+#              v58.57 — Issue #135/#134: run PNOTE-B claim memo overlay AFTER #135 CSO
+#              expansion so 142 DERIVED_HIGH headers receive MEMOTEXT; preserve 308 marker.
+#              v58.56 — Issue #135: Option-3 consume + 459 CSO expansion (142 derived,
+#              308 header-only no-PACTG, 9 hold); MINTAMT=0 retained; #134 marker-safe.
+#              v58.55 — GP variation flags derive from real emitted GP key segmentation;
+#              CV/TV collapse and default-only cleanup cannot clear GP variation.
+#              v58.54 — Issue #135 Phase A: always emit quikclms.MINTAMT=0.00 (client lock;
+#              interest not needed). Post-emit force after #134; MPAID/MAMOUNT untouched.
+#              v58.52 — Issue #59: do not let Issue #49 later-active-phase override replace
+#              Death Claim Pending (50) on scoped S/DP policy 9010521213C / 010521213C.
+#              Other #49 overrides unchanged; #59 Active+LP interceptor unchanged.
+#              v58.50 — Issue #70: QuikPlan LOANINTX from PCOVR.LOAN_ADV_ARREARS (0/N→A, 1→R);
+#              retain SKIP_TRANSLATION + invalid→A safety net; QuikLoan lookup unchanged.
+#              v58.49 — Issue A11 + A3: default-only PVO/key handling, independent CV/TV UW collapse,
+#              fleet DEFICIENCY/PAR guards, and focused regression checks.
+#              v58.48 — Issue #120: emit quiklist.csv for active six LST groups (PPOLC+RNA GP);
+#              MCOMP=C, governance defaults, deterministic postal address preference, 07132 repair.
+#              v58.47 — Issue #134: PNOTE FILE_TYPE=B → quikclms.MEMOTEXT (Claims Tab memo);
 #              exclude B from quikmemo Policy Memo. Post-emit overlay after #79/#85/#84.
 #              v58.46 — Item 18 claims overlay: apply combined amounts only when loan offset
 #              is present. Interest-only (0630) rows must not inflate NETDB/MPAID/MFACE above
@@ -16,6 +37,8 @@
 #              PAID_UP_TYPE LE/ET no longer wins on Annual Renewable Term; use CONTRACT_CODE+REASON.
 #              v58.43 — Issue #119: PUA coverages force quikridr.MPAR=0 (non-participating).
 #              Robert: when QLAdmin adds a PA rider it sets PAR/MPAR to 0; do not inherit base.
+#              v58.61 — Issue #135: surrender CLAIMSTAT=99 zero-payee backfill
+#              (PE 90/92/94 sum-match, else OWNR/INSD/PAYR); PRELSA dated extract resolve.
 #              v58.42 — Honor Source\\<package>\\ extract folders (e.g. 12312025_Data) when
 #              Source Data File points inside a package subdir; do not collapse to Source root.
 #              v58.41 — Auto-launch DBF_Append_Tool\\run_app.bat after any successful conversion
@@ -263,6 +286,7 @@ from qla_core.schema_constants import (
     QUIKREIN_SCHEMA,
     QUIKRMST_SCHEMA,
     QUIKBENH_SCHEMA,
+    QUIKLIST_SCHEMA,
 )
 from qla_core import run_logging as RL
 from qla_core.quikconvert_tagline import (
@@ -278,6 +302,7 @@ from qla_core.quikplan_converter import (
     apply_single_premium_payment_settings,
     apply_ploan_loanint_enrichment,
     apply_iswl_product_tags,
+    _restore_authoritative_loanintx_from_source,
 )
 from qla_core.issue_a_plan_setup import apply_issue_a_plan_setup
 from qla_core.cso_mortality_crosswalk import (
@@ -316,6 +341,7 @@ from qla_core import rate_emit as RE
 from qla_core.quikmemo_converter import convert_quikmemo_from_pnote_pense
 from qla_core.quikmemo_dbf_generator import write_quikmemo_dbf
 from qla_core.quikdate_converter import emit_quikdate_csv
+from qla_core.quiklist_converter import emit_quiklist_csv
 from qla_core.modal_premium_factors import (
     apply_modal_factors_to_quikplan as apply_issue21j_modal_factors,
     apply_modal_policy_fees_to_quikridr,
@@ -390,6 +416,11 @@ from qla_core.issue84_track_a_header_backfill import (
 from qla_core.issue134_claim_memo_overlay import (
     apply_issue134_claim_memos,
     write_issue134_orphan_audit,
+)
+from qla_core.issue135_mintamt_zero import apply_issue135_mintamt_zero
+from qla_core.issue135_cso_claims_expansion import (
+    apply_issue135_cso_claims_expansion,
+    write_issue135_expansion_audits,
 )
 # --- Phase 18A–20: Claims orchestration, UAT handoff/emit/batch/DBF, MPOLICY validation ---
 VALID_RUN_MODES = ("UAT", "PRODUCTION", "DISABLED")
@@ -539,7 +570,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.50"
+APP_VERSION = "v58.61"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -600,6 +631,7 @@ class QLAdminEnterpriseIntegrationSuite:
             "quikmemo": ["MEMOKEY", "MEMOTEXT"],
             "quikclms": QUIKCLMS_SCHEMA,
             "quikclmp": QUIKCLMP_SCHEMA,
+            "quiklist": QUIKLIST_SCHEMA,
         }
 
         self.RUN_MODE = self._resolve_run_mode()
@@ -1460,8 +1492,15 @@ class QLAdminEnterpriseIntegrationSuite:
         env_path = os.environ.get("QLA_CLAIMS_PRELSA_PATH", "").strip()
         if env_path and os.path.isfile(env_path):
             return os.path.normpath(env_path)
-        candidates = [
-            os.path.join(self._migration_source_dir(), "RelationshipNameAddress_Extract.csv"),
+        src_dir = self._migration_source_dir()
+        dated = []
+        if os.path.isdir(src_dir):
+            for name in os.listdir(src_dir):
+                if name.lower().startswith("relationshipnameaddress_extract") and name.lower().endswith(".csv"):
+                    dated.append(os.path.join(src_dir, name))
+        dated.sort(reverse=True)
+        candidates = dated + [
+            os.path.join(src_dir, "RelationshipNameAddress_Extract.csv"),
             os.path.join(self._app_base_dir(), "docs", "claims_conversion_reference", "RelationshipNameAddress_Extract.csv"),
         ]
         for path in candidates:
@@ -1856,6 +1895,136 @@ class QLAdminEnterpriseIntegrationSuite:
         if overlay_result.get("audit_path"):
             self.log(f"  Orphan audit: {overlay_result['audit_path']}")
 
+    def _apply_issue135_cso_claims_expansion(self, output_dir):
+        """Issue #135: Option-3 consume + 459 CSO expansion (pre-#134 PNOTE-B, pre-MINTAMT zero)."""
+        clms_path = os.path.normpath(os.path.join(output_dir, "quikclms.csv"))
+        clmp_path = os.path.normpath(os.path.join(output_dir, "quikclmp.csv"))
+        result = {
+            "applied": False,
+            "reason": "",
+            "option3_headers_updated": 0,
+            "derived_headers_emitted": 0,
+            "header_only_308_emitted": 0,
+            "holds_9": 0,
+        }
+        if not os.path.isfile(clms_path) or not os.path.isfile(clmp_path):
+            result["reason"] = "missing_quikclms_or_quikclmp"
+            return result
+        try:
+            clms_df = pd.read_csv(clms_path, dtype=str).fillna("")
+            clmp_df = pd.read_csv(clmp_path, dtype=str).fillna("")
+            clms_after, clmp_after, stats = apply_issue135_cso_claims_expansion(
+                clms_df,
+                clmp_df,
+                pactg_path=self._resolve_claims_pactg_path(),
+                prelsa_path=self._resolve_claims_prelsa_path(),
+            )
+            evidence_dir = os.path.join(
+                self._repo_root(),
+                "Issue_Log_Items",
+                "Issue_135",
+                "evidence",
+            )
+            reports_dir = os.path.join(self._migration_root(), "Reports")
+            write_issue135_expansion_audits(stats, evidence_dir, reports_dir)
+            tmp_clms = clms_path + ".tmp"
+            tmp_clmp = clmp_path + ".tmp"
+            clms_after.to_csv(tmp_clms, index=False, encoding="utf-8")
+            clmp_after.to_csv(tmp_clmp, index=False, encoding="utf-8")
+            os.replace(tmp_clms, clms_path)
+            os.replace(tmp_clmp, clmp_path)
+            result.update(
+                {
+                    "applied": bool(stats.get("applied")),
+                    "option3_headers_updated": int(stats.get("option3_headers_updated", 0) or 0),
+                    "derived_headers_emitted": int(stats.get("derived_headers_emitted", 0) or 0),
+                    "derived_payees_emitted": int(stats.get("derived_payees_emitted", 0) or 0),
+                    "derived_payee_holds": int(stats.get("derived_payee_holds", 0) or 0),
+                    "header_only_308_emitted": int(stats.get("header_only_308_emitted", 0) or 0),
+                    "holds_9": int(stats.get("holds_9", 0) or 0),
+                    "zero_payee_backfill_policies": int(
+                        stats.get("zero_payee_backfill_policies", 0) or 0
+                    ),
+                    "zero_payee_backfill_rows": int(stats.get("zero_payee_backfill_rows", 0) or 0),
+                    "clms_rows_after": int(stats.get("clms_rows_after", 0) or 0),
+                    "clmp_rows_after": int(stats.get("clmp_rows_after", 0) or 0),
+                    "reason": "",
+                }
+            )
+            return result
+        except Exception as exc:
+            result["reason"] = f"error:{exc}"
+            return result
+
+    def _log_issue135_cso_expansion_summary(self, overlay_result):
+        if not overlay_result:
+            return
+        self.log("ISSUE #135 CSO CLAIMS EXPANSION (Option-3 + 459):")
+        if not overlay_result.get("applied"):
+            self.log(f"  Skipped: {overlay_result.get('reason', 'unknown')}")
+            return
+        self.log(
+            f"  Option3 headers={overlay_result.get('option3_headers_updated', 0)} "
+            f"derived_hdr={overlay_result.get('derived_headers_emitted', 0)} "
+            f"derived_payees={overlay_result.get('derived_payees_emitted', 0)} "
+            f"header_only_308={overlay_result.get('header_only_308_emitted', 0)} "
+            f"holds_9={overlay_result.get('holds_9', 0)}"
+        )
+        if overlay_result.get("zero_payee_backfill_rows"):
+            self.log(
+                f"  MATCH_CSO zero-payee backfill rows="
+                f"{overlay_result.get('zero_payee_backfill_rows')} "
+                f"policies={overlay_result.get('zero_payee_backfill_policies')}"
+            )
+
+    def _apply_issue135_mintamt_zero(self, output_dir):
+        """Issue #135 Phase A: force quikclms.MINTAMT=0.00 after other claim post-emit steps."""
+        clms_path = os.path.normpath(os.path.join(output_dir, "quikclms.csv"))
+        result = {
+            "applied": False,
+            "rows_updated": 0,
+            "nonzero_before": 0,
+            "reason": "",
+        }
+        if not os.path.isfile(clms_path):
+            result["reason"] = "missing_quikclms"
+            return result
+        try:
+            clms_df = pd.read_csv(clms_path, dtype=str).fillna("")
+            clms_after, stats = apply_issue135_mintamt_zero(clms_df)
+            updated = int(stats.get("rows_updated", 0) or 0)
+            result["nonzero_before"] = int(stats.get("nonzero_before", 0) or 0)
+            if updated <= 0:
+                result["reason"] = stats.get("reason") or "already_zero"
+                return result
+            tmp_path = clms_path + ".tmp"
+            clms_after.to_csv(tmp_path, index=False, encoding="utf-8")
+            os.replace(tmp_path, clms_path)
+            result.update(
+                {
+                    "applied": True,
+                    "rows_updated": updated,
+                    "reason": "",
+                }
+            )
+            return result
+        except Exception as exc:
+            result["reason"] = f"error:{exc}"
+            return result
+
+    def _log_issue135_mintamt_summary(self, overlay_result):
+        if not overlay_result:
+            return
+        self.log("ISSUE #135 MINTAMT FORCE ZERO:")
+        if not overlay_result.get("applied"):
+            self.log(f"  Skipped: {overlay_result.get('reason', 'unknown')}")
+            self.log(f"  Nonzero before: {overlay_result.get('nonzero_before', 0)}")
+            return
+        self.log(
+            f"  Rows updated={overlay_result.get('rows_updated', 0)} "
+            f"nonzero_before={overlay_result.get('nonzero_before', 0)}"
+        )
+
     def _apply_issue85_claim_header_structure(self, output_dir):
         """Issue #85: merge/re-phase quikclms headers; re-attach quikclmp phases (D1–D4)."""
         clms_path = os.path.normpath(os.path.join(output_dir, "quikclms.csv"))
@@ -2100,9 +2269,9 @@ class QLAdminEnterpriseIntegrationSuite:
         return self.CLAIMS_ORCHESTRATION["run_mode"] == "UAT"
 
     def _claims_staging_dir(self):
-        cfg = self.CLAIMS_ORCHESTRATION
-        base_out = self._resolve_output_base_dir()
-        staging_dir = os.path.normpath(os.path.join(base_out, cfg["staging_subdir"]))
+        staging_dir = os.path.normpath(os.path.join(
+            self._migration_root(), "Staging", "claims_uat_staging",
+        ))
         os.makedirs(staging_dir, exist_ok=True)
         return staging_dir
 
@@ -2459,7 +2628,9 @@ class QLAdminEnterpriseIntegrationSuite:
         }
 
     def _claims_uat_dbf_dir(self):
-        return os.path.normpath(os.path.join(self._resolve_output_base_dir(), CLAIMS_UAT_DBF_SUBDIR))
+        return os.path.normpath(os.path.join(
+            self._migration_root(), "Staging", CLAIMS_UAT_DBF_SUBDIR,
+        ))
 
     def _uat_emit_csv_paths(self, output_dir):
         return {
@@ -3770,7 +3941,9 @@ class QLAdminEnterpriseIntegrationSuite:
             display["rate_csv_dir"] = last.get("csv_dir", "") or self._rate_loader_csv_dir()
             display["rate_dbf_dir"] = last.get("dbf_dir", "")
         else:
-            manifest = os.path.join(self._rate_loader_csv_dir(), "rate_csv_manifest.csv")
+            manifest = os.path.join(
+                self._migration_root(), "Reports", "rates", "rate_csv_manifest.csv",
+            )
             if os.path.isfile(manifest):
                 display["rate_status"] = "PRIOR RUN (see manifest)"
                 display["rate_csv_dir"] = self._rate_loader_csv_dir()
@@ -5216,11 +5389,24 @@ class QLAdminEnterpriseIntegrationSuite:
                 )
                 emit_result["issue84_track_a"] = track_a_result
                 self._log_issue84_track_a_summary(track_a_result)
+                # Order locked v58.57: #135 expansion first (creates 142 derived headers),
+                # then #134 PNOTE-B MEMOTEXT overlay (covers new + existing death rows;
+                # preserves CSO_CONTROLLED_NO_PACTG_HISTORY on 308), then MINTAMT=0.
+                issue135_expand = self._apply_issue135_cso_claims_expansion(
+                    emit_result.get("output_dir") or self._resolve_output_base_dir()
+                )
+                emit_result["issue135_cso_expansion"] = issue135_expand
+                self._log_issue135_cso_expansion_summary(issue135_expand)
                 issue134_result = self._apply_issue134_claim_memos(
                     emit_result.get("output_dir") or self._resolve_output_base_dir()
                 )
                 emit_result["issue134_claim_memos"] = issue134_result
                 self._log_issue134_claim_memo_summary(issue134_result)
+                issue135_result = self._apply_issue135_mintamt_zero(
+                    emit_result.get("output_dir") or self._resolve_output_base_dir()
+                )
+                emit_result["issue135_mintamt"] = issue135_result
+                self._log_issue135_mintamt_summary(issue135_result)
         else:
             self.log("  UAT emit skipped (RUN_MODE != UAT or QLA_CLAIMS_UAT_EMIT=0).")
 
@@ -5615,6 +5801,12 @@ class QLAdminEnterpriseIntegrationSuite:
 
     def _reports_dir(self):
         return os.path.normpath(os.path.join(self._migration_root(), "Reports"))
+
+    def _logs_dir(self):
+        """Batch / migration text logs (not QLAdmin table CSVs)."""
+        path = os.path.normpath(os.path.join(self._migration_root(), "Logs"))
+        os.makedirs(path, exist_ok=True)
+        return path
 
     def _issue45_usable_bank_account(self, acct_raw):
         """Issue #45: PPPAC fallback account usability (>=4 digits, not masked/zero)."""
@@ -6787,7 +6979,7 @@ class QLAdminEnterpriseIntegrationSuite:
                     
                     self.log(f"Success: {t_id}.csv - {len(qdf)} records.")
                     
-                    audit_path = os.path.normpath(os.path.join(out_dir, "Migration_Audit_Log.txt"))
+                    audit_path = os.path.normpath(os.path.join(self._logs_dir(), "Migration_Audit_Log.txt"))
                     is_new_log = not os.path.exists(audit_path)
                     source_count = len(source)
                     output_count = len(qdf)
@@ -6864,7 +7056,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         self.log(f"P3F MPLAN AUTHORITY: validation={'PASSED' if passed else 'FAILED'} stats={val_stats}")
                         self.log(f"P3F governance outputs: {p3f_dir}")
 
-                    audit_path = os.path.normpath(os.path.join(out_dir, "Migration_Audit_Log.txt"))
+                    audit_path = os.path.normpath(os.path.join(self._logs_dir(), "Migration_Audit_Log.txt"))
                     is_new_log = not os.path.exists(audit_path)
                     audit_msg = (
                         f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TABLE: {t_id.upper():<10} | "
@@ -7040,7 +7232,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         rein_df.to_csv(rein_out, index=False)
                         rmst_df.to_csv(rmst_out, index=False)
                         self.log(f"GATED OUTPUT: {rein_out} ({len(rein_df)} rows), {rmst_out} ({len(rmst_df)} rows)")
-                    audit_path = os.path.normpath(os.path.join(out_dir, "Migration_Audit_Log.txt"))
+                    audit_path = os.path.normpath(os.path.join(self._logs_dir(), "Migration_Audit_Log.txt"))
                     is_new_log = not os.path.exists(audit_path)
                     audit_msg = (
                         f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TABLE: REINSURANCE | "
@@ -7117,7 +7309,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         )
                     except Exception as exc:
                         self.log(f"  WARNING: QUIKMEMO DBF generation failed: {exc}")
-                    audit_path = os.path.normpath(os.path.join(out_dir, "Migration_Audit_Log.txt"))
+                    audit_path = os.path.normpath(os.path.join(self._logs_dir(), "Migration_Audit_Log.txt"))
                     is_new_log = not os.path.exists(audit_path)
                     audit_msg = (
                         f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TABLE: QUIKMEMO   | "
@@ -7886,7 +8078,7 @@ class QLAdminEnterpriseIntegrationSuite:
                     cw_authority = load_crosswalk_authority(cw_path) if cw_path and os.path.exists(cw_path) else None
                     var_cfg = VariationClassificationConfig.from_env_and_defaults(self._app_base_dir())
                     audit_rows = classify_all_plans(var_cfg)
-                    audit_path = os.path.normpath(os.path.join(out_dir, "variation_code_audit.csv"))
+                    audit_path = os.path.normpath(os.path.join(self._reports_dir(), "variation_code_audit.csv"))
                     write_variation_audit_csv(audit_rows, audit_path)
                     self.log(f"Variation audit: {audit_path} ({len(audit_rows)} plans, "
                              f"auto_apply={'Y' if var_cfg.auto_apply_variation_codes else 'N'})")
@@ -7896,9 +8088,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         variation_recs, var_cfg.auto_apply_variation_codes,
                     )
                     qdf = pd.DataFrame(output, columns=schema)
-                    qdf = apply_rate_variation_flag_enrichment(qdf, self._app_base_dir())
-                    qdf = apply_single_premium_payment_settings(qdf, self._app_base_dir(), log=self.log)
-                    # Issue #70: audit blank/unknown LOAN_ADV_ARREARS ? A fallback
+                    # Issue #70: audit blank/unknown LOAN_ADV_ARREARS → A fallback
                     _loanintx_qa = getattr(convert_quikplan_to_output, "last_loanintx_qa", None) or {}
                     _fb = int(_loanintx_qa.get("fallback_count", 0) or 0)
                     if _fb:
@@ -7910,6 +8100,8 @@ class QLAdminEnterpriseIntegrationSuite:
                         _a = int((qdf["LOANINTX"].astype(str).str.strip().str.upper() == "A").sum())
                         _r = int((qdf["LOANINTX"].astype(str).str.strip().str.upper() == "R").sum())
                         self.log(f"Issue #70 LOANINTX emit: A={_a} R={_r}")
+                    qdf = apply_rate_variation_flag_enrichment(qdf, self._app_base_dir())
+                    qdf = apply_single_premium_payment_settings(qdf, self._app_base_dir(), log=self.log)
                     current_stage = "Applying rulebooks and crosswalks"
                     self.update_run_progress(4, detail="plan/rate enrichments + CSO assumptions")
                     self.log(f"Rate variation flags applied (R7B): {int((qdf['PLANVALOPT'] == 'Y').sum())} plans PLANVALOPT=Y")
@@ -7925,7 +8117,7 @@ class QLAdminEnterpriseIntegrationSuite:
                             f"NFOINT/INTMETHCV cells updated={cso_qa['cells_updated']} "
                             f"(overwrites={cso_qa['cells_overwritten']})"
                         )
-                        cso_qa_path = os.path.normpath(os.path.join(out_dir, "cso_mortality_crosswalk_qa.csv"))
+                        cso_qa_path = os.path.normpath(os.path.join(self._reports_dir(), "cso_mortality_crosswalk_qa.csv"))
                         with open(cso_qa_path, "w", newline="", encoding="utf-8") as f:
                             w = csv.writer(f)
                             w.writerow(["METRIC", "VALUE"])
@@ -7983,6 +8175,9 @@ class QLAdminEnterpriseIntegrationSuite:
                     )
                     qdf = apply_issue_a_plan_setup(qdf, repo_root=self._app_base_dir(), log=self.log)
                     qdf = apply_iswl_product_tags(qdf, log=self.log)
+                    # Issue #70: final batch path must restore source-confirmed
+                    # arrears after every later normalization/enrichment.
+                    qdf = _restore_authoritative_loanintx_from_source(qdf, source)
 
                     output = qdf[schema].values.tolist()
                     bank_draft_exceptions = None
@@ -8122,13 +8317,13 @@ class QLAdminEnterpriseIntegrationSuite:
                                     _i59_lp = self.normalize(src_row.get('POLICY_NUMBER', ''))
                                     _i59_ql = self.normalize(row_data.get('MPOLICY', ''))
                                     _i59_keys = {
-                                        '901122D991', '01122D991C',
-                                        '9014FG8217', '014FG8217C',
-                                        '9016FG8217', '016FG8217C',
-                                        '901ML8171', '01ML8171C', '01ML8171',
-                                        '901ML8250', '01ML8250C',
-                                        '901ML8522', '01ML8522C',
-                                        '9010521213', '010521213C',
+                                        '901122D991', '901122D991C', '01122D991C',
+                                        '9014FG8217', '9014FG8217C', '014FG8217C',
+                                        '9016FG8217', '9016FG8217C', '016FG8217C',
+                                        '901ML8171', '901ML8171C', '01ML8171C', '01ML8171',
+                                        '901ML8250', '901ML8250C', '01ML8250C',
+                                        '901ML8522', '901ML8522C', '01ML8522C',
+                                        '9010521213', '9010521213C', '010521213C',
                                     }
                                     _i59 = (_i59_lp in _i59_keys) or (_i59_ql in _i59_keys)
                                     if c_code == 'T':
@@ -8389,7 +8584,19 @@ class QLAdminEnterpriseIntegrationSuite:
                                             _new_status, _overridden = select_mstatus_from_active_phase(
                                                 val, _phases, self._issue49_bare_status_map
                                             )
-                                            if _overridden:
+                                            # Issue #59: keep Death Claim Pending (50) for the one
+                                            # client S/DP policy; #49 later-active-phase must not
+                                            # replace it with a later PUA/active phase (22).
+                                            _i59_dp_keys = {
+                                                "9010521213",
+                                                "9010521213C",
+                                                "010521213C",
+                                            }
+                                            _i59_dp = (
+                                                _lp_pol in _i59_dp_keys
+                                                or _prov_pol in _i59_dp_keys
+                                            )
+                                            if _overridden and not _i59_dp:
                                                 val = _new_status
                                                 self._issue49_mstatus_override_count = (
                                                     getattr(self, "_issue49_mstatus_override_count", 0) + 1
@@ -9002,7 +9209,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         f"(quikplan PLAN universe={len(quikplan_plan_set)})"
                     )
                 
-                audit_path = os.path.normpath(os.path.join(out_dir, "Migration_Audit_Log.txt"))
+                audit_path = os.path.normpath(os.path.join(self._logs_dir(), "Migration_Audit_Log.txt"))
                 is_new_log = not os.path.exists(audit_path)
                 
                 source_count = len(source)
@@ -9068,6 +9275,20 @@ class QLAdminEnterpriseIntegrationSuite:
                     )
                 except Exception as e:
                     self.log(f"Warning: QuikDate governance emit failed - {e}")
+            # ---------------------------------------------------------------------------------------
+
+            # --- Issue #120: QuikList group bill master (active six LST groups) ---
+            if is_batch:
+                try:
+                    out_dir = self.path_vars["Out"][0].get()
+                    src_dir = self._migration_source_dir()
+                    ql_info = emit_quiklist_csv(src_dir, out_dir)
+                    self.log(
+                        f"Success: quiklist.csv - {ql_info.get('row_count', 0)} records "
+                        f"(groups={', '.join(ql_info.get('groups', []))})."
+                    )
+                except Exception as e:
+                    self.log(f"Warning: QuikList group bill emit failed - {e}")
             # ---------------------------------------------------------------------------------------
 
             # --- Policy Data Governance: internal transformation audit (Reports only) ---

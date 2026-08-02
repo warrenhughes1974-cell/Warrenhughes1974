@@ -1,0 +1,25 @@
+{
+  "overall": "PASS",
+  "engine": "v58.57",
+  "app_version_root": "v58.57",
+  "app_version_mig": "v58.57",
+  "fails": [],
+  "clms": 6044,
+  "clmp": 5497,
+  "counts": {
+    "derived_in_output": 142,
+    "no_pactg_marker": 308,
+    "marker_with_payee": 0,
+    "option3_pols": 43,
+    "holds_analysis": 9,
+    "holds_in_output": 0,
+    "death_with_b": 1351,
+    "missing_pnote_b": 0,
+    "mintamt_nonzero": 0
+  },
+  "moved_artifacts_expected": {
+    "Migration_Audit_Log.txt": "QLA_Migration/Logs/",
+    "cso_mortality_crosswalk_qa.csv": "QLA_Migration/Reports/",
+    "variation_code_audit.csv": "QLA_Migration/Reports/"
+  }
+}

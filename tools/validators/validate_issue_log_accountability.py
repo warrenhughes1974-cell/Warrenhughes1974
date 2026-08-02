@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
 PY = sys.executable
-SCRIPT_VERSION = "1.3"
+SCRIPT_VERSION = "1.5"
 
 # Match UAT batch / run_converter.bat so MLASTANN validators (#60/#76) use the
 # extract as-of date rather than today's system date.
@@ -122,6 +122,7 @@ def spot_checks() -> list[dict]:
     pltv = load_csv("rates/QuikPlTv.csv") if (OUT / "rates" / "QuikPlTv.csv").exists() else []
     tvs = load_csv("rates/QuikTvs.csv") if (OUT / "rates" / "QuikTvs.csv").exists() else []
     plan = load_csv("quikplan.csv")
+    quiklist = load_csv("quiklist.csv")
 
     mstat = _PolicyIndex((r["MPOLICY"], r) for r in mstr)
     _ridr_groups = defaultdict(list)
@@ -131,6 +132,34 @@ def spot_checks() -> list[dict]:
 
     def add(issue, status, detail):
         results.append({"id": issue, "status": status, "detail": detail})
+
+    # #120 — active-six QuikList group master seed.
+    expected_quiklist_groups = {
+        "03494L", "05624L", "07132", "07777L", "T8342L", "Z2583L"
+    }
+    observed_quiklist_groups = {
+        _norm(row.get("MGROUP")) for row in quiklist if _norm(row.get("MGROUP"))
+    }
+    quiklist_errors = []
+    if len(quiklist) != 6:
+        quiklist_errors.append(f"rows={len(quiklist)} expected 6")
+    if observed_quiklist_groups != expected_quiklist_groups:
+        quiklist_errors.append(
+            f"groups={sorted(observed_quiklist_groups)} expected={sorted(expected_quiklist_groups)}"
+        )
+    for row in quiklist:
+        group = _norm(row.get("MGROUP"))
+        if _norm(row.get("MCOMP")) != "C":
+            quiklist_errors.append(f"{group}: MCOMP != C")
+        if not _norm(row.get("MBILLNAME")):
+            quiklist_errors.append(f"{group}: blank MBILLNAME")
+    add(
+        "#120",
+        "IN_DATA" if not quiklist_errors else "GAP",
+        "quiklist rows=6; six active MGROUPs; MCOMP=C; names populated"
+        if not quiklist_errors
+        else "; ".join(quiklist_errors),
+    )
 
     # #13
     if _norm(mstat.get("010516211C", {}).get("MSTATUS")) == "54" and _norm(
@@ -435,15 +464,19 @@ def spot_checks() -> list[dict]:
         add("#58", "GAP", "010367131C modal fees missing")
 
     # #59
-    for pol in ("01122D991C", "014FG8217C", "016FG8217C", "01ML8171C", "01ML8250C", "01ML8522C"):
-        # padded keys
-        got = None
-        for k, row in mstat.items():
-            if k.replace(" ", "") == pol.replace(" ", ""):
-                got = _norm(row.get("MSTATUS"))
-                break
+    for pol in (
+        "901122D991C",
+        "9014FG8217C",
+        "9016FG8217C",
+        "901ML8171C",
+        "901ML8250C",
+        "901ML8522C",
+    ):
+        # _PolicyIndex canonicalizes both the current 901…C and legacy keys.
+        got = _norm((mstat.get(pol) or {}).get("MSTATUS"))
         add(f"#59:{pol}", "IN_DATA" if got == "22" else "GAP", f"MSTATUS={got}")
-    dp = _norm(mstat.get("010521213C", {}).get("MSTATUS"))
+    dp_row = mstat.get("9010521213C") or mstat.get("010521213C", {})
+    dp = _norm(dp_row.get("MSTATUS"))
     add("#59:010521213C", "IN_DATA" if dp == "50" else "GAP", f"MSTATUS={dp} (Death Claim Pending)")
 
     # #60
@@ -548,6 +581,45 @@ def spot_checks() -> list[dict]:
         f"ART policies={len(art_pols)}; MSTATUS=44={art_eti}; MPHSTAT=44={art_mph_eti}",
     )
 
+    # #135 — CSO claims expansion present in Output (narrow spot-check; full gate via validator job).
+    # Truthful counts from current Output: 142 derived headers with payees, 308 marker header-only,
+    # MINTAMT all zero. Option-3/HOLD detail is covered by the production validator job.
+    _135_marker = "CSO_CONTROLLED_NO_PACTG_HISTORY"
+    _135_clms = clms
+    _135_clmp = clmp
+    _135_mint_nz = 0
+    for r in _135_clms:
+        try:
+            if abs(float(str(r.get("MINTAMT", "0") or "0").replace(",", ""))) > 0.01:
+                _135_mint_nz += 1
+        except (TypeError, ValueError):
+            _135_mint_nz += 1
+    _135_marker_n = sum(
+        1 for r in _135_clms if _135_marker in _norm(r.get("MEMOTEXT", ""))
+    )
+    _135_clmp_pols = {_canon(r.get("MPOLICY")) for r in _135_clmp}
+    _135_marker_with_payee = sum(
+        1
+        for r in _135_clms
+        if _135_marker in _norm(r.get("MEMOTEXT", ""))
+        and _canon(r.get("MPOLICY")) in _135_clmp_pols
+    )
+    # DERIVED_HIGH footprint: CLAIMSTAT=2 death headers beyond pre-#135 baseline are evidenced
+    # by production validator; spot-check locks marker/MINTAMT/no-payee-on-308 invariants.
+    _135_ok = (
+        len(_135_clms) >= 6044
+        and len(_135_clmp) >= 5935
+        and _135_mint_nz == 0
+        and _135_marker_n == 308
+        and _135_marker_with_payee == 0
+    )
+    add(
+        "#135",
+        "IN_DATA" if _135_ok else "GAP",
+        f"clms={len(_135_clms)} clmp={len(_135_clmp)}; MINTAMT_nz={_135_mint_nz}; "
+        f"marker_308={_135_marker_n}; marker_with_payee={_135_marker_with_payee}",
+    )
+
     # engine version
     add("Engine", "IN_DATA", "expect v57.85 (batch completed)")
 
@@ -597,6 +669,7 @@ def main() -> int:
         ("#121", ["tools/validators/validate_issue121_art_no_eti.py"], True),
         ("#124", ["tools/validators/validate_issue124_quikiswl.py"], True),
         ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
+        ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
     ]
 
     val_results = []

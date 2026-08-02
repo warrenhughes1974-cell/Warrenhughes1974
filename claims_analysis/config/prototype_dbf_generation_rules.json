@@ -27,7 +27,7 @@
     "preserve_residuals": true
   },
   "quikclms_layout": [
-    {"field": "MPOLICY", "type": "CHARACTER", "length": 10, "decimals": 0},
+    {"field": "MPOLICY", "type": "CHARACTER", "length": 11, "decimals": 0},
     {"field": "MPHASE", "type": "NUMERIC", "length": 2, "decimals": 0},
     {"field": "CLAIMNUM", "type": "CHARACTER", "length": 20, "decimals": 0},
     {"field": "CLAIMSTAT", "type": "NUMERIC", "length": 2, "decimals": 0},
@@ -61,7 +61,7 @@
     {"field": "MPHPAIDTO", "type": "DATE", "length": 8, "decimals": 0}
   ],
   "quikclmp_layout": [
-    {"field": "MPOLICY", "type": "CHARACTER", "length": 10, "decimals": 0},
+    {"field": "MPOLICY", "type": "CHARACTER", "length": 11, "decimals": 0},
     {"field": "MPHASE", "type": "NUMERIC", "length": 2, "decimals": 0},
     {"field": "MCHECKNO", "type": "NUMERIC", "length": 7, "decimals": 0},
     {"field": "MAMOUNT", "type": "NUMERIC", "length": 12, "decimals": 2},

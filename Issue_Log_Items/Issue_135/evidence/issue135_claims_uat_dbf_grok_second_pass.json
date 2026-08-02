@@ -1,0 +1,166 @@
+{
+  "validator": "grok_second_pass_claims_uat_dbf_rerun",
+  "model": "Cursor Grok 4.5",
+  "pass": true,
+  "fail_count": 0,
+  "fails": [],
+  "checks": [
+    {
+      "check": "ALIGNMENT_MANIFEST_PASS",
+      "status": "PASS",
+      "detail": "Overall alignment: PASS \u2014 CSV and DBF row counts match."
+    },
+    {
+      "check": "CLMS_DBF_EXISTS",
+      "status": "PASS",
+      "detail": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMS_PHASE19_UAT.DBF"
+    },
+    {
+      "check": "CLMS_DBT_EXISTS",
+      "status": "PASS",
+      "detail": "DBT"
+    },
+    {
+      "check": "CLMP_DBF_EXISTS",
+      "status": "PASS",
+      "detail": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMP_PHASE19_UAT.DBF"
+    },
+    {
+      "check": "SHORT_CLMS_EXISTS",
+      "status": "PASS",
+      "detail": "QUIKCLMS.DBF+DBT"
+    },
+    {
+      "check": "SHORT_CLMP_EXISTS",
+      "status": "PASS",
+      "detail": "QUIKCLMP.DBF"
+    },
+    {
+      "check": "CLMS_ROW_COUNT_6044",
+      "status": "PASS",
+      "detail": "6044"
+    },
+    {
+      "check": "CLMP_ROW_COUNT_5495",
+      "status": "PASS",
+      "detail": "5495"
+    },
+    {
+      "check": "SHORT_CLMS_ROW_MATCH",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "SHORT_CLMP_ROW_MATCH",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "HEADER_EXISTS",
+      "status": "PASS",
+      "detail": "{'MPOLICY': '9011156655C', 'MPAID': 5145.67, 'MFACE': 5000.0, 'NETDB': 5000.0, 'MINTAMT': 0.0}"
+    },
+    {
+      "check": "MPAID_5145_67",
+      "status": "PASS",
+      "detail": "5145.67"
+    },
+    {
+      "check": "MFACE_5000",
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    {
+      "check": "NETDB_5000",
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    {
+      "check": "MINTAMT_0",
+      "status": "PASS",
+      "detail": "0.0"
+    },
+    {
+      "check": "MPOLICY_C11_PRESERVED",
+      "status": "PASS",
+      "detail": "CSV=9011156655C DBF=9011156655C (layout C(11) preserves trailing C)"
+    },
+    {
+      "check": "EXACTLY_4_PAYEES",
+      "status": "PASS",
+      "detail": "count=4"
+    },
+    {
+      "check": "PAYEE_SUM_5145_67",
+      "status": "PASS",
+      "detail": "sum=5145.67"
+    },
+    {
+      "check": "MSEQ_1_EXISTS",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "MSEQ_1_NAME",
+      "status": "PASS",
+      "detail": "LINVILLE L BRASWELL"
+    },
+    {
+      "check": "MSEQ_1_AMT",
+      "status": "PASS",
+      "detail": "1286.42"
+    },
+    {
+      "check": "MSEQ_2_EXISTS",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "MSEQ_2_NAME",
+      "status": "PASS",
+      "detail": "CHERI ROSE BRASWELL"
+    },
+    {
+      "check": "MSEQ_2_AMT",
+      "status": "PASS",
+      "detail": "1286.41"
+    },
+    {
+      "check": "MSEQ_3_EXISTS",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "MSEQ_3_NAME",
+      "status": "PASS",
+      "detail": "DANIEL L BRASWELL JR"
+    },
+    {
+      "check": "MSEQ_3_AMT",
+      "status": "PASS",
+      "detail": "1286.42"
+    },
+    {
+      "check": "MSEQ_4_EXISTS",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "MSEQ_4_NAME",
+      "status": "PASS",
+      "detail": "ROBERT C BRASWELL"
+    },
+    {
+      "check": "MSEQ_4_AMT",
+      "status": "PASS",
+      "detail": "1286.42"
+    }
+  ],
+  "policy": "9011156655C",
+  "dbf_policy_key": "9011156655C",
+  "payee_sum": 5145.67,
+  "alignment": "PASS",
+  "clms_rows": 6044,
+  "clmp_rows": 5495,
+  "generated_at": "20260802T225239Z"
+}

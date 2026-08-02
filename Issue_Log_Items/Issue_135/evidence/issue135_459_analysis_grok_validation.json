@@ -1,0 +1,22 @@
+{
+  "label": "Grok validation",
+  "generated_at": "2026-08-02T20:36:28Z",
+  "policies_checked": 459,
+  "population_count_is_459": true,
+  "category_counts": {
+    "DERIVED_HIGH": 142,
+    "NO_PACTG_HISTORY": 308,
+    "HOLD_INCOMPLETE_SOURCE": 9
+  },
+  "fail_n": 0,
+  "warn_n": 0,
+  "pass_n": 459,
+  "overall": "PASS",
+  "issue_rows": [],
+  "notes": [
+    "Validates derived amounts are supported by open 2032\u21921058 eco rows after loop/reversal exclusion.",
+    "Confirms HOLD/NO categories do not invent amounts.",
+    "Confirms cso_match_yn arithmetic vs cso_total_paid.",
+    "A CSO cross-check match is NOT the same as production CSO-validated Output settlement."
+  ]
+}

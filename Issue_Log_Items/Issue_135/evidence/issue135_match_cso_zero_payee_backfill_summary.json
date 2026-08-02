@@ -1,0 +1,45 @@
+{
+  "reason_class": "MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE",
+  "applied": true,
+  "policies_backfilled": 137,
+  "rows_added": 194,
+  "skipped_n": 0,
+  "skipped_sample": [],
+  "allowlist_n": 137,
+  "allowlist_policies_sample": [
+    "9010150740C",
+    "9010331157C",
+    "9010335038C",
+    "9010411727C",
+    "9010438821C",
+    "9010443109C",
+    "9010455617C",
+    "9010471933C",
+    "9010498617C",
+    "9010521160C",
+    "9010586005C",
+    "9010726104C",
+    "9010749041C",
+    "9010756034C",
+    "9010757541C",
+    "9010758074C",
+    "9010764339C",
+    "9010774484C",
+    "9010778914C",
+    "9010779130C"
+  ],
+  "class_counts": {
+    "SAFE_BACKFILL": 137,
+    "HOLD_INCOMPLETE": 3
+  },
+  "discovery": {
+    "cohort_n": 140,
+    "class_counts": {
+      "SAFE_BACKFILL": 137,
+      "HOLD_INCOMPLETE": 3
+    },
+    "safe_n": 137
+  },
+  "golden_policy": "9011156655C",
+  "note": "Evidence-gated MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE cohort backfill. SAFE_BACKFILL only; HOLD cases not fabricated. Issue #135 remains open (prior 9 HOLDs + residual zero-payee holds)."
+}

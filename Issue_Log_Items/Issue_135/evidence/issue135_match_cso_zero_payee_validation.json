@@ -1,0 +1,117 @@
+{
+  "reason": "MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE_COHORT",
+  "pass": true,
+  "fail_count": 0,
+  "safe_n": 137,
+  "already_n": 0,
+  "hold_n": 3,
+  "checks": [
+    {
+      "check": "CLASSIFICATION_PRESENT",
+      "status": "PASS",
+      "detail": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\issue135_match_cso_zero_payee_classification.csv"
+    },
+    {
+      "check": "HOLDS_PRESENT",
+      "status": "PASS",
+      "detail": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\issue135_match_cso_zero_payee_holds.csv"
+    },
+    {
+      "check": "AUDIT_PRESENT",
+      "status": "PASS",
+      "detail": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\issue135_match_cso_zero_payee_backfill_audit.csv"
+    },
+    {
+      "check": "META_PRESENT",
+      "status": "PASS",
+      "detail": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\issue135_match_cso_zero_payee_apply_meta.json"
+    },
+    {
+      "check": "COHORT_CLASSIFIED",
+      "status": "PASS",
+      "detail": "n=140"
+    },
+    {
+      "check": "SAFE_COUNT_GE_137",
+      "status": "PASS",
+      "detail": "safe=137 already=0"
+    },
+    {
+      "check": "HOLD_COUNT_EQ_3",
+      "status": "PASS",
+      "detail": "hold_n=3"
+    },
+    {
+      "check": "SAFE_PAYEE_SUM_EQ_MPAID",
+      "status": "PASS",
+      "detail": "bad=[]"
+    },
+    {
+      "check": "PAYEE_MSEQ_MATCHES_HEADER",
+      "status": "PASS",
+      "detail": "bad=[]"
+    },
+    {
+      "check": "NO_FABRICATED_STUBS",
+      "status": "PASS",
+      "detail": "bad=[]"
+    },
+    {
+      "check": "TARGET_MINTAMT_ZERO",
+      "status": "PASS",
+      "detail": "bad=[]"
+    },
+    {
+      "check": "MINTAMT_ALL_ZERO",
+      "status": "PASS",
+      "detail": "nz=0"
+    },
+    {
+      "check": "GOLDEN_4_PAYEES",
+      "status": "PASS",
+      "detail": "n=4"
+    },
+    {
+      "check": "GOLDEN_SUM_5145_67",
+      "status": "PASS",
+      "detail": "5145.67"
+    },
+    {
+      "check": "HOLDS_STILL_ZERO_PAYEE",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "check": "CLMP_DELTA_MATCHES_META",
+      "status": "PASS",
+      "detail": "len=5935 expected>=5495"
+    },
+    {
+      "check": "QUIKCLMS_NOT_MUTATED_FLAG",
+      "status": "PASS",
+      "detail": "False"
+    },
+    {
+      "check": "HEADER_MONEY_UNCHANGED_FLAG",
+      "status": "PASS",
+      "detail": "True"
+    },
+    {
+      "check": "POLICIES_BACKFILLED_META",
+      "status": "PASS",
+      "detail": "137"
+    },
+    {
+      "check": "ISSUE134_MARKER_PRESERVED",
+      "status": "PASS",
+      "detail": "hits=308"
+    },
+    {
+      "check": "NO_SAFE_LEFT_ZERO",
+      "status": "PASS",
+      "detail": "residual_safe_zero=[]"
+    }
+  ],
+  "clmp_total_rows": 5935,
+  "golden_payees": 4
+}

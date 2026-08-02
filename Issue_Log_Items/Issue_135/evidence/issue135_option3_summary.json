@@ -1,0 +1,56 @@
+{
+  "generated_at": "2026-08-02T20:20:28Z",
+  "issue": 135,
+  "phase": "OPTION3_ECONOMIC_RECONSTRUCTION_OVERLAY",
+  "production_output_mutated": false,
+  "app_py_wired": false,
+  "mintamt_remains_zero": true,
+  "pactg_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\PACTG_Accounting_Extract20260630.csv",
+  "available_mismatch": 61,
+  "candidates_in": 45,
+  "prior_holds_untouched": 16,
+  "corrected_candidates": 43,
+  "candidate_holds_unresolved": 2,
+  "status_counts": {
+    "CORRECTED": 43,
+    "HOLD": 2
+  },
+  "corrected_by_class": {
+    "MISSING_DEATH_MPAID_BUT_PACTG_PAYOUT": 5,
+    "MULTIPLICITY_X2_DUPLICATE_OR_CLEARING": 17,
+    "MULTIPLICITY_X3_REINSTATEMENT": 21
+  },
+  "overlay_quikclms_rows": 43,
+  "overlay_quikclmp_rows": 51,
+  "needs_payee_identity_n": 10,
+  "teacher_status": {
+    "9011156098C": {
+      "option3_status": "CORRECTED",
+      "cso_total_paid": 15000.0,
+      "corrected_mpaid": "15000.00",
+      "rule_reasons": "EXCLUDE_REINSTATEMENT_ENDOW_LOOP|EXCLUDE_INTRACO_UNAPPLIED_LOOP|KEEP_ECONOMIC_DEATH_PAYOUT_2032_TO_1058|DEDUP_SUBSET_MATCH_CSO_TOTAL_PAID"
+    },
+    "9010914301C": {
+      "option3_status": "CORRECTED",
+      "cso_total_paid": 25019.98,
+      "corrected_mpaid": "25019.98",
+      "rule_reasons": "EXCLUDE_REINSTATEMENT_ENDOW_LOOP|EXCLUDE_INTRACO_UNAPPLIED_LOOP|KEEP_ECONOMIC_DEATH_PAYOUT_2032_TO_1058|DEDUP_SUBSET_MATCH_CSO_TOTAL_PAID"
+    },
+    "9010391359C": {
+      "option3_status": "CORRECTED",
+      "cso_total_paid": 1260.06,
+      "corrected_mpaid": "1260.06",
+      "rule_reasons": "KEEP_ECONOMIC_DEATH_PAYOUT_2032_TO_1058|PROMOTE_MISSING_DEATH_PAYOUT_FROM_PACTG"
+    }
+  },
+  "eric_supply_gaps": 459,
+  "eric_gaps_touched": false,
+  "remaining_production_gate": "Overlay proven on available CANDIDATE policies. Production quikclms/quikclmp amounts unchanged. Wire Option-3 filter upstream of Phase 10a/10b derivation (or controlled post-emit consume of overlay) only after user approval of production consume path + focused re-validation on full Output.",
+  "artifacts": {
+    "candidate_summary": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\issue135_option3_candidate_summary.csv",
+    "corrected_events": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\issue135_option3_corrected_events.csv",
+    "quikclmp_overlay": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\issue135_option3_quikclmp_overlay.csv",
+    "quikclms_overlay": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\issue135_option3_quikclms_overlay.csv",
+    "hold_unresolved": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\issue135_option3_hold_unresolved.csv"
+  }
+}

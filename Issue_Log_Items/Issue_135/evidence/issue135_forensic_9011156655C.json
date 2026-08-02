@@ -1,0 +1,362 @@
+{
+  "policy": "9011156655C",
+  "output_quikclms": [
+    {
+      "MPOLICY": "9011156655C",
+      "MPHASE": "1",
+      "MSEQ": "0",
+      "CLAIMNUM": "RC-9011156655",
+      "CLAIMSTAT": "2",
+      "ORIGSTTUS": "3",
+      "DTOFDEATH": "20200205",
+      "RPTDATE": "20200205",
+      "PDDATE": "20200205",
+      "ACCPTDATE": "20200205",
+      "MPAID": "5145.67",
+      "MFACE": "5000.00",
+      "NETDB": "5000.00",
+      "DIVIDENDS": "0.00",
+      "LOAN": "0.00",
+      "PREMIUM": "0.00",
+      "SUSPENSE": "0.00",
+      "ADJUST": "0.00",
+      "MINTAMT": "0.00",
+      "MINTST": "",
+      "MINTRATE": "0",
+      "MINTDAYS": "0",
+      "MHOLDINT": "0.00"
+    }
+  ],
+  "output_quikclmp_count": 0,
+  "pactg_total_rows": 28,
+  "settlement_detail": [
+    {
+      "effective_date": "20200205",
+      "date_added": "20211104",
+      "debit_code": "530",
+      "credit_code": "38",
+      "debit_account": "600113R",
+      "credit_account": "2032",
+      "amount": 5000.0,
+      "date_reversed": "0",
+      "reversal_code": "",
+      "payee_rela": "",
+      "payee_seq": "0",
+      "class": "funding_face"
+    },
+    {
+      "effective_date": "20200205",
+      "date_added": "20211104",
+      "debit_code": "110",
+      "credit_code": "38",
+      "debit_account": "400113R",
+      "credit_account": "2032",
+      "amount": 86.64,
+      "date_reversed": "0",
+      "reversal_code": "",
+      "payee_rela": "",
+      "payee_seq": "0",
+      "class": "unearned_premium_return"
+    },
+    {
+      "effective_date": "20200205",
+      "date_added": "20211104",
+      "debit_code": "110",
+      "credit_code": "38",
+      "debit_account": "400113R",
+      "credit_account": "2032",
+      "amount": 59.03,
+      "date_reversed": "0",
+      "reversal_code": "",
+      "payee_rela": "",
+      "payee_seq": "0",
+      "class": "unearned_premium_return"
+    },
+    {
+      "effective_date": "20200205",
+      "date_added": "20211104",
+      "debit_code": "38",
+      "credit_code": "94",
+      "debit_account": "2032",
+      "credit_account": "1058",
+      "amount": 1286.42,
+      "date_reversed": "0",
+      "reversal_code": "",
+      "payee_rela": "PE",
+      "payee_seq": "1",
+      "class": "payout_1058"
+    },
+    {
+      "effective_date": "20200205",
+      "date_added": "20211104",
+      "debit_code": "38",
+      "credit_code": "94",
+      "debit_account": "2032",
+      "credit_account": "1058",
+      "amount": 1286.41,
+      "date_reversed": "0",
+      "reversal_code": "",
+      "payee_rela": "PE",
+      "payee_seq": "2",
+      "class": "payout_1058"
+    },
+    {
+      "effective_date": "20200205",
+      "date_added": "20211104",
+      "debit_code": "38",
+      "credit_code": "94",
+      "debit_account": "2032",
+      "credit_account": "1058",
+      "amount": 1286.42,
+      "date_reversed": "0",
+      "reversal_code": "",
+      "payee_rela": "PE",
+      "payee_seq": "3",
+      "class": "payout_1058"
+    },
+    {
+      "effective_date": "20200205",
+      "date_added": "20211104",
+      "debit_code": "38",
+      "credit_code": "94",
+      "debit_account": "2032",
+      "credit_account": "1058",
+      "amount": 1286.42,
+      "date_reversed": "0",
+      "reversal_code": "",
+      "payee_rela": "PE",
+      "payee_seq": "4",
+      "class": "payout_1058"
+    }
+  ],
+  "layers": {
+    "face_0530_to_2032": 5000.0,
+    "unearned_prem_110_to_2032": 145.67000000000002,
+    "payout_1058_total": 5145.67,
+    "payout_PE1": 1286.42,
+    "payout_PE2": 1286.41,
+    "payout_PE3": 1286.42,
+    "payout_PE4": 1286.42
+  },
+  "arithmetic": {
+    "face_funding": 5000.0,
+    "unearned_premium_return": 145.67,
+    "interest_dividend": 0,
+    "clearing_in_total": 5145.67,
+    "payout_total": 5145.67,
+    "balanced_clearing_vs_payout": true,
+    "gap_net_payment_minus_face": 145.67,
+    "gap_is_interest": false,
+    "gap_is_unearned_premium": true
+  },
+  "rna_pe_payees": [
+    {
+      "relate": "PE",
+      "name_id": "711254",
+      "bseq": "4",
+      "name": "ROBERT C BRASWELL",
+      "addr": "4306 BRAGG BLVD - APT 304",
+      "city": "FAYETTEVILLE",
+      "st": "NC",
+      "zip": "28303"
+    },
+    {
+      "relate": "PE",
+      "name_id": "711250",
+      "bseq": "1",
+      "name": "LINVILLE L BRASWELL",
+      "addr": "1244 WHITE STONE QUARRY RD",
+      "city": "BOWLING GREEN",
+      "st": "KY",
+      "zip": "42101"
+    },
+    {
+      "relate": "PE",
+      "name_id": "711252",
+      "bseq": "3",
+      "name": "DANIEL L BRASWELL JR",
+      "addr": "4306 BRAGG BLVD - APT 304",
+      "city": "FAYETTEVILLE",
+      "st": "NC",
+      "zip": "28303"
+    },
+    {
+      "relate": "PE",
+      "name_id": "711251",
+      "bseq": "2",
+      "name": "CHERI ROSE BRASWELL",
+      "addr": "609 CATTLE LANE",
+      "city": "LILLINGTON",
+      "st": "NC",
+      "zip": "27546"
+    }
+  ],
+  "issue135_recon": {
+    "mpolicy": "9011156655C",
+    "policy_digits": "9011156655",
+    "population": "AVAILABLE_MATCH",
+    "is_teacher_death": "N",
+    "cso_total_paid": "5145.67",
+    "death_mpaid": "5145.67",
+    "death_mintamt": "0.0",
+    "death_rows": "1",
+    "death_claimstats": "2",
+    "payee_sum_mamount": "0.0",
+    "payee_rows": "0",
+    "residual_cso_minus_death_mpaid": "0.0",
+    "payee_minus_death_mpaid": "-5145.67",
+    "non_death_rows": "0",
+    "non_death_families": "",
+    "non_death_mpaid_sum_DO_NOT_ADD_TO_CSO": "0.0",
+    "pactg_row_count": "28",
+    "pactg_layer_totals_json": "{\"clearing_death\": 5145.67, \"payout_death_claim_payment\": 5145.67, \"unclassified\": 876.56}",
+    "proposed_rule_class": "MATCH_CSO",
+    "proposed_rule_note": "Death MPAID equals CSO Total_Paid within tolerance",
+    "cso_plan_code": "1L1301",
+    "cso_last_pd_date": "2021-11-04 00:00:00"
+  },
+  "issue135_bucket": {
+    "in_142_derived_high": false,
+    "in_308_no_pactg": false,
+    "in_9_hold": false,
+    "actual_class": "MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE",
+    "note": "Pre-existing death header already MATCH_CSO on MPAID; Issue #135 did not backfill payees for this class. Legacy claims pipeline left payees out due to UNBALANCED (-145.67) when unearned premium 110 was not counted as funding."
+  },
+  "recommended_fix": {
+    "keep_mpaid": 5145.67,
+    "keep_mface_netdb": 5000.0,
+    "keep_mintamt": 0.0,
+    "emit_quikclmp": [
+      {
+        "mseq": 1,
+        "amount": 1286.42,
+        "pe_seq": 1,
+        "name_id": "711250",
+        "name": "LINVILLE L BRASWELL",
+        "addr": "1244 WHITE STONE QUARRY RD",
+        "city": "BOWLING GREEN",
+        "st": "KY",
+        "zip": "42101"
+      },
+      {
+        "mseq": 2,
+        "amount": 1286.41,
+        "pe_seq": 2,
+        "name_id": "711251",
+        "name": "CHERI ROSE BRASWELL",
+        "addr": "609 CATTLE LANE",
+        "city": "LILLINGTON",
+        "st": "NC",
+        "zip": "27546"
+      },
+      {
+        "mseq": 3,
+        "amount": 1286.42,
+        "pe_seq": 3,
+        "name_id": "711252",
+        "name": "DANIEL L BRASWELL JR",
+        "addr": "4306 BRAGG BLVD - APT 304",
+        "city": "FAYETTEVILLE",
+        "st": "NC",
+        "zip": "28303"
+      },
+      {
+        "mseq": 4,
+        "amount": 1286.42,
+        "pe_seq": 4,
+        "name_id": "711254",
+        "name": "ROBERT C BRASWELL",
+        "addr": "4306 BRAGG BLVD - APT 304",
+        "city": "FAYETTEVILLE",
+        "st": "NC",
+        "zip": "28303"
+      }
+    ],
+    "do_not_put_145_67_in_mintamt": true,
+    "premium_field": "leave 0 (returned unearned premium already inside MPAID)"
+  },
+  "confidence": 0.93,
+  "coding_safe_to_begin": true,
+  "coding_scope_note": "Surgical payee backfill for this policy is safe. Fleet MATCH_CSO zero-payee cohort (~140) needs separate gated inventory before mass apply.",
+  "second_pass_checks": [
+    {
+      "name": "mpaid_equals_payout",
+      "pass": true
+    },
+    {
+      "name": "mface_equals_face_funding",
+      "pass": true
+    },
+    {
+      "name": "mintamt_zero",
+      "pass": true
+    },
+    {
+      "name": "no_interest_codes",
+      "pass": true
+    },
+    {
+      "name": "premium_gap_145_67",
+      "pass": true
+    },
+    {
+      "name": "four_pe_payouts",
+      "pass": true
+    },
+    {
+      "name": "four_rna_pe",
+      "pass": true
+    },
+    {
+      "name": "zero_output_payees",
+      "pass": true
+    },
+    {
+      "name": "payout_sum_5145_67",
+      "pass": true
+    }
+  ],
+  "second_pass_all_pass": true,
+  "rna_b1_payees": [
+    {
+      "relate": "B1",
+      "name_id": "711251",
+      "bseq": "0",
+      "name": "CHERI ROSE BRASWELL",
+      "addr": "609 CATTLE LANE",
+      "city": "LILLINGTON",
+      "st": "NC",
+      "zip": "27546"
+    },
+    {
+      "relate": "B1",
+      "name_id": "711250",
+      "bseq": "0",
+      "name": "LINVILLE L BRASWELL",
+      "addr": "1244 WHITE STONE QUARRY RD",
+      "city": "BOWLING GREEN",
+      "st": "KY",
+      "zip": "42101"
+    },
+    {
+      "relate": "B1",
+      "name_id": "711254",
+      "bseq": "0",
+      "name": "ROBERT C BRASWELL",
+      "addr": "4306 BRAGG BLVD - APT 304",
+      "city": "FAYETTEVILLE",
+      "st": "NC",
+      "zip": "28303"
+    },
+    {
+      "relate": "B1",
+      "name_id": "711252",
+      "bseq": "0",
+      "name": "DANIEL L BRASWELL JR",
+      "addr": "4306 BRAGG BLVD - APT 304",
+      "city": "FAYETTEVILLE",
+      "st": "NC",
+      "zip": "28303"
+    }
+  ]
+}

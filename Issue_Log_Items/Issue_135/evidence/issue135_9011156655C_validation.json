@@ -1,0 +1,130 @@
+{
+  "policy": "9011156655C",
+  "reason": "MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE",
+  "pass": true,
+  "fail_count": 0,
+  "checks": [
+    {
+      "check": "HEADER_EXISTS",
+      "status": "PASS",
+      "detail": "rows=1"
+    },
+    {
+      "check": "MPAID_5145_67",
+      "status": "PASS",
+      "detail": "5145.67"
+    },
+    {
+      "check": "MFACE_5000",
+      "status": "PASS",
+      "detail": "5000.00"
+    },
+    {
+      "check": "NETDB_5000",
+      "status": "PASS",
+      "detail": "5000.00"
+    },
+    {
+      "check": "MINTAMT_ZERO",
+      "status": "PASS",
+      "detail": "0.00"
+    },
+    {
+      "check": "PREMIUM_ZERO",
+      "status": "PASS",
+      "detail": "0.00"
+    },
+    {
+      "check": "CLAIMSTAT_2",
+      "status": "PASS",
+      "detail": "2"
+    },
+    {
+      "check": "CLAIMNUM_RC",
+      "status": "PASS",
+      "detail": "RC-9011156655"
+    },
+    {
+      "check": "EXACTLY_4_PAYEES",
+      "status": "PASS",
+      "detail": "count=4"
+    },
+    {
+      "check": "ALL_PAYEE_MSEQ_MATCH_HEADER",
+      "status": "PASS",
+      "detail": "header=0 payee_mseqs=['0']"
+    },
+    {
+      "check": "PAYEE_SUM_5145_67",
+      "status": "PASS",
+      "detail": "sum=5145.67"
+    },
+    {
+      "check": "MCHECKNO_BLANK_OR_0",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "PAYEE_LINVILLE_EXISTS",
+      "status": "PASS",
+      "detail": "n=1"
+    },
+    {
+      "check": "PAYEE_LINVILLE_MPHASE",
+      "status": "PASS",
+      "detail": "1"
+    },
+    {
+      "check": "PAYEE_CHERI_EXISTS",
+      "status": "PASS",
+      "detail": "n=1"
+    },
+    {
+      "check": "PAYEE_CHERI_MPHASE",
+      "status": "PASS",
+      "detail": "1"
+    },
+    {
+      "check": "PAYEE_DANIEL_EXISTS",
+      "status": "PASS",
+      "detail": "n=1"
+    },
+    {
+      "check": "PAYEE_DANIEL_MPHASE",
+      "status": "PASS",
+      "detail": "1"
+    },
+    {
+      "check": "PAYEE_ROBERT_EXISTS",
+      "status": "PASS",
+      "detail": "n=1"
+    },
+    {
+      "check": "PAYEE_ROBERT_MPHASE",
+      "status": "PASS",
+      "detail": "1"
+    },
+    {
+      "check": "CLMP_TOTAL_DELTA_MATCHES_META",
+      "status": "PASS",
+      "detail": "len=5935 expected>=5495 meta=issue135_match_cso_zero_payee_apply_meta.json"
+    },
+    {
+      "check": "QUIKCLMS_NOT_MUTATED_FLAG",
+      "status": "PASS",
+      "detail": "False"
+    },
+    {
+      "check": "HEADER_MONEY_UNCHANGED_FLAG",
+      "status": "PASS",
+      "detail": "True"
+    },
+    {
+      "check": "GOLDEN_PAYEES_IN_COHORT_META",
+      "status": "PASS",
+      "detail": "4"
+    }
+  ],
+  "payee_rows": 4,
+  "clmp_total_rows": 5935
+}

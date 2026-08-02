@@ -1,0 +1,185 @@
+{
+  "validator": "grok_second_pass_issue135_deploy_package",
+  "model": "Cursor Grok 4.5",
+  "pass": true,
+  "fail_count": 0,
+  "fails": [],
+  "checks": [
+    {
+      "check": "APP_VERSION_LOCK",
+      "status": "PASS",
+      "detail": "root=v58.60 mig=v58.60"
+    },
+    {
+      "check": "CLMS_ROWS_6044",
+      "status": "PASS",
+      "detail": "6044"
+    },
+    {
+      "check": "CLMP_ROWS_5495",
+      "status": "PASS",
+      "detail": "5495"
+    },
+    {
+      "check": "TV_SYNC_CLMS",
+      "status": "PASS",
+      "detail": "tv=6044 out=6044"
+    },
+    {
+      "check": "TV_SYNC_CLMP",
+      "status": "PASS",
+      "detail": "tv=5495 out=5495"
+    },
+    {
+      "check": "MINTAMT_ALL_ZERO",
+      "status": "PASS",
+      "detail": "nonzero=0"
+    },
+    {
+      "check": "MARKER_308",
+      "status": "PASS",
+      "detail": "308"
+    },
+    {
+      "check": "MARKER_NO_PAYEES",
+      "status": "PASS",
+      "detail": "with_payees=0"
+    },
+    {
+      "check": "HOLD9_ABSENT",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "check": "GOLDEN_4_PAYEES",
+      "status": "PASS",
+      "detail": "4"
+    },
+    {
+      "check": "GOLDEN_PAYEE_SUM",
+      "status": "PASS",
+      "detail": "5145.67"
+    },
+    {
+      "check": "SHORT_CLMS_EXISTS",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "SHORT_CLMP_EXISTS",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "NO_CLMP_DBT",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "check": "DBF_CLMS_ROWS",
+      "status": "PASS",
+      "detail": "6044"
+    },
+    {
+      "check": "DBF_MPOLICY_C11",
+      "status": "PASS",
+      "detail": "['MPOLICY C(11)']"
+    },
+    {
+      "check": "DBF_HEADER_EXISTS",
+      "status": "PASS",
+      "detail": "{'MPOLICY': '9011156655C', 'MPAID': 5145.67, 'MFACE': 5000.0, 'NETDB': 5000.0, 'MINTAMT': 0.0}"
+    },
+    {
+      "check": "DBF_MPOLICY_KEY",
+      "status": "PASS",
+      "detail": "9011156655C"
+    },
+    {
+      "check": "DBF_MPAID",
+      "status": "PASS",
+      "detail": "5145.67"
+    },
+    {
+      "check": "DBF_MFACE",
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    {
+      "check": "DBF_NETDB",
+      "status": "PASS",
+      "detail": "5000.0"
+    },
+    {
+      "check": "DBF_MINTAMT",
+      "status": "PASS",
+      "detail": "0.0"
+    },
+    {
+      "check": "DBF_CLMP_ROWS",
+      "status": "PASS",
+      "detail": "5495"
+    },
+    {
+      "check": "DBF_CLMP_MPOLICY_C11",
+      "status": "PASS",
+      "detail": "['MPOLICY C(11)']"
+    },
+    {
+      "check": "DBF_GOLDEN_4",
+      "status": "PASS",
+      "detail": "4"
+    },
+    {
+      "check": "DBF_GOLDEN_SUM",
+      "status": "PASS",
+      "detail": "5145.67"
+    }
+  ],
+  "clms_rows": 6044,
+  "clmp_rows": 5495,
+  "dbf_clms_rows": 6044,
+  "dbf_clmp_rows": 5495,
+  "golden_payees": [
+    {
+      "MSEQ": 1,
+      "MPAYNAME": "LINVILLE L BRASWELL",
+      "MAMOUNT": 1286.42
+    },
+    {
+      "MSEQ": 2,
+      "MPAYNAME": "CHERI ROSE BRASWELL",
+      "MAMOUNT": 1286.41
+    },
+    {
+      "MSEQ": 3,
+      "MPAYNAME": "DANIEL L BRASWELL JR",
+      "MAMOUNT": 1286.42
+    },
+    {
+      "MSEQ": 4,
+      "MPAYNAME": "ROBERT C BRASWELL",
+      "MAMOUNT": 1286.42
+    }
+  ],
+  "remaining_holds_documented": {
+    "hold_incomplete_source_9": [
+      "9010395879C",
+      "9010741943C",
+      "9010771580C",
+      "9010771662C",
+      "9011153243C",
+      "9011154868C",
+      "9011158069C",
+      "9011175485C",
+      "9011193674C"
+    ],
+    "zero_payee_hold_incomplete_3": [
+      "9010792038C",
+      "9011062307C",
+      "9015000341C"
+    ],
+    "issue_closed": false
+  },
+  "generated_at": "20260802T225209Z"
+}

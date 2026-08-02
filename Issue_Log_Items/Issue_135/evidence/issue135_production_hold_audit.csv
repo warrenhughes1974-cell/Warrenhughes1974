@@ -1,0 +1,162 @@
+mpolicy,category,cso_total_paid,note
+9010391359C,OPTION3_HOLD_NO_SAFE_PAYEE,1260.06,Header MPAID corrected; payee not fabricated
+9011025088C,OPTION3_HOLD_NO_SAFE_PAYEE,8212.35,Header MPAID corrected; payee not fabricated
+9011132389C,OPTION3_HOLD_NO_SAFE_PAYEE,10058.24,Header MPAID corrected; payee not fabricated
+9011138884C,OPTION3_HOLD_NO_SAFE_PAYEE,5048.71,Header MPAID corrected; payee not fabricated
+9011141895C,OPTION3_HOLD_NO_SAFE_PAYEE,5019.46,Header MPAID corrected; payee not fabricated
+9011183505C,OPTION3_HOLD_NO_SAFE_PAYEE,5032.62,Header MPAID corrected; payee not fabricated
+9011197222C,OPTION3_HOLD_NO_SAFE_PAYEE,15067.69,Header MPAID corrected; payee not fabricated
+9011200251C,OPTION3_HOLD_NO_SAFE_PAYEE,8190.72,Header MPAID corrected; payee not fabricated
+9011208787C,OPTION3_HOLD_NO_SAFE_PAYEE,36660.00,Header MPAID corrected; payee not fabricated
+9011217970C,OPTION3_HOLD_NO_SAFE_PAYEE,7988.35,Header MPAID corrected; payee not fabricated
+9010395879C,HOLD_INCOMPLETE_SOURCE,4916.26,Death-family accounting signals present (funding/clearing/cash) but no open ECONOMIC_DEATH_PAYOUT 2032→1058 (0094/0090) after loop/reversal exclusion
+9010741943C,HOLD_INCOMPLETE_SOURCE,39515.55,Death-family accounting signals present (funding/clearing/cash) but no open ECONOMIC_DEATH_PAYOUT 2032→1058 (0094/0090) after loop/reversal exclusion
+9010771580C,HOLD_INCOMPLETE_SOURCE,20089.71,Death-family accounting signals present (funding/clearing/cash) but no open ECONOMIC_DEATH_PAYOUT 2032→1058 (0094/0090) after loop/reversal exclusion
+9010771662C,HOLD_INCOMPLETE_SOURCE,46125.62,Death-family accounting signals present (funding/clearing/cash) but no open ECONOMIC_DEATH_PAYOUT 2032→1058 (0094/0090) after loop/reversal exclusion
+9011153243C,HOLD_INCOMPLETE_SOURCE,4669.56,Death-family accounting signals present (funding/clearing/cash) but no open ECONOMIC_DEATH_PAYOUT 2032→1058 (0094/0090) after loop/reversal exclusion
+9011154868C,HOLD_INCOMPLETE_SOURCE,5043.29,Death-family accounting signals present (funding/clearing/cash) but no open ECONOMIC_DEATH_PAYOUT 2032→1058 (0094/0090) after loop/reversal exclusion
+9011158069C,HOLD_INCOMPLETE_SOURCE,4965.05,Death-family accounting signals present (funding/clearing/cash) but no open ECONOMIC_DEATH_PAYOUT 2032→1058 (0094/0090) after loop/reversal exclusion
+9011175485C,HOLD_INCOMPLETE_SOURCE,4800.86,Death-family accounting signals present (funding/clearing/cash) but no open ECONOMIC_DEATH_PAYOUT 2032→1058 (0094/0090) after loop/reversal exclusion
+9011193674C,HOLD_INCOMPLETE_SOURCE,2275.94,Death-family accounting signals present (funding/clearing/cash) but no open ECONOMIC_DEATH_PAYOUT 2032→1058 (0094/0090) after loop/reversal exclusion
+9010367438C,DERIVED_HOLD_NO_SAFE_PAYEE,4469.37,Header emitted from accounting; payee held — no safe PRELSA name
+9010378710C,DERIVED_HOLD_NO_SAFE_PAYEE,6715.85,Header emitted from accounting; payee held — no safe PRELSA name
+9010395382C,DERIVED_HOLD_NO_SAFE_PAYEE,4012.31,Header emitted from accounting; payee held — no safe PRELSA name
+9010403922C,DERIVED_HOLD_NO_SAFE_PAYEE,9666.78,Header emitted from accounting; payee held — no safe PRELSA name
+9010404857C,DERIVED_HOLD_NO_SAFE_PAYEE,6292.70,Header emitted from accounting; payee held — no safe PRELSA name
+9010406795C,DERIVED_HOLD_NO_SAFE_PAYEE,8750.51,Header emitted from accounting; payee held — no safe PRELSA name
+9010410714C,DERIVED_HOLD_NO_SAFE_PAYEE,6140.25,Header emitted from accounting; payee held — no safe PRELSA name
+9010417200C,DERIVED_HOLD_NO_SAFE_PAYEE,3283.18,Header emitted from accounting; payee held — no safe PRELSA name
+9010425720C,DERIVED_HOLD_NO_SAFE_PAYEE,1918.99,Header emitted from accounting; payee held — no safe PRELSA name
+9010430086C,DERIVED_HOLD_NO_SAFE_PAYEE,6481.27,Header emitted from accounting; payee held — no safe PRELSA name
+9010442552C,DERIVED_HOLD_NO_SAFE_PAYEE,4716.41,Header emitted from accounting; payee held — no safe PRELSA name
+9010449559C,DERIVED_HOLD_NO_SAFE_PAYEE,7316.82,Header emitted from accounting; payee held — no safe PRELSA name
+9010457291C,DERIVED_HOLD_NO_SAFE_PAYEE,8829.12,Header emitted from accounting; payee held — no safe PRELSA name
+9010463420C,DERIVED_HOLD_NO_SAFE_PAYEE,3599.65,Header emitted from accounting; payee held — no safe PRELSA name
+9010464869C,DERIVED_HOLD_NO_SAFE_PAYEE,4716.62,Header emitted from accounting; payee held — no safe PRELSA name
+9010464870C,DERIVED_HOLD_NO_SAFE_PAYEE,2959.70,Header emitted from accounting; payee held — no safe PRELSA name
+9010476803C,DERIVED_HOLD_NO_SAFE_PAYEE,4859.27,Header emitted from accounting; payee held — no safe PRELSA name
+9010477512C,DERIVED_HOLD_NO_SAFE_PAYEE,11019.57,Header emitted from accounting; payee held — no safe PRELSA name
+9010477513C,DERIVED_HOLD_NO_SAFE_PAYEE,12260.03,Header emitted from accounting; payee held — no safe PRELSA name
+9010478285C,DERIVED_HOLD_NO_SAFE_PAYEE,8066.76,Header emitted from accounting; payee held — no safe PRELSA name
+9010486919C,DERIVED_HOLD_NO_SAFE_PAYEE,1363.61,Header emitted from accounting; payee held — no safe PRELSA name
+9010486964C,DERIVED_HOLD_NO_SAFE_PAYEE,5636.74,Header emitted from accounting; payee held — no safe PRELSA name
+9010488274C,DERIVED_HOLD_NO_SAFE_PAYEE,11489.42,Header emitted from accounting; payee held — no safe PRELSA name
+9010491000C,DERIVED_HOLD_NO_SAFE_PAYEE,5033.43,Header emitted from accounting; payee held — no safe PRELSA name
+9010498153C,DERIVED_HOLD_NO_SAFE_PAYEE,8136.19,Header emitted from accounting; payee held — no safe PRELSA name
+9010505549C,DERIVED_HOLD_NO_SAFE_PAYEE,5730.58,Header emitted from accounting; payee held — no safe PRELSA name
+9010521651C,DERIVED_HOLD_NO_SAFE_PAYEE,10150.54,Header emitted from accounting; payee held — no safe PRELSA name
+9010550564C,DERIVED_HOLD_NO_SAFE_PAYEE,13974.98,Header emitted from accounting; payee held — no safe PRELSA name
+9010607249C,DERIVED_HOLD_NO_SAFE_PAYEE,9672.81,Header emitted from accounting; payee held — no safe PRELSA name
+9010731970C,DERIVED_HOLD_NO_SAFE_PAYEE,20424.82,Header emitted from accounting; payee held — no safe PRELSA name
+9010736035C,DERIVED_HOLD_NO_SAFE_PAYEE,81378.18,Header emitted from accounting; payee held — no safe PRELSA name
+9010748300C,DERIVED_HOLD_NO_SAFE_PAYEE,15977.88,Header emitted from accounting; payee held — no safe PRELSA name
+9010749053C,DERIVED_HOLD_NO_SAFE_PAYEE,3634.52,Header emitted from accounting; payee held — no safe PRELSA name
+9010750813C,DERIVED_HOLD_NO_SAFE_PAYEE,1071.77,Header emitted from accounting; payee held — no safe PRELSA name
+9010752703C,DERIVED_HOLD_NO_SAFE_PAYEE,22556.61,Header emitted from accounting; payee held — no safe PRELSA name
+9010769714C,DERIVED_HOLD_NO_SAFE_PAYEE,49445.73,Header emitted from accounting; payee held — no safe PRELSA name
+9010771111C,DERIVED_HOLD_NO_SAFE_PAYEE,29840.23,Header emitted from accounting; payee held — no safe PRELSA name
+9010774109C,DERIVED_HOLD_NO_SAFE_PAYEE,9942.49,Header emitted from accounting; payee held — no safe PRELSA name
+9010776157C,DERIVED_HOLD_NO_SAFE_PAYEE,30968.34,Header emitted from accounting; payee held — no safe PRELSA name
+9010776653C,DERIVED_HOLD_NO_SAFE_PAYEE,30663.38,Header emitted from accounting; payee held — no safe PRELSA name
+9010785049C,DERIVED_HOLD_NO_SAFE_PAYEE,15651.06,Header emitted from accounting; payee held — no safe PRELSA name
+9010785932C,DERIVED_HOLD_NO_SAFE_PAYEE,11926.31,Header emitted from accounting; payee held — no safe PRELSA name
+9010803025C,DERIVED_HOLD_NO_SAFE_PAYEE,17499.78,Header emitted from accounting; payee held — no safe PRELSA name
+9010809932C,DERIVED_HOLD_NO_SAFE_PAYEE,25132.30,Header emitted from accounting; payee held — no safe PRELSA name
+9010810504C,DERIVED_HOLD_NO_SAFE_PAYEE,24284.16,Header emitted from accounting; payee held — no safe PRELSA name
+9010811204C,DERIVED_HOLD_NO_SAFE_PAYEE,19623.04,Header emitted from accounting; payee held — no safe PRELSA name
+9010814552C,DERIVED_HOLD_NO_SAFE_PAYEE,15271.13,Header emitted from accounting; payee held — no safe PRELSA name
+9010816590C,DERIVED_HOLD_NO_SAFE_PAYEE,4142.30,Header emitted from accounting; payee held — no safe PRELSA name
+9010817415C,DERIVED_HOLD_NO_SAFE_PAYEE,25936.35,Header emitted from accounting; payee held — no safe PRELSA name
+9010817477C,DERIVED_HOLD_NO_SAFE_PAYEE,53656.24,Header emitted from accounting; payee held — no safe PRELSA name
+9010817639C,DERIVED_HOLD_NO_SAFE_PAYEE,10735.34,Header emitted from accounting; payee held — no safe PRELSA name
+9010825720C,DERIVED_HOLD_NO_SAFE_PAYEE,99890.93,Header emitted from accounting; payee held — no safe PRELSA name
+9010834430C,DERIVED_HOLD_NO_SAFE_PAYEE,14160.46,Header emitted from accounting; payee held — no safe PRELSA name
+9010834689C,DERIVED_HOLD_NO_SAFE_PAYEE,15701.10,Header emitted from accounting; payee held — no safe PRELSA name
+9010834690C,DERIVED_HOLD_NO_SAFE_PAYEE,10483.16,Header emitted from accounting; payee held — no safe PRELSA name
+9010838129C,DERIVED_HOLD_NO_SAFE_PAYEE,10943.69,Header emitted from accounting; payee held — no safe PRELSA name
+9010851148C,DERIVED_HOLD_NO_SAFE_PAYEE,47407.10,Header emitted from accounting; payee held — no safe PRELSA name
+9010856188C,DERIVED_HOLD_NO_SAFE_PAYEE,22694.40,Header emitted from accounting; payee held — no safe PRELSA name
+9010860471C,DERIVED_HOLD_NO_SAFE_PAYEE,18257.80,Header emitted from accounting; payee held — no safe PRELSA name
+9010860472C,DERIVED_HOLD_NO_SAFE_PAYEE,34257.45,Header emitted from accounting; payee held — no safe PRELSA name
+9010863788C,DERIVED_HOLD_NO_SAFE_PAYEE,30627.74,Header emitted from accounting; payee held — no safe PRELSA name
+9010875065C,DERIVED_HOLD_NO_SAFE_PAYEE,16701.59,Header emitted from accounting; payee held — no safe PRELSA name
+9010891075C,DERIVED_HOLD_NO_SAFE_PAYEE,36938.36,Header emitted from accounting; payee held — no safe PRELSA name
+9010892327C,DERIVED_HOLD_NO_SAFE_PAYEE,10088.54,Header emitted from accounting; payee held — no safe PRELSA name
+9010917520C,DERIVED_HOLD_NO_SAFE_PAYEE,6896.82,Header emitted from accounting; payee held — no safe PRELSA name
+9010917600C,DERIVED_HOLD_NO_SAFE_PAYEE,24314.62,Header emitted from accounting; payee held — no safe PRELSA name
+9010920793C,DERIVED_HOLD_NO_SAFE_PAYEE,10363.74,Header emitted from accounting; payee held — no safe PRELSA name
+9010928495C,DERIVED_HOLD_NO_SAFE_PAYEE,21325.70,Header emitted from accounting; payee held — no safe PRELSA name
+9010929235C,DERIVED_HOLD_NO_SAFE_PAYEE,4236.96,Header emitted from accounting; payee held — no safe PRELSA name
+9010942233C,DERIVED_HOLD_NO_SAFE_PAYEE,12165.61,Header emitted from accounting; payee held — no safe PRELSA name
+9011013545C,DERIVED_HOLD_NO_SAFE_PAYEE,6197.09,Header emitted from accounting; payee held — no safe PRELSA name
+9011016867C,DERIVED_HOLD_NO_SAFE_PAYEE,8421.91,Header emitted from accounting; payee held — no safe PRELSA name
+9011045847C,DERIVED_HOLD_NO_SAFE_PAYEE,11636.43,Header emitted from accounting; payee held — no safe PRELSA name
+9011077201C,DERIVED_HOLD_NO_SAFE_PAYEE,9172.72,Header emitted from accounting; payee held — no safe PRELSA name
+9011083791C,DERIVED_HOLD_NO_SAFE_PAYEE,9513.81,Header emitted from accounting; payee held — no safe PRELSA name
+9011101578C,DERIVED_HOLD_NO_SAFE_PAYEE,2328.69,Header emitted from accounting; payee held — no safe PRELSA name
+9011105059C,DERIVED_HOLD_NO_SAFE_PAYEE,10037.77,Header emitted from accounting; payee held — no safe PRELSA name
+9011105839C,DERIVED_HOLD_NO_SAFE_PAYEE,3780.33,Header emitted from accounting; payee held — no safe PRELSA name
+9011106214C,DERIVED_HOLD_NO_SAFE_PAYEE,5078.60,Header emitted from accounting; payee held — no safe PRELSA name
+9011106317C,DERIVED_HOLD_NO_SAFE_PAYEE,3009.87,Header emitted from accounting; payee held — no safe PRELSA name
+9011109861C,DERIVED_HOLD_NO_SAFE_PAYEE,5015.13,Header emitted from accounting; payee held — no safe PRELSA name
+9011109994C,DERIVED_HOLD_NO_SAFE_PAYEE,5963.99,Header emitted from accounting; payee held — no safe PRELSA name
+9011114096C,DERIVED_HOLD_NO_SAFE_PAYEE,6755.54,Header emitted from accounting; payee held — no safe PRELSA name
+9011114950C,DERIVED_HOLD_NO_SAFE_PAYEE,4335.79,Header emitted from accounting; payee held — no safe PRELSA name
+9011124666C,DERIVED_HOLD_NO_SAFE_PAYEE,3028.55,Header emitted from accounting; payee held — no safe PRELSA name
+9011136476C,DERIVED_HOLD_NO_SAFE_PAYEE,1116.83,Header emitted from accounting; payee held — no safe PRELSA name
+9011139998C,DERIVED_HOLD_NO_SAFE_PAYEE,5000.00,Header emitted from accounting; payee held — no safe PRELSA name
+9011141382C,DERIVED_HOLD_NO_SAFE_PAYEE,3760.00,Header emitted from accounting; payee held — no safe PRELSA name
+9011142178C,DERIVED_HOLD_NO_SAFE_PAYEE,5165.88,Header emitted from accounting; payee held — no safe PRELSA name
+9011143630C,DERIVED_HOLD_NO_SAFE_PAYEE,3000.00,Header emitted from accounting; payee held — no safe PRELSA name
+9011147930C,DERIVED_HOLD_NO_SAFE_PAYEE,5017.89,Header emitted from accounting; payee held — no safe PRELSA name
+9011148847C,DERIVED_HOLD_NO_SAFE_PAYEE,4967.12,Header emitted from accounting; payee held — no safe PRELSA name
+9011150801C,DERIVED_HOLD_NO_SAFE_PAYEE,5027.29,Header emitted from accounting; payee held — no safe PRELSA name
+9011150973C,DERIVED_HOLD_NO_SAFE_PAYEE,5000.00,Header emitted from accounting; payee held — no safe PRELSA name
+9011154752C,DERIVED_HOLD_NO_SAFE_PAYEE,3642.14,Header emitted from accounting; payee held — no safe PRELSA name
+9011161880C,DERIVED_HOLD_NO_SAFE_PAYEE,5025.35,Header emitted from accounting; payee held — no safe PRELSA name
+9011178455C,DERIVED_HOLD_NO_SAFE_PAYEE,8617.79,Header emitted from accounting; payee held — no safe PRELSA name
+9011180887C,DERIVED_HOLD_NO_SAFE_PAYEE,5027.06,Header emitted from accounting; payee held — no safe PRELSA name
+9011180907C,DERIVED_HOLD_NO_SAFE_PAYEE,5015.22,Header emitted from accounting; payee held — no safe PRELSA name
+9011181080C,DERIVED_HOLD_NO_SAFE_PAYEE,1918.83,Header emitted from accounting; payee held — no safe PRELSA name
+9011182954C,DERIVED_HOLD_NO_SAFE_PAYEE,2611.97,Header emitted from accounting; payee held — no safe PRELSA name
+9011183532C,DERIVED_HOLD_NO_SAFE_PAYEE,5024.81,Header emitted from accounting; payee held — no safe PRELSA name
+9011185059C,DERIVED_HOLD_NO_SAFE_PAYEE,16790.37,Header emitted from accounting; payee held — no safe PRELSA name
+9011187300C,DERIVED_HOLD_NO_SAFE_PAYEE,6913.03,Header emitted from accounting; payee held — no safe PRELSA name
+9011189754C,DERIVED_HOLD_NO_SAFE_PAYEE,4185.03,Header emitted from accounting; payee held — no safe PRELSA name
+9011189786C,DERIVED_HOLD_NO_SAFE_PAYEE,7032.33,Header emitted from accounting; payee held — no safe PRELSA name
+9011189855C,DERIVED_HOLD_NO_SAFE_PAYEE,5008.76,Header emitted from accounting; payee held — no safe PRELSA name
+9011190411C,DERIVED_HOLD_NO_SAFE_PAYEE,5021.72,Header emitted from accounting; payee held — no safe PRELSA name
+9011191392C,DERIVED_HOLD_NO_SAFE_PAYEE,5008.19,Header emitted from accounting; payee held — no safe PRELSA name
+9011191513C,DERIVED_HOLD_NO_SAFE_PAYEE,2060.34,Header emitted from accounting; payee held — no safe PRELSA name
+9011194070C,DERIVED_HOLD_NO_SAFE_PAYEE,5022.34,Header emitted from accounting; payee held — no safe PRELSA name
+9011194752C,DERIVED_HOLD_NO_SAFE_PAYEE,3025.62,Header emitted from accounting; payee held — no safe PRELSA name
+9011194768C,DERIVED_HOLD_NO_SAFE_PAYEE,45216.44,Header emitted from accounting; payee held — no safe PRELSA name
+9011195093C,DERIVED_HOLD_NO_SAFE_PAYEE,5025.50,Header emitted from accounting; payee held — no safe PRELSA name
+9011195486C,DERIVED_HOLD_NO_SAFE_PAYEE,4067.21,Header emitted from accounting; payee held — no safe PRELSA name
+9011195599C,DERIVED_HOLD_NO_SAFE_PAYEE,10000.00,Header emitted from accounting; payee held — no safe PRELSA name
+9011196134C,DERIVED_HOLD_NO_SAFE_PAYEE,76963.55,Header emitted from accounting; payee held — no safe PRELSA name
+9011196569C,DERIVED_HOLD_NO_SAFE_PAYEE,5017.68,Header emitted from accounting; payee held — no safe PRELSA name
+9011197062C,DERIVED_HOLD_NO_SAFE_PAYEE,5027.91,Header emitted from accounting; payee held — no safe PRELSA name
+9011197715C,DERIVED_HOLD_NO_SAFE_PAYEE,9411.61,Header emitted from accounting; payee held — no safe PRELSA name
+9011198540C,DERIVED_HOLD_NO_SAFE_PAYEE,5000.00,Header emitted from accounting; payee held — no safe PRELSA name
+9011202381C,DERIVED_HOLD_NO_SAFE_PAYEE,3041.31,Header emitted from accounting; payee held — no safe PRELSA name
+9011203904C,DERIVED_HOLD_NO_SAFE_PAYEE,5011.27,Header emitted from accounting; payee held — no safe PRELSA name
+9011205919C,DERIVED_HOLD_NO_SAFE_PAYEE,7555.09,Header emitted from accounting; payee held — no safe PRELSA name
+9011209262C,DERIVED_HOLD_NO_SAFE_PAYEE,7681.39,Header emitted from accounting; payee held — no safe PRELSA name
+9011209469C,DERIVED_HOLD_NO_SAFE_PAYEE,28908.74,Header emitted from accounting; payee held — no safe PRELSA name
+9011210149C,DERIVED_HOLD_NO_SAFE_PAYEE,23938.07,Header emitted from accounting; payee held — no safe PRELSA name
+9011217617C,DERIVED_HOLD_NO_SAFE_PAYEE,6066.91,Header emitted from accounting; payee held — no safe PRELSA name
+9011235627C,DERIVED_HOLD_NO_SAFE_PAYEE,12155.58,Header emitted from accounting; payee held — no safe PRELSA name
+9011244378C,DERIVED_HOLD_NO_SAFE_PAYEE,29591.33,Header emitted from accounting; payee held — no safe PRELSA name
+9011246246C,DERIVED_HOLD_NO_SAFE_PAYEE,8557.29,Header emitted from accounting; payee held — no safe PRELSA name
+9011253007C,DERIVED_HOLD_NO_SAFE_PAYEE,9800.65,Header emitted from accounting; payee held — no safe PRELSA name
+9011257022C,DERIVED_HOLD_NO_SAFE_PAYEE,11415.05,Header emitted from accounting; payee held — no safe PRELSA name
+9011257043C,DERIVED_HOLD_NO_SAFE_PAYEE,9684.13,Header emitted from accounting; payee held — no safe PRELSA name
+9011259940C,DERIVED_HOLD_NO_SAFE_PAYEE,5019.50,Header emitted from accounting; payee held — no safe PRELSA name
+9011261538C,DERIVED_HOLD_NO_SAFE_PAYEE,5036.19,Header emitted from accounting; payee held — no safe PRELSA name
+9011262631C,DERIVED_HOLD_NO_SAFE_PAYEE,11746.31,Header emitted from accounting; payee held — no safe PRELSA name
+9011268907C,DERIVED_HOLD_NO_SAFE_PAYEE,5047.61,Header emitted from accounting; payee held — no safe PRELSA name
+9011273881C,DERIVED_HOLD_NO_SAFE_PAYEE,11505.55,Header emitted from accounting; payee held — no safe PRELSA name
+9011273882C,DERIVED_HOLD_NO_SAFE_PAYEE,11580.89,Header emitted from accounting; payee held — no safe PRELSA name
+9015000171C,DERIVED_HOLD_NO_SAFE_PAYEE,3450.89,Header emitted from accounting; payee held — no safe PRELSA name
+9015000181C,DERIVED_HOLD_NO_SAFE_PAYEE,4213.73,Header emitted from accounting; payee held — no safe PRELSA name

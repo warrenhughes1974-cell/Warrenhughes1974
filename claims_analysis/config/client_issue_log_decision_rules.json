@@ -43,8 +43,9 @@
     ]
   },
   "item18_combined_claim_amounts": {
-    "decision": "Death settlement claim amount = DB + loan payout + loan interest combined.",
+    "decision": "Death settlement claim amount = DB + loan payout + loan interest combined. Applies only when a loan offset layer is present. Do not add 0630 death-claim interest on top of 0094 payout (interest is already in the check).",
     "combine_layers": ["payout", "offset", "interest"],
+    "requires_loan_offset": true,
     "applies_to_claim_families": ["DEATH_CLAIM"]
   },
   "item19_payee_overrides": [

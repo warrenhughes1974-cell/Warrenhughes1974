@@ -1,0 +1,11 @@
+{
+  "policy": "9011156655C",
+  "reason": "MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE",
+  "app_version": "v58.60",
+  "pass": true,
+  "fails": [],
+  "screenshot_aligned": true,
+  "payee_count": 4,
+  "confidence": 0.95,
+  "followup": "Broader MATCH_CSO existing-header zero-payee cohort (~140) remains follow-up analysis \u2014 not mass-applied by this change."
+}

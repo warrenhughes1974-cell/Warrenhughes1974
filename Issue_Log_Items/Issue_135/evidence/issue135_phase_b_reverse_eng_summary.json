@@ -1,0 +1,241 @@
+{
+  "generated_at": "2026-08-02T20:09:05Z",
+  "issue": 135,
+  "phase": "B_REVERSE_ENGINEERING",
+  "available_mismatch_count": 61,
+  "claimstat_2_mismatch_count": 61,
+  "claimstat_1_mismatch_count": 0,
+  "no_death_shell_ps_separated": 32,
+  "evidence_class_counts": {
+    "CLEARING_DUPLICATION_SUSPECT": 10,
+    "MULTIPLICITY_X3_REINSTATEMENT": 22,
+    "MISSING_DEATH_MPAID_BUT_PACTG_PAYOUT": 6,
+    "MULTIPLICITY_X2_DUPLICATE_OR_CLEARING": 17,
+    "LOAN_RESIDUAL_SHORTFALL": 2,
+    "HEADER_PAYEE_MISALIGN_BOTH_OFF": 3,
+    "INTEREST_IN_CHECK_RESIDUAL": 1
+  },
+  "hold_flag_counts": {
+    "HOLD": 16,
+    "CANDIDATE": 45
+  },
+  "claimstat_2_class_counts": {
+    "CLEARING_DUPLICATION_SUSPECT": 10,
+    "MULTIPLICITY_X3_REINSTATEMENT": 22,
+    "MISSING_DEATH_MPAID_BUT_PACTG_PAYOUT": 6,
+    "MULTIPLICITY_X2_DUPLICATE_OR_CLEARING": 17,
+    "LOAN_RESIDUAL_SHORTFALL": 2,
+    "HEADER_PAYEE_MISALIGN_BOTH_OFF": 3,
+    "INTEREST_IN_CHECK_RESIDUAL": 1
+  },
+  "examples_by_class": {
+    "MULTIPLICITY_X3_REINSTATEMENT": {
+      "count": 22,
+      "policies": [
+        "9010385491C",
+        "9010745640C",
+        "9010764834C",
+        "9010778262C",
+        "9010778841C"
+      ],
+      "hold_flags": [
+        "CANDIDATE",
+        "CANDIDATE",
+        "CANDIDATE",
+        "CANDIDATE",
+        "CANDIDATE"
+      ],
+      "ratios": [
+        2.9998,
+        2.9967,
+        2.984,
+        2.9877,
+        3.0
+      ],
+      "residuals": [
+        -11999.16,
+        -10045.24,
+        -20986.04,
+        -19717.08,
+        -22325.54
+      ]
+    },
+    "MULTIPLICITY_X2_DUPLICATE_OR_CLEARING": {
+      "count": 17,
+      "policies": [
+        "9010411499C",
+        "9010428771C",
+        "9010500769C",
+        "9010841471C",
+        "9010894951C"
+      ],
+      "hold_flags": [
+        "CANDIDATE",
+        "CANDIDATE",
+        "CANDIDATE",
+        "CANDIDATE",
+        "CANDIDATE"
+      ],
+      "ratios": [
+        2.0,
+        1.9953,
+        1.9954,
+        2.0,
+        2.0
+      ],
+      "residuals": [
+        -10467.29,
+        -5000.0,
+        -5000.0,
+        -7315.24,
+        -14442.87
+      ]
+    },
+    "CLEARING_DUPLICATION_SUSPECT": {
+      "count": 10,
+      "policies": [
+        "9010376540C",
+        "9010834719C",
+        "9010836057C",
+        "9010840780C",
+        "9011000854C"
+      ],
+      "hold_flags": [
+        "HOLD",
+        "HOLD",
+        "HOLD",
+        "HOLD",
+        "HOLD"
+      ],
+      "ratios": [
+        2.971,
+        4.5491,
+        1.2,
+        1.3333,
+        1.1993
+      ],
+      "residuals": [
+        -11621.22,
+        -177457.2,
+        -3162.72,
+        -2058.86,
+        -5380.4
+      ]
+    },
+    "MISSING_DEATH_MPAID_BUT_PACTG_PAYOUT": {
+      "count": 6,
+      "policies": [
+        "9010391359C",
+        "9010786152C",
+        "9011141895C",
+        "9011183505C",
+        "9011208787C"
+      ],
+      "hold_flags": [
+        "CANDIDATE",
+        "CANDIDATE",
+        "CANDIDATE",
+        "CANDIDATE",
+        "CANDIDATE"
+      ],
+      "ratios": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "residuals": [
+        1260.06,
+        7935.67,
+        5019.46,
+        5032.62,
+        36660.0
+      ]
+    },
+    "HEADER_PAYEE_MISALIGN_BOTH_OFF": {
+      "count": 3,
+      "policies": [
+        "9010768069C",
+        "9010780003C",
+        "9010783502C"
+      ],
+      "hold_flags": [
+        "HOLD",
+        "HOLD",
+        "HOLD"
+      ],
+      "ratios": [
+        1.6,
+        1.496,
+        2.9736
+      ],
+      "residuals": [
+        -3003.84,
+        -3024.13,
+        -14147.82
+      ]
+    },
+    "LOAN_RESIDUAL_SHORTFALL": {
+      "count": 2,
+      "policies": [
+        "9010454002C",
+        "9011212602C"
+      ],
+      "hold_flags": [
+        "HOLD",
+        "HOLD"
+      ],
+      "ratios": [
+        0.9913,
+        0.4447
+      ],
+      "residuals": [
+        59.95,
+        7587.93
+      ]
+    },
+    "INTEREST_IN_CHECK_RESIDUAL": {
+      "count": 1,
+      "policies": [
+        "9010847570C"
+      ],
+      "hold_flags": [
+        "HOLD"
+      ],
+      "ratios": [
+        ""
+      ],
+      "residuals": [
+        -28834.15
+      ]
+    }
+  },
+  "candidate_class_counts": {
+    "MULTIPLICITY_X3_REINSTATEMENT": 22,
+    "MISSING_DEATH_MPAID_BUT_PACTG_PAYOUT": 6,
+    "MULTIPLICITY_X2_DUPLICATE_OR_CLEARING": 17
+  },
+  "phase_b_code_implementability": {
+    "MULTIPLICITY_X3_REINSTATEMENT": {
+      "count": 22,
+      "safe_to_implement_phase_b_code": false,
+      "reason": "Repeated PACTG pattern exists (ratio + clearing/reinstatement/0094-1058 legs). Correction mechanism is still ambiguous: scale header MPAID vs dedupe quikclmp payees vs exclude reinstatement/clearing loops in emit. Do not force MPAID=Total_Paid without an approved audit-reasoned path. Needs Development approval for the chosen mechanism."
+    },
+    "MISSING_DEATH_MPAID_BUT_PACTG_PAYOUT": {
+      "count": 6,
+      "safe_to_implement_phase_b_code": false,
+      "reason": "Repeated PACTG pattern exists (ratio + clearing/reinstatement/0094-1058 legs). Correction mechanism is still ambiguous: scale header MPAID vs dedupe quikclmp payees vs exclude reinstatement/clearing loops in emit. Do not force MPAID=Total_Paid without an approved audit-reasoned path. Needs Development approval for the chosen mechanism."
+    },
+    "MULTIPLICITY_X2_DUPLICATE_OR_CLEARING": {
+      "count": 17,
+      "safe_to_implement_phase_b_code": false,
+      "reason": "Repeated PACTG pattern exists (ratio + clearing/reinstatement/0094-1058 legs). Correction mechanism is still ambiguous: scale header MPAID vs dedupe quikclmp payees vs exclude reinstatement/clearing loops in emit. Do not force MPAID=Total_Paid without an approved audit-reasoned path. Needs Development approval for the chosen mechanism."
+    }
+  },
+  "phase_b_code_change": false,
+  "phase_b_code_change_reason": "No Phase B production claim-amount rule implemented. x2 (17) and x3 (22) have repeated PACTG proof, but the emit correction mechanism is unresolved (header scale vs payee dedupe vs exclude reinstatement/clearing loops). Forcing MPAID=Total_Paid without that path is disallowed. Missing-death PACTG payout cases are few (<5) and need the same mechanism choice.",
+  "mintamt_remains_zero": true,
+  "eric_gaps_untouched": true,
+  "pactg_path": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Source\\PACTG_Accounting_Extract20260630.csv"
+}

@@ -1,0 +1,25 @@
+{
+  "reason_class": "MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE",
+  "applied": true,
+  "policies_backfilled": 1,
+  "rows_added": 4,
+  "skipped": [],
+  "allowlist": [
+    "9011156655C"
+  ],
+  "note": "Surgical MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE payee backfill. Broader ~140 zero-payee cohort remains follow-up analysis — not mass-applied.",
+  "source_evidence": {
+    "forensic_json": "Issue_Log_Items/Issue_135/evidence/issue135_forensic_9011156655C.json",
+    "pactg_settlement": "DATE_ADDED=20211104; funding 600113R->2032 face 5000.00 + 400113R->2032 unearned premium 86.64+59.03; payout 2032->1058 PE1-4 = 1286.42/1286.41/1286.42/1286.42",
+    "rna_pe": "NAME_ID 711250/711251/711252/711254 BENEFIT_SEQ 1-4",
+    "phase9_staging": "claims_analysis/phase9_quikclmp_canonical_staging HIGH_CONFIDENCE MULTI_PAYEE_STAGED",
+    "quikclms_unchanged": {
+      "MPAID": 5145.67,
+      "MFACE": 5000.0,
+      "NETDB": 5000.0,
+      "MINTAMT": 0.0,
+      "PREMIUM": 0.0
+    },
+    "issue_135_status": "NOT closed; broader MATCH_CSO zero-payee cohort (~140) follow-up"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "generated_at": "2026-08-02T23:40:38Z",
+  "overall": "PASS",
+  "fail_count": 0,
+  "checks": [
+    {
+      "check": "MINTAMT_ALL_ZERO",
+      "status": "PASS",
+      "detail": "nonzero=0"
+    },
+    {
+      "check": "NO_DUP_MPOLICY_CLAIMNUM_MSEQ",
+      "status": "PASS",
+      "detail": "dups=0"
+    },
+    {
+      "check": "CLMS_SCHEMA",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "check": "CLMP_SCHEMA",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "check": "MPOLICY_TRAILING_C",
+      "status": "PASS",
+      "detail": "bad=0"
+    },
+    {
+      "check": "OPTION3_MPAID_MATCH",
+      "status": "PASS",
+      "detail": "ok=43 bad=[]"
+    },
+    {
+      "check": "TEACHER_MPAID",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "check": "HOLD9_NOT_EMITTED",
+      "status": "PASS",
+      "detail": "present=[]"
+    },
+    {
+      "check": "HEADER_ONLY_308",
+      "status": "PASS",
+      "detail": "ok=308/308 bad_sample=[]"
+    },
+    {
+      "check": "DERIVED_142_HEADERS",
+      "status": "PASS",
+      "detail": "ok=142/142 missing_or_amt=[]"
+    },
+    {
+      "check": "DERIVED_PAYEE_SUMS",
+      "status": "PASS",
+      "detail": "bad=[]"
+    },
+    {
+      "check": "NON_TARGET_SPOTCHECK_9010402010C",
+      "status": "PASS",
+      "detail": "9010402010C=8920.15"
+    },
+    {
+      "check": "NO_FABRICATED_PAYEE_STUBS",
+      "status": "PASS",
+      "detail": "count=0"
+    }
+  ],
+  "clms_rows": 6044,
+  "clmp_rows": 5935,
+  "claimstat_counts": [
+    [
+      "99",
+      4357
+    ],
+    [
+      "2",
+      1687
+    ]
+  ]
+}

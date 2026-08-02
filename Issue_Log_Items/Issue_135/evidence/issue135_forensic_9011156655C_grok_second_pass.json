@@ -1,0 +1,74 @@
+{
+  "policy": "9011156655C",
+  "pass_type": "independent_grok_second_pass",
+  "date": "2026-08-02",
+  "scope": "read_only_forensic_validation_of_primary_conclusion",
+  "primary_conclusion_under_test": {
+    "gap_145_67_is_unearned_premium_not_interest": true,
+    "mpaid_5145_67_is_correct_paid_amount": true,
+    "mface_5000_is_correct_face": true,
+    "mintamt_must_stay_zero": true,
+    "missing_payees_are_emit_gap_not_source_gap": true,
+    "issue135_bucket": "MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE_not_142_308_or_9"
+  },
+  "independent_rechecks": [
+    {
+      "id": "R1",
+      "check": "PACTG settlement clearing in equals payout out",
+      "evidence": "530->2032 5000.00 + 110->2032 86.64 + 110->2032 59.03 = 5145.67; four 38->1058 PE legs sum 5145.67",
+      "pass": true
+    },
+    {
+      "id": "R2",
+      "check": "No interest/dividend settlement codes present",
+      "evidence": "No 0630 / 603803R / 603703R / loan legs on DATE_ADDED=20211104 settlement batch",
+      "pass": true
+    },
+    {
+      "id": "R3",
+      "check": "145.67 equals unearned premium return only",
+      "evidence": "86.64 + 59.03 = 145.67 from debit_code 110 / debit_account 400113R into credit 2032",
+      "pass": true
+    },
+    {
+      "id": "R4",
+      "check": "Output header matches screenshot money fields",
+      "evidence": "MPAID=5145.67, MFACE=5000, NETDB=5000, DIV/LOAN/PREM/SUSP/INT=0; CLAIMSTAT=2; dates 20200205",
+      "pass": true
+    },
+    {
+      "id": "R5",
+      "check": "Output has zero payee rows while source has four PE payouts + four RNA PE names",
+      "evidence": "quikclmp count=0; PACTG PE seq 1-4; RNA PE 711250/711251/711252/711254",
+      "pass": true
+    },
+    {
+      "id": "R6",
+      "check": "Legacy pipeline blocked payees as UNBALANCED because funding ignored 110",
+      "evidence": "phase7c residual -145.67 PAYOUT_EXCESS; phase17 PRODUCTION_BLOCKED UNBALANCED_CLAIM; phase9 still staged 4 HIGH_CONFIDENCE payees",
+      "pass": true
+    },
+    {
+      "id": "R7",
+      "check": "Not in Issue #135 142 / 308 / 9 populations",
+      "evidence": "Absent from HOLD list; has 28 PACTG rows and no CSO_CONTROLLED_NO_PACTG_HISTORY marker; already in Output as AVAILABLE_MATCH MATCH_CSO so DERIVED_HIGH skip path",
+      "pass": true
+    },
+    {
+      "id": "R8",
+      "check": "Do not map 145.67 into MINTAMT",
+      "evidence": "Interest layer empty; Issue #135 Phase A MINTAMT=0 mandatory; component is premium return in clearing",
+      "pass": true
+    }
+  ],
+  "disagreements_with_primary": [],
+  "amplifications": [
+    "Screenshot blank payee (Disc C / Check# 0 / Amount 0) is consistent with zero quikclmp rows, not a separate QLAdmin display bug.",
+    "CSO Total_Paid and Output MPAID already agree at 5145.67; money-header fix is not required for this policy.",
+    "Same structural class appears broader: issue135_cso_output_recon has ~140 MATCH_CSO rows with MPAID>0 and payee_rows=0; mass backfill needs gated inventory beyond this single-policy fix."
+  ],
+  "verdict": "PASS_CONFIRM_PRIMARY",
+  "confidence": 0.94,
+  "coding_safe_to_begin": true,
+  "recommended_first_coding_step": "Surgical quikclmp emit for 9011156655C only (4 PE payees totaling 5145.67); leave quikclms money fields unchanged; then decide whether to inventory the broader MATCH_CSO zero-payee cohort."
+}

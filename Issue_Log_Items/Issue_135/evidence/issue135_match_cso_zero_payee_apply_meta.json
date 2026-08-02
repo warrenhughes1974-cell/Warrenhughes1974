@@ -1,0 +1,23 @@
+{
+  "reason": "MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE_COHORT",
+  "before_clmp_rows": 5301,
+  "after_clmp_rows": 5495,
+  "rows_added": 194,
+  "policies_backfilled": 137,
+  "cohort_n": 140,
+  "class_counts": {
+    "SAFE_BACKFILL": 137,
+    "HOLD_INCOMPLETE": 3
+  },
+  "safe_allowlist_n": 137,
+  "hold_n": 3,
+  "pre_archive": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\quikclmp_pre_issue135_zero_payee_cohort_20260802T214834Z.csv",
+  "evidence_archive": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_135\\evidence\\quikclmp_pre_issue135_zero_payee_cohort_20260802T214834Z.csv",
+  "pre_sha256": "2f0692539d0ddf34dfc4e8dc967d6ad27a0be9d831bbe3b111b1b14c9e88e399",
+  "post_sha256": "5dd6d9da57134da17a81382c58e8cdb2fd3f161a8c99475d780104b778bff0fc",
+  "test_validation": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output\\Test_Validation\\quikclmp.csv",
+  "quikclms_mutated": false,
+  "header_money_unchanged": true,
+  "golden_9011156655C_payees": 4,
+  "approx_zero_payee_death_headers_before": 609
+}

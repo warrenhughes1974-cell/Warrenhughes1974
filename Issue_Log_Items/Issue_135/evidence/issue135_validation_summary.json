@@ -1,0 +1,53 @@
+{
+  "issue": 135,
+  "status": "PASS",
+  "app_version_root": "v58.61",
+  "app_version_mig": "v58.61",
+  "clms_rows": 6044,
+  "mintamt_nonzero": 0,
+  "teacher_recon": {
+    "9011156098C": {
+      "population": "AVAILABLE_MISMATCH",
+      "proposed_rule_class": "REINSTATEMENT_TRIPLE_COUNT",
+      "cso_total_paid": "15000.0",
+      "death_mpaid": "45000.0"
+    },
+    "9010914301C": {
+      "population": "AVAILABLE_MISMATCH",
+      "proposed_rule_class": "DUPLICATE_PAYOUT",
+      "cso_total_paid": "25019.98",
+      "death_mpaid": "50039.96"
+    },
+    "9010391359C": {
+      "population": "AVAILABLE_MISMATCH",
+      "proposed_rule_class": "MISSING_DEATH_MPAID_BUT_PACTG_PAYOUT",
+      "cso_total_paid": "1260.06",
+      "death_mpaid": "0.0"
+    },
+    "9010150740C": {
+      "population": "AVAILABLE_MATCH",
+      "proposed_rule_class": "MATCH_CSO",
+      "cso_total_paid": "3213.59",
+      "death_mpaid": "3213.59"
+    },
+    "9010402010C": {
+      "population": "AVAILABLE_MATCH",
+      "proposed_rule_class": "MATCH_CSO",
+      "cso_total_paid": "8920.15",
+      "death_mpaid": "8920.15"
+    },
+    "9010429064C": {
+      "population": "AVAILABLE_MATCH",
+      "proposed_rule_class": "MATCH_CSO",
+      "cso_total_paid": "22711.07",
+      "death_mpaid": "22711.07"
+    },
+    "9010430296C": {
+      "population": "AVAILABLE_MATCH",
+      "proposed_rule_class": "MATCH_CSO",
+      "cso_total_paid": "11639.54",
+      "death_mpaid": "11639.54"
+    }
+  },
+  "errors": []
+}
