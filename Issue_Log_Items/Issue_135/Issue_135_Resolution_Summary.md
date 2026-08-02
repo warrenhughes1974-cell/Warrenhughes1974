@@ -7,7 +7,7 @@
 **Closed date:** 2026-08-02  
 **Owner:** Conversion (Warren) / Issue Owner Eric  
 **Branch:** `issue-34-pr7-quikisrr`  
-**Commit:** *(filled after git push)*  
+**Commit:** `7a13bf7`  
 
 ---
 
