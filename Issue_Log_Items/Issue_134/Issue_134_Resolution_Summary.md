@@ -103,5 +103,5 @@ Revert v58.47 hooks / `issue134_claim_memo_overlay.py` / B skip in `quikmemo_con
 | Item | Value |
 |------|-------|
 | Version | v58.47 |
-| Branch | (recorded at commit) |
-| Commit | (recorded at commit) |
+| Branch | `issue-34-pr7-quikisrr` |
+| Commit | `35c27e4` |
