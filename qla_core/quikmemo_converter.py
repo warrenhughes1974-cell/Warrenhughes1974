@@ -120,14 +120,14 @@ def _sort_int(raw: str) -> int:
         return 0
 
 
-def _format_pnote_memotext(row: pd.Series) -> str:
+def _format_pnote_memotext(row: pd.Series, tag: str = "[PNOTE]") -> str:
     date_disp, user_from_nameid = _parse_pnote_date(row.get("DATE_OR_NAMEID", ""))
     time_disp = _format_time_hhmmss(row.get("TIME_OR_UW_REQ_SEQ", ""))
     ben_seq = _strip(row.get("BENEFIT_SEQ", ""))
     seq = _strip(row.get("RECORD_SEQ", ""))
     user = user_from_nameid or "-"
     lines = [
-        "[PNOTE]",
+        tag,
         f"Date: {date_disp}",
         f"Time: {time_disp}",
         f"User: {user}",
@@ -140,6 +140,11 @@ def _format_pnote_memotext(row: pd.Series) -> str:
     if body:
         lines.append(body)
     return "\n".join(lines)
+
+
+def format_pnote_b_claim_memotext(row: pd.Series) -> str:
+    """Issue #134 — death-benefit note text for quikclms.MEMOTEXT (Claims Tab)."""
+    return _format_pnote_memotext(row, tag="[PNOTE-B]")
 
 
 def _format_pense_memotext(row: pd.Series) -> str:
@@ -219,6 +224,7 @@ def convert_quikmemo_from_pnote_pense(
         "skipped_blank_pnote": 0,
         "skipped_blank_pense": 0,
         "skipped_non_p_ens": 0,
+        "skipped_file_type_b": 0,  # Issue #134 — Claims Tab via quikclms, not Policy Memo
         "skipped_orphan": 0,
         "skipped_exact_dup": 0,
         "emitted_pnote": 0,
@@ -274,6 +280,10 @@ def convert_quikmemo_from_pnote_pense(
         pnote = _read_pnote_csv(pnote_path)
         stats["pnote_source_rows"] = len(pnote)
         for _, row in pnote.iterrows():
+            # Issue #134: FILE_TYPE B → quikclms.MEMOTEXT (Claims Tab), not Policy Memo
+            if _strip(row.get("FILE_TYPE", "")).upper() == "B":
+                stats["skipped_file_type_b"] += 1
+                continue
             text = _text_blob(row, PNOTE_LINE_COLS)
             if _is_blank_text(text):
                 stats["skipped_blank_pnote"] += 1

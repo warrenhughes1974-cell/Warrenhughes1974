@@ -1,10 +1,11 @@
 # LifePRO → QLAdmin Issue Resolution Framework
 
-**Version:** 1.3  
+**Version:** 1.4  
 **Project:** Warrenhughes1974 / QLA Migration  
 **Scope:** Gated issue log remediation — no code until Development approved  
 **Agent map locked:** 2026-07-22 — **Cursor Grok 4.5 for all stages** (was mixed Composer/Grok)  
 **Auto-chains locked:** 2026-07-22 — Pre-Dev through Risk; Post-Dev through Validation; Post-Val through Closure  
+**Stage 0 Discovery locked:** 2026-08-01 — Search & Discuss before Intake; stop until “Proceed to Intake”
 
 ---
 
@@ -13,6 +14,7 @@
 Every issue log item must pass through the same **gated process** before production conversion logic changes. This framework prevents:
 
 - Coding before source data or field definitions are confirmed
+- Starting Intake/Planning before the real target table/UI is confirmed
 - Broad refactors that break stable conversions
 - Missing validation/regression evidence
 - Unresolved client questions shipped as assumptions
@@ -21,11 +23,23 @@ Every issue log item must pass through the same **gated process** before product
 
 ---
 
-## Auto-Chains (default — locked 2026-07-22)
+## Auto-Chains (default — Stage 0 locked 2026-08-01)
 
-### Pre-Development Auto-Chain (on issue open)
+### Discovery (on issue open) — Stage 0
 
-When the user **opens** an issue, complete stages **1 → 4** in the same session:
+When the user **opens** an issue (or asks to discuss it), run **Discovery (Search & Discuss)** first:
+
+| Order | Stage | Deliverable |
+|------:|-------|-------------|
+| 0 | Discovery | Chat discussion + optional `Issue_<ID>_Discovery_Notes.md` |
+
+**Stop after Discovery.** Discuss what needs to be done. Do **not** run Intake → Risk until the user says e.g. **“Proceed to Intake”**.
+
+**Opt-out:** “Skip Discovery” / “Proceed to Intake” on open → skip Stage 0 and run the Pre-Development chain below.
+
+### Pre-Development Auto-Chain (after Proceed to Intake)
+
+When the user says **Proceed to Intake** (or opens with skip-Discovery), complete stages **1 → 4** in the same session:
 
 | Order | Stage | Deliverable |
 |------:|-------|-------------|
@@ -46,12 +60,13 @@ Do **not** start Development until the user says e.g. “Approved for Developmen
 **Regression → Closure** (G7 Output accountability + commit/push rules still apply).
 
 **Hard stops:**
+- Discovery incomplete (no ID / no symptom) → stop; do not Intake
 - Intake incomplete (no ID / no symptom) → stop
 - Dependency Gate **BLOCKED** → stop; do not Risk
 - Risk **No-Go** → stop; do not ask for Development
 - Validation **FAIL** → stop; return to Development (do not Closure)
 
-**Opt-out:** “Intake only” / “stop after Intake” → stop after Intake.
+**Opt-out:** “Discovery only” → stop after Discovery. “Intake only” / “stop after Intake” → stop after Intake.
 
 Mirror: `.cursor/rules/issue-framework-stage-agents.mdc`
 
@@ -61,10 +76,13 @@ Mirror: `.cursor/rules/issue-framework-stage-agents.mdc`
 
 ```mermaid
 flowchart TD
-    A[Intake Agent] --> B[Planning Agent]
+    D[Discovery Search and Discuss] --> Stop0{User Proceed to Intake?}
+    Stop0 -->|No| Hold[Stop after Discovery]
+    Stop0 -->|Yes| A[Intake Agent]
+    A --> B[Planning Agent]
     B --> C{Dependency Gate}
-    C -->|Missing inputs| D[Blocked]
-    D --> C
+    C -->|Missing inputs| Blk[Blocked]
+    Blk --> C
     C -->|All dependencies met| E[Risk Agent]
     E --> F{Go / No-Go}
     F -->|No-Go| B
@@ -84,6 +102,7 @@ flowchart TD
 
 | Stage | Agent | Code allowed? | Assigned model |
 |-------|--------|---------------|----------------|
+| 0 | Discovery | **No** | **Cursor Grok 4.5** |
 | 1 | Intake | **No** | **Cursor Grok 4.5** |
 | 2 | Planning | **No** | **Cursor Grok 4.5** |
 | 3 | Dependency Gate | **No** | **Cursor Grok 4.5** |
@@ -101,6 +120,7 @@ flowchart TD
 
 | Gate | Location | Pass criteria |
 |------|----------|---------------|
+| **G-D — Discovery complete** | After Discovery | Source/target discussed; wrong-tab risks called out; open questions listed; user may Proceed to Intake |
 | **G0 — Intake complete** | After Intake | Issue scoped, artifacts listed, severity/owner assigned |
 | **G1 — Planning complete** | After Planning | Source/target mapping documented, open questions listed |
 | **G2 — Dependencies satisfied** | Dependency Gate | No blockers on source files, client answers, field defs, screenshots |
@@ -110,6 +130,7 @@ flowchart TD
 | **G6 — Regression pass** | Regression | Unrelated tables/fields unchanged; no schema drift |
 | **G7 — Closure** | Closure | **`Resolution:`** one-line fix summary published; resolution summary + tracking sheets updated; **`app.py` version bumped** if engine/rate path touched; **git commit + push to remote** (issue-scoped); **Output accountability gate:** issue validator PASS on full `QLA_Migration/Output/` + accountability **IN_DATA** for this issue (no GAP) + affected tables in `Test_Validation/`; **production-ready** batch verified (validators + network pull instructions) |
 
+**Intake cannot begin until G-D is satisfied (or Discovery explicitly skipped).**  
 **Development cannot begin until G1 + G2 + G3 are satisfied.**
 
 ---
@@ -120,6 +141,7 @@ Use these statuses in issue tracking sheets and report headers:
 
 | Status | Meaning | Next action |
 |--------|---------|-------------|
+| **Discovery** | Issue opened; search & discuss in progress or complete | Discuss findings; wait for Proceed to Intake |
 | **Intake** | Issue received; not yet analyzed | Run Intake Agent |
 | **Planning** | Research and mapping in progress | Run Planning Agent |
 | **Blocked — Awaiting Client Data** | Missing LifePRO extract, re-pull, or file delivery | Dependency Gate; client action |
@@ -135,16 +157,17 @@ Use these statuses in issue tracking sheets and report headers:
 
 ## Framework Rules (Non-Negotiable)
 
-1. **No code changes** during Intake, Planning, Dependency Gate, or Risk stages.
-2. **Development cannot begin** until Planning and Risk are complete (G1 + G3).
-3. If **source data, client clarification, field definitions, or screenshots** are missing, **stop at Dependency Gate**.
-4. All code changes must be **surgical and issue-specific** — no wholesale rewrites.
-5. Every development change must include **validation and regression evidence**.
-6. Every issue must end with an **issue-log-ready resolution summary** (Closure Agent).
-7. **G7 brief resolution (required):** Closure must publish a single paste-ready line — **`Resolution:`** followed by one brief sentence stating what the fix was (**do not include engine version** in this line; version belongs in the summary header / Release column). This line goes in the resolution summary header, tracking sheets, and client readout — not only the long-form report.
-8. **G7 release gate:** When Development touched conversion or rate code, Closure must **commit issue-scoped changes and `git push` to remote** so network batch machines can pull the fix. Bump **`app.py` version** when the batch path changes.
-9. **G7 Output accountability gate:** Do **not** mark **Closed** until (a) the issue validator PASSes on **full** `QLA_Migration/Output/`, (b) `validate_issue_log_accountability.py` (or equivalent) shows this issue **IN_DATA** (GAP blocks Closure), and (c) affected tables are published to `Output/Test_Validation/`. Code-only or TV-only proof is insufficient. User waiver only, with reason + date.
-10. **Preserve prior fixes:** Issue #25 MPOLICY padding (`format_qladmin_mpolicy`) and Issue #26 MPREM mapping (`ANN_PREM_PER_UNIT` + fallback) must not regress.
+1. **No code changes** during Discovery, Intake, Planning, Dependency Gate, or Risk stages.
+2. **Discovery runs first** on issue open — search & discuss, then stop — unless the user skips Discovery.
+3. **Development cannot begin** until Planning and Risk are complete (G1 + G3).
+4. If **source data, client clarification, field definitions, or screenshots** are missing, **stop at Dependency Gate**.
+5. All code changes must be **surgical and issue-specific** — no wholesale rewrites.
+6. Every development change must include **validation and regression evidence**.
+7. Every issue must end with an **issue-log-ready resolution summary** (Closure Agent).
+8. **G7 brief resolution (required):** Closure must publish a single paste-ready line — **`Resolution:`** followed by one brief sentence stating what the fix was (**do not include engine version** in this line; version belongs in the summary header / Release column). This line goes in the resolution summary header, tracking sheets, and client readout — not only the long-form report.
+9. **G7 release gate:** When Development touched conversion or rate code, Closure must **commit issue-scoped changes and `git push` to remote** so network batch machines can pull the fix. Bump **`app.py` version** when the batch path changes.
+10. **G7 Output accountability gate:** Do **not** mark **Closed** until (a) the issue validator PASSes on **full** `QLA_Migration/Output/`, (b) `validate_issue_log_accountability.py` (or equivalent) shows this issue **IN_DATA** (GAP blocks Closure), and (c) affected tables are published to `Output/Test_Validation/`. Code-only or TV-only proof is insufficient. User waiver only, with reason + date.
+11. **Preserve prior fixes:** Issue #25 MPOLICY padding (`format_qladmin_mpolicy`) and Issue #26 MPREM mapping (`ANN_PREM_PER_UNIT` + fallback) must not regress.
 
 ---
 
@@ -216,18 +239,31 @@ Use these statuses in issue tracking sheets and report headers:
 
 ---
 
+### Issue #134 — Death Benefit Notes (Discovery example)
+
+| Stage | Outcome |
+|-------|---------|
+| Discovery | Client “Memo on Claims Tab” = `quikclms.MEMOTEXT`, not Policy `quikmemo`; PNOTE `FILE_TYPE=B` (~4,149 rows) currently wrong-routed to Policy Memo |
+| Intake+ | Awaiting “Proceed to Intake” |
+
+**Lesson:** Search & Discuss first — “Memo” can mean Policy Memo, Claims Memo, or UW memo.
+
+---
+
 ## How to Run
 
 1. Open an issue in chat (or paste the master prompt from `AI_Agents/Run_Issue_Framework_Prompt.md`)
-2. Agent auto-runs **Intake → Planning → Dependency Gate → Risk** on Cursor Grok 4.5, then stops and asks for Development approval
-3. Say **“Approved for Development”** → agent runs **Development → Validation**, then stops with Validation readout
-4. On Validation **PASS**, agent continues **Regression → Closure** (G7 gates still apply)
+2. Agent runs **Discovery (Search & Discuss)** on Cursor Grok 4.5, then **stops** and asks whether to Proceed to Intake
+3. Say **“Proceed to Intake”** → agent runs **Intake → Planning → Dependency Gate → Risk**, then stops and asks for Development approval
+4. Say **“Approved for Development”** → agent runs **Development → Validation**, then stops with Validation readout
+5. On Validation **PASS**, agent continues **Regression → Closure** (G7 gates still apply)
 
 ---
 
 ## Related Documents
 
 - `AGENTS.md` — Enterprise conversion guardrails
+- `AI_Agents/Discovery_Agent.md` — Stage 0 Search & Discuss
 - `AI_Agents/Dependency_Gate.md` — Blocker checklist
 - `AI_Agents/Templates/` — Report templates
 - `Issue_Log_Items/Issue_Log_Master_Tracking_Sheet.md` — Master issue index

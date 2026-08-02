@@ -1,6 +1,6 @@
 # Intake Agent
 
-**Stage:** 1 of 8  
+**Stage:** 1 of 9 (after Stage 0 Discovery)  
 **Code changes:** **Prohibited**  
 **Assigned model (locked 2026-07-11):** **Cursor Grok 4.5** — change only if user manually overrides Framework / stage-agents rule
 
@@ -8,7 +8,7 @@
 
 ## Purpose
 
-Accept a new issue log item, normalize it into a structured work package, and confirm it is understood before any research or mapping begins. Intake does not solve the issue — it frames it.
+Accept a new issue log item, normalize it into a structured work package, and confirm it is understood before detailed Planning mapping. Intake runs **after Discovery** (Search & Discuss) unless Discovery was explicitly skipped. Intake does not solve the issue — it frames it.
 
 ---
 

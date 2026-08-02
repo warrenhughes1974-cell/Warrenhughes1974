@@ -1,10 +1,18 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.44
-# Date:        2026-07-28
+# Version:     v58.47
+# Date:        2026-08-01
 # SYNC:        Must match repo root app.py — run_converter.bat launches root app.py, not this copy.
-# Change Note: v58.44 — Issue #121: ART family (5667AT/5646AT/57ATCR) must not emit ETI.
+# Change Note: v58.47 — Issue #134: PNOTE FILE_TYPE=B → quikclms.MEMOTEXT (Claims Tab memo);
+#              exclude B from quikmemo Policy Memo. Post-emit overlay after #79/#85/#84.
+#              v58.46 — Item 18 claims overlay: apply combined amounts only when loan offset
+#              is present. Interest-only (0630) rows must not inflate NETDB/MPAID/MFACE above
+#              the 0094 payout (double-count fix; e.g. 9010402010 10700.73 → 8920.15).
+#              v58.45 — Issue #124: emit QuikIswl month-0 seed rows for all ISWL base policies
+#              (MLOB=I, MLASTANNV=MISSDT, MDB=MUNIT*1000, MMONTH=0). Batch hook default ON
+#              (QLA_ENABLE_QUIKISWL_EMIT=0 to skip). Post-load anniversary remains client ops.
+#              v58.44 — Issue #121: ART family (5667AT/5646AT/57ATCR) must not emit ETI.
 #              PAID_UP_TYPE LE/ET no longer wins on Annual Renewable Term; use CONTRACT_CODE+REASON.
 #              v58.43 — Issue #119: PUA coverages force quikridr.MPAR=0 (non-participating).
 #              Robert: when QLAdmin adds a PA rider it sets PAR/MPAR to 0; do not inherit base.
@@ -379,6 +387,10 @@ from qla_core.issue84_track_a_header_backfill import (
     backfill_quikclms_headers_from_payees,
     write_money_field_audit,
 )
+from qla_core.issue134_claim_memo_overlay import (
+    apply_issue134_claim_memos,
+    write_issue134_orphan_audit,
+)
 # --- Phase 18A–20: Claims orchestration, UAT handoff/emit/batch/DBF, MPOLICY validation ---
 VALID_RUN_MODES = ("UAT", "PRODUCTION", "DISABLED")
 DEFAULT_RUN_MODE = "UAT"
@@ -527,7 +539,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.44"
+APP_VERSION = "v58.47"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -1571,6 +1583,10 @@ class QLAdminEnterpriseIntegrationSuite:
                 adj = pd.read_csv(adj_path, dtype=str)
                 adj["combined_claim_amount"] = pd.to_numeric(adj["combined_claim_amount"], errors="coerce")
                 adj = adj.dropna(subset=["combined_claim_amount"])
+                # Item 18: loan-settlement only. Skip interest-only rows (0630 already in 0094).
+                if "offset" in adj.columns:
+                    adj["offset"] = pd.to_numeric(adj["offset"], errors="coerce").fillna(0.0)
+                    adj = adj[adj["offset"] != 0.0]
                 prefix_map = {
                     self._claimnum_prefix(row["reconstructed_claim_id"]): row["combined_claim_amount"]
                     for _, row in adj.iterrows()
@@ -1771,6 +1787,74 @@ class QLAdminEnterpriseIntegrationSuite:
             self.log(f"  After CLAIMSTAT counts: {counts}")
         if remap_result.get("audit_path"):
             self.log(f"  Audit: {remap_result['audit_path']}")
+
+    def _apply_issue134_claim_memos(self, output_dir):
+        """Issue #134: PNOTE FILE_TYPE=B → quikclms.MEMOTEXT (Claims Tab). After #79 lineage use."""
+        clms_path = os.path.normpath(os.path.join(output_dir, "quikclms.csv"))
+        result = {
+            "applied": False,
+            "rows_updated": 0,
+            "policies_updated": 0,
+            "orphan_b_policies": 0,
+            "audit_path": "",
+            "reason": "",
+        }
+        if not os.path.isfile(clms_path):
+            result["reason"] = "missing_quikclms"
+            return result
+        try:
+            src_dir = self._migration_source_dir()
+            pnote_path, _pnote_label, _pense_path, _pense_label = resolve_quikmemo_sources(src_dir)
+            if not pnote_path:
+                result["reason"] = "missing_pnote"
+                return result
+            clms_df = pd.read_csv(clms_path, dtype=str).fillna("")
+            clms_after, orphan_df, stats = apply_issue134_claim_memos(clms_df, pnote_path)
+            updated = int(stats.get("rows_updated", 0) or 0)
+            if updated <= 0:
+                result["reason"] = stats.get("reason") or "no_b_memos_applied"
+                result["orphan_b_policies"] = int(stats.get("orphan_b_policies", 0) or 0)
+                if not orphan_df.empty:
+                    result["audit_path"] = write_issue134_orphan_audit(orphan_df, self._reports_dir())
+                return result
+            tmp_path = clms_path + ".tmp"
+            clms_after.to_csv(tmp_path, index=False, encoding="utf-8")
+            os.replace(tmp_path, clms_path)
+            audit_path = ""
+            if not orphan_df.empty:
+                audit_path = write_issue134_orphan_audit(orphan_df, self._reports_dir())
+            result.update(
+                {
+                    "applied": True,
+                    "rows_updated": updated,
+                    "policies_updated": int(stats.get("policies_updated", 0) or 0),
+                    "orphan_b_policies": int(stats.get("orphan_b_policies", 0) or 0),
+                    "audit_path": audit_path,
+                }
+            )
+            return result
+        except Exception as exc:
+            result["reason"] = f"error:{exc}"
+            return result
+
+    def _log_issue134_claim_memo_summary(self, overlay_result):
+        if not overlay_result:
+            return
+        self.log("ISSUE #134 CLAIM MEMOS (PNOTE B → quikclms.MEMOTEXT):")
+        if not overlay_result.get("applied"):
+            self.log(f"  Skipped: {overlay_result.get('reason', 'unknown')}")
+            if overlay_result.get("orphan_b_policies"):
+                self.log(f"  Orphan B policies: {overlay_result.get('orphan_b_policies')}")
+            if overlay_result.get("audit_path"):
+                self.log(f"  Orphan audit: {overlay_result['audit_path']}")
+            return
+        self.log(
+            f"  Rows updated={overlay_result.get('rows_updated', 0)} "
+            f"policies={overlay_result.get('policies_updated', 0)} "
+            f"orphan_b={overlay_result.get('orphan_b_policies', 0)}"
+        )
+        if overlay_result.get("audit_path"):
+            self.log(f"  Orphan audit: {overlay_result['audit_path']}")
 
     def _apply_issue85_claim_header_structure(self, output_dir):
         """Issue #85: merge/re-phase quikclms headers; re-attach quikclmp phases (D1–D4)."""
@@ -1993,6 +2077,11 @@ class QLAdminEnterpriseIntegrationSuite:
     def _batch_include_quikisrr_enabled(self):
         flag = os.environ.get("QLA_ENABLE_QUIKISRR_EMIT", "").strip().lower() in ("1", "true", "yes")
         return flag and self.CLAIMS_ORCHESTRATION["run_mode"] == "UAT"
+
+    def _batch_include_quikiswl_enabled(self):
+        # Issue #124: default ON for full batch; set QLA_ENABLE_QUIKISWL_EMIT=0 to skip.
+        flag = os.environ.get("QLA_ENABLE_QUIKISWL_EMIT", "1").strip().lower()
+        return flag not in ("0", "false", "no")
 
     def _claims_uat_dbf_generation_enabled(self):
         flag = os.environ.get("QLA_GENERATE_UAT_CLAIMS_DBF", "").strip().lower() in ("1", "true", "yes")
@@ -5127,6 +5216,11 @@ class QLAdminEnterpriseIntegrationSuite:
                 )
                 emit_result["issue84_track_a"] = track_a_result
                 self._log_issue84_track_a_summary(track_a_result)
+                issue134_result = self._apply_issue134_claim_memos(
+                    emit_result.get("output_dir") or self._resolve_output_base_dir()
+                )
+                emit_result["issue134_claim_memos"] = issue134_result
+                self._log_issue134_claim_memo_summary(issue134_result)
         else:
             self.log("  UAT emit skipped (RUN_MODE != UAT or QLA_CLAIMS_UAT_EMIT=0).")
 
@@ -5236,6 +5330,32 @@ class QLAdminEnterpriseIntegrationSuite:
                 self.log(f"  {name}: {info.get('rows', '?')} rows (appended={info.get('appended', '')})")
         self.log("=" * 60)
         return result
+
+    def _execute_batch_quikiswl_seed(self):
+        """Issue #124 — QuikIswl month-0 seeds from converted quikmstr/quikridr."""
+        if not self._batch_include_quikiswl_enabled():
+            self.log("BATCH QUIKISWL (Issue #124): skipped (QLA_ENABLE_QUIKISWL_EMIT=0).")
+            return None
+        self.log("=" * 60)
+        self.log("BATCH QUIKISWL SEED (Issue #124 — month-0 QuikIswl)")
+        try:
+            from qla_core.quikiswl_loader import emit_quikiswl_seeds
+
+            out_dir = self._migration_output_dir()
+            summary = emit_quikiswl_seeds(out_dir)
+            self._last_quikiswl_result = summary
+            self.log(
+                f"QUIKISWL (batch): status={summary.get('status', '?')} "
+                f"rows={summary.get('rows', '?')} output={summary.get('output', '')}"
+            )
+            if summary.get("by_plan"):
+                self.log(f"  by_plan: {summary.get('by_plan')}")
+            self.log("=" * 60)
+            return summary
+        except Exception as exc:
+            self.log(f"QUIKISWL ERROR: {exc}")
+            self.log("=" * 60)
+            return {"status": "FAILED", "error": str(exc)}
 
     def on_table_select(self, event=None):
         table = self.table_var.get()
@@ -6977,6 +7097,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         f"  Stats: PNOTE emit={memo_stats.get('emitted_pnote', 0)} "
                         f"PENSE emit={memo_stats.get('emitted_pense', 0)} "
                         f"blank skip={memo_stats.get('skipped_blank_pnote', 0) + memo_stats.get('skipped_blank_pense', 0)} "
+                        f"file_type_b skip={memo_stats.get('skipped_file_type_b', 0)} "
                         f"orphan={memo_stats.get('skipped_orphan', 0)} "
                         f"exact dup={memo_stats.get('skipped_exact_dup', 0)}"
                     )
@@ -8954,7 +9075,9 @@ class QLAdminEnterpriseIntegrationSuite:
             current_stage = "Running claims / payment outputs"
             batch_claims_result = None
             batch_quikisrr_result = None
+            batch_quikiswl_result = None
             if is_batch:
+                batch_quikiswl_result = self._execute_batch_quikiswl_seed()
                 batch_claims_result = self._execute_batch_claims_uat_finale()
                 batch_quikisrr_result = self._execute_batch_quikisrr_finale(batch_claims_result)
 

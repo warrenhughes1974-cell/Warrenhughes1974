@@ -5,12 +5,13 @@ alwaysApply: true
 
 # Issue Framework — Stage Agents (locked)
 
-**Authority:** User-locked 2026-07-11; **stage map + auto-chain revised 2026-07-22** (Grok 4.5 all stages; stops only at Development approval and after Validation). **Do not change unless the user manually overrides in chat or edits this rule / `AI_Agents/Framework.md`.**
+**Authority:** User-locked 2026-07-11; **stage map + auto-chain revised 2026-07-22** (Grok 4.5 all stages; stops only at Development approval and after Validation); **Stage 0 Discovery locked 2026-08-01** (Search & Discuss before Intake). **Do not change unless the user manually overrides in chat or edits this rule / `AI_Agents/Framework.md`.**
 
 ## Linear stage order
 
 | Stage | Agent | Code allowed? | Assigned model |
 |-------|--------|---------------|----------------|
+| 0 | Discovery | **No** | Cursor Grok 4.5 |
 | 1 | Intake | **No** | Cursor Grok 4.5 |
 | 2 | Planning | **No** | Cursor Grok 4.5 |
 | 3 | Dependency Gate | **No** | Cursor Grok 4.5 |
@@ -20,9 +21,17 @@ alwaysApply: true
 | 7 | Regression | Read-only + batch/compare | Cursor Grok 4.5 |
 | 8 | Closure | Docs only | Cursor Grok 4.5 |
 
-## Auto-chains (default — locked 2026-07-22)
+## Auto-chains (default — Stage 0 locked 2026-08-01)
 
-### Pre-Development Auto-Chain (on issue open)
+### Discovery (on issue open)
+
+**Discovery (Search & Discuss)** → then **stop**.
+
+Discuss what needs to be done (repo/source/UI target). Do **not** start Intake until the user says e.g. “Proceed to Intake”.
+
+**Opt-out:** “Skip Discovery” / open with “Proceed to Intake” → skip Stage 0.
+
+### Pre-Development Auto-Chain (after Proceed to Intake)
 
 **Intake → Planning → Dependency Gate → Risk** → then **stop**.
 
@@ -40,21 +49,23 @@ When Validation **PASS**es (or user says validation is complete / proceed to Clo
 
 **Regression → Closure** (including G7 Output accountability gate).
 
-**Opt-out:** “Intake only” / “stop after Intake” → stop after Intake. Dependency Gate **BLOCKED** → stop; do not Risk.
+**Opt-out:** “Discovery only” → stop after Discovery. “Intake only” / “stop after Intake” → stop after Intake. Dependency Gate **BLOCKED** → stop; do not Risk.
 
 ## Enforcement
 
 1. Use Cursor Grok 4.5 for **all** stages unless the user overrides.
-2. Intake → Risk: **no production code**.
-3. Opening an issue triggers the Pre-Development Auto-Chain unless the user opts out.
-4. Development requires G1 + G2 + G3 **and** explicit Development approval.
-5. After Development approval, run Development then Validation, then stop for the Validation readout.
-6. After Validation PASS, continue Regression → Closure in the same session (or when user confirms).
-7. Canonical copy: `AI_Agents/Framework.md` — keep both in sync.
-8. **G7 Closure Output gate:** do **not** mark **Closed** until issue validator PASS on full `QLA_Migration/Output/` and accountability **IN_DATA** (see `.cursor/rules/issue-closure-output-gate.mdc`).
+2. Discovery → Risk: **no production code**.
+3. Opening an issue triggers **Discovery** first (then stop) unless the user opts out / skips Discovery.
+4. After “Proceed to Intake”, run Intake → Risk, then stop for Development approval.
+5. Development requires G1 + G2 + G3 **and** explicit Development approval.
+6. After Development approval, run Development then Validation, then stop for the Validation readout.
+7. After Validation PASS, continue Regression → Closure in the same session (or when user confirms).
+8. Canonical copy: `AI_Agents/Framework.md` — keep both in sync.
+9. **G7 Closure Output gate:** do **not** mark **Closed** until issue validator PASS on full `QLA_Migration/Output/` and accountability **IN_DATA** (see `.cursor/rules/issue-closure-output-gate.mdc`).
 
 ## Related
 
 - `AI_Agents/Framework.md`
+- `AI_Agents/Discovery_Agent.md`
 - `AI_Agents/Run_Issue_Framework_Prompt.md`
 - `AGENTS.md`

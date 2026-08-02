@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+134	Closed	Death Benefit Notes	Please place any note with a File_Type code of B on the PNOTE_PolicyNotes_Extract in Memo section in the Claims Tab.	7/30/2026	No Go	Eric	Warren	2026-08-01	Resolution: PNOTE File_Type B death-benefit notes now load to Claims Tab memo on quikclms.MEMOTEXT and are excluded from the Policy Memo tab (quikmemo). v58.47; validator+regression PASS; QLAdmin UAT OK on 9010150740C with DBF+DBT.

@@ -1,0 +1,53 @@
+{
+  "pnote_b_policies": 1501,
+  "death_rows_with_b": 1209,
+  "missing_pnote_b_tag": 0,
+  "sample_b_still_in_quikmemo": 0,
+  "quikclms_rows": 5594,
+  "quikmemo_rows": 5083,
+  "quikclmp_rows": 6422,
+  "traces": [
+    {
+      "MPOLICY": "9010150740C",
+      "clms_has_pnote_b": true,
+      "clms_has_pb": true,
+      "clms_has_lineage_death": false,
+      "memo_has_pnote_b": false,
+      "ok": true
+    },
+    {
+      "MPOLICY": "9010150910C",
+      "clms_has_pnote_b": true,
+      "clms_has_pb": true,
+      "clms_has_lineage_death": false,
+      "memo_has_pnote_b": false,
+      "ok": true
+    },
+    {
+      "MPOLICY": "9010335038C",
+      "clms_has_pnote_b": true,
+      "clms_has_pb": true,
+      "clms_has_lineage_death": false,
+      "memo_has_pnote_b": false,
+      "ok": true
+    },
+    {
+      "MPOLICY": "9010331157C",
+      "clms_has_pnote_b": true,
+      "clms_has_pb": true,
+      "clms_has_lineage_death": false,
+      "memo_has_pnote_b": false,
+      "ok": true
+    },
+    {
+      "MPOLICY": "9010363098C",
+      "clms_has_pnote_b": true,
+      "clms_has_pb": true,
+      "clms_has_lineage_death": false,
+      "memo_has_pnote_b": false,
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

@@ -594,6 +594,8 @@ def main() -> int:
         ("#105", ["tools/validators/validate_issue105_mpar.py"], True),
         ("#119", ["tools/validators/validate_issue119_pua_mpar.py"], True),
         ("#121", ["tools/validators/validate_issue121_art_no_eti.py"], True),
+        ("#124", ["tools/validators/validate_issue124_quikiswl.py"], True),
+        ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
     ]
 
     val_results = []
