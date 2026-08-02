@@ -32,10 +32,10 @@
 | Output-root load-package hygiene? | **Cleared** — non-load claims/audit CSVs → `Reports/`; `claims_uat_dbf/` + `claims_uat_staging/` → `Staging/` |
 | Tracking updated / Closed? | **Yes** — Closed; Date Resolved `2026-08-02` |
 | Client UAT | **PASS** — user confirmed 2026-08-02 |
-| Git commit + push (G7 release)? | **Commit requested** — issue-scoped commit will be recorded; push not requested |
+| Git commit + push (G7 release)? | **Committed** — `d843e29` (`Close Issue #70 LOANINTX source mapping`); push not requested |
 | **May mark Closed?** | **Yes** — validation, accountability, Test_Validation, regression, hygiene, and UAT gates satisfied |
 
-**Status action this pass:** record client UAT PASS and set tracking to **Closed**. The issue-scoped commit will preserve the release; push remains outside scope unless separately requested.
+**Status action this pass:** record client UAT PASS, set tracking to **Closed**, and record commit `d843e29`. Push remains outside scope unless separately requested.
 
 ### History — prior Closure review (same day, earlier pass)
 
