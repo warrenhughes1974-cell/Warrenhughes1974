@@ -22,8 +22,8 @@ enum AppManual {
         "Go to Smart Analysis → Scan Folder (sort the shoot — not the upload package yet).",
         "Review KEEP, B-ROLL, REVIEW, and DISCARD. Optional AI Assist / cut hints run if enabled in Settings.",
         "Optional: edit the pink Hook column for shoot-day labels, or Generate Thumbnails as a quick preview.",
-        "Click Run Pipeline to move junk and send KEEP clips to Clip Cleaner.",
-        "In Clip Cleaner, confirm trim/Production Pass settings and let KEEP clips polish into Processed/.",
+        "Click Run Pipeline to move DISCARD into _DISCARD, rename REVIEW with NEEDS_REVIEW_, and send KEEP clips to Clip Cleaner in date order.",
+        "In Clip Cleaner, prefer Trim Mode Full + Edges (one pass) with Aggressive cutting; let KEEP clips polish into Processed/.",
         "Import the _CLEANED files into Filmora and finish the creative edit.",
         "Go to YouTube Prep (upload stage): choose the finished Filmora export → Transcribe & Analyze Story → Confirm Story.",
         "In YouTube Prep, pick a title, Rank Thumbnails, Generate Description/Tags, then Build Upload Package.",
@@ -34,12 +34,12 @@ enum AppManual {
         ManualSection(
             icon: "scissors",
             title: "Trim Mode",
-            body: "Use Start & End Only. This cuts dead air before you start talking and after you stop, but keeps natural pauses in the middle."
+            body: "Use Full + Edges for one run: cut the dead start/end, then silence-trim the whole clip. Edges Only keeps middle pauses; Full Clip only does silence throughout."
         ),
         ManualSection(
             icon: "bolt.fill",
             title: "Cutting Style",
-            body: "Use Aggressive for tight edge trims on setup and teardown footage."
+            body: "Use Aggressive with Full + Edges for tight setup/teardown cuts without a second pass."
         ),
         ManualSection(
             icon: "waveform.badge.magnifyingglass",
@@ -59,7 +59,7 @@ enum AppManual {
         ManualSection(
             icon: "folder.badge.gearshape",
             title: "Smart Analysis First",
-            body: "Run Smart Analysis before cleaning so obvious junk goes to _DISCARD, B-roll is labeled separately, and sudden camera jerks are flagged for review."
+            body: "Run Smart Analysis before cleaning so obvious junk goes to _DISCARD, REVIEW clips are renamed NEEDS_REVIEW_ in place, B-roll is labeled separately, and sudden camera jerks are flagged for review."
         )
     ]
 
@@ -103,6 +103,14 @@ enum AppManual {
     ]
 
     static let changelog: [ManualChangelogEntry] = [
+        ManualChangelogEntry(
+            version: "1.58",
+            highlights: [
+                "Run Pipeline renames REVIEW clips with NEEDS_REVIEW_ (they stay in the shoot folder); DISCARD still moves to _DISCARD.",
+                "New Trim Mode Full + Edges: aggressive start/end cut then full-clip silence trim in one Cleaner run — no second pass.",
+                "KEEP clips stay in capture-date order through analysis, pipeline handoff, and Cleaner processing."
+            ]
+        ),
         ManualChangelogEntry(
             version: "1.57",
             highlights: [

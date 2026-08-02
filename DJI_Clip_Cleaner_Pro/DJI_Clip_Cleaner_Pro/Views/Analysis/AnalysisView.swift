@@ -11,7 +11,7 @@ struct AnalysisView: View {
     private var savedPreset = CleaningPreset.balanced.rawValue
 
     @AppStorage("cleaningTrimMode")
-    private var savedTrimMode = CleaningTrimMode.edgesOnly.rawValue
+    private var savedTrimMode = CleaningTrimMode.fullPlusEdges.rawValue
 
     @AppStorage("productionPassEnabled")
     private var productionPassEnabled = true
@@ -28,7 +28,7 @@ struct AnalysisView: View {
     }
 
     private var selectedTrimMode: CleaningTrimMode {
-        CleaningTrimMode(rawValue: savedTrimMode) ?? .edgesOnly
+        CleaningTrimMode(rawValue: savedTrimMode) ?? .fullPlusEdges
     }
 
     private var productionPassSettings: ProductionPassSettings {
@@ -72,8 +72,9 @@ struct AnalysisView: View {
             Text(
                 """
                 1. Move DISCARD clips to _DISCARD folder
-                2. Leave B-ROLL and REVIEW clips in place
-                3. Send KEEP clips to Clip Cleaner and start processing
+                2. Rename REVIEW clips with NEEDS_REVIEW_ (stay in the folder)
+                3. Leave B-ROLL clips in place
+                4. Send KEEP clips to Clip Cleaner in capture-date order
 
                 \(viewModel.pipelineSummary)
                 """

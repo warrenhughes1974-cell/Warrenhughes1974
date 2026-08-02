@@ -34,7 +34,7 @@ final class CleanerViewModel: ObservableObject {
     private var activeProcess: Process?
     private var processingQueue: [VideoFile] = []
     private var activePreset: CleaningPreset = .balanced
-    private var activeTrimMode: CleaningTrimMode = .edgesOnly
+    private var activeTrimMode: CleaningTrimMode = .fullPlusEdges
     private var activeProductionPass = ProductionPassSettings.enabledByDefault
     private var activeStabilizationEnabled = false
     private var processingStartedAt: Date?
@@ -343,7 +343,8 @@ final class CleanerViewModel: ObservableObject {
 
         isProcessing = true
         cancellationRequested = false
-        processingQueue = videos
+        // Always process KEEP clips in capture-date order.
+        processingQueue = VideoFile.sortByCaptureDate(videos)
         activePreset = preset
         activeTrimMode = trimMode
         activeProductionPass = productionPass
@@ -492,26 +493,121 @@ final class CleanerViewModel: ObservableObject {
         )
 
         Task {
-            let arguments = await buildAutoEditorArguments(
-                for: video,
-                outputURL: outputURL
+            await self.processClipWithTrimMode(
+                video: video,
+                outputURL: outputURL,
+                autoEditorPath: autoEditorPath,
+                outputFolder: outputFolder
             )
-
-            await MainActor.run {
-                self.runAutoEditor(
-                    video: video,
-                    arguments: arguments,
-                    outputURL: outputURL,
-                    autoEditorPath: autoEditorPath,
-                    outputFolder: outputFolder
-                )
-            }
         }
     }
 
+    /// Runs the selected trim mode (including two-pass Full + Edges) then continues the queue.
+    private func processClipWithTrimMode(
+        video: VideoFile,
+        outputURL: URL,
+        autoEditorPath: String,
+        outputFolder: URL
+    ) async {
+        guard isProcessing, !cancellationRequested else {
+            await MainActor.run {
+                finishProcessing(cancelled: cancellationRequested)
+            }
+            return
+        }
+
+        let succeeded: Bool
+        switch activeTrimMode {
+        case .fullPlusEdges:
+            succeeded = await runFullPlusEdgesPasses(
+                video: video,
+                outputURL: outputURL,
+                autoEditorPath: autoEditorPath
+            )
+        case .fullClip, .edgesOnly:
+            let arguments = await buildAutoEditorArguments(
+                for: video.url,
+                outputURL: outputURL,
+                mode: activeTrimMode,
+                logLabel: video.name
+            )
+            succeeded = await runAutoEditorProcess(
+                arguments: arguments,
+                autoEditorPath: autoEditorPath
+            )
+        }
+
+        await MainActor.run {
+            self.finishClipAfterAutoEditor(
+                video: video,
+                outputURL: outputURL,
+                autoEditorSucceeded: succeeded,
+                autoEditorPath: autoEditorPath,
+                outputFolder: outputFolder
+            )
+        }
+    }
+
+    /// Edge cut first (aggressive start/end), then full-clip silence cleanup — one user run.
+    private func runFullPlusEdgesPasses(
+        video: VideoFile,
+        outputURL: URL,
+        autoEditorPath: String
+    ) async -> Bool {
+        let tempURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "HughesClipPrep-Edges-\(UUID().uuidString).\(video.url.pathExtension)"
+            )
+
+        defer {
+            try? FileManager.default.removeItem(at: tempURL)
+        }
+
+        appendLog("[FULL+EDGES] Pass 1/2 — cut dead start/end for \(video.name)")
+        let edgeArgs = await buildAutoEditorArguments(
+            for: video.url,
+            outputURL: tempURL,
+            mode: .edgesOnly,
+            logLabel: video.name
+        )
+        let edgesOK = await runAutoEditorProcess(
+            arguments: edgeArgs,
+            autoEditorPath: autoEditorPath
+        )
+
+        guard edgesOK,
+              FileManager.default.fileExists(atPath: tempURL.path) else {
+            appendLog("[WARN] Edge pass failed for \(video.name) — trying full-clip only.")
+            let fullArgs = await buildAutoEditorArguments(
+                for: video.url,
+                outputURL: outputURL,
+                mode: .fullClip,
+                logLabel: video.name
+            )
+            return await runAutoEditorProcess(
+                arguments: fullArgs,
+                autoEditorPath: autoEditorPath
+            )
+        }
+
+        appendLog("[FULL+EDGES] Pass 2/2 — silence trim through the clip")
+        let fullArgs = await buildAutoEditorArguments(
+            for: tempURL,
+            outputURL: outputURL,
+            mode: .fullClip,
+            logLabel: video.name
+        )
+        return await runAutoEditorProcess(
+            arguments: fullArgs,
+            autoEditorPath: autoEditorPath
+        )
+    }
+
     private func buildAutoEditorArguments(
-        for video: VideoFile,
-        outputURL: URL
+        for inputURL: URL,
+        outputURL: URL,
+        mode: CleaningTrimMode,
+        logLabel: String
     ) async -> [String] {
         let margin = String(
             format: "%.2fsec",
@@ -525,10 +621,11 @@ final class CleanerViewModel: ObservableObject {
             "--audio-codec", "aac"
         ]
 
-        switch activeTrimMode {
-        case .fullClip:
+        switch mode {
+        case .fullClip, .fullPlusEdges:
+            // fullPlusEdges builds args per pass; treat as fullClip here.
             return [
-                video.url.path,
+                inputURL.path,
                 "--margin",
                 margin
             ] + sampleRateArgs + [
@@ -538,7 +635,7 @@ final class CleanerViewModel: ObservableObject {
 
         case .edgesOnly:
             if let boundaries = await SpeechAnalyzer.detectSpeechBoundaries(
-                videoURL: video.url
+                videoURL: inputURL
             ) {
                 let protectedRange = String(
                     format: "nil,%.2fsec,%.2fsec",
@@ -548,14 +645,15 @@ final class CleanerViewModel: ObservableObject {
 
                 appendLog(
                     String(
-                        format: "[EDGES] Protecting speech from %.1fs to %.1fs",
+                        format: "[EDGES] %@ — protecting speech from %.1fs to %.1fs",
+                        logLabel,
                         boundaries.firstSpeechTime,
                         boundaries.lastSpeechTime
                     )
                 )
 
                 return [
-                    video.url.path,
+                    inputURL.path,
                     "--when-inactive",
                     "cut",
                     "--margin",
@@ -569,11 +667,11 @@ final class CleanerViewModel: ObservableObject {
             }
 
             appendLog(
-                "[WARN] \(video.name) — no speech detected for edge trim; using full-clip mode."
+                "[WARN] \(logLabel) — no speech detected for edge trim; using full-clip mode."
             )
 
             return [
-                video.url.path,
+                inputURL.path,
                 "--margin",
                 margin
             ] + sampleRateArgs + [
@@ -583,192 +681,119 @@ final class CleanerViewModel: ObservableObject {
         }
     }
 
-    private func runAutoEditor(
-        video: VideoFile,
+    private func runAutoEditorProcess(
         arguments: [String],
+        autoEditorPath: String
+    ) async -> Bool {
+        await withCheckedContinuation { continuation in
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: autoEditorPath)
+            process.arguments = arguments
+
+            let temporaryLogURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent("DJIClipCleaner-\(UUID().uuidString).log")
+            FileManager.default.createFile(atPath: temporaryLogURL.path, contents: nil)
+
+            guard let outputHandle = try? FileHandle(forWritingTo: temporaryLogURL) else {
+                continuation.resume(returning: false)
+                return
+            }
+
+            process.standardOutput = outputHandle
+            process.standardError = outputHandle
+            self.activeProcess = process
+
+            process.terminationHandler = { completed in
+                try? outputHandle.close()
+                let processOutput =
+                    (try? String(contentsOf: temporaryLogURL, encoding: .utf8)) ?? ""
+                try? FileManager.default.removeItem(at: temporaryLogURL)
+
+                Task { @MainActor in
+                    self.activeProcess = nil
+                    if completed.terminationStatus != 0 {
+                        let trimmed = processOutput
+                            .trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !trimmed.isEmpty {
+                            self.appendLog(trimmed)
+                        }
+                    }
+                    continuation.resume(returning: completed.terminationStatus == 0)
+                }
+            }
+
+            do {
+                try process.run()
+            } catch {
+                try? outputHandle.close()
+                try? FileManager.default.removeItem(at: temporaryLogURL)
+                self.activeProcess = nil
+                self.appendLog("[FAILED] auto-editor launch: \(error.localizedDescription)")
+                continuation.resume(returning: false)
+            }
+        }
+    }
+
+    private func finishClipAfterAutoEditor(
+        video: VideoFile,
         outputURL: URL,
+        autoEditorSucceeded: Bool,
         autoEditorPath: String,
         outputFolder: URL
     ) {
-        guard isProcessing else {
+        guard isProcessing else { return }
+
+        if cancellationRequested {
+            removeIncompleteOutputIfNeeded()
+            finishProcessing(cancelled: true)
             return
         }
 
-        let process = Process()
+        let outputExists = FileManager.default.fileExists(atPath: outputURL.path)
 
-        process.executableURL =
-            URL(fileURLWithPath: autoEditorPath)
-        process.arguments = arguments
-
-        let temporaryLogURL =
-            FileManager.default.temporaryDirectory
-                .appendingPathComponent(
-                    "DJIClipCleaner-\(UUID().uuidString).log"
+        Task {
+            if autoEditorSucceeded, outputExists {
+                let postProcessingSucceeded = await self.runPostProcessing(
+                    video: video,
+                    outputURL: outputURL
                 )
 
-        FileManager.default.createFile(
-            atPath: temporaryLogURL.path,
-            contents: nil
-        )
-
-        guard let outputHandle =
-                try? FileHandle(
-                    forWritingTo: temporaryLogURL
-                ) else {
-
-            failedCount += 1
-
-            appendLog(
-                "[FAILED] \(video.name) — could not create temporary process log."
-            )
-
-            currentIndex += 1
-
-            processNextVideo(
-                autoEditorPath: autoEditorPath,
-                outputFolder: outputFolder
-            )
-
-            return
-        }
-
-        process.standardOutput = outputHandle
-        process.standardError = outputHandle
-
-        activeProcess = process
-
-        process.terminationHandler = {
-            [weak self] completedProcess in
-
-            try? outputHandle.close()
-
-            let processOutput =
-                (try? String(
-                    contentsOf: temporaryLogURL,
-                    encoding: .utf8
-                )) ?? ""
-
-            try? FileManager.default.removeItem(
-                at: temporaryLogURL
-            )
-
-            Task { @MainActor in
-                guard let self else {
-                    return
-                }
-
-                self.activeProcess = nil
-
-                if self.cancellationRequested {
-                    self.removeIncompleteOutputIfNeeded()
-                    self.finishProcessing(
-                        cancelled: true
-                    )
-
-                    return
-                }
-
-                let outputExists =
-                    FileManager.default.fileExists(
-                        atPath: outputURL.path
-                    )
-
-                if completedProcess.terminationStatus == 0,
-                   outputExists {
-
-                    let postProcessingSucceeded = await self.runPostProcessing(
-                        video: video,
-                        outputURL: outputURL
-                    )
-
+                await MainActor.run {
                     if !postProcessingSucceeded {
                         self.failedCount += 1
                         self.removeIncompleteOutputIfNeeded()
-
-                        self.currentIndex += 1
-                        self.progress =
-                            Double(self.currentIndex) /
-                            Double(
-                                max(
-                                    self.processingQueue.count,
-                                    1
-                                )
-                            )
-
-                        self.processNextVideo(
-                            autoEditorPath: autoEditorPath,
-                            outputFolder: outputFolder
-                        )
-
-                        return
+                    } else {
+                        self.processedCount += 1
+                        self.appendLog("[DONE] \(video.name)")
                     }
 
-                    self.processedCount += 1
+                    self.currentIndex += 1
+                    self.progress =
+                        Double(self.currentIndex) /
+                        Double(max(self.processingQueue.count, 1))
 
-                    self.appendLog(
-                        "[DONE] \(video.name)"
+                    self.processNextVideo(
+                        autoEditorPath: autoEditorPath,
+                        outputFolder: outputFolder
                     )
-                } else {
+                }
+            } else {
+                await MainActor.run {
                     self.failedCount += 1
                     self.removeIncompleteOutputIfNeeded()
+                    self.appendLog("[FAILED] \(video.name) — auto-editor did not finish cleanly.")
 
-                    self.appendLog(
-                        "[FAILED] \(video.name) — exit code \(completedProcess.terminationStatus)"
+                    self.currentIndex += 1
+                    self.progress =
+                        Double(self.currentIndex) /
+                        Double(max(self.processingQueue.count, 1))
+
+                    self.processNextVideo(
+                        autoEditorPath: autoEditorPath,
+                        outputFolder: outputFolder
                     )
-
-                    let trimmedOutput =
-                        processOutput
-                            .trimmingCharacters(
-                                in: .whitespacesAndNewlines
-                            )
-
-                    if !trimmedOutput.isEmpty {
-                        self.appendLog(
-                            trimmedOutput
-                        )
-                    }
                 }
-
-                self.currentIndex += 1
-
-                self.progress =
-                    Double(self.currentIndex) /
-                    Double(
-                        max(
-                            self.processingQueue.count,
-                            1
-                        )
-                    )
-
-                self.processNextVideo(
-                    autoEditorPath: autoEditorPath,
-                    outputFolder: outputFolder
-                )
             }
-        }
-
-        do {
-            try process.run()
-        } catch {
-            try? outputHandle.close()
-
-            try? FileManager.default.removeItem(
-                at: temporaryLogURL
-            )
-
-            activeProcess = nil
-            failedCount += 1
-
-            appendLog(
-                "[FAILED] \(video.name) — \(error.localizedDescription)"
-            )
-
-            currentIndex += 1
-
-            processNextVideo(
-                autoEditorPath: autoEditorPath,
-                outputFolder: outputFolder
-            )
         }
     }
 

@@ -281,18 +281,20 @@ final class AnalysisViewModel {
 
             let pipeline = outcome.pipeline
             let keepVideos = outcome.keepVideos
+            // Refresh table paths after DISCARD moves / REVIEW renames; keep date order.
+            results = outcome.updatedResults
 
             guard !keepVideos.isEmpty else {
                 statusMessage =
-                    "Pipeline moved \(pipeline.movedToDiscard) clip(s) to _DISCARD, but no KEEP clips were found to clean."
+                    "Pipeline moved \(pipeline.movedToDiscard) to _DISCARD and renamed \(pipeline.renamedReview) REVIEW clip(s), but no KEEP clips were found to clean."
                 return
             }
 
             let summary =
                 "Moved \(pipeline.movedToDiscard) DISCARD clip(s) to _DISCARD. " +
+                "Renamed \(pipeline.renamedReview) REVIEW clip(s) with \(ClipPipelineService.reviewFilePrefix). " +
                 "B-ROLL \(pipeline.bRollCount) left in place. " +
-                "REVIEW \(pipeline.reviewCount) left in place. " +
-                "Cleaning \(pipeline.keepCount) KEEP clip(s)."
+                "Cleaning \(pipeline.keepCount) KEEP clip(s) in capture-date order."
 
             cleanerViewModel.receivePipelineHandoff(
                 folder: selectedFolderURL,
@@ -605,6 +607,7 @@ final class AnalysisViewModel {
             if Task.isCancelled {
                 statusMessage = "Analysis cancelled."
             } else {
+                results.sort { VideoFile.isInCaptureOrder($0.video, $1.video) }
                 statusMessage = "Analysis complete for \(results.count) clip(s)."
                 autoExportReportIfPossible()
             }
@@ -634,6 +637,7 @@ final class AnalysisViewModel {
 struct PipelineResult: Sendable {
     let movedToDiscard: Int
     let skippedDiscard: Int
+    let renamedReview: Int
     let keepCount: Int
     let reviewCount: Int
     let bRollCount: Int
@@ -642,11 +646,16 @@ struct PipelineResult: Sendable {
 
 enum ClipPipelineService {
     private static let discardFolderName = "_DISCARD"
+    static let reviewFilePrefix = "NEEDS_REVIEW_"
 
     static func run(
         results: [AnalysisResult],
         in folderURL: URL
-    ) throws -> (pipeline: PipelineResult, keepVideos: [VideoFile]) {
+    ) throws -> (
+        pipeline: PipelineResult,
+        keepVideos: [VideoFile],
+        updatedResults: [AnalysisResult]
+    ) {
         let discardFolder = folderURL.appendingPathComponent(
             discardFolderName,
             isDirectory: true
@@ -659,12 +668,19 @@ enum ClipPipelineService {
 
         var moved = 0
         var skipped = 0
+        var renamedReview = 0
         var keepVideos: [VideoFile] = []
         var reviewCount = 0
         var bRollCount = 0
         var discardCount = 0
+        var updatedResults: [AnalysisResult] = []
 
-        for result in results {
+        // Process in capture-date order so renames/moves stay chronological.
+        let ordered = results.sorted {
+            VideoFile.isInCaptureOrder($0.video, $1.video)
+        }
+
+        for result in ordered {
             switch result.recommendation {
             case .discard:
                 discardCount += 1
@@ -686,31 +702,89 @@ enum ClipPipelineService {
 
                 try FileManager.default.moveItem(at: source, to: destination)
                 moved += 1
+                // Drop from the live results list — file left the shoot folder.
 
             case .keep:
                 keepVideos.append(result.video)
+                updatedResults.append(result)
 
             case .review:
                 reviewCount += 1
+                let renamed = try renameReviewClip(result)
+                if renamed.didRename {
+                    renamedReview += 1
+                }
+                updatedResults.append(renamed.result)
 
             case .bRoll:
                 bRollCount += 1
+                updatedResults.append(result)
 
             default:
-                break
+                updatedResults.append(result)
             }
         }
 
         let pipeline = PipelineResult(
             movedToDiscard: moved,
             skippedDiscard: skipped,
+            renamedReview: renamedReview,
             keepCount: keepVideos.count,
             reviewCount: reviewCount,
             bRollCount: bRollCount,
             discardCount: discardCount
         )
 
-        return (pipeline, VideoFile.sortByCaptureDate(keepVideos))
+        let sortedResults = updatedResults.sorted {
+            VideoFile.isInCaptureOrder($0.video, $1.video)
+        }
+
+        return (
+            pipeline,
+            VideoFile.sortByCaptureDate(keepVideos),
+            sortedResults
+        )
+    }
+
+    private static func renameReviewClip(
+        _ result: AnalysisResult
+    ) throws -> (result: AnalysisResult, didRename: Bool) {
+        let source = result.video.url
+        let fileName = source.lastPathComponent
+
+        guard FileManager.default.fileExists(atPath: source.path) else {
+            return (result, false)
+        }
+
+        if fileName.hasPrefix(reviewFilePrefix) {
+            return (result, false)
+        }
+
+        let destination = source
+            .deletingLastPathComponent()
+            .appendingPathComponent(reviewFilePrefix + fileName)
+
+        if FileManager.default.fileExists(atPath: destination.path) {
+            return (result, false)
+        }
+
+        try FileManager.default.moveItem(at: source, to: destination)
+
+        let renamedVideo = VideoFile(
+            url: destination,
+            duration: result.video.duration,
+            fileSize: result.video.fileSize,
+            recordedAt: result.video.recordedAt,
+            sequenceNumber: result.video.sequenceNumber
+        )
+
+        var updated = result.replacingVideo(renamedVideo)
+        if !updated.notes.localizedCaseInsensitiveContains("needs review") {
+            let tag = "Renamed with \(reviewFilePrefix) prefix for manual review."
+            updated.notes = updated.notes.isEmpty ? tag : "\(updated.notes) · \(tag)"
+        }
+
+        return (updated, true)
     }
 }
 

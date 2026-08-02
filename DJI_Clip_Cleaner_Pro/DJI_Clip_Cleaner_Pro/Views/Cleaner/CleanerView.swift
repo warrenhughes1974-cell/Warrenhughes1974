@@ -10,7 +10,7 @@ struct CleanerView: View {
 
     @AppStorage("cleaningTrimMode")
     private var savedTrimMode =
-        CleaningTrimMode.edgesOnly.rawValue
+        CleaningTrimMode.fullPlusEdges.rawValue
 
     @AppStorage("stabilizationEnabled")
     private var stabilizationEnabled = false
@@ -31,7 +31,7 @@ struct CleanerView: View {
     private var selectedTrimMode: CleaningTrimMode {
         CleaningTrimMode(
             rawValue: savedTrimMode
-        ) ?? .edgesOnly
+        ) ?? .fullPlusEdges
     }
 
     private var productionPassSettings: ProductionPassSettings {
@@ -366,7 +366,7 @@ struct CleanerView: View {
                             .tag(mode.rawValue)
                     }
                 }
-                .pickerStyle(.segmented)
+                .pickerStyle(.menu)
                 .disabled(
                     viewModel.isProcessing
                 )

@@ -31,8 +31,8 @@ struct AnalysisResult: Identifiable {
     var suggestedTitle: String
     var thumbnailPath: String
 
-    init(video: VideoFile) {
-        self.id = video.id
+    init(video: VideoFile, id: UUID? = nil) {
+        self.id = id ?? video.id
         self.video = video
         self.speechStatus = .pending
         self.motionStatus = .pending
@@ -44,5 +44,21 @@ struct AnalysisResult: Identifiable {
         self.suggestedHook = ""
         self.suggestedTitle = ""
         self.thumbnailPath = ""
+    }
+
+    /// Keep analysis fields when the file is renamed on disk (REVIEW → NEEDS_REVIEW_…).
+    func replacingVideo(_ video: VideoFile) -> AnalysisResult {
+        var copy = AnalysisResult(video: video, id: id)
+        copy.speechStatus = speechStatus
+        copy.motionStatus = motionStatus
+        copy.speechSummary = speechSummary
+        copy.motionSummary = motionSummary
+        copy.recommendation = recommendation
+        copy.notes = notes
+        copy.cutHints = cutHints
+        copy.suggestedHook = suggestedHook
+        copy.suggestedTitle = suggestedTitle
+        copy.thumbnailPath = thumbnailPath
+        return copy
     }
 }

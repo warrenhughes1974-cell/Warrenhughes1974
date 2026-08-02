@@ -3,6 +3,8 @@ import Foundation
 enum CleaningTrimMode: String, CaseIterable, Identifiable {
     case fullClip = "Full Clip"
     case edgesOnly = "Start & End Only"
+    /// Edge trim (cut pre/post speech) then full-clip silence cleanup — one run.
+    case fullPlusEdges = "Full + Edges"
 
     var id: String {
         rawValue
@@ -14,6 +16,8 @@ enum CleaningTrimMode: String, CaseIterable, Identifiable {
             return "Trims silence throughout the entire clip, including pauses between sentences."
         case .edgesOnly:
             return "Trims dead air before you start talking and after you stop. Keeps natural pauses in the middle."
+        case .fullPlusEdges:
+            return "One pass: aggressively cut the dead start/end, then trim silence through the whole clip. No second run."
         }
     }
 }
