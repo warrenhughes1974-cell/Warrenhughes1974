@@ -30,6 +30,23 @@ POLICY_CROSSWALK_FIELDS = frozenset({
     "MCID", "MOWNCID", "MRIDRID",
 })
 
+def map_loan_adv_arrears_to_loanintx(raw) -> tuple[str, str]:
+    """Map PCOVR LOAN_ADV_ARREARS to QuikPlan LOANINTX (A/R). Issue #70 CSO codebook.
+
+    Returns (loanintx, audit_tag). audit_tag is mapped_0 / mapped_n / mapped_1 /
+    blank_default / unknown_default. Blank and unknown fall back to A.
+    """
+    v = normalize(raw)
+    if v == "0":
+        return "A", "mapped_0"
+    if v == "N":
+        return "A", "mapped_n"
+    if v == "1":
+        return "R", "mapped_1"
+    if not v:
+        return "A", "blank_default"
+    return "A", "unknown_default"
+
 
 def prepare_quikplan_source(source: pd.DataFrame) -> pd.DataFrame:
     if "COVERAGE_ID" in source.columns:
@@ -139,6 +156,11 @@ def _map_field_value(
     elif note == "SEX_BASIS_BOTH_BLANK" and val.upper() == "B":
         val = ""
 
+    # Issue #70: LOAN_ADV_ARREARS codebook → A/R (before SKIP_TRANSLATION / status maps).
+    if t_f == "LOANINTX" and s_f == "LOAN_ADV_ARREARS":
+        raw_laa = normalize(src_row.get(s_f)) if s_f in source.columns else ""
+        val, _audit_tag = map_loan_adv_arrears_to_loanintx(raw_laa)
+
     if any(k in t_f for k in ["AGE", "DUR", "YRS"]) and "VAL" not in t_f and "VPU" not in t_f and "PREM" not in t_f:
         if val.isdigit() and len(val) == 1:
             val = val.zfill(2)
@@ -245,6 +267,7 @@ def convert_quikplan_row(
     crosswalk_authority: CrosswalkAuthority | None = None,
     variation_recommendations: dict[str, dict] | None = None,
     auto_apply_variation_codes: bool = False,
+    loanintx_audits: list | None = None,
 ) -> dict:
     row_data = {h: "" for h in schema}
     for _, rule in rules.iterrows():
@@ -253,6 +276,23 @@ def convert_quikplan_row(
         )
         if actual_h:
             row_data[actual_h] = val
+
+    # Issue #70: authoritative same-row PCOVR LOAN_ADV_ARREARS → LOANINTX
+    # (overrides rulebook default / raw source digit so A/R emit is source-driven).
+    raw_laa = ""
+    if "LOAN_ADV_ARREARS" in getattr(src_row, "index", []):
+        raw_laa = normalize(src_row.get("LOAN_ADV_ARREARS", ""))
+    loanintx, audit_tag = map_loan_adv_arrears_to_loanintx(raw_laa)
+    row_data["LOANINTX"] = loanintx
+    if loanintx_audits is not None and audit_tag in ("blank_default", "unknown_default"):
+        loanintx_audits.append(
+            {
+                "COVERAGE_ID": normalize(src_row.get("COVERAGE_ID", "")),
+                "LOAN_ADV_ARREARS": raw_laa,
+                "LOANINTX": loanintx,
+                "AUDIT": audit_tag,
+            }
+        )
 
     coverage_id = normalize(src_row.get("COVERAGE_ID", ""))
     if overlay_config is not None:
@@ -281,12 +321,19 @@ def convert_quikplan_to_output(
         overlay_config = resolve_crosswalk_overlay_config()
 
     output: list[list] = []
+    loanintx_audits: list[dict] = []
     for src_row in iter_quikplan_source_rows(source):
         row_data = convert_quikplan_row(
             src_row, source, rules, schema, lookups, trans_map, cw_map, overlay_config,
             crosswalk_authority, variation_recommendations, auto_apply_variation_codes,
+            loanintx_audits=loanintx_audits,
         )
         output.append([row_data[h] for h in schema])
+    # Issue #70 audit/trace for blank/unknown LOAN_ADV_ARREARS → A fallback
+    convert_quikplan_to_output.last_loanintx_qa = {  # type: ignore[attr-defined]
+        "fallback_count": len(loanintx_audits),
+        "fallbacks": loanintx_audits,
+    }
     return output
 
 
@@ -394,6 +441,10 @@ def run_quikplan_conversion(
 
     df = apply_issue_a_plan_setup(df, repo_root=repo_root)
     df = apply_iswl_product_tags(df)
+    # Issue #70: preserve authoritative arrears values after all enrichment
+    # steps.  Only a clear source code of 1/1.0 restores R; all other values
+    # retain the existing A/invalid fallback behavior.
+    df = _restore_authoritative_loanintx_from_source(df, source)
     return df
 
 
@@ -661,16 +712,42 @@ def build_ploan_loanint_by_quikplan(
 
 
 def _normalize_quikplan_loanintx(df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
-    """Issue #70: force LOANINTX to A when missing/invalid (valid values: A or R only)."""
+    """Issue #70 safety net: invalid/missing LOANINTX → A; preserves/canonicalizes A or R."""
     if df is None or df.empty or "LOANINTX" not in df.columns:
         return df, 0
     fixed = 0
     for i in df.index:
         cur_x = str(df.at[i, "LOANINTX"] or "").strip().upper()
-        if cur_x not in ("A", "R"):
+        if cur_x in ("A", "R"):
+            if str(df.at[i, "LOANINTX"] or "") != cur_x:
+                df.at[i, "LOANINTX"] = cur_x
+        else:
             df.at[i, "LOANINTX"] = "A"
             fixed += 1
     return df, fixed
+
+
+def _restore_authoritative_loanintx_from_source(
+    df: pd.DataFrame,
+    source: pd.DataFrame,
+) -> pd.DataFrame:
+    """Restore source-confirmed arrears after later plan enrichment steps."""
+    if (
+        df is None
+        or df.empty
+        or source is None
+        or source.empty
+        or "LOANINTX" not in df.columns
+        or "LOAN_ADV_ARREARS" not in source.columns
+    ):
+        return df
+    for out_idx, src_row in zip(df.index, iter_quikplan_source_rows(source)):
+        loanintx, _audit_tag = map_loan_adv_arrears_to_loanintx(
+            src_row.get("LOAN_ADV_ARREARS", "")
+        )
+        if loanintx == "R":
+            df.at[out_idx, "LOANINTX"] = "R"
+    return df
 
 
 def apply_ploan_loanint_enrichment(
@@ -685,8 +762,8 @@ def apply_ploan_loanint_enrichment(
 
     Rulebook defaults LOANINT to 0.00 with no LifePRO source — Product Setup never saw
     loan rates. QuikLoan already maps PLOAN→MLOANINT; this lifts the same authority onto
-    the plan catalog. LOANINTX is set to A when missing/invalid (Issue #70 interim default
-    pending CSO Advance/Arrears guidance; Issue #32 Advance fallback).
+    the plan catalog. LOANINTX is source-mapped from PCOVR.LOAN_ADV_ARREARS (Issue #70);
+    this path only applies the A/R safety net (preserves valid R).
     Blank-safe: plans with no PLOAN evidence keep existing LOANINT.
     """
     if df is None or df.empty or "PLAN" not in df.columns or "LOANINT" not in df.columns:
@@ -740,14 +817,14 @@ def apply_ploan_loanint_enrichment(
             updated += 1
 
     # Issue #70: LOANINTX must be A or R on every plan (not only PLOAN-matched).
-    # Interim default A pending CSO Advance/Arrears guidance.
+    # Safety net only — preserves source-mapped R from LOAN_ADV_ARREARS.
     df, intx_fixed = _normalize_quikplan_loanintx(df)
 
     qa = {
         "ploan_path": path,
         "plans_with_ploan_rate": len(rate_by_plan),
         "loanint_cells_updated": updated,
-        "loanintx_cells_set_to_a": intx_fixed,
+        "loanintx_invalid_normalized_to_a": intx_fixed,
     }
     try:
         df.attrs["ploan_loanint_qa"] = qa
@@ -756,7 +833,7 @@ def apply_ploan_loanint_enrichment(
     if log:
         log(
             f"PLOAN loan-int enrichment: plans_with_rate={qa['plans_with_ploan_rate']} "
-            f"LOANINT updated={updated} LOANINTX set to A={intx_fixed} "
+            f"LOANINT updated={updated} LOANINTX invalid→A={intx_fixed} "
             f"source={os.path.basename(path)}"
         )
     return df

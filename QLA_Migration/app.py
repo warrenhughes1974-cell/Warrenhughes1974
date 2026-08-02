@@ -539,7 +539,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.47"
+APP_VERSION = "v58.50"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -7898,6 +7898,18 @@ class QLAdminEnterpriseIntegrationSuite:
                     qdf = pd.DataFrame(output, columns=schema)
                     qdf = apply_rate_variation_flag_enrichment(qdf, self._app_base_dir())
                     qdf = apply_single_premium_payment_settings(qdf, self._app_base_dir(), log=self.log)
+                    # Issue #70: audit blank/unknown LOAN_ADV_ARREARS ? A fallback
+                    _loanintx_qa = getattr(convert_quikplan_to_output, "last_loanintx_qa", None) or {}
+                    _fb = int(_loanintx_qa.get("fallback_count", 0) or 0)
+                    if _fb:
+                        self.log(
+                            f"Issue #70 LOANINTX: {_fb} plan(s) used A fallback "
+                            f"(blank/unknown LOAN_ADV_ARREARS); see convert audit."
+                        )
+                    if "LOANINTX" in qdf.columns:
+                        _a = int((qdf["LOANINTX"].astype(str).str.strip().str.upper() == "A").sum())
+                        _r = int((qdf["LOANINTX"].astype(str).str.strip().str.upper() == "R").sum())
+                        self.log(f"Issue #70 LOANINTX emit: A={_a} R={_r}")
                     current_stage = "Applying rulebooks and crosswalks"
                     self.update_run_progress(4, detail="plan/rate enrichments + CSO assumptions")
                     self.log(f"Rate variation flags applied (R7B): {int((qdf['PLANVALOPT'] == 'Y').sum())} plans PLANVALOPT=Y")

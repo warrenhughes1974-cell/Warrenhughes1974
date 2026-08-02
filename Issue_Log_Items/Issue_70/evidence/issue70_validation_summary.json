@@ -1,0 +1,22 @@
+{
+  "engine": "v58.50",
+  "rows": 141,
+  "loanintx_counts": {
+    "A": 137,
+    "R": 4
+  },
+  "arrears_plans": [
+    "1SALMI",
+    "1SALML",
+    "1SALOL",
+    "9SLADB"
+  ],
+  "trace": {
+    "1SALOL": "R",
+    "1SALML": "R",
+    "1SALMI": "R",
+    "9SLADB": "R",
+    "1960PO": "A"
+  },
+  "validator": "PASS"
+}

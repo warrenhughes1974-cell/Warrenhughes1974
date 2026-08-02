@@ -580,6 +580,7 @@ def main() -> int:
         ("#58", ["tools/validators/validate_issue58_quikridr_modal_fees.py"], False),
         ("#59", ["tools/validators/validate_issue59_mstatus.py"], False),
         ("#60", ["tools/validators/validate_issue60_pua_phase.py"], True),
+        ("#70", ["QLA_Migration/_validate_issue70_loanintx.py"], True),
         ("#72", ["tools/validators/validate_issue72_mnfopt_status.py"], True),
         ("#75", ["Issue_Log_Items/Issue_75/scripts/validate_issue75_mbankno.py"], True),
         ("#76", ["tools/validators/validate_issue76_eti_rpu_payup.py"], True),

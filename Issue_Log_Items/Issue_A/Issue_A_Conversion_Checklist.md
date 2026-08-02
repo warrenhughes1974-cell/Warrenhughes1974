@@ -312,3 +312,67 @@ Notes:
 - Output hygiene: audits → `Reports/`; claims/memo UAT staging → `Staging/`; Output root = table CSVs + `rates/` + `Test_Validation/`
 - Log: `QLA_Migration/Logs/_full_batch_test_log.txt` / `_full_batch_console_20260726.txt`
 - Archive pre-run: `QLA_Migration/Archive/weekly_build_20260726_pre/`
+
+### Run 2026-07-26 (evening) — app.py v58.42 — YE policy batch — Source=`12312025_Data` (12/31/2025)
+
+Operator: Agent (user request: convert 12/31/2025 policy data; keep latest product/rates)  
+Env: UAT; `QLA_PRODUCT_SETUP_ISOLATED=1`; `QLA_BATCH_INCLUDE_RATE_TABLES=0`; `QLA_VALUATION_DATE=20251231`; source package `QLA_Migration/Source/12312025_Data`  
+Result summary: **8 PASS** · **1 PARTIAL** · **2 BLOCKED** · **4 OPEN** (SME-gated) · conversion exit **0** (~28 min)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | `1668SP`, `10L171`, `10L172`, `1L17SP`: PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **BLOCKED** | All 141 DEFICIENCY=N; awaiting CSO |
+| A3 | **BLOCKED** | Default PVO fleet rule awaiting Development approval |
+| A4 | **PASS** | 0 blank-PLAN rows in rates Quik* (unchanged latest rates) |
+| A5 | **OPEN** | Awaiting Valuation_Setup |
+| A6 | **PARTIAL** | Pre-existing orphan-flag residual (quikplan unchanged) |
+| A7 | **OPEN** | VARGP=4 fleet-wide; awaiting Eric (Item 09) |
+| A8a | **PASS** | A-prefix PAR=0 (2 plans) |
+| A8b | **PASS** | A-prefix VARDB=0 |
+| A8c | **OPEN** | Awaiting Eric |
+| A8d | **OPEN** | Awaiting Eric |
+| A8e | **PASS** | A-prefix PLANVALOPT clear |
+| A9a | **OPEN** | Awaiting Eric |
+| A9b | **PASS** | Prefix-9 PAR≠0 count 0 (56 plans) |
+| A10 | **PASS** | QuikUwpo 5 rows (00/NS/PR/SM/ST); 0 dupes |
+
+Notes:
+- Locked source root: `QLA_Migration/Source/12312025_Data` (v58.42 package-folder fix)
+- Product/rates preserved from latest run: `quikplan.csv` untouched (141 plans); `rates/` 24 CSVs not regenerated
+- YE policy row counts: quikmstr 5,084 · quikridr 6,936 · quikclnt 13,532 · quikprmh 201,574 · quikbenh 42,532 · quikloan 365 · quikrein 7 · quikrmst 733
+- Known non-checklist: UAT DBF QUIKCLMP `MCHECKNO` overflow (CSV OK); Balancing “Items Need Attention” pre-existing class
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt`
+
+### Run 2026-08-02 — app.py v58.50 — Midyear UAT full batch — Source=`PPOLC_PolicyMaster_Extract_20260630.csv`
+
+Operator: Validation / Tester Agent (Issue #70 Stage 6)  
+Env: UAT; `QLA_BATCH_INCLUDE_RATE_TABLES=1`; `QLA_PRODUCT_SETUP_ISOLATED=0`; `QLA_FORCE_PPOLC_EXTRACT=PPOLC_PolicyMaster_Extract_20260630.csv`  
+Result summary: **8 PASS** · **1 PARTIAL** · **2 BLOCKED** · **5 OPEN** (SME-gated) · conversion exit **0** (~28 min) · Issue #70 LOANINTX **PASS** (137 A / 4 R)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | `1668SP`, `10L171`, `10L172`, `1L17SP`: PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **BLOCKED** | All 141 DEFICIENCY=N; awaiting CSO |
+| A3 | **BLOCKED** | Default PVO fleet rule awaiting Development approval |
+| A4 | **PASS** | 0 blank-PLAN rows in `rates/` Quik* CSVs |
+| A5 | **OPEN** | BASIS blank 141/141; awaiting Valuation_Setup / Issue #80 |
+| A6 | **PARTIAL** | Pre-existing category/key residual class (not re-opened here) |
+| A7 | **OPEN** | VARGP=4 on 141/141; examples `920ADB`, `965ADB`, `960ADB`; awaiting Eric (Item 09) |
+| A8a | **PASS** | A-prefix PAR=0 (`A60MIR`, `A96DAR`) |
+| A8b | **PASS** | A-prefix VARDB=0 |
+| A8c | **OPEN** | Annuity DEPINT/LOANINT=0.00; awaiting Eric interest-rate scope |
+| A8d | **OPEN** | No schg column on QuikPlan; awaiting Eric |
+| A8e | **PASS** | A-prefix PLANVALOPT=N |
+| A9a | **OPEN** | Prefix-9 PLANTYPE blank 56/56 (e.g. `920ADB`, `9665WP`, `9SLADB`); awaiting Eric field confirm |
+| A9b | **PASS** | Prefix-9 PAR≠0 count 0 (56 plans) |
+| A10 | **PASS** | QuikUwpo 5 rows (00/NS/PR/SM/ST); 0 dupes |
+
+Notes:
+- Trigger: Issue #70 Validation re-batch after Development v58.50 (stale Output was 141×A)
+- Batch log: `Issue #70 LOANINTX emit: A=137 R=4` → `QLA_Migration/Logs/_full_batch_test_log.txt`
+- Arrears plans: `1SALOL`, `1SALML`, `1SALMI`, `9SLADB` = R; control `1960PO` = A
+- QuikLoan: 356 rows, MLOANINTX all A; 0 flips; 0 loan rows on R plans
+- Collateral vs pre-batch snapshot (not Issue #70): PLANVALOPT Y→N on 7 PUA plans (`121PUA`,`165PUA`,`170PUA`,`185PUA`,`1970PA`,`1OLPUA`,`1POPUA`) — flag for Regression
+- Output hygiene: non-table claims/audit artifacts remain in Output root (relocate blocked this session); see Issue_70_Validation_Report.md §9
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt`
