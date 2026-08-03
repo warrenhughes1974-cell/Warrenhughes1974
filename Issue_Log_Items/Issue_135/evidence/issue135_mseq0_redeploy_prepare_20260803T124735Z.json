@@ -1,0 +1,9 @@
+{
+  "ts": "20260803T124735Z",
+  "clms_rows": 6044,
+  "clmp_rows": 5495,
+  "source_clmp": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\quikclmp_pre_surrender_zero_payee_20260802T232516Z.csv",
+  "golden_mseqs": [
+    "0"
+  ]
+}

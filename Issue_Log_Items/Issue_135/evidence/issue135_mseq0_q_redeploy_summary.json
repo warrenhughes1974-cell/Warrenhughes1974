@@ -1,0 +1,53 @@
+{
+  "generated_at": "20260803T124851Z",
+  "pass": true,
+  "destination": "Q:\\CSO\\CSO_Test_6_30_2026",
+  "clms_rows": 6044,
+  "clmp_rows": 5935,
+  "mpolicy_c11": true,
+  "header": {
+    "MPOLICY": "9011156655C",
+    "MPAID": 5145.67,
+    "MSEQ": 0
+  },
+  "payees": [
+    {
+      "MSEQ": 0,
+      "MPAYNAME": "LINVILLE L BRASWELL",
+      "MAMOUNT": 1286.42
+    },
+    {
+      "MSEQ": 0,
+      "MPAYNAME": "CHERI ROSE BRASWELL",
+      "MAMOUNT": 1286.41
+    },
+    {
+      "MSEQ": 0,
+      "MPAYNAME": "DANIEL L BRASWELL JR",
+      "MAMOUNT": 1286.42
+    },
+    {
+      "MSEQ": 0,
+      "MPAYNAME": "ROBERT C BRASWELL",
+      "MAMOUNT": 1286.42
+    }
+  ],
+  "payee_mseqs": [
+    0
+  ],
+  "payee_sum": 5145.67,
+  "copied": [
+    {
+      "name": "QUIKCLMS.DBF",
+      "size": 1457662
+    },
+    {
+      "name": "QUIKCLMS.DBT",
+      "size": 3332782
+    },
+    {
+      "name": "QUIKCLMP.DBF",
+      "size": 1870359
+    }
+  ]
+}

@@ -421,6 +421,10 @@ from qla_core.issue135_cso_claims_expansion import (
     apply_issue135_cso_claims_expansion,
     write_issue135_expansion_audits,
 )
+from qla_core.claims_payee_mseq_align import (
+    ClaimsPayeeMseqAlignError,
+    align_claims_csv_dir,
+)
 
 # --- Phase 18A–20: Claims orchestration, UAT handoff/emit/batch/DBF, MPOLICY validation ---
 VALID_RUN_MODES = ("UAT", "PRODUCTION", "DISABLED")
@@ -570,7 +574,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.62"
+APP_VERSION = "v58.65"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -2017,6 +2021,52 @@ class QLAdminEnterpriseIntegrationSuite:
             f"  Rows updated={overlay_result.get('rows_updated', 0)} "
             f"nonzero_before={overlay_result.get('nonzero_before', 0)}"
         )
+
+    def _apply_claims_payee_mseq_align(self, output_dir):
+        """Force QUIKCLMP.MSEQ to claim-header MSEQ so QLAdmin payee UI joins."""
+        result = {"applied": False, "ok": False, "reason": "", "align": {}, "gate": {}}
+        try:
+            tv = os.path.join(output_dir, "Test_Validation")
+            info = align_claims_csv_dir(
+                output_dir,
+                test_validation_dir=tv,
+                require_golden=False,
+            )
+            result.update(
+                {
+                    "applied": True,
+                    "ok": True,
+                    "align": info.get("align") or {},
+                    "gate": info.get("gate") or {},
+                    "test_validation_copied": info.get("test_validation_copied"),
+                }
+            )
+            return result
+        except ClaimsPayeeMseqAlignError as exc:
+            result["reason"] = str(exc)
+            return result
+        except Exception as exc:
+            result["reason"] = f"error:{exc}"
+            return result
+
+    def _log_claims_payee_mseq_align_summary(self, align_result):
+        if not align_result:
+            return
+        self.log("CLAIMS PAYEE MSEQ ALIGN (QLAdmin join MPOLICY+MPHASE+MSEQ):")
+        if not align_result.get("ok"):
+            self.log(f"  FAIL: {align_result.get('reason', 'unknown')}")
+            return
+        align = align_result.get("align") or {}
+        self.log(
+            f"  rows={align.get('rows', 0)} changed={align.get('changed', 0)} "
+            f"already_aligned={align.get('already_aligned', 0)}"
+        )
+        golden = (align_result.get("gate") or {}).get("golden") or {}
+        if golden.get("present"):
+            self.log(
+                f"  golden 9011156655C payees={golden.get('payee_n')} "
+                f"mseqs={golden.get('mseqs')} ok={golden.get('ok')}"
+            )
 
     def _apply_issue85_claim_header_structure(self, output_dir):
         """Issue #85: merge/re-phase quikclms headers; re-attach quikclmp phases (D1–D4)."""
@@ -3771,11 +3821,22 @@ class QLAdminEnterpriseIntegrationSuite:
             status = self._last_product_setup_result.get("status", "UNKNOWN")
             self.update_run_progress(4, detail=f"validation — status={status}")
             self.log(f"PRODUCT SETUP: completed status={status}")
-            self._run_output_hygiene(run_error_log)
-            if status == "SUCCESS":
+            package_ok = self._run_output_hygiene(run_error_log)
+            if status == "SUCCESS" and package_ok:
                 self._launch_dbf_append_tool()
                 self.complete_run_progress("Complete — quikplan.csv written to QLA_Migration\\Output")
                 messagebox.showinfo("Product Setup", "Product setup conversion completed successfully.")
+            elif status == "SUCCESS" and not package_ok:
+                self.fail_run_progress(
+                    "Append Tool packaging",
+                    "Append package gate failed after product setup",
+                    run_error_log.folder,
+                )
+                messagebox.showerror(
+                    "Product Setup",
+                    "Product setup CSVs were written, but the DBF Append Tool package failed.\n\n"
+                    f"Details:\n{run_error_log.folder}",
+                )
             elif status == "BLOCKED":
                 run_error_log.write_failed_stage("Validation and blocker checks",
                                                  "Product setup emit blocked by validation controls.")
@@ -4006,10 +4067,10 @@ class QLAdminEnterpriseIntegrationSuite:
                     self.log(f"Issue #96: post-rate PVO refresh skipped: {exc}")
             if not from_batch:
                 self.update_run_progress(4, detail=f"validation — status={status}")
-                self._run_output_hygiene(run_error_log)
-                if status == "SUCCESS" or result.get("partial_emit"):
+                package_ok = self._run_output_hygiene(run_error_log)
+                if package_ok and (status == "SUCCESS" or result.get("partial_emit")):
                     self._launch_dbf_append_tool()
-                if status == "SUCCESS":
+                if status == "SUCCESS" and package_ok:
                     detail = "Complete — rate tables written to QLA_Migration\\Output\\rates"
                     if result.get("partial_emit"):
                         detail += " (partial: non-CV blockers ignored)"
@@ -4025,6 +4086,17 @@ class QLAdminEnterpriseIntegrationSuite:
                     if result.get("csv_dir"):
                         msg += f"\n\nCSV folder:\n{result['csv_dir']}"
                     messagebox.showinfo("Rate Tables", msg)
+                elif status == "SUCCESS" and not package_ok:
+                    self.fail_run_progress(
+                        "Append Tool packaging",
+                        "Append package gate failed after rate tables",
+                        run_error_log.folder,
+                    )
+                    messagebox.showerror(
+                        "Rate Tables",
+                        "Rate tables were written, but the DBF Append Tool package failed.\n\n"
+                        f"Details:\n{run_error_log.folder}",
+                    )
                 elif status == "BLOCKED":
                     run_error_log.write_failed_stage("Rate validation",
                                                      f"{result.get('blockers', '?')} blocker(s) prevented emit.")
@@ -5399,6 +5471,18 @@ class QLAdminEnterpriseIntegrationSuite:
                 )
                 emit_result["issue135_mintamt"] = issue135_result
                 self._log_issue135_mintamt_summary(issue135_result)
+                # Last claims CSV mutate before UAT DBF generate / Append packaging.
+                mseq_align = self._apply_claims_payee_mseq_align(
+                    emit_result.get("output_dir") or self._resolve_output_base_dir()
+                )
+                emit_result["claims_payee_mseq_align"] = mseq_align
+                self._log_claims_payee_mseq_align_summary(mseq_align)
+                if not mseq_align.get("ok"):
+                    emit_result["validation_ok"] = False
+                    emit_result["validation_error"] = (
+                        "claims_payee_mseq_align_failed:"
+                        + str(mseq_align.get("reason") or "unknown")
+                    )
         else:
             self.log("  UAT emit skipped (RUN_MODE != UAT or QLA_CLAIMS_UAT_EMIT=0).")
 
@@ -6357,62 +6441,72 @@ class QLAdminEnterpriseIntegrationSuite:
         return summary
 
     def _publish_dbf_append_tool_input(self, out_dir=None):
-        """Copy table + rate CSVs into Desktop\\DBF_Append_Tool\\input (flat).
+        """Publish Append Tool package: safe CSVs to input; memo/claims DBFs to output.
 
-        QLA_Migration/Output remains the conversion home; the append tool reads a
-        flat CSV folder. Rate tables under Output/rates/ are copied to input root.
+        quikmemo / quikclms / quikclmp are excluded from Append Tool input so EXECUTE
+        cannot blank MEMOTEXT. Claims CSVs are MSEQ-aligned, UAT DBFs regenerated,
+        join-gated, then placed into Desktop\\DBF_Append_Tool\\output.
         """
         try:
+            from qla_core.dbf_append_tool_package import (
+                DbfAppendPackageError,
+                finalize_dbf_append_tool_package,
+            )
+
             src_dir = out_dir or (
                 self.path_vars["Out"][0].get().strip() if hasattr(self, "path_vars") else ""
             ) or self._migration_output_dir()
             if not src_dir or not os.path.isdir(src_dir):
                 return 0
-            dest = os.path.normpath(DBF_APPEND_TOOL_INPUT)
-            os.makedirs(dest, exist_ok=True)
-            skip_names = {
-                "rate_csv_manifest.csv",
-                "claims_review_hold_manifest.csv",
-                "claims_cross_table_validation_report.csv",
-                "claims_emit_enhancement_validation.csv",
-                "cso_mortality_crosswalk_qa.csv",
-                "variation_code_audit.csv",
-                "migration_audit_log.txt",
-            }
-            copied = 0
-            for name in os.listdir(src_dir):
-                if not name.lower().endswith(".csv"):
-                    continue
-                if not name.lower().startswith("quik"):
-                    continue
-                if name.lower() in skip_names:
-                    continue
-                src = os.path.join(src_dir, name)
-                if not os.path.isfile(src):
-                    continue
-                shutil.copy2(src, os.path.join(dest, name))
-                copied += 1
-            rates_dir = os.path.join(src_dir, "rates")
-            if os.path.isdir(rates_dir):
-                for name in os.listdir(rates_dir):
-                    if not name.lower().endswith(".csv"):
-                        continue
-                    if name.lower() in skip_names:
-                        continue
-                    src = os.path.join(rates_dir, name)
-                    if not os.path.isfile(src):
-                        continue
-                    shutil.copy2(src, os.path.join(dest, name))
-                    copied += 1
-            if copied:
+            repo_root = os.path.normpath(
+                getattr(self, "repo_root", None)
+                or os.path.dirname(os.path.abspath(__file__))
+            )
+            # Root app.py lives at repo root; QLA_Migration/app.py needs parent.
+            if os.path.basename(repo_root).lower() == "qla_migration":
+                repo_root = os.path.dirname(repo_root)
+            result = finalize_dbf_append_tool_package(
+                src_dir,
+                repo_root,
+                append_input=DBF_APPEND_TOOL_INPUT,
+                append_output=DBF_APPEND_TOOL_OUTPUT,
+                publish_csvs=True,
+            )
+            csv_n = int((result.get("csv_publish") or {}).get("copied") or 0)
+            skipped = (result.get("csv_publish") or {}).get("skipped") or []
+            memo = result.get("quikmemo") or {}
+            claims = result.get("claims") or {}
+            align = (result.get("mseq_align") or {}).get("align") or {}
+            self.log(
+                f"DBF Append Tool: published {csv_n} CSV(s) → {DBF_APPEND_TOOL_INPUT} "
+                f"(excluded memo/claims CSV: {', '.join(skipped) or 'none'})"
+            )
+            self.log(
+                f"DBF Append Tool: payee MSEQ align changed={align.get('changed', 0)} "
+                f"rows={align.get('rows', 0)}"
+            )
+            if memo.get("ok"):
                 self.log(
-                    f"DBF Append Tool: published {copied} CSV(s) → {dest} "
-                    f"(quikmemo.dbf/dbt stay in {DBF_APPEND_TOOL_OUTPUT})"
+                    f"DBF Append Tool: quikmemo.dbf+sidecar → {DBF_APPEND_TOOL_OUTPUT} "
+                    f"rows={memo.get('dbf_rows')}"
                 )
-            return copied
+            if claims.get("ok"):
+                gate = (result.get("append_claims_gate") or {})
+                self.log(
+                    f"DBF Append Tool: claims UAT DBF/DBT → {DBF_APPEND_TOOL_OUTPUT} "
+                    f"clms={gate.get('clms_rows')} clmp={gate.get('clmp_rows')} "
+                    f"c11={gate.get('mpolicy_c11')}"
+                )
+            self._last_dbf_append_package_ok = True
+            return csv_n
+        except DbfAppendPackageError as exc:
+            self._last_dbf_append_package_ok = False
+            self.log(f"DBF Append Tool: PACKAGE FAIL (blocking): {exc}")
+            return -1
         except Exception as exc:
-            self.log(f"DBF Append Tool publish skipped (non-fatal): {exc}")
-            return 0
+            self._last_dbf_append_package_ok = False
+            self.log(f"DBF Append Tool: PACKAGE FAIL (blocking): {exc}")
+            return -1
 
     def _launch_dbf_append_tool(self):
         """Open Desktop\\DBF_Append_Tool\\run_app.bat after any successful conversion.
@@ -6422,6 +6516,9 @@ class QLAdminEnterpriseIntegrationSuite:
         paths are already defaulted to input/output. Disable with
         QLA_LAUNCH_DBF_APPEND_TOOL=0.
         """
+        if getattr(self, "_last_dbf_append_package_ok", True) is False:
+            self.log("DBF Append Tool: launch blocked — package gate failed")
+            return False
         flag = os.environ.get("QLA_LAUNCH_DBF_APPEND_TOOL", "1").strip().lower()
         if flag in ("0", "false", "no", "off"):
             self.log("DBF Append Tool: launch skipped (QLA_LAUNCH_DBF_APPEND_TOOL=0)")
@@ -6443,12 +6540,17 @@ class QLAdminEnterpriseIntegrationSuite:
             return False
 
     def _run_output_hygiene(self, error_log=None):
-        """Keep QLA_Migration/Output CSV-only. Moves (never deletes) non-CSV files
-        to Reports / rate sandbox / Error_Logs and reports the result in the log."""
+        """Keep QLA_Migration/Output CSV-only and finalize Append Tool package.
+
+        Returns True when Append packaging succeeded (or was not required);
+        False when packaging failed. Callers must not report a clean Complete
+        when this returns False.
+        """
         try:
             out_dir = self.path_vars["Out"][0].get().strip() or self._migration_output_dir()
             if not out_dir or not os.path.isdir(out_dir):
-                return
+                self._last_dbf_append_package_ok = False
+                return False
             reports = self._reports_dir()
             sandbox = self._rate_loader_dbf_dir()
             res = RL.relocate_non_csv(out_dir, reports, sandbox, error_log)
@@ -6460,9 +6562,14 @@ class QLAdminEnterpriseIntegrationSuite:
                          f"(left in place, not deleted):")
                 for src, reason in res["skipped"]:
                     self.log(f"  - {os.path.basename(src)}: {reason}")
-            self._publish_dbf_append_tool_input(out_dir)
+            pub_rc = self._publish_dbf_append_tool_input(out_dir)
+            ok = pub_rc >= 0 and getattr(self, "_last_dbf_append_package_ok", False) is True
+            self._last_dbf_append_package_ok = ok
+            return ok
         except Exception as exc:
-            self.log(f"Output hygiene skipped (non-fatal): {exc}")
+            self._last_dbf_append_package_ok = False
+            self.log(f"Output hygiene / Append package FAIL (blocking): {exc}")
+            return False
 
     def start_governance_audit_thread(self):
         if self.is_running:
@@ -9345,7 +9452,28 @@ class QLAdminEnterpriseIntegrationSuite:
                 elif vr.get("status") == "ERROR":
                     val_note = f"\n\nData governance: error — {vr.get('error', 'see log')}"
 
-            if is_batch and batch_claims_result and batch_claims_result.get("emit_result"):
+            current_stage = "Writing final CSV outputs and summaries"
+            self.update_run_progress(9, detail="finalizing")
+            package_ok = self._run_output_hygiene(run_error_log)
+            if package_ok:
+                self._launch_dbf_append_tool()
+            else:
+                self.log("DBF Append Tool: launch skipped — Append package gate failed")
+
+            if not package_ok:
+                self.fail_run_progress(
+                    "Append Tool packaging",
+                    "Claims/memo Append package gate failed — see console",
+                    run_error_log.folder,
+                )
+                messagebox.showerror(
+                    "Append Package Failed",
+                    "Conversion tables were written, but the DBF Append Tool package "
+                    "failed validation (claims/memo/payee join).\n\n"
+                    "Do not load Append Tool output until this is fixed.\n\n"
+                    f"Details:\n{run_error_log.folder}",
+                )
+            elif is_batch and batch_claims_result and batch_claims_result.get("emit_result"):
                 emit_info = batch_claims_result["emit_result"]
                 dbf_info = batch_claims_result.get("dbf_result")
                 dbf_note = ""
@@ -9370,18 +9498,17 @@ class QLAdminEnterpriseIntegrationSuite:
                     "Batch conversion finished.\n\n"
                     "UAT claims (quikclms/quikclmp) emitted to main output.\n"
                     f"Review holds: {emit_info.get('hold_count', 0)} records in claims_review_hold_manifest.csv"
-                    f"{isrr_note}{dbf_note}{rate_note}{val_note}",
+                    f"{isrr_note}{dbf_note}{rate_note}{val_note}\n\n"
+                    "Append Tool package validated (claims payee join + memo).",
                 )
+                self.complete_run_progress()
             else:
                 done_msg = "Conversion Finished."
                 if is_batch and val_note:
                     done_msg += val_note
+                done_msg += "\n\nAppend Tool package validated."
                 messagebox.showinfo("Complete", done_msg)
-            current_stage = "Writing final CSV outputs and summaries"
-            self.update_run_progress(9, detail="finalizing")
-            self._run_output_hygiene(run_error_log)
-            self._launch_dbf_append_tool()
-            self.complete_run_progress()
+                self.complete_run_progress()
         except Exception as e:
             self.log(f"!!! ERROR: {str(e)}")
             run_error_log.write_exception(current_stage, e)
