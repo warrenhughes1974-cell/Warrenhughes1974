@@ -1,0 +1,396 @@
+{
+  "generated_at": "20260803T175420Z",
+  "task": "full_dbf_append_package",
+  "source_csv": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
+  "dbf_input": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\input",
+  "dbf_output": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output",
+  "q_deploy": false,
+  "generic_ok": 42,
+  "generic_fail": 0,
+  "memo_ok": true,
+  "claims_ok": true,
+  "memo": {
+    "csv_rows": 5083,
+    "dbf_rows": 5083,
+    "dbf_path": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\quikmemo.dbf",
+    "memo_sidecar": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\quikmemo.dbt",
+    "fpt_exists": true,
+    "ok": true
+  },
+  "claims": {
+    "ok": true,
+    "staging": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf",
+    "copied": [
+      {
+        "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMS.DBF",
+        "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\QUIKCLMS.DBF",
+        "size": 1356683
+      },
+      {
+        "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMS.DBF",
+        "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\quikclms.dbf",
+        "size": 1356683
+      },
+      {
+        "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMS.DBT",
+        "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\QUIKCLMS.DBT",
+        "size": 3086422
+      },
+      {
+        "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMS.DBT",
+        "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\quikclms.dbt",
+        "size": 3086422
+      },
+      {
+        "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMP.DBF",
+        "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\QUIKCLMP.DBF",
+        "size": 1902804
+      },
+      {
+        "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMP.DBF",
+        "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\quikclmp.dbf",
+        "size": 1902804
+      }
+    ],
+    "missing": []
+  },
+  "results": [
+    {
+      "csv": "quikactg.csv",
+      "stem": "quikactg",
+      "ok": true,
+      "template": "quikactg.dbf",
+      "appended": 87,
+      "total": 87
+    },
+    {
+      "csv": "quikagts.csv",
+      "stem": "quikagts",
+      "ok": true,
+      "template": "quikagts.dbf",
+      "appended": 4843,
+      "total": 4843
+    },
+    {
+      "csv": "quikbenf.csv",
+      "stem": "quikbenf",
+      "ok": true,
+      "template": "quikbenf.dbf",
+      "appended": 5918,
+      "total": 5918
+    },
+    {
+      "csv": "quikbenh.csv",
+      "stem": "quikbenh",
+      "ok": true,
+      "template": "quikbenh.dbf",
+      "appended": 44795,
+      "total": 44795
+    },
+    {
+      "csv": "quikclid.csv",
+      "stem": "quikclid",
+      "ok": true,
+      "template": "quikclid.dbf",
+      "appended": 32289,
+      "total": 32289
+    },
+    {
+      "csv": "quikclnt.csv",
+      "stem": "quikclnt",
+      "ok": true,
+      "template": "quikclnt.dbf",
+      "appended": 13604,
+      "total": 31818
+    },
+    {
+      "csv": "quikdate.csv",
+      "stem": "quikdate",
+      "ok": true,
+      "template": "quikdate.dbf",
+      "appended": 1,
+      "total": 1
+    },
+    {
+      "csv": "quikdvdp.csv",
+      "stem": "quikdvdp",
+      "ok": true,
+      "template": "quikdvdp.dbf",
+      "appended": 5083,
+      "total": 5083
+    },
+    {
+      "csv": "quikdvpr.csv",
+      "stem": "quikdvpr",
+      "ok": true,
+      "template": "quikdvpr.dbf",
+      "appended": 31,
+      "total": 31
+    },
+    {
+      "csv": "QuikIsrr.csv",
+      "stem": "QuikIsrr",
+      "ok": true,
+      "template": "QuikIsrr.dbf",
+      "appended": 3688,
+      "total": 3688
+    },
+    {
+      "csv": "QuikIswl.csv",
+      "stem": "QuikIswl",
+      "ok": true,
+      "template": "QuikIswl.dbf",
+      "appended": 2268,
+      "total": 2268
+    },
+    {
+      "csv": "quiklist.csv",
+      "stem": "quiklist",
+      "ok": true,
+      "template": "quiklist.dbf",
+      "appended": 6,
+      "total": 6
+    },
+    {
+      "csv": "quikloan.csv",
+      "stem": "quikloan",
+      "ok": true,
+      "template": "quikloan.dbf",
+      "appended": 353,
+      "total": 353
+    },
+    {
+      "csv": "quikmstr.csv",
+      "stem": "quikmstr",
+      "ok": true,
+      "template": "quikmstr.dbf",
+      "appended": 5083,
+      "total": 5083
+    },
+    {
+      "csv": "quikplan.csv",
+      "stem": "quikplan",
+      "ok": true,
+      "template": "quikplan.dbf",
+      "appended": 141,
+      "total": 141
+    },
+    {
+      "csv": "quikprmh.csv",
+      "stem": "quikprmh",
+      "ok": true,
+      "template": "quikprmh.dbf",
+      "appended": 210821,
+      "total": 210821
+    },
+    {
+      "csv": "quikrein.csv",
+      "stem": "quikrein",
+      "ok": true,
+      "template": "quikrein.dbf",
+      "appended": 7,
+      "total": 7
+    },
+    {
+      "csv": "quikridr.csv",
+      "stem": "quikridr",
+      "ok": true,
+      "template": "quikridr.dbf",
+      "appended": 6934,
+      "total": 6934
+    },
+    {
+      "csv": "quikrmst.csv",
+      "stem": "quikrmst",
+      "ok": true,
+      "template": "quikrmst.dbf",
+      "appended": 733,
+      "total": 733
+    },
+    {
+      "csv": "QuikAint.csv",
+      "stem": "QuikAint",
+      "ok": true,
+      "template": "QuikAint.dbf",
+      "appended": 2,
+      "total": 2
+    },
+    {
+      "csv": "QuikCoi.csv",
+      "stem": "QuikCoi",
+      "ok": true,
+      "template": "QuikCoi.dbf",
+      "appended": 792,
+      "total": 792
+    },
+    {
+      "csv": "QuikCvs.csv",
+      "stem": "QuikCvs",
+      "ok": true,
+      "template": "QuikCvs.dbf",
+      "appended": 38359,
+      "total": 38359
+    },
+    {
+      "csv": "QuikDbs.csv",
+      "stem": "QuikDbs",
+      "ok": true,
+      "template": "QuikDbs.dbf",
+      "appended": 2513,
+      "total": 2513
+    },
+    {
+      "csv": "QuikDvs.csv",
+      "stem": "QuikDvs",
+      "ok": true,
+      "template": "QuikDvs.dbf",
+      "appended": 6736,
+      "total": 6736
+    },
+    {
+      "csv": "QuikGcoi.csv",
+      "stem": "QuikGcoi",
+      "ok": true,
+      "template": "QuikGcoi.dbf",
+      "appended": 198,
+      "total": 198
+    },
+    {
+      "csv": "QuikGps.csv",
+      "stem": "QuikGps",
+      "ok": true,
+      "template": "QuikGps.dbf",
+      "appended": 11983,
+      "total": 11983
+    },
+    {
+      "csv": "QuikIssc.csv",
+      "stem": "QuikIssc",
+      "ok": true,
+      "template": "QuikIssc.dbf",
+      "appended": 8,
+      "total": 8
+    },
+    {
+      "csv": "QuikNff.csv",
+      "stem": "QuikNff",
+      "ok": true,
+      "template": "QuikNff.dbf",
+      "appended": 20217,
+      "total": 20217
+    },
+    {
+      "csv": "QuikNps.csv",
+      "stem": "QuikNps",
+      "ok": true,
+      "template": "QuikNps.dbf",
+      "appended": 52647,
+      "total": 52647
+    },
+    {
+      "csv": "QuikPlBd.csv",
+      "stem": "QuikPlBd",
+      "ok": true,
+      "template": "QuikPlBd.dbf",
+      "appended": 141,
+      "total": 142
+    },
+    {
+      "csv": "QuikPlCv.csv",
+      "stem": "QuikPlCv",
+      "ok": true,
+      "template": "QuikPlCv.dbf",
+      "appended": 248,
+      "total": 249
+    },
+    {
+      "csv": "QuikPlDb.csv",
+      "stem": "QuikPlDb",
+      "ok": true,
+      "template": "QuikPlDb.dbf",
+      "appended": 227,
+      "total": 228
+    },
+    {
+      "csv": "QuikPlDv.csv",
+      "stem": "QuikPlDv",
+      "ok": true,
+      "template": "QuikPlDv.dbf",
+      "appended": 227,
+      "total": 228
+    },
+    {
+      "csv": "QuikPlGd.csv",
+      "stem": "QuikPlGd",
+      "ok": true,
+      "template": "QuikPlGd.dbf",
+      "appended": 229,
+      "total": 230
+    },
+    {
+      "csv": "QuikPlGp.csv",
+      "stem": "QuikPlGp",
+      "ok": true,
+      "template": "QuikPlGp.dbf",
+      "appended": 299,
+      "total": 300
+    },
+    {
+      "csv": "QuikPlNb.csv",
+      "stem": "QuikPlNb",
+      "ok": true,
+      "template": "QuikPlNb.dbf",
+      "appended": 141,
+      "total": 142
+    },
+    {
+      "csv": "QuikPlSt.csv",
+      "stem": "QuikPlSt",
+      "ok": true,
+      "template": "QuikPlSt.dbf",
+      "appended": 141,
+      "total": 142
+    },
+    {
+      "csv": "QuikPlTv.csv",
+      "stem": "QuikPlTv",
+      "ok": true,
+      "template": "QuikPlTv.dbf",
+      "appended": 316,
+      "total": 317
+    },
+    {
+      "csv": "QuikPlUw.csv",
+      "stem": "QuikPlUw",
+      "ok": true,
+      "template": "QuikPlUw.dbf",
+      "appended": 199,
+      "total": 200
+    },
+    {
+      "csv": "QuikTvs.csv",
+      "stem": "QuikTvs",
+      "ok": true,
+      "template": "QuikTvs.dbf",
+      "appended": 52932,
+      "total": 52932
+    },
+    {
+      "csv": "QuikUint.csv",
+      "stem": "QuikUint",
+      "ok": true,
+      "template": "QuikUint.dbf",
+      "appended": 32,
+      "total": 32
+    },
+    {
+      "csv": "QuikUwpo.csv",
+      "stem": "QuikUwpo",
+      "ok": true,
+      "template": "QuikUwpo.dbf",
+      "appended": 5,
+      "total": 6
+    }
+  ],
+  "pass": true
+}

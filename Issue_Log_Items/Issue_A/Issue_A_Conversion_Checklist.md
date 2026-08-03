@@ -445,3 +445,72 @@ Notes:
 - Archives: `QLA_Migration/Archive/claims_uat_dbf_pre_issue135_deploy_20260802T224218Z/` · `QLA_Migration/Archive/Q_CSO_Test_6_30_2026_pre_issue135_deploy_20260802T224218Z/`
 - Evidence: `Issue_Log_Items/Issue_135/evidence/issue135_deploy_final_summary.json` · Grok PASS `issue135_deploy_grok_second_pass.json`
 - **Do not call full conversion clean** — A1–A10 plan checks were not evaluated; remaining #135 holds documented
+### Run 2026-08-02 (evening) — app.py v58.62 — Midyear UAT full batch — Source=`PPOLC_PolicyMaster_Extract_20260630.csv`
+
+Operator: Conversion Agent (Cursor Grok 4.5)  
+Env: UAT; `QLA_BATCH_INCLUDE_RATE_TABLES=1`; `QLA_PRODUCT_SETUP_ISOLATED=0`; `QLA_FORCE_PPOLC_EXTRACT=PPOLC_PolicyMaster_Extract_20260630.csv`; `QLA_PLOAN_PATH=...PLOAN_LoanInformation_Extract_20260630.csv`; `QLA_LAUNCH_DBF_APPEND_TOOL=0`  
+Result summary: **PASS** on implemented checks · OPEN SME items remain · conversion exit **0** (~30 min) · DBF Append package **45/45** to Desktop `DBF_Append_Tool\output` · **no Q: deploy**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | `1668SP`, `10L171`, `10L172`, `1L17SP`: PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **PASS** | Fleet DEFICIENCY=N (141/141) per locked Calc Dfcy=N |
+| A3 | **PASS** | Default keys retained; default-only PVO clear still applied in R7B |
+| A4 | **PASS** | No blank-PLAN orphans in QuikPl*/factor key tables (QuikUwpo/Aint/Uint are non-PLAN-key masters) |
+| A5 | **OPEN** | BASIS / Valuation_Setup — not closed this run |
+| A6 | **PARTIAL** | #136 real-rate-only flags applied; residual category/key classes outside #136 gold remain historical |
+| A7 | **OPEN** | VARGP structure / Item 09 — awaiting Eric |
+| A8a | **PASS** | A-prefix PAR=0 (`A60MIR`, `A96DAR`) |
+| A8b | **PASS** | A-prefix VARDB=0 |
+| A8c | **OPEN** | Annuity interest scope — Eric |
+| A8d | **OPEN** | schg — Eric |
+| A8e | **PASS** | A-prefix PLANVALOPT=N |
+| A9a | **OPEN** | Prefix-9 supp type — Eric |
+| A9b | **PASS** | Prefix-9 PAR≠0 count 0 |
+| A10 | **PASS** | QuikUwpo 5 rows (00/NS/PR/SM/ST) |
+| A11h/#136 | **PASS** | `1658C1` Band/State/DV off; GD/UW GP on; fleet BD=0 ST=0 |
+
+Notes:
+- Batch log: `QLA_Migration/Logs/_full_batch_test_log.txt` (v58.62; rates SUCCESS blockers=0)
+- LOANINTX: 137 A / 4 R; QuikLoan 356
+- Claims CSV this batch: quikclms **5594** / quikclmp **5366** (full-batch claims path; not the separate Issue #135 6044/5495 TV package)
+- CSVs published to `Desktop\DBF_Append_Tool\input` (45); DBFs built to `Desktop\DBF_Append_Tool\output` (45/45 PASS)
+- **Q:\CSO\CSO_Test_6_30_2026 was not written** (operator request). Prior Q quikplan.dbf mtime remains 19:24; Append Tool quikplan.dbf mtime 20:32
+- Evidence: `Issue_Log_Items/Issue_A/evidence/full_dbf_append_package_summary.json`
+- Do not call conversion fully clean while A5/A7/A8c/A8d/A9a remain OPEN
+
+### Run 2026-08-03 — app.py v58.65 — Source=LifePRO_Extracts_20260731 (valuation 2026-07-31)
+Operator: Conversion Agent (Cursor Grok 4.5)  
+Env: UAT; `QLA_BATCH_INCLUDE_RATE_TABLES=1`; `QLA_PRODUCT_SETUP_ISOLATED=0`; `QLA_FORCE_PPOLC_EXTRACT=PPOLC_PolicyMaster_Extract_20260731.csv`; `QLA_VALUATION_DATE=20260731`; `QLA_LAUNCH_DBF_APPEND_TOOL=0`  
+Result summary: **PASS** on implemented checks · OPEN SME items remain · conversion exit **0** (~29 min) · DBF Append package **46 DBFs** (42 generic + memo + claims) to Desktop `DBF_Append_Tool\output` · **no Q: deploy**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | Single-prem SP plans unchanged (1668SP, 10L171, 10L172, 1L17SP) |
+| A2 | **PASS** | Fleet DEFICIENCY=N (141/141) |
+| A3 | **PASS** | Default PVO keys retained |
+| A4 | **PASS** | No blank-PLAN orphans in QuikPl* / factor key tables |
+| A5 | **OPEN** | BASIS / Valuation_Setup — not closed this run |
+| A6 | **PARTIAL** | #136 real-rate-only flags; residual historical category/key classes |
+| A7 | **OPEN** | VARGP structure / Item 09 — awaiting Eric |
+| A8a | **PASS** | A-prefix PAR=0 |
+| A8b | **PASS** | A-prefix VARDB=0 |
+| A8c | **OPEN** | Annuity interest scope — Eric |
+| A8d | **OPEN** | schg — Eric |
+| A8e | **PASS** | A-prefix PLANVALOPT=N |
+| A9a | **OPEN** | Prefix-9 supp type — Eric |
+| A9b | **PASS** | Prefix-9 PAR≠0 count 0 |
+| A10 | **PASS** | QuikUwpo 6 rows |
+| A11h/#136 | **PASS** | `1658C1` gold unchanged |
+
+Notes:
+- Batch log: `QLA_Migration/Logs/_full_batch_test_log.txt` (v58.65; rates SUCCESS blockers=1 V-UINT-PDINT)
+- Source promoted 2026-07-31 LifePRO extracts; 6/30 archived to `06302026_Data.zip`
+- Batch append gate **FAIL** (golden 9011156655C zero payees) — remediated via Issue #135 MATCH_CSO zero-payee cohort backfill (+201 payee rows / 143 policies) using 7/31 PACTG+RNA; fixed `used_mseq` NameError in backfill module
+- Post-backfill DBF package: **FULL_DBF_APPEND PASS** generic=42/42 memo_ok claims_ok — evidence `Issue_Log_Items/Issue_A/evidence/full_dbf_append_package_summary.json`
+- Claims after backfill: quikclms **5625** / quikclmp **5598** (golden 9011156655C = 4 payees MSEQ=0)
+- QUIKISRR batch validator **FAIL** (candidate population mismatch) — QuikIsrr.dbf still emitted (3688 rows); review before production ISRR reload
+- Data governance: 433592 checked / 2485 problems (report-only)
+- CSVs in `Desktop\DBF_Append_Tool\input` (42); DBFs in `Desktop\DBF_Append_Tool\output` (46 incl. QUIKCLMS/QUIKCLMP + memo sidecars)
+- Do not call conversion fully clean while A5/A7/A8c/A8d/A9a remain OPEN
+

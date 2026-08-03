@@ -574,7 +574,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.65"
+APP_VERSION = "v58.66"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -1950,6 +1950,24 @@ class QLAdminEnterpriseIntegrationSuite:
                         stats.get("zero_payee_backfill_policies", 0) or 0
                     ),
                     "zero_payee_backfill_rows": int(stats.get("zero_payee_backfill_rows", 0) or 0),
+                    "surrender_zero_payee_backfill_policies": int(
+                        stats.get("surrender_zero_payee_backfill_policies", 0) or 0
+                    ),
+                    "surrender_zero_payee_backfill_rows": int(
+                        stats.get("surrender_zero_payee_backfill_rows", 0) or 0
+                    ),
+                    "surrender_zero_payee_rule1_policies": int(
+                        (stats.get("surrender_zero_payee_backfill_stats") or {}).get(
+                            "rule1_policies", 0
+                        )
+                        or 0
+                    ),
+                    "surrender_zero_payee_rule2_policies": int(
+                        (stats.get("surrender_zero_payee_backfill_stats") or {}).get(
+                            "rule2_policies", 0
+                        )
+                        or 0
+                    ),
                     "clms_rows_after": int(stats.get("clms_rows_after", 0) or 0),
                     "clmp_rows_after": int(stats.get("clmp_rows_after", 0) or 0),
                     "reason": "",
@@ -1980,6 +1998,13 @@ class QLAdminEnterpriseIntegrationSuite:
                 f"{overlay_result.get('zero_payee_backfill_rows')} "
                 f"policies={overlay_result.get('zero_payee_backfill_policies')}"
             )
+        self.log(
+            f"  SURRENDER zero-payee backfill rows="
+            f"{overlay_result.get('surrender_zero_payee_backfill_rows', 0)} "
+            f"policies={overlay_result.get('surrender_zero_payee_backfill_policies', 0)} "
+            f"(PE payout={overlay_result.get('surrender_zero_payee_rule1_policies', 0)}, "
+            f"relationship fallback={overlay_result.get('surrender_zero_payee_rule2_policies', 0)})"
+        )
 
     def _apply_issue135_mintamt_zero(self, output_dir):
         """Issue #135 Phase A: force quikclms.MINTAMT=0.00 after other claim post-emit steps."""

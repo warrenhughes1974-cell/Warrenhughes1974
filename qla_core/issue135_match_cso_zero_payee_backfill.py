@@ -939,7 +939,6 @@ def apply_match_cso_zero_payee_backfill(
             row["MSEQ"] = str(mseq)
             row["MHDPMT"] = "C"
             built.append(row)
-            used_mseq.add(mseq)
             audit_detail.append(
                 {
                     "mpolicy": pol,
