@@ -18,8 +18,13 @@ set QLA_BATCH_INCLUDE_RATE_TABLES=1
 set QLA_ENABLE_QUIKISRR_EMIT=1
 set QLA_ENABLE_REINSURANCE_EMIT=1
 set QLA_REINSURANCE_WRITE_OUTPUT=1
-REM Year-end / extract as-of date for QUIKRIDR.MLASTANN (override if needed)
-if not defined QLA_VALUATION_DATE set QLA_VALUATION_DATE=20251231
+REM The valuation date must match the source package being converted.
+REM Never reuse a prior year-end date for a current/midyear source extract.
+if not defined QLA_VALUATION_DATE (
+  echo ERROR: Set QLA_VALUATION_DATE to the source valuation date before running.
+  echo Example: set QLA_VALUATION_DATE=20260630
+  exit /b 2
+)
 
 echo ============================================================
 echo QLA Enterprise Data Integration Engine - UAT Batch Mode
@@ -27,7 +32,7 @@ echo ============================================================
 echo Repo root : %REPO_ROOT%
 echo RUN_MODE  : %QLA_RUN_MODE%
 echo VALUATION : %QLA_VALUATION_DATE%  (QUIKRIDR.MLASTANN)
-echo Engine    : v58.37 full UAT batch
+echo Engine    : v58.41 full UAT batch
 echo   claims + QuikLoan + QuikBenh (loan+#114 dividend) + rates + QuikIsrr + Reinsurance
 echo.
 echo In the UI, set paths to QLA_Migration:

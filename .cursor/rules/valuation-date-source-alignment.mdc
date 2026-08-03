@@ -1,0 +1,13 @@
+---
+description: Keep valuation dates aligned with the source conversion package
+alwaysApply: true
+---
+
+# Valuation date/source alignment
+
+- Every conversion must set `QLA_VALUATION_DATE=YYYYMMDD` to the valuation date represented by the source extract being converted.
+- Never default a current or midyear conversion to `20251231` or any other prior valuation date.
+- If the date is not known, stop and ask; do not run the batch.
+- For a 2026-06-30 source package, use `QLA_VALUATION_DATE=20260630`.
+- For a 2026-07-31 source package, use `QLA_VALUATION_DATE=20260731`.
+- Confirm the selected source package and valuation date in the run summary before handing off output.
