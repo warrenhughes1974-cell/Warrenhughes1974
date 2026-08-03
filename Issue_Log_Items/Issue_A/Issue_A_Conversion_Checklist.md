@@ -28,6 +28,7 @@
 | **A9a** | Supp `9*` — supp type | Plans with PLAN prefix **9** have supp type populated | OPEN | Eric: confirm field name |
 | **A9b** | Supp `9*` — PAR | Prefix-**9** plans have **PAR = 0** | **IMPLEMENTED v58.21** | 26 plans corrected; fleet scan PAR=1: 0 |
 | **A10** | QuikUwpo UW class master | Every distinct plan `UWCODE` (from QuikPlUw / keys) has **one** `QuikUwpo` row; key = `UWCODE` (no dupes); default `00` always present | **IMPLEMENTED v58.22** | Emits `Output/rates/QuikUwpo.csv`: 00/NS/PR/SM/ST. Verified PASS 2026-07-20. |
+| **A11h / #136** | Real-rate-only PVO variance | Category / `*VARY*` / `PLANVALOPT` enabled only from real factor differentiation; Band `00` and State ALL/`0000`/`00` alone never enable; no DV without `QuikDvs`; fleet-wide | **CLOSED as Issue #136 (v58.62)** | Warren+Luna locked 2026-08-02. Gold `1658C1`. Package: `Issue_Log_Items/Issue_136/` |
 
 ### How to add new checks
 
@@ -376,3 +377,71 @@ Notes:
 - Collateral vs pre-batch snapshot (not Issue #70): PLANVALOPT Y→N on 7 PUA plans (`121PUA`,`165PUA`,`170PUA`,`185PUA`,`1970PA`,`1OLPUA`,`1POPUA`) — flag for Regression
 - Output hygiene: non-table claims/audit artifacts remain in Output root (relocate blocked this session); see Issue_70_Validation_Report.md §9
 - Log: `QLA_Migration/Logs/_full_batch_test_log.txt`
+
+### Run 2026-08-02 (evening) — Claims UAT DBF rerun only — Source=`Output/Test_Validation` quikclms/quikclmp
+
+Operator: Coder Agent (Cursor Grok 4.5) — user request: regenerate claims tables so QLAdmin can load current payees  
+Scope: **Claims UAT DBF package only** — no full QuikPlan/rate conversion, no `app.py` changes, no Output CSV edits  
+Generator: `claims_analysis/phase19_uat_emitted_csv_dbf/uat_emitted_csv_dbf_generator.py`  
+Result summary: **0 plan PASS re-evaluated** · **claims DBF PASS** · **14 N/A** (plan/PVO checks out of scope) · conversion **not** declared clean
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **N/A** | Claims-table DBF rerun only; quikplan/rates not regenerated |
+| A2 | **N/A** | Claims-table DBF rerun only; DEFICIENCY not in scope |
+| A3 | **N/A** | Claims-table DBF rerun only; PVO keys not in scope |
+| A4 | **N/A** | Claims-table DBF rerun only; QuikPl* blank-PLAN not rechecked |
+| A5 | **N/A** | Claims-table DBF rerun only; basis not in scope |
+| A6 | **N/A** | Claims-table DBF rerun only; category/key match not rechecked |
+| A7 | **N/A** | Claims-table DBF rerun only; VARGP not in scope (remains OPEN fleet-wide) |
+| A8a | **N/A** | Claims-table DBF rerun only; annuity PAR not rechecked |
+| A8b | **N/A** | Claims-table DBF rerun only; annuity VarDB not rechecked |
+| A8c | **N/A** | Claims-table DBF rerun only; annuity interest remains OPEN / Eric |
+| A8d | **N/A** | Claims-table DBF rerun only; schg remains OPEN / Eric |
+| A8e | **N/A** | Claims-table DBF rerun only; annuity PVO defaults not rechecked |
+| A9a | **N/A** | Claims-table DBF rerun only; supp type remains OPEN / Eric |
+| A9b | **N/A** | Claims-table DBF rerun only; prefix-9 PAR not rechecked |
+| A10 | **N/A** | Claims-table DBF rerun only; QuikUwpo not regenerated |
+
+Notes:
+- **Claims DBF evidence (in-scope):** QUIKCLMS CSV/DBF **6044/6044** match=Y; QUIKCLMP CSV/DBF **5495/5495** match=Y; alignment manifest **PASS**
+- **Policy 9011156655C:** header MPAID 5145.67 / MFACE 5000 / NETDB 5000 / MINTAMT 0; 4 payees LINVILLE L BRASWELL / CHERI ROSE BRASWELL / DANIEL L BRASWELL JR / ROBERT C BRASWELL (1286.42/1286.41/1286.42/1286.42) sum 5145.67
+- **Source note:** Output root `quikclmp.csv` at rerun was stale 1709-row emit (0 Braswell rows); used `Output/Test_Validation` payee-complete package. Output CSVs were **not** modified.
+- Archive pre-overwrite: `QLA_Migration/Archive/claims_uat_dbf_pre_issue135_rerun_20260802T171739Z/`
+- Generated package: `QLA_Migration/Staging/claims_uat_dbf/` (`QUIKCLMS_PHASE19_UAT.DBF`+`.DBT`, `QUIKCLMP_PHASE19_UAT.DBF`, plus short names `QUIKCLMS.DBF`+`.DBT`, `QUIKCLMP.DBF`)
+- Evidence: `Issue_Log_Items/Issue_135/evidence/issue135_claims_uat_dbf_rerun_summary.json` · Grok second-pass PASS `issue135_claims_uat_dbf_grok_second_pass.json`
+- **Do not call full conversion clean** — OPEN plan checks (A2/A3/A5/A7/A8c/A8d/A9a) were not evaluated this run
+
+### Run 2026-08-02 (late evening) — Issue #135 claims restore + UAT DBF deploy — Source=`Output` quikclms/quikclmp (restored from TV)
+
+Operator: Coder Agent (Cursor Grok 4.5) — user-authorized rebuild/deploy to `Q:\CSO\CSO_Test_6_30_2026`  
+Scope: **Claims CSV restore + UAT DBF regenerate + Q short-name copy only** — no full QuikPlan/rate conversion; engine remains **v58.60**  
+Generator: `claims_analysis/phase19_uat_emitted_csv_dbf/uat_emitted_csv_dbf_generator.py`  
+Result summary: **0 plan PASS re-evaluated** · **claims CSV/DBF/Q deploy PASS** · **14 N/A** (plan/PVO checks out of scope) · conversion **not** declared clean · Issue **#135 not Closed**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **N/A** | Claims-only restore/DBF deploy; quikplan/rates not regenerated |
+| A2 | **N/A** | Claims-only; DEFICIENCY not in scope |
+| A3 | **N/A** | Claims-only; PVO keys not in scope |
+| A4 | **N/A** | Claims-only; QuikPl* blank-PLAN not rechecked |
+| A5 | **N/A** | Claims-only; basis not in scope |
+| A6 | **N/A** | Claims-only; category/key match not rechecked |
+| A7 | **N/A** | Claims-only; VARGP remains OPEN fleet-wide |
+| A8a | **N/A** | Claims-only; annuity PAR not rechecked |
+| A8b | **N/A** | Claims-only; annuity VarDB not rechecked |
+| A8c | **N/A** | Claims-only; annuity interest remains OPEN / Eric |
+| A8d | **N/A** | Claims-only; schg remains OPEN / Eric |
+| A8e | **N/A** | Claims-only; annuity PVO defaults not rechecked |
+| A9a | **N/A** | Claims-only; supp type remains OPEN / Eric |
+| A9b | **N/A** | Claims-only; prefix-9 PAR not rechecked |
+| A10 | **N/A** | Claims-only; QuikUwpo not regenerated |
+
+Notes:
+- **Restore:** Output root was stale **5594/5366**; promoted verified `Test_Validation` **6044/5495** (clmp SHA `5dd6d9da…`) after archive `*_pre_issue135_deploy_20260802T224218Z`
+- **Claims evidence:** CSV/DBF **6044/6044** and **5495/5495** match=Y; MINTAMT nonzero=0; Option-3=43; DERIVED_HIGH=142; marker 308; original 9 HOLDs absent; zero-payee SAFE backfill 137 / HOLD 3
+- **9011156655C:** header 5145.67/5000/5000/0; 4 payees sum 5145.67 (Braswell)
+- **Q deploy:** `Q:\CSO\CSO_Test_6_30_2026\QUIKCLMS.DBF` + `.DBT` + `QUIKCLMP.DBF` (no `QUIKCLMP.DBT`); destination row/payee verify PASS
+- Archives: `QLA_Migration/Archive/claims_uat_dbf_pre_issue135_deploy_20260802T224218Z/` · `QLA_Migration/Archive/Q_CSO_Test_6_30_2026_pre_issue135_deploy_20260802T224218Z/`
+- Evidence: `Issue_Log_Items/Issue_135/evidence/issue135_deploy_final_summary.json` · Grok PASS `issue135_deploy_grok_second_pass.json`
+- **Do not call full conversion clean** — A1–A10 plan checks were not evaluated; remaining #135 holds documented

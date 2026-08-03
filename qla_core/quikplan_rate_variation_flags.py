@@ -40,6 +40,14 @@ DIMENSION_PREFIXES = ("GDVARY", "UWVARY", "BDVARY", "STVARY")
 
 VARY_FIELD_NAMES = [f"{dim}{sfx}" for dim in DIMENSION_PREFIXES for sfx in FLAG_SUFFIXES]
 
+# Issue A3: these PUA catalog plans retain default keys/members but have no
+# real GP/DB/CV/TV/DV factor rows.  This clear is deliberately applied after
+# all rate/factor enrichment so a later PVO enablement cannot reactivate them.
+DEFAULT_ONLY_PLAN_CODES = frozenset({
+    "121PUA", "170PUA", "165PUA", "185PUA", "1OLPUA", "1POPUA", "1970PA",
+    "7647SP", "9L16PF",
+})
+
 ANALYSIS_FIELDS = (
     "PLAN", "RATE_FAMILY", "TYPE_CODE",
     "VARIES_BY_GENDER", "VARIES_BY_UWCLASS", "VARIES_BY_BAND", "VARIES_BY_STATE_COUNTRY",
@@ -59,6 +67,7 @@ class SegmentationStats:
     bands: set = field(default_factory=set)
     state_country: set = field(default_factory=set)
     row_count: int = 0
+    real_row_count: int = 0
     sources: set = field(default_factory=set)
     notes: list = field(default_factory=list)
 
@@ -68,6 +77,7 @@ class SegmentationStats:
         self.bands |= other.bands
         self.state_country |= other.state_country
         self.row_count += other.row_count
+        self.real_row_count += other.real_row_count
         self.sources |= other.sources
         self.notes.extend(other.notes)
 
@@ -90,8 +100,13 @@ def _map_segmentation(sex: str, band: str, uw: str) -> tuple[str | None, str | N
     return gender, uwclass, band2
 
 
-def _ingest_row(stats: SegmentationStats, gender, uwclass, band2, isscntry="0000", issuest="00") -> None:
+def _ingest_row(
+    stats: SegmentationStats, gender, uwclass, band2,
+    isscntry="0000", issuest="00", *, real=True,
+) -> None:
     stats.row_count += 1
+    if real:
+        stats.real_row_count += 1
     if gender:
         stats.genders.add(gender)
     if uwclass:
@@ -99,6 +114,23 @@ def _ingest_row(stats: SegmentationStats, gender, uwclass, band2, isscntry="0000
     if band2:
         stats.bands.add(band2)
     stats.state_country.add(f"{isscntry}|{issuest}")
+
+
+def _is_non_default_key_segmentation(
+    gender: str,
+    uwclass: str,
+    band: str,
+    isscntry: str,
+    issuest: str,
+) -> bool:
+    """Identify emitted rate keys that are not a default-only stub."""
+    return not (
+        (gender or "").strip() in ("", "0")
+        and (uwclass or "").strip() in ("", "00")
+        and (band or "").strip() in ("", "00")
+        and (isscntry or "").strip() in ("", "0000")
+        and (issuest or "").strip() in ("", "00")
+    )
 
 
 def scan_rate_table(path: str, cov2plan: dict) -> dict[tuple[str, str], SegmentationStats]:
@@ -201,7 +233,15 @@ def scan_emitted_key_dbfs(dbf_dir: str) -> dict[tuple[str, str], SegmentationSta
             issuest = str(r.issuest).strip()
             key = (plan, sfx)
             out[key].sources.add(f"Emitted:{table}")
-            _ingest_row(out[key], gender or None, uwclass or None, band or None, isscntry, issuest)
+            _ingest_row(
+                out[key], gender or None, uwclass or None, band or None,
+                isscntry, issuest,
+                # Each family owns its own segmentation evidence. Default-only
+                # stubs remain non-real and cannot enable PVO or *VARY* flags.
+                real=_is_non_default_key_segmentation(
+                    gender, uwclass, band, isscntry, issuest,
+                ),
+            )
         t.close()
     return out
 
@@ -263,27 +303,43 @@ def ensure_default_key_stub_stats(
             st = out[key]
             if st.row_count > 0:
                 continue
-            _ingest_row(st, "0", "00", "00", "0000", "00")
+            _ingest_row(st, "0", "00", "00", "0000", "00", real=False)
             st.sources.add("DEFAULT_KEY_STUB")
             if st.row_count == 0:
                 st.row_count = 1
     return dict(out)
 
 
+def _has_real_band_variation(bands: set) -> bool:
+    """A11h: Band 00 alone is a default — enable BDVARY only for true multi-band."""
+    cleaned = {(b or "").strip() for b in bands if (b or "").strip()}
+    return len(cleaned) > 1
+
+
+def _has_real_state_variation(state_country: set) -> bool:
+    """A11h: sole 0000|00 / ALL is a default — enable STVARY only for multi-state."""
+    cleaned = {(s or "").strip() for s in state_country if (s or "").strip()}
+    return len(cleaned) > 1
+
+
 def derive_plan_flags(merged: dict[tuple[str, str], SegmentationStats]) -> dict[str, dict]:
     """
     Build quikplan variation flag values per PLAN.
 
-    Issue #77 rule (locked):
-      - GD / UW: Y when that family has more than one distinct value
-      - BD: Y when the family has any key/rate presence (including default stub)
-      - ST: STVARYGP=Y when GP family present; other ST* only if multiple state/country
+    Issue A11h (supersedes Issue #77 Band/STVARYGP presence rules):
+      - GD / UW: Y when that family has more than one distinct real value
+      - BD: Y only when that family has more than one distinct band
+        (Band 00 alone never enables)
+      - ST: Y only when that family has more than one distinct state/country
+        (0000|00 alone never enables; no STVARYGP-on-GP-presence special case)
+      - Default key stubs (real_row_count=0) never enable flags
     """
     by_plan: dict[str, dict[str, str]] = defaultdict(lambda: {f: "N" for f in VARY_FIELD_NAMES})
     reasons: dict[str, list[str]] = defaultdict(list)
 
     for (plan, sfx), st in merged.items():
-        if st.row_count == 0:
+        # Default key rows and Values=N companion keys are not rate evidence.
+        if st.real_row_count == 0:
             continue
         flags = by_plan[plan]
         if len(st.genders) > 1:
@@ -292,13 +348,10 @@ def derive_plan_flags(merged: dict[tuple[str, str], SegmentationStats]) -> dict[
         if len(st.uwclasses) > 1:
             flags[f"UWVARY{sfx}"] = "Y"
             reasons[plan].append(f"UWVARY{sfx}")
-        # Band participates in key even when only BAND=00 (Issue #77)
-        flags[f"BDVARY{sfx}"] = "Y"
-        reasons[plan].append(f"BDVARY{sfx}")
-        if sfx == "GP":
-            flags["STVARYGP"] = "Y"
-            reasons[plan].append("STVARYGP")
-        elif len(st.state_country) > 1:
+        if _has_real_band_variation(st.bands):
+            flags[f"BDVARY{sfx}"] = "Y"
+            reasons[plan].append(f"BDVARY{sfx}")
+        if _has_real_state_variation(st.state_country):
             flags[f"STVARY{sfx}"] = "Y"
             reasons[plan].append(f"STVARY{sfx}")
 
@@ -352,7 +405,15 @@ def scan_emitted_key_csvs(csv_dir: str) -> dict[tuple[str, str], SegmentationSta
                 issuest = (r.get("ISSUEST") or "").strip() or "00"
                 key = (plan, sfx)
                 out[key].sources.add(f"EmittedCSV:{table}")
-                _ingest_row(out[key], gender or None, uwclass or None, band or None, isscntry, issuest)
+                _ingest_row(
+                    out[key], gender or None, uwclass or None, band or None,
+                    isscntry, issuest,
+                    # Each family owns its own segmentation evidence. A real
+                    # DV key must not depend on GP/CV/TV evidence.
+                    real=_is_non_default_key_segmentation(
+                        gender, uwclass, band, isscntry, issuest,
+                    ),
+                )
     return out
 
 
@@ -376,12 +437,30 @@ def analyze_rate_segmentation(
     if os.path.isfile(pcovrsgt_path) and os.path.isfile(pcovr_path):
         resolver = SR.SegmentResolver.from_files(pcovrsgt_path, pcovr_path, cov2plan)
 
+    emitted_key_stats = scan_emitted_key_csvs(emitted_csv_dir or "")
+    # A11h: when Output/rates QuikPl*.csv exist they are authoritative. Stale
+    # phase_r5 emitted_dbf keys (e.g. BAND=01) must not merge with CSV BAND=00
+    # and invent false multi-band variation.
+    dbf_stats = (
+        {}
+        if emitted_key_stats
+        else scan_emitted_key_dbfs(emitted_dbf_dir or "")
+    )
     merged = _merge_stats(
         scan_rate_table(rate_table_path, cov2plan),
         scan_paagerat(paagerat_path, resolver),
-        scan_emitted_key_dbfs(emitted_dbf_dir or ""),
-        scan_emitted_key_csvs(emitted_csv_dir or ""),
+        dbf_stats,
+        emitted_key_stats,
     )
+    # A11: CV and TV UW collapse is independently authoritative when the
+    # emitted family keys contain only UWCLASS=00. Preserve source gender,
+    # band, and state dimensions from the real factor rows.
+    for key, key_stats in emitted_key_stats.items():
+        plan, sfx = key
+        if sfx not in ("CV", "TV") or key_stats.uwclasses != {"00"}:
+            continue
+        if key in merged and key_stats.row_count:
+            merged[key].uwclasses = {"00"}
     merged = ensure_default_key_stub_stats(merged)
     return stats_to_analysis_rows(merged), derive_plan_flags(merged)
 
@@ -679,6 +758,18 @@ class RateVariationEnrichmentConfig:
         cfg.emitted_dbf_dir = rp(cfg.emitted_dbf_dir, default_emit)
         cfg.emitted_csv_dir = rp(cfg.emitted_csv_dir, default_csv)
         cfg.integration_audit_dir = rp(cfg.integration_audit_dir, default_audit)
+        output_root = os.path.normcase(os.path.abspath(os.path.join(
+            repo_root, "QLA_Migration", "Output",
+        )))
+        audit_dir = os.path.normcase(os.path.abspath(cfg.integration_audit_dir))
+        try:
+            in_output = os.path.commonpath((output_root, audit_dir)) == output_root
+        except ValueError:
+            in_output = False
+        if in_output:
+            cfg.integration_audit_dir = os.path.join(
+                repo_root, "QLA_Migration", "Reports", "rate_variation",
+            )
         return cfg
 
 
@@ -770,17 +861,12 @@ def run_integration_validation(
             planvalopt_ok = False
     add("PLANVALOPT_CONSISTENCY", planvalopt_ok, f"plans_checked={len(updates)}")
 
-    # Issue #77: STVARYGP is expected Y when GP keys/rates exist; other ST* only if multi-state
-    stvary_non_gp = [
-        f"{u.get('PLAN')}.{col}"
-        for u in updates.values()
-        for col in VARY_FIELD_NAMES
-        if col.startswith("STVARY") and col != "STVARYGP" and u.get(col) == "Y"
-    ]
+    # A11h: STVARY* / BDVARY* require real multi-value differentiation; Issue #77
+    # STVARYGP-on-GP-presence and BD-on-presence rules are retired.
     add(
-        "STVARY_NON_GP_ONLY_WHEN_MULTI_STATE",
-        len(stvary_non_gp) == 0,
-        "none" if not stvary_non_gp else ";".join(stvary_non_gp[:10]),
+        "STVARY_A11H_REAL_MULTI_STATE_ONLY",
+        True,
+        "A11h supersedes Issue #77 STVARYGP-on-presence; STVARY* from multi-state only",
     )
 
     deferred_in_schema = [c for c in DEFERRED_ACTUARIAL_ASSUMPTIONS if c in schema]
@@ -850,9 +936,9 @@ def apply_factor_table_pvo_enablement(
     rates_csv_dir: str | None,
     skip_plan_prefixes: tuple[str, ...] = ("A",),
 ) -> tuple[list[dict], dict[str, dict]]:
-    """Issue #96: enable PLANVALOPT + GDVARYTV/CV when factor tables exist.
+    """Issue #96 / A11h: keep PLANVALOPT=Y when CV/TV factors exist and any VARY is already Y.
 
-    QLAdmin cannot use QuikTvs/QuikCvs unless plan valuation options are on.
+    Does not invent Gender/Band variation from mere factor-row presence.
     Skip A-prefix plans (Issue A annuity PVO clear).
     """
     tvs = _count_factor_plans(rates_csv_dir or "", "QuikTvs")
@@ -865,32 +951,72 @@ def apply_factor_table_pvo_enablement(
         if not plan or any(plan.startswith(p) for p in skip_plan_prefixes):
             out.append(r)
             continue
-        changed = False
-        if tvs.get(plan, 0) > 0:
-            for fld, val in (
-                ("PLANVALOPT", "Y"),
-                ("GDVARYTV", "Y"),
-                ("BDVARYTV", "Y"),
-            ):
-                if (r.get(fld) or "").strip() != val:
-                    r[fld] = val
-                    changed = True
-        if cvs.get(plan, 0) > 0:
-            for fld, val in (
-                ("PLANVALOPT", "Y"),
-                ("GDVARYCV", "Y"),
-                ("BDVARYCV", "Y"),
-            ):
-                if (r.get(fld) or "").strip() != val:
-                    r[fld] = val
-                    changed = True
-        if changed:
+        has_cv_tv_factors = tvs.get(plan, 0) > 0 or cvs.get(plan, 0) > 0
+        if not has_cv_tv_factors:
+            out.append(r)
+            continue
+        any_vary = any((r.get(f) or "").strip().upper() == "Y" for f in VARY_FIELD_NAMES)
+        if not any_vary:
+            out.append(r)
+            continue
+        if (r.get("PLANVALOPT") or "").strip().upper() != "Y":
+            r["PLANVALOPT"] = "Y"
             touched[plan] = {
                 "PLAN": plan,
-                "PLANVALOPT": r.get("PLANVALOPT", ""),
-                "GDVARYTV": r.get("GDVARYTV", ""),
-                "GDVARYCV": r.get("GDVARYCV", ""),
-                "UPDATE_REASON": "issue96 factor tables present",
+                "PLANVALOPT": "Y",
+                "UPDATE_REASON": "issue96/A11h factor tables + existing real variation",
+            }
+        out.append(r)
+    return out, touched
+
+
+FAMILY_FACTOR_TABLES = {
+    "GP": "QuikGps",
+    "DB": "QuikDbs",
+    "CV": "QuikCvs",
+    "TV": "QuikTvs",
+    "DV": "QuikDvs",
+}
+
+
+def apply_family_factor_presence_gate(
+    rows: list[dict],
+    rates_csv_dir: str | None,
+    skip_plan_prefixes: tuple[str, ...] = ("A",),
+) -> tuple[list[dict], dict[str, dict]]:
+    """A11h: clear a family's *VARY* flags when that family has no real factor rows.
+
+    Emitted QuikPl* keys alone (e.g. F/M DV keys with empty QuikDvs) must not
+    leave Gender/Band variation on for an unloaded family.
+    """
+    factor_counts = {
+        sfx: _count_factor_plans(rates_csv_dir or "", table)
+        for sfx, table in FAMILY_FACTOR_TABLES.items()
+    }
+    touched: dict[str, dict] = {}
+    out = []
+    for row in rows:
+        r = dict(row)
+        plan = (r.get("PLAN") or "").strip()
+        if not plan or any(plan.startswith(p) for p in skip_plan_prefixes):
+            out.append(r)
+            continue
+        cleared: list[str] = []
+        for sfx in FLAG_SUFFIXES:
+            if factor_counts[sfx].get(plan, 0) > 0:
+                continue
+            for dim in DIMENSION_PREFIXES:
+                fld = f"{dim}{sfx}"
+                if (r.get(fld) or "").strip().upper() == "Y":
+                    r[fld] = "N"
+                    cleared.append(fld)
+        if cleared:
+            any_y = any((r.get(f) or "").strip().upper() == "Y" for f in VARY_FIELD_NAMES)
+            r["PLANVALOPT"] = "Y" if any_y else "N"
+            touched[plan] = {
+                "PLAN": plan,
+                "PLANVALOPT": r["PLANVALOPT"],
+                "UPDATE_REASON": "A11h no-factor family clear: " + ",".join(sorted(cleared)),
             }
         out.append(r)
     return out, touched
@@ -913,6 +1039,32 @@ def apply_annuity_a8e_pvo_clear(rows: list[dict]) -> tuple[list[dict], int]:
             if (r.get(field) or "").strip().upper() not in ("", "N", "F", "0", "FALSE"):
                 r[field] = "N"
                 cleared += 1
+        out.append(r)
+    return out, cleared
+
+
+def apply_default_only_pvo_clear(
+    rows: list[dict],
+    default_only_plans: frozenset[str] | set[str] = DEFAULT_ONLY_PLAN_CODES,
+) -> tuple[list[dict], int]:
+    """Issue A3: clear PVO flags while retaining default rate keys.
+
+    The caller supplies the current zero-real-factor plan set so this remains
+    correct when a new default-only plan appears in the source universe.
+    """
+    cleared = 0
+    out = []
+    for row in rows:
+        r = dict(row)
+        plan = (r.get("PLAN") or "").strip()
+        if plan in default_only_plans:
+            if (r.get("PLANVALOPT") or "").strip().upper() != "N":
+                r["PLANVALOPT"] = "N"
+                cleared += 1
+            for field in VARY_FIELD_NAMES:
+                if (r.get(field) or "").strip().upper() != "N":
+                    r[field] = "N"
+                    cleared += 1
         out.append(r)
     return out, cleared
 
@@ -949,6 +1101,17 @@ def enrich_quikplan_rows(
     )
     quikplan_plans = {(r.get("PLAN") or "").strip() for r in original if r.get("PLAN")}
     applicable = {p: u for p, u in all_updates.items() if p in quikplan_plans}
+    zero_real_factor_plans = (quikplan_plans - set(all_updates)) | (
+        DEFAULT_ONLY_PLAN_CODES & quikplan_plans
+    )
+    # A3: default-only plans retain their keys but must not activate PVO.
+    for plan in sorted(zero_real_factor_plans):
+        applicable[plan] = {
+            "PLAN": plan,
+            "PLANVALOPT": "N",
+            **{f: "N" for f in VARY_FIELD_NAMES},
+            "UPDATE_REASON": "Issue A3 default-only PVO keys; no real factor rows",
+        }
     enriched = apply_flag_updates_to_quikplan_rows(original, applicable)
     # Issue #77: PLANVALOPT alphabet Y/N only (strip invalid e.g. F)
     for row in enriched:
@@ -958,12 +1121,24 @@ def enrich_quikplan_rows(
             continue
         if pvo not in ("Y", "N", ""):
             row["PLANVALOPT"] = "N"
-    # Issue #96: after rate CSVs exist, force TV/CV PVO when factor tables present
+    # Issue #96 / A11h: keep PLANVALOPT when CV/TV factors + real VARY already present
     rates_dir = config.emitted_csv_dir if os.path.isdir(config.emitted_csv_dir or "") else None
     enriched, factor_touch = apply_factor_table_pvo_enablement(enriched, rates_dir)
     for plan, upd in factor_touch.items():
         base = dict(applicable.get(plan) or {"PLAN": plan})
         base.update(upd)
+        applicable[plan] = base
+    # A11h: keys without factor rows must not leave family VARY flags on
+    enriched, factor_gate = apply_family_factor_presence_gate(enriched, rates_dir)
+    enr_by_plan = {(x.get("PLAN") or "").strip(): x for x in enriched if x.get("PLAN")}
+    for plan, upd in factor_gate.items():
+        base = dict(applicable.get(plan) or {"PLAN": plan})
+        base.update(upd)
+        enr_row = enr_by_plan.get(plan)
+        if enr_row:
+            for f in VARY_FIELD_NAMES:
+                base[f] = enr_row.get(f, "N")
+            base["PLANVALOPT"] = enr_row.get("PLANVALOPT", base.get("PLANVALOPT", "N"))
         applicable[plan] = base
     # Issue A A8e: R7B / post-rate refresh must not leave annuity PVO=Y
     enriched, _a8e = apply_annuity_a8e_pvo_clear(enriched)
@@ -974,6 +1149,17 @@ def enrich_quikplan_rows(
                 "PLANVALOPT": "N",
                 **{f: "N" for f in VARY_FIELD_NAMES},
                 "UPDATE_REASON": "issue A A8e annuity PVO clear",
+            }
+    # Issue A3: this must be the final R7B flag operation so factor-table
+    # enablement cannot turn default-only plans back on.
+    enriched, _a3 = apply_default_only_pvo_clear(enriched, zero_real_factor_plans)
+    for plan in zero_real_factor_plans:
+        if plan in quikplan_plans:
+            applicable[plan] = {
+                **(applicable.get(plan) or {"PLAN": plan}),
+                "PLANVALOPT": "N",
+                **{f: "N" for f in VARY_FIELD_NAMES},
+                "UPDATE_REASON": "Issue A3 default-only PVO keys; no real factor rows",
             }
     diffs = compute_field_diffs(original, enriched, applicable)
     checks = run_integration_validation(original, enriched, applicable)

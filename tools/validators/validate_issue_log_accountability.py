@@ -620,6 +620,40 @@ def spot_checks() -> list[dict]:
         f"marker_308={_135_marker_n}; marker_with_payee={_135_marker_with_payee}",
     )
 
+    # #136 — QuikPlan PVO Band/State/DV/DB flags real-rate-only (gold 1658C1).
+    _136_plan = {_canon(r.get("PLAN")): r for r in plan}
+    _136_g = _136_plan.get(_canon("1658C1"))
+    _136_bd = 0
+    _136_st = 0
+    for r in plan:
+        if any(_norm(r.get(f, "")).upper() == "Y" for f in (
+            "BDVARYGP", "BDVARYDB", "BDVARYCV", "BDVARYTV", "BDVARYDV",
+        )):
+            _136_bd += 1
+        if any(_norm(r.get(f, "")).upper() == "Y" for f in (
+            "STVARYGP", "STVARYDB", "STVARYCV", "STVARYTV", "STVARYDV",
+        )):
+            _136_st += 1
+    _136_ok = (
+        _136_g is not None
+        and _norm(_136_g.get("BDVARYGP", "")).upper() == "N"
+        and _norm(_136_g.get("STVARYGP", "")).upper() == "N"
+        and _norm(_136_g.get("GDVARYDV", "")).upper() == "N"
+        and _norm(_136_g.get("GDVARYGP", "")).upper() == "Y"
+        and _norm(_136_g.get("UWVARYGP", "")).upper() == "Y"
+        and _136_bd == 0
+        and _136_st == 0
+    )
+    add(
+        "#136",
+        "IN_DATA" if _136_ok else "GAP",
+        f"1658C1 BDVARYGP={_norm((_136_g or {}).get('BDVARYGP',''))} "
+        f"STVARYGP={_norm((_136_g or {}).get('STVARYGP',''))} "
+        f"GDVARYDV={_norm((_136_g or {}).get('GDVARYDV',''))} "
+        f"GDVARYGP={_norm((_136_g or {}).get('GDVARYGP',''))}; "
+        f"fleet_BDY={_136_bd} fleet_STY={_136_st}",
+    )
+
     # engine version
     add("Engine", "IN_DATA", "expect v57.85 (batch completed)")
 
@@ -670,6 +704,7 @@ def main() -> int:
         ("#124", ["tools/validators/validate_issue124_quikiswl.py"], True),
         ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
         ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
+        ("#136", ["tools/validators/validate_issue136_pvo_flags.py"], True),
     ]
 
     val_results = []

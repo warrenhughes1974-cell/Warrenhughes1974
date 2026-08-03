@@ -1,0 +1,25 @@
+{
+  "issue": 136,
+  "engine": "v58.62",
+  "validated_at": "2026-08-02",
+  "validator": "tools/validators/validate_issue136_pvo_flags.py",
+  "result": "PASS",
+  "accountability": "IN_DATA",
+  "gold_1658C1": {
+    "PLANVALOPT": "Y",
+    "GDVARYGP": "Y",
+    "UWVARYGP": "Y",
+    "BDVARYGP": "N",
+    "STVARYGP": "N",
+    "GDVARYDV": "N",
+    "GDVARYDB": "N"
+  },
+  "fleet": {
+    "plans": 141,
+    "BDVARY_Y_plans": 0,
+    "STVARY_Y_plans": 0
+  },
+  "test_validation": "QLA_Migration/Output/Test_Validation/quikplan.csv",
+  "q_deploy": "Q:\\CSO\\CSO_Test_6_30_2026\\quikplan.dbf",
+  "luna_post_dev": "PASS-WITH-NOTES"
+}
