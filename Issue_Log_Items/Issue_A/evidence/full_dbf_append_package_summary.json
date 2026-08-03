@@ -1,5 +1,5 @@
 {
-  "generated_at": "20260803T175420Z",
+  "generated_at": "20260803T223217Z",
   "task": "full_dbf_append_package",
   "source_csv": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
   "dbf_input": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\input",
@@ -24,32 +24,32 @@
       {
         "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMS.DBF",
         "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\QUIKCLMS.DBF",
-        "size": 1356683
+        "size": 1349212
       },
       {
         "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMS.DBF",
         "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\quikclms.dbf",
-        "size": 1356683
+        "size": 1349212
       },
       {
         "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMS.DBT",
         "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\QUIKCLMS.DBT",
-        "size": 3086422
+        "size": 3070550
       },
       {
         "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMS.DBT",
         "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\quikclms.dbt",
-        "size": 3086422
+        "size": 3070550
       },
       {
         "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMP.DBF",
         "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\QUIKCLMP.DBF",
-        "size": 1902804
+        "size": 1893039
       },
       {
         "src": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Staging\\claims_uat_dbf\\QUIKCLMP.DBF",
         "dst": "C:\\Users\\warren\\Desktop\\DBF_Append_Tool\\output\\quikclmp.dbf",
-        "size": 1902804
+        "size": 1893039
       }
     ],
     "missing": []
@@ -76,32 +76,32 @@
       "stem": "quikbenf",
       "ok": true,
       "template": "quikbenf.dbf",
-      "appended": 5918,
-      "total": 5918
+      "appended": 5916,
+      "total": 5916
     },
     {
       "csv": "quikbenh.csv",
       "stem": "quikbenh",
       "ok": true,
       "template": "quikbenh.dbf",
-      "appended": 44795,
-      "total": 44795
+      "appended": 44456,
+      "total": 44456
     },
     {
       "csv": "quikclid.csv",
       "stem": "quikclid",
       "ok": true,
       "template": "quikclid.dbf",
-      "appended": 32289,
-      "total": 32289
+      "appended": 32285,
+      "total": 32285
     },
     {
       "csv": "quikclnt.csv",
       "stem": "quikclnt",
       "ok": true,
       "template": "quikclnt.dbf",
-      "appended": 13604,
-      "total": 31818
+      "appended": 13597,
+      "total": 31811
     },
     {
       "csv": "quikdate.csv",
@@ -132,8 +132,8 @@
       "stem": "QuikIsrr",
       "ok": true,
       "template": "QuikIsrr.dbf",
-      "appended": 3688,
-      "total": 3688
+      "appended": 3657,
+      "total": 3657
     },
     {
       "csv": "QuikIswl.csv",
@@ -156,8 +156,8 @@
       "stem": "quikloan",
       "ok": true,
       "template": "quikloan.dbf",
-      "appended": 353,
-      "total": 353
+      "appended": 356,
+      "total": 356
     },
     {
       "csv": "quikmstr.csv",
@@ -180,8 +180,8 @@
       "stem": "quikprmh",
       "ok": true,
       "template": "quikprmh.dbf",
-      "appended": 210821,
-      "total": 210821
+      "appended": 209480,
+      "total": 209480
     },
     {
       "csv": "quikrein.csv",
@@ -228,8 +228,8 @@
       "stem": "QuikCvs",
       "ok": true,
       "template": "QuikCvs.dbf",
-      "appended": 38359,
-      "total": 38359
+      "appended": 37999,
+      "total": 37999
     },
     {
       "csv": "QuikDbs.csv",
@@ -244,8 +244,8 @@
       "stem": "QuikDvs",
       "ok": true,
       "template": "QuikDvs.dbf",
-      "appended": 6736,
-      "total": 6736
+      "appended": 6452,
+      "total": 6452
     },
     {
       "csv": "QuikGcoi.csv",
@@ -260,8 +260,8 @@
       "stem": "QuikGps",
       "ok": true,
       "template": "QuikGps.dbf",
-      "appended": 11983,
-      "total": 11983
+      "appended": 11393,
+      "total": 11393
     },
     {
       "csv": "QuikIssc.csv",
@@ -284,8 +284,8 @@
       "stem": "QuikNps",
       "ok": true,
       "template": "QuikNps.dbf",
-      "appended": 52647,
-      "total": 52647
+      "appended": 46998,
+      "total": 46998
     },
     {
       "csv": "QuikPlBd.csv",
@@ -300,40 +300,40 @@
       "stem": "QuikPlCv",
       "ok": true,
       "template": "QuikPlCv.dbf",
-      "appended": 248,
-      "total": 249
+      "appended": 234,
+      "total": 235
     },
     {
       "csv": "QuikPlDb.csv",
       "stem": "QuikPlDb",
       "ok": true,
       "template": "QuikPlDb.dbf",
-      "appended": 227,
-      "total": 228
+      "appended": 213,
+      "total": 214
     },
     {
       "csv": "QuikPlDv.csv",
       "stem": "QuikPlDv",
       "ok": true,
       "template": "QuikPlDv.dbf",
-      "appended": 227,
-      "total": 228
+      "appended": 213,
+      "total": 214
     },
     {
       "csv": "QuikPlGd.csv",
       "stem": "QuikPlGd",
       "ok": true,
       "template": "QuikPlGd.dbf",
-      "appended": 229,
-      "total": 230
+      "appended": 215,
+      "total": 216
     },
     {
       "csv": "QuikPlGp.csv",
       "stem": "QuikPlGp",
       "ok": true,
       "template": "QuikPlGp.dbf",
-      "appended": 299,
-      "total": 300
+      "appended": 284,
+      "total": 285
     },
     {
       "csv": "QuikPlNb.csv",
@@ -356,24 +356,24 @@
       "stem": "QuikPlTv",
       "ok": true,
       "template": "QuikPlTv.dbf",
-      "appended": 316,
-      "total": 317
+      "appended": 264,
+      "total": 265
     },
     {
       "csv": "QuikPlUw.csv",
       "stem": "QuikPlUw",
       "ok": true,
       "template": "QuikPlUw.dbf",
-      "appended": 199,
-      "total": 200
+      "appended": 189,
+      "total": 190
     },
     {
       "csv": "QuikTvs.csv",
       "stem": "QuikTvs",
       "ok": true,
       "template": "QuikTvs.dbf",
-      "appended": 52932,
-      "total": 52932
+      "appended": 48969,
+      "total": 48969
     },
     {
       "csv": "QuikUint.csv",

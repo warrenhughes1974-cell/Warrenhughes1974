@@ -479,6 +479,40 @@ Notes:
 - Evidence: `Issue_Log_Items/Issue_A/evidence/full_dbf_append_package_summary.json`
 - Do not call conversion fully clean while A5/A7/A8c/A8d/A9a remain OPEN
 
+### Run 2026-08-03 — app.py v58.66 — Source=LifePRO 2026-06-30 extracts
+Operator: Conversion Agent (Cursor Grok 4.5)  
+Env: UAT; `QLA_BATCH_INCLUDE_RATE_TABLES=1`; `QLA_PRODUCT_SETUP_ISOLATED=0`; `QLA_FORCE_PPOLC_EXTRACT=PPOLC_PolicyMaster_Extract_20260630.csv`; `QLA_VALUATION_DATE=20260630`; `QLA_LAUNCH_DBF_APPEND_TOOL=0`  
+Result summary: **PASS** on implemented checks · OPEN SME items remain · conversion exit **0** (~27 min) · DBF Append package **46 DBFs** to Desktop `DBF_Append_Tool\output` · **no Q: deploy**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | Single-premium controls retained |
+| A2 | **PASS** | Fleet DEFICIENCY=N per locked Calc Dfcy decision |
+| A3 | **PASS** | Default PVO keys retained |
+| A4 | **PASS** | No blank-PLAN orphans in QuikPl* / factor key tables |
+| A5 | **OPEN** | BASIS / Valuation_Setup remains open |
+| A6 | **PARTIAL** | #136 real-rate-only flags retained; residual historical classes remain |
+| A7 | **OPEN** | VARGP / Item 09 awaits Eric |
+| A8a | **PASS** | Annuity PAR=0 |
+| A8b | **PASS** | Annuity VARDB=0 |
+| A8c | **OPEN** | Annuity interest scope awaits Eric |
+| A8d | **OPEN** | Annuity surrender-charge scope awaits Eric |
+| A8e | **PASS** | Annuity PLANVALOPT=N |
+| A9a | **OPEN** | Prefix-9 supplemental type awaits Eric |
+| A9b | **PASS** | Prefix-9 PAR controls pass |
+| A10 | **PASS** | QuikUwpo master emitted with 6 rows |
+| A11h/#136 | **PASS** | Real-rate-only PVO variation retained |
+
+Notes:
+- Batch log: `QLA_Migration/Logs/_full_batch_20260630_run.txt` and `_full_batch_test_log.txt`; valuation trace confirms `QLA_VALUATION_DATE=20260630`.
+- 7/31 source extracts were archived to `QLA_Migration/Source/LifePRO_Extracts_20260731.zip`; 6/30 extracts were restored from `06302026_Data.zip`.
+- Built-in append gate initially failed on the known golden zero-payee check; committed Issue #135 claims backfills were then applied using 6/30 PACTG + RNA: MATCH_CSO **143 policies / 201 rows**, surrender **440 rows**.
+- Final claims package: quikclms **5594** / quikclmp **6007**; DBF row alignment PASS.
+- Post-backfill DBF package: **FULL_DBF_APPEND PASS** generic=42/42, memo_ok=True, claims_ok=True.
+- Rate loader: **SUCCESS blockers=0 tables=23**. QUIKISRR: **SUCCESS 3657 events / 637 policies**.
+- Desktop `DBF_Append_Tool\output` contains the 6/30 package; no Q: deploy.
+- Do not call conversion fully clean while A5/A7/A8c/A8d/A9a remain OPEN.
+
 ### Run 2026-08-03 — app.py v58.65 — Source=LifePRO_Extracts_20260731 (valuation 2026-07-31)
 Operator: Conversion Agent (Cursor Grok 4.5)  
 Env: UAT; `QLA_BATCH_INCLUDE_RATE_TABLES=1`; `QLA_PRODUCT_SETUP_ISOLATED=0`; `QLA_FORCE_PPOLC_EXTRACT=PPOLC_PolicyMaster_Extract_20260731.csv`; `QLA_VALUATION_DATE=20260731`; `QLA_LAUNCH_DBF_APPEND_TOOL=0`  
