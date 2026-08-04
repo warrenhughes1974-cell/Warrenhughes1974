@@ -574,7 +574,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.66"
+APP_VERSION = "v58.67"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -6947,6 +6947,17 @@ class QLAdminEnterpriseIntegrationSuite:
                 self.log(f"  Locked source root: {locked_src_base}")
                 self.log(f"  Locked rulebook root: {locked_rule_base}")
                 self.log(f"  Output folder: {self.path_vars['Out'][0].get()}")
+                try:
+                    from qla_core.valuation_date import apply_valuation_date_env
+
+                    _batch_vd, _batch_vd_src = apply_valuation_date_env(locked_src_base)
+                    self.log(
+                        f"  Valuation date: {_batch_vd} ({_batch_vd_src}) -> QUIKRIDR.MLASTANN"
+                    )
+                except ValueError as _vd_err:
+                    self.log(f"  !!! VALUATION DATE ERROR: {_vd_err}")
+                    self.log("  Set QLA_VALUATION_DATE to match the source package before batch.")
+                    return
                 self.log("  NOTE: quikclms/quikclmp are NOT LifePRO source files — they come from Phase 17 UAT validation reporting.")
                 if self._product_setup_isolated():
                     self.log("  PRODUCT SETUP ISOLATED: quikplan will be SKIPPED in batch (QLA_PRODUCT_SETUP_ISOLATED=1)")

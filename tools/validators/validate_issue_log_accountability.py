@@ -21,11 +21,20 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
 PY = sys.executable
-SCRIPT_VERSION = "1.5"
+SCRIPT_VERSION = "1.6"
 
-# Match UAT batch / run_converter.bat so MLASTANN validators (#60/#76) use the
-# extract as-of date rather than today's system date.
-os.environ.setdefault("QLA_VALUATION_DATE", "20251231")
+SOURCE = ROOT / "QLA_Migration" / "Source"
+
+# Match the active source package — never default to a stale year-end date.
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from qla_core.valuation_date import apply_valuation_date_env  # noqa: E402
+
+try:
+    _ACCOUNTABILITY_VALUATION_DATE, _ACCOUNTABILITY_VALUATION_SRC = apply_valuation_date_env(SOURCE)
+except ValueError as _vd_exc:
+    _ACCOUNTABILITY_VALUATION_DATE = ""
+    _ACCOUNTABILITY_VALUATION_SRC = f"UNRESOLVED: {_vd_exc}"
 
 
 def _norm(v) -> str:

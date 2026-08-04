@@ -21,9 +21,13 @@ set QLA_REINSURANCE_WRITE_OUTPUT=1
 REM The valuation date must match the source package being converted.
 REM Never reuse a prior year-end date for a current/midyear source extract.
 if not defined QLA_VALUATION_DATE (
-  echo ERROR: Set QLA_VALUATION_DATE to the source valuation date before running.
-  echo Example: set QLA_VALUATION_DATE=20260630
-  exit /b 2
+  for /f "delims=" %%i in ('python "%REPO_ROOT%\tools\resolve_valuation_date.py"') do set "QLA_VALUATION_DATE=%%i"
+  if errorlevel 1 (
+    echo ERROR: Set QLA_VALUATION_DATE to the source valuation date before running.
+    echo Example: set QLA_VALUATION_DATE=20260630
+    exit /b 2
+  )
+  echo Auto-resolved QLA_VALUATION_DATE=%QLA_VALUATION_DATE% from QLA_Migration\Source
 )
 
 echo ============================================================

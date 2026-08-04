@@ -1,0 +1,2 @@
+﻿ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+126	Closed	QuikValf Issue Age vs QLAdmin	QuikValf Issue Age does not match QLAdmin system age. Associated with QLAdmin Issue Log item #94.	2026-07-30	Go-No Go	Eric	Warren	2026-08-04	Closed 2026-08-04 after v58.66 full batch with QLA_VALUATION_DATE=20260630 aligned to 6/30 source; QuikValf issue age now matches QLAdmin at 6/30/2026 valuation. Examples: 010407670C age 14; 010374099C age 17; 010149295C age 34. Cluster #127/#129/#94.
