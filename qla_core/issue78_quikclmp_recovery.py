@@ -200,6 +200,15 @@ def recover_missing_quikclmp_payments(
     if not missing_pols:
         return clmp, pd.DataFrame()
 
+    # Preserve Issue #2 width-11 header MPOLICY (with leading spaces). Never
+    # re-run format_qladmin_mpolicy on an already-suffixed stripped key — that
+    # double-appends C (e.g. 9018253C → 9018253CC) and breaks Append package joins.
+    header_mpolicy_by_strip: dict[str, str] = {}
+    for raw in clms["MPOLICY"].astype(str).tolist():
+        stripped = str(raw).strip()
+        if stripped and stripped not in header_mpolicy_by_strip:
+            header_mpolicy_by_strip[stripped] = str(raw)
+
     hdr = clms.copy()
     hdr["POL_KEY"] = hdr["MPOLICY"].astype(str).str.strip()
     hdr = hdr.drop_duplicates("POL_KEY").set_index("POL_KEY")
@@ -213,14 +222,18 @@ def recover_missing_quikclmp_payments(
     audit: list[dict[str, Any]] = []
 
     for lp in sorted(lifepro_pols):
-        qla = lp_map[lp]
-        if format_mpolicy:
+        qla_stripped = lp_map[lp]
+        qla = header_mpolicy_by_strip.get(qla_stripped, qla_stripped)
+        # Only format bare LifePRO numbers that are not already trailing-C QLA keys.
+        if format_mpolicy and not str(qla).strip().endswith("C"):
             qla = format_mpolicy(qla)
+        elif len(str(qla).strip()) < 11 and str(qla).strip().endswith("C"):
+            qla = str(qla).strip().rjust(11)
         pol_payouts = payouts[payouts["POL"] == lp].sort_values(["EFF", "AMT"]).reset_index(drop=True)
         if pol_payouts.empty:
             continue
 
-        header = hdr.loc[qla] if qla in hdr.index else None
+        header = hdr.loc[qla_stripped] if qla_stripped in hdr.index else None
         mphase = _strip(header["MPHASE"]) if header is not None else "1"
         claimstat = _strip(header["CLAIMSTAT"]) if header is not None else ""
         header_mpaid = _money(header["MPAID"]) if header is not None else "0.00"
@@ -248,7 +261,11 @@ def recover_missing_quikclmp_payments(
             row["MGROSS"] = amt
             row["MCHKDATE"] = eff
             row["MPMTDATE"] = eff
-            row["MCHECKNO"] = check if check.isdigit() else "0"
+            # QLAdmin MCHECKNO is N(7,0); LifePRO CONTROL_NUMBER may be wider.
+            if check.isdigit():
+                row["MCHECKNO"] = check if len(check) <= 7 else check[-7:]
+            else:
+                row["MCHECKNO"] = "0"
             row.update(payee)
             new_rows.append(row)
 

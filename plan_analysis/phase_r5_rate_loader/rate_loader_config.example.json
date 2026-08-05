@@ -1,13 +1,15 @@
 {
   "_comment": "Externalized R5 rate-loader configuration. Business/actuarial maintained. Copy to rate_loader_config.json and complete before emit.",
   "source_rate_extract": "QLA_Migration/Source/Rate_Table_Extract_Txt.txt",
-  "paagerat_pr_extract": "QLA_Migration/Source/PAAGERAT_AttainedAge_Rates_Extract_20260630.csv",
+  "paagerat_pr_extract": "QLA_Migration/Staging/paagerat_dated_merged.csv",
+  "paage_extract": "QLA_Migration/Staging/paage_dated_merged.csv",
   "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
   "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
   "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",
   "cso_mortality_crosswalk": "plan_analysis/source_data/rates/CSO_Mortiality_Crosswalk.csv",
   "psegt_csv": "QLA_Migration/Source/PSEGT_Segment_Extract_20260630.csv",
-  "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260530.csv",
+  "pdage_extract": "QLA_Migration/Staging/pdage_dated_merged.csv",
+  "_dated_extract_note": "PAAGE/PAAGERAT/PDAGE: pipeline merges all dated Source files; filename YYYYMMDD newest wins (qla_core.plan_source_paths).",
   "iswl_phase1": {
     "_note": "Validation-only; does not filter global rate emit.",
     "quikcvs_vargp": "2"
@@ -42,7 +44,7 @@
   "pdint_extract": "QLA_Migration/Source/PDINT_DeclaredInterestRates_Extract_20260630.csv",
   "pdinttbl_extract": "QLA_Migration/Source/PDINTTBL_DeclaredInterestRates_Extract_20260630.csv",
   "iswl_phase5": {
-    "_note": "ISWL QUIKUINT — PDINT CENII/A1 union_merge historical tiers → QuikUint.",
+    "_note": "ISWL QUIKUINT — PDINT CENII/A1 union_merge historical tiers → QuikUint (8 ISWL MPLANs; Issue #32).",
     "quikuint_enabled": true,
     "pdint_ident": "CENII",
     "type_code": "A1",
@@ -51,6 +53,34 @@
     "dint_rule_tiebreak": "3",
     "g1_mode": "mirror_a1",
     "mplan_allowlist": ["1658C1", "1658CS", "1659C2", "1659CR", "1659CS", "1659SR", "1669SR", "1679CS"]
+  },
+  "issue95_quikuint": {
+    "_note": "Issue #95 — additive QuikUint buckets (current-tier only). Does NOT expand ISWL_MPLAN_ALLOWLIST. A-MEM-SAFE excludes 9* riders and A* annuities.",
+    "enabled": true,
+    "membership_mode": "A-MEM-SAFE",
+    "quikplan_csv": "QLA_Migration/Output/quikplan.csv",
+    "rate_450_plans": [
+      "1668SP", "1669SR", "1658C1", "1658CS", "1659C2", "1659CR", "1659CS", "1659SR", "1679CS"
+    ],
+    "rate_200_plans": ["1SALOL", "1SALML"],
+    "spwl_1668": {
+      "mplans": ["1668SP"],
+      "pdint_ident": "SPWL",
+      "type_code": "A1",
+      "emit_mode": "current_only"
+    },
+    "sal01": {
+      "mplans": ["1SALOL", "1SALML"],
+      "pdint_ident": "SAL01",
+      "type_code": "C1",
+      "emit_mode": "current_only"
+    },
+    "residual_350": {
+      "pdint_ident": "L1001",
+      "type_code": "C1",
+      "emit_mode": "current_only",
+      "exclude_prefixes": ["9", "A"]
+    }
   },
   "iswl_phase6": {
     "_note": "ISWL QUIKISSC — Rate_Table TYPE=SL hub schedule → QuikIssc (8 rows).",

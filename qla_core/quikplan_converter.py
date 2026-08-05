@@ -441,9 +441,8 @@ def run_quikplan_conversion(
 
     df = apply_issue_a_plan_setup(df, repo_root=repo_root)
     df = apply_iswl_product_tags(df)
-    # Issue #70: preserve authoritative arrears values after all enrichment
-    # steps.  Only a clear source code of 1/1.0 restores R; all other values
-    # retain the existing A/invalid fallback behavior.
+    # Issue #70: preserve the authoritative A/R codebook after all enrichment
+    # steps, including the A fallback for blank/unknown source values.
     df = _restore_authoritative_loanintx_from_source(df, source)
     return df
 
@@ -745,8 +744,9 @@ def _restore_authoritative_loanintx_from_source(
         loanintx, _audit_tag = map_loan_adv_arrears_to_loanintx(
             src_row.get("LOAN_ADV_ARREARS", "")
         )
-        if loanintx == "R":
-            df.at[out_idx, "LOANINTX"] = "R"
+        # Re-apply the complete source codebook after later enrichment:
+        # unknown/blank source values must retain the A fallback too.
+        df.at[out_idx, "LOANINTX"] = loanintx
     return df
 
 

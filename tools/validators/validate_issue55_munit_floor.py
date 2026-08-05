@@ -5,7 +5,7 @@ Checks:
   - No rows with 0 < MUNIT < 0.001
   - No leading-dot decimal strings in quikridr numeric fields
   - Trace policies Phase 1 = 0; Phase 2 units unchanged numerically
-  - Issue #25 MPOLICY 10-char width preserved
+  - Issue #2 MPOLICY 11-char (padded) 901…C keys on traces
   - Issue #26 MPREM numeric values preserved (leading-zero fix allowed)
 
 Usage:
@@ -23,7 +23,7 @@ import shutil
 import sys
 from pathlib import Path
 
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "1.1"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 TEST_VALIDATION = DEFAULT_OUTPUT / "Test_Validation"
@@ -40,17 +40,20 @@ from qla_core.normalize_utils import format_qladmin_mpolicy  # noqa: E402
 
 EXPECTED_FLOOR_COUNT = 148
 EXPECTED_ROW_COUNT = 6934
+# Issue #2 (v58.29): MPOLICY is source POLICY_NUMBER + "C" at width 11.
+EXPECTED_MPOLICY_WIDTH = 11
 
+# Trace keys are Issue #2 11-char 901…C forms (legacy strip-9: 018495BC / 018499CC / 018510C).
 TRACE_EXPECTED = {
-    ("018495BC", "1"): 0.0,
-    ("018495BC", "2"): 0.53,
-    ("018499CC", "1"): 0.0,
-    ("018499CC", "2"): 1.05,
-    ("018510C", "1"): 0.0,
-    ("018510C", "2"): 0.647,
+    ("9018495BC", "1"): 0.0,
+    ("9018495BC", "2"): 0.53,
+    ("9018499CC", "1"): 0.0,
+    ("9018499CC", "2"): 1.05,
+    ("9018510C", "1"): 0.0,
+    ("9018510C", "2"): 0.647,
 }
 
-PUA_FLOOR_KEY = ("010434419C", "2")
+PUA_FLOOR_KEY = ("9010434419C", "2")
 
 
 def _s(v) -> str:
@@ -103,8 +106,8 @@ def validate_mpolicy_width(rows: list[dict[str, str]], keys: set[tuple[str, str]
         if keys is not None and key not in keys:
             continue
         mp = row.get("MPOLICY", "")
-        if mp and len(mp) != 10:
-            errs.append(f"MPOLICY width != 10: {mp!r} ({key})")
+        if mp and len(mp) != EXPECTED_MPOLICY_WIDTH:
+            errs.append(f"MPOLICY width != {EXPECTED_MPOLICY_WIDTH}: {mp!r} ({key})")
             if len(errs) >= 5:
                 break
     return errs
@@ -198,7 +201,10 @@ def validate(output_dir: Path, simulate_only: bool = False, publish_test_validat
     mpolicy_errs = validate_mpolicy_width(rows, set(TRACE_EXPECTED.keys()))
     if mpolicy_errs:
         errors.extend(mpolicy_errs[:3])
-    print(f"Issue #25 MPOLICY width (trace policies): {'PASS' if not mpolicy_errs else 'FAIL'}")
+    print(
+        f"Issue #2 MPOLICY width-{EXPECTED_MPOLICY_WIDTH} (trace policies): "
+        f"{'PASS' if not mpolicy_errs else 'FAIL'}"
+    )
 
     # Issue #26: MPREM numeric preserved (compare to baseline if present)
     if BASELINE.is_file():

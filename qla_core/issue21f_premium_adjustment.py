@@ -109,21 +109,67 @@ def _aggregate_policy_components(g: pd.DataFrame) -> Tuple[float, float, float, 
     return base, pua, su, sl
 
 
+def resolve_issue21f_output_mpolicy(
+    source_pol: str,
+    format_mpolicy_fn: Callable[[str], str],
+    *,
+    hist_keys: Optional[set] = None,
+    mstr_keys: Optional[set] = None,
+) -> str:
+    """
+    Issue #21F-local MPOLICY join — match existing quikprmh/quikmstr grain.
+
+    Uses the same path as non-adj quikprmh history: format(source POLICY_NUMBER).
+    Does **not** re-format crosswalk New_Value (that already ends in C and orphans as *CC).
+    Prefers an exact key already present on history/mstr when available.
+    """
+    pol = str(source_pol or "").strip()
+    if not pol:
+        return ""
+    candidate = str(format_mpolicy_fn(pol) or "").strip()
+    if not candidate:
+        return ""
+
+    allowed: set = set()
+    if hist_keys:
+        allowed |= {str(k).strip() for k in hist_keys if str(k).strip()}
+    if mstr_keys:
+        allowed |= {str(k).strip() for k in mstr_keys if str(k).strip()}
+
+    if allowed:
+        if candidate in allowed:
+            return candidate
+        # Rare: history retained a different pad/grain for the same core — join by digits+C
+        core = pol.upper().rstrip("C")
+        for key in allowed:
+            k = str(key).strip()
+            if k.upper().rstrip("C").lstrip("0") == core.lstrip("0"):
+                return k
+        return candidate
+    return candidate
+
+
 def build_lifepro_premium_totals(
     ppbentyp_path: Optional[str],
     normalize_fn: Callable[[str], str],
     format_mpolicy_fn: Callable[[str], str],
     crosswalk: Optional[Dict[str, str]] = None,
+    *,
+    hist_keys: Optional[set] = None,
+    mstr_keys: Optional[set] = None,
 ) -> Dict[str, dict]:
     """
     Per-policy LifePRO four-component totals from PPBENTYP (typed aggregation).
 
-    Returns dict keyed by MPOLICY (formatted) with component breakdown + ISWL flag.
+    Returns dict keyed by MPOLICY (Output/loadable grain) with component breakdown + ISWL flag.
+
+    ``crosswalk`` is accepted for call-site compatibility but is **not** used to build
+    CONV_ADJ MPOLICY keys (Wave 0 / Cut Completeness — join to history/mstr grain).
     """
     if not ppbentyp_path or not os.path.isfile(ppbentyp_path):
         return {}
 
-    cw = crosswalk or {}
+    _ = crosswalk  # retained for API compatibility; not used for key emit
     df = pd.read_csv(
         ppbentyp_path,
         encoding="latin1",
@@ -155,8 +201,13 @@ def build_lifepro_premium_totals(
         pol = str(pol).strip()
         if not pol:
             continue
-        mapped = cw.get(pol, pol)
-        mpolicy = format_mpolicy_fn(mapped)
+        # Same grain as quikprmh history emit: format(source), never format(cw New_Value)
+        mpolicy = resolve_issue21f_output_mpolicy(
+            pol,
+            format_mpolicy_fn,
+            hist_keys=hist_keys,
+            mstr_keys=mstr_keys,
+        )
         if not mpolicy:
             continue
         base, pua, su, sl = _aggregate_policy_components(grp)
@@ -175,12 +226,13 @@ def build_lifepro_premium_totals(
 
 
 def _format_mpolicy_key(mpolicy: str, format_mpolicy_fn: Optional[Callable[[str], str]] = None) -> str:
-    """Canonical MPOLICY key for joins (strip + optional QLAdmin padding)."""
+    """Canonical MPOLICY key for joins (strip; do not re-append C on already-final keys)."""
     raw = str(mpolicy or "").strip()
     if not raw:
         return ""
     if format_mpolicy_fn:
-        return format_mpolicy_fn(raw)
+        # Idempotent for Issue #2 width-11 trailing-C keys already on history rows
+        return str(format_mpolicy_fn(raw) or "").strip() or raw
     return raw
 
 
@@ -248,6 +300,16 @@ def _classify_status(
     return "LOADED"
 
 
+def _emit_issue2_mpolicy(mpolicy: str) -> str:
+    """Width-11 Issue #2 emit form (leading spaces). Join maps may be strip-keyed."""
+    s = str(mpolicy or "").strip()
+    if not s:
+        return ""
+    if len(s) < 11:
+        return s.rjust(11)
+    return s
+
+
 def build_conversion_adjustment_row(
     mpolicy: str,
     adjustment: float,
@@ -255,7 +317,12 @@ def build_conversion_adjustment_row(
 ) -> dict:
     """Synthetic quikprmh row for conversion opening-balance premium."""
     amt = _money_str(adjustment)
-    mp = _format_mpolicy_key(mpolicy, format_mpolicy_fn)
+    # Emit path passes format_mpolicy_fn=None with an already-resolved Output key.
+    # Pad short *C keys to Issue #2 width 11 (48 CONV_ADJ shorts were unpadded).
+    if format_mpolicy_fn is None:
+        mp = _emit_issue2_mpolicy(mpolicy)
+    else:
+        mp = _emit_issue2_mpolicy(_format_mpolicy_key(mpolicy, format_mpolicy_fn))
     return {
         "MPOLICY": mp,
         "DATEPAID": CONV_ADJ_DATEPAID,
@@ -285,11 +352,16 @@ def apply_issue21f_conversion_adjustments(
     format_mpolicy_fn: Callable[[str], str],
     crosswalk: Optional[Dict[str, str]] = None,
     reports_dir: Optional[str] = None,
+    mstr_mpolicy_keys: Optional[set] = None,
+    reject_orphan_vs_mstr: bool = True,
 ) -> Tuple[pd.DataFrame, dict]:
     """
     Append Conversion Adjustment rows to quikprmh DataFrame; write validation reports.
 
     Returns (modified_qdf, stats_dict). Existing payment rows are never modified.
+
+    When ``reject_orphan_vs_mstr`` is True and ``mstr_mpolicy_keys`` is provided, any
+    CONV_ADJ MPOLICY not in quikmstr raises ValueError (hard fail — no orphan *CC keys).
     """
     stats = {
         "loaded": 0,
@@ -300,6 +372,8 @@ def apply_issue21f_conversion_adjustments(
         "no_premium_data": 0,
         "no_crosswalk": 0,
         "stripped_adj": 0,
+        "orphan_adj_rejected": 0,
+        "join_mstr": 0,
     }
 
     if qdf is None or not isinstance(qdf, pd.DataFrame):
@@ -316,21 +390,30 @@ def apply_issue21f_conversion_adjustments(
     stats["stripped_adj"] = int(stripped_mask.sum())
     work = work.loc[~stripped_mask].reset_index(drop=True)
 
+    hist_map = _hist_totals_from_prmh(work, format_mpolicy_fn)
+    hist_keys = set(hist_map.keys())
+    mstr_keys = {str(k).strip() for k in (mstr_mpolicy_keys or set()) if str(k).strip()}
+
     lp_totals = build_lifepro_premium_totals(
-        ppbentyp_path, normalize_fn, format_mpolicy_fn, crosswalk
+        ppbentyp_path,
+        normalize_fn,
+        format_mpolicy_fn,
+        crosswalk,
+        hist_keys=hist_keys,
+        mstr_keys=mstr_keys or None,
     )
     if not lp_totals:
         return work[schema], stats
 
-    hist_map = _hist_totals_from_prmh(work, format_mpolicy_fn)
-
     validation_rows: List[dict] = []
     exception_rows: List[dict] = []
     new_rows: List[dict] = []
+    orphan_keys: List[str] = []
 
     for mpolicy in sorted(lp_totals.keys()):
         rec = lp_totals[mpolicy]
-        mp_key = _format_mpolicy_key(rec["MPOLICY"], format_mpolicy_fn)
+        # Emit the already-resolved Output key; do not re-run format on a finished key
+        mp_key = str(rec["MPOLICY"] or "").strip()
         hist_total = float(hist_map.get(mp_key, 0.0))
         adj = round(rec["LIFEPRO_TOTAL"] - hist_total, 2)
         status = _classify_status(rec, hist_total, adj)
@@ -350,7 +433,7 @@ def apply_issue21f_conversion_adjustments(
 
         vrow = {
             "SOURCE_POLICY": rec["SOURCE_POLICY"],
-            "MPOLICY": mpolicy,
+            "MPOLICY": mp_key,
             "ISWL": "Y" if rec["ISWL"] else "N",
             "BASE_PREMIUMS_PAID": _money_str(rec["BASE_PREMIUMS_PAID"]),
             "PUA_PREMIUMS_PAID": _money_str(rec["PUA_PREMIUMS_PAID"]),
@@ -372,7 +455,7 @@ def apply_issue21f_conversion_adjustments(
             stats["negative_exceptions"] += 1
             exception_rows.append({
                 "SOURCE_POLICY": rec["SOURCE_POLICY"],
-                "MPOLICY": mpolicy,
+                "MPOLICY": mp_key,
                 "ISWL": "N",
                 "LIFEPRO_TOTAL": _money_str(rec["LIFEPRO_TOTAL"]),
                 "HIST_TOTAL": _money_str(hist_total),
@@ -380,23 +463,42 @@ def apply_issue21f_conversion_adjustments(
                 "STATUS": status,
                 "NOTE": "QLAdmin history exceeds LifePRO total — review before load",
             })
-        elif status == "LOADED":
+        elif status in ("LOADED", "OPENING_BALANCE"):
+            if mstr_keys and mp_key not in mstr_keys:
+                stats["orphan_adj_rejected"] += 1
+                orphan_keys.append(mp_key)
+                exception_rows.append({
+                    "SOURCE_POLICY": rec["SOURCE_POLICY"],
+                    "MPOLICY": mp_key,
+                    "ISWL": "N",
+                    "LIFEPRO_TOTAL": _money_str(rec["LIFEPRO_TOTAL"]),
+                    "HIST_TOTAL": _money_str(hist_total),
+                    "ADJUSTMENT": _money_str(adj),
+                    "STATUS": "ORPHAN_NO_MSTR",
+                    "NOTE": "CONV_ADJ MPOLICY not in quikmstr — not emitted",
+                })
+                continue
             stats["loaded"] += 1
-            new_rows.append(
-                build_conversion_adjustment_row(mp_key, adj, format_mpolicy_fn)
-            )
-        elif status == "OPENING_BALANCE":
-            stats["loaded"] += 1
-            stats["opening_balance"] += 1
-            new_rows.append(
-                build_conversion_adjustment_row(mp_key, adj, format_mpolicy_fn)
-            )
+            if status == "OPENING_BALANCE":
+                stats["opening_balance"] += 1
+            if mstr_keys and mp_key in mstr_keys:
+                stats["join_mstr"] += 1
+            # Pass key as-is (already Output grain); avoid format re-append
+            new_rows.append(build_conversion_adjustment_row(mp_key, adj, None))
         elif status == "NO_GAP":
             stats["no_gap"] += 1
         elif status == "NO_PREMIUM_DATA":
             stats["no_premium_data"] += 1
         elif status == "NO_CROSSWALK":
             stats["no_crosswalk"] += 1
+
+    if orphan_keys and reject_orphan_vs_mstr and mstr_keys:
+        if reports_dir:
+            write_issue21f_reports(validation_rows, exception_rows, reports_dir)
+        raise ValueError(
+            f"Issue #21F: {len(orphan_keys)} CONV_ADJ MPOLICY key(s) not in quikmstr "
+            f"(sample={orphan_keys[:5]})"
+        )
 
     if new_rows:
         add_df = pd.DataFrame(new_rows, columns=schema)
@@ -407,6 +509,7 @@ def apply_issue21f_conversion_adjustments(
 
     stats["rows_before"] = len(qdf)
     stats["rows_after"] = len(work)
+    stats["conv_adj_rows"] = len(new_rows)
     return work[schema], stats
 
 

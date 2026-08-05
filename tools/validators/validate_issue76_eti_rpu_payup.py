@@ -10,6 +10,10 @@ Rules:
      and made the value drift between reruns of the same batch.
   4. Non-candidates and phase-2+ PUA rows unchanged
 
+Candidate count is active-cut / source-aware. The midyear frozen count (400) is not a
+hard GAP; when no same-cut count baseline exists the validator WARNs and still proves
+payup / MLASTANN behavior.
+
 Valuation date resolves the same way app.py does: QLA_VALUATION_DATE (YYYYMMDD) if set,
 otherwise today. Pass --valuation-date to override when checking an older package.
 
@@ -32,10 +36,11 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 TEST_VAL = DEFAULT_OUTPUT / "Test_Validation"
-EVIDENCE = PROJECT_ROOT / "Issue_Log_Items" / "Issue_76" / "evidence" / "issue76_validation_summary.csv"
+EVIDENCE_DIR = PROJECT_ROOT / "Issue_Log_Items" / "Issue_76" / "evidence"
+EVIDENCE = EVIDENCE_DIR / "issue76_validation_summary.csv"
 
-SCRIPT_VERSION = "2.0"
-EXPECTED_CANDIDATES = 400
+SCRIPT_VERSION = "2.1"
+MIDYEAR_CANDIDATE_COUNT = 400  # informational only; not a hard GAP on later cuts
 
 # Issue #2 (v58.29): MPOLICY is source POLICY_NUMBER + "C" at width 11. Traces below are
 # recorded in the original 10-char form, so all lookups go through _canon.
@@ -98,6 +103,25 @@ def _load_csv(path: Path) -> list[dict]:
         return list(csv.DictReader(f))
 
 
+def _same_cut_candidate_expectation(val: date) -> tuple[int | None, str]:
+    """Optional same-cut expected count file in Issue_76/evidence/."""
+    vymd = val.strftime("%Y%m%d")
+    for name in (
+        f"issue76_expected_candidates_{vymd}.txt",
+        "issue76_expected_candidates_active_cut.txt",
+    ):
+        path = EVIDENCE_DIR / name
+        if not path.is_file():
+            continue
+        raw = path.read_text(encoding="utf-8", errors="replace").strip().splitlines()
+        if not raw:
+            continue
+        digits = "".join(c for c in raw[0] if c.isdigit())
+        if digits:
+            return int(digits), path.name
+    return None, ""
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
@@ -116,6 +140,7 @@ def main() -> int:
     ridr = _load_csv(ridr_path)
     val_date, val_src = _resolve_valuation_date(args.valuation_date)
     errors: list[str] = []
+    warnings: list[str] = []
     rows_out: list[dict] = []
 
     cand = 0
@@ -159,8 +184,22 @@ def main() -> int:
             "MLAST_OK": "Y" if ok_mlast else "N",
         })
 
-    if cand != EXPECTED_CANDIDATES:
-        errors.append(f"candidate count {cand} != expected {EXPECTED_CANDIDATES}")
+    if cand < 1:
+        errors.append("no ETI/RPU phase-1 candidates in active cut")
+    else:
+        exp_count, exp_src = _same_cut_candidate_expectation(val_date)
+        if exp_count is not None:
+            if cand != exp_count:
+                errors.append(
+                    f"candidate count {cand} != same-cut expected {exp_count} ({exp_src})"
+                )
+            else:
+                print(f"OK: candidate count {cand} matches same-cut baseline {exp_src}")
+        else:
+            warnings.append(
+                f"no same-cut candidate-count baseline; active-cut candidates={cand} "
+                f"(midyear frozen {MIDYEAR_CANDIDATE_COUNT} not required)"
+            )
 
     # Trace: phase-1 pay-up moves to paid-to; the phase-2 PUA row keeps base MEFFDATE.
     sample_rows = [r for r in ridr if _canon(r.get("MPOLICY")) == _canon(SAMPLE)]
@@ -211,6 +250,8 @@ def main() -> int:
     print(f"validate_issue76_eti_rpu_payup v{SCRIPT_VERSION}")
     print(f"  valuation date: {val_date:%Y-%m-%d} ({val_src})")
     print(f"  candidates={cand} payup_fail={payup_bad} mlast_fail={mlast_bad}")
+    for wmsg in warnings:
+        print(f"WARN: {wmsg}")
 
     if errors:
         print("FAIL:")
@@ -223,6 +264,9 @@ def main() -> int:
         TEST_VAL.mkdir(parents=True, exist_ok=True)
         shutil.copy2(ridr_path, TEST_VAL / "quikridr.csv")
         print(f"Published: {TEST_VAL / 'quikridr.csv'}")
+    if warnings:
+        print("CLASS_A_WARN: no same-cut candidate-count baseline (exit 2)")
+        return 2
     return 0
 
 

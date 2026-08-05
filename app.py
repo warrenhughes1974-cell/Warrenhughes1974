@@ -1,10 +1,15 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.61
-# Date:        2026-08-02
+# Version:     v58.73
+# Date:        2026-08-04
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.61 — Issue #135: surrender CLAIMSTAT=99 zero-payee backfill
+# Change Note: v58.75 — L17 RV QuikTvs: PDAGE page VALUE1..10 annual expansion with
+#              identity Dur mapping; auditable PDAGE fallback when active cut lacks L17.
+#              v58.73 — Durable QuikTvs TV0 blank fill: non-SP rows emit `.00` zero;
+#              true single-premium plans preserve blank TV0 (config + quikplan evidence).
+#              v58.72 — Sync twin QLA_Migration/app.py byte-identical to root (PRELSA dated resolve + phase1 inherit path parity).
+#              v58.61 — Issue #135: surrender CLAIMSTAT=99 zero-payee backfill
 #              (PE 90/92/94 sum-match, else OWNR/INSD/PAYR); PRELSA dated extract resolve.
 #              v58.60 — Issue #135: evidence-gated MATCH_CSO_EXISTING_HEADER_ZERO_PAYEE
 #              cohort quikclmp backfill (SAFE_BACKFILL via 2032->1058 + PE/B1; holds residual).
@@ -574,7 +579,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.67"
+APP_VERSION = "v58.76"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -1493,17 +1498,31 @@ class QLAdminEnterpriseIntegrationSuite:
         return os.path.normpath(os.path.join(self._app_base_dir(), "QLA_Migration", "Source"))
 
     def _resolve_claims_prelsa_path(self):
+        """Resolve PRELSA/RNA — prefer dated Source extract (20260630 package)."""
         env_path = os.environ.get("QLA_CLAIMS_PRELSA_PATH", "").strip()
         if env_path and os.path.isfile(env_path):
             return os.path.normpath(env_path)
-        candidates = [
-            os.path.join(self._migration_source_dir(), "RelationshipNameAddress_Extract.csv"),
+        src_dir = self._migration_source_dir()
+        # Prefer LifePRO dated RelationshipNameAddress_Extract_YYYYMMDD.csv (newest first)
+        dated = []
+        if os.path.isdir(src_dir):
+            for name in os.listdir(src_dir):
+                if name.lower().startswith("relationshipnameaddress_extract") and name.lower().endswith(".csv"):
+                    dated.append(os.path.join(src_dir, name))
+        dated.sort(reverse=True)
+        # Also try table resolver (same patterns as quikclnt)
+        resolved, _label = resolve_table_source(src_dir, "quikclnt")
+        candidates = dated + [
+            resolved if resolved else "",
+            os.path.join(src_dir, "RelationshipNameAddress_Extract.csv"),
             os.path.join(self._app_base_dir(), "docs", "claims_conversion_reference", "RelationshipNameAddress_Extract.csv"),
         ]
         for path in candidates:
-            if os.path.isfile(path):
+            if path and os.path.isfile(path):
                 return os.path.normpath(path)
-        return os.path.normpath(candidates[-1])
+        return os.path.normpath(
+            os.path.join(src_dir, "RelationshipNameAddress_Extract_20260630.csv")
+        )
 
     def _resolve_claims_pactg_path(self):
         env_path = os.environ.get("QLA_CLAIMS_PACTG_PATH", "").strip()
@@ -6564,6 +6583,168 @@ class QLAdminEnterpriseIntegrationSuite:
             self.log(f"DBF Append Tool: launch failed (non-fatal): {exc}")
             return False
 
+    def _cut_journal_start(self, is_batch):
+        """Start Wave 1 cut-completeness journal for full-batch runs only."""
+        self._cut_journal = None
+        self._last_cut_manifest = None
+        self._cut_journal_required = bool(is_batch)
+        self._cut_journal_start_error = None
+        if not is_batch:
+            return
+        try:
+            from qla_core.cut_completeness_manifest import CutRunJournal
+
+            src_base = None
+            rule_base = None
+            try:
+                src_input = self.path_vars["Src"][0].get()
+                rule_input = self.path_vars["Rule"][0].get()
+                src_base = self._resolve_batch_src_base(src_input) if src_input else None
+                rule_base = self._resolve_batch_rule_base(rule_input) if rule_input else None
+            except Exception:
+                pass
+            self._cut_journal = CutRunJournal.start(
+                app_version=APP_VERSION,
+                launched_app_path=os.path.abspath(__file__),
+                run_mode=getattr(self, "RUN_MODE", os.environ.get("QLA_RUN_MODE", "")),
+                locked_src_base=src_base,
+                locked_rule_base=rule_base,
+            )
+            self.log("Cut Completeness: journal started (Wave 1 fail-closed gate)")
+        except Exception as exc:
+            self._cut_journal_start_error = str(exc)
+            self._cut_journal = None
+            self.log(f"Cut Completeness: journal start FAILED (fail-closed): {exc}")
+
+    def _cut_record(self, table_id, status, **kwargs):
+        journal = getattr(self, "_cut_journal", None)
+        if journal is None:
+            return
+        try:
+            extra = dict(kwargs.pop("extra", None) or {})
+            if "output_dir" not in extra:
+                try:
+                    out_dir = self.path_vars["Out"][0].get().strip() or self._migration_output_dir()
+                    if out_dir:
+                        extra["output_dir"] = out_dir
+                except Exception:
+                    pass
+            if extra:
+                kwargs["extra"] = extra
+            journal.record(table_id, status, **kwargs)
+        except Exception as exc:
+            self.log(f"Cut Completeness: journal record failed for {table_id}: {exc}")
+
+    def _publish_cut_tv_parity_tables(self):
+        """Refresh T1 Test_Validation copies from current Output so cut TV parity is truthful."""
+        try:
+            from tools.publish_test_validation import publish_tables
+
+            dest = publish_tables(
+                ["quikprmh", "quikbenh", "quikclms", "quikclmp"],
+                issue_tag="Cut_Completeness_T1",
+            )
+            self.log(f"Cut Completeness: published T1 Test_Validation tables → {dest}")
+            return True
+        except Exception as exc:
+            self.log(f"Cut Completeness: T1 Test_Validation publish failed: {exc}")
+            return False
+
+    def _evaluate_cut_completeness_gate(self, package_ok, error_log=None):
+        """Evaluate cut manifest after hygiene; gate Append/Complete on PASS ∧ package_ok."""
+        journal = getattr(self, "_cut_journal", None)
+        if journal is None and getattr(self, "_cut_journal_required", False):
+            reason = getattr(self, "_cut_journal_start_error", None) or "batch journal unavailable"
+            try:
+                from qla_core.cut_completeness_manifest import write_journal_unavailable_manifest
+
+                reports = self._reports_dir()
+                manifest = write_journal_unavailable_manifest(
+                    reason=reason,
+                    reports_dir=reports,
+                    package_ok=bool(package_ok),
+                    app_version=APP_VERSION,
+                    launched_app_path=os.path.abspath(__file__),
+                )
+                self._last_cut_manifest = manifest
+                self.log(
+                    f"Cut Completeness: JOURNAL_UNAVAILABLE — handoff blocked. "
+                    f"manifest → {(manifest.get('artifacts') or {}).get('json')}"
+                )
+            except Exception as exc:
+                self._last_cut_manifest = {
+                    "status": "FAIL",
+                    "detail": f"JOURNAL_UNAVAILABLE: {reason}; artifact write failed: {exc}",
+                    "handoff_ok": False,
+                    "findings": [{"code": "JOURNAL_UNAVAILABLE", "detail": reason}],
+                }
+                self.log(f"Cut Completeness: JOURNAL_UNAVAILABLE (artifact write failed): {exc}")
+            if error_log is not None:
+                try:
+                    error_log.write_failed_stage("Cut Completeness Gate", f"JOURNAL_UNAVAILABLE: {reason}")
+                except Exception:
+                    pass
+            return False
+        if journal is None:
+            self._last_cut_manifest = {
+                "status": "SKIPPED",
+                "detail": "no journal (non-batch)",
+                "handoff_ok": bool(package_ok),
+            }
+            return bool(package_ok)
+        if getattr(self, "_cut_journal_required", False) and journal is not None:
+            self._publish_cut_tv_parity_tables()
+        try:
+            from qla_core.cut_completeness_manifest import build_and_evaluate_cut_manifest
+
+            out_dir = self.path_vars["Out"][0].get().strip() or self._migration_output_dir()
+            reports = self._reports_dir()
+            manifest = build_and_evaluate_cut_manifest(
+                journal,
+                output_dir=out_dir,
+                reports_dir=reports,
+                run_validators=True,
+                write_artifacts=True,
+                package_ok=bool(package_ok),
+                mutate_hygiene=False,
+            )
+            self._last_cut_manifest = manifest
+            arts = manifest.get("artifacts") or {}
+            self.log(
+                f"Cut Completeness: status={manifest.get('status')} "
+                f"findings={len(manifest.get('findings') or [])} "
+                f"handoff_ok={manifest.get('handoff_ok')} "
+                f"semantics={manifest.get('pass_semantics')}"
+            )
+            if arts.get("json"):
+                self.log(f"Cut Completeness: manifest → {arts.get('json')}")
+            deferred = manifest.get("deferred_gaps") or []
+            if deferred:
+                ids = ",".join(str(d.get("id")) for d in deferred)
+                self.log(
+                    f"Cut Completeness: deferred_gaps=[{ids}] "
+                    "(PASS ≠ full Closed-fleet green)"
+                )
+            for warn in manifest.get("warnings") or []:
+                self.log(f"Cut Completeness WARN: {warn}")
+            if manifest.get("status") != "PASS":
+                for finding in (manifest.get("findings") or [])[:25]:
+                    self.log(f"  FAIL {finding.get('code')}: {finding.get('detail')}")
+                if error_log is not None:
+                    try:
+                        error_log.write_failed_stage(
+                            "Cut Completeness Gate",
+                            f"status=FAIL findings={len(manifest.get('findings') or [])}",
+                        )
+                    except Exception:
+                        pass
+                return False
+            return bool(package_ok)
+        except Exception as exc:
+            self._last_cut_manifest = {"status": "FAIL", "detail": str(exc), "handoff_ok": False}
+            self.log(f"Cut Completeness: gate evaluation ERROR (blocking): {exc}")
+            return False
+
     def _run_output_hygiene(self, error_log=None):
         """Keep QLA_Migration/Output CSV-only and finalize Append Tool package.
 
@@ -6587,6 +6768,19 @@ class QLAdminEnterpriseIntegrationSuite:
                          f"(left in place, not deleted):")
                 for src, reason in res["skipped"]:
                     self.log(f"  - {os.path.basename(src)}: {reason}")
+            # Wave 1: relocate non-table CSVs (claims_*.csv, manifests, audits)
+            try:
+                csv_res = RL.relocate_non_table_csvs(out_dir, reports, error_log)
+                if csv_res.get("moved"):
+                    self.log(
+                        f"Output hygiene: moved {len(csv_res['moved'])} non-table CSV(s) "
+                        f"out of Output root → Reports."
+                    )
+                if csv_res.get("skipped"):
+                    for src, reason in csv_res["skipped"]:
+                        self.log(f"  - {os.path.basename(src)}: {reason}")
+            except Exception as hyg_exc:
+                self.log(f"Output hygiene WARNING: non-table CSV relocate failed: {hyg_exc}")
             pub_rc = self._publish_dbf_append_tool_input(out_dir)
             ok = pub_rc >= 0 and getattr(self, "_last_dbf_append_package_ok", False) is True
             self._last_dbf_append_package_ok = ok
@@ -6827,6 +7021,7 @@ class QLAdminEnterpriseIntegrationSuite:
             self._diag_rel_fallback_count = 0
             self._claims_pipeline_runner_completed = False
             self._claims_pipeline_runner_success = False
+            self._cut_journal_start(is_batch)
             if self.debug_rel_fallback:
                 self.log("DEBUG REL: Relationship fallback logging enabled (QLA_DEBUG_REL_FALLBACK)")
             batch_claims_flag = self._batch_include_claims_uat_enabled()
@@ -6985,8 +7180,20 @@ class QLAdminEnterpriseIntegrationSuite:
                     self.log("PRODUCT SETUP ISOLATED: skipping quikplan in batch — use Product Setup Conversion panel.")
                     if os.path.isfile(qplan_path):
                         self.log(f"  Using existing catalog: {qplan_path}")
+                        self._cut_record(
+                            "quikplan",
+                            "REUSED_EXISTING",
+                            reason="PRODUCT_SETUP_ISOLATED",
+                            output_relpath="quikplan.csv",
+                        )
                     else:
                         self.log("  WARNING: output/quikplan.csv not found — run Product Setup Conversion first.")
+                        self._cut_record(
+                            "quikplan",
+                            "SKIPPED",
+                            reason="PRODUCT_SETUP_ISOLATED_MISSING",
+                            output_relpath="quikplan.csv",
+                        )
                     continue
                 
                 rule_input = self.path_vars["Rule"][0].get()
@@ -7015,6 +7222,13 @@ class QLAdminEnterpriseIntegrationSuite:
                 if t_id.lower() == "quikprmh":
                     if not os.path.exists(src_path):
                         self.log(f"Skipping {t_id.upper()} -> Missing Source Data: {src_path}")
+                        self._cut_record(
+                            "quikprmh",
+                            "SKIPPED",
+                            reason="MISSING_SOURCE",
+                            source_path=src_path,
+                            output_relpath="quikprmh.csv",
+                        )
                         continue
                     
                     self.log(f"Working Table: {t_id.upper()}")
@@ -7089,6 +7303,24 @@ class QLAdminEnterpriseIntegrationSuite:
                                 _reports_21f = os.path.normpath(
                                     os.path.join(self._app_base_dir(), "QLA_Migration", "Reports")
                                 )
+                                # Join CONV_ADJ to loadable quikmstr keys (Issue #2 90…C grain)
+                                _mstr_keys_21f = set()
+                                _mstr_path_21f = os.path.normpath(
+                                    os.path.join(out_dir, "quikmstr.csv")
+                                )
+                                if os.path.isfile(_mstr_path_21f):
+                                    try:
+                                        _mstr_df_21f = pd.read_csv(
+                                            _mstr_path_21f, dtype=str, encoding="latin1"
+                                        ).fillna("")
+                                        if "MPOLICY" in _mstr_df_21f.columns:
+                                            _mstr_keys_21f = {
+                                                str(v).strip()
+                                                for v in _mstr_df_21f["MPOLICY"]
+                                                if str(v).strip()
+                                            }
+                                    except Exception:
+                                        _mstr_keys_21f = set()
                                 qdf, _21f_stats = apply_issue21f_conversion_adjustments(
                                     qdf,
                                     _ppbentyp_21f,
@@ -7096,6 +7328,8 @@ class QLAdminEnterpriseIntegrationSuite:
                                     format_mpolicy_fn=self._format_qladmin_mpolicy,
                                     crosswalk=cw_map,
                                     reports_dir=_reports_21f,
+                                    mstr_mpolicy_keys=_mstr_keys_21f or None,
+                                    reject_orphan_vs_mstr=bool(_mstr_keys_21f),
                                 )
                                 self.log(
                                     f"Issue #21F: conversion adjustments loaded={_21f_stats.get('loaded', 0)} "
@@ -7113,6 +7347,13 @@ class QLAdminEnterpriseIntegrationSuite:
                     qdf.to_csv(out_path, index=False)
                     
                     self.log(f"Success: {t_id}.csv - {len(qdf)} records.")
+                    self._cut_record(
+                        "quikprmh",
+                        "WRITTEN",
+                        source_path=src_path,
+                        output_relpath="quikprmh.csv",
+                        row_count=len(qdf),
+                    )
                     
                     audit_path = os.path.normpath(os.path.join(self._logs_dir(), "Migration_Audit_Log.txt"))
                     is_new_log = not os.path.exists(audit_path)
@@ -7151,6 +7392,13 @@ class QLAdminEnterpriseIntegrationSuite:
                 if t_id.lower() == "quikactg":
                     if not os.path.exists(src_path):
                         self.log(f"Skipping {t_id.upper()} -> Missing Source Data: {src_path}")
+                        self._cut_record(
+                            "quikactg",
+                            "SKIPPED",
+                            reason="MISSING_SOURCE",
+                            source_path=src_path,
+                            output_relpath="quikactg.csv",
+                        )
                         continue
 
                     self.log(f"Working Table: {t_id.upper()} (PACTG plan-level accounting setup)")
@@ -7173,6 +7421,14 @@ class QLAdminEnterpriseIntegrationSuite:
                     out_path = os.path.normpath(os.path.join(out_dir, f"{t_id}.csv"))
                     output_df.to_csv(out_path, index=False)
                     self.log(f"Success: {t_id}.csv - {len(output_df)} plan records.")
+                    self._cut_record(
+                        "quikactg",
+                        "WRITTEN",
+                        source_path=src_path,
+                        output_relpath="quikactg.csv",
+                        row_count=len(output_df),
+                        extra={"output_abs_path": out_path, "feature": "quikactg_pactg"},
+                    )
 
                     if closed_actg and not trace_df.empty:
                         p3f_dir = os.path.normpath(
@@ -7212,9 +7468,23 @@ class QLAdminEnterpriseIntegrationSuite:
                             "Skipping QUIKLOAN — set QLA_ENABLE_QUIKLOAN_EMIT=1 for Issue #32 QuikLoan "
                             "(or run plan_analysis/phase_l1_quikloan/quikloan_runner.py)."
                         )
+                        self._cut_record(
+                            "quikloan",
+                            "SKIPPED",
+                            reason="EMIT_OFF",
+                            source_path=src_path if "src_path" in locals() else None,
+                            output_relpath="quikloan.csv",
+                        )
                         continue
                     if not os.path.exists(src_path):
                         self.log(f"Skipping {t_id.upper()} -> Missing Source Data: {src_path}")
+                        self._cut_record(
+                            "quikloan",
+                            "SKIPPED",
+                            reason="MISSING_SOURCE",
+                            source_path=src_path,
+                            output_relpath="quikloan.csv",
+                        )
                         continue
                     self.log(f"Working Table: {t_id.upper()} (PLOAN → QuikLoan Issue #32 v1.2)")
                     phase_l1_dir = os.path.normpath(
@@ -7246,6 +7516,21 @@ class QLAdminEnterpriseIntegrationSuite:
                         out_path = os.path.normpath(os.path.join(out_dir, "quikloan.csv"))
                         passed_df.to_csv(out_path, index=False)
                         self.log(f"GATED OUTPUT: {out_path} ({len(passed_df)} rows)")
+                        self._cut_record(
+                            "quikloan",
+                            "WRITTEN",
+                            source_path=src_path,
+                            output_relpath="quikloan.csv",
+                            row_count=len(passed_df),
+                        )
+                    else:
+                        self._cut_record(
+                            "quikloan",
+                            "GATED_NO_WRITE",
+                            reason="QLA_QUIKLOAN_WRITE_OUTPUT!=1",
+                            source_path=src_path,
+                            output_relpath="quikloan.csv",
+                        )
                     continue
                 if t_id.lower() == "quikbenh":
                     benh_loan_emit = (
@@ -7261,9 +7546,23 @@ class QLAdminEnterpriseIntegrationSuite:
                             "quikbenh_loan_runner.py), and/or "
                             "QLA_ENABLE_QUIKBENH_DIVIDEND_EMIT=1 for Issue #114 dividend history."
                         )
+                        self._cut_record(
+                            "quikbenh",
+                            "SKIPPED",
+                            reason="EMIT_OFF",
+                            source_path=src_path if "src_path" in locals() else None,
+                            output_relpath="quikbenh.csv",
+                        )
                         continue
                     if not os.path.exists(src_path):
                         self.log(f"Skipping {t_id.upper()} -> Missing Source Data: {src_path}")
+                        self._cut_record(
+                            "quikbenh",
+                            "SKIPPED",
+                            reason="MISSING_SOURCE",
+                            source_path=src_path,
+                            output_relpath="quikbenh.csv",
+                        )
                         continue
                     if benh_dividend_emit:
                         self._emit_quikbenh_dividend_history(src_path, src_base, cw_map)
@@ -7306,6 +7605,21 @@ class QLAdminEnterpriseIntegrationSuite:
                         out_path = os.path.normpath(os.path.join(out_dir, "quikbenh.csv"))
                         write_quikbenh_csv(merged_df, out_path)
                         self.log(f"GATED OUTPUT: {out_path} ({len(merged_df)} rows)")
+                        self._cut_record(
+                            "quikbenh",
+                            "WRITTEN",
+                            source_path=src_path,
+                            output_relpath="quikbenh.csv",
+                            row_count=len(merged_df),
+                        )
+                    else:
+                        self._cut_record(
+                            "quikbenh",
+                            "GATED_NO_WRITE",
+                            reason="QLA_QUIKBENH_LOAN_WRITE_OUTPUT!=1",
+                            source_path=src_path,
+                            output_relpath="quikbenh.csv",
+                        )
                     continue
                 if t_id.lower() in ("quikrein", "quikrmst"):
                     if getattr(self, "_reinsurance_batch_done", False):
@@ -7314,6 +7628,18 @@ class QLAdminEnterpriseIntegrationSuite:
                         self.log(
                             "Skipping REINSURANCE — set QLA_ENABLE_REINSURANCE_EMIT=1 "
                             "(or run plan_analysis/phase_r9_quikrein_rmst/reinsurance_runner.py)."
+                        )
+                        self._cut_record(
+                            "quikrein",
+                            "SKIPPED",
+                            reason="EMIT_OFF",
+                            output_relpath="quikrein.csv",
+                        )
+                        self._cut_record(
+                            "quikrmst",
+                            "SKIPPED",
+                            reason="EMIT_OFF",
+                            output_relpath="quikrmst.csv",
                         )
                         continue
                     ptrty_path, ptrty_label, prein_path, prein_label, preintrt_path, preintrt_label = resolve_reinsurance_sources(src_base)
@@ -7367,6 +7693,31 @@ class QLAdminEnterpriseIntegrationSuite:
                         rein_df.to_csv(rein_out, index=False)
                         rmst_df.to_csv(rmst_out, index=False)
                         self.log(f"GATED OUTPUT: {rein_out} ({len(rein_df)} rows), {rmst_out} ({len(rmst_df)} rows)")
+                        self._cut_record(
+                            "quikrein",
+                            "WRITTEN",
+                            output_relpath="quikrein.csv",
+                            row_count=len(rein_df),
+                        )
+                        self._cut_record(
+                            "quikrmst",
+                            "WRITTEN",
+                            output_relpath="quikrmst.csv",
+                            row_count=len(rmst_df),
+                        )
+                    else:
+                        self._cut_record(
+                            "quikrein",
+                            "GATED_NO_WRITE",
+                            reason="QLA_REINSURANCE_WRITE_OUTPUT!=1",
+                            output_relpath="quikrein.csv",
+                        )
+                        self._cut_record(
+                            "quikrmst",
+                            "GATED_NO_WRITE",
+                            reason="QLA_REINSURANCE_WRITE_OUTPUT!=1",
+                            output_relpath="quikrmst.csv",
+                        )
                     audit_path = os.path.normpath(os.path.join(self._logs_dir(), "Migration_Audit_Log.txt"))
                     is_new_log = not os.path.exists(audit_path)
                     audit_msg = (
@@ -7385,6 +7736,13 @@ class QLAdminEnterpriseIntegrationSuite:
                     pnote_path, pnote_label, pense_path, pense_label = resolve_quikmemo_sources(src_base)
                     if not pnote_path and not pense_path:
                         self.log(f"Skipping QUIKMEMO -> Missing PNOTE and PENSE sources in {src_base}")
+                        self._cut_record(
+                            "quikmemo",
+                            "SKIPPED",
+                            reason="MISSING_SOURCE",
+                            source_path=src_base,
+                            output_relpath="quikmemo.csv",
+                        )
                         continue
                     self.log("Working Table: QUIKMEMO (PNOTE + PENSE dual-source merge)")
                     if pnote_path:
@@ -7420,6 +7778,14 @@ class QLAdminEnterpriseIntegrationSuite:
                     out_path = os.path.normpath(os.path.join(out_dir, "quikmemo.csv"))
                     output_df.to_csv(out_path, index=False)
                     self.log(f"Success: quikmemo.csv - {len(output_df)} memo records.")
+                    self._cut_record(
+                        "quikmemo",
+                        "WRITTEN",
+                        source_path=pnote_path or pense_path,
+                        output_relpath="quikmemo.csv",
+                        row_count=len(output_df),
+                        extra={"output_abs_path": out_path, "feature": "quikmemo_pnote_pense"},
+                    )
                     self.log(
                         f"  Stats: PNOTE emit={memo_stats.get('emitted_pnote', 0)} "
                         f"PENSE emit={memo_stats.get('emitted_pense', 0)} "
@@ -7465,6 +7831,13 @@ class QLAdminEnterpriseIntegrationSuite:
                     self.log(f"Skipping {t_id.upper()} -> Missing files at specified paths:")
                     if not os.path.exists(rb_path): self.log(f"   [X] Cannot find Rulebook: {rb_path}")
                     if not os.path.exists(src_path): self.log(f"   [X] Cannot find Source Data: {src_path}")
+                    self._cut_record(
+                        str(t_id).lower(),
+                        "SKIPPED",
+                        reason="MISSING_FILES",
+                        source_path=src_path,
+                        output_relpath=f"{t_id}.csv",
+                    )
                     continue
                 
                 self.log(f"Working Table: {t_id.upper()}")
@@ -9272,6 +9645,13 @@ class QLAdminEnterpriseIntegrationSuite:
                 out_csv = os.path.normpath(os.path.join(out_dir, f"{t_id}.csv"))
                 aligned_out_df.to_csv(out_csv, index=False)
                 self.log(f"Success: {t_id}.csv - {len(output)} records.")
+                self._cut_record(
+                    str(t_id).lower(),
+                    "WRITTEN",
+                    source_path=src_path if "src_path" in locals() else None,
+                    output_relpath=f"{t_id}.csv",
+                    row_count=len(output),
+                )
 
                 if t_id.lower() == "quikmstr" and bank_draft_exceptions is not None:
                     self._write_bank_draft_account_exceptions(bank_draft_exceptions)
@@ -9410,8 +9790,15 @@ class QLAdminEnterpriseIntegrationSuite:
                         f"VERSION={qd_info.get('VERSION')}; "
                         f"ACHFILEID={qd_info.get('ACHFILEID')}; ACHFILEID2={qd_info.get('ACHFILEID2')})."
                     )
+                    self._cut_record(
+                        "quikdate",
+                        "WRITTEN",
+                        output_relpath="quikdate.csv",
+                        row_count=qd_info.get("row_count", 1),
+                    )
                 except Exception as e:
                     self.log(f"Warning: QuikDate governance emit failed - {e}")
+                    self._cut_record("quikdate", "FAILED", reason=str(e), output_relpath="quikdate.csv")
             # ---------------------------------------------------------------------------------------
 
             # --- Issue #120: QuikList group bill master (active six LST groups) ---
@@ -9424,8 +9811,15 @@ class QLAdminEnterpriseIntegrationSuite:
                         f"Success: quiklist.csv - {ql_info.get('row_count', 0)} records "
                         f"(groups={', '.join(ql_info.get('groups', []))})."
                     )
+                    self._cut_record(
+                        "quiklist",
+                        "WRITTEN",
+                        output_relpath="quiklist.csv",
+                        row_count=ql_info.get("row_count", 0),
+                    )
                 except Exception as e:
                     self.log(f"Warning: QuikList group bill emit failed - {e}")
+                    self._cut_record("quiklist", "FAILED", reason=str(e), output_relpath="quiklist.csv")
             # ---------------------------------------------------------------------------------------
 
             # --- Policy Data Governance: internal transformation audit (Reports only) ---
@@ -9448,8 +9842,65 @@ class QLAdminEnterpriseIntegrationSuite:
             batch_quikiswl_result = None
             if is_batch:
                 batch_quikiswl_result = self._execute_batch_quikiswl_seed()
+                if batch_quikiswl_result and batch_quikiswl_result.get("status") == "SUCCESS":
+                    self._cut_record(
+                        "QuikIswl",
+                        "WRITTEN",
+                        output_relpath="QuikIswl.csv",
+                        row_count=(batch_quikiswl_result.get("summary") or {}).get("rows"),
+                    )
+                elif batch_quikiswl_result and batch_quikiswl_result.get("status") == "SKIPPED":
+                    self._cut_record(
+                        "QuikIswl",
+                        "SKIPPED",
+                        reason=str(batch_quikiswl_result.get("reason") or "QUIKISWL_SKIPPED"),
+                        output_relpath="QuikIswl.csv",
+                    )
                 batch_claims_result = self._execute_batch_claims_uat_finale()
+                if batch_claims_result and batch_claims_result.get("emit_result"):
+                    emit_info = batch_claims_result["emit_result"]
+                    self._cut_record(
+                        "quikclms",
+                        "WRITTEN",
+                        output_relpath="quikclms.csv",
+                        row_count=emit_info.get("clms_rows") or emit_info.get("rows"),
+                    )
+                    self._cut_record(
+                        "quikclmp",
+                        "WRITTEN",
+                        output_relpath="quikclmp.csv",
+                        row_count=emit_info.get("clmp_rows"),
+                    )
+                elif is_batch:
+                    self._cut_record(
+                        "quikclms",
+                        "SKIPPED",
+                        reason="CLAIMS_UAT_NOT_EMITTED",
+                        output_relpath="quikclms.csv",
+                    )
+                    self._cut_record(
+                        "quikclmp",
+                        "SKIPPED",
+                        reason="CLAIMS_UAT_NOT_EMITTED",
+                        output_relpath="quikclmp.csv",
+                    )
                 batch_quikisrr_result = self._execute_batch_quikisrr_finale(batch_claims_result)
+                if batch_quikisrr_result and batch_quikisrr_result.get("status") == "SUCCESS":
+                    isrr_summary = batch_quikisrr_result.get("summary") or {}
+                    isrr_emitted = isrr_summary.get("emitted") or {}
+                    self._cut_record(
+                        "QuikIsrr",
+                        "WRITTEN",
+                        output_relpath="QuikIsrr.csv",
+                        row_count=isrr_emitted.get("rows"),
+                    )
+                elif batch_quikisrr_result and batch_quikisrr_result.get("status") == "SKIPPED":
+                    self._cut_record(
+                        "QuikIsrr",
+                        "SKIPPED",
+                        reason=str(batch_quikisrr_result.get("reason") or "QUIKISRR_SKIPPED"),
+                        output_relpath="QuikIsrr.csv",
+                    )
 
             if is_batch and hasattr(self, "rate_include_batch_var") and self.rate_include_batch_var.get():
                 if self.rate_emit_csv_var.get() or self.rate_emit_dbf_var.get():
@@ -9463,8 +9914,33 @@ class QLAdminEnterpriseIntegrationSuite:
                         f"RATE LOADER (batch finale): status={br.get('status', '?')} "
                         f"blockers={br.get('blockers', '?')} tables={br.get('tables', '?')}"
                     )
+                    if br.get("status") in ("SUCCESS", "PARTIAL") or br.get("partial_emit"):
+                        rates_dir = os.path.normpath(os.path.join(self.path_vars["Out"][0].get(), "rates"))
+                        if os.path.isdir(rates_dir):
+                            for fn in sorted(os.listdir(rates_dir)):
+                                if not fn.lower().endswith(".csv"):
+                                    continue
+                                stem = os.path.splitext(fn)[0]
+                                self._cut_record(
+                                    f"rates/{stem}",
+                                    "WRITTEN",
+                                    output_relpath=f"rates/{fn}",
+                                )
+                    else:
+                        self._cut_record(
+                            "rates/QuikUint",
+                            "FAILED",
+                            reason=f"RATE_LOADER_{br.get('status')}",
+                            output_relpath="rates/QuikUint.csv",
+                        )
                 else:
                     self.log("RATE LOADER (batch finale): skipped — enable CSV or DBF emit in Rate Table Generation panel.")
+                    self._cut_record(
+                        "rates/QuikUint",
+                        "SKIPPED",
+                        reason="RATE_EMIT_FORMAT_OFF",
+                        output_relpath="rates/QuikUint.csv",
+                    )
 
             val_note = ""
             if is_batch:
@@ -9491,12 +9967,40 @@ class QLAdminEnterpriseIntegrationSuite:
             current_stage = "Writing final CSV outputs and summaries"
             self.update_run_progress(9, detail="finalizing")
             package_ok = self._run_output_hygiene(run_error_log)
-            if package_ok:
+            cut_ok = True
+            if is_batch:
+                current_stage = "Cut Completeness Gate"
+                self.update_run_progress(9, detail="cut completeness manifest")
+                cut_ok = self._evaluate_cut_completeness_gate(package_ok, run_error_log)
+            handoff_ok = bool(package_ok and cut_ok)
+            if handoff_ok:
                 self._launch_dbf_append_tool()
             else:
-                self.log("DBF Append Tool: launch skipped — Append package gate failed")
+                if not cut_ok:
+                    self.log("DBF Append Tool: launch skipped — Cut Completeness Gate failed")
+                else:
+                    self.log("DBF Append Tool: launch skipped — Append package gate failed")
 
-            if not package_ok:
+            if is_batch and not cut_ok:
+                self.fail_run_progress(
+                    "Cut Completeness Gate",
+                    "Cut manifest FAIL — see QLA_Migration/Reports/cut_manifest_*.json",
+                    run_error_log.folder,
+                )
+                manifest = getattr(self, "_last_cut_manifest", {}) or {}
+                findings = manifest.get("findings") or []
+                preview = "\n".join(
+                    f"- {f.get('code')}: {f.get('detail')}" for f in findings[:12]
+                ) or "(see Reports manifest)"
+                messagebox.showerror(
+                    "Cut Completeness Failed",
+                    "Batch tables were written, but the Cut Completeness Gate failed.\n\n"
+                    "Complete/Append handoff is blocked.\n\n"
+                    f"{preview}\n\n"
+                    "Manifest: QLA_Migration/Reports/cut_manifest_latest.json\n"
+                    f"Details:\n{run_error_log.folder}",
+                )
+            elif not package_ok:
                 self.fail_run_progress(
                     "Append Tool packaging",
                     "Claims/memo Append package gate failed — see console",
@@ -9533,9 +10037,10 @@ class QLAdminEnterpriseIntegrationSuite:
                     "Complete",
                     "Batch conversion finished.\n\n"
                     "UAT claims (quikclms/quikclmp) emitted to main output.\n"
-                    f"Review holds: {emit_info.get('hold_count', 0)} records in claims_review_hold_manifest.csv"
+                    f"Review holds: {emit_info.get('hold_count', 0)} records "
+                    "(claims_review_hold_manifest.csv relocated to QLA_Migration/Reports)."
                     f"{isrr_note}{dbf_note}{rate_note}{val_note}\n\n"
-                    "Append Tool package validated (claims payee join + memo).",
+                    "Cut Completeness PASS + Append Tool package validated.",
                 )
                 self.complete_run_progress()
             else:

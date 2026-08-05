@@ -537,6 +537,32 @@ Result summary: **PASS** on implemented checks · OPEN SME items remain · conve
 | A10 | **PASS** | QuikUwpo 6 rows |
 | A11h/#136 | **PASS** | `1658C1` gold unchanged |
 
+### Run 2026-08-04 — app.py v58.71 — Source=LifePRO_Extracts_20260731 (valuation 2026-07-31)
+Operator: Conversion Agent (Cursor Grok 4.5)  
+Env: UAT; `QLA_BATCH_INCLUDE_RATE_TABLES=1`; `QLA_PRODUCT_SETUP_ISOLATED=0`; `QLA_VALUATION_DATE=20260731`; `QLA_LAUNCH_DBF_APPEND_TOOL=0`
+Result summary: **9 PASS** · **1 PARTIAL** · **6 BLOCKED** · cut manifest **FAIL** · handoff **BLOCKED** · conversion process exit **0**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | Single-premium plans: `1668SP`, `10L171`, `10L172`, `1L17SP`; PAYYRS=1 and S/Q/M factors=0 |
+| A2 | **PASS** | Fleet DEFICIENCY=N (141/141) |
+| A3 | **BLOCKED** | Default PVO keys not independently re-proven against TESTRD on this cut |
+| A4 | **PASS** | No blank-PLAN QuikPl* or factor-key orphans |
+| A5 | **BLOCKED** | BASIS blank on 141/141; Valuation_Setup remains open |
+| A6 | **PARTIAL** | #136 real-rate-only flags pass; broader category/key residuals remain |
+| A7 | **BLOCKED** | VARGP=4 with QuikPlGp keys on 141/141; awaiting Eric Item 09 |
+| A8a | **PASS** | Annuity PAR=0 |
+| A8b | **PASS** | Annuity VARDB=0 |
+| A8c | **BLOCKED** | Annuity interest scope unresolved |
+| A8d | **BLOCKED** | Annuity surrender-charge scope unresolved |
+| A8e | **PASS** | Annuity PLANVALOPT and variation flags defaulted |
+| A9a | **BLOCKED** | PLANTYPE blank on 56 prefix-9 plans; supplemental type unresolved |
+| A9b | **PASS** | Prefix-9 PAR=0 |
+| A10 | **PASS** | QuikUwpo emitted with no duplicates |
+| A11h/#136 | **PASS** | Real-rate-only PVO gold `1658C1` and fleet BD/ST checks pass |
+
+Run notes: manifest `FAIL`; required registry failures were Issues 21F, 54, 59, and 114; `quikrein` and `quikrmst` were reused; Test_Validation rates and QuikLoan were stale; Issue 95 validation remains hardcoded to 20260630. No handoff or commit.
+
 Notes:
 - Batch log: `QLA_Migration/Logs/_full_batch_test_log.txt` (v58.65; rates SUCCESS blockers=1 V-UINT-PDINT)
 - Source promoted 2026-07-31 LifePRO extracts; 6/30 archived to `06302026_Data.zip`

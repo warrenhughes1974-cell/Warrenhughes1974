@@ -45,7 +45,11 @@ def ppolc_candidates_for_valuation(
             str(src / "12312025_Data" / "PPOLC_PolicyMaster_Extract_20260102.csv"),
             str(src / "PPOLC_PolicyMaster_Extract_20260102.csv"),
         ]
-    return [str(src / f"PPOLC_PolicyMaster_Extract_{vd}.csv")]
+    # Prefer dated package folder (e.g. LifePRO_Extracts_20260731/) then Source root.
+    return [
+        str(src / f"LifePRO_Extracts_{vd}" / f"PPOLC_PolicyMaster_Extract_{vd}.csv"),
+        str(src / f"PPOLC_PolicyMaster_Extract_{vd}.csv"),
+    ]
 
 
 def select_ppolc_path(

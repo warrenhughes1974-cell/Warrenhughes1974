@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "description": "Wave 1 required registry for cut-completeness. PASS does not mean full Closed-fleet green; see wave1_deferred_gaps.",
+  "pass_semantics": "Cut Control + Required Registry PASS",
+  "issues": [
+    {
+      "id": "2",
+      "required": true,
+      "validators": ["QLA_Migration/_validate_issue2_mpolicy.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikmstr"],
+      "tv_parity": false
+    },
+    {
+      "id": "21F",
+      "required": true,
+      "validators": ["tools/validators/validate_issue21f_premium_adjustment.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikprmh"],
+      "tv_parity": true
+    },
+    {
+      "id": "25",
+      "required": true,
+      "validators": ["tools/validators/validate_mpolicy_width.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikmstr"],
+      "tv_parity": false
+    },
+    {
+      "id": "54",
+      "required": true,
+      "validators": ["tools/validators/validate_issue54_quikbenh_loan_history.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikbenh"],
+      "tv_parity": true
+    },
+    {
+      "id": "59",
+      "required": true,
+      "validators": ["tools/validators/validate_issue59_mstatus.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikmstr"],
+      "tv_parity": false
+    },
+    {
+      "id": "70",
+      "required": true,
+      "validators": ["QLA_Migration/_validate_issue70_loanintx.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikloan"],
+      "tv_parity": false
+    },
+    {
+      "id": "95",
+      "required": true,
+      "validators": ["tools/validators/validate_issue95_quikuint_pdinttbl.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["rates/QuikUint.csv"],
+      "tv_parity": true
+    },
+    {
+      "id": "105",
+      "required": true,
+      "validators": ["tools/validators/validate_issue105_mpar.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikmstr"],
+      "tv_parity": false
+    },
+    {
+      "id": "110",
+      "required": true,
+      "validators": ["tools/validators/validate_issue110_mdivopt.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikmstr"],
+      "tv_parity": false
+    },
+    {
+      "id": "114",
+      "required": true,
+      "validators": ["tools/validators/validate_issue114_dividend_history.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikbenh"],
+      "tv_parity": false
+    },
+    {
+      "id": "119",
+      "required": true,
+      "validators": ["tools/validators/validate_issue119_pua_mpar.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikmstr"],
+      "tv_parity": false
+    },
+    {
+      "id": "120",
+      "required": true,
+      "validators": ["tools/validators/validate_issue120_quiklist.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quiklist"],
+      "tv_parity": false
+    },
+    {
+      "id": "121",
+      "required": true,
+      "validators": ["tools/validators/validate_issue121_art_no_eti.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikmstr"],
+      "tv_parity": false
+    },
+    {
+      "id": "124",
+      "required": true,
+      "validators": ["tools/validators/validate_issue124_quikiswl.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["QuikIswl"],
+      "tv_parity": false
+    },
+    {
+      "id": "134",
+      "required": true,
+      "validators": ["QLA_Migration/_validate_issue134_claim_memos.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikmemo"],
+      "tv_parity": false
+    },
+    {
+      "id": "135",
+      "required": true,
+      "validators": ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"],
+      "accountability": "required_in_data",
+      "owned_tables": ["quikclms", "quikclmp"],
+      "tv_parity": true
+    }
+  ],
+  "wave1_deferred_gaps": [
+    {
+      "id": "55",
+      "reason": "Fleet MUNIT floor often GAP on current Output; Wave 2 repair track",
+      "validators": ["tools/validators/validate_issue55_munit_floor.py"]
+    },
+    {
+      "id": "60",
+      "reason": "PUA phase validator frequently GAP; Wave 2",
+      "validators": ["tools/validators/validate_issue60_pua_phase.py"]
+    },
+    {
+      "id": "76",
+      "reason": "ETI/RPU payup validator baseline unstable; Wave 2",
+      "validators": ["tools/validators/validate_issue76_eti_rpu_payup.py"]
+    },
+    {
+      "id": "96",
+      "reason": "PVO/rate variation fleet clearance deferred Wave 2",
+      "validators": ["Issue_Log_Items/Issue_96/validate_issue96_cso_pvo.py"]
+    },
+    {
+      "id": "116",
+      "reason": "Broken/noisy baseline; listed explicitly so not silently omitted",
+      "validators": ["Issue_Log_Items/Issue_116/scripts/validate_issue116.py"]
+    },
+    {
+      "id": "117",
+      "reason": "Broken/noisy baseline (user-named); deferred_gaps required — not silent omit",
+      "validators": ["Issue_Log_Items/Issue_117/scripts/validate_issue117.py"]
+    },
+    {
+      "id": "136",
+      "reason": "PVO flags fleet GAP clearance deferred Wave 2",
+      "validators": ["tools/validators/validate_issue136_pvo_flags.py"]
+    }
+  ]
+}

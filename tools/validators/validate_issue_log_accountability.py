@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
 PY = sys.executable
-SCRIPT_VERSION = "1.6"
+SCRIPT_VERSION = "1.9"
 
 SOURCE = ROOT / "QLA_Migration" / "Source"
 
@@ -92,6 +92,10 @@ def _run(label: str, argv: list[str], required: bool = True) -> dict:
     # known environmental / expected fails
     detail = out[-600:].strip().replace("\n", " | ")
     status = "GAP" if required else "WARN"
+    # Class A: functional checks passed with environmental caveat → exit 2 = WARN not GAP
+    if r.returncode == 2:
+        status = "WARN"
+        detail = detail or "Class A WARN (active-cut / archive baseline)"
     if "Missing required file" in out or "20260530" in out:
         status = "WARN"
         detail = "validator blocked on missing dated extract (environmental)"
@@ -101,10 +105,6 @@ def _run(label: str, argv: list[str], required: bool = True) -> dict:
     if label.startswith("#58") and "expected 10.44, got '10.4400'" in out:
         status = "IN_DATA"
         detail = "fee values present; format string only"
-    if label.startswith("#59") and "010521213C" in out and "expected '50'" in out:
-        # check patched Output / TV
-        status = "WARN"
-        detail = "validator vs Output may show #49 override; check patched MSTATUS below"
     return {"id": label, "status": status, "detail": detail, "exit": r.returncode}
 
 
@@ -484,9 +484,22 @@ def spot_checks() -> list[dict]:
         # _PolicyIndex canonicalizes both the current 901…C and legacy keys.
         got = _norm((mstat.get(pol) or {}).get("MSTATUS"))
         add(f"#59:{pol}", "IN_DATA" if got == "22" else "GAP", f"MSTATUS={got}")
+    # Death-claim policy is source-aware: S/DP → 50; later T/DC → 53 (Issue #13).
+    try:
+        from tools.validators.validate_issue59_mstatus import (  # noqa: WPS433
+            expected_death_claim_mstatus,
+        )
+
+        dp_exp, dp_detail = expected_death_claim_mstatus(SOURCE)
+    except Exception as exc:  # noqa: BLE001
+        dp_exp, dp_detail = "", f"source resolve failed: {exc}"
     dp_row = mstat.get("9010521213C") or mstat.get("010521213C", {})
     dp = _norm(dp_row.get("MSTATUS"))
-    add("#59:010521213C", "IN_DATA" if dp == "50" else "GAP", f"MSTATUS={dp} (Death Claim Pending)")
+    add(
+        "#59:010521213C",
+        "IN_DATA" if dp_exp and dp == dp_exp else "GAP",
+        f"MSTATUS={dp} (expected {dp_exp or '?'}; {dp_detail})",
+    )
 
     # #60
     g = next(
@@ -699,11 +712,13 @@ def main() -> int:
         ("#72", ["tools/validators/validate_issue72_mnfopt_status.py"], True),
         ("#75", ["Issue_Log_Items/Issue_75/scripts/validate_issue75_mbankno.py"], True),
         ("#76", ["tools/validators/validate_issue76_eti_rpu_payup.py"], True),
+        ("#95", ["tools/validators/validate_issue95_quikuint_pdinttbl.py"], True),
         ("#110", ["tools/validators/validate_issue110_mdivopt.py"], True),
         ("#114", ["tools/validators/validate_issue114_dividend_history.py"], True),
         ("#116", ["Issue_Log_Items/Issue_116/scripts/validate_issue116.py"], True),
         ("#117", ["Issue_Log_Items/Issue_117/scripts/validate_issue117.py"], True),
-        ("#21F", ["tools/validators/validate_issue21f_premium_adjustment.py"], False),
+        ("#120", ["tools/validators/validate_issue120_quiklist.py"], True),
+        ("#21F", ["tools/validators/validate_issue21f_premium_adjustment.py"], True),
         ("#21A", ["tools/validators/validate_issue21a_mnfopt.py"], False),
         ("#21J", ["tools/validators/validate_issue21j_modal_factors.py"], False),
         ("#21M", ["tools/validators/validate_issue21m_quikmemo.py"], False),

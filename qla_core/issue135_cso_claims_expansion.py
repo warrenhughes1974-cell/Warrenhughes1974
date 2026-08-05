@@ -741,11 +741,20 @@ def write_issue135_expansion_audits(
         p = evidence_dir / "issue135_production_hold_audit.csv"
         hold_df.to_csv(p, index=False, encoding="utf-8")
         paths["hold"] = str(p)
-    summary = {
-        k: v
-        for k, v in stats.items()
-        if k not in ("audit_df", "hold_df") and not isinstance(v, (pd.DataFrame,))
-    }
+    def _json_safe(obj: Any) -> Any:
+        if isinstance(obj, pd.DataFrame):
+            return {"_dataframe_rows": int(len(obj))}
+        if isinstance(obj, dict):
+            return {str(k): _json_safe(v) for k, v in obj.items() if k not in ("audit_df", "hold_df")}
+        if isinstance(obj, (list, tuple)):
+            return [_json_safe(v) for v in obj]
+        if isinstance(obj, (str, int, float, bool)) or obj is None:
+            return obj
+        return str(obj)
+
+    summary = _json_safe(
+        {k: v for k, v in stats.items() if k not in ("audit_df", "hold_df")}
+    )
     summary["generated_at"] = ts
     sp = evidence_dir / "issue135_production_apply_summary.json"
     with open(sp, "w", encoding="utf-8") as fh:

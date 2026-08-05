@@ -28,8 +28,93 @@ from qla_core import quikuint_loader as UINT
 from qla_core import quikissc_loader as ISSC
 from qla_core import pdage_missfill as PDM
 from qla_core import plan_source_paths as PSP
+from qla_core import quiktvs_tv0_fill as TV0
+from qla_core import quiknps_level_np as NPS
+from qla_core import quiktvs_l17_rv as L17RV
 
 KEY_FIELDS = ("PLAN", "GENDER", "UWCLASS", "BAND", "ISSCNTRY", "ISSUEST", "EFFDATE")
+
+
+def _equal_uw_collapse_generations(grid):
+    """Return generations whose complete UW factor grids are exactly equal."""
+    groups = collections.defaultdict(lambda: collections.defaultdict(dict))
+    for key, cells in grid.items():
+        plan, age, cntl, gender, uwclass, band, isscntry, issuest, effdate = key
+        generation = (plan, effdate)
+        base = (age, cntl, gender, band, isscntry, issuest)
+        groups[generation][uwclass][base] = cells
+
+    targets = set()
+    for (plan, effdate), by_uw in groups.items():
+        signatures = {
+            uw: tuple(sorted(
+                (base, tuple(sorted(
+                    (col, str(cell[0]).strip()) for col, cell in cells.items()
+                )))
+                for base, cells in uw_grid.items()
+            ))
+            for uw, uw_grid in by_uw.items()
+        }
+        if (
+            len(by_uw) > 1
+            and len(set(signatures.values())) == 1
+        ):
+            targets.add((plan, effdate))
+    return targets
+
+
+def _collapse_equal_uw_grids(grid):
+    """Collapse equal UW-class grids to UWCLASS=00, preserving other dimensions."""
+    targets = _equal_uw_collapse_generations(grid)
+    collapsed = {}
+    for key, cells in grid.items():
+        plan, age, cntl, gender, uwclass, band, isscntry, issuest, effdate = key
+        out_uw = "00" if (plan, effdate) in targets else uwclass
+        key = (plan, age, cntl, gender, out_uw, band, isscntry, issuest, effdate)
+        if key not in collapsed:
+            collapsed[key] = cells
+    return collapsed, targets
+
+
+def _rewrite_collapsed_family_keys(key_rows, collapse_targets, grids=None):
+    """Materialize CV/TV collapse after default and companion key enrichment."""
+    table_by_family = {"QuikCvs": "QuikPlCv", "QuikTvs": "QuikPlTv"}
+    grids = grids or {}
+    for factor_table, targets in collapse_targets.items():
+        key_table = table_by_family[factor_table]
+        protected = set()
+        for other_table, other_grid in grids.items():
+            if other_table == factor_table or S.KEY_TABLE.get(other_table) != key_table:
+                continue
+            for key in other_grid:
+                plan, age, cntl, gender, uwclass, band, isscntry, issuest, effdate = key
+                if (plan, effdate) in targets:
+                    protected.add((plan, gender, uwclass, band, isscntry, issuest, effdate))
+        rows = key_rows.get(key_table, [])
+        rewritten = []
+        seen = set()
+        for row in rows:
+            row = dict(row)
+            signature = tuple(row.get(field, "") for field in KEY_FIELDS)
+            if (
+                (row.get("PLAN", ""), row.get("EFFDATE", "")) in targets
+                and signature not in protected
+            ):
+                row["UWCLASS"] = "00"
+            signature = tuple(row.get(field, "") for field in KEY_FIELDS)
+            if signature not in seen:
+                rewritten.append(row)
+                seen.add(signature)
+        key_rows[key_table] = rewritten
+
+
+def collapse_equal_uw_families(grids, return_targets=False):
+    """Apply independent CV/TV UW collapse for each effective-date generation."""
+    targets = {}
+    for table in ("QuikCvs", "QuikTvs"):
+        if table in grids:
+            grids[table], targets[table] = _collapse_equal_uw_grids(grids[table])
+    return (grids, targets) if return_targets else grids
 
 
 class PipelineResult:
@@ -86,6 +171,9 @@ class PipelineResult:
         self.pdage_missfill_status = collections.Counter()
         self.pdage_missfill_enabled = False
         self.pdage_merge_summary = {}
+        self.quiktvs_tv0_fill = {}
+        self.quiknps_level_np = {}
+        self.l17_rv_expansion = {}
 
     @property
     def blocker_count(self):
@@ -364,11 +452,28 @@ def run(config_path, repo_root):
                 yield t
 
     res.grids, res.collisions, res.cap_collisions = L.build_factor_grid(stream(), config)
+    quiktvs_grid = res.grids.setdefault("QuikTvs", {})
+    res.l17_rv_expansion = L17RV.apply_l17_rv_quiktvs_grid(
+        quiktvs_grid,
+        repo_root,
+        pdage_path,
+        config,
+    )
+    # A11: collapse only independently equal CV or TV factor grids. GP/DB/DV
+    # and non-UW dimensions remain untouched.
+    res.grids, collapse_targets = collapse_equal_uw_families(res.grids, return_targets=True)
+
+    res.quiknps_level_np = NPS.apply_quiknps_level_np_grid(res.grids.get("QuikNps"))
 
     for table, grid in res.grids.items():
         rows, fi = L.grid_to_factor_rows(table, grid, config)
         res.factor_rows[table] = rows
         res.fmt_issues.extend(fi)
+
+    sp_plans = TV0.load_true_single_premium_plans(repo_root, config=cfg)
+    res.quiktvs_tv0_fill = TV0.apply_quiktvs_tv0_blank_fill(
+        res.factor_rows, sp_plans, source_decimals=config.source_decimals,
+    )
 
     for table, grid in res.grids.items():
         if table not in S.KEY_TABLE:
@@ -384,8 +489,11 @@ def run(config_path, repo_root):
 
     # Issue #77: default key stub for each GP/DB/CV/TV/DV family missing rates
     rated_plans = K.rated_plans_from_grids(res.grids)
+    # A3: extend existing TESTRD-style defaults to the authoritative QuikPlan
+    # universe without creating factor values.
+    all_plans = rated_plans | {p for p in res.authoritative_plans if p and " " not in p}
     res.default_key_stubs = K.ensure_default_key_stubs(
-        res.key_rows, rated_plans, assumptions=assumptions, effdate=config.effdate,
+        res.key_rows, all_plans, assumptions=assumptions, effdate=config.effdate,
     )
 
     # member / dimension tables (codes derived from validated segmentation tuples)
@@ -397,11 +505,45 @@ def run(config_path, repo_root):
     res.gender_companion_keys.extend(
         K.ensure_issue96_sal_gender_companion_keys(res.key_rows, assumptions=assumptions)
     )
+    # A11: key materialization must follow all stub/companion enrichment.
+    _rewrite_collapsed_family_keys(res.key_rows, collapse_targets, grids=res.grids)
     # Issue #77: member codes for stub keys (e.g. GENDER=0 / UW=00)
     MB.ensure_members_for_keys(res.member_rows, res.key_rows, effdate=config.effdate)
 
     res.issues, res.summary = V.validate(res.grids, res.factor_rows, res.fmt_issues,
                                          res.key_rows, res.deps, res.authoritative_plans, config)
+    for blocker in res.quiknps_level_np.get("blockers") or []:
+        res.issues.append(blocker)
+    for blocker in res.l17_rv_expansion.get("blockers") or []:
+        res.issues.append(blocker)
+    if res.l17_rv_expansion.get("applied"):
+        prov = res.l17_rv_expansion.get("provenance") or {}
+        detail_parts = [
+            f"L17 RV page expansion: parent keys={res.l17_rv_expansion.get('keys_injected_parent', 0)}, "
+            f"child keys={res.l17_rv_expansion.get('keys_injected_children', 0)}, "
+            f"cells={res.l17_rv_expansion.get('cells_injected', 0)}",
+            f"source={prov.get('path', '')}",
+        ]
+        if prov.get("fallback"):
+            detail_parts.append(prov.get("warning", "fallback PDAGE used for L17 RV"))
+        res.issues.append({
+            "id": "L17_RV_PDAGE_EXPAND",
+            "severity": "WARNING" if prov.get("fallback") else "INFO",
+            "table": "QuikTvs",
+            "detail": "; ".join(detail_parts),
+        })
+    if res.quiknps_level_np.get("rows_flattened") or res.quiknps_level_np.get("rows_already_level"):
+        res.issues.append({
+            "id": "QUIKNPS_LEVEL_NP",
+            "severity": "WARNING",
+            "table": "QuikNps",
+            "detail": (
+                f"Level NP1..NP9 from source DURATION={NPS.SOURCE_DURATION_ISSUE_YEAR} "
+                f"(VALUE1): {res.quiknps_level_np.get('rows_flattened', 0)} row(s) flattened, "
+                f"{res.quiknps_level_np.get('rows_already_level', 0)} already level, "
+                f"{res.quiknps_level_np.get('cells_set', 0)} cell(s) set"
+            ),
+        })
     # member-table EFFDATE gate (QuikPlNb must carry the standard generation)
     for row in res.member_rows.get("QuikPlNb", []):
         if row["EFFDATE"] != S.STANDARD_EFFDATE:
@@ -413,6 +555,18 @@ def run(config_path, repo_root):
                            "detail": f"duplicate source cell key={key} col={col} lines {prior},{line}"})
     # audited AGE caps (WARNING, never blocking)
     res.issues.extend(V.age_cap_warnings(res.age_cap))
+    if res.quiktvs_tv0_fill.get("filled") or res.quiktvs_tv0_fill.get("preserved_sp_blank"):
+        res.issues.append({
+            "id": "QUIKTVS_TV0_BLANK_FILL",
+            "severity": "WARNING",
+            "table": "QuikTvs",
+            "detail": (
+                f"TV0 blank fill: {res.quiktvs_tv0_fill.get('filled', 0)} non-SP cell(s) "
+                f"set to {TV0.quiktvs_tv0_zero_text(config.source_decimals)!r}; "
+                f"{res.quiktvs_tv0_fill.get('preserved_sp_blank', 0)} SP blank(s) preserved "
+                f"on plan(s) {', '.join(res.quiktvs_tv0_fill.get('sp_blank_plans') or []) or 'none'}"
+            ),
+        })
     # cap-induced collisions resolved in favor of genuine data (WARNING, audited)
     cc = collections.Counter()
     for (table, key, col, plan, type_code, dropped, kept) in res.cap_collisions:
@@ -541,6 +695,7 @@ def build_summary(res, phase, source, extra=None):
             "merge": res.pdage_merge_summary,
             "row_status": dict(res.pdage_missfill_status),
         },
+        "quiknps_level_np": res.quiknps_level_np,
     }
     if extra:
         summary.update(extra)

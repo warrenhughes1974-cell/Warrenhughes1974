@@ -164,7 +164,10 @@ def main() -> int:
     P.write_issue_reports(res, str(pipeline_dir))
 
     rows = list(res.quikuint_rows)
-    analysis = _analyze_rows(rows)
+    # Issue #95 may append non-ISWL QuikUint rows; Phase 5 checks stay scoped to 8 CENII MPLANs.
+    iswl_rows = [r for r in rows if r.get("MPLAN") in ISWL_UINT_MPLANS]
+    analysis = _analyze_rows(iswl_rows)
+    full_analysis = _analyze_rows(rows)
 
     psegt_path = resolve_path(cfg, "psegt_csv")
     psgt_path = resolve_path(cfg, "pcovrsgt_csv")
@@ -181,14 +184,15 @@ def main() -> int:
     v03 = analysis["schedule_ok"] and len(merged) == EXPECTED_UINT_TIERS_PER_MPLAN
     v04 = analysis["row_count"] == EXPECTED_UINT_ROWS
     v05 = analysis["distinct_mplans"] == 8 and set(analysis["rows_by_mplan"].keys()) == ISWL_UINT_MPLANS
-    v06 = analysis["mgt_mcur_mirror"]
-    v07 = analysis["percent_literal"]
-    v08 = analysis["loan_columns_absent"]
-    v09 = analysis["duplicate_index_keys"] == 0
+    v06 = full_analysis["mgt_mcur_mirror"]
+    v07 = full_analysis["percent_literal"]
+    v08 = full_analysis["loan_columns_absent"]
+    v09 = full_analysis["duplicate_index_keys"] == 0
 
     snapshot = {
         "blocker_count": res.blocker_count,
         "quikuint_rows": analysis["row_count"],
+        "quikuint_rows_full": full_analysis["row_count"],
         "rows_by_mplan": analysis["rows_by_mplan"],
         "factor_rows_unchanged": {
             "QuikCvs": len(res.factor_rows.get("QuikCvs", [])),
@@ -227,8 +231,9 @@ def main() -> int:
         "v_uint_01_schema": v01,
         "v_uint_02_cenii_a1": v02,
         "v_uint_03_union_merge": v03,
-        "v_uint_04_row_count_32": v04,
+        "v_uint_04_iswl_row_count_32": v04,
         "v_uint_05_mplans_8_8": v05,
+        "quikuint_rows_full": full_analysis["row_count"],
         "v_uint_06_mirror": v06,
         "v_uint_07_percent_literal": v07,
         "v_uint_08_no_loan": v08,
@@ -258,18 +263,24 @@ def main() -> int:
     print("=" * 72)
     print(f"ISWL QUIKUINT RECONCILE v{SCRIPT_VERSION}")
     print(f"Blockers: {res.blocker_count}  emit_ready: {res.emit_ready}")
-    print(f"QuikUint rows: {analysis['row_count']} (expect {EXPECTED_UINT_ROWS})")
+    print(
+        f"QuikUint ISWL rows: {analysis['row_count']} (expect {EXPECTED_UINT_ROWS}); "
+        f"full file: {full_analysis['row_count']}"
+    )
     for p in sorted(ISWL_UINT_MPLANS):
         print(f"  {p}: {analysis['rows_by_mplan'].get(p, 0)} tiers")
     print(f"V-UINT-01 schema: {'PASS' if v01 else 'FAIL'}")
     print(f"V-UINT-02 CENII/A1: {'PASS' if v02 else 'FAIL'} ({len(raw_tiers)} source tiers)")
     print(f"V-UINT-03 union_merge: {'PASS' if v03 else 'FAIL'}")
-    print(f"V-UINT-04 row count 32: {'PASS' if v04 else 'FAIL'}")
+    print(f"V-UINT-04 ISWL row count 32: {'PASS' if v04 else 'FAIL'}")
     print(f"V-UINT-05 MPLANs 8/8: {'PASS' if v05 else 'FAIL'}")
     print(f"V-UINT-06 MGTDRATE=MCURRATE: {'PASS' if v06 else 'FAIL'}")
     print(f"V-UINT-07 percent literal: {'PASS' if v07 else 'FAIL'}")
     print(f"V-UINT-08 no loan column: {'PASS' if v08 else 'FAIL'}")
-    print(f"V-UINT-09 unique index: {'PASS' if v09 else 'FAIL'} (dupes={analysis['duplicate_index_keys']})")
+    print(
+        f"V-UINT-09 unique index: {'PASS' if v09 else 'FAIL'} "
+        f"(dupes={full_analysis['duplicate_index_keys']})"
+    )
     print(f"V-UINT-10 Phase1-4 regression: {'PASS' if v10 else 'FAIL'}")
     print(f"PSEGT A1/G1/LN: {a1_count}/{g1_count}/{ln_count}/8")
     print("=" * 72)

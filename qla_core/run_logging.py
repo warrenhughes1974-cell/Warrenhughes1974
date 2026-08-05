@@ -237,3 +237,82 @@ def relocate_non_csv(output_dir, reports_dir, sandbox_dbf_dir, error_log: "RunEr
         except Exception as exc:  # never delete; just report
             result["skipped"].append((src, str(exc)))
     return result
+
+
+# Exact load-table basenames allowed in Output root (Wave 1 hygiene allowlist).
+# Audit/control leftovers such as quikmemo_orphan_log.csv are NOT allowed.
+_ALLOWED_OUTPUT_ROOT_TABLE_CSVS = {
+    "quikplan.csv",
+    "quikmstr.csv",
+    "quikclnt.csv",
+    "quikclid.csv",
+    "quikridr.csv",
+    "quikbenf.csv",
+    "quikdvdp.csv",
+    "quikdvpr.csv",
+    "quikprmh.csv",
+    "quikactg.csv",
+    "quikagts.csv",
+    "quikmemo.csv",
+    "quikloan.csv",
+    "quikbenh.csv",
+    "quikrein.csv",
+    "quikrmst.csv",
+    "quikdate.csv",
+    "quiklist.csv",
+    "quikiswl.csv",
+    "quikclms.csv",
+    "quikclmp.csv",
+    "quikisrr.csv",
+}
+
+
+def _is_allowed_output_table_csv(basename: str) -> bool:
+    """True only for canonical loadable table CSVs in Output root.
+
+    Prefix quik*/Quik* alone is insufficient — orphan/audit/control CSVs
+    (e.g. quikmemo_orphan_log.csv) must be relocated.
+    """
+    name = os.path.basename(basename)
+    lower = name.lower()
+    if not lower.endswith(".csv"):
+        return False
+    return lower in _ALLOWED_OUTPUT_ROOT_TABLE_CSVS
+
+
+def scan_non_table_csv(output_dir):
+    """Yield Output-root CSV paths that are not allowed load tables."""
+    if not output_dir or not os.path.isdir(output_dir):
+        return
+    for name in os.listdir(output_dir):
+        path = os.path.join(output_dir, name)
+        if not os.path.isfile(path):
+            continue
+        if not name.lower().endswith(".csv"):
+            continue
+        if not _is_allowed_output_table_csv(name):
+            yield path
+
+
+def relocate_non_table_csvs(output_dir, reports_dir, error_log: "RunErrorLog | None" = None):
+    """Move non-table CSVs (claims_*.csv, manifests, audits) out of Output root.
+
+    Never deletes. Wave 1 cut-hygiene companion to relocate_non_csv.
+    """
+    result = {"moved": [], "skipped": []}
+    dest_root = reports_dir
+    for src in scan_non_table_csv(output_dir):
+        base = os.path.basename(src)
+        lower = base.lower()
+        try:
+            if any(h in lower for h in _ERROR_NAME_HINTS) and error_log is not None:
+                dest_dir = error_log._ensure()
+            else:
+                dest_dir = dest_root
+            os.makedirs(dest_dir, exist_ok=True)
+            dest = _unique_dest(dest_dir, base)
+            shutil.move(src, dest)
+            result["moved"].append((src, dest))
+        except Exception as exc:
+            result["skipped"].append((src, str(exc)))
+    return result

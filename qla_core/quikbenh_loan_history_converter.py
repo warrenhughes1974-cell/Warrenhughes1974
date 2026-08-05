@@ -140,7 +140,34 @@ def _to_float_balance(val: Any) -> float | None:
 
 
 def _reverse_crosswalk(cw_map: dict[str, str]) -> dict[str, str]:
+    """Legacy helper (cw New_Value → LifePRO). Not used for opening-seed lookup."""
     return {v: k for k, v in cw_map.items() if v}
+
+
+def _build_lp_of_mpolicy_for_seeds(
+    *,
+    ploan_by_lp: dict[str, list[tuple[str, float]]],
+    source_policies: set[str] | None = None,
+) -> dict[str, str]:
+    """
+    Map formatted QuikBenh MPOLICY → LifePRO POLICY_NUMBER for PLOAN seed lookup.
+
+    Wave 0 / Cut Completeness: do **not** reverse(cw New_Value). Loan rows use
+    format_qladmin_mpolicy(PACTG/PLOAN source); seed lookup must use the same grain.
+    """
+    out: dict[str, str] = {}
+    for lp in ploan_by_lp.keys():
+        mp = format_qladmin_mpolicy(lp)
+        if mp:
+            out[mp] = str(lp).strip()
+    for lp in source_policies or set():
+        lp_s = str(lp).strip()
+        if not lp_s:
+            continue
+        mp = format_qladmin_mpolicy(lp_s)
+        if mp and mp not in out:
+            out[mp] = lp_s
+    return out
 
 
 def _load_ploan_by_lifepro(ploan_path: str | None) -> dict[str, list[tuple[str, float]]]:
@@ -405,7 +432,16 @@ def convert_quikbenh_loan_history_from_pactg(
             )
 
     ploan_by_lp = _load_ploan_by_lifepro(ploan_path)
-    lp_of_mpolicy = _reverse_crosswalk(cw_map)
+    # Seed map from LifePRO source numbers → formatted MPOLICY (not reverse(cw values))
+    source_pols = {
+        str(r.get("POLICY_NUMBER", "")).strip()
+        for r in trace_rows
+        if str(r.get("POLICY_NUMBER", "")).strip()
+    }
+    lp_of_mpolicy = _build_lp_of_mpolicy_for_seeds(
+        ploan_by_lp=ploan_by_lp,
+        source_policies=source_pols,
+    )
     loan_rows, seed_stats = _apply_opening_balance_seeds(
         loan_rows,
         ploan_by_lp=ploan_by_lp,
@@ -467,6 +503,7 @@ def convert_quikbenh_loan_history_from_pactg(
                 "reversed_excluded",
                 "excluded_0451_only",
                 "seed_emit",
+                "seed_skip_no_ploan",
                 "seed_skip_no_prior",
                 "seed_skip_zero_prior",
                 "seed_skip_dedupe",

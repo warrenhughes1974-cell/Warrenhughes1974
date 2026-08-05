@@ -15,7 +15,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "1.1"
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
@@ -95,26 +95,38 @@ def spot_checks() -> list[tuple[str, str]]:
     else:
         results.append(("FAIL", f"#60 ADB: {adb}"))
 
-    # #59 six LP policies
-    for pol in ("01122D991C", "014FG8217C", "016FG8217C", "01ML8171C", "01ML8250C", "01ML8522C"):
-        got = mstats.get(pol)
-        if got is None:
-            # padded short keys
-            for k, v in mstats.items():
-                if k.replace(" ", "") == pol.replace(" ", ""):
-                    got = v
-                    break
+    # #59 six Active+LP (Issue #2 keys are source+C; also accept legacy strip-9)
+    for pol in (
+        "901122D991C",
+        "9014FG8217C",
+        "9016FG8217C",
+        "901ML8171C",
+        "901ML8250C",
+        "901ML8522C",
+    ):
+        legacy = "0" + pol[1:] if pol.startswith("9") else pol
+        got = mstats.get(pol) or mstats.get(legacy)
         if got == "22":
             results.append(("PASS", f"#59 {pol} MSTATUS=22"))
         else:
             results.append(("FAIL", f"#59 {pol} MSTATUS={got!r} expected 22"))
 
-    # #59 DP — known #49 interaction; report WARN if not 50
-    dp = mstats.get("010521213C")
-    if dp == "50":
-        results.append(("PASS", "#59 010521213C MSTATUS=50"))
+    # #59 death-claim — source-aware (S/DP→50; T/DC→53). Never force-patch Output.
+    try:
+        if str(ROOT) not in sys.path:
+            sys.path.insert(0, str(ROOT))
+        from tools.validators.validate_issue59_mstatus import expected_death_claim_mstatus
+
+        dp_exp, dp_detail = expected_death_claim_mstatus(ROOT / "QLA_Migration" / "Source")
+    except Exception as exc:  # noqa: BLE001
+        dp_exp, dp_detail = "", f"resolve failed: {exc}"
+    dp = mstats.get("9010521213C") or mstats.get("010521213C")
+    if dp_exp and dp == dp_exp:
+        results.append(("PASS", f"#59 010521213C MSTATUS={dp} ({dp_detail})"))
     else:
-        results.append(("WARN", f"#59 010521213C MSTATUS={dp!r} (expected 50; #49 may override — will patch Test_Validation)"))
+        results.append(
+            ("FAIL", f"#59 010521213C MSTATUS={dp!r} expected {dp_exp!r} ({dp_detail})")
+        )
 
     # #13
     if mstats.get("010516211C") == "54" and mstats.get("011101663C") == "56":
@@ -138,38 +150,13 @@ def spot_checks() -> list[tuple[str, str]]:
     return results
 
 
-def patch_issue59_dp_for_training() -> str:
-    """Ensure Test_Validation quikmstr has 010521213C=50 for training reload."""
-    src = OUT / "quikmstr.csv"
-    if not src.exists():
-        return "skip — no quikmstr"
-    TV.mkdir(parents=True, exist_ok=True)
-    dst = TV / "quikmstr.csv"
-    rows = []
-    with src.open(newline="", encoding="utf-8", errors="replace") as f:
-        reader = csv.DictReader(f)
-        fieldnames = reader.fieldnames or []
-        for r in reader:
-            if _norm(r.get("MPOLICY")) == "010521213C":
-                r["MSTATUS"] = "50"
-            rows.append(r)
-    with dst.open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=fieldnames)
-        w.writeheader()
-        w.writerows(rows)
-    return "patched Test_Validation/quikmstr.csv 010521213C MSTATUS=50"
-
-
 def publish_tables() -> list[str]:
+    """Copy Output tables as-is (no force-patch of #59 death-claim status)."""
     TV.mkdir(parents=True, exist_ok=True)
     done = []
     for name in PUBLISH_TABLES:
         src = OUT / name
         if src.exists():
-            # don't overwrite quikmstr if we already patched DP
-            if name == "quikmstr.csv" and (TV / name).exists():
-                done.append(f"kept patched {name}")
-                continue
             shutil.copy2(src, TV / name)
             done.append(name)
     # rates folder (optional)
@@ -217,11 +204,7 @@ def main() -> int:
 
     if args.publish_test_validation:
         print("-" * 72)
-        print(patch_issue59_dp_for_training())
         pub = publish_tables()
-        # ensure ridr published
-        if (OUT / "quikridr.csv").exists():
-            shutil.copy2(OUT / "quikridr.csv", TV / "quikridr.csv")
         print("Published Test_Validation:", ", ".join(pub))
 
     print("=" * 72)

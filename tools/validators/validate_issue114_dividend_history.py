@@ -29,17 +29,28 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCRIPT_VERSION = "1.1"
-ENGINE_VERSION = "v58.37"
+SCRIPT_VERSION = "1.3"
+ENGINE_VERSION = "v58.70"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 DEFAULT_SOURCE = PROJECT_ROOT / "QLA_Migration" / "Source"
 DEFAULT_REPORTS = PROJECT_ROOT / "QLA_Migration" / "Reports"
 TEST_VALIDATION = DEFAULT_OUTPUT / "Test_Validation"
 
-# Pre-Issue-#114 quikbenh baseline (v58.35 full batch)
-BASELINE_PRESERVED = {"8": 3657, "10": 3562, "11": 14156, "12": 19135}
-BASELINE_TOTAL_ROWS = 40510
+# Preserved non-dividend baseline for #114 additive arithmetic.
+# History: v58.35 pre-#114 freeze had type10=3562 / total=40510.
+# Cut Completeness Wave 0 / Issue #54 restored 556 opening loan seeds (MBENTYP=10),
+# so midyear preserved type10 is 3562+556=4118 and preserved total is 40510+556=41066.
+# Type 8 (#34) is hard-frozen. Loan types 10/11/12 may grow on later cuts (#54 source
+# drift) — fail only if they shrink below this floor.
+ISSUE54_SEED_DELTA = 556
+BASELINE_TYPE8 = 3657
+BASELINE_LOAN_FLOOR = {
+    "10": 3562 + ISSUE54_SEED_DELTA,
+    "11": 14156,
+    "12": 19135,
+}
+BASELINE_PRESERVED = {"8": BASELINE_TYPE8, **BASELINE_LOAN_FLOOR}
 
 DIVIDEND_TYPES = ("1", "2", "3", "4", "5")
 # Issue #117 ledger extensions (interest credited / withdrawals) — not #114 amounts
@@ -73,18 +84,46 @@ def _money(val: str) -> float:
         return 0.0
 
 
-def _load_source_lifetime(source_dir: Path) -> dict[str, float]:
+def _resolve_ppbentyp_path(source_dir: Path) -> tuple[Path | None, str]:
+    """Prefer PPBENTYP for the active QLA_VALUATION_DATE package (not a stale root file)."""
+    sys.path.insert(0, str(PROJECT_ROOT))
+    from qla_core.issue21_open_item_decisions import resolve_ppbentyp_extract_path
+    from qla_core.valuation_date import apply_valuation_date_env
+
+    try:
+        vd, _src = apply_valuation_date_env(source_dir)
+    except ValueError as exc:
+        return None, f"valuation unresolved: {exc}"
+
+    candidates = [
+        source_dir / f"LifePRO_Extracts_{vd}" / f"PPBENTYP_BenefitType_Extract_{vd}.csv",
+        source_dir / f"PPBENTYP_BenefitType_Extract_{vd}.csv",
+    ]
+    resolved = resolve_ppbentyp_extract_path(str(source_dir / f"LifePRO_Extracts_{vd}"))
+    if resolved:
+        candidates.insert(0, Path(resolved))
+    root_resolved = resolve_ppbentyp_extract_path(str(source_dir))
+    if root_resolved:
+        candidates.append(Path(root_resolved))
+
+    for path in candidates:
+        if path and path.is_file():
+            return path, f"{vd} {path.name}"
+    return None, f"no PPBENTYP for valuation {vd}"
+
+
+def _load_source_lifetime(source_dir: Path) -> tuple[dict[str, float], str]:
     """PPBENTYP BA-row DIVIDENDS_CREDITED per MPOLICY, computed independently."""
     sys.path.insert(0, str(PROJECT_ROOT))
     from qla_core.normalize_utils import format_qladmin_mpolicy
 
-    matches = sorted(source_dir.glob("PPBENTYP_BenefitType_Extract*.csv"))
-    if not matches:
-        return {}
+    path, detail = _resolve_ppbentyp_path(source_dir)
+    if path is None:
+        return {}, detail
 
     csv.field_size_limit(10 ** 7)
     totals: dict[str, float] = defaultdict(float)
-    with matches[-1].open(encoding="latin-1", newline="") as f:
+    with path.open(encoding="latin-1", newline="") as f:
         reader = csv.reader(f)
         header = [c.replace("\ufeff", "").strip().upper() for c in next(reader)]
         try:
@@ -92,7 +131,7 @@ def _load_source_lifetime(source_dir: Path) -> dict[str, float]:
             i_tc = header.index("TYPE_CODE")
             i_div = header.index("DIVIDENDS_CREDITED")
         except ValueError:
-            return {}
+            return {}, f"{detail}: missing required columns"
         for row in reader:
             if len(row) < len(header):
                 continue
@@ -107,7 +146,7 @@ def _load_source_lifetime(source_dir: Path) -> dict[str, float]:
             mpolicy = format_qladmin_mpolicy(pol).strip()
             if mpolicy:
                 totals[mpolicy] += amount
-    return {k: round(v, 2) for k, v in totals.items() if v > 0}
+    return {k: round(v, 2) for k, v in totals.items() if v > 0}, detail
 
 
 def validate(
@@ -149,18 +188,29 @@ def validate(
     type_counts = Counter(r.get("MBENTYP", "") for r in rows)
     print(f"OK: quikbenh.csv rows={len(rows)} MBENTYP counts={dict(type_counts)}")
 
-    # 2. Prior-issue rows preserved untouched
-    preserved_ok = True
-    for t, expected in BASELINE_PRESERVED.items():
-        actual = type_counts.get(t, 0)
-        if actual != expected:
-            preserved_ok = False
-            errors.append(f"MBENTYP={t} count={actual} expected preserved baseline {expected}")
-    if preserved_ok:
+    # 2. Prior-issue rows: type 8 hard-frozen; loan types must not shrink below floor
+    type8 = type_counts.get("8", 0)
+    if type8 != BASELINE_TYPE8:
+        errors.append(f"MBENTYP=8 count={type8} expected preserved baseline {BASELINE_TYPE8}")
+    else:
+        print(f"OK: MBENTYP=8 preserved ({type8} rows)")
+
+    loan_counts = {t: type_counts.get(t, 0) for t in BASELINE_LOAN_FLOOR}
+    for t, floor in BASELINE_LOAN_FLOOR.items():
+        actual = loan_counts[t]
+        if actual < floor:
+            errors.append(
+                f"MBENTYP={t} count={actual} shrank below midyear floor {floor}"
+            )
+        elif actual > floor:
+            warnings.append(
+                f"MBENTYP={t} count={actual} above midyear floor {floor} "
+                "(loan/#54 source growth OK for #114)"
+            )
+    if not any(loan_counts[t] < BASELINE_LOAN_FLOOR[t] for t in BASELINE_LOAN_FLOOR):
         print(
-            "OK: prior-issue rows preserved "
-            f"(8={type_counts.get('8', 0)}, 10={type_counts.get('10', 0)}, "
-            f"11={type_counts.get('11', 0)}, 12={type_counts.get('12', 0)})"
+            "OK: loan types at/above midyear floor "
+            f"(10={loan_counts['10']}, 11={loan_counts['11']}, 12={loan_counts['12']})"
         )
 
     div_rows = [r for r in rows if r.get("MBENTYP", "") in DIVIDEND_TYPES]
@@ -188,16 +238,19 @@ def validate(
         )
 
     ledger_count = sum(type_counts.get(t, 0) for t in LEDGER_TYPES)
-    expected_total = BASELINE_TOTAL_ROWS + len(div_rows) + ledger_count
+    loan_count = sum(loan_counts.values())
+    expected_total = type8 + loan_count + len(div_rows) + ledger_count
     if len(rows) != expected_total:
         errors.append(
-            f"Row arithmetic off: total={len(rows)} but baseline {BASELINE_TOTAL_ROWS} "
-            f"+ dividend {len(div_rows)} + ledger(6/7) {ledger_count} = {expected_total}"
+            f"Row arithmetic off: total={len(rows)} but type8 {type8} "
+            f"+ loan {loan_count} + dividend {len(div_rows)} + ledger(6/7) "
+            f"{ledger_count} = {expected_total}"
         )
     else:
         print(
-            f"OK: additive only ({BASELINE_TOTAL_ROWS} + {len(div_rows)} "
-            f"+ ledger {ledger_count} = {len(rows)})"
+            f"OK: additive composition "
+            f"(8={type8} + loan={loan_count} + div={len(div_rows)} "
+            f"+ ledger={ledger_count} = {len(rows)})"
         )
 
     # 4. Field-level format — MPOLICY is space-padded, so measure it unstripped
@@ -260,10 +313,14 @@ def validate(
         print(f"OK: dividend-history policies={len(emitted)}")
 
     # 6/7. Reconcile against PPBENTYP source and the exception report
-    lifetime = _load_source_lifetime(source_dir)
+    lifetime, lifetime_src = _load_source_lifetime(source_dir)
     if not lifetime:
-        warnings.append(f"PPBENTYP extract not found under {source_dir} — reconciliation skipped")
+        warnings.append(
+            f"PPBENTYP extract not found under {source_dir} ({lifetime_src}) — "
+            "reconciliation skipped"
+        )
     else:
+        print(f"OK: PPBENTYP lifetime source = {lifetime_src} ({len(lifetime)} policies)")
         # Only policy-level reasons mean "no conversion adjustment for this policy".
         # OR_ROW_DOLLARS_EXCLUDED and CONTRA_SIDE_NOT_EMITTED are informational rows
         # about dollars deliberately left out; those policies still convert.

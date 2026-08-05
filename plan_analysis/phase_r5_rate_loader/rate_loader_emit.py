@@ -20,6 +20,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from qla_core import rate_pipeline as P
 from qla_core import rate_dbf_schema as S
 from qla_core import rate_dbf_writer as W
+from qla_core.rate_emit import _finalize_equal_cv_tv_keys
 from qla_core import quikaint_closed_riders as QAINT
 from qla_core.rate_member_setup import build_quikuwpo_rows
 
@@ -129,6 +130,9 @@ def main():
 
     cfg = json.load(open(CONFIG, encoding="utf-8"))
     res = P.run(CONFIG, ROOT)
+    # Keep the standalone CLI writer aligned with the app-integrated emit path:
+    # companion/default key enrichment must not restore superseded CV/TV UW keys.
+    _finalize_equal_cv_tv_keys(res.factor_rows, res.key_rows)
     P.write_issue_reports(res, HERE)
 
     manifest = []

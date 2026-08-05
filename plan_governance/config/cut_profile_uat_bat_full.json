@@ -1,0 +1,67 @@
+{
+  "profile": "uat_bat_full",
+  "description": "Full UAT bat cut-completeness profile (Wave 1). PASS means Cut Control + Required Registry, not full Closed-fleet accountability.",
+  "pass_label": "Cut Control + Required Registry PASS",
+  "required_run_mode": "UAT",
+  "required_valuation_date": "AUTO",
+  "source_date_allowlist": [],
+  "flag_pairs": [
+    {"enable": "QLA_ENABLE_QUIKLOAN_EMIT", "write": "QLA_QUIKLOAN_WRITE_OUTPUT"},
+    {"enable": "QLA_ENABLE_QUIKBENH_LOAN_EMIT", "write": "QLA_QUIKBENH_LOAN_WRITE_OUTPUT"},
+    {"enable": "QLA_ENABLE_QUIKBENH_DIVIDEND_EMIT", "write": "QLA_QUIKBENH_DIVIDEND_WRITE_OUTPUT"},
+    {"enable": "QLA_ENABLE_REINSURANCE_EMIT", "write": "QLA_REINSURANCE_WRITE_OUTPUT"}
+  ],
+  "required_flags": {
+    "QLA_BATCH_INCLUDE_CLAIMS_UAT": ["1", "true", "yes", "on"],
+    "QLA_ENABLE_QUIKISRR_EMIT": ["1", "true", "yes", "on"],
+    "QLA_BATCH_INCLUDE_RATE_TABLES": ["1", "true", "yes", "on"]
+  },
+  "forbidden_flags": {
+    "QLA_PRODUCT_SETUP_ISOLATED": ["1", "true", "yes", "on"]
+  },
+  "required_tables": [
+    "quikplan", "quikmstr", "quikclnt", "quikclid", "quikridr", "quikbenf",
+    "quikdvdp", "quikdvpr", "quikprmh", "quikactg", "quikagts", "quikmemo",
+    "quikloan", "quikbenh", "quikrein", "quikrmst",
+    "quikdate", "quiklist", "QuikIswl",
+    "quikclms", "quikclmp", "QuikIsrr"
+  ],
+  "table_output_map": {
+    "quikplan": "quikplan.csv",
+    "quikmstr": "quikmstr.csv",
+    "quikclnt": "quikclnt.csv",
+    "quikclid": "quikclid.csv",
+    "quikridr": "quikridr.csv",
+    "quikbenf": "quikbenf.csv",
+    "quikdvdp": "quikdvdp.csv",
+    "quikdvpr": "quikdvpr.csv",
+    "quikprmh": "quikprmh.csv",
+    "quikactg": "quikactg.csv",
+    "quikagts": "quikagts.csv",
+    "quikmemo": "quikmemo.csv",
+    "quikloan": "quikloan.csv",
+    "quikbenh": "quikbenh.csv",
+    "quikrein": "quikrein.csv",
+    "quikrmst": "quikrmst.csv",
+    "quikdate": "quikdate.csv",
+    "quiklist": "quiklist.csv",
+    "QuikIswl": "QuikIswl.csv",
+    "quikclms": "quikclms.csv",
+    "quikclmp": "quikclmp.csv",
+    "QuikIsrr": "QuikIsrr.csv"
+  },
+  "required_rates": [
+    "QuikAint", "QuikCoi", "QuikCvs", "QuikDbs", "QuikDvs", "QuikGcoi", "QuikGps",
+    "QuikIssc", "QuikNff", "QuikNps", "QuikPlBd", "QuikPlCv", "QuikPlDb", "QuikPlDv",
+    "QuikPlGd", "QuikPlGp", "QuikPlNb", "QuikPlSt", "QuikPlTv", "QuikPlUw", "QuikTvs",
+    "QuikUint", "QuikUwpo"
+  ],
+  "rates_tv_parity_tier": "T3_DEFERRED_WAVE2",
+  "allowed_output_root_csv_prefixes": ["quik", "Quik"],
+  "disallowed_output_root_csv_globs": ["claims_*.csv", "*_manifest.csv", "*_audit*.csv", "*_report*.csv"],
+  "allowed_output_subdirs": ["rates", "Test_Validation"],
+  "tv_parity_owned_tables": [
+    "quikprmh.csv", "quikbenh.csv", "quikclms.csv", "quikclmp.csv"
+  ],
+  "wave0_baseline_ref": "Issue_Log_Items/Issue_Cut_Completeness/Issue_Cut_Completeness_Validation_Report.md"
+}

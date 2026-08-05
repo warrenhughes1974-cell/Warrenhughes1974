@@ -1,18 +1,19 @@
 {
   "_comment": "R5 rate-loader config — ISWL Phase 1 (QUIKCVS) paths. External Source files need not be in Git.",
   "source_rate_extract": "QLA_Migration/Source/Rate_Table_Extract_Txt.txt",
-  "paagerat_pr_extract": "QLA_Migration/Source/PAAGERAT_AttainedAge_Rates_Extract_20260713.csv",
+  "paagerat_pr_extract": "QLA_Migration/Staging/paagerat_dated_merged.csv",
+  "paage_extract": "QLA_Migration/Staging/paage_dated_merged.csv",
   "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
   "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",
   "plan_form_crosswalk": "plan_analysis/source_data/crosswalk/Policy Form Crosswalk 5.22.26.xlsx",
   "cso_mortality_crosswalk": "plan_analysis/source_data/rates/CSO_Mortiality_Crosswalk.csv",
   "cso_valuation_setup": "plan_analysis/source_data/rates/CSO_Valuation_Setup.csv",
   "psegt_csv": "QLA_Migration/Source/PSEGT_Segment_Extract_20260630.csv",
-  "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260713.csv",
+  "pdage_extract": "QLA_Migration/Staging/pdage_dated_merged.csv",
   "issue42_pdage_missfill": {
-    "_note": "Issue #42 — append PDAGE age/duration rows missing from Rate_Table; segment-resolve via PCOVRSGT. Use July Source package (20260713).",
+    "_note": "Issue #42 — append PDAGE age/duration rows missing from Rate_Table; segment-resolve via PCOVRSGT. PDAGE/PAAGERAT/PAAGE dated Source files are merged first (filename YYYYMMDD newest wins) via qla_core.plan_source_paths.",
     "enabled": true,
-    "pdage_extract": "QLA_Migration/Source/PDAGE_AgeDuration_Rates_Extract_20260713.csv",
+    "pdage_extract": "QLA_Migration/Staging/pdage_dated_merged.csv",
     "staging_merged_csv": "QLA_Migration/Staging/rate_table_pdage_missfill_merged.csv",
     "approved_types": ["NP", "RV", "CV", "DB", "DV", "NF", "NN", "PN"]
   },
@@ -49,8 +50,9 @@
   },
   "pdint_extract": "QLA_Migration/Source/PDINT_DeclaredInterestRates_Extract_20260630.csv",
   "pdinttbl_extract": "QLA_Migration/Source/PDINTTBL_DeclaredInterestRates_Extract_20260630.csv",
+  "_pdint_note": "Fallback paths only. quikuint_loader prefers PDINTTBL for QLA_VALUATION_DATE under Source/ or Source/LifePRO_Extracts_YYYYMMDD/.",
   "iswl_phase5": {
-    "_note": "ISWL QUIKUINT — PDINT CENII/A1 union_merge historical tiers → QuikUint.",
+    "_note": "ISWL QUIKUINT — PDINT CENII/A1 union_merge historical tiers → QuikUint (8 ISWL MPLANs; Issue #32).",
     "quikuint_enabled": true,
     "pdint_ident": "CENII",
     "type_code": "A1",
@@ -59,6 +61,34 @@
     "dint_rule_tiebreak": "3",
     "g1_mode": "mirror_a1",
     "mplan_allowlist": ["1658C1", "1658CS", "1659C2", "1659CR", "1659CS", "1659SR", "1669SR", "1679CS"]
+  },
+  "issue95_quikuint": {
+    "_note": "Issue #95 — additive QuikUint buckets (current-tier only). Does NOT expand ISWL_MPLAN_ALLOWLIST. A-MEM-SAFE excludes 9* riders and A* annuities.",
+    "enabled": true,
+    "membership_mode": "A-MEM-SAFE",
+    "quikplan_csv": "QLA_Migration/Output/quikplan.csv",
+    "rate_450_plans": [
+      "1668SP", "1669SR", "1658C1", "1658CS", "1659C2", "1659CR", "1659CS", "1659SR", "1679CS"
+    ],
+    "rate_200_plans": ["1SALOL", "1SALML"],
+    "spwl_1668": {
+      "mplans": ["1668SP"],
+      "pdint_ident": "SPWL",
+      "type_code": "A1",
+      "emit_mode": "current_only"
+    },
+    "sal01": {
+      "mplans": ["1SALOL", "1SALML"],
+      "pdint_ident": "SAL01",
+      "type_code": "C1",
+      "emit_mode": "current_only"
+    },
+    "residual_350": {
+      "pdint_ident": "L1001",
+      "type_code": "C1",
+      "emit_mode": "current_only",
+      "exclude_prefixes": ["9", "A"]
+    }
   },
   "iswl_phase6": {
     "_note": "ISWL QUIKISSC — Rate_Table TYPE=SL hub schedule → QuikIssc (8 rows).",

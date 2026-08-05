@@ -67,6 +67,27 @@ def _clear_family_vary_flags(df: pd.DataFrame, idx, family: str) -> int:
     return n
 
 
+def _load_real_dv_factor_plans(path: str) -> set[str]:
+    """Return plans with at least one populated dividend factor cell."""
+    if not os.path.isfile(path):
+        return set()
+    try:
+        with open(path, newline="", encoding="utf-8-sig") as f:
+            reader = csv.DictReader(f)
+            factor_fields = [
+                field for field in (reader.fieldnames or [])
+                if field.upper().startswith("DV")
+            ]
+            return {
+                normalize(row.get("PLAN", ""))
+                for row in reader
+                if normalize(row.get("PLAN", ""))
+                and any(str(row.get(field, "") or "").strip() for field in factor_fields)
+            }
+    except (OSError, csv.Error):
+        return set()
+
+
 def apply_issue_a_plan_setup(
     df: pd.DataFrame,
     repo_root: str | None = None,
@@ -85,12 +106,28 @@ def apply_issue_a_plan_setup(
         "a8_par_vardb": 0,
         "a8e_pvo_defaults": 0,
         "a9b_par_cleared": 0,
+        "a11_dv_absent_par_cleared": 0,
+        "a11_deficiency_n": 0,
     }
+
+    # A11: QuikDvs factor absence is authoritative for this conversion. Keys
+    # (including A3 default stubs) do not count as dividend factors.
+    dv_path = os.path.join(rates_dir or default_rates_dir(repo_root), "QuikDvs.csv")
+    dv_factor_plans = _load_real_dv_factor_plans(dv_path)
 
     for idx in df.index:
         plan = normalize(df.at[idx, "PLAN"])
         if not plan:
             continue
+
+        if "DEFICIENCY" in df.columns and str(df.at[idx, "DEFICIENCY"] or "").strip().upper() != "N":
+            df.at[idx, "DEFICIENCY"] = "N"
+            stats["a11_deficiency_n"] += 1
+
+        if "PAR" in df.columns and plan not in dv_factor_plans:
+            if str(df.at[idx, "PAR"] or "").strip() != "0":
+                df.at[idx, "PAR"] = "0"
+                stats["a11_dv_absent_par_cleared"] += 1
 
         # A9b — supplemental prefix 9: non-participating
         if plan.startswith("9") and "PAR" in df.columns:
@@ -137,6 +174,8 @@ def apply_issue_a_plan_setup(
             f"A6 orphan flags cleared={stats['a6_orphan_flags_cleared']} "
             f"A8 PAR/VARDB plans={stats['a8_par_vardb']} "
             f"A8e PVO cells={stats['a8e_pvo_defaults']} "
-            f"A9b PAR cleared={stats['a9b_par_cleared']}"
+            f"A9b PAR cleared={stats['a9b_par_cleared']} "
+            f"A11 DV-absent PAR={stats['a11_dv_absent_par_cleared']} "
+            f"DEFICIENCY=N={stats['a11_deficiency_n']}"
         )
     return df

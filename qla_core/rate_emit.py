@@ -15,6 +15,7 @@ from qla_core import rate_dbf_schema as S
 from qla_core import rate_dbf_writer as W
 from qla_core import rate_pipeline as P
 from qla_core import quikaint_closed_riders as QAINT
+from qla_core import quiktvs_tv0_fill as TV0
 from qla_core.rate_member_setup import build_quikuwpo_rows
 
 # Blockers that must not prevent CV / factor / key / member CSV emit.
@@ -23,6 +24,90 @@ PARTIAL_EMIT_BLOCKERS = frozenset({"V-UINT-PDINT", "V-ISSC-RATE", "V-ISSC-SL"})
 MEMBER_TABLES = ("QuikPlGd", "QuikPlBd", "QuikPlUw", "QuikPlSt", "QuikPlNb")
 CV_KEY_TABLE = "QuikPlCv"
 CV_FACTOR_TABLE = "QuikCvs"
+
+
+def _finalize_equal_cv_tv_keys(factor_rows, key_rows):
+    """Enforce independent equal-UW CV/TV collapse at the final emit boundary."""
+    def text(value):
+        return "" if value is None else str(value).strip()
+
+    fixed_fields = {
+        "PLAN", "AGE", "CNTL", "GENDER", "UWCLASS", "BAND",
+        "ISSCNTRY", "ISSUEST", "EFFDATE",
+    }
+    factor_to_key = {"QuikCvs": "QuikPlCv", "QuikTvs": "QuikPlTv"}
+    targets = {}
+    for factor_table, key_table in factor_to_key.items():
+        by_generation = {}
+        for row in factor_rows.get(factor_table, []):
+            plan = text(row.get("PLAN"))
+            effdate = text(row.get("EFFDATE"))
+            uwclass = text(row.get("UWCLASS"))
+            if not plan or not uwclass:
+                continue
+            base = tuple(text(row.get(field)) for field in (
+                "AGE", "CNTL", "GENDER", "BAND", "ISSCNTRY", "ISSUEST",
+            ))
+            values = tuple(
+                sorted((field, text(value))
+                       for field, value in row.items() if field not in fixed_fields)
+            )
+            by_generation.setdefault((plan, effdate), {}).setdefault(uwclass, {})[base] = values
+        for generation, by_uw in by_generation.items():
+            signatures = {
+                uwclass: tuple(sorted(grid.items()))
+                for uwclass, grid in by_uw.items()
+            }
+            if len(by_uw) > 1 and len(set(signatures.values())) == 1:
+                targets[factor_table] = targets.get(factor_table, set()) | {generation}
+
+        if not targets.get(factor_table):
+            continue
+        rewritten = []
+        seen = set()
+        for row in factor_rows.get(factor_table, []):
+            row = dict(row)
+            generation = (text(row.get("PLAN")), text(row.get("EFFDATE")))
+            if generation in targets[factor_table]:
+                row["UWCLASS"] = "00"
+            signature = tuple(text(row.get(field[0]))
+                              for field in S.factor_table_fields(factor_table))
+            if signature not in seen:
+                rewritten.append(row)
+                seen.add(signature)
+        factor_rows[factor_table] = rewritten
+
+        protected = set()
+        for other_table, other_rows in factor_rows.items():
+            if other_table == factor_table or S.KEY_TABLE.get(other_table) != key_table:
+                continue
+            for other_row in other_rows:
+                generation = (text(other_row.get("PLAN")), text(other_row.get("EFFDATE")))
+                if generation in targets[factor_table]:
+                    protected.add(tuple(
+                        text(other_row.get(field)) for field in (
+                            "PLAN", "GENDER", "UWCLASS", "BAND",
+                            "ISSCNTRY", "ISSUEST", "EFFDATE",
+                        )
+                    ))
+        rewritten = []
+        seen = set()
+        for row in key_rows.get(key_table, []):
+            row = dict(row)
+            generation = (text(row.get("PLAN")), text(row.get("EFFDATE")))
+            signature = tuple(text(row.get(field)) for field in (
+                "PLAN", "GENDER", "UWCLASS", "BAND",
+                "ISSCNTRY", "ISSUEST", "EFFDATE",
+            ))
+            if generation in targets[factor_table] and signature not in protected:
+                row["UWCLASS"] = "00"
+            signature = tuple(text(row.get(field[0]))
+                              for field in S.key_table_fields(key_table))
+            if signature not in seen:
+                rewritten.append(row)
+                seen.add(signature)
+        key_rows[key_table] = rewritten
+    return targets
 
 
 def _default_audit_csv(repo_root):
@@ -122,8 +207,10 @@ def _write_dbf_tables(res, emit_dir, manifest):
     manifest.append(qaint_entry)
 
 
-def _write_csv_manifest(csv_dir, manifest):
-    manifest_path = os.path.join(csv_dir, "rate_csv_manifest.csv")
+def _write_csv_manifest(csv_dir, manifest, manifest_dir=None):
+    manifest_dir = manifest_dir or os.path.dirname(csv_dir)
+    os.makedirs(manifest_dir, exist_ok=True)
+    manifest_path = os.path.join(manifest_dir, "rate_csv_manifest.csv")
     with open(manifest_path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["KIND", "TABLE", "FILENAME", "ROWS", "NOTES"])
@@ -177,6 +264,15 @@ def run_rate_emit(
 
     try:
         res = P.run(config_path, repo_root)
+        # Final boundary guard: companion/default enrichment must not restore
+        # superseded CV/TV UW keys before CSV/DBF writers consume the rows.
+        _finalize_equal_cv_tv_keys(res.factor_rows, res.key_rows)
+        # Idempotent re-apply after UW collapse (pipeline already filled; catches edge rows).
+        with open(config_path, encoding="utf-8") as _cfg_f:
+            _cfg = json.load(_cfg_f)
+        _sp = TV0.load_true_single_premium_plans(repo_root, config=_cfg)
+        _dec = int((_cfg.get("segmentation_defaults") or {}).get("source_decimals", 2))
+        TV0.apply_quiktvs_tv0_blank_fill(res.factor_rows, _sp, source_decimals=_dec)
         P.write_issue_reports(res, phase_report_dir)
     except Exception as exc:
         return {
@@ -242,7 +338,11 @@ def run_rate_emit(
                     "kind": "surrender", "table": "QuikIssc", "path": issc_path, "rows": issc_n,
                 })
                 messages.append(f"Issue #88 QuikIssc: {issc_n} row(s)")
-            csv_manifest_path = _write_csv_manifest(csv_dir, manifest)
+            manifest_dir = os.path.join(repo_root, "QLA_Migration", "Reports", "rates")
+            csv_manifest_path = _write_csv_manifest(csv_dir, manifest, manifest_dir)
+            pointer_path = os.path.join(phase_report_dir, "rate_csv_manifest_pointer.txt")
+            with open(pointer_path, "w", encoding="utf-8") as pointer:
+                pointer.write(csv_manifest_path + "\n")
             if partial and not gate_ok:
                 messages.append(
                     f"Partial CSV emit: {res.blocker_count} non-CV blocker(s) ignored "

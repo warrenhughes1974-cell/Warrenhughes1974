@@ -24,26 +24,48 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCRIPT_VERSION = "1.2"
-ENGINE_VERSION = "v57.82"
+SCRIPT_VERSION = "1.4"
+ENGINE_VERSION = "v58.68"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 TEST_VALIDATION = DEFAULT_OUTPUT / "Test_Validation"
 BASELINE_TYPE8 = 3657
 EXPECTED_LOAN_ROWS_MIN = 37300
-EXPECTED_LOAN_ROWS_MAX = 37600
+EXPECTED_LOAN_ROWS_MAX = 38200  # includes restored opening seeds (~556)
 EXPECTED_SEED_MIN = 550
 EXPECTED_SEED_MAX = 565
 EXPECTED_LOAN_POLICIES_MIN = 650
-QUIKLOAN_BASELINE_ROWS = 356
-SAMPLE_MPOLICY = "010331768C"
-UAT_SEED_MPOLICY = "010822238C"
+QUIKLOAN_BASELINE_ROWS = 356  # midyear package; later cuts may differ (WARN only)
+# Issue #2 width-11 / 90…C grain (legacy 010…C aliases accepted in lookups)
+SAMPLE_MPOLICY = "9010331768C"
+SAMPLE_MPOLICY_ALIASES = {SAMPLE_MPOLICY, "010331768C"}
+UAT_SEED_MPOLICY = "9010822238C"
+UAT_SEED_ALIASES = {UAT_SEED_MPOLICY, "010822238C"}
 UAT_SEED_MDATE = "20171220"
 UAT_SEED_MBEN = "8373.99"
-UAT_CURRENT_BALANCE = 9731.08
+MPOLICY_WIDTH = 11
+# Midyear closure golden; active cuts supersede via quikloan.MLOANBAL
+MIDYEAR_UAT_CURRENT_BALANCE = 9731.08
 UAT_FIRST_BALANCE_TOL = 0.02
 LOAN_TYPES = frozenset({"10", "11", "12"})
 SCHEMA = ["MPOLICY", "MBENTYP", "MDATE", "MBEN"]
+
+
+def _quikloan_balance(output_dir: Path, aliases: set[str]) -> tuple[float | None, str]:
+    """Return (MLOANBAL, detail) for the UAT seed policy from current Output."""
+    loan_path = output_dir / "quikloan.csv"
+    if not loan_path.is_file():
+        return None, "quikloan.csv missing"
+    for r in _read_csv(loan_path):
+        if r.get("MPOLICY", "").strip() not in aliases:
+            continue
+        raw = r.get("MLOANBAL", "") or r.get("MLOANPRIN", "")
+        try:
+            bal = float(raw or 0)
+        except ValueError:
+            return None, f"non-numeric MLOANBAL={raw!r}"
+        return bal, f"quikloan MLOANBAL={bal:.2f}"
+    return None, f"no quikloan row for {sorted(aliases)}"
 
 
 def _read_csv(path: Path) -> list[dict[str, str]]:
@@ -121,11 +143,18 @@ def validate(
         if type_counts.get(t, 0) == 0:
             errors.append(f"Missing MBENTYP={t} loan rows")
 
-    bad_mpolicy = [r for r in rows if len(r.get("MPOLICY", "")) != 10]
+    bad_mpolicy = [
+        r
+        for r in rows
+        if r.get("MPOLICY", "") and len(r.get("MPOLICY", "").strip()) != MPOLICY_WIDTH
+    ]
     if bad_mpolicy:
-        errors.append(f"MPOLICY width violations: {len(bad_mpolicy)} row(s)")
+        errors.append(
+            f"MPOLICY width violations: {len(bad_mpolicy)} row(s) "
+            f"(expected Issue #2 width {MPOLICY_WIDTH})"
+        )
     else:
-        print("OK: all MPOLICY values are 10 characters")
+        print(f"OK: all MPOLICY values are {MPOLICY_WIDTH} characters (Issue #2)")
 
     bad_date = [r for r in rows if r.get("MDATE", "") and not r["MDATE"].isdigit()]
     if bad_date:
@@ -133,11 +162,11 @@ def validate(
     else:
         print("OK: MDATE YYYYMMDD format")
 
-    # Opening seed assert — 010822238C
+    # Opening seed assert — 9010822238C (Issue #2; legacy 010822238C)
     uat_seeds = [
         r
         for r in rows
-        if r.get("MPOLICY", "").strip() == UAT_SEED_MPOLICY
+        if r.get("MPOLICY", "").strip() in UAT_SEED_ALIASES
         and r.get("MBENTYP", "") == "10"
         and r.get("MDATE", "") == UAT_SEED_MDATE
     ]
@@ -148,7 +177,12 @@ def validate(
         )
     else:
         amt = uat_seeds[0].get("MBEN", "")
-        if amt != UAT_SEED_MBEN:
+        got_pol = uat_seeds[0].get("MPOLICY", "").strip()
+        if got_pol != UAT_SEED_MPOLICY:
+            errors.append(
+                f"Opening seed MPOLICY={got_pol!r} expected {UAT_SEED_MPOLICY!r}"
+            )
+        elif amt != UAT_SEED_MBEN:
             errors.append(
                 f"Opening seed amount for {UAT_SEED_MPOLICY}: got {amt} expected {UAT_SEED_MBEN}"
             )
@@ -159,11 +193,24 @@ def validate(
             )
 
     # Balance close: forward net of type effects should equal QuikLoan current
-    # (QLAdmin Balance after first row ≈ first amount when chain closes)
+    # (QLAdmin Balance after first row ≈ first amount when chain closes).
+    # Prefer active-cut quikloan.MLOANBAL; fall back to midyear golden.
+    uat_bal, uat_bal_src = _quikloan_balance(output_dir, UAT_SEED_ALIASES)
+    if uat_bal is None:
+        uat_current_balance = MIDYEAR_UAT_CURRENT_BALANCE
+        print(
+            f"WARN: UAT balance from Output unavailable ({uat_bal_src}); "
+            f"using midyear golden {uat_current_balance:.2f}"
+        )
+        warnings.append(f"UAT QuikLoan balance fallback: {uat_bal_src}")
+    else:
+        uat_current_balance = uat_bal
+        print(f"OK: UAT current balance from {uat_bal_src}")
+
     uat_loan_rows = [
         r
         for r in rows
-        if r.get("MPOLICY", "").strip() == UAT_SEED_MPOLICY
+        if r.get("MPOLICY", "").strip() in UAT_SEED_ALIASES
         and r.get("MBENTYP", "") in LOAN_TYPES
     ]
     uat_loan_rows.sort(key=lambda r: (r.get("MDATE", ""), r.get("MBENTYP", "")))
@@ -176,15 +223,15 @@ def validate(
                 amt = 0.0
             t = r.get("MBENTYP", "")
             fwd += amt if t in ("10", "11") else -amt
-        if abs(fwd - UAT_CURRENT_BALANCE) > UAT_FIRST_BALANCE_TOL:
+        if abs(fwd - uat_current_balance) > UAT_FIRST_BALANCE_TOL:
             errors.append(
                 f"{UAT_SEED_MPOLICY} forward Benh net={fwd:.2f} "
-                f"expected QuikLoan {UAT_CURRENT_BALANCE:.2f}"
+                f"expected QuikLoan {uat_current_balance:.2f}"
             )
         else:
             print(
                 f"OK: {UAT_SEED_MPOLICY} forward Benh net={fwd:.2f} "
-                f"matches QuikLoan {UAT_CURRENT_BALANCE:.2f}"
+                f"matches QuikLoan {uat_current_balance:.2f}"
             )
         # Implied Balance on first row under QLAdmin backward formula
         first_amt = float(uat_loan_rows[0].get("MBEN", "") or 0)
@@ -193,7 +240,7 @@ def validate(
             if uat_loan_rows[0].get("MBENTYP") in ("10", "11")
             else -first_amt
         )
-        implied_first_bal = UAT_CURRENT_BALANCE - later
+        implied_first_bal = uat_current_balance - later
         if abs(implied_first_bal - first_amt) > UAT_FIRST_BALANCE_TOL:
             errors.append(
                 f"{UAT_SEED_MPOLICY} implied first Balance={implied_first_bal:.2f} "
@@ -222,7 +269,8 @@ def validate(
     sample = [
         r
         for r in rows
-        if r.get("MPOLICY", "").strip() == SAMPLE_MPOLICY and r.get("MBENTYP", "") in LOAN_TYPES
+        if r.get("MPOLICY", "").strip() in SAMPLE_MPOLICY_ALIASES
+        and r.get("MBENTYP", "") in LOAN_TYPES
     ]
     if not sample:
         warnings.append(f"No loan rows for sample MPOLICY={SAMPLE_MPOLICY}")

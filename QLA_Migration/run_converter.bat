@@ -18,6 +18,12 @@ set QLA_BATCH_INCLUDE_RATE_TABLES=1
 set QLA_ENABLE_QUIKISRR_EMIT=1
 set QLA_ENABLE_REINSURANCE_EMIT=1
 set QLA_REINSURANCE_WRITE_OUTPUT=1
+REM Issue #135 / Cut Completeness Wave 0: dated PRELSA for 20260630 package
+if not defined QLA_CLAIMS_PRELSA_PATH (
+  if exist "%REPO_ROOT%\QLA_Migration\Source\RelationshipNameAddress_Extract_20260630.csv" (
+    set "QLA_CLAIMS_PRELSA_PATH=%REPO_ROOT%\QLA_Migration\Source\RelationshipNameAddress_Extract_20260630.csv"
+  )
+)
 REM The valuation date must match the source package being converted.
 REM Never reuse a prior year-end date for a current/midyear source extract.
 if not defined QLA_VALUATION_DATE (
@@ -36,7 +42,7 @@ echo ============================================================
 echo Repo root : %REPO_ROOT%
 echo RUN_MODE  : %QLA_RUN_MODE%
 echo VALUATION : %QLA_VALUATION_DATE%  (QUIKRIDR.MLASTANN)
-echo Engine    : v58.41 full UAT batch
+echo Engine    : v58.71 full UAT batch (Cut Completeness Wave 1)
 echo   claims + QuikLoan + QuikBenh (loan+#114 dividend) + rates + QuikIsrr + Reinsurance
 echo.
 echo In the UI, set paths to QLA_Migration:
