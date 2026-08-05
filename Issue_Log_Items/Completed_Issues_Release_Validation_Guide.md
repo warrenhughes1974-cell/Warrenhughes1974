@@ -4,7 +4,7 @@
 
 **Canonical path:** `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`
 
-**Last rebuilt:** 2026-08-04 (initial living checklist; update on each close/commit).  
+**Last rebuilt:** 2026-08-05 (quikclnt high-water + client-ID Append smoke).  
 **Framework authority:** `AI_Agents/Framework.md` v1.5+ rule 12 / G7 — required for every agent and model (**Cursor Grok 4.5, Luna / gpt-5.6-luna-*, Composer**, overrides).  
 **Always-on rule:** `.cursor/rules/completed-issues-release-guide.mdc`
 
@@ -20,7 +20,7 @@
 python tools/validators/validate_release_closed_issues.py
 ```
 
-Faster smoke-only (still blocks on #106/#98/#71/#2/#59/#135/#136):
+Faster smoke-only (still blocks on #106/#98/#71/#2/#59/#135/#136/#21F + quikclnt high-water):
 
 ```text
 python tools/validators/validate_release_closed_issues.py --smoke-only
@@ -163,6 +163,9 @@ These are the fixes most often “closed in code” but missing from the package
 | **59** | Seven named policies MSTATUS | Six Active 22; death-claim `010521213C`/`9010521213C` = source ST map (S/DP→50; T/DC→53) |
 | **135** | Sample death/surrender claims | CSO Total_Paid; MINTAMT=0 |
 | **136** | `1658C1` PVO | Band/State/DV off when only defaults |
+| **21F** | `quikprmh` CONV_ADJ @ 20171231 | Traditional gold `9010310404C` + ISWL gold `9010718309C` (FV deposits − history; e.g. 4243.06). Fail if ISWL missing CONV_ADJ |
+| **CLNT-HW** | Last physical `quikclnt.csv` row | TEMP high-water: `MLNAME=ZZZ CONVERSION HIGHWATER`, `MCLIENTID` = max(prior)+1 right-justified (e.g. `713664`). QLAdmin New Client must not land in low LifePRO NAME_ID ranges (12480s). Disable only with `QLA_QUIKCLNT_HIGHWATER=0` |
+| **CLNT-RJ** | Append / DBF pack of client keys | `MCLIENTID` / `MPRIMID` / `MBENFID` / related fields **right-justified** like `MPOLICY` (v58.77+). Left-justified client IDs → wrong SEEK / wrong name on Use |
 
 The release gate script runs these smokes plus full accountability. Any Closed ID showing **GAP** blocks the release unless Warren waives in writing.
 
@@ -174,17 +177,19 @@ Run this **before** committing conversion/rate code. Do **not** commit until eve
 
 | # | What | Command / check | PASS looks like |
 |---|------|-----------------|-----------------|
-| 1 | Engine identity | `python -c "import app; print(app.APP_VERSION)"` + twin `QLA_Migration/app.py` match | Both **v58.76+**; hashes aligned |
+| 1 | Engine identity | `python -c "import app; print(app.APP_VERSION)"` + twin `QLA_Migration/app.py` match | Both **v58.78+** (high-water + client-ID rjust); twin hashes aligned |
 | 2 | Unit tests (rates) | `python -m pytest tests/test_quiktvs_l17_rv.py tests/test_quiktvs_tv0_fill.py -q` (and `qla_core/tests` if present for #95) | PASS |
 | 3 | L17 QuikTvs shape | Spot `Output/rates/QuikTvs.csv` → `1L17SP` F/00 | Dur0 ≠ 56.09; Dur1≈56.09; Dur2≈57.81; annual row count ≫ 38 (e.g. ~398/plan) |
 | 4 | #96 validator | `python Issue_Log_Items/Issue_96/validate_issue96_cso_pvo.py` | PASS (annual-grid aware — **not** frozen 38) |
 | 5 | #106 validator | `python Issue_Log_Items/Issue_106/validate_issue106_quiktvs_duration.py` | PASS |
 | 6 | TV0 + CEN NP | Spot QuikTvs TV0 fill; `1658C1` M/37 PR QuikNps all 4.00 | PASS |
-| 7 | Release smoke | `python tools/validators/validate_release_closed_issues.py --smoke-only` | RELEASE_OK / no FAIL on high-risk |
-| 8 | Guide rows | This file: #96 L17 annual wording; high-risk L17/TV0/CEN NP rows present | Updated in **same commit** as code |
-| 9 | Do **not** commit | `QLA_Migration/Output/**`, Desktop Append Tool, Q: DBFs, secrets | Package artifacts stay local |
+| 7 | **quikclnt high-water** | `python tools/validators/validate_quikclnt_highwater.py` | Last row = `ZZZ CONVERSION HIGHWATER` with `MCLIENTID` = max+1 (rjust). Fail if missing before commit of v58.78+ |
+| 8 | Client-ID Append pack | Spot-check Append `quikclnt`/`quikbenf` (or rebuild package): client keys rjust like `MPOLICY` | No left-justified `MCLIENTID`/`MBENFID` in DBF |
+| 9 | Release smoke | `python tools/validators/validate_release_closed_issues.py --smoke-only` | RELEASE_OK / no FAIL on high-risk (includes CLNT-HW) |
+| 10 | Guide rows | This file: L17/TV0/CEN NP + **CLNT-HW / CLNT-RJ** rows present | Updated in **same commit** as code |
+| 11 | Do **not** commit | `QLA_Migration/Output/**`, Desktop Append Tool, Q: DBFs, secrets | Package artifacts stay local |
 
-**Known open (do not “fix” in commit):** `1658C1` / `658 CEN I` QuikTvs ends at **384** per LifePRO RV (6/30 and 7/31) — waiting on CSO for reserve source. Reinsurance ON HOLD.
+**Known open (do not “fix” in commit):** `1658C1` / `658 CEN I` QuikTvs ends at **384** per LifePRO RV (6/30 and 7/31) — waiting on CSO for reserve source. Reinsurance ON HOLD. High-water client is **temporary** until Robert confirms next-ID / remumber — keep gated (`QLA_QUIKCLNT_HIGHWATER`).
 
 ---
 
@@ -196,6 +201,7 @@ Run this **before** committing conversion/rate code. Do **not** commit until eve
 | Full `QLA_Migration/Output/rates/` (after GENERATE RATE TABLES / rate pipeline) | Old rates left on disk from a prior week |
 | Engine version + commit hash in release note | “Code was pushed” without re-batch |
 | Accountability + smoke results for this Output | Last issue’s Validation report from a different Output |
+| DBFs from Append Tool built with **client-ID right-justify** (v58.77+: `MCLIENTID`/`MPRIMID`/`MBENFID`/… packed like `MPOLICY`) **and** `quikclnt` EOF high-water (v58.78+) | Old Append Tool that strips + left-justifies client IDs (wrong SEEK / wrong name on Use); or quikclnt without EOF high-water (New Client collides with 12480s) |
 
 **Partial UAT reload** (`Test_Validation/`) is for client screen checks only. **Production / full load package** must be the full Output rebuilt on the release commit.
 
@@ -273,6 +279,7 @@ Reviewed 2026-08-04. Most Closed rows **layer** (different scopes) or **supersed
 | Dividend | #38 + #114 + #116 + #117 (+ #21D rate) | Balance vs history vs paid-to date vs interest rate — different fields |
 | Rates keys/PVO | #71 + #77 + #80 + #83 + #96 + #106 + #136 + TV0 + CEN NP | BAND=00, keys, assumptions, companions, SAL/L17 annual RV, RV Dur identity, TV0 fill, level CEN NP, real-rate-only flags |
 | Memo | #21M + #50 + #134 | Emit + parse; B carve-out to claims |
+| Client ID | CLNT-RJ (v58.77) + CLNT-HW (v58.78 / A12) | Right-justify keys for SEEK; TEMP EOF high-water so New Client skips low NAME_IDs |
 
 ### Live tension to watch (not two Closed guide rows, but still dangerous)
 
@@ -293,7 +300,7 @@ If a new issue needs a different precedence than this table: **stop and notify W
 | 2 | 11 Character Policy Number | Resolution: QLAdmin policy numbers now keep the LifePRO source policy number with a trailing C and are right-justified to 11 characters (replacing the old strip-9 crosswalk and 10-character pad). Engine v58.29. UAT: Test_Validation. | all quik* MPOLICY fields | **Source:** PPOLC / PPBEN POLICY_NUMBER. **How:** Take LifePRO POLICY_NUMBER, append C, right-justify to 11 chars; compare every Output MPOLICY. No strip-9 crosswalk. | python QLA_Migration/_validate_issue2_mpolicy.py | any policy - e.g. source 9010374099 -> 9010374099C |
 | 13 | Incorrect QL Status (quikmstr.MSTATUS) | When CONTRACT_CODE=T, MSTATUS follows CONTRACT_REASON not PAID_UP_TYPE; 607 policies (v57.48). | quikmstr.MSTATUS | **Source:** PPOLC CONTRACT_CODE / CONTRACT_REASON / PAID_UP_TYPE. **How:** When CONTRACT_CODE=T, MSTATUS must follow CONTRACT_REASON (not PAID_UP_TYPE). | python tools/validators/validate_issue13_mstatus.py | 010516211C->54; 011101663C->56 |
 | 21A | NFO / Dividend Options | PPBENTYP cache reads BF_NON_FORFEITURE for ISWL/BF; NFO codes 1/2 -> APL (MNFOPT=1) per SME (v57.47). | quikmstr.MNFOPT / quikridr NFO | **Source:** PPBENTYP BF_NON_FORFEITURE (ISWL/BF). **How:** LifePRO NFO 1/2 map to APL (MNFOPT=1) for ISWL/BF from BF_NON_FORFEITURE cache. | python tools/validators/validate_issue21a_mnfopt.py | 010765930C; 010718309C; 010818663C |
-| 21F | Premium History | Non-ISWL Conversion Adjustment quikprmh row @ 12/31/2017 when LifePRO Base+PUA+SU+SL > history; ISWL excluded (v57.73). UAT pending. | quikprmh | **Source:** PACTG premium history + PPBEN Base/PUA/SU/SL totals. **How:** Non-ISWL: when LifePRO Base+PUA+SU+SL > loaded history, emit Conversion Adjustment @ 20171231. ISWL excluded. Golden `9010310404C` hist+adj must equal active-cut LIFEPRO_TOTAL from the 21F report (not a frozen midyear 17040.05). | python tools/validators/validate_issue21f_premium_adjustment.py | non-ISWL policies with CONV_ADJ-like quikprmh rows; golden 9010310404C |
+| 21F | Premium History | **v58.79:** Conversion Adjustment `quikprmh` @ 12/31/2017 for **all** plans when LifePRO lifetime paid > history. Traditional: PPBENTYP Base+PUA+SU+SL. ISWL/UL: PPBEN `FV_GUAR_DEPOSITS`. (Was non-ISWL-only v57.73.) | quikprmh | **Source:** PACTG history + PPBENTYP (traditional) / PPBEN FV_GUAR_DEPOSITS (ISWL). **How:** Emit CONV_ADJ @ 20171231 for positive gap. Golden traditional `9010310404C`; ISWL gold `9010718309C` adj = FV deposits − history (e.g. 5492.56−1249.50=4243.06). | python tools/validators/validate_issue21f_premium_adjustment.py | CONV_ADJ rows fleet-wide; 9010310404C; 9010718309C |
 | 21G | Total Premium / Cost Basis | Not required in QL - New Era; no master-field load | (none - not loaded) | **Source:** LifePRO Premiums Paid / Tax Basis. **How:** Confirm QLAdmin has no master cost-basis field load; staged report only if needed. No quikmstr field expected. | manual / New Era decision | 010448806C (LifePRO proof only) |
 | 21J | Modal Premium Factors | UAT - Coverage Detail modal grid on sample policies | quikplan modal factors; Coverage Detail grid | **Source:** Client modal-factor mapping + PAC GL85 overrides. **How:** Per-plan ANNL/SEMI/QTRL/MTHD/MTHB factors; PAC GL85 quarterly/semiannual overrides. | python tools/validators/validate_issue21j_modal_factors.py | 010713704C Coverage Detail modal grid |
 | 21L | Last Change Date | QLAdmin sets date on load | quikmstr last-change date | **Source:** N/A (QLAdmin sets on load). **How:** Confirm conversion does not invent Last Change Date; QLAdmin owns it on load. | manual | N/A |
@@ -354,7 +361,7 @@ Source package / QLA_VALUATION_DATE: ____________
 Full policy batch after pull: YES / NO
 Rates regenerated after pull (if needed): YES / NO / N/A
 Accountability script: PASS / FAIL
-High-risk smoke (#106/#98/#71/#2/#59/#135/#136): PASS / FAIL
+High-risk smoke (#106/#98/#71/#2/#59/#135/#136/#21F + CLNT-HW): PASS / FAIL
 Closed-row failures (IDs): ____________
 Handoff = full Output (not Test_Validation only): YES / NO
 Waivers (ID + reason + date): ____________

@@ -19,6 +19,7 @@ from qla_core.dbf_append_tool_package import (
     DEFAULT_APPEND_OUTPUT,
     finalize_dbf_append_tool_package,
 )
+from qla_core.normalize_utils import CLIENT_ID_TARGET_FIELDS
 
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "QLA_Migration" / "Output"
@@ -121,7 +122,9 @@ def _append_csv_to_dbf(csv_path: Path, template_path: Path, out_path: Path) -> t
                     raw_val = str(row[csv_col]) if csv_col and csv_col in row else ""
                     val = raw_val.strip()
 
-                    if f_name_upper == "MPOLICY":
+                    # Fixed-width SEEK keys: strip then right-justify to DBF length.
+                    # (Default character packing below is left-justify / trailing spaces.)
+                    if f_name_upper == "MPOLICY" or f_name_upper in CLIENT_ID_TARGET_FIELDS:
                         val = val.rjust(field["length"], " ")
                     if f_name_upper == "MBANKNO" and len(val) >= 2 and val[-2] == "/":
                         val = val[:-2]

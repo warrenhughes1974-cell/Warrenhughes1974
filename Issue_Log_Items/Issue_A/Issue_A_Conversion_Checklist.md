@@ -29,11 +29,12 @@
 | **A9b** | Supp `9*` — PAR | Prefix-**9** plans have **PAR = 0** | **IMPLEMENTED v58.21** | 26 plans corrected; fleet scan PAR=1: 0 |
 | **A10** | QuikUwpo UW class master | Every distinct plan `UWCODE` (from QuikPlUw / keys) has **one** `QuikUwpo` row; key = `UWCODE` (no dupes); default `00` always present | **IMPLEMENTED v58.22** | Emits `Output/rates/QuikUwpo.csv`: 00/NS/PR/SM/ST. Verified PASS 2026-07-20. |
 | **A11h / #136** | Real-rate-only PVO variance | Category / `*VARY*` / `PLANVALOPT` enabled only from real factor differentiation; Band `00` and State ALL/`0000`/`00` alone never enable; no DV without `QuikDvs`; fleet-wide | **CLOSED as Issue #136 (v58.62)** | Warren+Luna locked 2026-08-02. Gold `1658C1`. Package: `Issue_Log_Items/Issue_136/` |
+| **A12** | Client ID pack + high-water | (1) Client-ID fields right-justified like `MPOLICY` in CSV + Append DBF. (2) Last physical `quikclnt` row = TEMP high-water `ZZZ CONVERSION HIGHWATER` with `MCLIENTID` = max+1 (so QLAdmin New Client does not reuse low LifePRO NAME_IDs). | **IMPLEMENTED v58.78** | Validator: `python tools/validators/validate_quikclnt_highwater.py`. Disable with `QLA_QUIKCLNT_HIGHWATER=0`. Temporary until remumber / Robert next-ID answer. |
 
 ### How to add new checks
 
 When Robert (or internal review) finds another plan-setup defect:
-1. Add a new row `A10`, `A11`, … above.
+1. Add a new row `A12`, `A13`, … above.
 2. Mention it in the next conversion run log.
 3. Do **not** remove closed checks — mark Status **CLOSED** and leave history in run logs.
 
@@ -77,6 +78,8 @@ Result summary: <n PASS / n FAIL / n BLOCKED / n N/A>
 | A9a | | |
 | A9b | | |
 | A10 | | |
+| A11h/#136 | | |
+| A12 | | |
 
 Notes:
 -

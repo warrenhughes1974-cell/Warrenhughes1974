@@ -47,6 +47,8 @@ def format_qladmin_mpolicy(val) -> str:
 
 
 # LifePRO NAME_ID is Character(11), right-justified with leading spaces.
+# QLAdmin DBF templates often use C(12) for the same keys — Append Tool must
+# rjust to the template field length after strip (see build_full_dbf_append_package).
 QLADMIN_MCLIENTID_WIDTH = 11
 CLIENT_ID_TARGET_FIELDS = frozenset({
     "MCLIENTID",
@@ -56,6 +58,7 @@ CLIENT_ID_TARGET_FIELDS = frozenset({
     "MASGNID",
     "MBENPID",
     "MBENCID",
+    "MBENFID",  # quikbenf beneficiary client id
     "MCID",
     "MOWNCID",
     "MRIDRID",

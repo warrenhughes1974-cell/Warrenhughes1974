@@ -44,6 +44,16 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
     ("#59 MSTATUS allowlist", ["tools/validators/validate_issue59_mstatus.py"], True),
     ("#135 Claims CSO", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
     ("#136 PVO flags", ["tools/validators/validate_issue136_pvo_flags.py"], True),
+    (
+        "#21F CONV_ADJ (incl ISWL)",
+        ["tools/validators/validate_issue21f_premium_adjustment.py"],
+        True,
+    ),
+    (
+        "quikclnt high-water EOF",
+        ["tools/validators/validate_quikclnt_highwater.py"],
+        True,
+    ),
 ]
 
 

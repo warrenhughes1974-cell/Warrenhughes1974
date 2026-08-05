@@ -7,11 +7,17 @@ import csv
 import json
 import os
 import shutil
+import sys
 import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from qla_core.normalize_utils import CLIENT_ID_TARGET_FIELDS
+
 TV = ROOT / "QLA_Migration" / "Output" / "Test_Validation"
 ARCH = ROOT / "QLA_Migration" / "Archive"
 EVID = ROOT / "Issue_Log_Items" / "Issue_A" / "evidence"
@@ -135,7 +141,7 @@ def _append_csv_to_dbf(csv_path: Path, template_path: Path, out_path: Path) -> t
                     raw_val = str(row[csv_col]) if csv_col and csv_col in row else ""
                     val = raw_val.strip()
 
-                    if f_name_upper == "MPOLICY":
+                    if f_name_upper == "MPOLICY" or f_name_upper in CLIENT_ID_TARGET_FIELDS:
                         val = val.rjust(field["length"], " ")
                     if f_name_upper == "MBANKNO" and len(val) >= 2 and val[-2] == "/":
                         val = val[:-2]

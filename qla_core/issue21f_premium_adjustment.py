@@ -1,13 +1,15 @@
 """
 Issue #21F — Conversion premium adjustment for truncated quikprmh history.
 
-Business rules (Eric confirmed 2026-07-11):
-  - One additive Conversion Adjustment row per eligible non-ISWL policy
-  - LifePRO total = PREMIUMS_PAID + PU_PREMIUMS_PAID + SU_PREMIUMS_PAID + SL_PREMIUMS_PAID
+Business rules:
+  - One additive Conversion Adjustment row per eligible policy (all plans)
+  - Traditional: LifePRO total = BA/BF PREMIUMS_PAID + PU + SU + SL (PPBENTYP)
+  - ISWL/UL (BF book): LifePRO total = PPBEN FV_GUAR_DEPOSITS (PPBENTYP premiums are .00)
   - DATEPAID = 2017-12-31; classify via MSOURCE/USER_ID/MBATCH markers
   - Positive adjustments only; negatives → exception report
-  - ISWL (PPBENTYP TYPE_CODE=BF) excluded phase 1
   - Idempotent: strip prior CONV_ADJ rows and rebuild each run (same output on re-run)
+
+v58.79: ISWL included — FV_GUAR_DEPOSITS authority (was phase-1 exclude).
 """
 
 from __future__ import annotations
@@ -149,6 +151,36 @@ def resolve_issue21f_output_mpolicy(
     return candidate
 
 
+def _load_iswl_fv_deposits(ppben_path: Optional[str], normalize_fn: Callable[[str], str]) -> Dict[str, float]:
+    """PPBEN BENEFIT_TYPE=FV → FV_GUAR_DEPOSITS keyed by normalized source POLICY_NUMBER."""
+    if not ppben_path or not os.path.isfile(ppben_path):
+        return {}
+    ben = pd.read_csv(
+        ppben_path,
+        encoding="latin1",
+        low_memory=False,
+        dtype=str,
+        on_bad_lines="skip",
+    ).fillna("")
+    ben.columns = [str(c).strip().upper() for c in ben.columns]
+    if "POLICY_NUMBER" not in ben.columns or "FV_GUAR_DEPOSITS" not in ben.columns:
+        return {}
+    type_col = "BENEFIT_TYPE" if "BENEFIT_TYPE" in ben.columns else None
+    if type_col is None:
+        return {}
+    out: Dict[str, float] = {}
+    fv = ben[ben[type_col].astype(str).str.strip().str.upper() == "FV"]
+    for _, row in fv.iterrows():
+        pol = normalize_fn(str(row.get("POLICY_NUMBER", "")))
+        if not pol:
+            continue
+        amt = _money_float(row.get("FV_GUAR_DEPOSITS", ""))
+        # Prefer largest deposit if multiple FV rows (rare)
+        if amt > out.get(pol, 0.0):
+            out[pol] = amt
+    return out
+
+
 def build_lifepro_premium_totals(
     ppbentyp_path: Optional[str],
     normalize_fn: Callable[[str], str],
@@ -157,9 +189,13 @@ def build_lifepro_premium_totals(
     *,
     hist_keys: Optional[set] = None,
     mstr_keys: Optional[set] = None,
+    ppben_path: Optional[str] = None,
 ) -> Dict[str, dict]:
     """
-    Per-policy LifePRO four-component totals from PPBENTYP (typed aggregation).
+    Per-policy LifePRO totals for #21F gap calculation.
+
+    Traditional: PPBENTYP four-component sum.
+    ISWL (TYPE_CODE=BF): overlay BASE/LIFEPRO_TOTAL from PPBEN FV_GUAR_DEPOSITS.
 
     Returns dict keyed by MPOLICY (Output/loadable grain) with component breakdown + ISWL flag.
 
@@ -170,6 +206,7 @@ def build_lifepro_premium_totals(
         return {}
 
     _ = crosswalk  # retained for API compatibility; not used for key emit
+    fv_deposits = _load_iswl_fv_deposits(ppben_path, normalize_fn)
     df = pd.read_csv(
         ppbentyp_path,
         encoding="latin1",
@@ -211,11 +248,16 @@ def build_lifepro_premium_totals(
         if not mpolicy:
             continue
         base, pua, su, sl = _aggregate_policy_components(grp)
+        is_iswl = pol in iswl_pols
+        # ISWL/UL: PPBENTYP PREMIUMS_PAID on BF is .00; lifetime paid is FV deposits
+        if is_iswl and pol in fv_deposits:
+            base = float(fv_deposits[pol])
+            pua = su = sl = 0.0
         lp_total = base + pua + su + sl
         totals[mpolicy] = {
             "SOURCE_POLICY": pol,
             "MPOLICY": mpolicy,
-            "ISWL": pol in iswl_pols,
+            "ISWL": is_iswl,
             "BASE_PREMIUMS_PAID": base,
             "PUA_PREMIUMS_PAID": pua,
             "SU_PREMIUMS_PAID": su,
@@ -285,8 +327,6 @@ def _classify_status(
     hist_total: float,
     adj: float,
 ) -> str:
-    if rec.get("ISWL"):
-        return "ISWL_EXCLUDED"
     if not rec.get("MPOLICY"):
         return "NO_CROSSWALK"
     if rec["LIFEPRO_TOTAL"] <= 0 and hist_total <= 0:
@@ -354,6 +394,7 @@ def apply_issue21f_conversion_adjustments(
     reports_dir: Optional[str] = None,
     mstr_mpolicy_keys: Optional[set] = None,
     reject_orphan_vs_mstr: bool = True,
+    ppben_path: Optional[str] = None,
 ) -> Tuple[pd.DataFrame, dict]:
     """
     Append Conversion Adjustment rows to quikprmh DataFrame; write validation reports.
@@ -362,11 +403,14 @@ def apply_issue21f_conversion_adjustments(
 
     When ``reject_orphan_vs_mstr`` is True and ``mstr_mpolicy_keys`` is provided, any
     CONV_ADJ MPOLICY not in quikmstr raises ValueError (hard fail — no orphan *CC keys).
+
+    ``ppben_path`` supplies FV_GUAR_DEPOSITS for ISWL/UL (required for positive ISWL adj).
     """
     stats = {
         "loaded": 0,
         "opening_balance": 0,
-        "iswl_excluded": 0,
+        "iswl_loaded": 0,
+        "iswl_excluded": 0,  # retained for log compatibility; always 0 after v58.79
         "negative_exceptions": 0,
         "no_gap": 0,
         "no_premium_data": 0,
@@ -374,6 +418,7 @@ def apply_issue21f_conversion_adjustments(
         "stripped_adj": 0,
         "orphan_adj_rejected": 0,
         "join_mstr": 0,
+        "ppben_path": ppben_path or "",
     }
 
     if qdf is None or not isinstance(qdf, pd.DataFrame):
@@ -401,6 +446,7 @@ def apply_issue21f_conversion_adjustments(
         crosswalk,
         hist_keys=hist_keys,
         mstr_keys=mstr_keys or None,
+        ppben_path=ppben_path,
     )
     if not lp_totals:
         return work[schema], stats
@@ -449,14 +495,12 @@ def apply_issue21f_conversion_adjustments(
         }
         validation_rows.append(vrow)
 
-        if status == "ISWL_EXCLUDED":
-            stats["iswl_excluded"] += 1
-        elif status == "NEGATIVE_EXCEPTION":
+        if status == "NEGATIVE_EXCEPTION":
             stats["negative_exceptions"] += 1
             exception_rows.append({
                 "SOURCE_POLICY": rec["SOURCE_POLICY"],
                 "MPOLICY": mp_key,
-                "ISWL": "N",
+                "ISWL": "Y" if rec["ISWL"] else "N",
                 "LIFEPRO_TOTAL": _money_str(rec["LIFEPRO_TOTAL"]),
                 "HIST_TOTAL": _money_str(hist_total),
                 "ADJUSTMENT": _money_str(adj),
@@ -470,7 +514,7 @@ def apply_issue21f_conversion_adjustments(
                 exception_rows.append({
                     "SOURCE_POLICY": rec["SOURCE_POLICY"],
                     "MPOLICY": mp_key,
-                    "ISWL": "N",
+                    "ISWL": "Y" if rec["ISWL"] else "N",
                     "LIFEPRO_TOTAL": _money_str(rec["LIFEPRO_TOTAL"]),
                     "HIST_TOTAL": _money_str(hist_total),
                     "ADJUSTMENT": _money_str(adj),
@@ -479,6 +523,8 @@ def apply_issue21f_conversion_adjustments(
                 })
                 continue
             stats["loaded"] += 1
+            if rec.get("ISWL"):
+                stats["iswl_loaded"] += 1
             if status == "OPENING_BALANCE":
                 stats["opening_balance"] += 1
             if mstr_keys and mp_key in mstr_keys:

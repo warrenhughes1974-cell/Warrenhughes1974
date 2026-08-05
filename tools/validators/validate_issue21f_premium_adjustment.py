@@ -1,4 +1,4 @@
-"""Validate Issue #21F conversion premium adjustment on quikprmh (v57.73)."""
+"""Validate Issue #21F conversion premium adjustment on quikprmh (v58.79+ all plans)."""
 from __future__ import annotations
 
 import argparse
@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
-SCRIPT_VERSION = "1.1"
+SCRIPT_VERSION = "1.2"
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 REPORTS = ROOT / "QLA_Migration" / "Reports"
@@ -47,7 +47,7 @@ def main() -> int:
     print("=" * 72)
     print(
         f"ISSUE #21F — CONVERSION PREMIUM ADJUSTMENT VALIDATION "
-        f"(engine v57.73 / validator {SCRIPT_VERSION})"
+        f"(engine v58.79+ / validator {SCRIPT_VERSION})"
     )
     print("=" * 72)
     errors: list[str] = []
@@ -58,7 +58,8 @@ def main() -> int:
         print("FAIL: quikprmh.csv not found")
         return 1
 
-    prmh = pd.read_csv(prmh_path, dtype=str, encoding="latin1").fillna("")
+    prmh = pd.read_csv(prmh_path, dtype=str, encoding="utf-8-sig").fillna("")
+    prmh.columns = [str(c).strip().upper().lstrip("\ufeff") for c in prmh.columns]
     print(f"\nquikprmh rows: {len(prmh)}")
 
     # Schema
@@ -126,17 +127,43 @@ def main() -> int:
         if abs(total - lifepro_total) > 0.02:
             errors.append(f"golden total reconcile failed: {total}")
 
-    # ISWL must not have CONV_ADJ (Issue #2 key)
-    iswl_pol = "9010713704C"
+    # ISWL must HAVE CONV_ADJ (v58.79+ — FV_GUAR_DEPOSITS authority)
+    iswl_pol = "9010718309C"
+    iswl_aliases = {iswl_pol, "010718309C"}
     iswl_adj = prmh[
-        (prmh["MPOLICY"].astype(str).str.strip().isin({iswl_pol, "010713704C"}))
+        (prmh["MPOLICY"].astype(str).str.strip().isin(iswl_aliases))
         & (prmh["MSOURCE"].astype(str).str.strip().str.upper() == CONV_ADJ_MSOURCE)
     ]
     print(f"\n[ISWL] {iswl_pol} CONV_ADJ rows: {len(iswl_adj)}")
-    if len(iswl_adj) != 0:
-        errors.append(f"ISWL {iswl_pol} must not have CONV_ADJ row")
+    if len(iswl_adj) != 1:
+        errors.append(f"ISWL {iswl_pol}: expected 1 CONV_ADJ, got {len(iswl_adj)}")
     else:
-        print("  PASS: ISWL excluded")
+        irow = iswl_adj.iloc[0]
+        iprem = float(str(irow["PREMIUM"]).strip() or 0)
+        idate = str(irow["DATEPAID"]).strip()
+        ok_i = idate == CONV_ADJ_DATEPAID and iprem > 0
+        print(f"  DATEPAID={idate} PREMIUM={iprem:.2f} -> {'PASS' if ok_i else 'FAIL'}")
+        if not ok_i:
+            errors.append(f"ISWL {iswl_pol} CONV_ADJ marker/amount mismatch")
+        # Prefer report ADJUSTMENT when present
+        expect_iswl = None
+        if val_report_early.is_file():
+            _val_iswl = pd.read_csv(val_report_early, dtype=str).fillna("")
+            _vi = _val_iswl[_val_iswl["MPOLICY"].astype(str).str.strip().isin(iswl_aliases)]
+            if len(_vi) == 1:
+                try:
+                    expect_iswl = float(str(_vi.iloc[0].get("ADJUSTMENT", "")).strip() or 0)
+                except ValueError:
+                    expect_iswl = None
+        if expect_iswl is not None and abs(iprem - expect_iswl) > 0.02:
+            errors.append(
+                f"ISWL {iswl_pol} PREMIUM={iprem} != report ADJUSTMENT={expect_iswl}"
+            )
+        elif expect_iswl is None and abs(iprem - 4243.06) > 0.02:
+            # UAT-proven 7/31 gold when report missing
+            errors.append(f"ISWL {iswl_pol} PREMIUM={iprem} expected ~4243.06")
+        else:
+            print("  PASS: ISWL CONV_ADJ present (FV deposits - history)")
 
     # Idempotency: at most one CONV_ADJ per MPOLICY
     adj_all = prmh[prmh["MSOURCE"].astype(str).str.strip().str.upper() == CONV_ADJ_MSOURCE]

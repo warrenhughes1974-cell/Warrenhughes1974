@@ -1,10 +1,15 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.73
-# Date:        2026-08-04
-# SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.75 — L17 RV QuikTvs: PDAGE page VALUE1..10 annual expansion with
+# Version:     v58.79
+# Date:        2026-08-05
+# SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
+# Change Note: v58.79 — Issue #21F CONV_ADJ for all plans including ISWL (PPBEN FV_GUAR_DEPOSITS).
+#              v58.78 — TEMP quikclnt EOF high-water client (max+1) so QLAdmin New Client
+#              does not collide with low LifePRO NAME_IDs; disable via QLA_QUIKCLNT_HIGHWATER=0.
+#              v58.77 — Right-justify client-ID keys (incl. MBENFID) for QLAdmin SEEK;
+#              Append Tool packs MCLIENTID/MPRIMID/…/MBENFID like MPOLICY (not left-justified).
+#              v58.75 — L17 RV QuikTvs: PDAGE page VALUE1..10 annual expansion with
 #              identity Dur mapping; auditable PDAGE fallback when active cut lacks L17.
 #              v58.73 — Durable QuikTvs TV0 blank fill: non-SP rows emit `.00` zero;
 #              true single-premium plans preserve blank TV0 (config + quikplan evidence).
@@ -579,7 +584,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.76"
+APP_VERSION = "v58.79"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -7291,14 +7296,33 @@ class QLAdminEnterpriseIntegrationSuite:
                     out_path = os.path.normpath(os.path.join(out_dir, f"{t_id}.csv"))
                     qdf = pd.DataFrame(output, columns=schema)
 
-                    # Issue #21F: conversion premium adjustment (non-ISWL, additive only)
+                    # Issue #21F: conversion premium adjustment (all plans; ISWL via FV deposits)
                     if is_batch:
                         try:
+                            _src_root_21f = os.path.normpath(
+                                os.path.join(self._app_base_dir(), "QLA_Migration", "Source")
+                            )
                             _ppbentyp_21f = resolve_ppbentyp_extract_path(src_base)
                             if not _ppbentyp_21f:
-                                _ppbentyp_21f = resolve_ppbentyp_extract_path(
-                                    os.path.normpath(os.path.join(self._app_base_dir(), "QLA_Migration", "Source"))
-                                )
+                                _ppbentyp_21f = resolve_ppbentyp_extract_path(_src_root_21f)
+                            _ppben_21f = resolve_ppben_path(src_base)
+                            if not _ppben_21f:
+                                _ppben_21f = resolve_ppben_path(_src_root_21f)
+                            # Dated extract folders (e.g. LifePRO_Extracts_20260731)
+                            if not _ppben_21f or not _ppbentyp_21f:
+                                try:
+                                    for _sub in sorted(os.listdir(_src_root_21f), reverse=True):
+                                        _sub_path = os.path.join(_src_root_21f, _sub)
+                                        if not os.path.isdir(_sub_path):
+                                            continue
+                                        if not _ppbentyp_21f:
+                                            _ppbentyp_21f = resolve_ppbentyp_extract_path(_sub_path)
+                                        if not _ppben_21f:
+                                            _ppben_21f = resolve_ppben_path(_sub_path)
+                                        if _ppbentyp_21f and _ppben_21f:
+                                            break
+                                except Exception:
+                                    pass
                             if _ppbentyp_21f:
                                 _reports_21f = os.path.normpath(
                                     os.path.join(self._app_base_dir(), "QLA_Migration", "Reports")
@@ -7330,15 +7354,21 @@ class QLAdminEnterpriseIntegrationSuite:
                                     reports_dir=_reports_21f,
                                     mstr_mpolicy_keys=_mstr_keys_21f or None,
                                     reject_orphan_vs_mstr=bool(_mstr_keys_21f),
+                                    ppben_path=_ppben_21f,
                                 )
                                 self.log(
                                     f"Issue #21F: conversion adjustments loaded={_21f_stats.get('loaded', 0)} "
                                     f"opening_balance={_21f_stats.get('opening_balance', 0)} "
                                     f"stripped_prior={_21f_stats.get('stripped_adj', 0)} "
-                                    f"ISWL_excluded={_21f_stats.get('iswl_excluded', 0)} "
+                                    f"ISWL_loaded={_21f_stats.get('iswl_loaded', 0)} "
                                     f"neg_exceptions={_21f_stats.get('negative_exceptions', 0)} "
                                     f"rows {_21f_stats.get('rows_before', 0)}->{_21f_stats.get('rows_after', 0)}"
                                 )
+                                if not _ppben_21f:
+                                    self.log(
+                                        "Issue #21F WARNING: PPBEN extract not found — "
+                                        "ISWL CONV_ADJ uses FV_GUAR_DEPOSITS and will be skipped/zero"
+                                    )
                             else:
                                 self.log("Issue #21F: skipped — PPBENTYP extract not found")
                         except Exception as e:
@@ -9643,14 +9673,25 @@ class QLAdminEnterpriseIntegrationSuite:
                     self.log(f"P3E governance outputs: {p3e_dir}")
                 aligned_out_df = pd.DataFrame(output, columns=schema)
                 out_csv = os.path.normpath(os.path.join(out_dir, f"{t_id}.csv"))
+                if t_id.lower() == "quikclnt":
+                    from qla_core.quikclnt_highwater import apply_quikclnt_highwater
+
+                    aligned_out_df, _hw_stats = apply_quikclnt_highwater(aligned_out_df)
+                    if _hw_stats.get("applied"):
+                        self.log(
+                            f"TEMP quikclnt high-water: id={_hw_stats.get('highwater_id')} "
+                            f"(max_prior={_hw_stats.get('max_prior')}; "
+                            f"disable QLA_QUIKCLNT_HIGHWATER=0)"
+                        )
+                        output = aligned_out_df.to_dict("records")
                 aligned_out_df.to_csv(out_csv, index=False)
-                self.log(f"Success: {t_id}.csv - {len(output)} records.")
+                self.log(f"Success: {t_id}.csv - {len(aligned_out_df)} records.")
                 self._cut_record(
                     str(t_id).lower(),
                     "WRITTEN",
                     source_path=src_path if "src_path" in locals() else None,
                     output_relpath=f"{t_id}.csv",
-                    row_count=len(output),
+                    row_count=len(aligned_out_df),
                 )
 
                 if t_id.lower() == "quikmstr" and bank_draft_exceptions is not None:
