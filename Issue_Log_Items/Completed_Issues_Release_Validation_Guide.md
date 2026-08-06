@@ -4,7 +4,7 @@
 
 **Canonical path:** `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`
 
-**Last rebuilt:** 2026-08-05 (quikclnt high-water + client-ID Append smoke).  
+**Last rebuilt:** 2026-08-06 (CLNT-RJ client-ID width-12 + high-water always-on smoke).  
 **Framework authority:** `AI_Agents/Framework.md` v1.5+ rule 12 / G7 — required for every agent and model (**Cursor Grok 4.5, Luna / gpt-5.6-luna-*, Composer**, overrides).  
 **Always-on rule:** `.cursor/rules/completed-issues-release-guide.mdc`
 
@@ -20,7 +20,7 @@
 python tools/validators/validate_release_closed_issues.py
 ```
 
-Faster smoke-only (still blocks on #106/#98/#71/#2/#59/#135/#136/#21F + quikclnt high-water):
+Faster smoke-only (still blocks on #106/#98/#71/#2/#59/#135/#136/#21F + CLNT-HW + CLNT-RJ width-12):
 
 ```text
 python tools/validators/validate_release_closed_issues.py --smoke-only
@@ -164,8 +164,8 @@ These are the fixes most often “closed in code” but missing from the package
 | **135** | Sample death/surrender claims | CSO Total_Paid; MINTAMT=0 |
 | **136** | `1658C1` PVO | Band/State/DV off when only defaults |
 | **21F** | `quikprmh` CONV_ADJ @ 20171231 | Traditional gold `9010310404C` + ISWL gold `9010718309C` (FV deposits − history; e.g. 4243.06). Fail if ISWL missing CONV_ADJ |
-| **CLNT-HW** | Last physical `quikclnt.csv` row | TEMP high-water: `MLNAME=ZZZ CONVERSION HIGHWATER`, `MCLIENTID` = max(prior)+1 right-justified (e.g. `713664`). QLAdmin New Client must not land in low LifePRO NAME_ID ranges (12480s). Disable only with `QLA_QUIKCLNT_HIGHWATER=0` |
-| **CLNT-RJ** | Append / DBF pack of client keys | `MCLIENTID` / `MPRIMID` / `MBENFID` / related fields **right-justified** like `MPOLICY` (v58.77+). Left-justified client IDs → wrong SEEK / wrong name on Use |
+| **CLNT-HW** | Last physical `quikclnt.csv` row | TEMP high-water: `MLNAME=ZZZ CONVERSION HIGHWATER`, `MCLIENTID` = max(prior)+1 left-padded to **12** (e.g. `     713664`). QLAdmin New Client must not land in low LifePRO NAME_ID ranges (12480s). Disable only with `QLA_QUIKCLNT_HIGHWATER=0` |
+| **CLNT-RJ** | Client keys on Output + Append DBF | `MCLIENTID` / `MPRIMID` / `MBENFID` / related: numeric→zero decimals, trim, **left-pad spaces to width 12** (v58.81+). Not MPOLICY width-11. Left-justified / short IDs → wrong SEEK / wrong name on Use. Smoke: `python tools/validators/validate_client_id_width12.py` |
 
 The release gate script runs these smokes plus full accountability. Any Closed ID showing **GAP** blocks the release unless Warren waives in writing.
 
@@ -177,15 +177,15 @@ Run this **before** committing conversion/rate code. Do **not** commit until eve
 
 | # | What | Command / check | PASS looks like |
 |---|------|-----------------|-----------------|
-| 1 | Engine identity | `python -c "import app; print(app.APP_VERSION)"` + twin `QLA_Migration/app.py` match | Both **v58.78+** (high-water + client-ID rjust); twin hashes aligned |
+| 1 | Engine identity | `python -c "import app; print(app.APP_VERSION)"` + twin `QLA_Migration/app.py` match | Both **v58.81+** (high-water + client-ID width-12); twin hashes aligned |
 | 2 | Unit tests (rates) | `python -m pytest tests/test_quiktvs_l17_rv.py tests/test_quiktvs_tv0_fill.py -q` (and `qla_core/tests` if present for #95) | PASS |
 | 3 | L17 QuikTvs shape | Spot `Output/rates/QuikTvs.csv` → `1L17SP` F/00 | Dur0 ≠ 56.09; Dur1≈56.09; Dur2≈57.81; annual row count ≫ 38 (e.g. ~398/plan) |
 | 4 | #96 validator | `python Issue_Log_Items/Issue_96/validate_issue96_cso_pvo.py` | PASS (annual-grid aware — **not** frozen 38) |
 | 5 | #106 validator | `python Issue_Log_Items/Issue_106/validate_issue106_quiktvs_duration.py` | PASS |
 | 6 | TV0 + CEN NP | Spot QuikTvs TV0 fill; `1658C1` M/37 PR QuikNps all 4.00 | PASS |
-| 7 | **quikclnt high-water** | `python tools/validators/validate_quikclnt_highwater.py` | Last row = `ZZZ CONVERSION HIGHWATER` with `MCLIENTID` = max+1 (rjust). Fail if missing before commit of v58.78+ |
-| 8 | Client-ID Append pack | Spot-check Append `quikclnt`/`quikbenf` (or rebuild package): client keys rjust like `MPOLICY` | No left-justified `MCLIENTID`/`MBENFID` in DBF |
-| 9 | Release smoke | `python tools/validators/validate_release_closed_issues.py --smoke-only` | RELEASE_OK / no FAIL on high-risk (includes CLNT-HW) |
+| 7 | **quikclnt high-water** | `python tools/validators/validate_quikclnt_highwater.py` | Last row = `ZZZ CONVERSION HIGHWATER` with `MCLIENTID` = max+1 (width-12). Fail if missing before commit of v58.78+ |
+| 8 | **CLNT-RJ client-ID width-12** | `python tools/validators/validate_client_id_width12.py` (+ Append pack from empty template) | All non-blank client keys match `format_qladmin_mclientid` (width 12). No left-justified short IDs in CSV/DBF |
+| 9 | Release smoke | `python tools/validators/validate_release_closed_issues.py --smoke-only` | RELEASE_OK / no FAIL on high-risk (includes CLNT-HW + CLNT-RJ) |
 | 10 | Guide rows | This file: L17/TV0/CEN NP + **CLNT-HW / CLNT-RJ** rows present | Updated in **same commit** as code |
 | 11 | Do **not** commit | `QLA_Migration/Output/**`, Desktop Append Tool, Q: DBFs, secrets | Package artifacts stay local |
 
@@ -201,7 +201,7 @@ Run this **before** committing conversion/rate code. Do **not** commit until eve
 | Full `QLA_Migration/Output/rates/` (after GENERATE RATE TABLES / rate pipeline) | Old rates left on disk from a prior week |
 | Engine version + commit hash in release note | “Code was pushed” without re-batch |
 | Accountability + smoke results for this Output | Last issue’s Validation report from a different Output |
-| DBFs from Append Tool built with **client-ID right-justify** (v58.77+: `MCLIENTID`/`MPRIMID`/`MBENFID`/… packed like `MPOLICY`) **and** `quikclnt` EOF high-water (v58.78+) | Old Append Tool that strips + left-justifies client IDs (wrong SEEK / wrong name on Use); or quikclnt without EOF high-water (New Client collides with 12480s) |
+| DBFs from Append Tool built from **empty template** with **client-ID width-12** (v58.81+: numeric→zero decimals, trim, left-pad to 12) **and** `quikclnt` EOF high-water (v58.78+) | Old Append that left-justifies short client IDs (wrong SEEK / wrong name on Use); seed-row stacking; or quikclnt without EOF high-water (New Client collides with 12480s) |
 
 **Partial UAT reload** (`Test_Validation/`) is for client screen checks only. **Production / full load package** must be the full Output rebuilt on the release commit.
 
@@ -279,7 +279,7 @@ Reviewed 2026-08-04. Most Closed rows **layer** (different scopes) or **supersed
 | Dividend | #38 + #114 + #116 + #117 (+ #21D rate) | Balance vs history vs paid-to date vs interest rate — different fields |
 | Rates keys/PVO | #71 + #77 + #80 + #83 + #96 + #106 + #136 + TV0 + CEN NP | BAND=00, keys, assumptions, companions, SAL/L17 annual RV, RV Dur identity, TV0 fill, level CEN NP, real-rate-only flags |
 | Memo | #21M + #50 + #134 | Emit + parse; B carve-out to claims |
-| Client ID | CLNT-RJ (v58.77) + CLNT-HW (v58.78 / A12) | Right-justify keys for SEEK; TEMP EOF high-water so New Client skips low NAME_IDs |
+| Client ID | CLNT-RJ (v58.81 width-12) + CLNT-HW (v58.78 / A12) | Width-12 left-pad keys for SEEK; TEMP EOF high-water so New Client skips low NAME_IDs |
 
 ### Live tension to watch (not two Closed guide rows, but still dangerous)
 

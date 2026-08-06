@@ -103,6 +103,83 @@ def _format_modal_fee(amount: float) -> str:
     return f"{amount:.4f}"
 
 
+def crude_billing_mode_ann_factor(bill_mode: int | None) -> float:
+    """Issue #88 calendar payments-per-year factor (fallback when modal % missing)."""
+    return {12: 1.0, 6: 2.0, 3: 4.0, 1: 12.0}.get(
+        bill_mode if bill_mode is not None else 12, 1.0
+    )
+
+
+def parse_modal_factor_percent(val: Any) -> float | None:
+    """Parse QLAdmin-style modal factor percent (e.g. 9.1999); None if blank/invalid/≤0."""
+    s = _strip(val).replace(",", "")
+    if not s or s.lower() in ("nan", "none", "null"):
+        return None
+    try:
+        pct = float(s)
+    except ValueError:
+        return None
+    if pct <= 0.0:
+        return None
+    return pct
+
+
+def modal_factor_percent_for_billing(
+    bill_mode: int | None,
+    bill_form: Any,
+    plan_factors: dict[str, str] | None,
+) -> float | None:
+    """Return modal factor percent for current billing mode/form, or None.
+
+    Issue #137 — LifePRO BILLING_MODE on this book: 1=monthly, 3=quarterly,
+    6=semiannual, 12=annual. Monthly PAC uses MTHB; Direct uses MTHD.
+    """
+    if not plan_factors:
+        return None
+    mode = bill_mode if bill_mode is not None else 12
+    if mode == 12:
+        pct = parse_modal_factor_percent(plan_factors.get("ANNL", ""))
+        return pct if pct is not None else 100.0
+    if mode == 6:
+        return parse_modal_factor_percent(plan_factors.get("SEMI", ""))
+    if mode == 3:
+        return parse_modal_factor_percent(plan_factors.get("QTRL", ""))
+    if mode == 1:
+        key = "MTHB" if _normalize_bill_form(str(bill_form or "")) == "PAC" else "MTHD"
+        return parse_modal_factor_percent(plan_factors.get(key, ""))
+    return None
+
+
+def blank_ann_annual_ppu(
+    mode_prem: float,
+    units: float,
+    bill_mode: int | None,
+    bill_form: Any,
+    plan_factors: dict[str, str] | None,
+) -> tuple[float, str]:
+    """Annual premium per unit for blank ANN_PREM_PER_UNIT (#88/#137).
+
+    Prefer modalized annual: MODE ÷ (factor%/100) ÷ units.
+    Fall back to crude MODE × payments_per_year ÷ units when factor missing.
+    Returns (annual_ppu, method) with method in {'modal', 'crude'}.
+    """
+    if units <= 0.0 or mode_prem < 0.0:
+        return 0.0, "crude"
+    pct = modal_factor_percent_for_billing(bill_mode, bill_form, plan_factors)
+    if pct is not None and pct > 0.0:
+        return (mode_prem / (pct / 100.0)) / units, "modal"
+    ann_factor = crude_billing_mode_ann_factor(bill_mode)
+    return (mode_prem * ann_factor) / units, "crude"
+
+
+def format_mprem_ppu(annual_ppu: float) -> str:
+    """Match app.py MPREM emit formatting."""
+    val = f"{annual_ppu:.6f}".rstrip("0").rstrip(".")
+    if val in ("", "-0"):
+        return "0"
+    return val
+
+
 def _load_phase1_mplan(quikridr_path: str) -> dict[str, str]:
     if not quikridr_path or not os.path.isfile(quikridr_path):
         return {}

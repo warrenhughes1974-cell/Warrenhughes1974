@@ -1,6 +1,7 @@
 """One-shot headless full batch test for QLA_Migration (no GUI interaction)."""
 from pathlib import Path
 import os
+import subprocess
 import sys
 import tkinter as tk
 from tkinter import messagebox
@@ -126,3 +127,13 @@ finally:
     root.destroy()
 
 print("=== QLA FULL BATCH TEST DONE ===", flush=True)
+
+# Every full batch: client-ID width-12 + high-water must hold on Output (CLNT-RJ / CLNT-HW).
+for _smoke_label, _smoke_script in (
+    ("CLNT-RJ client-ID width-12", "tools/validators/validate_client_id_width12.py"),
+    ("CLNT-HW quikclnt high-water", "tools/validators/validate_quikclnt_highwater.py"),
+):
+    _rc = subprocess.run([sys.executable, os.path.join(BASE, _smoke_script)], cwd=BASE)
+    if _rc.returncode != 0:
+        raise SystemExit(f"FULL BATCH POST-CHECK FAIL: {_smoke_label}")
+    print(f"POST-CHECK PASS: {_smoke_label}", flush=True)

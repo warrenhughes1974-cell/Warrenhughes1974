@@ -77,9 +77,12 @@ def _append_csv_to_dbf(csv_path: Path, template_path: Path, out_path: Path) -> t
         dbf_handle.seek(1)
         dbf_handle.write(bytes([today.year - 1900, today.month, today.day]))
 
-        num_records = int.from_bytes(header[4:8], byteorder="little")
+        # Template may contain seed/demo rows — start fresh (structure only).
+        num_records = 0
         header_len = int.from_bytes(header[8:10], byteorder="little")
         record_len = int.from_bytes(header[10:12], byteorder="little")
+        dbf_handle.seek(4)
+        dbf_handle.write((0).to_bytes(4, byteorder="little"))
 
         dbf_handle.seek(32)
         fields = []
@@ -95,15 +98,10 @@ def _append_csv_to_dbf(csv_path: Path, template_path: Path, out_path: Path) -> t
                 {"name": f_name, "type": f_type, "length": f_length, "decimals": f_decimals}
             )
 
-        dbf_handle.seek(0, 2)
-        if dbf_handle.tell() > header_len:
-            dbf_handle.seek(-1, 2)
-            if dbf_handle.read(1) == b"\x1A":
-                dbf_handle.seek(-1, 2)
-            else:
-                dbf_handle.seek(0, 2)
-        else:
-            dbf_handle.seek(header_len)
+        # Truncate any pre-copied template data; write conversion rows only.
+        dbf_handle.seek(header_len)
+        dbf_handle.truncate()
+        dbf_handle.seek(header_len)
 
         new_recs = 0
         with csv_path.open(mode="r", encoding="utf-8-sig", errors="replace", newline="") as csv_file:

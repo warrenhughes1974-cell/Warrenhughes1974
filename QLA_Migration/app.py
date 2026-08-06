@@ -1,10 +1,14 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.79
+# Version:     v58.81
 # Date:        2026-08-05
 # SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
-# Change Note: v58.79 — Issue #21F CONV_ADJ for all plans including ISWL (PPBEN FV_GUAR_DEPOSITS).
+# Change Note: v58.81 — Client IDs: numeric→zero-decimal string, trim, left-pad to 12
+#              (MCLIENTID/MPRIMID/MBENFID/…); was width 11.
+#              v58.80 — Issue #137: blank ANN MPREM fallback uses modalized annual
+#              (MODE ÷ mode-factor%) then ÷ units; crude ×12/4/2 only if factor missing.
+#              v58.79 — Issue #21F CONV_ADJ for all plans including ISWL (PPBEN FV_GUAR_DEPOSITS).
 #              v58.78 — TEMP quikclnt EOF high-water client (max+1) so QLAdmin New Client
 #              does not collide with low LifePRO NAME_IDs; disable via QLA_QUIKCLNT_HIGHWATER=0.
 #              v58.77 — Right-justify client-ID keys (incl. MBENFID) for QLAdmin SEEK;
@@ -357,6 +361,9 @@ from qla_core.modal_premium_factors import (
     apply_plan_modal_factors_to_quikmstr,
     apply_pac_gl85_modal_overrides,
     append_issue21j_conversion_memos,
+    blank_ann_annual_ppu,
+    format_mprem_ppu,
+    load_modal_factor_mapping,
 )
 from qla_core.issue21_open_item_decisions import (
     apply_ul_fund_balance_to_quikridr_row,
@@ -584,7 +591,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.79"
+APP_VERSION = "v58.81"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -8417,11 +8424,15 @@ class QLAdminEnterpriseIntegrationSuite:
                             self.log("Issue #105: quikplan.csv not found — MPAR defaults to 0")
                     except Exception as e:
                         self.log(f"Warning: Issue #105 product PAR map failed - {e}")
-                    # Issue #88: PPOLC BILLING_MODE for annualized Prem/Unit fallback
+                    # Issue #88/#137: PPOLC BILLING_MODE/FORM for Prem/Unit fallback
                     # Issue #89: POLICY_FEE cache on quikridr path (ridr-only rebatch must not wipe MANNLFEE)
                     try:
                         self._billing_mode_map = {}
+                        self._billing_form_map = {}
                         self._policy_fee_map = {}
+                        self._modal_factor_map = load_modal_factor_mapping()
+                        self._issue137_modal_mprem = 0
+                        self._issue137_crude_mprem = 0
                         _src_dir_i88 = os.path.dirname(src_path)
                         _ppolc_i88 = None
                         for _fn in os.listdir(_src_dir_i88):
@@ -8440,6 +8451,7 @@ class QLAdminEnterpriseIntegrationSuite:
                             _pmdf.columns = [str(c).strip().upper() for c in _pmdf.columns]
                             if "POLICY_NUMBER" in _pmdf.columns:
                                 _has_billing = "BILLING_MODE" in _pmdf.columns
+                                _has_bill_form = "BILLING_FORM" in _pmdf.columns
                                 _has_policy_fee = "POLICY_FEE" in _pmdf.columns
                                 for _, _pr in _pmdf.iterrows():
                                     _pol = self.normalize(_pr.get("POLICY_NUMBER"))
@@ -8454,6 +8466,10 @@ class QLAdminEnterpriseIntegrationSuite:
                                                 self._billing_mode_map[_pol] = int(float(_bm))
                                             except (ValueError, TypeError):
                                                 pass
+                                    if _has_bill_form:
+                                        _bf = str(_pr.get("BILLING_FORM", "")).strip()
+                                        if _bf and _bf.lower() not in ("nan", "none", "null"):
+                                            self._billing_form_map[_pol] = _bf
                                     if _has_policy_fee:
                                         _fee = str(_pr.get("POLICY_FEE", "")).strip()
                                         if _fee.endswith(".0"):
@@ -8469,8 +8485,18 @@ class QLAdminEnterpriseIntegrationSuite:
                                         self._policy_fee_map[_pol] = _fee
                                 if _has_billing:
                                     self.log(
-                                        f"Issue #88: loaded PPOLC BILLING_MODE cache "
+                                        f"Issue #88/#137: loaded PPOLC BILLING_MODE cache "
                                         f"({len(self._billing_mode_map)} policies; {os.path.basename(_ppolc_i88)})"
+                                    )
+                                if _has_bill_form:
+                                    self.log(
+                                        f"Issue #137: loaded PPOLC BILLING_FORM cache "
+                                        f"({len(self._billing_form_map)} policies)"
+                                    )
+                                if self._modal_factor_map:
+                                    self.log(
+                                        f"Issue #137: loaded modal factor map "
+                                        f"({len(self._modal_factor_map)} plans) for blank-ANN MPREM"
                                     )
                                 if _has_policy_fee:
                                     self.log(
@@ -8478,9 +8504,11 @@ class QLAdminEnterpriseIntegrationSuite:
                                         f"({len(self._policy_fee_map)} records; {os.path.basename(_ppolc_i88)})"
                                     )
                     except Exception as e:
-                        self.log(f"Warning: Issue #88/#89 PPOLC cache failed - {e}")
+                        self.log(f"Warning: Issue #88/#89/#137 PPOLC cache failed - {e}")
                         self._billing_mode_map = {}
+                        self._billing_form_map = {}
                         self._policy_fee_map = {}
+                        self._modal_factor_map = {}
 
                 quikagts_clnt_cache = {}
                 if t_id.lower() == "quikagts":
@@ -8812,14 +8840,14 @@ class QLAdminEnterpriseIntegrationSuite:
                                             val = pulled_fee
                                 # -----------------------------------------------------------------
 
-                                # --- Issue 26/88: ANN_PREM_PER_UNIT -> MPREM; blank => annualized MODE_PREMIUM / units ---
+                                # --- Issue 26/88/137: ANN -> MPREM; blank => modalized MODE / factor / units ---
                                 if t_id.lower() == "quikridr" and t_f == "MPREM":
                                     try:
                                         ann_num = float(str(val).replace(",", "").strip() or 0)
                                     except (ValueError, TypeError):
                                         ann_num = 0.0
                                     if ann_num == 0.0:
-                                        # Issue #88: do not load full MODE_PREMIUM into Prem/Unit
+                                        # Issue #88/#137: never load full MODE_PREMIUM into Prem/Unit
                                         try:
                                             mode_prem = float(
                                                 str(src_row.get("MODE_PREMIUM", "")).replace(",", "").strip() or 0
@@ -8835,13 +8863,25 @@ class QLAdminEnterpriseIntegrationSuite:
                                         if units > 0.0:
                                             pol_key = self.normalize(src_row.get("POLICY_NUMBER", ""))
                                             bill_mode = getattr(self, "_billing_mode_map", {}).get(pol_key)
-                                            ann_factor = {12: 1.0, 6: 2.0, 3: 4.0, 1: 12.0}.get(
-                                                bill_mode if bill_mode is not None else 12, 1.0
+                                            bill_form = getattr(self, "_billing_form_map", {}).get(pol_key, "")
+                                            mplan_key = self.normalize(row_data.get("MPLAN", ""))
+                                            plan_factors = getattr(self, "_modal_factor_map", {}).get(mplan_key)
+                                            annual_ppu, _mprem_method = blank_ann_annual_ppu(
+                                                mode_prem,
+                                                units,
+                                                bill_mode,
+                                                bill_form,
+                                                plan_factors,
                                             )
-                                            annual_ppu = (mode_prem * ann_factor) / units
-                                            val = f"{annual_ppu:.6f}".rstrip("0").rstrip(".")
-                                            if val in ("", "-0"):
-                                                val = "0"
+                                            if _mprem_method == "modal":
+                                                self._issue137_modal_mprem = (
+                                                    getattr(self, "_issue137_modal_mprem", 0) + 1
+                                                )
+                                            else:
+                                                self._issue137_crude_mprem = (
+                                                    getattr(self, "_issue137_crude_mprem", 0) + 1
+                                                )
+                                            val = format_mprem_ppu(annual_ppu)
                                         else:
                                             val = ""
                                 # -----------------------------------------------------------------

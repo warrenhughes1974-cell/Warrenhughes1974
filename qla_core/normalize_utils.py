@@ -46,10 +46,10 @@ def format_qladmin_mpolicy(val) -> str:
     return core.rjust(QLADMIN_MPOLICY_WIDTH)
 
 
-# LifePRO NAME_ID is Character(11), right-justified with leading spaces.
-# QLAdmin DBF templates often use C(12) for the same keys — Append Tool must
-# rjust to the template field length after strip (see build_full_dbf_append_package).
-QLADMIN_MCLIENTID_WIDTH = 11
+# Client IDs (NAME_ID / MCLIENTID and linked keys): emit as C(12), left-padded.
+# Rule (Warren 2026-08-05): if LifePRO value is numeric → string with zero decimals;
+# trim; left-pad with spaces to 12. Append Tool still rjusts to DBF field length after strip.
+QLADMIN_MCLIENTID_WIDTH = 12
 CLIENT_ID_TARGET_FIELDS = frozenset({
     "MCLIENTID",
     "MPRIMID",
@@ -65,14 +65,41 @@ CLIENT_ID_TARGET_FIELDS = frozenset({
 })
 
 
-def format_qladmin_mclientid(val, width: int = QLADMIN_MCLIENTID_WIDTH) -> str:
-    """Fixed-width QLAdmin client ID: left-pad with spaces (right-justified)."""
-    if pd.isna(val) or str(val).strip().lower() in ["nan", "none", ""]:
+def _client_id_core_string(val) -> str:
+    """Normalize a LifePRO/client ID to a trimmed string (zero decimals if numeric)."""
+    if val is None or (isinstance(val, float) and pd.isna(val)):
         return ""
-    core = normalize(val)
+    if isinstance(val, bool):
+        return ""
+    if isinstance(val, int):
+        return str(val)
+    if isinstance(val, float):
+        if pd.isna(val):
+            return ""
+        return f"{val:.0f}"
+
+    s = str(val).strip()
+    if not s or s.lower() in ("nan", "none", "null"):
+        return ""
+    # Numeric string (including "590235.0" / "5.90235E+5") → zero-decimal digits
+    try:
+        as_f = float(s.replace(",", ""))
+    except ValueError:
+        return s.strip()
+    if pd.isna(as_f):
+        return ""
+    return f"{as_f:.0f}"
+
+
+def format_qladmin_mclientid(val, width: int = QLADMIN_MCLIENTID_WIDTH) -> str:
+    """Client ID for QLAdmin tables: trim, numeric→zero decimals, left-pad to width (12)."""
+    core = _client_id_core_string(val)
     if not core:
         return ""
-    if len(core) >= width:
+    core = core.strip()
+    if not core:
+        return ""
+    if len(core) > width:
         return core
     return core.rjust(width)
 

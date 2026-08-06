@@ -54,6 +54,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_quikclnt_highwater.py"],
         True,
     ),
+    (
+        "CLNT-RJ client-ID width-12",
+        ["tools/validators/validate_client_id_width12.py"],
+        True,
+    ),
 ]
 
 

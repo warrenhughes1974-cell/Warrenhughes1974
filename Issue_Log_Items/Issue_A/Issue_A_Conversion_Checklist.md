@@ -29,7 +29,7 @@
 | **A9b** | Supp `9*` — PAR | Prefix-**9** plans have **PAR = 0** | **IMPLEMENTED v58.21** | 26 plans corrected; fleet scan PAR=1: 0 |
 | **A10** | QuikUwpo UW class master | Every distinct plan `UWCODE` (from QuikPlUw / keys) has **one** `QuikUwpo` row; key = `UWCODE` (no dupes); default `00` always present | **IMPLEMENTED v58.22** | Emits `Output/rates/QuikUwpo.csv`: 00/NS/PR/SM/ST. Verified PASS 2026-07-20. |
 | **A11h / #136** | Real-rate-only PVO variance | Category / `*VARY*` / `PLANVALOPT` enabled only from real factor differentiation; Band `00` and State ALL/`0000`/`00` alone never enable; no DV without `QuikDvs`; fleet-wide | **CLOSED as Issue #136 (v58.62)** | Warren+Luna locked 2026-08-02. Gold `1658C1`. Package: `Issue_Log_Items/Issue_136/` |
-| **A12** | Client ID pack + high-water | (1) Client-ID fields right-justified like `MPOLICY` in CSV + Append DBF. (2) Last physical `quikclnt` row = TEMP high-water `ZZZ CONVERSION HIGHWATER` with `MCLIENTID` = max+1 (so QLAdmin New Client does not reuse low LifePRO NAME_IDs). | **IMPLEMENTED v58.78** | Validator: `python tools/validators/validate_quikclnt_highwater.py`. Disable with `QLA_QUIKCLNT_HIGHWATER=0`. Temporary until remumber / Robert next-ID answer. |
+| **A12** | Client ID pack + high-water | (1) Client-ID fields: numeric→zero-decimal string, trim, **left-pad to 12** in CSV + Append DBF (`MCLIENTID`/`MPRIMID`/`MBENFID`/…). (2) Last physical `quikclnt` row = TEMP high-water `ZZZ CONVERSION HIGHWATER` with `MCLIENTID` = max+1. | **IMPLEMENTED v58.81** (was v58.78 width 11) | Always-on: `python tools/validators/validate_client_id_width12.py` + `validate_quikclnt_highwater.py` (release smoke + full-batch post-check). Disable high-water only with `QLA_QUIKCLNT_HIGHWATER=0`. Temporary until remumber / Robert next-ID answer. |
 
 ### How to add new checks
 
@@ -576,4 +576,20 @@ Notes:
 - Data governance: 433592 checked / 2485 problems (report-only)
 - CSVs in `Desktop\DBF_Append_Tool\input` (42); DBFs in `Desktop\DBF_Append_Tool\output` (46 incl. QUIKCLMS/QUIKCLMP + memo sidecars)
 - Do not call conversion fully clean while A5/A7/A8c/A8d/A9a remain OPEN
+
+### Run 2026-08-05 — app.py v58.80 — Midyear UAT full batch — Source=`PPOLC_PolicyMaster_Extract_20260630.csv`
+Operator: Conversion Agent (Cursor Grok 4.5)  
+Env: UAT; `QLA_VALUATION_DATE=20260630`; rates ON; Append GUI OFF; **no git commit** (Warren hold)  
+Includes: #137 modalized blank-ANN MPREM, #58 modal fees, client-ID rjust + quikclnt high-water, #21F engine path  
+Result: Append **PASS** · #137 gold Nancy **PASS** · A1/A2/A4/A12 spot-PASS
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP PAYYRS=1; S/Q/M factors 0 |
+| A2 | **PASS** | DEFICIENCY=N 141/141 |
+| A4 | **PASS** | 0 blank-PLAN rate rows |
+| A12 | **PASS** | High-water EOF id=713664; client IDs rjust |
+| A3/A5/A7/A8c/A8d/A9a | **BLOCKED** | Prior open items unchanged |
+
+Run notes: log `QLA_Migration/Logs/_full_batch_test_log.txt`; gold `9010722550C` MPREM×MUNIT≈435.98; `FULL_DBF_APPEND PASS` 42/42; Desktop Append input/output refreshed; Test_Validation updated (ridr/mstr/clnt/clid/benf/plan). Reinsurance still ON HOLD for client reload.
 
