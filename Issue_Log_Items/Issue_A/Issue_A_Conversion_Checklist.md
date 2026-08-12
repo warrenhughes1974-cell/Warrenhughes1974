@@ -593,3 +593,20 @@ Result: Append **PASS** · #137 gold Nancy **PASS** · A1/A2/A4/A12 spot-PASS
 
 Run notes: log `QLA_Migration/Logs/_full_batch_test_log.txt`; gold `9010722550C` MPREM×MUNIT≈435.98; `FULL_DBF_APPEND PASS` 42/42; Desktop Append input/output refreshed; Test_Validation updated (ridr/mstr/clnt/clid/benf/plan). Reinsurance still ON HOLD for client reload.
 
+
+### Run 2026-08-12 — app.py v58.93 — Issue 104 validated advance-loan pilot
+
+Operator: Agent (user request: Issue 104 controlled pilot)  
+Environment: UAT; `QLA_VALUATION_DATE=20260731`; rates OFF (loan-only scope); QuikLoan ON; `QLA_ISSUE104_VALIDATED_LOAN_BACKOUT=1`  
+Result summary: Issue 104 pilot PASS · A12 PASS · other OPEN A-checks not re-scored (rates not regenerated)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1–A11h | N/A | Rates/product setup not regenerated this run |
+| A12 | **PASS** | Full-batch post-checks CLNT-RJ + CLNT-HW PASS |
+
+Notes:
+- QuikLoan: 353 rows; pilot cohort 176 adjusted; runtime formula failures 0; non-cohort changed 0.
+- Anchor `9010331768C` → MLOANPRIN/MLOANBAL=3331.46; MLOANINT=5.00; MLOANINTX=A; MLOANACCR=0.00.
+- Smoke: `python tools/validators/validate_issue104_loan_pilot.py` PASS.
+- Batch log: `QLA_Migration/Logs/_full_batch_test_log.txt`.

@@ -1,10 +1,14 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.92
+# Version:     v58.93
 # Date:        2026-08-12
 # SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
-# Change Note: v58.92 — QuikSpec emit: PPOLC.RES_STATE → quikspec.RESSTATE with
+# Change Note: v58.93 — Issue 104 validated advance-loan pilot: allowlisted policies
+#              only back out LOAN_BALANCE×(1−rate) into MLOANPRIN/MLOANBAL after
+#              runtime formula checks; flag QLA_ISSUE104_VALIDATED_LOAN_BACKOUT
+#              (default 1). Non-cohort loans unchanged. Full-batch smoke wired.
+#              v58.92 — QuikSpec emit: PPOLC.RES_STATE → quikspec.RESSTATE with
 #              authoritative MPOLICY; VANISH defaults False / VANISHDT blank until
 #              vanish mapping is in scope. Sync_Rulebook_quikspec.csv + PPOLC source;
 #              SKIP_TRANSLATION avoids WA/IN/PA/GU relationship-code collisions.
@@ -599,7 +603,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.92"
+APP_VERSION = "v58.93"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -7558,6 +7562,21 @@ class QLAdminEnterpriseIntegrationSuite:
                         f"MLOANINTX fallback={ql_stats.get('mloanintx_fallback_count', 0)}; "
                         f"reports -> {phase_l1_dir}"
                     )
+                    if ql_stats.get("issue104_pilot_enabled"):
+                        self.log(
+                            "Issue 104 validated advance-loan pilot: "
+                            f"encountered={ql_stats.get('issue104_cohort_encountered', 0)} "
+                            f"adjusted={ql_stats.get('issue104_cohort_adjusted', 0)} "
+                            f"runtime_fail={ql_stats.get('issue104_runtime_formula_failures', 0)} "
+                            f"(disable QLA_ISSUE104_VALIDATED_LOAN_BACKOUT=0)"
+                        )
+                        if ql_stats.get("issue104_audit_path"):
+                            self.log(f"Issue 104 pilot audit: {ql_stats.get('issue104_audit_path')}")
+                        if ql_stats.get("issue104_runtime_formula_failures"):
+                            self.log(
+                                "WARNING: Issue 104 allowlisted policies failed runtime "
+                                "formula checks — left on gross LOAN_BALANCE mapping."
+                            )
                     if os.environ.get("QLA_QUIKLOAN_WRITE_OUTPUT", "").strip() == "1":
                         out_path = os.path.normpath(os.path.join(out_dir, "quikloan.csv"))
                         passed_df.to_csv(out_path, index=False)

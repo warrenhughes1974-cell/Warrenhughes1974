@@ -21,6 +21,11 @@ import pandas as pd
 
 from qla_core.schema_constants import QUIKLOAN_SCHEMA
 from qla_core.normalize_utils import format_qladmin_mpolicy
+from qla_core.issue104_loan_pilot import (
+    apply_issue104_pilot_backout,
+    issue104_loan_pilot_enabled,
+    load_issue104_allowlist,
+)
 
 _DEFAULT_RULES_PATH = os.path.normpath(
     os.path.join(os.path.dirname(__file__), "..", "plan_governance", "config", "quikloan_derivation_rules.json")
@@ -389,6 +394,10 @@ def map_ploan_to_quikloan(
 
     rows: list[dict] = []
     trace_rows: list[dict] = []
+    issue104_audits: list[dict] = []
+    issue104_allowlist = (
+        load_issue104_allowlist() if issue104_loan_pilot_enabled() else {}
+    )
 
     for _, row in latest_df.iterrows():
         pol_src = _s(row.get("POLICY_NUMBER", ""))
@@ -402,6 +411,17 @@ def map_ploan_to_quikloan(
         prin_raw = row.get(prin_src, row.get("LOAN_BALANCE", ""))
         prin_num = _parse_balance(prin_raw)
         prin_str = f"{float(prin_num):.2f}" if prin_num is not None else bal_str
+
+        # Issue 104 validated advance pilot — allowlist + runtime formula only.
+        prin_str, bal_str, i104_audit = apply_issue104_pilot_backout(
+            mpolicy=mpolicy,
+            source_row=row,
+            current_prin=prin_str,
+            current_bal=bal_str,
+            allowlist=issue104_allowlist,
+        )
+        if i104_audit.get("PILOT_ELIGIBLE") == "Y" or i104_audit.get("PILOT_APPLIED") == "Y":
+            issue104_audits.append(i104_audit)
 
         mloanint, int_scale_note = normalize_loan_interest_rate(row.get("INTEREST_RATE", ""), scale)
 
@@ -457,10 +477,16 @@ def map_ploan_to_quikloan(
             "INTEREST_TYPE": _s(row.get("INTEREST_TYPE", "")),
             "INT_METHOD": _s(row.get("INT_METHOD", "")),
             "BALANCE_CLASS": row.get("_LATEST_BALANCE_CLASS", ""),
+            "ISSUE104_PILOT_APPLIED": i104_audit.get("PILOT_APPLIED", "N"),
+            "ISSUE104_PILOT_REASON": i104_audit.get("REASON", ""),
             **{k: candidate[k] for k in QUIKLOAN_SCHEMA},
         })
 
-    return pd.DataFrame(rows, columns=QUIKLOAN_SCHEMA), pd.DataFrame(trace_rows)
+    mapped = pd.DataFrame(rows, columns=QUIKLOAN_SCHEMA)
+    trace = pd.DataFrame(trace_rows)
+    # Attach pilot audit for convert_quikloan_from_ploan stats/reporting.
+    mapped.attrs["issue104_pilot_audits"] = issue104_audits
+    return mapped, trace
 
 
 def validate_quikloan_emit(
@@ -810,6 +836,12 @@ def convert_quikloan_from_ploan(
     orphan_df = pd.DataFrame(orphan_rows) if orphan_rows else pd.DataFrame(columns=["MPOLICY", "REASON"])
 
     intx_fallback = int((trace_df["MLOANINTX_SOURCE"] == "default").sum()) if "MLOANINTX_SOURCE" in trace_df.columns else 0
+    i104_audits = list(getattr(quikloan_df, "attrs", {}).get("issue104_pilot_audits") or [])
+    i104_applied = [a for a in i104_audits if a.get("PILOT_APPLIED") == "Y"]
+    i104_runtime_fail = [
+        a for a in i104_audits
+        if a.get("PILOT_ELIGIBLE") == "Y" and a.get("PILOT_APPLIED") != "Y"
+    ]
 
     stats.update({
         "raw_rows": len(raw_df),
@@ -821,6 +853,11 @@ def convert_quikloan_from_ploan(
         "quikmstr_orphan_rows": len(orphan_rows),
         "quikmstr_orphan_df": orphan_df,
         "duplicate_mpolicy_in_emit": int(passed_df["MPOLICY"].duplicated().sum()) if len(passed_df) else 0,
+        "issue104_pilot_enabled": issue104_loan_pilot_enabled(),
+        "issue104_cohort_encountered": len(i104_audits),
+        "issue104_cohort_adjusted": len(i104_applied),
+        "issue104_runtime_formula_failures": len(i104_runtime_fail),
+        "issue104_pilot_audits": i104_audits,
     })
 
     if output_dir:
@@ -838,5 +875,17 @@ def convert_quikloan_from_ploan(
             stats=stats,
         )
         stats["report_paths"] = report_paths
+
+    # Issue 104 pilot audit always lands under QLA_Migration/Reports (not Output).
+    try:
+        repo_reports = os.path.normpath(
+            os.path.join(os.path.dirname(__file__), "..", "QLA_Migration", "Reports")
+        )
+        os.makedirs(repo_reports, exist_ok=True)
+        audit_path = os.path.join(repo_reports, "issue104_validated_advance_loan_pilot_audit.csv")
+        pd.DataFrame(i104_audits).to_csv(audit_path, index=False)
+        stats["issue104_audit_path"] = audit_path
+    except Exception as exc:
+        stats["issue104_audit_error"] = str(exc)
 
     return passed_df, trace_df, exceptions_df, stats
