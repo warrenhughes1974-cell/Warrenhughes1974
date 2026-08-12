@@ -11,7 +11,7 @@ Policy / Owner Domain:
   quikclnt   - Clients / names & addresses- done
   quikclid   - Client-to-policy relationship links- done
   quikpolx   - Policy extension / cross record- not needed
-  quikspec   - Policy spec record- so far not quikspec records
+  quikspec   - Policy spec (RESSTATE from PPOLC.RES_STATE; VANISH shell default F)
   quikmemo   - Policy memo / notes- no notes (yet)
   quiksusp   - Suspense records- Need to look for suspense
   quikprmh   - Premium payment history- done

@@ -244,6 +244,7 @@ def relocate_non_csv(output_dir, reports_dir, sandbox_dbf_dir, error_log: "RunEr
 _ALLOWED_OUTPUT_ROOT_TABLE_CSVS = {
     "quikplan.csv",
     "quikmstr.csv",
+    "quikspec.csv",
     "quikclnt.csv",
     "quikclid.csv",
     "quikridr.csv",

@@ -24,6 +24,7 @@ LifePRO    LifePRO export filename pattern (any extract date)          QLA outpu
 Table      (newest matching file in Source/ is used)
 --------   ----------------------------------------------------------   -----------
 PPOLC      PPOLC_PolicyMaster_Extract*.csv                              quikmstr
+           (same file — QuikSpec resident state / vanish shell)         quikspec
 PPBEN      PPBEN_PolicyBenefit_Extract*.csv                               quikridr
 PPBENTYP   PPBENTYP_BenefitType_Extract*.csv                            quikdvdp
 PRELSA     RelationshipNameAddress_Extract*.csv                         quikclnt

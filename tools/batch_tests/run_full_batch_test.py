@@ -128,10 +128,11 @@ finally:
 
 print("=== QLA FULL BATCH TEST DONE ===", flush=True)
 
-# Every full batch: client-ID width-12 + high-water must hold on Output (CLNT-RJ / CLNT-HW).
+# Every full batch: client-ID width-12 + high-water + QuikSpec resident state.
 for _smoke_label, _smoke_script in (
     ("CLNT-RJ client-ID width-12", "tools/validators/validate_client_id_width12.py"),
     ("CLNT-HW quikclnt high-water", "tools/validators/validate_quikclnt_highwater.py"),
+    ("QuikSpec resident state", "tools/validators/validate_quikspec_resident_state.py"),
 ):
     _rc = subprocess.run([sys.executable, os.path.join(BASE, _smoke_script)], cwd=BASE)
     if _rc.returncode != 0:

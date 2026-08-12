@@ -23,6 +23,14 @@ TABLE_SOURCE_SPECS = {
         "required": True,
         "converts_to": "quikmstr",
     },
+    "quikspec": {
+        "lifepro_table": "PPOLC",
+        "lifepro_label": "Policy Master",
+        "lifepro_patterns": [r"^PPOLC[_ ]PolicyMaster[_ ]Extract.*\.csv$"],
+        "legacy_names": ["quikspec.csv"],
+        "required": False,
+        "converts_to": "quikspec",
+    },
     "quikridr": {
         "lifepro_table": "PPBEN",
         "lifepro_label": "Policy Benefit / Riders",
