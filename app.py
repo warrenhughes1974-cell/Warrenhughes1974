@@ -364,6 +364,9 @@ from qla_core.modal_premium_factors import (
     blank_ann_annual_ppu,
     format_mprem_ppu,
     load_modal_factor_mapping,
+    issue139_fee_class,
+    policy_fees_suppressed,
+    suppress_policy_fees,
 )
 from qla_core.issue21_open_item_decisions import (
     apply_ul_fund_balance_to_quikridr_row,
@@ -591,7 +594,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.81"
+APP_VERSION = "v58.91"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -10007,6 +10010,23 @@ class QLAdminEnterpriseIntegrationSuite:
                                     "WRITTEN",
                                     output_relpath=f"rates/{fn}",
                                 )
+                        # Issue #96 / A7: batch finale must re-apply R7B after rates exist
+                        # (same as rate-only path). Without this, VARGP/VARDB stay at the
+                        # pre-rate quikplan values (A8b can force annuity VARDB=0).
+                        try:
+                            from qla_core.quikplan_rate_variation_flags import integrate_quikplan_file
+                            qp_path = os.path.normpath(
+                                os.path.join(self.path_vars["Out"][0].get(), "quikplan.csv")
+                            )
+                            if os.path.isfile(qp_path):
+                                r7 = integrate_quikplan_file(qp_path, repo_root=self._repo_root())
+                                self.log(
+                                    f"Issue #96/A7: post-rate quikplan refresh (batch) — "
+                                    f"PLANVALOPT=Y plans={r7.planvalopt_y} "
+                                    f"blockers={r7.validation_blockers}"
+                                )
+                        except Exception as exc:
+                            self.log(f"Issue #96/A7: post-rate quikplan refresh skipped: {exc}")
                     else:
                         self._cut_record(
                             "rates/QuikUint",

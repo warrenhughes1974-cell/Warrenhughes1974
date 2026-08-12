@@ -364,6 +364,9 @@ from qla_core.modal_premium_factors import (
     blank_ann_annual_ppu,
     format_mprem_ppu,
     load_modal_factor_mapping,
+    issue139_fee_class,
+    policy_fees_suppressed,
+    suppress_policy_fees,
 )
 from qla_core.issue21_open_item_decisions import (
     apply_ul_fund_balance_to_quikridr_row,
@@ -591,7 +594,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.81"
+APP_VERSION = "v58.91"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -9760,22 +9763,62 @@ class QLAdminEnterpriseIntegrationSuite:
                         aligned_out_df, fee_stats = apply_modal_policy_fees_to_quikridr(
                             aligned_out_df, mstr_df,
                         )
-                        # Issue #89: fail-closed if fee cache populated but MANNLFEE wiped on base rows
+                        # Issue 139: suppress fees for ISWL/UNKNOWN only (Warren 2026-08-11
+                        # refinement). Confirmed non-ISWL keep #21C/#58 fees + MMODEPREM.
+                        if policy_fees_suppressed():
+                            aligned_out_df, mstr_df, _fee_sup = suppress_policy_fees(
+                                aligned_out_df,
+                                mstr_df,
+                                audit_path=os.path.join(
+                                    self._repo_root(), "QLA_Migration", "Reports",
+                                    "policy_fee_suppression_audit.csv",
+                                ),
+                            )
+                            mstr_df.to_csv(mstr_path, index=False)
+                            self.log(
+                                f"Issue 139 policy fees suppressed (ISWL/UNKNOWN only): "
+                                f"quikridr rows zeroed={_fee_sup['ridr_rows_zeroed']} "
+                                f"(iswl={_fee_sup.get('iswl_rows_zeroed', 0)}, "
+                                f"unknown={_fee_sup.get('unknown_rows_zeroed', 0)}), "
+                                f"MMODEPREM reduced={_fee_sup['modeprem_reduced']} "
+                                f"(zero premium {_fee_sup['modeprem_zero']}, below fee "
+                                f"{_fee_sup['modeprem_below_fee']}); "
+                                f"cohorts iswl={_fee_sup.get('iswl_policies', 0)} "
+                                f"non_iswl={_fee_sup.get('non_iswl_policies', 0)} "
+                                f"unknown={_fee_sup.get('unknown_policies', 0)}"
+                            )
+                        # Issue #89: fail-closed if fee cache populated but MANNLFEE wiped.
+                        # Flag=0: original fleet wipe guard. Flag on: intentional ISWL/UNKNOWN
+                        # zeros must not mask a confirmed non-ISWL fee wipe.
                         _fee_cache_n = len(getattr(self, "_policy_fee_map", {}) or {})
                         if _fee_cache_n >= 1000:
                             _mann_pop = 0
+                            _non_iswl_mann_pop = 0
                             for _, _fr in aligned_out_df.iterrows():
                                 if str(_fr.get("MPHASE", "")).strip() not in ("1", "01"):
                                     continue
                                 try:
-                                    if float(str(_fr.get("MANNLFEE", "")).strip() or 0) > 0:
-                                        _mann_pop += 1
+                                    _fee_amt = float(str(_fr.get("MANNLFEE", "")).strip() or 0)
                                 except ValueError:
-                                    pass
-                            if _mann_pop == 0:
+                                    _fee_amt = 0.0
+                                if _fee_amt <= 0:
+                                    continue
+                                _mann_pop += 1
+                                if issue139_fee_class(_fr.get("MPLAN", "")) == "NON_ISWL":
+                                    _non_iswl_mann_pop += 1
+                            if not policy_fees_suppressed():
+                                if _mann_pop == 0:
+                                    _i89_msg = (
+                                        f"Issue #89 FATAL: PPOLC fee cache has {_fee_cache_n} policies but "
+                                        f"quikridr MANNLFEE populated on 0 base rows — fee wipe detected; aborting."
+                                    )
+                                    self.log(_i89_msg)
+                                    raise RuntimeError(_i89_msg)
+                            elif _non_iswl_mann_pop == 0:
                                 _i89_msg = (
                                     f"Issue #89 FATAL: PPOLC fee cache has {_fee_cache_n} policies but "
-                                    f"quikridr MANNLFEE populated on 0 base rows — fee wipe detected; aborting."
+                                    f"quikridr MANNLFEE populated on 0 confirmed non-ISWL base rows — "
+                                    f"non-ISWL fee wipe detected under Issue 139 mixed suppression; aborting."
                                 )
                                 self.log(_i89_msg)
                                 raise RuntimeError(_i89_msg)

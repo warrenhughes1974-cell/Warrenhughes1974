@@ -7,6 +7,7 @@ from typing import Any
 
 import pandas as pd
 
+from qla_core.cso_mortality_crosswalk import is_iswl_mplan
 from qla_core.normalize_utils import format_qladmin_mpolicy
 
 MODAL_FACTOR_FIELDS = ("ANNL", "SEMI", "QTRL", "MTHD", "MTHB")
@@ -384,6 +385,202 @@ def apply_modal_policy_fees_to_quikridr(
         else:
             stats["skipped_missing_factors"] += 1
     return out, stats
+
+
+POLICY_FEE_FIELDS = ("MANNLFEE", "MSEMIFEE", "MQTRLFEE", "MMTHDFEE", "MMTHBFEE")
+
+# Which fee a policy is actually billed, by mode. Monthly splits on MBILLFRM
+# because direct and bank draft carry different fees.
+_MODE_FEE_FIELD = {"12": "MANNLFEE", "06": "MSEMIFEE", "03": "MQTRLFEE"}
+_MONTHLY_MODE = "01"
+_BANK_DRAFT_BILLFRM = "2"
+SUPPRESSED_FEE_VALUE = "0.0000"
+ISSUE139_SUPPRESS_CLASSES = frozenset({"ISWL", "UNKNOWN"})
+
+
+def policy_fees_suppressed() -> bool:
+    """Issue 139 — when on (default), suppress fees for ISWL and UNKNOWN only.
+
+    Confirmed non-ISWL keep existing #21C/#58 fee values and fee-inclusive
+    MMODEPREM. Set QLA_SUPPRESS_POLICY_FEES=0 to disable Issue 139 suppression
+    for all policies and restore original #89 fleet wipe-guard behavior.
+    """
+    return (os.environ.get("QLA_SUPPRESS_POLICY_FEES", "1").strip() or "1") != "0"
+
+
+def issue139_fee_class(mplan: Any) -> str:
+    """Classify a phase-1 MPLAN for Issue 139: ISWL | NON_ISWL | UNKNOWN.
+
+    Blank/missing MPLAN is UNKNOWN (never treated as confirmed non-ISWL).
+    Uses the authoritative is_iswl_mplan() allowlist — no second plan list.
+    """
+    plan = _strip(mplan)
+    if not plan:
+        return "UNKNOWN"
+    if is_iswl_mplan(plan):
+        return "ISWL"
+    return "NON_ISWL"
+
+
+def issue139_suppresses_mplan(mplan: Any) -> bool:
+    """True when Issue 139 suppression (flag on) applies to this phase-1 MPLAN."""
+    return issue139_fee_class(mplan) in ISSUE139_SUPPRESS_CLASSES
+
+
+def _mode_fee_field(mode: str, billfrm: str) -> str | None:
+    if mode == _MONTHLY_MODE:
+        return "MMTHBFEE" if billfrm == _BANK_DRAFT_BILLFRM else "MMTHDFEE"
+    return _MODE_FEE_FIELD.get(mode)
+
+
+def suppress_policy_fees(
+    ridr_df: pd.DataFrame,
+    mstr_df: pd.DataFrame,
+    audit_path: str | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
+    """Issue 139 — strip policy fees from ISWL/UNKNOWN only; non-ISWL pass through.
+
+    Classification source is ONLY phase-1 quikridr.MPLAN (MPHASE 1/01) via
+    is_iswl_mplan(). Rider-phase MPLAN is ignored. quikmstr is joined by
+    normalized MPOLICY after classification solely to subtract the mode fee from
+    MMODEPREM for suppressed policies.
+
+    Confirmed non-ISWL: do not zero fees and do not subtract from MMODEPREM —
+    existing #21C/#58 values (including legitimate zeros) pass unchanged.
+    Blank/missing phase-1 MPLAN is UNKNOWN and remains suppressed (safest path).
+
+    Run after apply_modal_policy_fees_to_quikridr so the modal fees exist to remove.
+    """
+    stats: dict = {
+        "fee_bearing_policies": 0,
+        "modeprem_reduced": 0,
+        "modeprem_zero": 0,
+        "modeprem_below_fee": 0,
+        "unmapped_mode": 0,
+        "ridr_rows_zeroed": 0,
+        "iswl_policies": 0,
+        "non_iswl_policies": 0,
+        "unknown_policies": 0,
+        "iswl_rows_zeroed": 0,
+        "unknown_rows_zeroed": 0,
+        "non_iswl_passthrough": 0,
+        "unknown_mpolicies": [],
+    }
+    ridr_out = ridr_df.copy()
+    mstr_out = mstr_df.copy() if mstr_df is not None else mstr_df
+    for col in POLICY_FEE_FIELDS + ("MPHASE", "MPOLICY", "MPLAN"):
+        if col not in ridr_out.columns:
+            ridr_out[col] = ""
+
+    # Phase-1 only: classify and capture fee snapshot. Rider phases never classify.
+    class_by_policy: dict[str, str] = {}
+    mplan_by_policy: dict[str, str] = {}
+    fees_by_policy: dict[str, dict[str, float]] = {}
+    for _, row in ridr_out.iterrows():
+        if _strip(row.get("MPHASE", "")) not in ("1", "01"):
+            continue
+        pol = format_qladmin_mpolicy(_strip(row.get("MPOLICY", "")))
+        if not pol:
+            continue
+        mplan = _strip(row.get("MPLAN", ""))
+        class_by_policy[pol] = issue139_fee_class(mplan)
+        mplan_by_policy[pol] = mplan
+        fees_by_policy[pol] = {
+            f: _parse_positive_amount(row.get(f)) for f in POLICY_FEE_FIELDS
+        }
+
+    for pol, cls in class_by_policy.items():
+        if cls == "ISWL":
+            stats["iswl_policies"] += 1
+        elif cls == "UNKNOWN":
+            stats["unknown_policies"] += 1
+            stats["unknown_mpolicies"].append(pol)
+        else:
+            stats["non_iswl_policies"] += 1
+            stats["non_iswl_passthrough"] += 1
+
+    audit: list[dict] = []
+    if mstr_out is not None and not mstr_out.empty and "MMODEPREM" in mstr_out.columns:
+        for idx, row in mstr_out.iterrows():
+            pol = format_qladmin_mpolicy(_strip(row.get("MPOLICY", "")))
+            cls = class_by_policy.get(pol)
+            if cls not in ISSUE139_SUPPRESS_CLASSES:
+                continue
+            fees = fees_by_policy.get(pol)
+            if not fees:
+                continue
+            field = _mode_fee_field(
+                _strip(row.get("MMODE", "")), _strip(row.get("MBILLFRM", ""))
+            )
+            if not field:
+                stats["unmapped_mode"] += 1
+                continue
+            fee = fees.get(field, 0.0)
+            if fee <= 0:
+                continue
+            stats["fee_bearing_policies"] += 1
+            before = _parse_positive_amount(row.get("MMODEPREM"))
+            if before <= 0:
+                stats["modeprem_zero"] += 1
+                continue
+            if before < fee:
+                # Fee was never inside this premium; leave the bill alone.
+                stats["modeprem_below_fee"] += 1
+                continue
+            after = before - fee
+            mstr_out.at[idx, "MMODEPREM"] = f"{after:.2f}"
+            stats["modeprem_reduced"] += 1
+            audit.append(
+                {
+                    "MPOLICY": pol,
+                    "MPLAN": mplan_by_policy.get(pol, ""),
+                    "CLASSIFICATION": cls,
+                    "MMODE": _strip(row.get("MMODE", "")),
+                    "MBILLFRM": _strip(row.get("MBILLFRM", "")),
+                    "FEE_FIELD": field,
+                    "FEE_REMOVED": f"{fee:.4f}",
+                    "MMODEPREM_BEFORE": f"{before:.2f}",
+                    "MMODEPREM_AFTER": f"{after:.2f}",
+                }
+            )
+
+    for idx, row in ridr_out.iterrows():
+        if _strip(row.get("MPHASE", "")) not in ("1", "01"):
+            continue
+        pol = format_qladmin_mpolicy(_strip(row.get("MPOLICY", "")))
+        cls = class_by_policy.get(pol) or issue139_fee_class(row.get("MPLAN", ""))
+        if cls not in ISSUE139_SUPPRESS_CLASSES:
+            continue
+        if not any(_parse_positive_amount(row.get(f)) > 0 for f in POLICY_FEE_FIELDS):
+            continue
+        for f in POLICY_FEE_FIELDS:
+            ridr_out.at[idx, f] = SUPPRESSED_FEE_VALUE
+        stats["ridr_rows_zeroed"] += 1
+        if cls == "ISWL":
+            stats["iswl_rows_zeroed"] += 1
+        else:
+            stats["unknown_rows_zeroed"] += 1
+
+    if audit_path:
+        os.makedirs(os.path.dirname(audit_path) or ".", exist_ok=True)
+        pd.DataFrame(
+            audit,
+            columns=[
+                "MPOLICY", "MPLAN", "CLASSIFICATION", "MMODE", "MBILLFRM",
+                "FEE_FIELD", "FEE_REMOVED", "MMODEPREM_BEFORE", "MMODEPREM_AFTER",
+            ],
+        ).to_csv(audit_path, index=False)
+        unk_path = os.path.join(
+            os.path.dirname(audit_path),
+            "policy_fee_suppression_unknown.csv",
+        )
+        pd.DataFrame(
+            [{"MPOLICY": p, "MPLAN": "", "CLASSIFICATION": "UNKNOWN"}
+             for p in stats["unknown_mpolicies"]],
+            columns=["MPOLICY", "MPLAN", "CLASSIFICATION"],
+        ).to_csv(unk_path, index=False)
+
+    return ridr_out, mstr_out, stats
 
 
 def load_quikplan_factor_lookup(quikplan_path: str) -> dict[str, dict[str, str]]:

@@ -464,10 +464,61 @@ def spot_checks() -> list[dict]:
         else:
             add(f"#57:{pol}", "GAP", f"MNFOPT={got} expected {exp}")
 
-    # #58 fees
+    # #58 fees — Issue 139 mixed suppression (Warren 2026-08-11): ISWL/UNKNOWN
+    # fees stay zero; confirmed non-ISWL (e.g. 010367131C / 17085M) must retain #21C/#58.
+    from qla_core.cso_mortality_crosswalk import is_iswl_mplan
+    from qla_core.modal_premium_factors import issue139_fee_class, policy_fees_suppressed
+
     rrows = by_ridr.get("010367131C", [])
     p1 = next((r for r in rrows if _norm(r.get("MPHASE")) in ("1", "01")), None)
-    if p1 and _norm(p1.get("MANNLFEE")) and _norm(p1.get("MSEMIFEE")):
+    if policy_fees_suppressed():
+        if not p1:
+            add("#58", "GAP", "010367131C phase-1 missing under Issue 139 mixed suppression")
+        else:
+            cls = issue139_fee_class(p1.get("MPLAN"))
+            mann = _norm(p1.get("MANNLFEE"))
+            msemi = _norm(p1.get("MSEMIFEE"))
+            if cls != "NON_ISWL":
+                add("#58", "GAP", f"010367131C expected NON_ISWL for #58 anchor, got {cls}")
+            elif mann and msemi and float(mann or 0) > 0:
+                add(
+                    "#58",
+                    "IN_DATA",
+                    f"010367131C non-ISWL fees retained MANNLFEE={mann} MSEMIFEE={msemi}",
+                )
+            else:
+                add(
+                    "#58",
+                    "GAP",
+                    "010367131C non-ISWL modal fees missing under Issue 139 mixed suppression",
+                )
+        # ISWL control: first phase-1 ISWL row must have zero fees when suppressed
+        _iswl_ctrl = None
+        for _pol, _rows in by_ridr.items():
+            _p1i = next((r for r in _rows if _norm(r.get("MPHASE")) in ("1", "01")), None)
+            if _p1i and is_iswl_mplan(_p1i.get("MPLAN")):
+                _iswl_ctrl = _p1i
+                break
+        if _iswl_ctrl is None:
+            add("#58-ISWL", "WARN", "no ISWL phase-1 row found for Issue 139 control")
+        else:
+            _ifees = [
+                float(_norm(_iswl_ctrl.get(f)) or 0)
+                for f in ("MANNLFEE", "MSEMIFEE", "MQTRLFEE", "MMTHDFEE", "MMTHBFEE")
+            ]
+            if any(v > 0 for v in _ifees):
+                add(
+                    "#58-ISWL",
+                    "GAP",
+                    f"ISWL {_norm(_iswl_ctrl.get('MPOLICY'))} still has non-zero fees under Issue 139",
+                )
+            else:
+                add(
+                    "#58-ISWL",
+                    "IN_DATA",
+                    f"ISWL {_norm(_iswl_ctrl.get('MPOLICY'))} fees suppressed (0)",
+                )
+    elif p1 and _norm(p1.get("MANNLFEE")) and _norm(p1.get("MSEMIFEE")):
         add("#58", "IN_DATA", f"010367131C MANNLFEE={_norm(p1.get('MANNLFEE'))} MSEMIFEE={_norm(p1.get('MSEMIFEE'))}")
     else:
         add("#58", "GAP", "010367131C modal fees missing")
