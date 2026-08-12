@@ -4,7 +4,7 @@
 
 **Canonical path:** `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`
 
-**Last rebuilt:** 2026-08-06 (CLNT-RJ client-ID width-12 + high-water always-on smoke).  
+**Last rebuilt:** 2026-08-12 (#95 QuikUint/PDINTTBL always-on smoke).  
 **Framework authority:** `AI_Agents/Framework.md` v1.5+ rule 12 / G7 — required for every agent and model (**Cursor Grok 4.5, Luna / gpt-5.6-luna-*, Composer**, overrides).  
 **Always-on rule:** `.cursor/rules/completed-issues-release-guide.mdc`
 
@@ -20,7 +20,7 @@
 python tools/validators/validate_release_closed_issues.py
 ```
 
-Faster smoke-only (still blocks on #106/#98/#71/#2/#59/#135/#136/#21F + CLNT-HW + CLNT-RJ width-12):
+Faster smoke-only (still blocks on #106/#98/#71/#2/#59/#95/#135/#136/#21F + CLNT-HW + CLNT-RJ width-12):
 
 ```text
 python tools/validators/validate_release_closed_issues.py --smoke-only
@@ -166,6 +166,7 @@ These are the fixes most often “closed in code” but missing from the package
 | **21F** | `quikprmh` CONV_ADJ @ 20171231 | Traditional gold `9010310404C` + ISWL gold `9010718309C` (FV deposits − history; e.g. 4243.06). Fail if ISWL missing CONV_ADJ |
 | **CLNT-HW** | Last physical `quikclnt.csv` row | TEMP high-water: `MLNAME=ZZZ CONVERSION HIGHWATER`, `MCLIENTID` = max(prior)+1 left-padded to **12** (e.g. `     713664`). QLAdmin New Client must not land in low LifePRO NAME_ID ranges (12480s). Disable only with `QLA_QUIKCLNT_HIGHWATER=0` |
 | **CLNT-RJ** | Client keys on Output + Append DBF | `MCLIENTID` / `MPRIMID` / `MBENFID` / related: numeric→zero decimals, trim, **left-pad spaces to width 12** (v58.81+). Not MPOLICY width-11. Left-justified / short IDs → wrong SEEK / wrong name on Use. Smoke: `python tools/validators/validate_client_id_width12.py` |
+| **95** | `rates/QuikUint.csv` vs PDINTTBL | ISWL/`1668SP` current **4.50%**; `1SALOL`/`1SALML` **2.00%**; residual A-MEM-SAFE **3.50%**; CENII ISWL history preserved; no `9*`/`A*` QuikUint rows. Smoke: `python tools/validators/validate_issue95_quikuint_pdinttbl.py` |
 
 The release gate script runs these smokes plus full accountability. Any Closed ID showing **GAP** blocks the release unless Warren waives in writing.
 
@@ -330,6 +331,7 @@ If a new issue needs a different precedence than this table: **stop and notify W
 | 83 | Fleet gender companion rate keys (F/M; Values=N) | Resolution: Rate setup now emits missing Female/Male companion keys fleet-wide when a plan declares both gender members but a GP/DB/CV/TV/DV family only had one sex key, without inventing factor values (QLAdmin Values=N on companions with no factors). Val+Reg PASS; UAT pending... | QuikPlGp/Db/Cv/Tv/Dv keys | **Source:** plan gender members vs factor presence. **How:** Missing F/M companion keys emitted when plan has both genders; Values=N if no factors (no invented rates). | companion key presence for dual-gender plans | 221END |
 | 88 | Blank ANN_PPU fallback loads full MODE_PREMIUM into Prem/Unit (valuation x units) | Resolution: When ANN_PREM_PER_UNIT is blank, quikridr.MPREM now uses annualized MODE_PREMIUM ÷ NUMBER_OF_UNITS instead of full modal premium; quikmstr Mode Prem unchanged. Val+Reg PASS; anchor 010779727C; reload Test_Validation/quikridr.csv. | quikridr.MPREM | **Source:** PPBEN ANN_PREM_PER_UNIT / MODE_PREMIUM / NUMBER_OF_UNITS. **How:** If ANN_PPU blank: MPREM = annualized MODE_PREMIUM ÷ units (not full modal). | python tools/validators/validate_issue26_mprem.py + #88 samples | 010779727C |
 | 89 | Policy fee wipe after quikridr-only rebatch (MANNLFEE / modal fees) | Resolution: Policy fees now load from LifePRO on every quikridr emit (including ridr-only rebatches), with a fail-closed guard so a blank fleet fee wipe cannot ship again; annual and modal fees are restored on fee-bearing policies. | quikridr MANNLFEE / modal fees | **Source:** LifePRO policy fee fields. **How:** Fees reload on every quikridr emit (including ridr-only); fail-closed if blank wipe. | fee-bearing policies non-blank MANNLFEE | fee-bearing policies after ridr-only rebatch |
+| 95 | Declared Interest Rates Incorrect | Resolution: Declared interest rates load from LifePRO PDINTTBL into QuikUint — 4.50% for ISWL and 1668SP, 2.00% for SAL OL/ML, 3.50% for other in-scope plans; ISWL CENII history kept. Closed 08/04/2026. Always-on release smoke 08/12/2026. | rates/QuikUint | **Source:** PDINTTBL_DeclaredInterestRates_Extract for active `QLA_VALUATION_DATE`. **How:** Current tier per MPLAN matches Eric buckets; 8 ISWL plans keep full CENII history; residual excludes `9*`/`A*`. | python tools/validators/validate_issue95_quikuint_pdinttbl.py | 1668SP 4.50%; 1SALOL 2.00%; 1SALMI 3.50%; 1L1095 3.50%; 1659C2 4.50% + history |
 | 139 | Policy fees withheld for ISWL/UNKNOWN only | Resolution: Withhold policy fees for ISWL and UNKNOWN (blank phase-1 MPLAN) only; confirmed non-ISWL keep #21C/#58 fees and fee-inclusive `MMODEPREM`. Class from phase-1 `quikridr.MPLAN` via `is_iswl_mplan()` only — not `quikmstr`, not rider phases. Warren approved fleet suppress 2026-08-09; refined to mixed population 2026-08-11 (v58.91). Controlled 07/31 full-batch validation PASS: 5,083 phase-1 policies; ISWL 2,268; non-ISWL 2,815; UNKNOWN 0; 2,191 non-ISWL fee-bearing rows restored; ISWL/UNKNOWN nonzero-fee exceptions 0. **G7 accountability and Closure remain required.** | quikridr MANNLFEE, MSEMIFEE, MQTRLFEE, MMTHDFEE, MMTHBFEE; quikmstr MMODEPREM | **Source:** LifePRO `POLICY_FEE` / fee-inclusive `MODE_PREMIUM`; class from phase-1 MPLAN allowlist. **How:** ISWL/UNKNOWN five fee fields = 0 and audit accounts for their `MMODEPREM` reductions; non-ISWL fees retained where #21C/#58 apply; UNKNOWN count/list exposed (clean accept UNKNOWN=0). **Reversible:** `QLA_SUPPRESS_POLICY_FEES=0` disables Issue 139 for all. | `python tools/validators/validate_issue139_policy_fee_suppression.py`; `python tools/validators/validate_issue58_quikridr_modal_fees.py` | ISWL fees 0; non-ISWL 010367131C fees retained; UNKNOWN=0 |
 | 96 | CSO val cannot use SAL MULTPL / L17 RV (PVO + QuikPl wiring) | Resolution: CSO valuation enables Plan Values Options when QuikTvs/Cvs exist for SAL MULTPL and L17 RV plans; 1SALMI shares 1SALOL M/F QuikPlCv/QuikPlTv keys. **2026-08-05:** L17 QuikTvs is the full annual LifePRO RV grid (Dur N=Dur N), not the old sparse ~38-row page-start strip; if active-cut PDAGE has no L17 RV, use dated PDAGE that contains L17 (e.g. 7/31) with provenance. | quikplan PVO; QuikPlCv/Tv for SAL/L17; rates/QuikTvs L17 family | **Source:** PDAGE RV for L17 (+ SAL OL for SAL MULTPL). **How:** PVO on when TV/CV exist; SAL QuikTvs >=500 (active-cut OK); L17 full annual grid + child fingerprint == 1L17SP; prove 1L17SP F/00 Dur1≈56.09 Dur2≈57.81. Do not invent L17 QuikCvs. Do not require frozen 38 rows. | python Issue_Log_Items/Issue_96/validate_issue96_cso_pvo.py | 1SALMI; 1SALOL; 1L17SP F/00; 10L171/10L172/117JPO/17MJPO |
 | 98 | CV Endpoint Off By One (010398471C / 17085M) - #41 follow-up | Resolution: GL85 CV duration placement now starts .06 in year 3 for male issue ages 1-17 and keeps the age-100 terminal 1000 (Eric 010398471C / 17085M M age 14). Val+Reg PASS; reload Test_Validation/rates/QuikCvs.csv. | rates/QuikCvs | **Source:** GL85 / PAAGE CV grid for 17085M. **How:** Male ages 1-17: .06 starts year 3; age-100 terminal 1000 retained. | accountability #98 anchors on 17085M M/14 | 010398471C / 17085M M age 14 |
@@ -363,7 +365,7 @@ Source package / QLA_VALUATION_DATE: ____________
 Full policy batch after pull: YES / NO
 Rates regenerated after pull (if needed): YES / NO / N/A
 Accountability script: PASS / FAIL
-High-risk smoke (#106/#98/#71/#2/#59/#135/#136/#21F + CLNT-HW): PASS / FAIL
+High-risk smoke (#106/#98/#71/#2/#59/#95/#135/#136/#21F + CLNT-HW): PASS / FAIL
 Closed-row failures (IDs): ____________
 Handoff = full Output (not Test_Validation only): YES / NO
 Waivers (ID + reason + date): ____________

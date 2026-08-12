@@ -31,7 +31,7 @@ RATES = OUT / "rates"
 SOURCE = ROOT / "QLA_Migration" / "Source"
 REPORTS = ROOT / "QLA_Migration" / "Reports"
 PY = sys.executable
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "1.4"  # v1.4: #95 QuikUint/PDINTTBL always-on smoke (Warren 2026-08-12)
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -40,6 +40,11 @@ if str(ROOT) not in sys.path:
 # (label, argv relative to ROOT, required)
 SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
     ("#106 QuikTvs duration", ["Issue_Log_Items/Issue_106/validate_issue106_quiktvs_duration.py"], True),
+    (
+        "L14 QuikCvs duration",
+        ["Issue_Log_Items/Issue_L14/validate_issue_l14_quikcvs_duration.py"],
+        True,
+    ),
     ("#2 MPOLICY width-11", ["QLA_Migration/_validate_issue2_mpolicy.py"], True),
     ("#59 MSTATUS allowlist", ["tools/validators/validate_issue59_mstatus.py"], True),
     ("#135 Claims CSO", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
@@ -57,6 +62,26 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
     (
         "CLNT-RJ client-ID width-12",
         ["tools/validators/validate_client_id_width12.py"],
+        True,
+    ),
+    (
+        "A7 VARGP/VARDB vs rate grids",
+        ["tools/validators/validate_issueA7_variation_codes.py"],
+        True,
+    ),
+    (
+        "#138 QuikGps age vs LifePRO premium",
+        ["tools/validators/validate_issue138_rate_age_alignment.py"],
+        True,
+    ),
+    (
+        "#140 attained-age storage axis",
+        ["tools/validators/validate_issue140_attained_age_axis.py"],
+        True,
+    ),
+    (
+        "#95 QuikUint / PDINTTBL",
+        ["tools/validators/validate_issue95_quikuint_pdinttbl.py"],
         True,
     ),
 ]
