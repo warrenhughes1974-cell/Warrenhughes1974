@@ -1,10 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.93
-# Date:        2026-08-12
+# Version:     v58.96
+# Date:        2026-08-18
 # SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
-# Change Note: v58.93 — Issue 104 validated advance-loan pilot: allowlisted policies
+# Change Note: v58.96 — Issue #143: BF RPU MUNIT = BF_CURRENT_DB/VALUE_PER_UNIT when
+#              they differ (locked 23-row mismatch set). Isolated post-map override
+#              before #55 emit. MPREM/MVPU/#108A MSAVEUNIT/#124 MDB formula unchanged.
+#              v58.93 — Issue 104 validated advance-loan pilot: allowlisted policies
 #              only back out LOAN_BALANCE×(1−rate) into MLOANPRIN/MLOANBAL after
 #              runtime formula checks; flag QLA_ISSUE104_VALIDATED_LOAN_BACKOUT
 #              (default 1). Non-cohort loans unchanged. Full-batch smoke wired.
@@ -300,6 +303,11 @@ from qla_core.normalize_utils import (
     format_qladmin_mpolicy,
 )
 from qla_core.quikridr_decimal_emit import apply_quikridr_decimal_emit
+from qla_core.issue143_rpu_munit import (
+    apply_issue143_rpu_munit,
+    find_extract_csv,
+    load_issue143_bf_cache,
+)
 from qla_core.rate_dbf_schema import map_rider_uwclass
 from qla_core.schema_constants import (
     QUIKPLAN_SCHEMA,
@@ -603,7 +611,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.93"
+APP_VERSION = "v58.96"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -8413,6 +8421,8 @@ class QLAdminEnterpriseIntegrationSuite:
                 quikridr_product_par_map = {}
                 self._billing_mode_map = getattr(self, "_billing_mode_map", {}) or {}
                 if t_id.lower() == "quikridr":
+                    self._issue143_rpu_pols = set()
+                    self._issue143_bf_cache = {}
                     try:
                         ppb_path = os.path.normpath(os.path.join(os.path.dirname(src_path), "PPBENTYP.csv"))
                         if os.path.exists(ppb_path):
@@ -8498,6 +8508,13 @@ class QLAdminEnterpriseIntegrationSuite:
                                         _bf = str(_pr.get("BILLING_FORM", "")).strip()
                                         if _bf and _bf.lower() not in ("nan", "none", "null"):
                                             self._billing_form_map[_pol] = _bf
+                                    # Issue #143: RPU identity is PPOLC.PAID_UP_TYPE=RU (not MSTATUS=45).
+                                    # Must run before the Policy Fee continue so blank-fee RU policies are kept.
+                                    _put_i143 = str(_pr.get("PAID_UP_TYPE", "")).strip().upper()
+                                    if _put_i143.endswith(".0"):
+                                        _put_i143 = _put_i143[:-2]
+                                    if _put_i143 == "RU":
+                                        self._issue143_rpu_pols.add(_pol)
                                     if _has_policy_fee:
                                         _fee = str(_pr.get("POLICY_FEE", "")).strip()
                                         if _fee.endswith(".0"):
@@ -8531,12 +8548,39 @@ class QLAdminEnterpriseIntegrationSuite:
                                         f"Issue #89: loaded Policy Fee cache for quikridr "
                                         f"({len(self._policy_fee_map)} records; {os.path.basename(_ppolc_i88)})"
                                     )
+                                if self._issue143_rpu_pols:
+                                    self.log(
+                                        f"Issue #143: loaded PAID_UP_TYPE=RU set "
+                                        f"({len(self._issue143_rpu_pols)} policies)"
+                                    )
                     except Exception as e:
                         self.log(f"Warning: Issue #88/#89/#137 PPOLC cache failed - {e}")
                         self._billing_mode_map = {}
                         self._billing_form_map = {}
                         self._policy_fee_map = {}
                         self._modal_factor_map = {}
+
+                    # Issue #143: seq-1 TYPE_CODE + BF_CURRENT_DB (PPBENTYP Column DD)
+                    try:
+                        _src_dir_i143 = os.path.dirname(src_path)
+                        _ppb_i143 = find_extract_csv(
+                            [_src_dir_i143, os.path.dirname(_src_dir_i143)],
+                            "ppbentyp",
+                        )
+                        if _ppb_i143:
+                            self._issue143_bf_cache = load_issue143_bf_cache(
+                                _ppb_i143, self.normalize
+                            )
+                            self.log(
+                                f"Issue #143: loaded PPBENTYP BF_CURRENT_DB cache "
+                                f"({len(self._issue143_bf_cache)} seq-1 rows; "
+                                f"{os.path.basename(_ppb_i143)})"
+                            )
+                        else:
+                            self.log("Issue #143: PPBENTYP extract not found — MUNIT remap skipped")
+                    except Exception as e:
+                        self.log(f"Warning: Issue #143 PPBENTYP cache failed - {e}")
+                        self._issue143_bf_cache = {}
 
                 quikagts_clnt_cache = {}
                 if t_id.lower() == "quikagts":
@@ -8789,6 +8833,7 @@ class QLAdminEnterpriseIntegrationSuite:
                     quikridr_mphdob_fix_count = 0
                     if t_id.lower() == "quikridr":
                         self._issue76_payup_adjust_count = 0
+                        self._issue143_remap_count = 0
                     if quikridr_valuation_date is not None:
                         _vd_env = os.environ.get("QLA_VALUATION_DATE", "").strip()
                         _vd_src = "conversion run date"
@@ -9627,6 +9672,35 @@ class QLAdminEnterpriseIntegrationSuite:
                                 # Runs after MPHDOB resolution above — that derivation reads MAGE.
                                 self._apply_issue108_nfo_phase1_fields(row_data, _qm_st, _qm_pd)
                                 _nfo_phase1 = self.normalize(_qm_st) in ("44", "45")
+                            # Issue #143: after normal NUMBER_OF_UNITS→MUNIT, remap BF RPU
+                            # mismatches so Amount Ins = PPBENTYP BF_CURRENT_DB (Column DD).
+                            # Isolated override; #55 emit below still formats/floors MUNIT.
+                            if tphase == "1":
+                                _i143_src = self.normalize(src_row.get("POLICY_NUMBER", ""))
+                                if _i143_src and _i143_src in (
+                                    getattr(self, "_issue143_rpu_pols", None) or ()
+                                ):
+                                    _i143_meta = (
+                                        getattr(self, "_issue143_bf_cache", None) or {}
+                                    ).get(_i143_src) or {}
+                                    _i143_vpu = src_row.get("VALUE_PER_UNIT")
+                                    if str(_i143_vpu or "").strip().lower() in (
+                                        "",
+                                        "nan",
+                                        "none",
+                                        "null",
+                                    ):
+                                        _i143_vpu = row_data.get("MVPU")
+                                    if apply_issue143_rpu_munit(
+                                        row_data,
+                                        is_rpu=True,
+                                        type_code=_i143_meta.get("type_code", ""),
+                                        bf_current_db=_i143_meta.get("bf_current_db"),
+                                        value_per_unit=_i143_vpu,
+                                    ):
+                                        self._issue143_remap_count = (
+                                            getattr(self, "_issue143_remap_count", 0) + 1
+                                        )
                             apply_quikridr_decimal_emit(row_data)
                             # v57.96: blank MSAVE* mirror final live fields; MRRULE default A
                             # Issue #108A: mirror suppressed on ETI/RPU phase 1
@@ -9668,6 +9742,11 @@ class QLAdminEnterpriseIntegrationSuite:
                             self.log(
                                 f"Issue #76: adjusted phase-1 MPAYUP/MLASTANN on "
                                 f"{_i76} ETI/RPU polic(ies)"
+                            )
+                        _i143 = getattr(self, "_issue143_remap_count", 0)
+                        if _i143:
+                            self.log(
+                                f"Issue #143: remapped MUNIT on {_i143} BF RPU row(s)"
                             )
                     if t_id.lower() == "quikmstr":
                         _i121 = getattr(self, "_issue121_art_guard_count", 0)

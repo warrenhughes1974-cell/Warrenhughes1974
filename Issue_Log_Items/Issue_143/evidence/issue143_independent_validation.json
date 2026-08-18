@@ -1,0 +1,377 @@
+{
+  "verdict": "PASS",
+  "source_cut": "20260630",
+  "rpu_policies": 304,
+  "independent_candidates": 23,
+  "candidates_corrected": 23,
+  "missing_corrections": [],
+  "unauthorized_corrections": [],
+  "death_benefit_fails": [],
+  "aligned_bf": 82,
+  "aligned_bf_unchanged": 82,
+  "ba_source": 199,
+  "ba_present_unchanged": 184,
+  "ba_absent": 15,
+  "ba_absent_preexisting": 15,
+  "gold_ok": true,
+  "field_diff_changed_rows": 23,
+  "field_hits": {
+    "MUNIT": 23
+  },
+  "pre_rows": 6934,
+  "post_rows": 6934,
+  "issue55_traces_pass": true,
+  "issue55_floor_violations": 0,
+  "issue108a_status45_blank_msave": 13,
+  "issue108a_fails": [],
+  "version_ok": true,
+  "errors": [],
+  "observations": [
+    "15 BA RPU source policies are absent from both pre-#143 baseline and current Output (pre-existing / unrelated to #143)"
+  ],
+  "gold": {
+    "policy": "9010757606C",
+    "source_units": 25.0,
+    "bf_current_db": 19101.96,
+    "vpu": 1000.0,
+    "expected_munit": 19.10196,
+    "baseline_munit": 25.0,
+    "actual_munit": 19.10196,
+    "amount_ins": 19101.96,
+    "baseline_mprem": "9.77037",
+    "actual_mprem": "9.77037",
+    "baseline_mvpu": "1000.00",
+    "actual_mvpu": "1000.00",
+    "msaveunit": "",
+    "mpolicy": "9010757606C",
+    "plan": "1659C2"
+  },
+  "risk_extra_traces": [
+    {
+      "mpolicy": "9010766847C",
+      "expected": 5.16341,
+      "actual": 5.16341,
+      "pass": true
+    },
+    {
+      "mpolicy": "9010826422C",
+      "expected": 9.6559,
+      "actual": 9.6559,
+      "pass": true
+    }
+  ],
+  "issue55": [
+    {
+      "mpolicy": "9018495BC",
+      "mphase": "1",
+      "expected": 0.0,
+      "actual": 0.0,
+      "pass": true
+    },
+    {
+      "mpolicy": "9018495BC",
+      "mphase": "2",
+      "expected": 0.53,
+      "actual": 0.53,
+      "pass": true
+    },
+    {
+      "mpolicy": "9018499CC",
+      "mphase": "1",
+      "expected": 0.0,
+      "actual": 0.0,
+      "pass": true
+    },
+    {
+      "mpolicy": "9018499CC",
+      "mphase": "2",
+      "expected": 1.05,
+      "actual": 1.05,
+      "pass": true
+    },
+    {
+      "mpolicy": "9018510C",
+      "mphase": "1",
+      "expected": 0.0,
+      "actual": 0.0,
+      "pass": true
+    },
+    {
+      "mpolicy": "9018510C",
+      "mphase": "2",
+      "expected": 0.647,
+      "actual": 0.647,
+      "pass": true
+    }
+  ],
+  "issue124": [
+    {
+      "mpolicy": "9010757606C",
+      "plan": "1659C2",
+      "corrected_munit": 19.10196,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 19101.96
+    },
+    {
+      "mpolicy": "9010760069C",
+      "plan": "1659C2",
+      "corrected_munit": 20.36707,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 20367.07
+    },
+    {
+      "mpolicy": "9010766847C",
+      "plan": "1659C2",
+      "corrected_munit": 5.16341,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 5163.41
+    },
+    {
+      "mpolicy": "9010774868C",
+      "plan": "1659C2",
+      "corrected_munit": 22.995639999999998,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 22995.64
+    },
+    {
+      "mpolicy": "9010780870C",
+      "plan": "1659C2",
+      "corrected_munit": 21.457069999999998,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 21457.07
+    },
+    {
+      "mpolicy": "9010786243C",
+      "plan": "1659C2",
+      "corrected_munit": 21.8998,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 21899.8
+    },
+    {
+      "mpolicy": "9010796917C",
+      "plan": "1659C2",
+      "corrected_munit": 20.86018,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 20860.18
+    },
+    {
+      "mpolicy": "9010805394C",
+      "plan": "1659C2",
+      "corrected_munit": 18.394,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 18394.0
+    },
+    {
+      "mpolicy": "9010812930C",
+      "plan": "1659C2",
+      "corrected_munit": 12.506020000000001,
+      "current_quikiswl_mdb": 30000.0,
+      "expected_mdb_next_seed": 12506.02
+    },
+    {
+      "mpolicy": "9010823867C",
+      "plan": "1658C1",
+      "corrected_munit": 4.57208,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 4572.08
+    },
+    {
+      "mpolicy": "9010823868C",
+      "plan": "1658C1",
+      "corrected_munit": 6.3842799999999995,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 6384.28
+    },
+    {
+      "mpolicy": "9010823869C",
+      "plan": "1658C1",
+      "corrected_munit": 9.320780000000001,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 9320.78
+    },
+    {
+      "mpolicy": "9010823870C",
+      "plan": "1658C1",
+      "corrected_munit": 6.86997,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 6869.97
+    },
+    {
+      "mpolicy": "9010826422C",
+      "plan": "1658C1",
+      "corrected_munit": 9.655899999999999,
+      "current_quikiswl_mdb": 50000.0,
+      "expected_mdb_next_seed": 9655.9
+    },
+    {
+      "mpolicy": "9010835334C",
+      "plan": "1659CR",
+      "corrected_munit": 4.50917,
+      "current_quikiswl_mdb": 10000.0,
+      "expected_mdb_next_seed": 4509.17
+    },
+    {
+      "mpolicy": "9010847463C",
+      "plan": "1659C2",
+      "corrected_munit": 20.29598,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 20295.98
+    },
+    {
+      "mpolicy": "9010885442C",
+      "plan": "1659C2",
+      "corrected_munit": 20.96155,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 20961.55
+    },
+    {
+      "mpolicy": "9010933370C",
+      "plan": "1659C2",
+      "corrected_munit": 19.21677,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 19216.77
+    },
+    {
+      "mpolicy": "9011001627C",
+      "plan": "1659C2",
+      "corrected_munit": 3.04464,
+      "current_quikiswl_mdb": 30000.0,
+      "expected_mdb_next_seed": 3044.64
+    },
+    {
+      "mpolicy": "9011025612C",
+      "plan": "1659CR",
+      "corrected_munit": 2.7426,
+      "current_quikiswl_mdb": 5000.0,
+      "expected_mdb_next_seed": 2742.6
+    },
+    {
+      "mpolicy": "9011044907C",
+      "plan": "1659C2",
+      "corrected_munit": 21.08459,
+      "current_quikiswl_mdb": 35000.0,
+      "expected_mdb_next_seed": 21084.59
+    },
+    {
+      "mpolicy": "9011069977C",
+      "plan": "1659C2",
+      "corrected_munit": 12.62525,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 12625.25
+    },
+    {
+      "mpolicy": "9011154856C",
+      "plan": "1659C2",
+      "corrected_munit": 6.10475,
+      "current_quikiswl_mdb": 25000.0,
+      "expected_mdb_next_seed": 6104.75
+    }
+  ],
+  "ba_absent_detail": [
+    {
+      "source_policy": "901222DC",
+      "constructed_qla": "901222DC",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9014100C",
+      "constructed_qla": "9014100C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018166C",
+      "constructed_qla": "9018166C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018167C",
+      "constructed_qla": "9018167C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018236C",
+      "constructed_qla": "9018236C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018237C",
+      "constructed_qla": "9018237C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018258C",
+      "constructed_qla": "9018258C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018284C",
+      "constructed_qla": "9018284C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018330C",
+      "constructed_qla": "9018330C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018465C",
+      "constructed_qla": "9018465C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018495C",
+      "constructed_qla": "9018495C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018645C",
+      "constructed_qla": "9018645C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "9018845C",
+      "constructed_qla": "9018845C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "901ML4140C",
+      "constructed_qla": "901ML4140C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    },
+    {
+      "source_policy": "901ML8378C",
+      "constructed_qla": "901ML8378C",
+      "in_baseline": false,
+      "in_output": false,
+      "preexisting_absence": true
+    }
+  ]
+}

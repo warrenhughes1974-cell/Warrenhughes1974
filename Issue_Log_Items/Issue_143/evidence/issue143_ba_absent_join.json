@@ -1,0 +1,413 @@
+{
+  "all_related_output_munit_unchanged_vs_baseline": true,
+  "rows": [
+    {
+      "source_policy": "901222DC",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "901222DCC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "901222DCC",
+          "munit": "0.71700",
+          "baseline_munit": "0.71700",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "901222DDC",
+          "munit": "0.69400",
+          "baseline_munit": "0.69400",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9014100C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9014100CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9014100BC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9014100CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9014100DC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9014100EC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018166C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018166CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018166CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018167C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018167CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018167CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018167DC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018167EC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018236C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018236CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018236BC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018236CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018237C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018237CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018237CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018237DC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018237EC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018237FC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018237GC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018258C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018258CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018258AC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018258BC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018258CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018284C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018284CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018284AC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018284CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018284DC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018330C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018330CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018330AC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018330BC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018330CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018465C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018465CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018465CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018465DC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018495C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018495CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018495AC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018495BC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018495CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018645C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018645CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018645AC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018645BC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018645CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "9018845C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "9018845CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "9018845BC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "9018845CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "901ML4140C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "901ML4140CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "901ML4140BC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "901ML4140CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    },
+    {
+      "source_policy": "901ML8378C",
+      "in_ppolc_ru": true,
+      "issue2_expected_mpolicy": "901ML8378CC",
+      "exact_constructed_in_output": false,
+      "issue2_key_in_output": true,
+      "issue2_key_in_baseline": true,
+      "phase1_hits": [
+        {
+          "mpolicy": "901ML8378AC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "901ML8378BC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "901ML8378CC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "901ML8378DC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        },
+        {
+          "mpolicy": "901ML8378EC",
+          "munit": "0.00000",
+          "baseline_munit": "0.00000",
+          "munit_unchanged": true
+        }
+      ]
+    }
+  ]
+}

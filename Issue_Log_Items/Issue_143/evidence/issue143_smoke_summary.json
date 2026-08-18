@@ -1,0 +1,55 @@
+{
+  "smoke": "#143 Units Incorrect (RPU)",
+  "result": "PASS",
+  "blocks_release_on_fail": true,
+  "generated": "2026-08-18T13:48:36Z",
+  "engine_note": "v58.96 Closed row",
+  "checks": [
+    {
+      "id": "1_corrected_munit_23",
+      "status": "PASS",
+      "detail": "candidates=23 corrected=23 missing=[]"
+    },
+    {
+      "id": "2_gold_9010757606C",
+      "status": "PASS",
+      "detail": "MUNIT=19.10196 MVPU=1000.00 AmountIns=19101.96"
+    },
+    {
+      "id": "3_amount_ins_eq_column_dd",
+      "status": "PASS",
+      "detail": "fails=0"
+    },
+    {
+      "id": "4_aligned_bf_82_unchanged",
+      "status": "PASS",
+      "detail": "aligned=82 unchanged=82 fail=[]"
+    },
+    {
+      "id": "5_ba_199_no_remap",
+      "status": "PASS",
+      "detail": "ba_source=199 present_unchanged=184 remapped=[]"
+    },
+    {
+      "id": "6_protected_mprem_mvpu_msave_mpolicy",
+      "status": "PASS",
+      "detail": "fails=0"
+    },
+    {
+      "id": "7_issue55_issue108a",
+      "status": "PASS",
+      "detail": "floor=0 traces=True validate_issue55=0 msave_fail=[]"
+    },
+    {
+      "id": "8_issue124_mdb_after_reseed",
+      "status": "PASS",
+      "detail": "gold_stored=19101.96 gold_expected=19101.96 mismatches=0"
+    },
+    {
+      "id": "9_no_unauthorized_munit",
+      "status": "PASS",
+      "detail": "unauthorized=[] authorized_corrected=23"
+    }
+  ],
+  "issue124_mdb_mismatches": []
+}

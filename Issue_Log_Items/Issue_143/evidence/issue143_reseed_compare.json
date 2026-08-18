@@ -1,0 +1,199 @@
+{
+  "quikiswl_rows": 2268,
+  "affected_23_ok": true,
+  "gold": {
+    "mpolicy": "9010757606C",
+    "pre_mdb": 25000.0,
+    "post_mdb": 19101.96,
+    "expected_mdb": 19101.96,
+    "munit": 19.10196,
+    "matches_munit_x_1000": true
+  },
+  "unrelated_mdb_ne_current_munit": [],
+  "changed_23": [
+    {
+      "mpolicy": "9010757606C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 19101.96,
+      "expected_mdb": 19101.96,
+      "munit": 19.10196,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010760069C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 20367.07,
+      "expected_mdb": 20367.07,
+      "munit": 20.36707,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010766847C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 5163.41,
+      "expected_mdb": 5163.41,
+      "munit": 5.16341,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010774868C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 22995.64,
+      "expected_mdb": 22995.64,
+      "munit": 22.99564,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010780870C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 21457.07,
+      "expected_mdb": 21457.07,
+      "munit": 21.45707,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010786243C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 21899.8,
+      "expected_mdb": 21899.8,
+      "munit": 21.8998,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010796917C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 20860.18,
+      "expected_mdb": 20860.18,
+      "munit": 20.86018,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010805394C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 18394.0,
+      "expected_mdb": 18394.0,
+      "munit": 18.394,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010812930C",
+      "pre_mdb": 30000.0,
+      "post_mdb": 12506.02,
+      "expected_mdb": 12506.02,
+      "munit": 12.50602,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010823867C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 4572.08,
+      "expected_mdb": 4572.08,
+      "munit": 4.57208,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010823868C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 6384.28,
+      "expected_mdb": 6384.28,
+      "munit": 6.38428,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010823869C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 9320.78,
+      "expected_mdb": 9320.78,
+      "munit": 9.32078,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010823870C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 6869.97,
+      "expected_mdb": 6869.97,
+      "munit": 6.86997,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010826422C",
+      "pre_mdb": 50000.0,
+      "post_mdb": 9655.9,
+      "expected_mdb": 9655.9,
+      "munit": 9.6559,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010835334C",
+      "pre_mdb": 10000.0,
+      "post_mdb": 4509.17,
+      "expected_mdb": 4509.17,
+      "munit": 4.50917,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010847463C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 20295.98,
+      "expected_mdb": 20295.98,
+      "munit": 20.29598,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010885442C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 20961.55,
+      "expected_mdb": 20961.55,
+      "munit": 20.96155,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9010933370C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 19216.77,
+      "expected_mdb": 19216.77,
+      "munit": 19.21677,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9011001627C",
+      "pre_mdb": 30000.0,
+      "post_mdb": 3044.64,
+      "expected_mdb": 3044.64,
+      "munit": 3.04464,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9011025612C",
+      "pre_mdb": 5000.0,
+      "post_mdb": 2742.6,
+      "expected_mdb": 2742.6,
+      "munit": 2.7426,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9011044907C",
+      "pre_mdb": 35000.0,
+      "post_mdb": 21084.59,
+      "expected_mdb": 21084.59,
+      "munit": 21.08459,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9011069977C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 12625.25,
+      "expected_mdb": 12625.25,
+      "munit": 12.62525,
+      "matches_munit_x_1000": true
+    },
+    {
+      "mpolicy": "9011154856C",
+      "pre_mdb": 25000.0,
+      "post_mdb": 6104.75,
+      "expected_mdb": 6104.75,
+      "munit": 6.10475,
+      "matches_munit_x_1000": true
+    }
+  ]
+}

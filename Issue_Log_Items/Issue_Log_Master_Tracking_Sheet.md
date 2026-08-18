@@ -4,7 +4,8 @@
 **Purpose:** Single tracking sheet for **policy conversion (Issue #21)** and **claims conversion (Items 14–19)**.
 
 **Data accountability (midyear):** `Issue_Log_Items/Issue_Log_Data_Accountability_20260714.md`  
-**Year-end package:** `Issue_Log_Items/YearEnd_20251231_Conversion_Notes.md` · load `Output/Test_Validation/`
+**Year-end package:** `Issue_Log_Items/YearEnd_20251231_Conversion_Notes.md` · load `Output/Test_Validation/`  
+**Completed issues release checklist:** `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md` (update on every close/commit)
 
 ---
 
@@ -64,6 +65,7 @@
 
 | ID | Item | Status | Release | Resolution |
 |---|---|---|---|---|
+| **#143** | Units Incorrect (RPU) | **CLOSED ✓** | **v58.96** | Issue #143 is Closed in v58.96. The 23 SME-authorized BF Reduced Paid-Up policies now derive MUNIT from BF_CURRENT_DB / VALUE_PER_UNIT so QLAdmin Amount Ins reproduces the LifePRO paid-up death benefit. Validation, Regression, and final Smoke testing passed (PASS 9/9; release smoke RELEASE_OK). The existing Issue #124 QuikIswl emit was subsequently executed (COMPLETE), and all 23 affected ISWL records now store MDB = corrected MUNIT × 1000. Gold 9010757606C now contains MUNIT 19.10196 and MDB 19101.96. Authorized MUNIT corrections 23; unauthorized 0; unexplained diffs 0; outstanding #143 downstream dependencies 0. Detail: `Issue_Log_Items/Issue_143/` |
 | **#2** | 11 Character Policy Number | **CLOSED ✓** | **v58.29** | Resolution: QLAdmin policy numbers now keep the LifePRO source policy number with a trailing C and are right-justified to 11 characters (replacing the old strip-9 crosswalk and 10-character pad). Detail: `Issue_Log_Items/Issue_2/` |
 | **#13** | Incorrect QL Status (`quikmstr.MSTATUS`) | **CLOSED ✓** | **v57.48** | When CONTRACT_CODE=T, MSTATUS follows CONTRACT_REASON not PAID_UP_TYPE; 607 policies (v57.48). |
 | **#25** | MPOLICY 10-char left-pad | **SUPERSEDED by #2** | v57.30 / v57.34 | Replaced by Issue #2 width-11 source+`C` (v58.29). |

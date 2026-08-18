@@ -1,0 +1,545 @@
+{
+  "summary": {
+    "verdict": "PASS",
+    "baseline": "Issue_Log_Items\\Issue_143\\evidence\\quikridr_pre_issue143_20260818T130527Z.csv",
+    "quikridr": {
+      "pre": 6934,
+      "post": 6934,
+      "fields_same": true,
+      "field_count": 40,
+      "keys_same": true
+    },
+    "changed_rows": 23,
+    "field_hits": {
+      "MUNIT": 23
+    },
+    "non_candidate_changes": 0,
+    "protected_fields_ok": true,
+    "gold_ok": true,
+    "issue108a_msave_unchanged": true,
+    "issue124_stored_mdb_ne_current_munit": 23,
+    "issue124_class": "EXPECTED DOWNSTREAM CONSEQUENCE",
+    "errors": [],
+    "other_tables": [
+      {
+        "table": "quikactg.csv",
+        "rows": 87,
+        "mtime": 1786558040.025032
+      },
+      {
+        "table": "quikagts.csv",
+        "rows": 4843,
+        "mtime": 1786558265.515682
+      },
+      {
+        "table": "quikbenf.csv",
+        "rows": 5916,
+        "mtime": 1786557279.3938942
+      },
+      {
+        "table": "quikbenh.csv",
+        "rows": 45012,
+        "mtime": 1786558641.365832
+      },
+      {
+        "table": "quikclid.csv",
+        "rows": 32285,
+        "mtime": 1786557061.2620907
+      },
+      {
+        "table": "quikclmp.csv",
+        "rows": 6536,
+        "mtime": 1786709620.8914275
+      },
+      {
+        "table": "quikclms.csv",
+        "rows": 36174,
+        "mtime": 1786558640.8753164
+      },
+      {
+        "table": "quikclnt.csv",
+        "rows": 13598,
+        "mtime": 1786557001.8021598
+      },
+      {
+        "table": "quikdate.csv",
+        "rows": 1,
+        "mtime": 1786558284.66154
+      },
+      {
+        "table": "quikdvdp.csv",
+        "rows": 5083,
+        "mtime": 1786557389.3613584
+      },
+      {
+        "table": "quikdvpr.csv",
+        "rows": 31,
+        "mtime": 1786557430.0113716
+      },
+      {
+        "table": "QuikIsrr.csv",
+        "rows": 3657,
+        "mtime": 1786558641.4017642
+      },
+      {
+        "table": "QuikIswl.csv",
+        "rows": 2268,
+        "mtime": 1786558289.1732132
+      },
+      {
+        "table": "quiklist.csv",
+        "rows": 6,
+        "mtime": 1786558288.8148825
+      },
+      {
+        "table": "quikloan.csv",
+        "rows": 356,
+        "mtime": 1786558091.9427197
+      },
+      {
+        "table": "quikmemo.csv",
+        "rows": 299649,
+        "mtime": 1786558278.6687622
+      },
+      {
+        "table": "quikmstr.csv",
+        "rows": 5083,
+        "mtime": 1786623748.9170651
+      },
+      {
+        "table": "quikplan.csv",
+        "rows": 141,
+        "mtime": 1786558916.9910297
+      },
+      {
+        "table": "quikprmh.csv",
+        "rows": 211709,
+        "mtime": 1786557663.6344023
+      },
+      {
+        "table": "quikrein.csv",
+        "rows": 7,
+        "mtime": 1786319965.146521
+      },
+      {
+        "table": "quikrmst.csv",
+        "rows": 733,
+        "mtime": 1786319965.158928
+      },
+      {
+        "table": "quikspec.csv",
+        "rows": 5083,
+        "mtime": 1786557198.1563451
+      },
+      {
+        "table": "quikactg.csv",
+        "rows": 87,
+        "mtime": 1786558040.025032
+      },
+      {
+        "table": "quikagts.csv",
+        "rows": 4843,
+        "mtime": 1786558265.515682
+      },
+      {
+        "table": "quikbenf.csv",
+        "rows": 5916,
+        "mtime": 1786557279.3938942
+      },
+      {
+        "table": "quikbenh.csv",
+        "rows": 45012,
+        "mtime": 1786558641.365832
+      },
+      {
+        "table": "quikclid.csv",
+        "rows": 32285,
+        "mtime": 1786557061.2620907
+      },
+      {
+        "table": "quikclmp.csv",
+        "rows": 6536,
+        "mtime": 1786709620.8914275
+      },
+      {
+        "table": "quikclms.csv",
+        "rows": 36174,
+        "mtime": 1786558640.8753164
+      },
+      {
+        "table": "quikclnt.csv",
+        "rows": 13598,
+        "mtime": 1786557001.8021598
+      },
+      {
+        "table": "quikdate.csv",
+        "rows": 1,
+        "mtime": 1786558284.66154
+      },
+      {
+        "table": "quikdvdp.csv",
+        "rows": 5083,
+        "mtime": 1786557389.3613584
+      },
+      {
+        "table": "quikdvpr.csv",
+        "rows": 31,
+        "mtime": 1786557430.0113716
+      },
+      {
+        "table": "QuikIsrr.csv",
+        "rows": 3657,
+        "mtime": 1786558641.4017642
+      },
+      {
+        "table": "QuikIswl.csv",
+        "rows": 2268,
+        "mtime": 1786558289.1732132
+      },
+      {
+        "table": "quiklist.csv",
+        "rows": 6,
+        "mtime": 1786558288.8148825
+      },
+      {
+        "table": "quikloan.csv",
+        "rows": 356,
+        "mtime": 1786558091.9427197
+      },
+      {
+        "table": "quikmemo.csv",
+        "rows": 299649,
+        "mtime": 1786558278.6687622
+      },
+      {
+        "table": "quikmstr.csv",
+        "rows": 5083,
+        "mtime": 1786623748.9170651
+      },
+      {
+        "table": "quikplan.csv",
+        "rows": 141,
+        "mtime": 1786558916.9910297
+      },
+      {
+        "table": "quikprmh.csv",
+        "rows": 211709,
+        "mtime": 1786557663.6344023
+      },
+      {
+        "table": "quikrein.csv",
+        "rows": 7,
+        "mtime": 1786319965.146521
+      },
+      {
+        "table": "quikrmst.csv",
+        "rows": 733,
+        "mtime": 1786319965.158928
+      },
+      {
+        "table": "quikspec.csv",
+        "rows": 5083,
+        "mtime": 1786557198.1563451
+      }
+    ],
+    "output_inventory": [
+      {
+        "table": "quikactg.csv",
+        "rows": 87
+      },
+      {
+        "table": "quikagts.csv",
+        "rows": 4843
+      },
+      {
+        "table": "quikbenf.csv",
+        "rows": 5916
+      },
+      {
+        "table": "quikbenh.csv",
+        "rows": 45012
+      },
+      {
+        "table": "quikclid.csv",
+        "rows": 32285
+      },
+      {
+        "table": "quikclmp.csv",
+        "rows": 6536
+      },
+      {
+        "table": "quikclms.csv",
+        "rows": 36174
+      },
+      {
+        "table": "quikclnt.csv",
+        "rows": 13598
+      },
+      {
+        "table": "quikdate.csv",
+        "rows": 1
+      },
+      {
+        "table": "quikdvdp.csv",
+        "rows": 5083
+      },
+      {
+        "table": "quikdvpr.csv",
+        "rows": 31
+      },
+      {
+        "table": "QuikIsrr.csv",
+        "rows": 3657
+      },
+      {
+        "table": "QuikIswl.csv",
+        "rows": 2268
+      },
+      {
+        "table": "quiklist.csv",
+        "rows": 6
+      },
+      {
+        "table": "quikloan.csv",
+        "rows": 356
+      },
+      {
+        "table": "quikmemo.csv",
+        "rows": 299649
+      },
+      {
+        "table": "quikmstr.csv",
+        "rows": 5083
+      },
+      {
+        "table": "quikplan.csv",
+        "rows": 141
+      },
+      {
+        "table": "quikprmh.csv",
+        "rows": 211709
+      },
+      {
+        "table": "quikrein.csv",
+        "rows": 7
+      },
+      {
+        "table": "quikridr.csv",
+        "rows": 6934
+      },
+      {
+        "table": "quikrmst.csv",
+        "rows": 733
+      },
+      {
+        "table": "quikspec.csv",
+        "rows": 5083
+      }
+    ]
+  },
+  "classifications_sample": [
+    {
+      "table": "quikridr",
+      "mpolicy": "9010757606C",
+      "field": "MUNIT",
+      "class": "EXPECTED ISSUE #143",
+      "before": "25.00000",
+      "after": "19.10196"
+    },
+    {
+      "table": "quikridr",
+      "mpolicy": "9010760069C",
+      "field": "MUNIT",
+      "class": "EXPECTED ISSUE #143",
+      "before": "25.00000",
+      "after": "20.36707"
+    },
+    {
+      "table": "quikridr",
+      "mpolicy": "9010766847C",
+      "field": "MUNIT",
+      "class": "EXPECTED ISSUE #143",
+      "before": "25.00000",
+      "after": "5.16341"
+    },
+    {
+      "table": "quikridr",
+      "mpolicy": "9010774868C",
+      "field": "MUNIT",
+      "class": "EXPECTED ISSUE #143",
+      "before": "25.00000",
+      "after": "22.99564"
+    },
+    {
+      "table": "quikridr",
+      "mpolicy": "9010780870C",
+      "field": "MUNIT",
+      "class": "EXPECTED ISSUE #143",
+      "before": "25.00000",
+      "after": "21.45707"
+    }
+  ],
+  "issue124": [
+    {
+      "mpolicy": "9010757606C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 19101.96,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010760069C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 20367.07,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010766847C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 5163.41,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010774868C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 22995.64,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010780870C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 21457.07,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010786243C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 21899.8,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010796917C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 20860.18,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010805394C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 18394.0,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010812930C",
+      "plan": "1659C2",
+      "current_stored_mdb": 30000.0,
+      "expected_mdb_after_reseed": 12506.02,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010823867C",
+      "plan": "1658C1",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 4572.08,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010823868C",
+      "plan": "1658C1",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 6384.28,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010823869C",
+      "plan": "1658C1",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 9320.78,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010823870C",
+      "plan": "1658C1",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 6869.97,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010826422C",
+      "plan": "1658C1",
+      "current_stored_mdb": 50000.0,
+      "expected_mdb_after_reseed": 9655.9,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010835334C",
+      "plan": "1659CR",
+      "current_stored_mdb": 10000.0,
+      "expected_mdb_after_reseed": 4509.17,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010847463C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 20295.98,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010885442C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 20961.55,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9010933370C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 19216.77,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9011001627C",
+      "plan": "1659C2",
+      "current_stored_mdb": 30000.0,
+      "expected_mdb_after_reseed": 3044.64,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9011025612C",
+      "plan": "1659CR",
+      "current_stored_mdb": 5000.0,
+      "expected_mdb_after_reseed": 2742.6,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9011044907C",
+      "plan": "1659C2",
+      "current_stored_mdb": 35000.0,
+      "expected_mdb_after_reseed": 21084.59,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9011069977C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 12625.25,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    },
+    {
+      "mpolicy": "9011154856C",
+      "plan": "1659C2",
+      "current_stored_mdb": 25000.0,
+      "expected_mdb_after_reseed": 6104.75,
+      "class": "EXPECTED DOWNSTREAM CONSEQUENCE"
+    }
+  ]
+}

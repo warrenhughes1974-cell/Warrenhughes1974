@@ -31,7 +31,7 @@ RATES = OUT / "rates"
 SOURCE = ROOT / "QLA_Migration" / "Source"
 REPORTS = ROOT / "QLA_Migration" / "Reports"
 PY = sys.executable
-SCRIPT_VERSION = "1.4"  # v1.4: #95 QuikUint/PDINTTBL always-on smoke (Warren 2026-08-12)
+SCRIPT_VERSION = "1.5"  # v1.5: #143 BF RPU MUNIT always-on smoke (Warren 2026-08-18)
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -82,6 +82,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
     (
         "#95 QuikUint / PDINTTBL",
         ["tools/validators/validate_issue95_quikuint_pdinttbl.py"],
+        True,
+    ),
+    (
+        "#143 BF RPU MUNIT",
+        ["tools/validators/validate_issue143_smoke.py"],
         True,
     ),
 ]
