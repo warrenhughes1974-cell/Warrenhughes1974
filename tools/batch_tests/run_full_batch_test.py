@@ -155,6 +155,8 @@ for _smoke_label, _smoke_script in (
     ("QuikSpec resident state", "tools/validators/validate_quikspec_resident_state.py"),
     ("Issue 141 reserve category", "QLA_Migration/_validate_issue141_resrvcat.py"),
     ("Issue 104 loan pilot", "tools/validators/validate_issue104_loan_pilot.py"),
+    ("Issue 75 PAC Bank Acct", "tools/validators/validate_issue75_mbankno.py"),
+    ("Issue 139 ISWL policy fees withheld", "tools/validators/validate_issue139_policy_fee_suppression.py"),
 ):
     _rc = subprocess.run([sys.executable, os.path.join(BASE, _smoke_script)], cwd=BASE)
     if _rc.returncode != 0:

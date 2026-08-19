@@ -1,67 +1,98 @@
 # Issue 139 — Policy fees withheld for ISWL / UNKNOWN only
 
-**Raised:** 2026-08-09 (Warren)
-**Refined:** 2026-08-11 (Warren) — restore non-ISWL #21C/#58 fees
-**Status:** Validated — pending G7 accountability / Closure
-**Engine:** v58.91 (`app.py` and `QLA_Migration/app.py`)
-**Override approved:** Warren, 2026-08-09 (fleet suppress); refinement 2026-08-11
+**Issue:** 139 — Remove policy fees (ISWL/UNKNOWN)  
+**Framework stage:** Closure Agent  
+**Final status:** **Closed**  
+**Engine version:** v58.99  
+**Closed date:** 2026-08-19  
+**Owner:** Conversion
 
 ---
 
-## Business decision
+## Resolution (issue log — paste-ready)
 
-Withhold policy fees from the load for **ISWL** and **UNKNOWN** (blank/missing
-phase-1 `MPLAN`) only. Confirmed **non-ISWL** policies keep the existing #21C/#58
-fee values and fee-inclusive `MMODEPREM`. Revisit ISWL fee treatment later.
+**Resolution:** ISWL policy fees are withheld on the load (annual and modal fees set to zero, and billed premium no longer includes that fee). Traditional policies still keep their fees.
 
-## Classification (authoritative)
+> Copy the line above into tracking sheets and client readouts. Long-form detail follows.
 
-| Source | Rule |
-|---|---|
-| Runtime class | Phase-1 `quikridr.MPLAN` only (`MPHASE` 1/01) via `is_iswl_mplan()` |
-| Not a class source | `quikmstr` (joined by normalized `MPOLICY` after class for `MMODEPREM` only) |
-| Rider phases | Ignored; cannot override phase-1 class |
-| Blank/missing phase-1 MPLAN | **UNKNOWN** — suppressed (safest); counted/listed; clean acceptance needs UNKNOWN=0 |
+---
 
-Baseline estimates (~2249 ISWL, ~2191 non-ISWL, ~$16323.81) are sanity checks only.
+## Problem Statement
 
-## Closed-issue override
+ISWL policies were loading LifePRO policy fees onto QuikRidr (typically $25 annual) and keeping that fee inside mode premium. Warren directed conversion to withhold those fees for ISWL only. The withhold ran once (v58.91), then a later `quikridr` rebuild put the fees back because root `app.py` (the file the converter actually launches) no longer called the withhold.
 
-| Issue | What it did | Status now |
-|---|---|---|
-| 21C | Mapped LifePRO `POLICY_FEE` into `quikridr.MANNLFEE` on the base coverage row | Suppressed for ISWL/UNKNOWN; active for non-ISWL |
-| 58 | Derived modal fees from `MANNLFEE` × modal factors | Same as 21C |
-| 89 | Fail-closed guard so a fee wipe cannot ship | Active: flag=0 fleet wipe; flag on = non-ISWL wipe still FATAL |
+---
 
-## Scope
+## Root Cause
 
-**Non-ISWL:** no Issue 139 zeroing and no `MMODEPREM` subtraction — #21C/#58
-outputs (including legitimate zeros) pass through unchanged.
+**Category:** [x] Mapping error  [ ] Source extract defect  [ ] Scope gap  [ ] Client definition  [ ] QLAdmin behavior  [x] Other — converter copy drift / missing always-on smoke
 
-**ISWL / UNKNOWN:** zero the five `quikridr` fee fields and subtract the
-mode-appropriate fee from `quikmstr.MMODEPREM` using the existing guards
-(zero premium / below-fee skip). No manual fee add.
+`QLA_Migration/app.py` still called `suppress_policy_fees`. Root `app.py` imported it and did not call it. `run_converter.bat` launches root `app.py`. Issue 139 was never Closed and was not on `SMOKE_JOBS`, so the drop shipped.
 
-**Flag:** `QLA_SUPPRESS_POLICY_FEES` default/on = mixed suppression; `=0`
-disables Issue 139 for all and restores original full-fleet #89 guard.
+---
 
-## Implementation
+## Resolution
+
+Withhold is applied again on current Output: 2,266 ISWL fee rows zeroed; 2,249 mode premiums reduced; 2,191 traditional fee rows kept. Root `app.py` now calls the same withhold after modal fee load. Convert-time abort and release-gate smoke fail if ISWL fees come back.
+
+### Files changed
 
 | File | Change |
-|---|---|
-| `qla_core/modal_premium_factors.py` | Classifier gate + cohort stats/audit (`issue139_fee_class`) |
-| `app.py`, `QLA_Migration/app.py` | v58.91; scoped #89 guard; cohort log line |
-| `tools/validators/validate_issue58_quikridr_modal_fees.py` | Cohort-aware; no blanket SKIP |
-| `tools/validators/validate_issue139_policy_fee_suppression.py` | Mixed-population controls |
-| `tools/validators/validate_issue_log_accountability.py` | Non-ISWL fee assert + ISWL zero control |
+|------|--------|
+| `app.py` | Restore withhold + #89 non-ISWL wipe guard + convert-time smoke; v58.99 |
+| `QLA_Migration/app.py` | Convert-time smoke; v58.99 |
+| `qla_core/issue139_fee_smoke.py` | Fail-closed floors + gold traces |
+| `tools/validators/validate_issue139_policy_fee_suppression.py` | Fail-closed (no SKIP / no flag-off PASS) |
+| `tools/validators/validate_release_closed_issues.py` | `SMOKE_JOBS` #139 |
+| `QLA_Migration/Output/quikridr.csv` / `quikmstr.csv` | ISWL fees 0; traditional fees kept |
 
-## Validation result
+### Rulebook changes
 
-Controlled full-batch validation passed on the 2026-07-31 source cut:
-5,083 phase-1 policies; ISWL 2,268; non-ISWL 2,815; UNKNOWN 0;
-non-ISWL fee-bearing rows restored 2,191; ISWL/UNKNOWN nonzero-fee exceptions 0.
-The #58 focused validator, Issue 139 validator, #96/A7 regression, and #118
-regression passed. Existing negative `MMODEPREM` records were unchanged.
+None.
 
-Issue 139 remains pending G7 accountability and formal Closure; do not mark
-Closed until the full Output gate passes.
+### Engine changes
+
+- Call `suppress_policy_fees` after `#58` modal fee load on **both** `app.py` copies.
+- `#89` FATAL on non-ISWL fee wipe when withhold is on (not on intentional ISWL zeros).
+
+---
+
+## Evidence
+
+| Artifact | Path |
+|----------|------|
+| Validator | `tools/validators/validate_issue139_policy_fee_suppression.py` PASS 2026-08-19 |
+| Bank Acct regression | `validate_issue75_mbankno.py` PASS |
+| Non-ISWL fees | `validate_issue58_quikridr_modal_fees.py` PASS |
+| Test_Validation | `quikmstr.csv` + `quikridr.csv` |
+
+---
+
+## Trace Policy Confirmation
+
+| Policy | Client expected | Emitted | Match |
+|--------|-----------------|---------|-------|
+| 9010713704C | ISWL fees off; mode premium without fee | fees 0.0000; MMODEPREM 41.71 | Yes |
+| 9010367131C | Traditional fees kept | MANNLFEE 10.4400 | Yes |
+
+---
+
+## Explicitly Not Changed
+
+- [x] quikmstr.MMODPREM / modal premium totals (only ISWL MMODEPREM reduced by the withheld fee)
+- [x] Issue #26 MPREM mapping on unrelated logic
+- [x] Issue #25 MPOLICY padding
+- [x] Issue #75 PAC Bank Acct
+- [x] Traditional #21C/#58 fees
+
+---
+
+## Closed-issue override (#89)
+
+#89 still restores fees on every `quikridr` emit and still blocks a **non-ISWL** fee wipe. ISWL zeros are #139 (Warren 2026-08-11; re-locked 2026-08-19 after the drop).
+
+---
+
+## Always-on smoke
+
+Registered in `SMOKE_JOBS`. Convert-time abort after `quikridr` write. Disable only with `QLA_ISSUE139_FEE_SMOKE=0` (debug).

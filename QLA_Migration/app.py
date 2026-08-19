@@ -1,10 +1,17 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.97
+# Version:     v58.99
 # Date:        2026-08-19
 # SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
-# Change Note: v58.97 — Issue 141: quikspec.RESRVCAT from PCOVR.PRODUCT_TYPE via
+# Change Note: v58.99 — Issue 139 ISWL/UNKNOWN policy-fee withhold restored on
+#              root app.py (the file run_converter.bat actually launches) plus
+#              convert-time / release-gate fail-closed smoke so a later quikridr
+#              rebatch cannot ship ISWL $25 fees again.
+#              v58.98 — Issue #75/#45 Bank Acct always-on smoke: PAC MBANKNO floor
+#              plus release-gate / full-batch post-check so a quikmstr rebatch cannot
+#              ship blank Bank Acct again.
+#              v58.97 — Issue 141: quikspec.RESRVCAT from PCOVR.PRODUCT_TYPE via
 #              PPBEN BENEFIT_SEQ=1 (BA traditional / BF ISWL). Do not copy
 #              quikplan.PRODUCT (ISWLFE overlay stays on the plan).
 #              v58.96 — Issue #143: BF RPU MUNIT = BF_CURRENT_DB/VALUE_PER_UNIT when
@@ -614,7 +621,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.97"
+APP_VERSION = "v58.99"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -6051,6 +6058,64 @@ class QLAdminEnterpriseIntegrationSuite:
             return False
         return True
 
+    def _issue75_assert_pac_bank_acct(self, out_csv):
+        """Always-on #75/#45 smoke after quikmstr write. Disable with QLA_ISSUE75_BANK_SMOKE=0."""
+        flag = str(os.environ.get("QLA_ISSUE75_BANK_SMOKE", "1")).strip().lower()
+        if flag in ("0", "false", "no", "off"):
+            return
+        from pathlib import Path
+
+        from qla_core.issue75_mbankno_smoke import FLEET_PAC_MIN, evaluate_quikmstr
+
+        ok, errors, stats = evaluate_quikmstr(Path(out_csv))
+        self.log(
+            f"Issue #75 Bank Acct smoke: pac={stats.get('pac')} "
+            f"filled={stats.get('pac_filled')} blank={stats.get('pac_blank')} "
+            f"invalid={stats.get('pac_invalid')}"
+        )
+        if int(stats.get("pac") or 0) < FLEET_PAC_MIN:
+            return
+        if ok:
+            return
+        for err in errors[:8]:
+            self.log(f"Issue #75 Bank Acct FAIL: {err}")
+        raise RuntimeError(
+            "Issue #75 Bank Acct smoke FAIL — PAC MBANKNO dropped. "
+            "Restore aba_routing_lookup.csv in Source and re-emit quikmstr. "
+            + "; ".join(errors[:3])
+        )
+
+    def _issue139_assert_iswl_fees_off(self, ridr_csv, mstr_csv):
+        """Always-on #139 smoke after quikridr write. Disable with QLA_ISSUE139_FEE_SMOKE=0."""
+        flag = str(os.environ.get("QLA_ISSUE139_FEE_SMOKE", "1")).strip().lower()
+        if flag in ("0", "false", "no", "off"):
+            return
+        from pathlib import Path
+
+        from qla_core.issue139_fee_smoke import FLEET_ISWL_MIN, evaluate_fee_withhold
+
+        ridr_path = Path(ridr_csv)
+        mstr_path = Path(mstr_csv) if mstr_csv else None
+        ok, errors, stats = evaluate_fee_withhold(
+            ridr_path, mstr_path if mstr_path and mstr_path.is_file() else None
+        )
+        self.log(
+            f"Issue 139 fee smoke: ISWL={stats.get('iswl')} "
+            f"ISWL_fee={stats.get('iswl_fee')} "
+            f"NON_ISWL_MANNLFEE={stats.get('non_iswl_fee')}"
+        )
+        if int(stats.get("phase1") or 0) < FLEET_ISWL_MIN:
+            return
+        if ok:
+            return
+        for err in errors[:8]:
+            self.log(f"Issue 139 fee FAIL: {err}")
+        raise RuntimeError(
+            "Issue 139 fee smoke FAIL — ISWL policy fees came back. "
+            "Root app.py must call suppress_policy_fees after modal fee load. "
+            + "; ".join(errors[:3])
+        )
+
     def _apply_issue45_bank_draft_gate(self, row_data, src_row, exceptions):
         """Issue #45/#75: MBILLFRM=2 without QLA-safe bank account+ABA → blank MBANKNO + exception.
 
@@ -9847,6 +9912,8 @@ class QLAdminEnterpriseIntegrationSuite:
                     )
                 aligned_out_df.to_csv(out_csv, index=False)
                 self.log(f"Success: {t_id}.csv - {len(aligned_out_df)} records.")
+                if t_id.lower() == "quikmstr":
+                    self._issue75_assert_pac_bank_acct(out_csv)
                 self._cut_record(
                     str(t_id).lower(),
                     "WRITTEN",
@@ -9941,6 +10008,7 @@ class QLAdminEnterpriseIntegrationSuite:
                                 self.log(_i89_msg)
                                 raise RuntimeError(_i89_msg)
                         aligned_out_df.to_csv(out_csv, index=False)
+                        self._issue139_assert_iswl_fees_off(out_csv, mstr_path)
                         self.log(
                             f"Issue 36: plan modal factors copied to quikmstr "
                             f"(updated={plan_modal_stats.get('policies_updated', 0)}, "

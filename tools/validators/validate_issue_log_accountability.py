@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
 PY = sys.executable
-SCRIPT_VERSION = "1.10"
+SCRIPT_VERSION = "1.11"
 
 SOURCE = ROOT / "QLA_Migration" / "Source"
 
@@ -359,7 +359,7 @@ def spot_checks() -> list[dict]:
 
     # #45 bank draft
     bank_nz = sum(1 for r in mstr if _norm(r.get("MBANKNO")))
-    add("#45", "IN_DATA" if bank_nz else "WARN", f"MBANKNO populated={bank_nz}")
+    add("#45", "IN_DATA" if bank_nz >= 2000 else "GAP", f"MBANKNO populated={bank_nz}")
 
     # #75 PPCOM / QLA-safe MBANKNO (reopen v58.35)
     def _mbankno_ql_safe(mb: str) -> bool:
@@ -509,11 +509,21 @@ def spot_checks() -> list[dict]:
             ]
             if any(v > 0 for v in _ifees):
                 add(
+                    "#139",
+                    "GAP",
+                    f"ISWL {_norm(_iswl_ctrl.get('MPOLICY'))} still has non-zero fees under Issue 139",
+                )
+                add(
                     "#58-ISWL",
                     "GAP",
                     f"ISWL {_norm(_iswl_ctrl.get('MPOLICY'))} still has non-zero fees under Issue 139",
                 )
             else:
+                add(
+                    "#139",
+                    "IN_DATA",
+                    f"ISWL {_norm(_iswl_ctrl.get('MPOLICY'))} fees withheld (0)",
+                )
                 add(
                     "#58-ISWL",
                     "IN_DATA",
@@ -780,6 +790,7 @@ def main() -> int:
         ("#124", ["tools/validators/validate_issue124_quikiswl.py"], True),
         ("#143", ["tools/validators/validate_issue143_smoke.py"], True),
         ("#141", ["QLA_Migration/_validate_issue141_resrvcat.py"], True),
+        ("#139", ["tools/validators/validate_issue139_policy_fee_suppression.py"], True),
         ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
         ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
         ("#136", ["tools/validators/validate_issue136_pvo_flags.py"], True),

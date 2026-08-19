@@ -1,0 +1,39 @@
+---
+description: On every Closed issue, register a fail-closed always-on smoke so the fix cannot drop from Output.
+alwaysApply: true
+---
+
+# Closed-issue smoke test (locked 2026-08-19)
+
+**Authority:** Warren 2026-08-19. Bank Acct (#75) and Reserve Category (#141) dropped or would drop without a hard smoke. **Do not mark Closed without this.**
+
+## Hard rule
+
+Whenever an issue is marked **Closed** (or treated as client-done), you **must**:
+
+1. Have a **fail-closed** validator (exit 1 if the fix is missing or blank in full `QLA_Migration/Output/`).
+2. Register it as **required** in `SMOKE_JOBS` in `tools/validators/validate_release_closed_issues.py`.
+3. Add/update the high-risk smoke row in `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`.
+4. Run `python tools/validators/validate_release_closed_issues.py --smoke-only` and confirm the new job **PASS**es.
+
+Do **not** Close if the smoke job is missing. User waiver only, with reason + date.
+
+## What the smoke must catch
+
+The same drop that happened on Bank Acct: a later `quikmstr` / table rebatch that writes the table **without** the Closed fix. Count floors, gold traces, and “lookup/source file present” checks belong here — not only “script exists.”
+
+## Wiring
+
+| Place | Action |
+|-------|--------|
+| Validator | `tools/validators/validate_issue<ID>_*.py` or issue-folder script; exit 1 on FAIL |
+| Release smoke | Append `(label, [script], True)` to `SMOKE_JOBS` |
+| Full batch | `--smoke-only` already runs `SMOKE_JOBS`; add a named post-check only if the job is not in that list yet |
+| Guide | High-risk smoke table + Closed row Validator column |
+
+## Related
+
+- Framework rule 14 / G7: `AI_Agents/Framework.md`
+- Closure: `AI_Agents/Closure_Agent.md`
+- `.cursor/rules/issue-closure-output-gate.mdc`
+- `.cursor/rules/completed-issues-release-guide.mdc`

@@ -31,7 +31,7 @@ RATES = OUT / "rates"
 SOURCE = ROOT / "QLA_Migration" / "Source"
 REPORTS = ROOT / "QLA_Migration" / "Reports"
 PY = sys.executable
-SCRIPT_VERSION = "1.6"  # v1.6: #141 quikspec.RESRVCAT always-on smoke (Warren 2026-08-19)
+SCRIPT_VERSION = "1.8"  # v1.8: #139 ISWL fee withhold always-on smoke (Warren 2026-08-19)
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -92,6 +92,16 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
     (
         "#141 quikspec RESRVCAT",
         ["QLA_Migration/_validate_issue141_resrvcat.py"],
+        True,
+    ),
+    (
+        "#75/#45 PAC Bank Acct",
+        ["tools/validators/validate_issue75_mbankno.py"],
+        True,
+    ),
+    (
+        "#139 ISWL policy fees withheld",
+        ["tools/validators/validate_issue139_policy_fee_suppression.py"],
         True,
     ),
 ]
