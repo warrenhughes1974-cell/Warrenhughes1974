@@ -3,3 +3,4 @@ POLICY_NUMBER,MPOLICY,,Mapped from POLICY_NUMBER (authoritative QLA MPOLICY form
 RES_STATE,RESSTATE,,SKIP_TRANSLATION
 ,VANISH,F,Default False until vanish mapping is in scope
 ,VANISHDT,,Blank until vanish date mapping is in scope
+,RESRVCAT,,Issue 141: post-emit PCOVR.PRODUCT_TYPE via PPBEN BENEFIT_SEQ=1; do not copy quikplan.PRODUCT

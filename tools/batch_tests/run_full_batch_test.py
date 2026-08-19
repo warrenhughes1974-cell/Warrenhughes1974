@@ -16,6 +16,9 @@ os.environ.setdefault("QLA_GENERATE_UAT_CLAIMS_DBF", "1")
 os.environ.setdefault("QLA_CLAIMS_ORCHESTRATE", "1")
 os.environ.setdefault("QLA_ENABLE_QUIKLOAN_EMIT", "1")
 os.environ.setdefault("QLA_QUIKLOAN_WRITE_OUTPUT", "1")
+# Issue 104 validated advance-loan pilot: ON for every normal full batch.
+# Explicit rollback only: QLA_ISSUE104_VALIDATED_LOAN_BACKOUT=0
+os.environ.setdefault("QLA_ISSUE104_VALIDATED_LOAN_BACKOUT", "1")
 os.environ.setdefault("QLA_ENABLE_QUIKBENH_LOAN_EMIT", "1")
 os.environ.setdefault("QLA_QUIKBENH_LOAN_WRITE_OUTPUT", "1")
 os.environ.setdefault("QLA_ENABLE_QUIKBENH_DIVIDEND_EMIT", "1")
@@ -123,19 +126,54 @@ try:
     with open(log_path, "w", encoding="utf-8") as fh:
         fh.write(log_text)
     print(f"Console log saved: {log_path}", flush=True)
+
+    # Hard fail when rates were requested but rate emit did not succeed.
+    # Silent continuation left stale Output/rates/ and skipped A7 refresh.
+    if _include_rates:
+        br = getattr(app, "_last_rate_loader_result", None) or {}
+        status = str(br.get("status", "")).upper()
+        if status not in ("SUCCESS", "PARTIAL") and not br.get("partial_emit"):
+            raise SystemExit(
+                f"FULL BATCH FAIL: rate loader status={status or 'UNKNOWN'} "
+                f"tables={br.get('tables', '?')} — Output/rates not refreshed. "
+                "Do not hand off; fix rate source and re-run."
+            )
+        print(
+            f"RATE LOADER OK: status={status} tables={br.get('tables', '?')}",
+            flush=True,
+        )
 finally:
     root.destroy()
 
 print("=== QLA FULL BATCH TEST DONE ===", flush=True)
 
-# Every full batch: client-ID width-12 + high-water + QuikSpec + Issue 104 loan pilot.
+# Every full batch — NO EXCEPTIONS:
+# 1) Full-batch-only smokes (not yet in the release-gate list)
+# 2) Full release-gate high-risk smoke suite (same as
+#    validate_release_closed_issues.py --smoke-only)
 for _smoke_label, _smoke_script in (
-    ("CLNT-RJ client-ID width-12", "tools/validators/validate_client_id_width12.py"),
-    ("CLNT-HW quikclnt high-water", "tools/validators/validate_quikclnt_highwater.py"),
     ("QuikSpec resident state", "tools/validators/validate_quikspec_resident_state.py"),
+    ("Issue 141 reserve category", "QLA_Migration/_validate_issue141_resrvcat.py"),
     ("Issue 104 loan pilot", "tools/validators/validate_issue104_loan_pilot.py"),
 ):
     _rc = subprocess.run([sys.executable, os.path.join(BASE, _smoke_script)], cwd=BASE)
     if _rc.returncode != 0:
         raise SystemExit(f"FULL BATCH POST-CHECK FAIL: {_smoke_label}")
     print(f"POST-CHECK PASS: {_smoke_label}", flush=True)
+
+print("=== FULL BATCH RELEASE-GATE SMOKES (mandatory) ===", flush=True)
+_release_gate = subprocess.run(
+    [
+        sys.executable,
+        os.path.join(BASE, "tools/validators/validate_release_closed_issues.py"),
+        "--smoke-only",
+    ],
+    cwd=BASE,
+)
+if _release_gate.returncode != 0:
+    raise SystemExit(
+        "FULL BATCH POST-CHECK FAIL: release-gate smoke-only "
+        "(validate_release_closed_issues.py --smoke-only). "
+        "Do not hand off this package."
+    )
+print("POST-CHECK PASS: release-gate smoke-only", flush=True)

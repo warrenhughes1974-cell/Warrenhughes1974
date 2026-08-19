@@ -8,7 +8,7 @@
     "strict_order": true
   },
   "quikspec": {
-    "columns": ["MPOLICY", "VANISH", "VANISHDT", "RESSTATE"],
+    "columns": ["MPOLICY", "VANISH", "VANISHDT", "RESSTATE", "RESRVCAT"],
     "strict_order": true
   },
   "quikclnt": {
@@ -61,6 +61,10 @@
   },
   "quikloan": {
     "columns": ["MPOLICY", "MLOANPRIN", "MLOANBAL", "MLOANINT", "MLOANINTX", "MLOANIDT", "MLOANDATE", "MLOANACCR", "MLOANBILL"],
+    "strict_order": true
+  },
+  "quiklist": {
+    "columns": ["MGROUP", "MCOMP", "MBILLNAME", "MBILLADDR1", "MBILLADDR2", "MBILLCITY", "MBILLST", "MBILLZIP", "MBILLZIP2", "MSORT", "MPHONE", "MFAX", "MEMAIL", "MAGENT", "MAGENCY", "MCTNAME", "MCTADDR1", "MCTADDR2", "MCTCITY", "MCTST", "MCTZIP", "MCTZIP2", "MCTPHONE", "MCTFAX", "MCTEMAIL", "MLAPSEL", "MLAPSEH", "MMAILAGENT", "MEMOTEXT", "MBILLDAY", "MBILLMODE", "MBILLTO", "MEMAILPDF", "MPDFPSSWD", "MBILLCSV", "MGRPANNV", "MRRGANNV", "MSTATUS"],
     "strict_order": true
   }
 }

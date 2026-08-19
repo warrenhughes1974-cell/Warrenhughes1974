@@ -1,0 +1,99 @@
+{
+  "quikspec_rows": 5083,
+  "ppben_ba_rows": 5083,
+  "pcovr_coverages": 141,
+  "missing_join": 0,
+  "proposed_resrvcat": {
+    "03": 677,
+    "05": 1162,
+    "06": 454,
+    "16": 656,
+    "07": 202,
+    "11": 80,
+    "09": 20,
+    "08": 245,
+    "12": 521,
+    "13": 832,
+    "L": 33,
+    "70": 163,
+    "19": 38
+  },
+  "vs_current_quikplan_product": {
+    "matches_quikplan_PRODUCT": 2782,
+    "differs_from_quikplan_PRODUCT": 2301
+  },
+  "traces": [
+    {
+      "policy": "9010143726C",
+      "ppben_plan": "621 END85",
+      "mplan": "221END",
+      "proposed_resrvcat": "03",
+      "quikplan_product": "03",
+      "quikplan_hlob": "",
+      "vanish": "F",
+      "resstate": "CO"
+    },
+    {
+      "policy": "9010148272C",
+      "ppben_plan": "621 END85",
+      "mplan": "221END",
+      "proposed_resrvcat": "03",
+      "quikplan_product": "03",
+      "quikplan_hlob": "",
+      "vanish": "F",
+      "resstate": "MO"
+    },
+    {
+      "policy": "9010713704C",
+      "ppben_plan": "659 CEN II",
+      "mplan": "1659C2",
+      "proposed_resrvcat": "05",
+      "quikplan_product": "ISWLFE",
+      "quikplan_hlob": "ISWLFE",
+      "vanish": "F",
+      "resstate": "NE"
+    }
+  ],
+  "iswl_plan_tags_must_stay": {
+    "1658C1": {
+      "PRODUCT": "ISWLFE",
+      "HLOB": "ISWLFE",
+      "MKTG": "ISWLFE"
+    },
+    "1658CS": {
+      "PRODUCT": "ISWLFE",
+      "HLOB": "ISWLFE",
+      "MKTG": "ISWLFE"
+    },
+    "1659C2": {
+      "PRODUCT": "ISWLFE",
+      "HLOB": "ISWLFE",
+      "MKTG": "ISWLFE"
+    },
+    "1659CS": {
+      "PRODUCT": "ISWLFE",
+      "HLOB": "ISWLFE",
+      "MKTG": "ISWLFE"
+    },
+    "1659CR": {
+      "PRODUCT": "ISWLFE",
+      "HLOB": "ISWLFE",
+      "MKTG": "ISWLFE"
+    },
+    "1659SR": {
+      "PRODUCT": "ISWLFE",
+      "HLOB": "ISWLFE",
+      "MKTG": "ISWLFE"
+    },
+    "1669SR": {
+      "PRODUCT": "ISWLFE",
+      "HLOB": "ISWLFE",
+      "MKTG": "ISWLFE"
+    },
+    "1679CS": {
+      "PRODUCT": "ISWLFE",
+      "HLOB": "ISWLFE",
+      "MKTG": "ISWLFE"
+    }
+  }
+}

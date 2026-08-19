@@ -1,0 +1,25 @@
+{
+  "rows": 5083,
+  "filled": 5083,
+  "blank": 0,
+  "iswlfe_on_resrvcat": 0,
+  "join_mismatches": 0,
+  "traces": {
+    "9010143726C": {
+      "resrvcat": "03",
+      "vanish": "F",
+      "expected": "03"
+    },
+    "9010148272C": {
+      "resrvcat": "03",
+      "vanish": "F",
+      "expected": "03"
+    },
+    "9010713704C": {
+      "resrvcat": "05",
+      "vanish": "F",
+      "expected": "05"
+    }
+  },
+  "expected_filled": 5083
+}

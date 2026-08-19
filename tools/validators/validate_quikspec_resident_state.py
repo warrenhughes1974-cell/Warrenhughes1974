@@ -28,7 +28,7 @@ MSTR = OUT / "quikmstr.csv"
 REPORTS = ROOT / "QLA_Migration" / "Reports"
 SRC_DIR = ROOT / "QLA_Migration" / "Source"
 
-REQUIRED_COLS = ("MPOLICY", "VANISH", "VANISHDT", "RESSTATE")
+REQUIRED_COLS = ("MPOLICY", "VANISH", "VANISHDT", "RESSTATE", "RESRVCAT")
 
 
 def _load_ppolc_res_state(src_dir: Path) -> dict[str, str]:

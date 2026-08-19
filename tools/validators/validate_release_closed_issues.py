@@ -31,7 +31,7 @@ RATES = OUT / "rates"
 SOURCE = ROOT / "QLA_Migration" / "Source"
 REPORTS = ROOT / "QLA_Migration" / "Reports"
 PY = sys.executable
-SCRIPT_VERSION = "1.5"  # v1.5: #143 BF RPU MUNIT always-on smoke (Warren 2026-08-18)
+SCRIPT_VERSION = "1.6"  # v1.6: #141 quikspec.RESRVCAT always-on smoke (Warren 2026-08-19)
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -87,6 +87,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
     (
         "#143 BF RPU MUNIT",
         ["tools/validators/validate_issue143_smoke.py"],
+        True,
+    ),
+    (
+        "#141 quikspec RESRVCAT",
+        ["QLA_Migration/_validate_issue141_resrvcat.py"],
         True,
     ),
 ]

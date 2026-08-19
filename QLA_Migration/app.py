@@ -1,10 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.96
-# Date:        2026-08-18
+# Version:     v58.97
+# Date:        2026-08-19
 # SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
-# Change Note: v58.96 — Issue #143: BF RPU MUNIT = BF_CURRENT_DB/VALUE_PER_UNIT when
+# Change Note: v58.97 — Issue 141: quikspec.RESRVCAT from PCOVR.PRODUCT_TYPE via
+#              PPBEN BENEFIT_SEQ=1 (BA traditional / BF ISWL). Do not copy
+#              quikplan.PRODUCT (ISWLFE overlay stays on the plan).
+#              v58.96 — Issue #143: BF RPU MUNIT = BF_CURRENT_DB/VALUE_PER_UNIT when
 #              they differ (locked 23-row mismatch set). Isolated post-map override
 #              before #55 emit. MPREM/MVPU/#108A MSAVEUNIT/#124 MDB formula unchanged.
 #              v58.93 — Issue 104 validated advance-loan pilot: allowlisted policies
@@ -611,7 +614,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.96"
+APP_VERSION = "v58.97"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -656,7 +659,7 @@ class QLAdminEnterpriseIntegrationSuite:
         self.TABLE_SCHEMAS = {
             "quikplan": QUIKPLAN_SCHEMA,
             "quikmstr": ["MPOLICY","MSTATUS","MSTATDATE","MISSDT","MPAIDTO","MBILLTO","MNFOPT","MDIVOPT","MBILLFRM","MBILLDAY","MACCTNO","MBANKNO","MPREBILL","MMODE","MMODEPREM","MSEMI","MQTRL","MMTHD","MMTHB","MINQUIRY","MISSUEST","MBFCY","MGROUP","MPRIMID","MOWNRID","MPAYRID","MASGNID","MBENPID","MBENCID","MAPPDATE","MSUBMDATE","MRELDATE","MRELOTHER","MORIGBILL","MORIGMODE","MISSCNTRY","MOWNCID","MACHCNT","MACHNXTDT","MRESSTATE","MBLLDOM","MSPCODE","MISSCLASS","MMSMBI","MORGBLLDOM"],
-            "quikspec": ["MPOLICY", "VANISH", "VANISHDT", "RESSTATE"],
+            "quikspec": ["MPOLICY", "VANISH", "VANISHDT", "RESSTATE", "RESRVCAT"],
             "quikclnt": ["MCLIENTID", "MTYPE", "MTAXID", "MTAXIDTYPE", "MTITLE", "MFNAME", "MMNAME", "MLNAME", "MSUFFIX", "MADDR1", "MADDR2", "MCITY", "MSTATE", "MZIP", "MZIP2", "MCOUNTRY", "MPHONEHOME", "MPHONEOFC", "MPHOFCEXT", "MPHONECELL", "MPHONEFAX", "MEMAIL", "MDOB", "MSEX", "MMEMBERID", "MLANGUAGE", "MPDFPSSWD", "MEMAILCORR", "MVALID", "MDNC", "MOFAC", "MMEMBERDT", "MMSMBI", "MFOREIGN", "MOCCODE"],
             "quikridr": ["MPOLICY", "MPHASE", "MPHSTAT", "MLASTANN", "MANNSTAT", "MPHDOB", "MSEX", "MPLAN", "MPAR", "MEFFDATE", "MEXPRY", "MPAYUP", "MAGE", "MUNIT", "MVPU", "MPREM", "MANNLFEE", "MSEMIFEE", "MQTRLFEE", "MMTHDFEE", "MMTHBFEE", "MRRULE", "MCOMMID", "MCV0", "MCV1", "MCV2", "MSAVEAGE", "MSAVEUNIT", "MSAVEVPU", "MSAVEPREM", "MRIDRID", "MSSN", "MUWCLASS", "MBAND", "MSAVESTAT", "MCOMMPREM", "MSPCODE", "MLOCKTYP", "MLOCKDT", "MUNLCKDT"],
             "quikbenf": ["MPOLICY", "MBENFID", "MTYPE", "MRELATION", "MSPLIT"],
@@ -9831,6 +9834,17 @@ class QLAdminEnterpriseIntegrationSuite:
                             f"disable QLA_QUIKCLNT_HIGHWATER=0)"
                         )
                         output = aligned_out_df.to_dict("records")
+                if t_id.lower() == "quikspec":
+                    from qla_core.quikspec_resrvcat import apply_quikspec_resrvcat
+
+                    _spec_src = src_base if "src_base" in locals() else os.path.dirname(src_path)
+                    aligned_out_df, _rs_stats = apply_quikspec_resrvcat(
+                        aligned_out_df, _spec_src
+                    )
+                    self.log(
+                        f"Issue 141: RESRVCAT filled={_rs_stats.get('filled')} "
+                        f"blank={_rs_stats.get('blank')}"
+                    )
                 aligned_out_df.to_csv(out_csv, index=False)
                 self.log(f"Success: {t_id}.csv - {len(aligned_out_df)} records.")
                 self._cut_record(

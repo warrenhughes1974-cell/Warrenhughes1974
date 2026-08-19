@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
 PY = sys.executable
-SCRIPT_VERSION = "1.9"
+SCRIPT_VERSION = "1.10"
 
 SOURCE = ROOT / "QLA_Migration" / "Source"
 
@@ -295,8 +295,9 @@ def spot_checks() -> list[dict]:
     # #106 RV QuikTvs duration identity (LifePRO Dur N == QL Dur N)
     tv876 = _tv_at("170858", "M", 17, 2)
     tv1000 = _tv_at("170858", "M", 17, 83)
-    tv1_cen = _tv_at("1659C2", "M", 17, 1, uw="SM")
-    tv978 = _tv_at("1659C2", "M", 17, 83, uw="SM")
+    # Issue #118 remapped 1659C2 (not an L10 form) from SM to ST.
+    tv1_cen = _tv_at("1659C2", "M", 17, 1, uw="ST")
+    tv978 = _tv_at("1659C2", "M", 17, 83, uw="ST")
     if (
         _cv_num(tv876) == 8.76
         and _cv_num(tv1000) == 1000.0
@@ -306,14 +307,14 @@ def spot_checks() -> list[dict]:
         add(
             "#106",
             "IN_DATA",
-            "170858 M/17 Dur2=8.76 Dur83=1000; 1659C2 M/17 SM Dur1=1 Dur83=978",
+            "170858 M/17 Dur2=8.76 Dur83=1000; 1659C2 M/17 ST Dur1=1 Dur83=978",
         )
     else:
         add(
             "#106",
             "GAP",
             f"170858 Dur2={tv876 or '(blank)'} Dur83={tv1000 or '(blank)'}; "
-            f"1659C2 SM Dur1={tv1_cen or '(blank)'} Dur83={tv978 or '(blank)'}",
+            f"1659C2 ST Dur1={tv1_cen or '(blank)'} Dur83={tv978 or '(blank)'}",
         )
 
     # #96 CSO PVO + SAL MULTPL / L17 QuikPl* wiring
@@ -777,6 +778,8 @@ def main() -> int:
         ("#119", ["tools/validators/validate_issue119_pua_mpar.py"], True),
         ("#121", ["tools/validators/validate_issue121_art_no_eti.py"], True),
         ("#124", ["tools/validators/validate_issue124_quikiswl.py"], True),
+        ("#143", ["tools/validators/validate_issue143_smoke.py"], True),
+        ("#141", ["QLA_Migration/_validate_issue141_resrvcat.py"], True),
         ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
         ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
         ("#136", ["tools/validators/validate_issue136_pvo_flags.py"], True),
