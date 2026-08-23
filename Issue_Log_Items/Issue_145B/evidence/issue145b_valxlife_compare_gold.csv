@@ -1,0 +1,6 @@
+policy,source_workbook,valx_units,qla_units,difference,unrev_0561_dollars,predicted_0561_unit_impact,matches_0561_formula,notes
+9010815236,QLAdmin-ValxLife 6-2026 run at 6-2026.xlsx Compare,24.30594,25.00000,-0.69406,1402.56,1.40256,NO,Valx equals BF_CURRENT_DB/1000 (24.30594). QLA still 25. Opposite of 0561 face-cut (would be 23.59744).
+9011050114,QLAdmin-ValxLife 6-2026 run at 6-2026.xlsx Compare,25.00000,25.00000,0.00000,136.00,0.13600,NO,Both 25. Does not show Eric 24.864. This QLA side is pre-anniversary MUNIT.
+9011069610,QLAdmin-ValxLife 6-2026 run at 6-2026.xlsx Compare,50.00000,50.00000,0.00000,406.00,0.40600,NO,Both 50. Does not show 49.594.
+9010761639,same (Issue 146 out of scope),25.00000,25.00000,0.00000,271.00,0.27100,NO,#146 leftover. Both 25.
+9010760840,same (Issue 146 out of scope),35.00000,35.00000,0.00000,716.40,0.71640,NO,#146 leftover. Both 35.

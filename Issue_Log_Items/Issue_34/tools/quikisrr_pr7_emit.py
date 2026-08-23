@@ -37,8 +37,9 @@ from qla_core.quikisrr_loader import (
 
 OUT_DIR = PROJECT_ROOT / "QLA_Migration" / "Output"
 ARTIFACT_DIR = PROJECT_ROOT / "Issue_Log_Items" / "Issue_34" / "output" / "PR7_QUIKISRR"
-# Baselines from current Source PACTG_Accounting_Extract*.csv (20260630 refresh).
-EXPECTED = {"rows": 3657, "policies": 637, "amount": 1232602.53}
+# Pre-#145B floor (all ISWL 0561s). After #145B the leftover book is extract-dependent.
+# Do not fail emit on this stale count. Fail if any VB event is still a candidate.
+EXPECTED_PRE_145B = {"rows": 3657, "policies": 637, "amount": 1232602.53}
 
 
 def _row_hash(rows: list[dict], fields: list[str]) -> str:
@@ -89,6 +90,7 @@ def emit_package(dry_run: bool = False) -> dict:
 
     candidate_policies = {e.policy_number for e in result.candidates}
     candidate_amount = sum(e.trans_amount for e in result.candidates)
+    vb_policies = {e.policy_number for e in result.vb_excluded}
 
     summary = {
         "emit_date": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -97,9 +99,12 @@ def emit_package(dry_run: bool = False) -> dict:
             "rows": len(result.candidates),
             "policies": len(candidate_policies),
             "gross_amount": round(candidate_amount, 2),
-            "expected_rows": EXPECTED["rows"],
-            "expected_policies": EXPECTED["policies"],
-            "expected_amount": EXPECTED["amount"],
+            "expected_rows_pre_145b": EXPECTED_PRE_145B["rows"],
+            "expected_policies_pre_145b": EXPECTED_PRE_145B["policies"],
+            "expected_amount_pre_145b": EXPECTED_PRE_145B["amount"],
+            "vb_excluded_rows": len(result.vb_excluded),
+            "vb_excluded_policies": len(vb_policies),
+            "vb_leak_policies": sorted(candidate_policies & vb_policies),
         },
         "emitted": {
             "rows": len(result.emitted_events),
@@ -180,11 +185,14 @@ def main() -> int:
     print(json.dumps(summary, indent=2))
 
     pop = summary["candidate_population"]
-    if pop["rows"] != EXPECTED["rows"] or pop["policies"] != EXPECTED["policies"]:
-        print("FAIL: candidate population mismatch")
+    if pop.get("vb_excluded_rows", 0) < 1:
+        print("FAIL: Issue 145B VB exclude produced 0 drops — PPOLC VB join missed")
         return 2
-    if abs(pop["gross_amount"] - EXPECTED["amount"]) > 0.02:
-        print("FAIL: candidate amount mismatch")
+    if pop.get("vb_leak_policies"):
+        print("FAIL: VB policies still in leftover candidates")
+        return 2
+    if pop["rows"] < 1:
+        print("FAIL: leftover non-VB QuikIsrr candidates is 0")
         return 2
     return 0
 

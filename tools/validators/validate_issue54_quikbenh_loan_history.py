@@ -3,7 +3,7 @@ Issue #54 — validate QuikBenh loan history rows (PACTG → MBENTYP 10/11/12 + 
 
 Checks:
   1. quikbenh.csv schema (MPOLICY, MBENTYP, MDATE, MBEN)
-  2. MBENTYP=8 row count preserved (#34 ISRR companion)
+  2. MBENTYP=8 leftover present (#34 ISRR; #145B removed VB 0561 companions)
   3. Loan types 10/11/12 present; MBENTYP 20 absent (deferred)
   4. Opening seed on UAT policy 010822238C (20171220 / 8373.99)
   5. quikloan.csv row count unchanged (footer companion)
@@ -24,12 +24,13 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCRIPT_VERSION = "1.4"
-ENGINE_VERSION = "v58.68"
+SCRIPT_VERSION = "1.5"
+ENGINE_VERSION = "v59.01"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 TEST_VALIDATION = DEFAULT_OUTPUT / "Test_Validation"
-BASELINE_TYPE8 = 3657
+# #145B excludes vanishing-policy 0561 companions. Type 8 leftover is extract-dependent.
+TYPE8_MIN = 1
 EXPECTED_LOAN_ROWS_MIN = 37300
 EXPECTED_LOAN_ROWS_MAX = 38200  # includes restored opening seeds (~556)
 EXPECTED_SEED_MIN = 550
@@ -113,10 +114,10 @@ def validate(
 
     print(f"OK: quikbenh.csv rows={len(rows)} MBENTYP counts={dict(type_counts)}")
 
-    if type8 != BASELINE_TYPE8:
-        errors.append(f"MBENTYP=8 count={type8} expected preserved baseline {BASELINE_TYPE8}")
+    if type8 < TYPE8_MIN:
+        errors.append(f"MBENTYP=8 count={type8} expected leftover >= {TYPE8_MIN} (#34 non-VB)")
     else:
-        print(f"OK: MBENTYP=8 preserved ({type8} rows)")
+        print(f"OK: MBENTYP=8 leftover ({type8} rows; #145B VB 0561s excluded)")
 
     if loan_rows < EXPECTED_LOAN_ROWS_MIN or loan_rows > EXPECTED_LOAN_ROWS_MAX:
         errors.append(

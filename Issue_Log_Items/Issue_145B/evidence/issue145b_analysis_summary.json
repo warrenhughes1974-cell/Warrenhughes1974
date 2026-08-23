@@ -1,0 +1,71 @@
+{
+  "cut": "20260630",
+  "vb_identification": {
+    "source": "PPOLC_PolicyMaster_Extract_20260630.csv",
+    "field": "BILLING_REASON",
+    "code": "VB",
+    "interpretation": "On vanish / vanish billing. Locked by Issue 145. Not 'eligible to vanish'.",
+    "policy_count": 636,
+    "billing_reason_distribution": {
+      "(blank)": 3322,
+      "ET": 291,
+      "RU": 304,
+      "PU": 344,
+      "VB": 636,
+      "PC": 169,
+      "WD": 17
+    },
+    "ba_or_vanish_flag_distribution": {
+      "-----------------": 1,
+      "(blank)": 7002
+    },
+    "ba_or_vanish_usable": false,
+    "original_units_nonzero_rows": 576
+  },
+  "pactg_0561": {
+    "all_561": 3722,
+    "unreversed": 3661,
+    "reversed": 61,
+    "vb_unreversed_rows": 3452,
+    "vb_reversed_rows": 43,
+    "vb_policies_with_unreversed": 587,
+    "vb_without_0561": 49,
+    "non_vb_unreversed_rows": 209,
+    "non_vb_unreversed_policies": 52,
+    "note_146": "non-VB 0561 population is Issue 146 \u2014 out of scope for 145B"
+  },
+  "quikisrr": {
+    "output_rows": 3657,
+    "output_policies": 637,
+    "vb_policies_with_isrr": 587,
+    "vb_isrr_rows": 3452
+  },
+  "population": {
+    "vb_policies": 636,
+    "output_munit_already_differs_from_lp": 0,
+    "vb_with_unrev_emit_not_exact": 0
+  },
+  "out_of_scope_146_examples": {
+    "9010761639": {
+      "is_vb": false,
+      "billing_reason": "",
+      "lp_units": 25.0,
+      "n_0561": 1,
+      "sum_0561": 271.0,
+      "scope": "Issue 146 \u2014 not analyzed as 145B candidates"
+    },
+    "9010760840": {
+      "is_vb": false,
+      "billing_reason": "",
+      "lp_units": 35.0,
+      "n_0561": 2,
+      "sum_0561": 716.4,
+      "scope": "Issue 146 \u2014 not analyzed as 145B candidates"
+    }
+  },
+  "gold_keys": [
+    "9010815236",
+    "9011050114",
+    "9011069610"
+  ]
+}

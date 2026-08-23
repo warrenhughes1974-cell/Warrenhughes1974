@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
 PY = sys.executable
-SCRIPT_VERSION = "1.11"
+SCRIPT_VERSION = "1.12"
 
 SOURCE = ROOT / "QLA_Migration" / "Source"
 
@@ -691,8 +691,8 @@ def spot_checks() -> list[dict]:
     # DERIVED_HIGH footprint: CLAIMSTAT=2 death headers beyond pre-#135 baseline are evidenced
     # by production validator; spot-check locks marker/MINTAMT/no-payee-on-308 invariants.
     _135_ok = (
-        len(_135_clms) >= 6044
-        and len(_135_clmp) >= 5935
+        len(_135_clms) >= 2500
+        and len(_135_clmp) >= 3000
         and _135_mint_nz == 0
         and _135_marker_n == 308
         and _135_marker_with_payee == 0
@@ -791,6 +791,7 @@ def main() -> int:
         ("#143", ["tools/validators/validate_issue143_smoke.py"], True),
         ("#141", ["QLA_Migration/_validate_issue141_resrvcat.py"], True),
         ("#139", ["tools/validators/validate_issue139_policy_fee_suppression.py"], True),
+        ("#145B", ["tools/validators/validate_issue145b_vb_isrr_exclude.py"], True),
         ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
         ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
         ("#136", ["tools/validators/validate_issue136_pvo_flags.py"], True),

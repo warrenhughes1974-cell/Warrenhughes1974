@@ -1,0 +1,30 @@
+{
+  "issue": "145B",
+  "generated": "2026-08-23",
+  "cut": "20260630",
+  "code_changed": false,
+  "vb_source": "QLA_Migration/Output/quikspec.csv VANISH=T",
+  "vb_policies": 636,
+  "before": {
+    "QuikIsrr.csv": {"rows": 3657, "policies": 637},
+    "vb_quikisrr_rows": 3452,
+    "vb_quikisrr_policies": 587,
+    "vb_quikisrr_amount": 1157482.66,
+    "vb_quikclms_ps": 3452,
+    "vb_quikclmp_phase0": 3452,
+    "vb_quikbenh_type8": 3452
+  },
+  "proposed": {
+    "QuikIsrr.csv": {"rows": 205, "policies": 50, "amount": 75119.87},
+    "vb_quikisrr_rows": 0,
+    "companions_removed_each": 3452
+  },
+  "gold": {
+    "9010815236C": {"vanish": true, "before_rows": 8, "before_amt": 1402.56, "after_rows": 0, "munit": 25.0},
+    "9011050114C": {"vanish": true, "before_rows": 1, "before_amt": 136.0, "after_rows": 0, "munit": 25.0},
+    "9011069610C": {"vanish": true, "before_rows": 1, "before_amt": 406.0, "after_rows": 0, "munit": 50.0},
+    "9010761639C": {"vanish": false, "before_rows": 1, "before_amt": 271.0, "after_rows": 1, "scope": "146"},
+    "9010760840C": {"vanish": false, "before_rows": 2, "before_amt": 716.4, "after_rows": 2, "scope": "146"}
+  },
+  "untouched": ["quikridr.MUNIT", "quikridr.MPREM", "quikmstr.MMODEPREM", "quikspec.VANISH", "PACTG source", "quikbenh types 10/11/12"]
+}

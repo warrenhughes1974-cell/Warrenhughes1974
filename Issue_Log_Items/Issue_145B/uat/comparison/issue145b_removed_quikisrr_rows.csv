@@ -1,0 +1,11 @@
+source_line,mpolicy,msurrdate,msurramt,reversal_status,transaction_type
+2215,9010815236C,20181002,174.51,unreversed (Issue 34 already dropped REVERSAL=Y),PACTG 0561 emitted as QuikIsrr
+2216,9010815236C,20191002,174.51,unreversed (Issue 34 already dropped REVERSAL=Y),PACTG 0561 emitted as QuikIsrr
+2217,9010815236C,20201002,174.51,unreversed (Issue 34 already dropped REVERSAL=Y),PACTG 0561 emitted as QuikIsrr
+2218,9010815236C,20211002,174.51,unreversed (Issue 34 already dropped REVERSAL=Y),PACTG 0561 emitted as QuikIsrr
+2219,9010815236C,20221002,174.51,unreversed (Issue 34 already dropped REVERSAL=Y),PACTG 0561 emitted as QuikIsrr
+2220,9010815236C,20231212,176.67,unreversed (Issue 34 already dropped REVERSAL=Y),PACTG 0561 emitted as QuikIsrr
+2221,9010815236C,20241002,176.67,unreversed (Issue 34 already dropped REVERSAL=Y),PACTG 0561 emitted as QuikIsrr
+2222,9010815236C,20251002,176.67,unreversed (Issue 34 already dropped REVERSAL=Y),PACTG 0561 emitted as QuikIsrr
+3460,9011050114C,20171226,136.0,unreversed (Issue 34 already dropped REVERSAL=Y),PACTG 0561 emitted as QuikIsrr
+3543,9011069610C,20260304,406.0,unreversed (Issue 34 already dropped REVERSAL=Y),PACTG 0561 emitted as QuikIsrr

@@ -1,0 +1,31 @@
+{
+  "issue": "145B",
+  "applied_utc": "2026-08-23T17:04:42Z",
+  "before": {
+    "QuikIsrr": 3657,
+    "quikclms": 6044,
+    "quikclmp": 6536,
+    "quikbenh": 45012
+  },
+  "after": {
+    "QuikIsrr": 205,
+    "quikclms": 2592,
+    "quikclmp": 3084,
+    "quikbenh": 41560
+  },
+  "removed": {
+    "QuikIsrr": 3452,
+    "quikclms": 3452,
+    "quikclmp": 3452,
+    "quikbenh": 3452
+  },
+  "gold_vb": [
+    "9010815236C",
+    "9011050114C",
+    "9011069610C"
+  ],
+  "gold_146": [
+    "9010761639C",
+    "9010760840C"
+  ]
+}

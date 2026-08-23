@@ -1,0 +1,323 @@
+{
+  "source": "docs/VaxLife_QLAdmin_VPUNITDIFFERENCES.txt",
+  "columns": "Group | Policy | ValxLife units | QLAdmin live units | Diff",
+  "listing_rows": 345,
+  "qla_live_equals_seed_minus_0561_over_1000": {
+    "match": 288,
+    "miss": 57,
+    "tol": 0.002
+  },
+  "listed_diff_equals_0561_over_1000": {
+    "match": 287,
+    "miss": 58,
+    "note": "Fails when Valx units already reduced (e.g. 9010815236 Valx=24.30594 not 25)."
+  },
+  "positive_diff_rows": {
+    "count": 337,
+    "qla_matches_counterfactual": 288
+  },
+  "negative_diff_rows": 8,
+  "by_bucket": {
+    "145B_GOLD": {
+      "rows": 3,
+      "qla_matches_counterfactual": 3
+    },
+    "145B_VB": {
+      "rows": 316,
+      "qla_matches_counterfactual": 260
+    },
+    "146": {
+      "rows": 2,
+      "qla_matches_counterfactual": 2
+    },
+    "146_OTHER": {
+      "rows": 24,
+      "qla_matches_counterfactual": 23
+    }
+  },
+  "golds": {
+    "9010815236": {
+      "valx_units": 24.30594,
+      "qla_live_units": 23.597,
+      "listed_diff": 0.70894,
+      "sum_0561": 1402.56,
+      "unit_impact_0561": 1.40256,
+      "counterfactual_units": 23.59744,
+      "qla_matches_counterfactual": true,
+      "bucket": "145B_GOLD"
+    },
+    "9011050114": {
+      "valx_units": 25.0,
+      "qla_live_units": 24.864,
+      "listed_diff": 0.136,
+      "sum_0561": 136.0,
+      "unit_impact_0561": 0.136,
+      "counterfactual_units": 24.864,
+      "qla_matches_counterfactual": true,
+      "bucket": "145B_GOLD"
+    },
+    "9011069610": {
+      "valx_units": 50.0,
+      "qla_live_units": 49.594,
+      "listed_diff": 0.406,
+      "sum_0561": 406.0,
+      "unit_impact_0561": 0.406,
+      "counterfactual_units": 49.594,
+      "qla_matches_counterfactual": true,
+      "bucket": "145B_GOLD"
+    },
+    "9010761639": {
+      "valx_units": 25.0,
+      "qla_live_units": 24.729,
+      "listed_diff": 0.271,
+      "sum_0561": 271.0,
+      "unit_impact_0561": 0.271,
+      "counterfactual_units": 24.729,
+      "qla_matches_counterfactual": true,
+      "bucket": "146"
+    },
+    "9010760840": {
+      "valx_units": 35.0,
+      "qla_live_units": 34.284,
+      "listed_diff": 0.716,
+      "sum_0561": 716.4,
+      "unit_impact_0561": 0.7164,
+      "counterfactual_units": 34.2836,
+      "qla_matches_counterfactual": true,
+      "bucket": "146"
+    }
+  },
+  "miss_sample": [
+    {
+      "policy": "9010905200",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 24.585,
+      "diff": 0.415,
+      "sum_0561": 553.0,
+      "counterfactual": 24.447
+    },
+    {
+      "policy": "9010753409",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 24.395,
+      "diff": 0.605,
+      "sum_0561": 726.0,
+      "counterfactual": 24.274
+    },
+    {
+      "policy": "9010796916",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 24.098,
+      "diff": 0.902,
+      "sum_0561": 1014.75,
+      "counterfactual": 23.98525
+    },
+    {
+      "policy": "9010797832",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 24.032,
+      "diff": 0.968,
+      "sum_0561": 1089.0,
+      "counterfactual": 23.911
+    },
+    {
+      "policy": "9010797831",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 24.014,
+      "diff": 0.986,
+      "sum_0561": 1109.25,
+      "counterfactual": 23.89075
+    },
+    {
+      "policy": "9010842857",
+      "bucket": "145B_VB",
+      "valx": 50.0,
+      "qla_live": 48.998,
+      "diff": 1.002,
+      "sum_0561": 1203.0,
+      "counterfactual": 48.797
+    },
+    {
+      "policy": "9010719553",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 23.922,
+      "diff": 1.078,
+      "sum_0561": 1212.75,
+      "counterfactual": 23.78725
+    },
+    {
+      "policy": "9010902973",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 23.922,
+      "diff": 1.078,
+      "sum_0561": 1212.75,
+      "counterfactual": 23.78725
+    },
+    {
+      "policy": "9010992126",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 23.864,
+      "diff": 1.136,
+      "sum_0561": 1278.0,
+      "counterfactual": 23.722
+    },
+    {
+      "policy": "9010794751",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 23.798,
+      "diff": 1.202,
+      "sum_0561": 1352.25,
+      "counterfactual": 23.64775
+    },
+    {
+      "policy": "9010798030",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 23.684,
+      "diff": 1.316,
+      "sum_0561": 1480.5,
+      "counterfactual": 23.5195
+    },
+    {
+      "policy": "9010902972",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 23.642,
+      "diff": 1.358,
+      "sum_0561": 1527.75,
+      "counterfactual": 23.47225
+    },
+    {
+      "policy": "9010794730",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 23.504,
+      "diff": 1.496,
+      "sum_0561": 1683.0,
+      "counterfactual": 23.317
+    },
+    {
+      "policy": "9010794731",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 23.156,
+      "diff": 1.844,
+      "sum_0561": 2074.5,
+      "counterfactual": 22.9255
+    },
+    {
+      "policy": "9010752580",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 23.092,
+      "diff": 1.908,
+      "sum_0561": 2146.5,
+      "counterfactual": 22.8535
+    },
+    {
+      "policy": "9010755152",
+      "bucket": "145B_VB",
+      "valx": 7.0,
+      "qla_live": 5.071,
+      "diff": 1.929,
+      "sum_0561": 2169.81,
+      "counterfactual": 4.83019
+    },
+    {
+      "policy": "9010796707",
+      "bucket": "145B_VB",
+      "valx": 10.0,
+      "qla_live": 8.027,
+      "diff": 1.973,
+      "sum_0561": 2219.4,
+      "counterfactual": 7.7806
+    },
+    {
+      "policy": "9010901787",
+      "bucket": "145B_VB",
+      "valx": 10.0,
+      "qla_live": 7.926,
+      "diff": 2.074,
+      "sum_0561": 2332.8,
+      "counterfactual": 7.6672
+    },
+    {
+      "policy": "9010749842",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 22.896,
+      "diff": 2.104,
+      "sum_0561": 2367.0,
+      "counterfactual": 22.633
+    },
+    {
+      "policy": "9010720759",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 22.766,
+      "diff": 2.234,
+      "sum_0561": 2513.25,
+      "counterfactual": 22.48675
+    },
+    {
+      "policy": "9010752702",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 22.766,
+      "diff": 2.234,
+      "sum_0561": 2513.25,
+      "counterfactual": 22.48675
+    },
+    {
+      "policy": "9010749843",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 22.702,
+      "diff": 2.298,
+      "sum_0561": 2585.25,
+      "counterfactual": 22.41475
+    },
+    {
+      "policy": "9010796356",
+      "bucket": "145B_VB",
+      "valx": 25.0,
+      "qla_live": 22.702,
+      "diff": 2.298,
+      "sum_0561": 2585.25,
+      "counterfactual": 22.41475
+    },
+    {
+      "policy": "9010842315",
+      "bucket": "145B_VB",
+      "valx": 7.0,
+      "qla_live": 4.528,
+      "diff": 2.472,
+      "sum_0561": 2781.54,
+      "counterfactual": 4.21846
+    },
+    {
+      "policy": "9010794514",
+      "bucket": "145B_VB",
+      "valx": 10.4,
+      "qla_live": 7.77,
+      "diff": 2.63,
+      "sum_0561": 2959.02,
+      "counterfactual": 7.44098
+    }
+  ],
+  "miss_split": {
+    "explained_by_dropping_latest_0561": 28,
+    "unexplained_qla_near_30_staircase": 29,
+    "note": "Bottom of listing has QLA units walking ~30.18 to ~31.00 by ~0.0317 per row. Treat those 29 as listing noise, not a second unit formula."
+  },
+  "conclusion": "This listing is live QLAdmin units after anniversary, not conversion MUNIT. On the 145B golds, live QLA units equal LifePRO units minus unreversed 0561/1000."
+}

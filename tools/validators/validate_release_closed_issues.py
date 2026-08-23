@@ -31,7 +31,7 @@ RATES = OUT / "rates"
 SOURCE = ROOT / "QLA_Migration" / "Source"
 REPORTS = ROOT / "QLA_Migration" / "Reports"
 PY = sys.executable
-SCRIPT_VERSION = "1.8"  # v1.8: #139 ISWL fee withhold always-on smoke (Warren 2026-08-19)
+SCRIPT_VERSION = "1.9"  # v1.9: #145B VB 0561 QuikIsrr exclude always-on smoke (Warren 2026-08-23)
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -102,6 +102,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
     (
         "#139 ISWL policy fees withheld",
         ["tools/validators/validate_issue139_policy_fee_suppression.py"],
+        True,
+    ),
+    (
+        "#145B vanish 0561s out of ISRR",
+        ["tools/validators/validate_issue145b_vb_isrr_exclude.py"],
         True,
     ),
 ]

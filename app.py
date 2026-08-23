@@ -1,10 +1,15 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v58.99
-# Date:        2026-08-19
+# Version:     v59.01
+# Date:        2026-08-23
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v58.99 — Issue 139 ISWL/UNKNOWN policy-fee withhold restored on
+# Change Note: v59.01 — Issue 145B: exclude PPOLC BILLING_REASON=VB 0561s from
+#              QuikIsrr / PR-7 companions so anniversary does not cut vanish units.
+#              v59.00 — Issue 145: quikspec.VANISH=T when PPOLC BILLING_REASON=VB;
+#              else F. VANISHDT stays blank. RESSTATE / RESRVCAT unchanged.
+#              Also restore general quikspec to_csv indent (write all tables).
+#              v58.99 — Issue 139 ISWL/UNKNOWN policy-fee withhold restored on
 #              root app.py (the file run_converter.bat actually launches) plus
 #              convert-time / release-gate fail-closed smoke so a later quikridr
 #              rebatch cannot ship ISWL $25 fees again.
@@ -621,7 +626,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v58.99"
+APP_VERSION = "v59.01"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -9901,6 +9906,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         output = aligned_out_df.to_dict("records")
                 if t_id.lower() == "quikspec":
                     from qla_core.quikspec_resrvcat import apply_quikspec_resrvcat
+                    from qla_core.quikspec_vanish import apply_quikspec_vanish
 
                     _spec_src = src_base if "src_base" in locals() else os.path.dirname(src_path)
                     aligned_out_df, _rs_stats = apply_quikspec_resrvcat(
@@ -9910,7 +9916,14 @@ class QLAdminEnterpriseIntegrationSuite:
                         f"Issue 141: RESRVCAT filled={_rs_stats.get('filled')} "
                         f"blank={_rs_stats.get('blank')}"
                     )
-                    aligned_out_df.to_csv(out_csv, index=False)
+                    aligned_out_df, _vb_stats = apply_quikspec_vanish(
+                        aligned_out_df, _spec_src
+                    )
+                    self.log(
+                        f"Issue 145: VANISH T={_vb_stats.get('true')} "
+                        f"F={_vb_stats.get('false')} missing={_vb_stats.get('missing')}"
+                    )
+                aligned_out_df.to_csv(out_csv, index=False)
                 self.log(f"Success: {t_id}.csv - {len(aligned_out_df)} records.")
                 if t_id.lower() == "quikmstr":
                     self._issue75_assert_pac_bank_acct(out_csv)

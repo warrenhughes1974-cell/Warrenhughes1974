@@ -1,0 +1,640 @@
+{
+  "9010815236": {
+    "is_vb": true,
+    "ppolc": {
+      "billing_reason": "VB",
+      "billing_code": "A",
+      "billing_mode": "12",
+      "contract_code": "A",
+      "mode_prem": 176.67,
+      "ann_prem": 176.67,
+      "paid_to": "20261002",
+      "issue_date": "",
+      "group": ""
+    },
+    "ppben_base": {
+      "seq": "1",
+      "type": "BF",
+      "status": "A",
+      "plan": "",
+      "units": 25.0,
+      "vpu": 1000.0,
+      "mode_prem": 176.67
+    },
+    "ppbentyp": {
+      "type_code": "BF",
+      "seq": "1",
+      "original_units": 0.0,
+      "ba_or_vanish_flag": "",
+      "bf_current_db": 24305.94
+    },
+    "qla_ridr": {
+      "mpolicy": "9010815236C",
+      "mplan": "1659C2",
+      "munit": 25.0,
+      "mvpu": 1000.0,
+      "mprem": 6.9804,
+      "mphstat": "22"
+    },
+    "qla_iswl": {
+      "mdb": 25000.0,
+      "mcashval": 0.0,
+      "mmonth": "0",
+      "mlastannv": "19861002"
+    },
+    "qla_spec": {
+      "vanish": "T",
+      "vanishdt": ""
+    },
+    "pactg_unreversed": [
+      {
+        "policy": "9010815236",
+        "debit": "561",
+        "credit": "13",
+        "eff": "20181002",
+        "added": "20181002",
+        "amt": 174.51,
+        "reversal": "",
+        "date_reversed": "",
+        "control": "434631806051",
+        "record_seq": "0",
+        "benefit_seq": "4",
+        "plan": "659 CEN II",
+        "coder": "C03A"
+      },
+      {
+        "policy": "9010815236",
+        "debit": "561",
+        "credit": "13",
+        "eff": "20191002",
+        "added": "20191002",
+        "amt": 174.51,
+        "reversal": "",
+        "date_reversed": "",
+        "control": "438291809179",
+        "record_seq": "0",
+        "benefit_seq": "4",
+        "plan": "659 CEN II",
+        "coder": "C03A"
+      },
+      {
+        "policy": "9010815236",
+        "debit": "561",
+        "credit": "13",
+        "eff": "20201002",
+        "added": "20201002",
+        "amt": 174.51,
+        "reversal": "",
+        "date_reversed": "",
+        "control": "441961853037",
+        "record_seq": "0",
+        "benefit_seq": "4",
+        "plan": "659 CEN II",
+        "coder": "C03A"
+      },
+      {
+        "policy": "9010815236",
+        "debit": "561",
+        "credit": "13",
+        "eff": "20211002",
+        "added": "20211004",
+        "amt": 174.51,
+        "reversal": "",
+        "date_reversed": "",
+        "control": "445631830435",
+        "record_seq": "0",
+        "benefit_seq": "4",
+        "plan": "659 CEN II",
+        "coder": "C03A"
+      },
+      {
+        "policy": "9010815236",
+        "debit": "561",
+        "credit": "13",
+        "eff": "20221002",
+        "added": "20221201",
+        "amt": 174.51,
+        "reversal": "",
+        "date_reversed": "",
+        "control": "449872040503",
+        "record_seq": "0",
+        "benefit_seq": "4",
+        "plan": "659 CEN II",
+        "coder": "C03A"
+      },
+      {
+        "policy": "9010815236",
+        "debit": "561",
+        "credit": "12",
+        "eff": "20231212",
+        "added": "20231212",
+        "amt": 176.67,
+        "reversal": "",
+        "date_reversed": "",
+        "control": "453640723536",
+        "record_seq": "0",
+        "benefit_seq": "1",
+        "plan": "659 CEN II",
+        "coder": "MENA"
+      },
+      {
+        "policy": "9010815236",
+        "debit": "561",
+        "credit": "13",
+        "eff": "20241002",
+        "added": "20241002",
+        "amt": 176.67,
+        "reversal": "",
+        "date_reversed": "",
+        "control": "456601814310",
+        "record_seq": "0",
+        "benefit_seq": "4",
+        "plan": "659 CEN II",
+        "coder": "C03A"
+      },
+      {
+        "policy": "9010815236",
+        "debit": "561",
+        "credit": "13",
+        "eff": "20251002",
+        "added": "20251002",
+        "amt": 176.67,
+        "reversal": "",
+        "date_reversed": "",
+        "control": "460251826513",
+        "record_seq": "0",
+        "benefit_seq": "4",
+        "plan": "659 CEN II",
+        "coder": "C03A"
+      }
+    ],
+    "pactg_reversed": [
+      {
+        "policy": "9010815236",
+        "debit": "561",
+        "credit": "13",
+        "eff": "20221002",
+        "added": "20221003",
+        "amt": 174.51,
+        "reversal": "Y",
+        "date_reversed": "20221201",
+        "control": "449282022261",
+        "record_seq": "0",
+        "benefit_seq": "4",
+        "plan": "659 CEN II",
+        "coder": "C03A"
+      }
+    ],
+    "isrr": [
+      {
+        "mpolicy": "9010815236C",
+        "date": "20181002",
+        "amt": 174.51
+      },
+      {
+        "mpolicy": "9010815236C",
+        "date": "20191002",
+        "amt": 174.51
+      },
+      {
+        "mpolicy": "9010815236C",
+        "date": "20201002",
+        "amt": 174.51
+      },
+      {
+        "mpolicy": "9010815236C",
+        "date": "20211002",
+        "amt": 174.51
+      },
+      {
+        "mpolicy": "9010815236C",
+        "date": "20221002",
+        "amt": 174.51
+      },
+      {
+        "mpolicy": "9010815236C",
+        "date": "20231212",
+        "amt": 176.67
+      },
+      {
+        "mpolicy": "9010815236C",
+        "date": "20241002",
+        "amt": 176.67
+      },
+      {
+        "mpolicy": "9010815236C",
+        "date": "20251002",
+        "amt": 176.67
+      }
+    ],
+    "traces": [
+      {
+        "source": {
+          "policy": "9010815236",
+          "debit": "561",
+          "credit": "13",
+          "eff": "20181002",
+          "added": "20181002",
+          "amt": 174.51,
+          "reversal": "",
+          "date_reversed": "",
+          "control": "434631806051",
+          "record_seq": "0",
+          "benefit_seq": "4",
+          "plan": "659 CEN II",
+          "coder": "C03A"
+        },
+        "isrr": {
+          "mpolicy": "9010815236C",
+          "date": "20181002",
+          "amt": 174.51
+        },
+        "status": "Exact Match"
+      },
+      {
+        "source": {
+          "policy": "9010815236",
+          "debit": "561",
+          "credit": "13",
+          "eff": "20191002",
+          "added": "20191002",
+          "amt": 174.51,
+          "reversal": "",
+          "date_reversed": "",
+          "control": "438291809179",
+          "record_seq": "0",
+          "benefit_seq": "4",
+          "plan": "659 CEN II",
+          "coder": "C03A"
+        },
+        "isrr": {
+          "mpolicy": "9010815236C",
+          "date": "20191002",
+          "amt": 174.51
+        },
+        "status": "Exact Match"
+      },
+      {
+        "source": {
+          "policy": "9010815236",
+          "debit": "561",
+          "credit": "13",
+          "eff": "20201002",
+          "added": "20201002",
+          "amt": 174.51,
+          "reversal": "",
+          "date_reversed": "",
+          "control": "441961853037",
+          "record_seq": "0",
+          "benefit_seq": "4",
+          "plan": "659 CEN II",
+          "coder": "C03A"
+        },
+        "isrr": {
+          "mpolicy": "9010815236C",
+          "date": "20201002",
+          "amt": 174.51
+        },
+        "status": "Exact Match"
+      },
+      {
+        "source": {
+          "policy": "9010815236",
+          "debit": "561",
+          "credit": "13",
+          "eff": "20211002",
+          "added": "20211004",
+          "amt": 174.51,
+          "reversal": "",
+          "date_reversed": "",
+          "control": "445631830435",
+          "record_seq": "0",
+          "benefit_seq": "4",
+          "plan": "659 CEN II",
+          "coder": "C03A"
+        },
+        "isrr": {
+          "mpolicy": "9010815236C",
+          "date": "20211002",
+          "amt": 174.51
+        },
+        "status": "Exact Match"
+      },
+      {
+        "source": {
+          "policy": "9010815236",
+          "debit": "561",
+          "credit": "13",
+          "eff": "20221002",
+          "added": "20221201",
+          "amt": 174.51,
+          "reversal": "",
+          "date_reversed": "",
+          "control": "449872040503",
+          "record_seq": "0",
+          "benefit_seq": "4",
+          "plan": "659 CEN II",
+          "coder": "C03A"
+        },
+        "isrr": {
+          "mpolicy": "9010815236C",
+          "date": "20221002",
+          "amt": 174.51
+        },
+        "status": "Exact Match"
+      },
+      {
+        "source": {
+          "policy": "9010815236",
+          "debit": "561",
+          "credit": "12",
+          "eff": "20231212",
+          "added": "20231212",
+          "amt": 176.67,
+          "reversal": "",
+          "date_reversed": "",
+          "control": "453640723536",
+          "record_seq": "0",
+          "benefit_seq": "1",
+          "plan": "659 CEN II",
+          "coder": "MENA"
+        },
+        "isrr": {
+          "mpolicy": "9010815236C",
+          "date": "20231212",
+          "amt": 176.67
+        },
+        "status": "Exact Match"
+      },
+      {
+        "source": {
+          "policy": "9010815236",
+          "debit": "561",
+          "credit": "13",
+          "eff": "20241002",
+          "added": "20241002",
+          "amt": 176.67,
+          "reversal": "",
+          "date_reversed": "",
+          "control": "456601814310",
+          "record_seq": "0",
+          "benefit_seq": "4",
+          "plan": "659 CEN II",
+          "coder": "C03A"
+        },
+        "isrr": {
+          "mpolicy": "9010815236C",
+          "date": "20241002",
+          "amt": 176.67
+        },
+        "status": "Exact Match"
+      },
+      {
+        "source": {
+          "policy": "9010815236",
+          "debit": "561",
+          "credit": "13",
+          "eff": "20251002",
+          "added": "20251002",
+          "amt": 176.67,
+          "reversal": "",
+          "date_reversed": "",
+          "control": "460251826513",
+          "record_seq": "0",
+          "benefit_seq": "4",
+          "plan": "659 CEN II",
+          "coder": "C03A"
+        },
+        "isrr": {
+          "mpolicy": "9010815236C",
+          "date": "20251002",
+          "amt": 176.67
+        },
+        "status": "Exact Match"
+      }
+    ],
+    "isrr_unmatched": [],
+    "sum_0561": 1402.56,
+    "vpu": 1000.0,
+    "unit_impact": 1.40256,
+    "lp_units": 25.0,
+    "qla_output_munit": 25.0,
+    "counterfactual_after_anniv": 23.59744,
+    "output_equals_lp": true,
+    "hypothesis": "QLA Output MUNIT still equals LifePRO units. If anniversary subtracts 0561 dollars from face (units*VPU), resulting units = LP units - sum(0561)/VPU."
+  },
+  "9011050114": {
+    "is_vb": true,
+    "ppolc": {
+      "billing_reason": "VB",
+      "billing_code": "A",
+      "billing_mode": "12",
+      "contract_code": "A",
+      "mode_prem": 121.0,
+      "ann_prem": 0.0,
+      "paid_to": "20261226",
+      "issue_date": "",
+      "group": ""
+    },
+    "ppben_base": {
+      "seq": "1",
+      "type": "BF",
+      "status": "A",
+      "plan": "",
+      "units": 25.0,
+      "vpu": 1000.0,
+      "mode_prem": 121.0
+    },
+    "ppbentyp": {
+      "type_code": "BF",
+      "seq": "1",
+      "original_units": 0.0,
+      "ba_or_vanish_flag": "",
+      "bf_current_db": 25000.0
+    },
+    "qla_ridr": {
+      "mpolicy": "9011050114C",
+      "mplan": "1659C2",
+      "munit": 25.0,
+      "mvpu": 1000.0,
+      "mprem": 4.84,
+      "mphstat": "22"
+    },
+    "qla_iswl": {
+      "mdb": 25000.0,
+      "mcashval": 0.0,
+      "mmonth": "0",
+      "mlastannv": "19911226"
+    },
+    "qla_spec": {
+      "vanish": "T",
+      "vanishdt": ""
+    },
+    "pactg_unreversed": [
+      {
+        "policy": "9011050114",
+        "debit": "561",
+        "credit": "13",
+        "eff": "20171226",
+        "added": "20180227",
+        "amt": 136.0,
+        "reversal": "",
+        "date_reversed": "",
+        "control": "432461110410",
+        "record_seq": "0",
+        "benefit_seq": "3",
+        "plan": "659 CEN II",
+        "coder": "MENA"
+      }
+    ],
+    "pactg_reversed": [],
+    "isrr": [
+      {
+        "mpolicy": "9011050114C",
+        "date": "20171226",
+        "amt": 136.0
+      }
+    ],
+    "traces": [
+      {
+        "source": {
+          "policy": "9011050114",
+          "debit": "561",
+          "credit": "13",
+          "eff": "20171226",
+          "added": "20180227",
+          "amt": 136.0,
+          "reversal": "",
+          "date_reversed": "",
+          "control": "432461110410",
+          "record_seq": "0",
+          "benefit_seq": "3",
+          "plan": "659 CEN II",
+          "coder": "MENA"
+        },
+        "isrr": {
+          "mpolicy": "9011050114C",
+          "date": "20171226",
+          "amt": 136.0
+        },
+        "status": "Exact Match"
+      }
+    ],
+    "isrr_unmatched": [],
+    "sum_0561": 136.0,
+    "vpu": 1000.0,
+    "unit_impact": 0.136,
+    "lp_units": 25.0,
+    "qla_output_munit": 25.0,
+    "counterfactual_after_anniv": 24.864,
+    "output_equals_lp": true,
+    "hypothesis": "QLA Output MUNIT still equals LifePRO units. If anniversary subtracts 0561 dollars from face (units*VPU), resulting units = LP units - sum(0561)/VPU."
+  },
+  "9011069610": {
+    "is_vb": true,
+    "ppolc": {
+      "billing_reason": "VB",
+      "billing_code": "A",
+      "billing_mode": "12",
+      "contract_code": "A",
+      "mode_prem": 406.0,
+      "ann_prem": 406.0,
+      "paid_to": "20270304",
+      "issue_date": "",
+      "group": ""
+    },
+    "ppben_base": {
+      "seq": "1",
+      "type": "BF",
+      "status": "A",
+      "plan": "",
+      "units": 50.0,
+      "vpu": 1000.0,
+      "mode_prem": 406.0
+    },
+    "ppbentyp": {
+      "type_code": "BF",
+      "seq": "1",
+      "original_units": 0.0,
+      "ba_or_vanish_flag": "",
+      "bf_current_db": 50000.0
+    },
+    "qla_ridr": {
+      "mpolicy": "9011069610C",
+      "mplan": "1659C2",
+      "munit": 50.0,
+      "mvpu": 1000.0,
+      "mprem": 7.62,
+      "mphstat": "22"
+    },
+    "qla_iswl": {
+      "mdb": 50000.0,
+      "mcashval": 0.0,
+      "mmonth": "0",
+      "mlastannv": "19930304"
+    },
+    "qla_spec": {
+      "vanish": "T",
+      "vanishdt": ""
+    },
+    "pactg_unreversed": [
+      {
+        "policy": "9011069610",
+        "debit": "561",
+        "credit": "13",
+        "eff": "20260304",
+        "added": "20260220",
+        "amt": 406.0,
+        "reversal": "",
+        "date_reversed": "",
+        "control": "461671013598",
+        "record_seq": "0",
+        "benefit_seq": "4",
+        "plan": "659 CEN II",
+        "coder": "CADA"
+      }
+    ],
+    "pactg_reversed": [],
+    "isrr": [
+      {
+        "mpolicy": "9011069610C",
+        "date": "20260304",
+        "amt": 406.0
+      }
+    ],
+    "traces": [
+      {
+        "source": {
+          "policy": "9011069610",
+          "debit": "561",
+          "credit": "13",
+          "eff": "20260304",
+          "added": "20260220",
+          "amt": 406.0,
+          "reversal": "",
+          "date_reversed": "",
+          "control": "461671013598",
+          "record_seq": "0",
+          "benefit_seq": "4",
+          "plan": "659 CEN II",
+          "coder": "CADA"
+        },
+        "isrr": {
+          "mpolicy": "9011069610C",
+          "date": "20260304",
+          "amt": 406.0
+        },
+        "status": "Exact Match"
+      }
+    ],
+    "isrr_unmatched": [],
+    "sum_0561": 406.0,
+    "vpu": 1000.0,
+    "unit_impact": 0.406,
+    "lp_units": 50.0,
+    "qla_output_munit": 50.0,
+    "counterfactual_after_anniv": 49.594,
+    "output_equals_lp": true,
+    "hypothesis": "QLA Output MUNIT still equals LifePRO units. If anniversary subtracts 0561 dollars from face (units*VPU), resulting units = LP units - sum(0561)/VPU."
+  }
+}

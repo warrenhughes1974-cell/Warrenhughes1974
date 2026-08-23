@@ -1,0 +1,272 @@
+{
+  "issue": "145B",
+  "built_utc": "2026-08-20T17:12:47Z",
+  "converter_changed": false,
+  "app_version_changed": false,
+  "output_root_modified": false,
+  "control": {
+    "quikisrr_path": "Issue_Log_Items/Issue_145B/uat/CONTROL/QuikIsrr.csv",
+    "quikisrr_sha256": "667d73c79889bf6dd81bcf201ce25928b89004b99d38ff8340e9dd92cad0c6d0",
+    "identical_to_output_quikisrr": true,
+    "other_tables": "Use QLA_Migration/Output/ as-is (not copied)."
+  },
+  "test": {
+    "quikisrr_path": "Issue_Log_Items/Issue_145B/uat/TEST/QuikIsrr.csv",
+    "quikisrr_sha256": "ac6e1c4b01d7be2d8b3dbc01482827a6876a21a91a9965819fb7055bf6893919",
+    "rows_kept": 3647,
+    "rows_removed": 10,
+    "policies_affected": [
+      "9010815236C",
+      "9011050114C",
+      "9011069610C"
+    ],
+    "other_tables": "Same files as Control: QLA_Migration/Output/ (quikmstr, quikridr, QuikIswl, PACTG, etc.)."
+  },
+  "delta": {
+    "tables_changed": [
+      "QuikIsrr.csv only"
+    ],
+    "tables_unchanged": [
+      "quikmstr.csv",
+      "quikridr.csv",
+      "QuikIswl.csv",
+      "quikspec.csv",
+      "quikclnt.csv",
+      "quikclms.csv",
+      "quikclmp.csv",
+      "quikbenh.csv"
+    ],
+    "non_gold_policies_changed": false,
+    "pactg_changed": false,
+    "munit_changed": false,
+    "quikiswl_changed": false,
+    "removed_row_count": 10,
+    "removed_amount_total": 1944.56
+  },
+  "output_sha256": {
+    "QuikIsrr.csv": "667d73c79889bf6dd81bcf201ce25928b89004b99d38ff8340e9dd92cad0c6d0",
+    "quikisrr.csv": "667d73c79889bf6dd81bcf201ce25928b89004b99d38ff8340e9dd92cad0c6d0",
+    "quikmstr.csv": "49043ca5dd61d3eefc9278fe03928a7bd7f9646aeafac7d514b35229da4026d5",
+    "quikridr.csv": "f9e7339757dad1ea5ad0b621aa4b19aad7fe0090953af906030acd942a6a9165",
+    "QuikIswl.csv": "ea5add66b1ca3e9cfb46f007844be004d3db5e92fc07523e7b1a7a7b6ce23636",
+    "quikspec.csv": "4a0978ffa4143caa510c519fda239cc6bfd612f0ee31bb79b3f025ca740c6090",
+    "quikclnt.csv": "40ceab28082bbeb76b9a3b9ba7196292ce9ed24552989bd706acf4c4b3cb93cd",
+    "quikclms.csv": "57641e3fc82d0080b754c65326e6d909acfd61831a1bd49047b43296d5f6c9de",
+    "quikclmp.csv": "71684639cf18484f6cccd7ad9fbc10d5979c35f1521d290f71d7a9d95ecc80ae",
+    "quikbenh.csv": "32f3714df48046914fda81541323a6291ab643b7120200db6fa2b03b057735a6"
+  },
+  "gold": {
+    "9010815236C": {
+      "lp_units": 25.0,
+      "munit": 25.0,
+      "expected_control": 23.59744,
+      "expected_test": 25.0,
+      "expected_sum": 1402.56,
+      "expected_n": 8,
+      "rows_removed": 8,
+      "sum_removed": 1402.56,
+      "sum_matches_expected": true,
+      "count_matches_expected": true,
+      "rows": [
+        {
+          "source_line": 2215,
+          "mpolicy": "9010815236C",
+          "msurrdate": "20181002",
+          "msurramt": 174.51,
+          "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+          "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+        },
+        {
+          "source_line": 2216,
+          "mpolicy": "9010815236C",
+          "msurrdate": "20191002",
+          "msurramt": 174.51,
+          "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+          "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+        },
+        {
+          "source_line": 2217,
+          "mpolicy": "9010815236C",
+          "msurrdate": "20201002",
+          "msurramt": 174.51,
+          "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+          "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+        },
+        {
+          "source_line": 2218,
+          "mpolicy": "9010815236C",
+          "msurrdate": "20211002",
+          "msurramt": 174.51,
+          "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+          "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+        },
+        {
+          "source_line": 2219,
+          "mpolicy": "9010815236C",
+          "msurrdate": "20221002",
+          "msurramt": 174.51,
+          "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+          "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+        },
+        {
+          "source_line": 2220,
+          "mpolicy": "9010815236C",
+          "msurrdate": "20231212",
+          "msurramt": 176.67,
+          "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+          "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+        },
+        {
+          "source_line": 2221,
+          "mpolicy": "9010815236C",
+          "msurrdate": "20241002",
+          "msurramt": 176.67,
+          "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+          "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+        },
+        {
+          "source_line": 2222,
+          "mpolicy": "9010815236C",
+          "msurrdate": "20251002",
+          "msurramt": 176.67,
+          "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+          "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+        }
+      ]
+    },
+    "9011050114C": {
+      "lp_units": 25.0,
+      "munit": 25.0,
+      "expected_control": 24.864,
+      "expected_test": 25.0,
+      "expected_sum": 136.0,
+      "expected_n": 1,
+      "rows_removed": 1,
+      "sum_removed": 136.0,
+      "sum_matches_expected": true,
+      "count_matches_expected": true,
+      "rows": [
+        {
+          "source_line": 3460,
+          "mpolicy": "9011050114C",
+          "msurrdate": "20171226",
+          "msurramt": 136.0,
+          "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+          "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+        }
+      ]
+    },
+    "9011069610C": {
+      "lp_units": 50.0,
+      "munit": 50.0,
+      "expected_control": 49.594,
+      "expected_test": 50.0,
+      "expected_sum": 406.0,
+      "expected_n": 1,
+      "rows_removed": 1,
+      "sum_removed": 406.0,
+      "sum_matches_expected": true,
+      "count_matches_expected": true,
+      "rows": [
+        {
+          "source_line": 3543,
+          "mpolicy": "9011069610C",
+          "msurrdate": "20260304",
+          "msurramt": 406.0,
+          "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+          "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+        }
+      ]
+    }
+  },
+  "removed_rows": [
+    {
+      "source_line": 2215,
+      "mpolicy": "9010815236C",
+      "msurrdate": "20181002",
+      "msurramt": 174.51,
+      "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+      "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+    },
+    {
+      "source_line": 2216,
+      "mpolicy": "9010815236C",
+      "msurrdate": "20191002",
+      "msurramt": 174.51,
+      "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+      "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+    },
+    {
+      "source_line": 2217,
+      "mpolicy": "9010815236C",
+      "msurrdate": "20201002",
+      "msurramt": 174.51,
+      "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+      "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+    },
+    {
+      "source_line": 2218,
+      "mpolicy": "9010815236C",
+      "msurrdate": "20211002",
+      "msurramt": 174.51,
+      "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+      "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+    },
+    {
+      "source_line": 2219,
+      "mpolicy": "9010815236C",
+      "msurrdate": "20221002",
+      "msurramt": 174.51,
+      "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+      "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+    },
+    {
+      "source_line": 2220,
+      "mpolicy": "9010815236C",
+      "msurrdate": "20231212",
+      "msurramt": 176.67,
+      "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+      "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+    },
+    {
+      "source_line": 2221,
+      "mpolicy": "9010815236C",
+      "msurrdate": "20241002",
+      "msurramt": 176.67,
+      "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+      "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+    },
+    {
+      "source_line": 2222,
+      "mpolicy": "9010815236C",
+      "msurrdate": "20251002",
+      "msurramt": 176.67,
+      "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+      "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+    },
+    {
+      "source_line": 3460,
+      "mpolicy": "9011050114C",
+      "msurrdate": "20171226",
+      "msurramt": 136.0,
+      "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+      "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+    },
+    {
+      "source_line": 3543,
+      "mpolicy": "9011069610C",
+      "msurrdate": "20260304",
+      "msurramt": 406.0,
+      "reversal_status": "unreversed (Issue 34 already dropped REVERSAL=Y)",
+      "transaction_type": "PACTG 0561 emitted as QuikIsrr"
+    }
+  ],
+  "guardrail": {
+    "vb_only": true,
+    "issue_146_non_vb_untouched": true,
+    "examples_not_in_this_test": [
+      "9010761639C",
+      "9010760840C"
+    ]
+  }
+}
