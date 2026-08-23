@@ -94,6 +94,16 @@ After they load this cut, run anniversary and confirm the three vanish golds sta
 
 ---
 
+## Git / release
+
+| Item | Value |
+|------|--------|
+| Close commit | `562b804` |
+| Branch | `issue-34-pr7-quikisrr` |
+| Remote | `origin/issue-34-pr7-quikisrr` |
+
+---
+
 ## Rollback
 
 Remove the VB filter in `quikisrr_loader.py` and restore the four Output tables from a pre-apply copy / re-run #34 emit on a clean claims book.

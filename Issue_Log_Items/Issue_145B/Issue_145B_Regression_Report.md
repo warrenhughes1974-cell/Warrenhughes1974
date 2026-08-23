@@ -6,6 +6,7 @@
 **Baseline:** apply audit before-counts in `issue145b_apply_summary.json`  
 **Output directory:** `QLA_Migration/Output/`  
 **Generated:** 2026-08-23  
+**Re-run:** 2026-08-23 (live Output after user “Proceed to regression”)  
 **Verdict:** **PASS**
 
 ---
@@ -62,7 +63,8 @@
 
 | Check | Result |
 |-------|--------|
-| `validate_issue26_mprem.py` | **WARN** — script still looks for 20260530 extracts (pre-existing; not this issue) |
+| `validate_issue26_mprem.py` | Script **FAIL** — still requires 20260530 extracts (pre-existing / environmental; not this issue) |
+| Output gold MPREM (Issue #2 keys) | **PASS** — `9010310404C` 13.20; `9010331768C` 10.96; `9010367131C` 9.12 |
 | quikridr row count | Unchanged 6934 |
 
 ### Other Closed rows overlapping this change
