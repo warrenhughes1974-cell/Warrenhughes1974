@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+156	Closed	Source Policy Number	Store the original LifePRO policy number on the QLAdmin User Defined field SOR_POL. QLAdmin policy number stays source plus C.	08/24/2026	Go	Eric	Warren	08/26/2026	08/26/2026 Resolution: The original LifePRO policy number now loads on the policy User Defined field, while QLAdmin still uses the number with C. Examples: 9011050114C source 9011050114; 9010143726C source 9010143726; 901122D991C source 901122D991.

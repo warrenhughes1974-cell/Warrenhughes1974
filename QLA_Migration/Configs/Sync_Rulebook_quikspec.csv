@@ -1,6 +1,7 @@
 Source_Field,Target_Field,Default_Value,Transformation_Note
 POLICY_NUMBER,MPOLICY,,Mapped from POLICY_NUMBER (authoritative QLA MPOLICY format)
+POLICY_NUMBER,SOR_POL,,SKIP_TRANSLATION
 RES_STATE,RESSTATE,,SKIP_TRANSLATION
-,VANISH,F,Default False until vanish mapping is in scope
-,VANISHDT,,Blank until vanish date mapping is in scope
+,VANISH,F,Issue 145: post-emit T when PPOLC BILLING_REASON=VB; else F (logical 1-char)
+,VANISHDT,,Blank — vanish date is not in scope (#22 research)
 ,RESRVCAT,,Issue 141: post-emit PCOVR.PRODUCT_TYPE via PPBEN BENEFIT_SEQ=1; do not copy quikplan.PRODUCT

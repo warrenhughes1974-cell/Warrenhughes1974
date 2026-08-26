@@ -792,6 +792,7 @@ def main() -> int:
         ("#141", ["QLA_Migration/_validate_issue141_resrvcat.py"], True),
         ("#139", ["tools/validators/validate_issue139_policy_fee_suppression.py"], True),
         ("#145B", ["tools/validators/validate_issue145b_vb_isrr_exclude.py"], True),
+        ("#156", ["QLA_Migration/_validate_issue156_sor_pol.py"], True),
         ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
         ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
         ("#136", ["tools/validators/validate_issue136_pvo_flags.py"], True),

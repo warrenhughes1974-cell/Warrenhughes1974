@@ -109,6 +109,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue145b_vb_isrr_exclude.py"],
         True,
     ),
+    (
+        "#156 quikspec SOR_POL",
+        ["QLA_Migration/_validate_issue156_sor_pol.py"],
+        True,
+    ),
 ]
 
 

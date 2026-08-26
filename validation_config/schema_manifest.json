@@ -8,7 +8,7 @@
     "strict_order": true
   },
   "quikspec": {
-    "columns": ["MPOLICY", "VANISH", "VANISHDT", "RESSTATE", "RESRVCAT"],
+    "columns": ["MPOLICY", "VANISH", "VANISHDT", "RESSTATE", "RESRVCAT", "SOR_POL"],
     "strict_order": true
   },
   "quikclnt": {

@@ -1,0 +1,25 @@
+{
+  "rows": 5083,
+  "filled": 5083,
+  "blank": 0,
+  "source_mismatches": 0,
+  "converted_key_copied": 0,
+  "traces": {
+    "9011050114C": {
+      "sor_pol": "9011050114",
+      "expected": "9011050114"
+    },
+    "9010143726C": {
+      "sor_pol": "9010143726",
+      "expected": "9010143726"
+    },
+    "901122D991C": {
+      "sor_pol": "901122D991",
+      "expected": "901122D991"
+    },
+    "901ML8487C": {
+      "sor_pol": "901ML8487",
+      "expected": "901ML8487"
+    }
+  }
+}
