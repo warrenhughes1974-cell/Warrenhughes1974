@@ -1,0 +1,292 @@
+{
+  "cut": "20260630",
+  "allowlist_count": 20,
+  "pc19": [
+    "9010758550",
+    "9010765198",
+    "9010770062",
+    "9010771070",
+    "9010773468",
+    "9010776813",
+    "9010777059",
+    "9010787639",
+    "9010788679",
+    "9010810228",
+    "9010811998",
+    "9010816969",
+    "9010817956",
+    "9010821435",
+    "9010826551",
+    "9010849882",
+    "9010943849",
+    "9011048543",
+    "9011077629"
+  ],
+  "blank_exception": "9010808831",
+  "keep_golds": [
+    "9010761639",
+    "9010760840"
+  ],
+  "quikisrr_total": 205,
+  "quikisrr_allow": 104,
+  "quikisrr_keep_gold": 3,
+  "quikisrr_other": 98,
+  "quikisrr_allow_amt": 32321.25,
+  "allow_policies_with_isrr": 20,
+  "allow_missing_isrr": [],
+  "companions": {
+    "clms_ps": {
+      "other": 98,
+      "allow": 104,
+      "keep_gold": 3
+    },
+    "clmp_phase0": {
+      "other": 98,
+      "allow": 104,
+      "keep_gold": 3
+    },
+    "benh_type8": {
+      "other": 98,
+      "allow": 104,
+      "keep_gold": 3
+    }
+  },
+  "non_vb_isrr_policies": 50,
+  "leftover_after_146": 101,
+  "allow_detail": [
+    {
+      "policy": "9010758550",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 218.48,
+      "isrr_rows": 3,
+      "isrr_amt": 655.44,
+      "amts_match_prem": 3,
+      "munit": "7.00000"
+    },
+    {
+      "policy": "9010765198",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 492.36,
+      "isrr_rows": 1,
+      "isrr_amt": 492.36,
+      "amts_match_prem": 1,
+      "munit": "16.00000"
+    },
+    {
+      "policy": "9010770062",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 317.1,
+      "isrr_rows": 4,
+      "isrr_amt": 1268.4,
+      "amts_match_prem": 4,
+      "munit": "10.00000"
+    },
+    {
+      "policy": "9010771070",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 272.4,
+      "isrr_rows": 4,
+      "isrr_amt": 1089.6,
+      "amts_match_prem": 4,
+      "munit": "10.00000"
+    },
+    {
+      "policy": "9010773468",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 179.35,
+      "isrr_rows": 4,
+      "isrr_amt": 717.4,
+      "amts_match_prem": 4,
+      "munit": "5.00000"
+    },
+    {
+      "policy": "9010776813",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 171.05,
+      "isrr_rows": 6,
+      "isrr_amt": 1026.3,
+      "amts_match_prem": 6,
+      "munit": "5.00000"
+    },
+    {
+      "policy": "9010777059",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 502.0,
+      "isrr_rows": 7,
+      "isrr_amt": 3514.0,
+      "amts_match_prem": 7,
+      "munit": "25.00000"
+    },
+    {
+      "policy": "9010787639",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 548.0,
+      "isrr_rows": 7,
+      "isrr_amt": 3836.0,
+      "amts_match_prem": 7,
+      "munit": "20.00000"
+    },
+    {
+      "policy": "9010788679",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 148.7,
+      "isrr_rows": 6,
+      "isrr_amt": 892.2,
+      "amts_match_prem": 6,
+      "munit": "5.00000"
+    },
+    {
+      "policy": "9010810228",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "RS",
+      "annual_premium": 163.2,
+      "isrr_rows": 7,
+      "isrr_amt": 1142.4,
+      "amts_match_prem": 7,
+      "munit": "5.00000"
+    },
+    {
+      "policy": "9010811998",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 548.0,
+      "isrr_rows": 5,
+      "isrr_amt": 2740.0,
+      "amts_match_prem": 5,
+      "munit": "20.00000"
+    },
+    {
+      "policy": "9010816969",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 181.9,
+      "isrr_rows": 6,
+      "isrr_amt": 1091.4,
+      "amts_match_prem": 6,
+      "munit": "6.00000"
+    },
+    {
+      "policy": "9010817956",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 148.7,
+      "isrr_rows": 7,
+      "isrr_amt": 1040.9,
+      "amts_match_prem": 7,
+      "munit": "5.00000"
+    },
+    {
+      "policy": "9010821435",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 351.2,
+      "isrr_rows": 2,
+      "isrr_amt": 702.4,
+      "amts_match_prem": 2,
+      "munit": "10.00000"
+    },
+    {
+      "policy": "9010826551",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 217.2,
+      "isrr_rows": 7,
+      "isrr_amt": 1520.4,
+      "amts_match_prem": 7,
+      "munit": "5.00000"
+    },
+    {
+      "policy": "9010849882",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 611.5,
+      "isrr_rows": 1,
+      "isrr_amt": 611.5,
+      "amts_match_prem": 1,
+      "munit": "10.00000"
+    },
+    {
+      "policy": "9010943849",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 570.85,
+      "isrr_rows": 7,
+      "isrr_amt": 3995.95,
+      "amts_match_prem": 7,
+      "munit": "15.00000"
+    },
+    {
+      "policy": "9011048543",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 667.45,
+      "isrr_rows": 4,
+      "isrr_amt": 2669.8,
+      "amts_match_prem": 4,
+      "munit": "15.00000"
+    },
+    {
+      "policy": "9011077629",
+      "billing_reason": "PC",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 276.1,
+      "isrr_rows": 8,
+      "isrr_amt": 2208.8,
+      "amts_match_prem": 8,
+      "munit": "5.00000"
+    },
+    {
+      "policy": "9010808831",
+      "billing_reason": "(blank)",
+      "contract": "A",
+      "contract_reason": "",
+      "annual_premium": 138.25,
+      "isrr_rows": 8,
+      "isrr_amt": 1106.0,
+      "amts_match_prem": 8,
+      "munit": "25.00000"
+    }
+  ],
+  "keep_detail": [
+    {
+      "policy": "9010761639",
+      "billing_reason": "(blank)",
+      "isrr_rows": 1,
+      "isrr_amt": 271.0
+    },
+    {
+      "policy": "9010760840",
+      "billing_reason": "(blank)",
+      "isrr_rows": 2,
+      "isrr_amt": 716.4
+    }
+  ]
+}

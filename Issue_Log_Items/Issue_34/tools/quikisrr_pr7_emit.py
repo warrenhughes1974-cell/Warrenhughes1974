@@ -91,6 +91,7 @@ def emit_package(dry_run: bool = False) -> dict:
     candidate_policies = {e.policy_number for e in result.candidates}
     candidate_amount = sum(e.trans_amount for e in result.candidates)
     vb_policies = {e.policy_number for e in result.vb_excluded}
+    issue146_policies = {e.policy_number for e in result.issue146_excluded}
 
     summary = {
         "emit_date": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -105,6 +106,9 @@ def emit_package(dry_run: bool = False) -> dict:
             "vb_excluded_rows": len(result.vb_excluded),
             "vb_excluded_policies": len(vb_policies),
             "vb_leak_policies": sorted(candidate_policies & vb_policies),
+            "issue146_excluded_rows": len(result.issue146_excluded),
+            "issue146_excluded_policies": len(issue146_policies),
+            "issue146_leak_policies": sorted(candidate_policies & issue146_policies),
         },
         "emitted": {
             "rows": len(result.emitted_events),
@@ -190,6 +194,9 @@ def main() -> int:
         return 2
     if pop.get("vb_leak_policies"):
         print("FAIL: VB policies still in leftover candidates")
+        return 2
+    if pop.get("issue146_leak_policies"):
+        print("FAIL: Issue 146 allowlist policies still in leftover candidates")
         return 2
     if pop["rows"] < 1:
         print("FAIL: leftover non-VB QuikIsrr candidates is 0")

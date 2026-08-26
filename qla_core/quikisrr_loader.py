@@ -14,6 +14,7 @@ from pathlib import Path
 
 from qla_core.cso_mortality_crosswalk import ISWL_MPLAN_ALLOWLIST
 from qla_core.issue145b_vb_isrr import filter_vb_events
+from qla_core.issue146_pc_isrr import filter_issue146_events
 from qla_core.lifepro_source_resolver import resolve_table_source
 
 HOLD_POLICIES = frozenset({"9010780411"})
@@ -145,6 +146,7 @@ class EmitResult:
     sequence_audit: list[dict] = field(default_factory=list)
     product_id_fallbacks: list[dict] = field(default_factory=list)
     vb_excluded: list[PartialSurrenderEvent] = field(default_factory=list)
+    issue146_excluded: list[PartialSurrenderEvent] = field(default_factory=list)
 
 
 def _blank_clms_row() -> dict:
@@ -458,8 +460,10 @@ def build_emit(
     candidates, hold_rows, reversal_excluded, fallbacks = load_pactg_events(pactg)
     src_dir = str(root / "QLA_Migration" / "Source")
     candidates, vb_excluded = filter_vb_events(candidates, src_dir)
+    candidates, issue146_excluded = filter_issue146_events(candidates)
     result.candidates = candidates
     result.vb_excluded = vb_excluded
+    result.issue146_excluded = issue146_excluded
     result.hold_rows = hold_rows
     result.reversal_excluded = reversal_excluded
     result.product_id_fallbacks = fallbacks

@@ -114,6 +114,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["QLA_Migration/_validate_issue156_sor_pol.py"],
         True,
     ),
+    (
+        "#146 PC/former-vanish 0561s out of ISRR",
+        ["tools/validators/validate_issue146_pc_isrr.py"],
+        True,
+    ),
 ]
 
 

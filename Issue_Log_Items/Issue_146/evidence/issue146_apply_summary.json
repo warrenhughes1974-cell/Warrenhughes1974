@@ -1,0 +1,32 @@
+{
+  "issue": "146",
+  "applied_utc": "2026-08-26T17:10:29Z",
+  "before": {
+    "QuikIsrr": 205,
+    "quikclms": 2592,
+    "quikclmp": 3084,
+    "quikbenh": 41560
+  },
+  "after": {
+    "QuikIsrr": 101,
+    "quikclms": 2488,
+    "quikclmp": 2980,
+    "quikbenh": 41456
+  },
+  "removed": {
+    "QuikIsrr": 104,
+    "quikclms": 104,
+    "quikclmp": 104,
+    "quikbenh": 104
+  },
+  "leftover_keep_gold_isrr": 3,
+  "gold_remove": [
+    "9011077629C",
+    "9010817956C",
+    "9010808831C"
+  ],
+  "gold_keep": [
+    "9010761639C",
+    "9010760840C"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "issue": "146",
+  "generated": "2026-08-26",
+  "verdict": "PASS",
+  "engine": "v59.03",
+  "quikisrr_after": 101,
+  "allowlist_removed": 104,
+  "issue146_validator": "PASS",
+  "issue145b_validator": "PASS",
+  "dry_run_issue146_excluded_rows": 104,
+  "dry_run_issue146_leak": []
+}

@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.02
+# Version:     v59.03
 # Date:        2026-08-26
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v59.02 — Issue 156: quikspec.SOR_POL = LifePRO PPOLC POLICY_NUMBER
+# Change Note: v59.03 — Issue 146: exclude 20 former-vanish (PC/blank) 0561s from
+#              QuikIsrr / PR-7 companions so anniversary does not cut those units.
+#              v59.02 — Issue 156: quikspec.SOR_POL = LifePRO PPOLC POLICY_NUMBER
 #              (no Issue #2 trailing C). Append template QUIKSPEC.DBF field C(10).
 #              v59.01 — Issue 145B: exclude PPOLC BILLING_REASON=VB 0561s from
 #              QuikIsrr / PR-7 companions so anniversary does not cut vanish units.
@@ -628,7 +630,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v59.02"
+APP_VERSION = "v59.03"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
