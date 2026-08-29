@@ -440,6 +440,9 @@ def run_quikplan_conversion(
     from qla_core.issue_a_plan_setup import apply_issue_a_plan_setup
 
     df = apply_issue_a_plan_setup(df, repo_root=repo_root)
+    from qla_core.issue142_sl_rider import seed_9sublf_plan
+
+    df = seed_9sublf_plan(df)
     df = apply_iswl_product_tags(df)
     # Issue #70: preserve the authoritative A/R codebook after all enrichment
     # steps, including the A fallback for blank/unknown source values.

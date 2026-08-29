@@ -39,7 +39,10 @@ from qla_core.quikridr_decimal_emit import (  # noqa: E402
 from qla_core.normalize_utils import format_qladmin_mpolicy  # noqa: E402
 
 EXPECTED_FLOOR_COUNT = 148
+# Issue #142 (v59.04): 22 Active SL riders emit as 9SUBLF; count them separately
+# so the pre-142 book guard stays intact.
 EXPECTED_ROW_COUNT = 6934
+ISSUE142_PLAN = "9SUBLF"
 # Issue #2 (v58.29): MPOLICY is source POLICY_NUMBER + "C" at width 11.
 EXPECTED_MPOLICY_WIDTH = 11
 
@@ -125,7 +128,15 @@ def validate(output_dir: Path, simulate_only: bool = False, publish_test_validat
         return 1
 
     rows = _read_csv(ridr_path)
-    print(f"Row count: {len(rows)} (expected {EXPECTED_ROW_COUNT})")
+    sublf_count = sum(
+        1 for r in rows if _s(r.get("MPLAN", "")).upper() == ISSUE142_PLAN
+    )
+    non_sublf_count = len(rows) - sublf_count
+    print(
+        f"Row count: {len(rows)} "
+        f"(non-9SUBLF {non_sublf_count} expected {EXPECTED_ROW_COUNT}; "
+        f"9SUBLF {sublf_count} per Issue #142)"
+    )
 
     if simulate_only:
         print("Mode: simulate-only (logic check on current CSV; batch re-run not required)")
@@ -150,8 +161,8 @@ def validate(output_dir: Path, simulate_only: bool = False, publish_test_validat
             print(f"  - {err}")
         return 0 if sim_ok and not errors else 1
 
-    if len(rows) != EXPECTED_ROW_COUNT:
-        errors.append(f"Row count {len(rows)} != {EXPECTED_ROW_COUNT}")
+    if non_sublf_count != EXPECTED_ROW_COUNT:
+        errors.append(f"Non-9SUBLF row count {non_sublf_count} != {EXPECTED_ROW_COUNT}")
 
     sub_floor = 0
     leading_dot_total = 0

@@ -1,0 +1,19 @@
+{
+  "sim_sl_total": 68,
+  "sim_sl_active": 22,
+  "sim_sl_suppressed": 46,
+  "sim_kept_sl_rows": 22,
+  "sim_non_sl_rows_touched": false,
+  "out_quikridr_rows": 6956,
+  "out_9sublf_rows": 22,
+  "out_9sublf_amount_insured_total": 0.0,
+  "out_dup_policy_phase_rows": 0,
+  "baseline_rows": 6934,
+  "current_non_sublf_rows": 6934,
+  "non_sublf_hash_match": true,
+  "out_quikplan_rows": 142,
+  "out_quikplan_9sublf": 1,
+  "quikplan_non_sublf_match_baseline": true,
+  "verdict": "PASS",
+  "fails": []
+}

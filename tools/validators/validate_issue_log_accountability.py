@@ -794,6 +794,7 @@ def main() -> int:
         ("#145B", ["tools/validators/validate_issue145b_vb_isrr_exclude.py"], True),
         ("#156", ["QLA_Migration/_validate_issue156_sor_pol.py"], True),
         ("#146", ["tools/validators/validate_issue146_pc_isrr.py"], True),
+        ("#142", ["tools/validators/validate_issue142_sl_rider.py"], True),
         ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
         ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
         ("#136", ["tools/validators/validate_issue136_pvo_flags.py"], True),

@@ -1,0 +1,17 @@
+{
+  "quikplan_rows": 142,
+  "vargp_distribution": {
+    "1": 11,
+    "2": 1,
+    "3": 97,
+    "4": 33
+  },
+  "vardb_distribution": {
+    "0": 119,
+    "1": 5,
+    "2": 8,
+    "3": 10
+  },
+  "mismatch_count": 0,
+  "result": "PASS"
+}

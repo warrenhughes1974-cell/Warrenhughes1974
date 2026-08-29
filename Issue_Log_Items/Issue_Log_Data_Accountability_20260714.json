@@ -1,11 +1,11 @@
 {
-  "generated": "2026-08-02T13:01:43",
-  "script_version": "1.4",
+  "generated": "2026-08-29T12:40:03",
+  "script_version": "1.12",
   "output": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
   "counts": {
-    "IN_DATA": 47,
-    "WARN": 13,
-    "GAP": 13
+    "IN_DATA": 70,
+    "WARN": 14,
+    "GAP": 4
   },
   "results": [
     {
@@ -70,15 +70,15 @@
     },
     {
       "id": "#54",
-      "status": "GAP",
-      "detail": "19135, '10': 3562, '2': 37, '8': 3657} | OK: MBENTYP=8 preserved (3657 rows) | OK: loan-history policies=665 | OK: no MBENTYP=20 rows (deferred) | OK: MDATE YYYYMMDD format | OK: quikloan.csv unchanged (356 rows) | WARN: Estimated opening seeds (type10 - 3562 PACTG)=0; expected 550\u2013565 | WARN: No loan rows for sample MPOLICY=010331768C | ------------------------------------------------------------------------ | RESULT: FAIL | FAIL: Loan-type rows (10/11/12)=36853 outside expected 37300\u201337600 | FAIL: MPOLICY width violations: 44456 row(s) | FAIL: Missing opening seed for 010822238C: expected MBENTYP=10 MDATE=20171220",
-      "exit": 1
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
     },
     {
       "id": "#55",
-      "status": "GAP",
-      "detail": "its): 0 | Trace policies: |   018495BC P1: MISSING |   018495BC P2: MISSING |   018499CC P1: MISSING |   018499CC P2: MISSING |   018510C P1: MISSING |   018510C P2: MISSING | Issue #25 MPOLICY width (trace policies): PASS | Issue #26 MPREM: baseline not found - spot-check leading-dot only |   MPREM leading-dot count: 0 |  | RESULT: FAIL |   - Missing trace row ('018495BC', '1') |   - Missing trace row ('018495BC', '2') |   - Missing trace row ('018499CC', '1') |   - Missing trace row ('018499CC', '2') |   - Missing trace row ('018510C', '1') |   - Missing trace row ('018510C', '2') |   - Missing PUA trace row ('010434419C', '2')",
-      "exit": 1
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
     },
     {
       "id": "#57",
@@ -88,21 +88,21 @@
     },
     {
       "id": "#58",
-      "status": "WARN",
-      "detail": "base rows=5083 MANNLFEE>0=4457 modal_fees_populated=4457 | FAIL |   trace policy missing: 010367131C |   trace policy missing: 010560185C |   trace policy missing: 010442216C",
-      "exit": 1
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
     },
     {
       "id": "#59",
       "status": "WARN",
-      "detail": "validator vs Output may show #49 override; check patched MSTATUS below",
+      "detail": "9010803420C: 22 -> 50 |     9010813163C: 44 -> 22 |     9010816990C: 22 -> 53 |     9010882416C: 22 -> 50 |     9010891087C: 22 -> 55 |     9010901657C: 44 -> 22 |     9011146243C: 22 -> 54 |     9011147572C: 22 -> 54 |     9011162365C: 22 -> 50 |     9011193709C: 41 -> 53 |     9011262751C: 22 -> 55 |     9011262752C: 22 -> 55 |     9010835310C: 50 -> 53 |     9011085270C: 50 -> 53 |     9011112998C: 50 -> 53 |     9011176240C: 50 -> 53 |     9011190416C: 50 -> 53 |     9011194146C: 50 -> 53 |   9010521213C after=53 expected 50 (baseline was 22; 20260630 PPOLC_PolicyMaster_Extract_20260630.csv CONTRACT=S/DP -> ST_S_DP=50)",
       "exit": 1
     },
     {
       "id": "#60",
-      "status": "GAP",
-      "detail": "NFO-terminated: 27) | Other later-phase rows checked: 1357 | Baseline drift vs v57.85: date/age/status=86 valuation-sensitive=6514 -> issue60_cross_release_drift.csv |   MLASTANN uniform shift: [-1] year(s) on 4769 rows | FAIL |   BASELINE drift PHASE1 9010764158C ph1 MPHSTAT: '44' -> '22' |   BASELINE drift PHASE1 9010764248C ph1 MPHSTAT: '44' -> '22' |   BASELINE drift PHASE1 9010768802C ph1 MPHSTAT: '44' -> '22' |   BASELINE drift PHASE1 9010773561C ph1 MPHSTAT: '44' -> '22' |   BASELINE drift PHASE1 9010774774C ph1 MPHSTAT: '44' -> '22' |   date/age/status drift rows: 86 (see issue60_cross_release_drift.csv)",
-      "exit": 1
+      "status": "WARN",
+      "detail": "9 | Baseline drift (midyear v57.85 (not same-cut)): date/age/status=112 valuation-sensitive=1758 -> issue60_cross_release_drift.csv | WARN: source-baseline unavailable for active cut - midyear v57.85 (not same-cut) retained for informational drift only; MPHSTAT/date drift vs midyear is not a GAP | WARN: TRACE 010150910C ADB vs midyear baseline skipped (no same-cut baseline; Class A) | WARN: informational midyear hard drift rows=112 (not scored; see issue60_cross_release_drift.csv) | PASS - Issue #60 Track A PUA phase rules; NFO PUA terminated per #108D | CLASS_A_WARN: source-baseline unavailable (exit 2)",
+      "exit": 2
     },
     {
       "id": "#70",
@@ -125,8 +125,14 @@
     {
       "id": "#76",
       "status": "GAP",
-      "detail": "validate_issue76_eti_rpu_payup v2.0 |   valuation date: 2025-12-31 (QLA_VALUATION_DATE=20251231) |   candidates=314 payup_fail=0 mlast_fail=0 | FAIL: |   - candidate count 314 != expected 400",
+      "detail": "validate_issue76_eti_rpu_payup v2.1 |   valuation date: 2026-06-30 (QLA_VALUATION_DATE=20260630) |   candidates=311 payup_fail=0 mlast_fail=38 | WARN: no same-cut candidate-count baseline; active-cut candidates=311 (midyear frozen 400 not required) | FAIL: |   - MLASTANN mismatch: 9010391878C got 16 expected 15 (paidto=20100701 val=20260630) |   - MLASTANN mismatch: 9010392930C got 22 expected 21 (paidto=20040701 val=20260630) |   - MLASTANN mismatch: 9010405175C got 44 expected 43 (paidto=19820728 val=20260630) |   - violations: payup=0 mlastann=38",
       "exit": 1
+    },
+    {
+      "id": "#95",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
     },
     {
       "id": "#110",
@@ -136,27 +142,33 @@
     },
     {
       "id": "#114",
+      "status": "GAP",
+      "detail": "olicies) | OK: dividend-history policies=586 | OK: PPBENTYP lifetime source = 20260630 PPBENTYP_BenefitType_Extract_20260630.csv (593 policies) | WARN: MBENTYP=10 count=4141 above midyear floor 4118 (loan/#54 source growth OK for #114) | WARN: MBENTYP=11 count=14260 above midyear floor 14156 (loan/#54 source growth OK for #114) | WARN: MBENTYP=12 count=19301 above midyear floor 19135 (loan/#54 source growth OK for #114) | ------------------------------------------------------------------------ | RESULT: FAIL | FAIL: 14 policy(ies) do not tie to PPBENTYP; first: 9010331768C emitted 7509.60 vs lifetime 7209.30",
+      "exit": 1
+    },
+    {
+      "id": "#116",
+      "status": "WARN",
+      "detail": "rows after=5083 | future MINTDATE with a balance (after): 0 | future MINTDATE on zero-balance rows: 931 (no accrual, not a defect) | WARN: missing-archive: C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\pre_116_117_20260725\\quikdvdp_BEFORE.csv absent \u00e2\u20ac\u201d before/after delta not scored; validated current Output (no future MINTDATE with balance) |  | ISSUE #116: WARN (missing-archive; current Output checks PASS) | CLASS_A_WARN: missing-archive (exit 2)",
+      "exit": 2
+    },
+    {
+      "id": "#117",
+      "status": "WARN",
+      "detail": "740C  bal   1664.37  3=   543.21 6=  2825.21 7=  1704.05  ->   1664.37  FOOTS |   9010154425C  bal   1100.42  3=   358.99 6=  1841.85 7=  1100.42  ->   1100.42  FOOTS |   9010157076C  bal   1203.11  3=   375.40 6=   827.71 7=     0.00  ->   1203.11  FOOTS | WARN: missing-archive: C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\pre_116_117_20260725\\quikbenh_BEFORE.csv absent \u00e2\u20ac\u201d before/after type stability not scored; validated current Output ledger footing + type 6 presence |  | ISSUE #117: WARN (missing-archive; current Output checks PASS) | CLASS_A_WARN: missing-archive (exit 2)",
+      "exit": 2
+    },
+    {
+      "id": "#120",
       "status": "IN_DATA",
       "detail": "validator PASS",
       "exit": 0
     },
     {
-      "id": "#116",
-      "status": "GAP",
-      "detail": "e_116\\scripts\\validate_issue116.py\", line 21, in <module> |     before, after = load(BEFORE), load(AFTER) |                     ~~~~^^^^^^^^ |   File \"C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_116\\scripts\\validate_issue116.py\", line 17, in load |     with open(path, newline=\"\", encoding=\"utf-8-sig\", errors=\"replace\") as fh: |          ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ | FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\warren\\\\Documents\\\\GitHub\\\\Warrenhughes1974\\\\QLA_Migration\\\\Archive\\\\pre_116_117_20260725\\\\quikdvdp_BEFORE.csv'",
-      "exit": 1
-    },
-    {
-      "id": "#117",
-      "status": "GAP",
-      "detail": "ne 41, in <module> |     before, after, dvdp = read(BENH_BEFORE), read(BENH_AFTER), read(DVDP) |                           ~~~~^^^^^^^^^^^^^ |   File \"C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\Issue_Log_Items\\Issue_117\\scripts\\validate_issue117.py\", line 37, in read |     with open(path, newline=\"\", encoding=\"utf-8-sig\", errors=\"replace\") as fh: |          ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ | FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\warren\\\\Documents\\\\GitHub\\\\Warrenhughes1974\\\\QLA_Migration\\\\Archive\\\\pre_116_117_20260725\\\\quikbenh_BEFORE.csv'",
-      "exit": 1
-    },
-    {
       "id": "#21F",
-      "status": "WARN",
-      "detail": "=============================================================== |  | quikprmh rows: 209480 |   schema order: PASS |  | [Golden] 010310404C CONV_ADJ rows: 0 |  | [ISWL] 010713704C CONV_ADJ rows: 0 |   PASS: ISWL excluded |  | [Idempotency] CONV_ADJ policies: 2619 rows: 2619 |   PASS: one CONV_ADJ max per policy |  | [Reports] validation=True exceptions=True |   report LOADED+OPENING_BALANCE=2619 adj_rows=2619 |   report row count vs CONV_ADJ: PASS |   report variance ~0 for loaded: PASS |  | ======================================================================== | RESULT: FAIL (1 issues) |   - golden: expected 1 CONV_ADJ row, got 0",
-      "exit": 1
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
     },
     {
       "id": "#21A",
@@ -201,7 +213,61 @@
       "exit": 0
     },
     {
+      "id": "#143",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#141",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#139",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#145B",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#156",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#146",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#142",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
       "id": "#134",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#135",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#136",
       "status": "IN_DATA",
       "detail": "validator PASS",
       "exit": 0
@@ -239,12 +305,12 @@
     {
       "id": "#40/#41",
       "status": "IN_DATA",
-      "detail": "QuikCvs rows=38359"
+      "detail": "QuikCvs rows=38490"
     },
     {
       "id": "#41",
       "status": "IN_DATA",
-      "detail": "1960PO QuikCvs rows=1000"
+      "detail": "1960PO QuikCvs rows=1002"
     },
     {
       "id": "#98",
@@ -254,17 +320,17 @@
     {
       "id": "#106",
       "status": "IN_DATA",
-      "detail": "170858 M/17 Dur2=8.76 Dur83=1000; 1659C2 M/17 SM Dur1=1 Dur83=978"
+      "detail": "170858 M/17 Dur2=8.76 Dur83=1000; 1659C2 M/17 ST Dur1=1 Dur83=978"
     },
     {
       "id": "#96",
       "status": "IN_DATA",
-      "detail": "1SALMI PVO=Y PlCv=['F', 'M'] PlTv=['F', 'M'] QuikTvs=516; 1L17SP QuikTvs=56"
+      "detail": "1SALMI PVO=Y PlCv=['F', 'M'] PlTv=['F', 'M'] QuikTvs=516; 1L17SP QuikTvs=398"
     },
     {
       "id": "#44",
       "status": "IN_DATA",
-      "detail": "quikloan rows=356"
+      "detail": "quikloan rows=353"
     },
     {
       "id": "#45",
@@ -274,7 +340,7 @@
     {
       "id": "#75",
       "status": "IN_DATA",
-      "detail": "draft MBANKNO filled=2078/2132 invalid=0; 9010161748C=091303855/0000002000581"
+      "detail": "draft MBANKNO filled=2075/2129 invalid=0; 9010161748C=091303855/0000002000581"
     },
     {
       "id": "#47",
@@ -299,7 +365,7 @@
     {
       "id": "#54",
       "status": "IN_DATA",
-      "detail": "quikbenh=44456 types={'1': 209, '3': 264, '6': 842, '7': 25, '4': 2569, '11': 14156, '12': 19135, '10': 3562, '2': 37, '8': 3657}"
+      "detail": "quikbenh=41764 types={'1': 209, '3': 265, '6': 843, '7': 25, '4': 2582, '10': 4141, '11': 14260, '12': 19301, '2': 37, '8': 101}"
     },
     {
       "id": "#55",
@@ -324,42 +390,52 @@
     {
       "id": "#58",
       "status": "IN_DATA",
-      "detail": "010367131C MANNLFEE=10.4400 MSEMIFEE=5.4288"
+      "detail": "010367131C non-ISWL fees retained MANNLFEE=10.4400 MSEMIFEE=5.4288"
     },
     {
-      "id": "#59:01122D991C",
-      "status": "GAP",
-      "detail": "MSTATUS=None"
+      "id": "#139",
+      "status": "IN_DATA",
+      "detail": "ISWL 9010713704C fees withheld (0)"
     },
     {
-      "id": "#59:014FG8217C",
-      "status": "GAP",
-      "detail": "MSTATUS=None"
+      "id": "#58-ISWL",
+      "status": "IN_DATA",
+      "detail": "ISWL 9010713704C fees suppressed (0)"
     },
     {
-      "id": "#59:016FG8217C",
-      "status": "GAP",
-      "detail": "MSTATUS=None"
+      "id": "#59:901122D991C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
     },
     {
-      "id": "#59:01ML8171C",
-      "status": "GAP",
-      "detail": "MSTATUS=None"
+      "id": "#59:9014FG8217C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
     },
     {
-      "id": "#59:01ML8250C",
-      "status": "GAP",
-      "detail": "MSTATUS=None"
+      "id": "#59:9016FG8217C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
     },
     {
-      "id": "#59:01ML8522C",
-      "status": "GAP",
-      "detail": "MSTATUS=None"
+      "id": "#59:901ML8171C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
+    },
+    {
+      "id": "#59:901ML8250C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
+    },
+    {
+      "id": "#59:901ML8522C",
+      "status": "IN_DATA",
+      "detail": "MSTATUS=22"
     },
     {
       "id": "#59:010521213C",
       "status": "GAP",
-      "detail": "MSTATUS=22 (Death Claim Pending)"
+      "detail": "MSTATUS=53 (expected 50; 20260630 PPOLC_PolicyMaster_Extract_20260630.csv CONTRACT=S/DP -> ST_S_DP=50)"
     },
     {
       "id": "#60",
@@ -379,12 +455,12 @@
     {
       "id": "#21F",
       "status": "IN_DATA",
-      "detail": "quikprmh CONV_ADJ-like rows=2619"
+      "detail": "quikprmh CONV_ADJ-like rows=4848"
     },
     {
       "id": "Claims 14-19",
       "status": "IN_DATA",
-      "detail": "clms=5594 clmp=5366"
+      "detail": "clms=2488 clmp=2981"
     },
     {
       "id": "#105",
@@ -400,6 +476,16 @@
       "id": "#121",
       "status": "IN_DATA",
       "detail": "ART policies=197; MSTATUS=44=0; MPHSTAT=44=0"
+    },
+    {
+      "id": "#135",
+      "status": "GAP",
+      "detail": "clms=2488 clmp=2981; MINTAMT_nz=0; marker_308=308; marker_with_payee=0"
+    },
+    {
+      "id": "#136",
+      "status": "IN_DATA",
+      "detail": "1658C1 BDVARYGP=N STVARYGP=N GDVARYDV=N GDVARYGP=Y; fleet_BDY=0 fleet_STY=0"
     },
     {
       "id": "Engine",

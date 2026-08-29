@@ -1,0 +1,61 @@
+Comprehensive Notes: Policy Premiums, SL Riders, and Loan Calculations
+These notes summarize discussions regarding policy premium calculations, issues with "SL" riders in valuation files, discrepancies in reduced paid-up policy units, the absence of guideline premiums for most policies, and the complexities of loan balance calculations from Life Pro data.
+1. Policy Premiums and Fees
+• Annual Policy Fees: Initially removed from all policies, but need to be reinstated for non-ISWL (Intersensitive Whole Life) policies.
+• ISWL policies are an exception as they do not use PRs (Premium Rates) and their expense is considered administrative, not a policy fee.
+• The expense in ISWL policies is already included in the policy fee field within Life Pro, which was a point of previous discussion.
+• The expected display in QL admin for annual policies should be $6.99.
+• Gross Premium Calculation: Should be based on the loaded gross premium file, factoring in modal factors (annual, semi-annual, quarterly, monthly) for correct calculation.
+• The initial gross premium amount appears correct as it's directly taken from Life Pro.
+• Factor Example: For an issue age of 54, the factor was 27.96.
+• System Behavior: It's noted that the system sometimes combines annual policy fees with other charges, making it appear unusual.
+• A policy fee of $6.99 is expected, but the system might combine it with other charges, making the total premium look different.
+• Resolution: For non-ISWL policies, the annual policy fee needs to be put back in the calculations. This should resolve the premium discrepancies.
+• The $6.99 fee will be separate, and the remaining amount will be correct.
+2. SL Rider Duplication Issue
+• Problem: The valuation file from New Era (Life Pro) duplicates the death benefit for policies labeled "SL" due to units.
+• This led to these "SL" items being held out of the drivers.
+• Impact: Eight specific "SL" policies appear on the valuation file.
+• Cause: The annual premium per unit seems to be causing the duplication.
+• Outlier: One policy has an annual premium of $8.05, which is an outlier as it should technically be zero for an SL rider.
+• Other SL Policies:
+• Policy with SL rider: premium of $218.
+• Additional premium: $219.
+• Another policy: $711.18.
+• These are actual accounting transactions.
+• Solution Discussion:
+• Can force the number of units to zero to prevent duplication, while still capturing the premium.
+• Concern about policy editing: if units are forced to zero, editing the policy might prompt for units, requiring a memo or override mechanism.
+• Research needed on having policies without units or overriding unit fields.
+• Can also explore tying the benefit to zero.
+• Active Policies: The problematic eight policies are active in Life Pro, but it seems no premiums are being paid on them (except for the outlier $8.05 one).
+• Action: A spreadsheet of these policies will be sent. The issue will be documented in the issues log.
+3. Reduced Paid-Up Policy Units
+• Problem: For some reduced paid-up policies, the units did not change when the death benefit was reduced.
+• Example: A policy shows 25 units, implying a $25,000 death benefit, but the actual reduced death benefit suggests 4.57208 units.
+• Check: A check is needed to ensure that the number of units matches the death benefit.
+• This means the unit value should be adjusted to reflect the actual death benefit (e.g., 4.57208 units instead of 25).
+• Origin: This is an existing issue within the system from Life Pro, not a conversion error. The units are being brought in correctly as 25 based on the sheets.
+• Resolution: Implement a check to match units to the death benefit and adjust units accordingly. This will be added to the issues log.
+4. Guideline Premiums
+• Inquiry: Sajitha inquired about guideline premiums.
+• Findings: Most tables for guideline premiums are empty, indicating no guideline premiums for most policies.
+• This simplifies processing as there's no need to worry about them for the majority.
+• Exception: L17 product policies.
+• There are 20 active L17 policies.
+• Some were marked "Yes" or "D", others "M" for guideline premiums.
+• Action: A list of the 20 active L17 policies with guideline premiums will be provided to Sajitha for review. This will be added to the issues log.
+5. Loan Calculations
+• Problem: Discrepancies in loan calculations due to a misunderstanding of Life Pro's field definitions, particularly regarding "loan amount added" (which seems to be interest in advance) and "loan balance."
+• The data cut being used is from 07/31, while the local data might be from 06/30, causing mismatches.
+• Life Pro Logic: Life Pro includes the current year's interest in the surrender amount, then backs out the interest to arrive at the true loan balance.
+• Example: Loan amount $3506.80 includes accrued interest of $8.88.
+• The "in-advance balance" is the starting balance, not the true loan balance.
+• "Negative accrued interest" in the table further complicates understanding.
+• Goal: Correctly calculate the loan balance by accounting for interest in advance and other components.
+• Calculation Method:
+• Life Pro provides the loan balance at the next anniversary (e.g., 07/24/2027 value).
+• To get the prior year's balance (e.g., 07/24/2026 value), the interest needs to be backed out.
+• The calculation involves multiplying the current loan balance by $(1 - \text{interest rate})$.
+• The interest rate is policy-specific (e.g., 5%, 7.4%). $$ \text{Prior Year Loan Balance} = \text{Current Loan Balance} \times (1 - \text{Interest Rate}) $$
+• Action: Need to obtain 07/31 data to match the provided examples. The loan balance will be calculated by reverse-engineering the interest based on the policy's anniversary and specific interest rate. This will resolve the issue for future loans as well. This will be added to the issues log.

@@ -2,7 +2,10 @@
 Issue #27 — Substandard Life (SL) benefit row governance for quikridr emit.
 
 SL (Substandard Life) is rating metadata in LifePRO, not a separate death benefit.
-Rows with BENEFIT_TYPE = SL must not emit to quikridr.
+Non-active SL rows must not emit to quikridr.
+
+Issue #142 (Warren override 2026-08-29) narrows this: Active STATUS_CODE=A SL
+rows emit as 9SUBLF with VPU zeroed. See qla_core/issue142_sl_rider.py.
 """
 
 from __future__ import annotations
@@ -15,6 +18,11 @@ import pandas as pd
 
 SL_BENEFIT_TYPE = "SL"
 SL_SUPPRESSION_REASON = "Issue #27"
+
+
+def is_active_sl_status(status) -> bool:
+    """Issue #142: only STATUS_CODE A leaves the Issue #27 suppression path."""
+    return str(status or "").strip().upper() == "A"
 
 AUDIT_COLUMNS = [
     "POLICY_NUMBER",

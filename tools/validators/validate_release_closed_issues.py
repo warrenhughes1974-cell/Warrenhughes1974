@@ -119,6 +119,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue146_pc_isrr.py"],
         True,
     ),
+    (
+        "#142 SL rider 9SUBLF",
+        ["tools/validators/validate_issue142_sl_rider.py"],
+        True,
+    ),
 ]
 
 

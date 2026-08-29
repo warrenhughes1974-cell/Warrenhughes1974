@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.03
-# Date:        2026-08-26
+# Version:     v59.04
+# Date:        2026-08-29
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v59.03 — Issue 146: exclude 20 former-vanish (PC/blank) 0561s from
+# Change Note: v59.04 — Issue 142: emit Active SL rows as 9SUBLF (VPU=0); keep
+#              Issue #27 suppression for non-active SL. Warren override 2026-08-29.
+#              v59.03 — Issue 146: exclude 20 former-vanish (PC/blank) 0561s from
 #              QuikIsrr / PR-7 companions so anniversary does not cut those units.
 #              v59.02 — Issue 156: quikspec.SOR_POL = LifePRO PPOLC POLICY_NUMBER
 #              (no Issue #2 trailing C). Append template QUIKSPEC.DBF field C(10).
@@ -446,6 +448,13 @@ from qla_core.sl_benefit_governance import (
     resolve_ppbentyp_path,
     write_sl_suppression_audit,
 )
+from qla_core.issue142_sl_rider import (
+    prepare_active_sl_for_emit,
+    seed_9sublf_plan,
+    sl_active_mask,
+    write_emit_audit,
+    build_emit_audit_rows,
+)
 from qla_core.claims_emit_enhancements import (
     apply_claims_emit_enhancements,
     build_plan_metadata_lookup,
@@ -630,7 +639,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v59.03"
+APP_VERSION = "v59.04"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -8702,13 +8711,17 @@ class QLAdminEnterpriseIntegrationSuite:
                         _qr_uv_removed = int((_qr_bt == 'UV').sum())
                         _qr_fv_removed = int((_qr_bt == 'FV').sum())
                         _qr_sl_removed = 0
+                        _sl_suppress = pd.Series(False, index=source.index)
                         if (_qr_bt == SL_BENEFIT_TYPE).any():
+                            _sl_mask = _qr_bt == SL_BENEFIT_TYPE
+                            _sl_active = sl_active_mask(source, _sl_mask)
+                            _sl_suppress = _sl_mask & ~_sl_active
                             _ppb_sl_path = resolve_ppbentyp_path(os.path.dirname(src_path))
                             _sl_table_cache = load_sl_table_code_cache(
                                 _ppb_sl_path, normalize_fn=self.normalize
                             )
                             _sl_audit_rows = build_sl_suppression_audit_rows(
-                                source.loc[_qr_bt == SL_BENEFIT_TYPE],
+                                source.loc[_sl_suppress],
                                 sl_table_cache=_sl_table_cache,
                                 cw_map=cw_map,
                                 normalize_fn=self.normalize,
@@ -8716,12 +8729,24 @@ class QLAdminEnterpriseIntegrationSuite:
                             _sl_audit_path = write_sl_suppression_audit(_sl_audit_rows)
                             _qr_sl_removed = len(_sl_audit_rows)
                             self.log(
-                                f"Issue #27 SL SUPPRESSION: Audited {_qr_sl_removed} rows → {_sl_audit_path}"
+                                f"Issue #27 SL SUPPRESSION: Audited {_qr_sl_removed} non-active rows → {_sl_audit_path}"
                             )
-                        source = source[~_qr_bt.isin(['UV', 'FV', SL_BENEFIT_TYPE])]
+                            if _sl_active.any():
+                                _sl_emit_rows = build_emit_audit_rows(
+                                    source.loc[_sl_active],
+                                    cw_map=cw_map,
+                                    normalize_fn=self.normalize,
+                                )
+                                _sl_emit_path = write_emit_audit(_sl_emit_rows)
+                                source = prepare_active_sl_for_emit(source, _sl_active)
+                                self.log(
+                                    f"Issue #142 SL EMIT: {_sl_active.sum()} Active SL rows → 9SUBLF VPU=0 "
+                                    f"({_sl_emit_path})"
+                                )
+                        source = source[~(_qr_bt.isin(['UV', 'FV']) | _sl_suppress)]
                         self.log(
                             f"QUIKRIDR BENEFIT TYPE FILTER: Removed "
-                            f"{_qr_uv_removed + _qr_fv_removed + _qr_sl_removed} UV/FV/SL rows from PPBEN source."
+                            f"{_qr_uv_removed + _qr_fv_removed + _qr_sl_removed} UV/FV/non-active-SL rows from PPBEN source."
                         )
                         self.log(f"Remaining PPBEN rows for QUIKRIDR: {len(source)}")
                     if 'BENEFIT_SEQ' in source.columns:
@@ -8889,6 +8914,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         qdf, self._app_base_dir(), log=self.log
                     )
                     qdf = apply_issue_a_plan_setup(qdf, repo_root=self._app_base_dir(), log=self.log)
+                    qdf = seed_9sublf_plan(qdf, log=self.log)
                     qdf = apply_iswl_product_tags(qdf, log=self.log)
                     # Issue #70: final batch path must restore source-confirmed
                     # arrears after every later normalization/enrichment.

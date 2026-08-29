@@ -27,6 +27,9 @@ DEFAULT_CROSSWALK = PROJECT_ROOT / "QLA_Migration" / "Mapping" / "Master_Crosswa
 EXPECTED_ARREARS_PLANS = frozenset({"1SALOL", "1SALML", "1SALMI", "9SLADB"})
 EXPECTED_A = 137
 EXPECTED_R = 4
+# Issue #142 (v59.04): seeded 9SUBLF plan carries LOANINTX=A; exclude it from
+# the pre-142 count guard so the original book expectation stays intact.
+ISSUE142_PLAN = "9SUBLF"
 TRACE_PLANS = {
     "1SALOL": "R",
     "1SALML": "R",
@@ -108,7 +111,9 @@ def main() -> int:
 
     rows = _load_csv(plan_path)
     errors: list[str] = []
-    counts = Counter(_n(r.get("LOANINTX")) for r in rows)
+    counts = Counter(
+        _n(r.get("LOANINTX")) for r in rows if _n(r.get("PLAN")) != ISSUE142_PLAN
+    )
     by_plan = {_n(r.get("PLAN")): _n(r.get("LOANINTX")) for r in rows if _n(r.get("PLAN"))}
 
     print(f"rows: {len(rows)}")
