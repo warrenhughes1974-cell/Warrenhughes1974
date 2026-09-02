@@ -114,4 +114,4 @@ Restore `QLA_Migration/Archive/issue159_pre_remap/quikridr_pre_issue159.csv` and
 
 ## Git release
 
-Commit hash and branch recorded after commit. `Output/` is gitignored — network machines keep v59.08 and the remapped `quikridr` (or re-run a full policy batch).
+Commit `03cc569` on `issue-34-pr7-quikisrr`. `Output/` is gitignored — network machines keep v59.08 and the remapped `quikridr` (or re-run a full policy batch).
