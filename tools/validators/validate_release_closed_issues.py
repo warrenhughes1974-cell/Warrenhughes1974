@@ -31,7 +31,7 @@ RATES = OUT / "rates"
 SOURCE = ROOT / "QLA_Migration" / "Source"
 REPORTS = ROOT / "QLA_Migration" / "Reports"
 PY = sys.executable
-SCRIPT_VERSION = "1.9"  # v1.9: #145B VB 0561 QuikIsrr exclude always-on smoke (Warren 2026-08-23)
+SCRIPT_VERSION = "2.1"  # v2.1: older-cut keep-newest plan/rate package smoke (2026-09-02)
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -67,6 +67,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
     (
         "A7 VARGP/VARDB vs rate grids",
         ["tools/validators/validate_issueA7_variation_codes.py"],
+        True,
+    ),
+    (
+        "#158 PR segment SEQ 1 ownership",
+        ["tools/validators/validate_issue158_pr_segment_ownership.py"],
         True,
     ),
     (
@@ -122,6 +127,21 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
     (
         "#142 SL rider 9SUBLF",
         ["tools/validators/validate_issue142_sl_rider.py"],
+        True,
+    ),
+    (
+        "PSUBSSEG era-banded rate substitution",
+        ["tools/validators/validate_psubsseg_substitution.py"],
+        True,
+    ),
+    (
+        "Newest plan/rates kept on older cuts",
+        ["tools/validators/validate_newest_plan_rates_kept.py"],
+        True,
+    ),
+    (
+        "#159 L10/L14 plan-aware MUWCLASS",
+        ["tools/validators/validate_issue159_muwclass_plan_aware.py"],
         True,
     ),
 ]

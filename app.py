@@ -1,10 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.04
-# Date:        2026-08-29
+# Version:     v59.08
+# Date:        2026-09-02
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v59.04 — Issue 142: emit Active SL rows as 9SUBLF (VPU=0); keep
+# Change Note: v59.08 — Issue 159: map_rider_uwclass gets plan=MPLAN so L10 S→SM
+#              and L14 N/Q/T/R keep #118 form-aware codes (not ST/00).
+#              v59.04 — Issue 142: emit Active SL rows as 9SUBLF (VPU=0); keep
 #              Issue #27 suppression for non-active SL. Warren override 2026-08-29.
 #              v59.03 — Issue 146: exclude 20 former-vanish (PC/blank) 0561s from
 #              QuikIsrr / PR-7 companions so anniversary does not cut those units.
@@ -639,7 +641,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v59.04"
+APP_VERSION = "v59.08"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -9301,7 +9303,10 @@ class QLAdminEnterpriseIntegrationSuite:
                                     if val not in ['T', 'F']: val = 'T' 
                                 elif t_f == "MUWCLASS":
                                     # Issue #59: never apply bare status map (S→55/P→41/N→T/T→56)
-                                    val = map_rider_uwclass(val)
+                                    # Issue #159: plan-aware #118 map (L10 S→SM, L14 N→NT)
+                                    val = map_rider_uwclass(
+                                        val, plan=self.normalize(row_data.get("MPLAN", ""))
+                                    )
                                 elif t_id.lower() == "quikplan" and t_f == "PAR":
                                     # LifePRO EXHIBIT_PAR_NONPAR (P/N/X/F) → QLAdmin PAR (1=par, 0=non-par)
                                     translated = trans_map.get(f"PAR_{val}", trans_map.get(val, ""))
@@ -9922,6 +9927,13 @@ class QLAdminEnterpriseIntegrationSuite:
                     self.log(f"P3E MPLAN AUTHORITY: validation={'PASSED' if passed else 'FAILED'} stats={val_stats}")
                     self.log(f"P3E governance outputs: {p3e_dir}")
                 aligned_out_df = pd.DataFrame(output, columns=schema)
+                if t_id.lower() in ("quikclnt", "quikclid", "quikbenf", "quikmstr", "quikridr"):
+                    for _cid_col in list(aligned_out_df.columns):
+                        if str(_cid_col).strip().upper() in CLIENT_ID_TARGET_FIELDS:
+                            aligned_out_df[_cid_col] = [
+                                format_qladmin_mclientid(v) if str(v).strip() else ""
+                                for v in aligned_out_df[_cid_col].astype(str)
+                            ]
                 out_csv = os.path.normpath(os.path.join(out_dir, f"{t_id}.csv"))
                 if t_id.lower() == "quikclnt":
                     from qla_core.quikclnt_highwater import apply_quikclnt_highwater
