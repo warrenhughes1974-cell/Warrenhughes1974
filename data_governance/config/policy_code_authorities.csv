@@ -55,7 +55,7 @@ MRELATION,MAIL,Mailing
 MRELATION,SERV,Servicer
 MRELATION,TRST,Trust
 MRELATION,WAIT,Wait
-MRELATION,PW,PW relationship
+MRELATION,POFA,Power of Attorney relationship
 MRELATION,O1,O1 relationship
 MNFOPT,0,None / default
 MNFOPT,1,Option 1

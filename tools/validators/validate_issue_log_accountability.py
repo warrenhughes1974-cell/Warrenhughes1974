@@ -798,6 +798,7 @@ def main() -> int:
         ("#158", ["tools/validators/validate_issue158_pr_segment_ownership.py"], True),
         ("#159", ["tools/validators/validate_issue159_muwclass_plan_aware.py"], True),
         ("#160", ["tools/validators/validate_issue160_pua_terminal_status.py"], True),
+        ("#161", ["tools/validators/validate_issue161_poa_relation_code.py"], True),
         ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
         ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
         ("#136", ["tools/validators/validate_issue136_pvo_flags.py"], True),

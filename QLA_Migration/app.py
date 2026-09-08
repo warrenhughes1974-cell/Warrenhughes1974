@@ -1,10 +1,16 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.08
-# Date:        2026-09-02
+# Version:     v59.11
+# Date:        2026-09-08
 # SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
-# Change Note: v59.08 — Issue 159: map_rider_uwclass gets plan=MPLAN so L10 S→SM
+# Change Note: v59.11 — Issue 161: add QLA_Migration/Output/quikcloth.csv (Client Other
+#              Record, QLAdmin Help 7.69, MPOLICY+MRELATION+MCLOTHID) — the actual table
+#              behind the Names/Other Information grid; POFA rows mirrored from quikclid.
+#              v59.10 — Issue 161: LifePRO RELATE_CODE PW → quikclid.MRELATION POFA
+#              (QLAdmin Names/Other Information Power of Attorney code).
+#              v59.09 — Issue 160: PUA MPHSTAT inherits terminal base status.
+#              v59.08 — Issue 159: map_rider_uwclass gets plan=MPLAN so L10 S→SM
 #              and L14 N/Q/T/R keep #118 form-aware codes (not ST/00).
 #              v59.04 — Issue 142: emit Active SL rows as 9SUBLF (VPU=0); keep
 #              Issue #27 suppression for non-active SL. Warren override 2026-08-29.
@@ -640,7 +646,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v59.09"
+APP_VERSION = "v59.11"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"

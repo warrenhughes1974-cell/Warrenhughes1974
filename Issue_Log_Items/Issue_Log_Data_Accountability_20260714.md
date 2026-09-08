@@ -1,6 +1,6 @@
 # Issue Log Data Accountability
 
-**Generated:** 2026-09-08T07:12:15  
+**Generated:** 2026-09-08T13:07:47  
 **Engine batch:** v57.85 full UAT Output  
 **Script:** `tools/validators/validate_issue_log_accountability.py` v1.12
 
@@ -8,7 +8,7 @@
 
 | Status | Count |
 |--------|------:|
-| IN_DATA (confirmed in Output) | 73 |
+| IN_DATA (confirmed in Output) | 74 |
 | WARN (env / known caveat) | 14 |
 | GAP (not confirmed) | 4 |
 | SKIP (no validator) | 0 |
@@ -65,6 +65,7 @@
 | #158 | **IN_DATA** | validator PASS |
 | #159 | **IN_DATA** | validator PASS |
 | #160 | **IN_DATA** | validator PASS |
+| #161 | **IN_DATA** | validator PASS |
 | #134 | **IN_DATA** | validator PASS |
 | #135 | **IN_DATA** | validator PASS |
 | #136 | **IN_DATA** | validator PASS |
