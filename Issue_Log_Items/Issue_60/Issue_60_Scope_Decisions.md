@@ -20,6 +20,7 @@
 | **SD-60-10** | Pilot / UAT policy: **`010310404C`**. Fleet apply Track A to all PUA product rows. | Chris sample + fleet analysis |
 | **SD-60-11** | **PUA only:** `MEFFDATE` / `MAGE` / `MPAYUP` / `MLASTANN` / `MPHSTAT` overrides apply **only** inside `_apply_pua_rider_inheritance` (gated by `_is_paid_up_addition_product`). **Do not** change dates or ages on other riders (ADB, WP, term, etc.) or on phase-1 base. | User Risk constraint 2026-07-14 |
 | **SD-60-12** | `MPHSTAT=41` only when base phase `MPHSTAT` &lt; 50; terminated-base PUA keep current status. | Risk G3 |
+| **SD-60-13** | **Carve-out to SD-60-12, approved 2026-09-07 (Warren, in chat).** Client (Brianna) reported PUA phases staying Expired (56) instead of following a Surrendered (55) base. Approved: PUA phase `MPHSTAT` now inherits the base phase's own terminal status exactly for **any** base status &ge;50 that is not 44/45 (which keep the existing #108D rule → 54) and not &lt;50 (which keep SD-60-3 → 41). Scope was explicitly broadened beyond "55 only" to **all** terminal codes (confirmed: base 50, 53, 55, 57 populations in current Output) at Warren's direction ("lets fix all"). Implemented under **Issue #160**; see `Issue_Log_Items/Issue_160/`. | Warren 2026-09-07 (chat approval) |
 
 ---
 

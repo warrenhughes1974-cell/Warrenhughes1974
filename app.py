@@ -641,7 +641,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v59.08"
+APP_VERSION = "v59.09"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -3636,6 +3636,14 @@ class QLAdminEnterpriseIntegrationSuite:
             row_data["MPHSTAT"] = "54"
         elif base_status < 50:
             row_data["MPHSTAT"] = "41"
+        else:
+            # Issue #160: PUA follows base phase's terminal status (e.g. 50 Suspended,
+            # 53 Terminated/Death, 55 Surrendered, 57 Matured) instead of keeping its
+            # own PPBEN-mapped status. Carve-out approved by Warren against SD-60-12
+            # (Issue #60), which only addressed base < 50 and 44/45.
+            base_mphstat_raw = self.normalize(entry.get("MPHSTAT", ""))
+            if base_mphstat_raw:
+                row_data["MPHSTAT"] = base_mphstat_raw
         self.log(
             "PUA RULE APPLIED: "
             f"MPOLICY={mpolicy} BASE_MPLAN={base_mplan} PUA_MPLAN={new_mplan} "

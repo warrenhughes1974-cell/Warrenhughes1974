@@ -1,9 +1,9 @@
 {
-  "generated": "2026-08-29T12:40:03",
+  "generated": "2026-09-08T07:12:15",
   "script_version": "1.12",
   "output": "C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Output",
   "counts": {
-    "IN_DATA": 70,
+    "IN_DATA": 73,
     "WARN": 14,
     "GAP": 4
   },
@@ -53,7 +53,7 @@
     {
       "id": "#49",
       "status": "WARN",
-      "detail": "atch may be required) | WARN: 01ML8515C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8535C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8556C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8565C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8584C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8678C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8772C: output MSTATUS= expected 22 (rebatch may be required) | WARN: Output appears pre-#49 - run full/quikmstr batch under v57.70 | RESULT: FAIL",
+      "detail": "tch may be required) | WARN: 01ML8535C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8556C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8565C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8584C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8678C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 01ML8772C: output MSTATUS= expected 22 (rebatch may be required) | WARN: 010439999C: output MSTATUS= expected 22 (rebatch may be required) | WARN: Output appears pre-#49 - run full/quikmstr batch under v57.70 | RESULT: FAIL",
       "exit": 1
     },
     {
@@ -95,13 +95,13 @@
     {
       "id": "#59",
       "status": "WARN",
-      "detail": "9010803420C: 22 -> 50 |     9010813163C: 44 -> 22 |     9010816990C: 22 -> 53 |     9010882416C: 22 -> 50 |     9010891087C: 22 -> 55 |     9010901657C: 44 -> 22 |     9011146243C: 22 -> 54 |     9011147572C: 22 -> 54 |     9011162365C: 22 -> 50 |     9011193709C: 41 -> 53 |     9011262751C: 22 -> 55 |     9011262752C: 22 -> 55 |     9010835310C: 50 -> 53 |     9011085270C: 50 -> 53 |     9011112998C: 50 -> 53 |     9011176240C: 50 -> 53 |     9011190416C: 50 -> 53 |     9011194146C: 50 -> 53 |   9010521213C after=53 expected 50 (baseline was 22; 20260630 PPOLC_PolicyMaster_Extract_20260630.csv CONTRACT=S/DP -> ST_S_DP=50)",
+      "detail": "aim expectation: 9010521213C=53 (20260831 PPOLC_PolicyMaster_Extract_20260831.csv CONTRACT=T/DC -> ST_T_DC=53) |   Named LP source change: 901ML8250C expect 53 (20260831 PPOLC_PolicyMaster_Extract_20260831.csv 901ML8250 CONTRACT=T/DC PUT=LP) |   Skipping package-wide baseline hard guard (active valuation 20260831 != baseline cut 20260630; use --strict-baseline to force) | FAIL |   TRACE 9010521213C: MSTATUS='50' expected '53' |   TRACE 901ML8250C: MSTATUS='22' expected '53' |   9010521213C after=50 expected 53 (baseline was 22; 20260831 PPOLC_PolicyMaster_Extract_20260831.csv CONTRACT=T/DC -> ST_T_DC=53)",
       "exit": 1
     },
     {
       "id": "#60",
       "status": "WARN",
-      "detail": "9 | Baseline drift (midyear v57.85 (not same-cut)): date/age/status=112 valuation-sensitive=1758 -> issue60_cross_release_drift.csv | WARN: source-baseline unavailable for active cut - midyear v57.85 (not same-cut) retained for informational drift only; MPHSTAT/date drift vs midyear is not a GAP | WARN: TRACE 010150910C ADB vs midyear baseline skipped (no same-cut baseline; Class A) | WARN: informational midyear hard drift rows=112 (not scored; see issue60_cross_release_drift.csv) | PASS - Issue #60 Track A PUA phase rules; NFO PUA terminated per #108D | CLASS_A_WARN: source-baseline unavailable (exit 2)",
+      "detail": "379 | Baseline drift (midyear v57.85 (not same-cut)): date/age/status=86 valuation-sensitive=1750 -> issue60_cross_release_drift.csv | WARN: source-baseline unavailable for active cut - midyear v57.85 (not same-cut) retained for informational drift only; MPHSTAT/date drift vs midyear is not a GAP | WARN: TRACE 010150910C ADB vs midyear baseline skipped (no same-cut baseline; Class A) | WARN: informational midyear hard drift rows=86 (not scored; see issue60_cross_release_drift.csv) | PASS - Issue #60 Track A PUA phase rules; NFO PUA terminated per #108D | CLASS_A_WARN: source-baseline unavailable (exit 2)",
       "exit": 2
     },
     {
@@ -125,7 +125,7 @@
     {
       "id": "#76",
       "status": "GAP",
-      "detail": "validate_issue76_eti_rpu_payup v2.1 |   valuation date: 2026-06-30 (QLA_VALUATION_DATE=20260630) |   candidates=311 payup_fail=0 mlast_fail=38 | WARN: no same-cut candidate-count baseline; active-cut candidates=311 (midyear frozen 400 not required) | FAIL: |   - MLASTANN mismatch: 9010391878C got 16 expected 15 (paidto=20100701 val=20260630) |   - MLASTANN mismatch: 9010392930C got 22 expected 21 (paidto=20040701 val=20260630) |   - MLASTANN mismatch: 9010405175C got 44 expected 43 (paidto=19820728 val=20260630) |   - violations: payup=0 mlastann=38",
+      "detail": "validate_issue76_eti_rpu_payup v2.1 |   valuation date: 2026-08-31 (QLA_VALUATION_DATE=20260831) |   candidates=314 payup_fail=0 mlast_fail=77 | WARN: no same-cut candidate-count baseline; active-cut candidates=314 (midyear frozen 400 not required) | FAIL: |   - MLASTANN mismatch: 9010382448C got 24 expected 25 (paidto=20010801 val=20260831) |   - MLASTANN mismatch: 9010391878C got 15 expected 16 (paidto=20100701 val=20260831) |   - MLASTANN mismatch: 9010392930C got 21 expected 22 (paidto=20040701 val=20260831) |   - violations: payup=0 mlastann=77",
       "exit": 1
     },
     {
@@ -143,13 +143,13 @@
     {
       "id": "#114",
       "status": "GAP",
-      "detail": "olicies) | OK: dividend-history policies=586 | OK: PPBENTYP lifetime source = 20260630 PPBENTYP_BenefitType_Extract_20260630.csv (593 policies) | WARN: MBENTYP=10 count=4141 above midyear floor 4118 (loan/#54 source growth OK for #114) | WARN: MBENTYP=11 count=14260 above midyear floor 14156 (loan/#54 source growth OK for #114) | WARN: MBENTYP=12 count=19301 above midyear floor 19135 (loan/#54 source growth OK for #114) | ------------------------------------------------------------------------ | RESULT: FAIL | FAIL: 14 policy(ies) do not tie to PPBENTYP; first: 9010331768C emitted 7509.60 vs lifetime 7209.30",
+      "detail": "an=37409 + div=3079 + ledger=867 = 41465) | OK: dividend MPOLICY values are 11 characters (padded) | OK: dividend MDATE YYYYMMDD format | OK: all dividend MBEN values positive | OK: dividend MBEN formatted to 2 decimals | OK: at most one 20171231 conversion adjustment per policy (579 policies) | OK: dividend-history policies=586 | OK: PPBENTYP lifetime source = 20260831 PPBENTYP_BenefitType_Extract_20260831.csv (593 policies) | ------------------------------------------------------------------------ | RESULT: FAIL | FAIL: 27 policy(ies) do not tie to PPBENTYP; first: 9010148272C emitted 365.23 vs lifetime 373.32",
       "exit": 1
     },
     {
       "id": "#116",
       "status": "WARN",
-      "detail": "rows after=5083 | future MINTDATE with a balance (after): 0 | future MINTDATE on zero-balance rows: 931 (no accrual, not a defect) | WARN: missing-archive: C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\pre_116_117_20260725\\quikdvdp_BEFORE.csv absent \u00e2\u20ac\u201d before/after delta not scored; validated current Output (no future MINTDATE with balance) |  | ISSUE #116: WARN (missing-archive; current Output checks PASS) | CLASS_A_WARN: missing-archive (exit 2)",
+      "detail": "rows after=5083 | future MINTDATE with a balance (after): 0 | future MINTDATE on zero-balance rows: 654 (no accrual, not a defect) | WARN: missing-archive: C:\\Users\\warren\\Documents\\GitHub\\Warrenhughes1974\\QLA_Migration\\Archive\\pre_116_117_20260725\\quikdvdp_BEFORE.csv absent \u00e2\u20ac\u201d before/after delta not scored; validated current Output (no future MINTDATE with balance) |  | ISSUE #116: WARN (missing-archive; current Output checks PASS) | CLASS_A_WARN: missing-archive (exit 2)",
       "exit": 2
     },
     {
@@ -255,6 +255,24 @@
       "exit": 0
     },
     {
+      "id": "#158",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#159",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
+      "id": "#160",
+      "status": "IN_DATA",
+      "detail": "validator PASS",
+      "exit": 0
+    },
+    {
       "id": "#134",
       "status": "IN_DATA",
       "detail": "validator PASS",
@@ -305,7 +323,7 @@
     {
       "id": "#40/#41",
       "status": "IN_DATA",
-      "detail": "QuikCvs rows=38490"
+      "detail": "QuikCvs rows=39954"
     },
     {
       "id": "#41",
@@ -330,7 +348,7 @@
     {
       "id": "#44",
       "status": "IN_DATA",
-      "detail": "quikloan rows=353"
+      "detail": "quikloan rows=356"
     },
     {
       "id": "#45",
@@ -340,7 +358,7 @@
     {
       "id": "#75",
       "status": "IN_DATA",
-      "detail": "draft MBANKNO filled=2075/2129 invalid=0; 9010161748C=091303855/0000002000581"
+      "detail": "draft MBANKNO filled=2078/2132 invalid=0; 9010161748C=091303855/0000002000581"
     },
     {
       "id": "#47",
@@ -365,7 +383,7 @@
     {
       "id": "#54",
       "status": "IN_DATA",
-      "detail": "quikbenh=41764 types={'1': 209, '3': 265, '6': 843, '7': 25, '4': 2582, '10': 4141, '11': 14260, '12': 19301, '2': 37, '8': 101}"
+      "detail": "quikbenh=41465 types={'1': 209, '3': 264, '6': 842, '7': 25, '4': 2569, '10': 4118, '11': 14156, '12': 19135, '2': 37, '8': 110}"
     },
     {
       "id": "#55",
@@ -435,7 +453,7 @@
     {
       "id": "#59:010521213C",
       "status": "GAP",
-      "detail": "MSTATUS=53 (expected 50; 20260630 PPOLC_PolicyMaster_Extract_20260630.csv CONTRACT=S/DP -> ST_S_DP=50)"
+      "detail": "MSTATUS=50 (expected 53; 20260831 PPOLC_PolicyMaster_Extract_20260831.csv CONTRACT=T/DC -> ST_T_DC=53)"
     },
     {
       "id": "#60",
@@ -460,7 +478,7 @@
     {
       "id": "Claims 14-19",
       "status": "IN_DATA",
-      "detail": "clms=2488 clmp=2981"
+      "detail": "clms=2497 clmp=2994"
     },
     {
       "id": "#105",
@@ -480,7 +498,7 @@
     {
       "id": "#135",
       "status": "GAP",
-      "detail": "clms=2488 clmp=2981; MINTAMT_nz=0; marker_308=308; marker_with_payee=0"
+      "detail": "clms=2497 clmp=2994; MINTAMT_nz=0; marker_308=308; marker_with_payee=0"
     },
     {
       "id": "#136",

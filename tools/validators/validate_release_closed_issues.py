@@ -144,6 +144,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue159_muwclass_plan_aware.py"],
         True,
     ),
+    (
+        "#160 PUA terminal status inheritance",
+        ["tools/validators/validate_issue160_pua_terminal_status.py"],
+        True,
+    ),
 ]
 
 
