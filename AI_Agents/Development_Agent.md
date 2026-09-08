@@ -16,9 +16,9 @@ Implement the **approved** fix from Planning + Risk. Changes must be minimal, is
 - [ ] Planning report complete (G1)
 - [ ] Dependency Gate **PASS** (G2)
 - [ ] Risk report **Go** or **Conditional Go** (G3)
-- [ ] User explicitly approved Development (e.g. "approved for development", "implement the fix")
+- [ ] Standing auto-start after Risk GO, or Warren approval on an exception path
 
-**Do not start Development from Planning alone.**
+**Do not start Development from Planning alone. Risk GO with no Closed-row conflict is the standing Development authorization.**
 
 ---
 

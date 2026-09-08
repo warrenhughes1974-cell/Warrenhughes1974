@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-09-08",
+  "protected_baseline": ["25", "26", "143", "WF1"],
+  "issues": {
+    "WF1": {
+      "title": "Verified development and delivery workflow install",
+      "tier": "workflow",
+      "client_visible": false,
+      "smoke_ids": ["workflow-gate-self-tests"],
+      "scripts": ["tests/workflow/test_workflow_gates.py"],
+      "acceptance": "Gate runner blocks missing smoke, stale evidence, unverified push, and unapproved exception advances."
+    },
+    "25": {
+      "title": "MPOLICY fixed-width padding",
+      "tier": "engine",
+      "client_visible": true,
+      "smoke_ids": ["#2 MPOLICY width-11"],
+      "scripts": [
+        "tools/validators/validate_mpolicy_width.py",
+        "QLA_Migration/_validate_issue2_mpolicy.py"
+      ],
+      "acceptance": "QLAdmin policy keys remain fixed-width padded."
+    },
+    "26": {
+      "title": "MPREM annual premium per unit",
+      "tier": "money",
+      "client_visible": true,
+      "smoke_ids": ["#26 MPREM"],
+      "scripts": ["tools/validators/validate_issue26_mprem.py"],
+      "acceptance": "MPREM maps from ANN_PREM_PER_UNIT with documented fallback."
+    },
+    "143": {
+      "title": "BF RPU MUNIT",
+      "tier": "money",
+      "client_visible": true,
+      "smoke_ids": ["#143 BF RPU MUNIT"],
+      "scripts": ["tools/validators/validate_issue143_smoke.py"],
+      "acceptance": "Inspect recorded Issue #143 requirements; do not invent goldens. Missing script is GAP.",
+      "inspect_only": true
+    }
+  }
+}

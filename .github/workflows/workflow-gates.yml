@@ -1,0 +1,30 @@
+# Workflow safeguard CI — no customer data, no full Output, no DBF.
+name: workflow-gates
+
+on:
+  push:
+    paths:
+      - "tools/workflow/**"
+      - "tools/validators/run_workflow_gate.py"
+      - "tests/workflow/**"
+      - ".github/workflows/workflow-gates.yml"
+      - "AI_Agents/Verified_Development_Delivery_Workflow.md"
+  pull_request:
+    paths:
+      - "tools/workflow/**"
+      - "tools/validators/run_workflow_gate.py"
+      - "tests/workflow/**"
+      - ".github/workflows/workflow-gates.yml"
+
+jobs:
+  self-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run workflow gate self-tests
+        env:
+          WORKFLOW_GATE_SKIP_SELFTEST: "1"
+        run: python tests/workflow/test_workflow_gates.py -q

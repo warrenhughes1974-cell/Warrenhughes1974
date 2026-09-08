@@ -1,8 +1,11 @@
 # LifePRO → QLAdmin Issue Resolution Framework
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Project:** Warrenhughes1974 / QLA Migration  
-**Scope:** Gated issue log remediation — no code until approved  
+**Operating process:** `AI_Agents/Verified_Development_Delivery_Workflow.md` (locked 2026-09-08)  
+**Scope:** Gated issue log remediation — no production code until Risk GO (auto-start) or Warren exception  
+
+This file keeps the historical nine-stage names and examples. Stage owners, auto-advance, smoke, and truthful status live in the operating process. Do not rename Stage 6 Validation or Stage 7 Regression.
 
 ---
 

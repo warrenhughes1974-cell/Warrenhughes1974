@@ -10,12 +10,13 @@ Copy everything below the line into Cursor. Replace the `[ISSUE BLOCK]` with you
 Run the Issue Resolution Framework for the issue below.
 
 Read and follow:
+- AI_Agents/Verified_Development_Delivery_Workflow.md
 - AI_Agents/Framework.md
 - AI_Agents/Intake_Agent.md
 - AI_Agents/Planning_Agent.md
 - AI_Agents/Dependency_Gate.md
 
-Start with Intake Agent and Planning Agent ONLY.
+Start with Research (Sonnet) for Discovery → Risk. Auto-continue unless wrong-target or a missing decision is flagged.
 
 Do NOT:
 - Write or modify conversion code
@@ -31,8 +32,8 @@ DO:
 - Preserve Issue #25 MPOLICY padding and Issue #26 MPREM mapping in all recommendations
 - Follow AGENTS.md surgical-change rules
 
-Stop after Planning (+ Dependency Gate assessment) unless I explicitly say:
-"Proceed to Risk Agent" or "Approved for Development."
+Auto-continue Intake → Risk. On Risk GO with no Closed-row conflict, start Development (Composer).
+Stop and ask Warren only for NO-GO, Class C, Closed-row conflict, protected merge/deploy, client UAT, or Opus.
 
 At the end, report:
 1. Current issue status (from Framework.md status list)

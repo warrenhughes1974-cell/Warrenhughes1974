@@ -1,0 +1,23 @@
+---
+description: Verified development and delivery — smoke, gates, truthful status, Closed-fix protection.
+alwaysApply: true
+---
+
+# Verified development and delivery
+
+Canonical: `AI_Agents/Verified_Development_Delivery_Workflow.md`
+
+- Never say done, checked in, released, or ready for testing without the matching evidence.
+- Every implemented fix needs a permanent issue-linked smoke. Always.
+- Local test ≠ commit ≠ push ≠ delivery branch ≠ rebuilt package ≠ recipient access. Report each separately.
+- Stages 0–4: Sonnet (`claude-sonnet-5-thinking-high`), no production code.
+- Stage 5: Composer (`composer-2.5-fast`). Stage 6 stays Validation. Stage 7 Regression. Stage 8 Closure.
+- Auto-advance Intake, Development, and check-in to `origin/main` unless an exception applies.
+- Warren only for: Risk NO-GO, Class C, Closed-row conflict, protected merge/deploy, client UAT, Opus.
+- Grok (`cursor-grok-4.6-high-fast`) validates money / engine / status / rates / claims only. Do not use Auto or `inherit` for those roles.
+- Surgical edits only. Protect Closed fixes including #25, #26, and #143. Stop and tell Warren before reversing a Closed row.
+- Full clean-checkout Output rebuild is required for a release candidate, not every issue.
+- Client UAT is required to Close client-visible defects only, not internal tooling.
+- Gate decisions come from `python tools/validators/run_workflow_gate.py`, not from an agent writing PASS.
+
+Statuses: PASS, FAIL, NOT_RUN, BLOCKED, NOT_APPLICABLE, UNVERIFIED. Skipping is not passing.

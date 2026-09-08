@@ -1,0 +1,29 @@
+---
+description: Issue stage owners, auto-advance, and locked model IDs for the verified workflow.
+alwaysApply: true
+---
+
+# Issue stage agents
+
+Authority: Warren 2026-09-08. Detail: `AI_Agents/Verified_Development_Delivery_Workflow.md`.
+
+| Stage | Owner | Code? | Model ID |
+|------|--------|-------|----------|
+| 0 Discovery | Research | No | `claude-sonnet-5-thinking-high` |
+| 1–4 Intake→Risk | Research | No | `claude-sonnet-5-thinking-high` |
+| 5 Development | Coder | Surgical only | `composer-2.5-fast` |
+| 6 Validation | Independent audit when tier requires Grok; otherwise executable gates | Read-only | `cursor-grok-4.6-high-fast` when required |
+| 7 Regression | Coder + gates | Compare only | `composer-2.5-fast` |
+| 8 Closure | Docs + gates | Docs only | `composer-2.5-fast` |
+
+Do not use Auto or `inherit` for these roles. Prefer non-Fast Composer/Grok when those IDs exist; current available IDs are Fast only.
+
+## Auto-advance (standing)
+
+After Discovery: continue Intake→Risk unless Discovery flags wrong-target or a missing business decision.  
+After Risk GO with no Closed-row conflict: start Development.  
+After local validation: scoped local commit, then check-in to `origin/main` (normal push only).
+
+## Stop and ask Warren
+
+Risk NO-GO, Class C, Closed-row conflict, force-push / protected merge / deploy, client UAT confirmation, Opus specialist.

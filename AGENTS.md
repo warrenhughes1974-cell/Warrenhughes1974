@@ -1,5 +1,9 @@
 # Enterprise Insurance Conversion Rules
 
+**Operating process:** `AI_Agents/Verified_Development_Delivery_Workflow.md`  
+**Gate runner:** `python tools/validators/run_workflow_gate.py`  
+Never report done / checked in / released / ready for testing without the matching evidence.
+
 DO NOT:
 - redesign architecture
 - rewrite stable workflows
