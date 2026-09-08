@@ -123,4 +123,4 @@ Restore `QLA_Migration/Archive/issue160_pre_remap/quikridr_pre_issue160.csv` ove
 
 ## Git release
 
-Issue-scoped files staged and committed; see commit hash recorded after `git push -u origin HEAD` below. `Output/` is gitignored — network machines keep v59.09 and the remapped `quikridr.csv` (or re-run a full policy batch, which now carries the fix natively).
+Commit `b8cd71e` on branch `issue-34-pr7-quikisrr`, pushed to `origin/issue-34-pr7-quikisrr`. 20 issue-scoped files (both `app.py` copies, the new validator, `SMOKE_JOBS`/accountability registration, `Issue_60_Scope_Decisions.md` SD-60-13, the Completed Issues guide row, refreshed accountability report, and all `Issue_Log_Items/Issue_160/` artifacts). `Output/` is gitignored — network machines keep v59.09 and the remapped `quikridr.csv` (or re-run a full policy batch, which now carries the fix natively).
