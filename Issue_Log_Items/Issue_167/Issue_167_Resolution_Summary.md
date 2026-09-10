@@ -118,4 +118,4 @@ Restore `Issue_Log_Items/Issue_167/evidence/quikridr_pre_issue167_20260910T08172
 
 ## Git release
 
-Commit pending on this close (issue-scoped files only). `Output/` is gitignored — network machines keep v59.12 and the remapped `quikridr.csv` (or re-run a full policy batch, which now carries the fix natively). Not pushed unless Warren asks.
+Commit `7e62a70` on branch `issue-34-pr7-quikisrr`. 21 issue-scoped files (both `app.py` copies, the new validator, `SMOKE_JOBS`/accountability registration, the Completed Issues guide row, and all `Issue_Log_Items/Issue_167/` artifacts). `Output/` is gitignored — network machines keep v59.12 and the remapped `quikridr.csv` (or re-run a full policy batch, which now carries the fix natively). Not pushed unless Warren asks.
