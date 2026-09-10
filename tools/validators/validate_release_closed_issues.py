@@ -154,6 +154,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue161_poa_relation_code.py"],
         True,
     ),
+    (
+        "#167 quikridr MLASTANN anniversary",
+        ["tools/validators/validate_issue167_mlastann.py"],
+        True,
+    ),
 ]
 
 

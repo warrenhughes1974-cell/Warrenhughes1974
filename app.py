@@ -1,10 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.11
-# Date:        2026-09-08
+# Version:     v59.12
+# Date:        2026-09-10
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v59.11 — Issue 161: add QLA_Migration/Output/quikcloth.csv (Client Other
+# Change Note: v59.12 — Issue 167: quikridr.MLASTANN is anniversary-accurate
+#              (completed years from MEFFDATE to QLA_VALUATION_DATE, minus 1 if
+#              the issue month/day has not occurred). ETI/RPU #76 overlay unchanged.
+#              v59.11 — Issue 161: add QLA_Migration/Output/quikcloth.csv (Client Other
 #              Record, QLAdmin Help 7.69, MPOLICY+MRELATION+MCLOTHID) — the actual table
 #              behind the Names/Other Information grid; POFA rows mirrored from quikclid.
 #              v59.10 — Issue 161: LifePRO RELATE_CODE PW → quikclid.MRELATION POFA
@@ -647,7 +650,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v59.11"
+APP_VERSION = "v59.12"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -5887,14 +5890,16 @@ class QLAdminEnterpriseIntegrationSuite:
         """
         Current policy year for QUIKRIDR.MLASTANN.
         Issue source: PPBEN.ISSUE_DATE (converted to MEFFDATE).
-        Valuation source: conversion run date (datetime.now().date()).
-        Methodology: valuation_year - issue_year (calendar-year duration).
+        Valuation source: QLA_VALUATION_DATE when set, else conversion run date.
+        Methodology: completed years from issue anniversary to valuation date
+        (Issue #167 / same month-day test as Issue #108B). Calendar-year
+        subtraction ran a year high whenever the anniversary had not occurred.
         """
         val = valuation_date or datetime.now().date()
         issue = self._parse_conversion_date(issue_date_raw)
         if not issue or issue > val:
             return ""
-        duration = val.year - issue.year
+        duration = val.year - issue.year - ((val.month, val.day) < (issue.month, issue.day))
         return str(duration) if duration >= 0 else ""
 
     def _apply_quikridr_mlastann(self, row_data, src_row, valuation_date):
