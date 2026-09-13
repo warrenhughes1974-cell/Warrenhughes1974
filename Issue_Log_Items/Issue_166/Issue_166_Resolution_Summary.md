@@ -116,4 +116,6 @@ QLAdmin still calculates the statement interest dollar after load. Confirm on UA
 
 ## Git release
 
-Recorded after commit/push in this file’s footer.
+- **Commit:** `7a392cb` — Close Issue #166: Div Accumulation Crediting (v59.13)
+- **Branch:** `issue-34-pr7-quikisrr`
+- **Output:** gitignored — network machines must re-emit `quikdvdp` after pull (`QLA_VALUATION_DATE` matching the source cut)
