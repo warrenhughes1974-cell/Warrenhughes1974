@@ -159,6 +159,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue167_mlastann.py"],
         True,
     ),
+    (
+        "#166 quikdvdp MDEPINT buckets",
+        ["tools/validators/validate_issue166_mdepint.py"],
+        True,
+    ),
 ]
 
 

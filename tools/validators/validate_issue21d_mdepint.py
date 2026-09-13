@@ -1,5 +1,9 @@
 """
-Issue #21D Track A — quikdvdp.MDEPINT validation (ISWL 4.50% / non-ISWL 4.00%).
+Issue #21D Track A — quikdvdp.MDEPINT validation (ISWL 4.50% preserved).
+
+Issue #166 (Warren override 2026-09-13) replaced the old non-ISWL 4.00 lock
+with #95 plan buckets. This script still fail-closes ISWL at 4.50 and
+checks non-ISWL against those buckets.
 
 Usage:
   python tools/validators/validate_issue21d_mdepint.py
@@ -19,12 +23,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from qla_core.cso_mortality_crosswalk import ISWL_MPLAN_ALLOWLIST, is_iswl_mplan
+from qla_core.mdepint_buckets import mdepint_for_mplan
 
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "1.1"
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 ISWL_RATE = "4.50"
-NON_ISWL_RATE = "4.00"
-TRACE_POLICIES = ("010713704C", "010818663C")
+TRACE_POLICIES = ("9010713704C", "9010824098C")
 
 
 def _read_csv(path: Path) -> pd.DataFrame:
@@ -77,7 +81,12 @@ def validate(output_dir: Path, baseline_dir: Path | None) -> int:
     non_iswl_rows = dvdp[~dvdp["MPOLICY"].astype(str).str.strip().isin(iswl_policies)]
 
     bad_iswl = iswl_rows[iswl_rows["MDEPINT"].apply(_rate) != ISWL_RATE]
-    bad_non = non_iswl_rows[non_iswl_rows["MDEPINT"].apply(_rate) != NON_ISWL_RATE]
+    bad_non = []
+    for _, row in non_iswl_rows.iterrows():
+        pol = str(row.get("MPOLICY", "")).strip()
+        exp = mdepint_for_mplan(mplan_by_pol.get(pol, ""))
+        if exp and _rate(row["MDEPINT"]) != exp:
+            bad_non.append(pol)
 
     print(f"ISWL policies (phase-1 MPLAN allowlist): {len(iswl_policies)}")
     print(f"quikdvdp ISWL rows: {len(iswl_rows)} | non-ISWL rows: {len(non_iswl_rows)}")
@@ -92,9 +101,9 @@ def validate(output_dir: Path, baseline_dir: Path | None) -> int:
         for pol in bad_iswl["MPOLICY"].head(5):
             errors.append(f"  sample ISWL fail: {pol}")
 
-    if len(bad_non):
-        errors.append(f"{len(bad_non)} non-ISWL policies have MDEPINT != {NON_ISWL_RATE}")
-        for pol in bad_non["MPOLICY"].head(5):
+    if bad_non:
+        errors.append(f"{len(bad_non)} non-ISWL policies have MDEPINT != #95 bucket")
+        for pol in bad_non[:5]:
             errors.append(f"  sample non-ISWL fail: {pol}")
 
     for pol in TRACE_POLICIES:
@@ -104,8 +113,8 @@ def validate(output_dir: Path, baseline_dir: Path | None) -> int:
             continue
         mplan = mplan_by_pol.get(pol, "?")
         rate = _rate(rows.iloc[0]["MDEPINT"])
-        expected = ISWL_RATE if is_iswl_mplan(mplan) else NON_ISWL_RATE
-        ok = rate == expected
+        expected = mdepint_for_mplan(mplan) or (ISWL_RATE if is_iswl_mplan(mplan) else "")
+        ok = bool(expected) and rate == expected
         print(f"\n{pol}: MPLAN={mplan} MDEPINT={rate} expected={expected} {'OK' if ok else 'FAIL'}")
         if not ok:
             errors.append(f"{pol}: MDEPINT {rate} expected {expected}")
@@ -115,15 +124,15 @@ def validate(output_dir: Path, baseline_dir: Path | None) -> int:
         base = base.set_index(base["MPOLICY"].astype(str).str.strip())
         cur = dvdp.set_index(dvdp["MPOLICY"].astype(str).str.strip())
         common = base.index.intersection(cur.index)
-        changed_non_iswl = 0
+        changed_iswl = 0
         for pol in common:
-            if pol in iswl_policies:
+            if pol not in iswl_policies:
                 continue
             if _rate(base.loc[pol, "MDEPINT"]) != _rate(cur.loc[pol, "MDEPINT"]):
-                changed_non_iswl += 1
-        print(f"\nBaseline diff: non-ISWL MDEPINT changes = {changed_non_iswl}")
-        if changed_non_iswl:
-            errors.append(f"{changed_non_iswl} non-ISWL policies changed vs baseline")
+                changed_iswl += 1
+        print(f"\nBaseline diff: ISWL MDEPINT changes = {changed_iswl}")
+        if changed_iswl:
+            errors.append(f"{changed_iswl} ISWL policies changed vs baseline")
 
     print("\n" + "=" * 72)
     if errors:
@@ -132,7 +141,7 @@ def validate(output_dir: Path, baseline_dir: Path | None) -> int:
             print(f"  - {e}")
         return 1
 
-    print("RESULT: PASS — ISWL MDEPINT 4.50; non-ISWL unchanged at 4.00")
+    print("RESULT: PASS — ISWL MDEPINT 4.50; non-ISWL matches #95 buckets (#166)")
     return 0
 
 

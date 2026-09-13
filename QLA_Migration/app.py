@@ -1,10 +1,14 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.12
-# Date:        2026-09-10
+# Version:     v59.13
+# Date:        2026-09-13
 # SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
-# Change Note: v59.12 — Issue 167: quikridr.MLASTANN is anniversary-accurate
+# Change Note: v59.13 — Issue 166: quikdvdp.MDEPINT follows #95 plan buckets
+#              (4.50 ISWL/1668SP, 2.00 SAL OL/ML, 3.50 residual). Year-end
+#              MINTDATE on deposit rows overlays to the prior anniversary.
+#              Warren #21D override 2026-09-13: non-ISWL no longer locked at 4.00.
+#              v59.12 — Issue 167: quikridr.MLASTANN is anniversary-accurate
 #              (completed years from MEFFDATE to QLA_VALUATION_DATE, minus 1 if
 #              the issue month/day has not occurred). ETI/RPU #76 overlay unchanged.
 #              v59.11 — Issue 161: add QLA_Migration/Output/quikcloth.csv (Client Other
@@ -373,6 +377,7 @@ from qla_core.cso_mortality_crosswalk import (
     iswl_mdepint_percent,
     load_cso_mortality_crosswalk,
 )
+from qla_core.mdepint_buckets import mdepint_for_mplan, overlay_year_end_mintdate
 from qla_core.cso_valuation_setup import (
     apply_quikplan_valuation_setup,
     default_valuation_setup_path,
@@ -649,7 +654,7 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v59.12"
+APP_VERSION = "v59.13"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -8426,6 +8431,7 @@ class QLAdminEnterpriseIntegrationSuite:
                     quikdvdp_tx_cache = {}
                     quikdvdp_tx_policies = set()
                     quikridr_mplan_cache = {}
+                    quikridr_meffdate_cache = {}
                     if t_id.lower() == "quikdvdp":
                         try:
                             qr_path = os.path.normpath(os.path.join(self.path_vars["Out"][0].get(), "quikridr.csv"))
@@ -8438,6 +8444,7 @@ class QLAdminEnterpriseIntegrationSuite:
                                         phase = self.normalize(qrow.get('MPHASE', '')) or "1"
                                         if phase == "1" and pol and pol not in quikridr_mplan_cache:
                                             quikridr_mplan_cache[pol] = self.normalize(qrow.get('MPLAN', ''))
+                                            quikridr_meffdate_cache[pol] = self.normalize(qrow.get('MEFFDATE', ''))
                                     self.log(
                                         f"Auto-loaded quikridr MPLAN cache for quikdvdp MDEPINT "
                                         f"({len(quikridr_mplan_cache)} policies)"
@@ -9697,10 +9704,25 @@ class QLAdminEnterpriseIntegrationSuite:
                                         f"(first hit {tp} MINTDATE={row_data.get('MINTDATE')})"
                                     )
                                 self._quikdvdp_641_hits = getattr(self, '_quikdvdp_641_hits', 0) + 1
-                            # Issue #21D Track A: ISWL-scoped MDEPINT from MPLAN allowlist (not fleet-wide).
+                            # Issue #166: MDEPINT from #95 plan buckets (Warren #21D
+                            # override 2026-09-13 — non-ISWL no longer locked at 4.00).
                             _mplan = quikridr_mplan_cache.get(tp, "")
-                            if is_iswl_mplan(_mplan):
-                                row_data['MDEPINT'] = iswl_mdepint_percent()
+                            _mdepint = mdepint_for_mplan(_mplan)
+                            if _mdepint:
+                                row_data['MDEPINT'] = _mdepint
+                            # Issue #166: year-end 0641 paid-to on a deposit row →
+                            # prior anniversary so statements can accrue a full policy year.
+                            _vd_digits = "".join(
+                                c for c in os.environ.get("QLA_VALUATION_DATE", "") if c.isdigit()
+                            )[:8]
+                            _ann = overlay_year_end_mintdate(
+                                row_data.get("MINTDATE"),
+                                row_data.get("MDEPOSIT"),
+                                quikridr_meffdate_cache.get(tp, ""),
+                                _vd_digits,
+                            )
+                            if _ann:
+                                row_data["MINTDATE"] = _ann
                         # ---------------------------
     
                         # --- QUIKAGTS ENRICHMENT ---

@@ -800,6 +800,7 @@ def main() -> int:
         ("#160", ["tools/validators/validate_issue160_pua_terminal_status.py"], True),
         ("#161", ["tools/validators/validate_issue161_poa_relation_code.py"], True),
         ("#167", ["tools/validators/validate_issue167_mlastann.py"], True),
+        ("#166", ["tools/validators/validate_issue166_mdepint.py"], True),
         ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
         ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
         ("#136", ["tools/validators/validate_issue136_pvo_flags.py"], True),
