@@ -164,6 +164,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue166_mdepint.py"],
         True,
     ),
+    (
+        "#168 L14 reserve class keys",
+        ["tools/validators/validate_issue168_l14_reserve_class_replication.py"],
+        True,
+    ),
 ]
 
 

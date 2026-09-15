@@ -1,0 +1,131 @@
+====================================================================================================
+L-PLAN RESERVE VALIDATION — Q:\CSO\CSO_Test_6_30_2026
+Generated: 2026-09-15 10:11
+QuikValf: Q:\CSO\CSO_Test_6_30_2026\QuikValf.dbf  mtime=2026-09-15 10:04:01.375351
+QuikTvs:  mtime=2026-09-15 07:23:39.536294
+QuikNps:  mtime=2026-09-15 07:23:35.852480
+LifePRO:  C:\Users\warren\Documents\GitHub\Warrenhughes1974\docs\Valuation\VALXLIFE.TXT
+====================================================================================================
+
+A) RATE TABLES ON THE TEST REGION — does each L plan have reserve / net-premium rows?
+----------------------------------------------------------------------------------------------------
+PLAN      POLICIES (ridr class)               QuikTvs class rows/nonzero              QuikNps class rows/nonzero
+10L171    ST=7                                ST=398/366                              ST=360/38
+10L172    ST=3                                ST=398/366                              ST=360/38
+1L1095    BL=98, PR=64, SM=216                BL=1066/1066, PR=1066/1066, SM=1066/1066BL=1000/1000, PR=1000/1000, SM=1000/1000
+1L10OD    BL=55, PR=42, SM=45                 BL=3302/2082, PR=3302/2082, SM=3302/2082BL=3064/2000, PR=3064/2000, SM=3064/2000
+1L10PR    SM=1                                BL=3302/2082, PR=3302/2082, SM=3302/2082BL=3064/2000, PR=3064/2000, SM=3064/2000
+1L10SO    BL=441                              BL=3302/2082, PR=1066/1066, SM=1066/1066BL=3064/2000, PR=1000/1000, SM=1000/1000
+1L10SR    BL=159                              BL=1016/1016                            BL=1000/1000
+1L14SC    NT=101, PQ=111, PR=13, ST=7         NT=332/332, PQ=332/332, PR=332/332, ST=332/332NT=328/328, PQ=328/328, PR=328/328, ST=328/328
+1L15GD    ST=11                               ST=332/332                              ST=328/328
+1L16GD    ST=2                                ST=192/192                              ST=188/188
+1L17SP    ST=20                               ST=398/366                              ST=38/38
+5L0110    PR=169, ST=47                       00=1590/0                               PR=1484/694, ST=1484/694
+5L01MA    ST=1                                ST=2/0                                  ST=14/14
+5L0510    PR=18, ST=2                         00=212/0, PR=1378/0, ST=689/0           PR=1484/588, ST=848/347
+5L075Y    PR=5, ST=3                          PR=1590/0, ST=795/0                     PR=1484/588, ST=742/294
+9L01WP    PR=34, ST=10                        00=204/102                              PR=204/102, ST=204/102
+9L05WP    PR=1                                NONE                                    NONE
+9L16PF    ST=2                                NONE                                    NONE
+
+A1) Policy classes with NO QuikTvs key (and no UWCLASS=00 fallback):
+    FAIL  9L05WP  class PR
+    FAIL  9L16PF  class ST
+A2) Policy classes with NO QuikNps key (and no UWCLASS=00 fallback):
+    FAIL  9L05WP  class PR
+    FAIL  9L16PF  class ST
+
+B) QUIKVALF vs LIFEPRO 6/30  (valued rows only, MRESERVE vs RV_MEAN_RV, $1 tol)
+----------------------------------------------------------------------------------------------------
+PLAN     CLS   ROWS QLA nz LP nz MATCH  QLA$0 LP>0   QLA reserve    LP reserve        diff
+10L171   ST       7      7     7     7           0     10,490.35     10,490.23        0.12
+10L172   ST       3      3     3     3           0      4,119.30      4,119.18        0.12
+1L1095   BL      61     61    61     0           0    155,247.30    164,409.17   -9,161.87
+1L1095   PR      39     39    39     0           0    990,944.79  1,010,441.18  -19,496.39
+1L1095   SM     158    158   158     0           0  1,015,086.86  1,117,600.81 -102,513.95
+1L10OD   BL      43     43    43    40           0    113,229.83    113,088.59      141.24
+1L10OD   PR      28     28    28    26           0    558,710.00    557,499.56    1,210.44
+1L10OD   SM      30     30    30    23           0    235,751.86    236,666.77     -914.91
+1L10SO   BL      61     55    55    58           0    291,380.16    291,634.98     -254.82
+1L10SR   BL      44     41    42     2           1    248,182.95    255,523.06   -7,340.11
+1L14SC   NT      37     37    37    36           0    244,196.70    243,784.05      412.65
+1L14SC   PQ      65     65    65    65           0    894,649.90    894,645.40        4.50
+1L14SC   PR       5      5     5     5           0     42,789.70     42,789.44        0.26
+1L14SC   ST       1      1     1     1           0      3,121.45      3,121.45        0.00
+1L15GD   ST       5      5     5     2           0     27,703.14     27,757.93      -54.79
+1L16GD   ST       1      1     1     0           0      2,664.40      2,593.62       70.78
+1L17SP   ST      20     20     0     0           0     47,825.20          0.00   47,825.20
+5L0110   PR     103      0   103     0         103          0.00    144,828.46 -144,828.46
+5L0110   ST      21      0    21     0          21          0.00     24,890.01  -24,890.01
+5L01MA   ST       1      0     1     0           1          0.00      1,354.00   -1,354.00
+5L0510   PR       9      5     9     5           4     11,155.10     31,601.85  -20,446.75
+5L0510   ST       1      0     1     0           1          0.00        389.75     -389.75
+5L075Y   PR       2      2     2     2           0      3,472.55      3,471.95        0.60
+5L075Y   ST       3      3     3     3           0      5,153.50      5,152.25        1.25
+9L01WP   PR       8      8     8     0           0         32.75         67.99      -35.24
+9L01WP   ST       1      1     1     0           0          7.00         37.52      -30.52
+----------------------------------------------------------------------------------------------------
+TOTAL           757    618   729   278         131  4,905,914.79  5,187,959.20 -282,044.41
+
+C) L14 (1L14SC) — the #168 fix. PQ/PR/ST must no longer be $0.
+----------------------------------------------------------------------------------------------------
+  NT: rows=37 match=36  QLA=244,196.70  LP=243,784.05  FAIL
+  PQ: rows=65 match=65  QLA=894,649.90  LP=894,645.40  PASS
+  PR: rows=5 match=5  QLA=42,789.70  LP=42,789.44  PASS
+  ST: rows=1 match=1  QLA=3,121.45  LP=3,121.45  PASS
+
+C1) Named L14 traces
+  9011226092C class=NT  MRESERVE=9,895.80  expected=9,895.80  PASS
+  9011227604C class=PQ  MRESERVE=9,895.80  expected=9,895.80  PASS
+  9011258186C class=PQ  MRESERVE=9,543.45  expected=9,543.45  PASS
+
+D) ALL L-plan rows where QLAdmin reserve is $0 and LifePRO is not
+----------------------------------------------------------------------------------------------------
+  131 rows  (detail: C:\Users\warren\Documents\GitHub\Warrenhughes1974\Issue_Log_Items\Issue_168\evidence\l_plan_qla_zero_vs_lifepro_20260915_1011.csv)
+    1L10SR BL: 1 rows  LifePRO $4,700.05
+    5L0110 PR: 103 rows  LifePRO $144,828.46
+    5L0110 ST: 21 rows  LifePRO $24,890.01
+    5L01MA ST: 1 rows  LifePRO $1,354.00
+    5L0510 PR: 4 rows  LifePRO $20,446.75
+    5L0510 ST: 1 rows  LifePRO $389.75
+
+E) Valued but off by more than $1 (both sides nonzero)
+----------------------------------------------------------------------------------------------------
+    1L1095 BL: 61 rows  net diff $-9,161.87
+    1L1095 PR: 39 rows  net diff $-19,496.39
+    1L1095 SM: 158 rows  net diff $-102,513.95
+    1L10OD BL: 3 rows  net diff $140.33
+    1L10OD PR: 2 rows  net diff $1,205.99
+    1L10OD SM: 7 rows  net diff $-917.46
+    1L10SO BL: 3 rows  net diff $-255.66
+    1L10SR BL: 41 rows  net diff $-2,640.06
+    1L14SC NT: 1 rows  net diff $411.59
+    1L15GD ST: 3 rows  net diff $-54.81
+    1L16GD ST: 1 rows  net diff $70.78
+    9L01WP PR: 8 rows  net diff $-35.24
+    9L01WP ST: 1 rows  net diff $-30.52
+    first 15:
+      9L01WP PR 9011066632C  QLA=6.00  LP=15.28  diff=-9.28
+      9L01WP PR 9011074813C  QLA=1.25  LP=11.74  diff=-10.49
+      9L01WP PR 9011095161C  QLA=5.00  LP=6.67  diff=-1.67
+      9L01WP PR 9011106246C  QLA=1.50  LP=3.09  diff=-1.59
+      1L10OD SM 9011107112C  QLA=1,196.25  LP=1,166.27  diff=29.98
+      1L10OD BL 9011108803C  QLA=296.30  LP=289.68  diff=6.62
+      1L10OD SM 9011112850C  QLA=2,320.25  LP=2,982.56  diff=-662.31
+      1L10OD SM 9011116691C  QLA=2,127.00  LP=2,074.78  diff=52.22
+      1L10OD SM 9011116692C  QLA=1,534.50  LP=2,064.33  diff=-529.83
+      1L10OD SM 9011130781C  QLA=6,539.50  LP=5,468.68  diff=1,070.82
+      1L10OD BL 9011139778C  QLA=189.88  LP=185.52  diff=4.36
+      1L10SO BL 9011150969C  QLA=4,486.10  LP=4,600.00  diff=-113.90
+      1L10OD BL 9011179151C  QLA=550.50  LP=421.15  diff=129.35
+      9L01WP PR 9011180292C  QLA=1.00  LP=10.68  diff=-9.68
+      1L10SO BL 9011185539C  QLA=6,767.84  LP=6,955.96  diff=-188.12
+
+F) VERDICT
+----------------------------------------------------------------------------------------------------
+  L14 class-key fix (PQ/PR/ST now valued and matching): FAIL
+  L-book QLA $0 with LifePRO reserve remaining: 131 rows / $196,609.02
+  L-book match rate: 278/757 valued rows
+  Rate-table class gaps (no TV key): 2
+  Rate-table class gaps (no NP key): 2
