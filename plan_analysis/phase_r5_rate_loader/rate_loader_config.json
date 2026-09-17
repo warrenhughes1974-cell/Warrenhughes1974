@@ -48,6 +48,24 @@
       "7619DT", "7619PU", "7647FP", "7647SP", "7690DT"
     ]
   },
+  "pua_cv": {
+    "_note": "PUA QUIKCVS — PAAGERAT TYPE=CV attained-age per unit (Eric 8/13/26; excludes 261PUA/265PUA/280PUA which inherit Rate_Table CV).",
+    "quikcvs_pua_enabled": true,
+    "cv_mplan_allowlist": [
+      "121PUA", "165PUA", "170PUA", "185PUA", "1OLPUA", "1POPUA", "1970PA"
+    ]
+  },
+  "paagerat_np": {
+    "_note": "Issue #169 — 667 ART net premium. LifePRO stores this plan's net valuation premium by ATTAINED AGE in PAAGERAT (PDAGE carries no NP rows for the family). QuikNps has no quikplan VARY field, so the vector is expanded onto the issue-age x duration grid: QuikNps[age][idx] = vector[age+idx+1]. Proven to the cent on 94 of the 95 unit-carrying valued rows. PSUBSSEG emit entry E4 scoped this and never shipped.",
+    "quiknps_attained_age_enabled": true,
+    "np_mplan_allowlist": ["5667AT"],
+    "coverage_effdate": {},
+    "issue_age_max": 75
+  },
+  "psubsseg_substitution": {
+    "_note": "PSUBSSEG coverage-ID substitution — additive era-banded EFFDATE generations (CV/RV/NP) from the reviewed scope manifest. scope_csv defaults to Issue_Log_Items/PSUBSSEG_Rate_Substitution/psubsseg_substitution_scope.csv.",
+    "enabled": true
+  },
   "pdint_extract": "QLA_Migration/Source/PDINT_DeclaredInterestRates_Extract_20260630.csv",
   "pdinttbl_extract": "QLA_Migration/Source/PDINTTBL_DeclaredInterestRates_Extract_20260630.csv",
   "_pdint_note": "Fallback paths only. quikuint_loader prefers PDINTTBL for QLA_VALUATION_DATE under Source/ or Source/LifePRO_Extracts_YYYYMMDD/.",

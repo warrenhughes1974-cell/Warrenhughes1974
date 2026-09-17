@@ -24,13 +24,17 @@ from qla_core import paagerat_pr_loader as PA
 from qla_core import paagerat_bp_loader as BP
 from qla_core import paagerat_ul_coi_loader as COI
 from qla_core import paagerat_db_loader as DB
+from qla_core import paagerat_cv_loader as PUACV
+from qla_core import paagerat_np_loader as PANP
 from qla_core import quikuint_loader as UINT
 from qla_core import quikissc_loader as ISSC
 from qla_core import pdage_missfill as PDM
 from qla_core import plan_source_paths as PSP
 from qla_core import quiktvs_tv0_fill as TV0
 from qla_core import quiknps_level_np as NPS
+from qla_core import attained_age_grid_fill as AASF
 from qla_core import quiktvs_l17_rv as L17RV
+from qla_core import psubsseg_substitution_loader as PSUB
 
 KEY_FIELDS = ("PLAN", "GENDER", "UWCLASS", "BAND", "ISSCNTRY", "ISSUEST", "EFFDATE")
 
@@ -122,6 +126,10 @@ class PipelineResult:
         self.row_status = collections.Counter()
         self.excluded = collections.defaultdict(lambda: [0, set()])
         self.age_cap = collections.Counter()   # (PLAN,TYPE,ORIG_AGE,EMIT_AGE) -> rows
+        # Issue #140: plans emitted on the attained-age slot axis, carried from the
+        # loaders because row shape cannot tell an attained-age key from issue age 0.
+        self.attained_age_slot_plans = collections.defaultdict(set)
+        self.attained_age_slot_fill = []
         self.grids = {}
         self.collisions = []
         self.cap_collisions = []
@@ -156,6 +164,14 @@ class PipelineResult:
         self.paagerat_db_plans = frozenset()
         self.paagerat_db_enabled = False
         self.paagerat_db_mplan_allowlist = []
+        self.paagerat_pua_cv_status = collections.Counter()
+        self.paagerat_pua_cv_plans = frozenset()
+        self.paagerat_pua_cv_enabled = False
+        self.paagerat_pua_cv_mplan_allowlist = []
+        self.paagerat_np_status = collections.Counter()
+        self.paagerat_np_plans = frozenset()
+        self.paagerat_np_enabled = False
+        self.paagerat_np_mplan_allowlist = []
         self.quikuint_rows = []
         self.quikuint_status = collections.Counter()
         self.quikuint_enabled = False
@@ -167,11 +183,19 @@ class PipelineResult:
         self.non_cv_inheritance_manifest = []
         self.non_cv_inheritance_status = collections.Counter()
         self.shared_rate_manifest = []
+        self.shared_pr_dropped_plans = []
         self.shared_rate_status = collections.Counter()
+        # PSUBSSEG coverage-ID substitution (era-banded EFFDATE generations)
+        self.psubsseg_enabled = False
+        self.psubsseg_manifest = []
+        self.psubsseg_scope_issues = []
+        self.psubsseg_status = collections.Counter()
+        self.psubsseg_plan_copy = {}
         self.pdage_missfill_status = collections.Counter()
         self.pdage_missfill_enabled = False
         self.pdage_merge_summary = {}
         self.quiktvs_tv0_fill = {}
+        self.quikdvs_dv0_fill = {}
         self.quiknps_level_np = {}
         self.l17_rv_expansion = {}
 
@@ -218,6 +242,19 @@ def _resolve_path(repo_root, rel_or_abs):
 def run(config_path, repo_root):
     cfg = json.load(open(config_path, encoding="utf-8"))
     base_rt = _resolve_path(repo_root, cfg["source_rate_extract"])
+    # Config often pins Source/Rate_Table_Extract_Txt.txt; when that file is
+    # absent (common on a fresh 07/31 cut), use the canonical resolver fallback
+    # (Source txt → plan_analysis Rate_Table twin) instead of hard-failing.
+    if not base_rt or not os.path.isfile(base_rt):
+        resolved_rt = PSP.rate_table_extract()
+        if resolved_rt and os.path.isfile(resolved_rt):
+            print(
+                f"RATE: source_rate_extract missing ({base_rt or cfg.get('source_rate_extract')}); "
+                f"using resolver fallback: {resolved_rt}",
+                flush=True,
+            )
+            base_rt = resolved_rt
+            cfg["source_rate_extract"] = resolved_rt
     pdage_cfg = cfg.get("issue42_pdage_missfill") or {}
 
     # Multi-source dated extracts: PAAGE / PAAGERAT / PDAGE — filename YYYYMMDD newest wins
@@ -289,6 +326,14 @@ def run(config_path, repo_root):
     cov2plan, res.plan2desc = L.load_plan_crosswalk(xlsx)
     res.authoritative_plans = set(cov2plan.values())
     cv_fnz = L.load_cv_slice_fnz(src)
+    # Rate identity fix (2026-08-13): CV first-duration truth from PDAGE native
+    # pages replaces the cv_lifepro_first_duration() guess. Slices absent from
+    # PDAGE fall back to the legacy guess (flagged cv_first_fallback on rows).
+    cv_native_first = {}
+    if pdage_path and os.path.isfile(pdage_path):
+        cv_native_first = L.load_cv_native_first(pdage_path)
+    print(f"RATE: CV native-first map from PDAGE: {len(cv_native_first)} slices "
+          f"({os.path.basename(pdage_path) if pdage_path else 'no PDAGE — legacy guess'})", flush=True)
     rt_key_index = PDM.rate_table_key_index(base_rt)
     res.paagerat_vargp3_plans = PA.load_paagerat_vargp3_plan_set_from_config(repo_root, cfg)
     res.paagerat_bp_plans = BP.load_paagerat_bp_plan_set_from_config(repo_root, cfg)
@@ -307,6 +352,15 @@ def run(config_path, repo_root):
     res.paagerat_db_enabled = bool(cfg.get("wave2_db", {}).get("quikdbs_enabled", False))
     if res.paagerat_db_enabled:
         res.paagerat_db_mplan_allowlist = sorted(DB.wave2_db_mplan_allowlist(cfg))
+    res.paagerat_pua_cv_plans = PUACV.load_paagerat_cv_plan_set_from_config(repo_root, cfg)
+    res.paagerat_pua_cv_enabled = bool(cfg.get("pua_cv", {}).get("quikcvs_pua_enabled", False))
+    if res.paagerat_pua_cv_enabled:
+        res.paagerat_pua_cv_mplan_allowlist = sorted(PUACV.pua_cv_mplan_allowlist(cfg))
+    # Issue #169: PAAGERAT attained-age NP expanded onto the QuikNps issue-age grid.
+    res.paagerat_np_enabled = PANP.np_enabled(cfg)
+    if res.paagerat_np_enabled:
+        res.paagerat_np_plans = PANP.load_paagerat_np_plan_set_from_config(repo_root, cfg)
+        res.paagerat_np_mplan_allowlist = sorted(PANP.np_mplan_allowlist(cfg))
     res.quikuint_enabled = bool(cfg.get("iswl_phase5", {}).get("quikuint_enabled", False))
     res.quikissc_enabled = bool(cfg.get("iswl_phase6", {}).get("quikissc_enabled", False))
     pr_suppress = PA._iswl_bp_suppress_plans(cfg)
@@ -318,6 +372,8 @@ def run(config_path, repo_root):
             res.excluded[t["type_code"]][1].add(t["coverage_id"])
         elif t["status"] == "IN_SCOPE" and t.get("age_capped"):
             res.age_cap[(t["plan"], t["type_code"], t["original_age"], t["age"])] += 1
+        if t["status"] == "IN_SCOPE" and t.get("attained_age_slot"):
+            res.attained_age_slot_plans[t["table"]].add(t["plan"])
 
     psgt_path = _resolve_path(repo_root, cfg.get("pcovrsgt_csv", ""))
     pcovr_path = _resolve_path(repo_root, cfg.get("pcovr_csv", ""))
@@ -376,17 +432,48 @@ def run(config_path, repo_root):
             ),
         )
         if os.path.isfile(candidate_csv):
-            res.shared_rate_manifest = SCL.build_shared_manifest(candidate_csv)
+            # Issue #158: plans that own a SEQ 1 premium segment take their QuikGps grid
+            # from the PR loader, so their shared PR candidates are dropped here.
+            _pa_for_owners = paagerat_merged or _resolve_path(
+                repo_root, cfg.get("paagerat_pr_extract", "")
+            )
+            pr_owner_plans = PA.load_pr_slot_owner_plans(_pa_for_owners, segment_resolver)
+            res.shared_rate_manifest = SCL.build_shared_manifest(
+                candidate_csv, pr_owner_plans=pr_owner_plans
+            )
+            res.shared_pr_dropped_plans = list(SCL.SHARED_PR_DROPPED_PLANS)
+
+    # PSUBSSEG coverage-ID substitution: reviewed scope manifest -> additive
+    # era-banded EFFDATE generations (CV/RV/NP). See psubsseg_substitution_loader.
+    psub_cfg = cfg.get("psubsseg_substitution") or {}
+    res.psubsseg_enabled = bool(psub_cfg.get("enabled", False))
+    if res.psubsseg_enabled:
+        scope_csv = _resolve_path(
+            repo_root,
+            psub_cfg.get(
+                "scope_csv",
+                os.path.join(
+                    "Issue_Log_Items",
+                    "PSUBSSEG_Rate_Substitution",
+                    "psubsseg_substitution_scope.csv",
+                ),
+            ),
+        )
+        res.psubsseg_manifest, res.psubsseg_scope_issues = PSUB.load_scope_manifest(
+            scope_csv, cov2plan
+        )
 
     def stream():
         for t in L.transform_source(
             src, cov2plan, config, cv_fnz=cv_fnz,
             segment_resolver=segment_resolver, rt_key_index=rt_key_index,
+            cv_native_first=cv_native_first,
         ):
             _track(t)
             yield t
 
-        for t in CIL.transform_inherited_cv(src, res.cv_inheritance_manifest, config, cv_fnz=cv_fnz):
+        for t in CIL.transform_inherited_cv(src, res.cv_inheritance_manifest, config,
+                                            cv_fnz=cv_fnz, cv_native_first=cv_native_first):
             st = t["status"]
             res.cv_inheritance_status[st] += 1
             _track(t)
@@ -403,6 +490,12 @@ def run(config_path, repo_root):
             res.shared_rate_status[st] += 1
             _track(t)
             yield t
+
+        if res.psubsseg_manifest:
+            for t in PSUB.transform_psubsseg_pdage(pdage_path, res.psubsseg_manifest, config):
+                res.psubsseg_status[t["status"]] += 1
+                _track(t)
+                yield t
 
         pa_path = paagerat_merged or _resolve_path(repo_root, cfg.get("paagerat_pr_extract", ""))
         if pa_path and os.path.isfile(pa_path) and segment_resolver is not None:
@@ -445,6 +538,24 @@ def run(config_path, repo_root):
                     res.paagerat_db_status[st] += 1
                     _track(t)
                     yield t
+            if cfg.get("pua_cv", {}).get("quikcvs_pua_enabled", False):
+                pua_allow = PUACV.pua_cv_mplan_allowlist(cfg)
+                for t in PUACV.transform_paagerat_pua_cv(pa_path, resolver, config,
+                                                         plan_allowlist=pua_allow):
+                    st = t["status"]
+                    res.paagerat_pua_cv_status[st] += 1
+                    _track(t)
+                    yield t
+            if PANP.np_enabled(cfg):
+                for t in PANP.transform_paagerat_np(
+                    pa_path, resolver, config,
+                    plan_allowlist=PANP.np_mplan_allowlist(cfg),
+                    coverage_effdate=PANP.coverage_effdate_map(cfg),
+                    age_max=PANP.issue_age_max(cfg),
+                ):
+                    res.paagerat_np_status[t["status"]] += 1
+                    _track(t)
+                    yield t
             for t in SCL.transform_paagerat_shared(pa_path, res.shared_rate_manifest, config):
                 st = t["status"]
                 res.shared_rate_status[st] += 1
@@ -459,11 +570,23 @@ def run(config_path, repo_root):
         pdage_path,
         config,
     )
+    # PSUBSSEG PLAN_COPY entries (sandwich re-emits): clone the copy plan's
+    # standard-generation cells to the banded EFFDATE. After L17 RV expansion,
+    # before UW collapse so new generations collapse independently.
+    if res.psubsseg_manifest:
+        res.psubsseg_plan_copy = PSUB.apply_psubsseg_plan_copies(
+            res.grids, res.psubsseg_manifest
+        )
     # A11: collapse only independently equal CV or TV factor grids. GP/DB/DV
     # and non-UW dimensions remain untouched.
     res.grids, collapse_targets = collapse_equal_uw_families(res.grids, return_targets=True)
 
     res.quiknps_level_np = NPS.apply_quiknps_level_np_grid(res.grids.get("QuikNps"))
+
+    # Issue #140: attained-age grids must run from CNTL=00 (Help p556).
+    res.attained_age_slot_fill = AASF.apply_attained_age_slot_fill(
+        res.grids, res.attained_age_slot_plans,
+    )
 
     for table, grid in res.grids.items():
         rows, fi = L.grid_to_factor_rows(table, grid, config)
@@ -473,6 +596,9 @@ def run(config_path, repo_root):
     sp_plans = TV0.load_true_single_premium_plans(repo_root, config=cfg)
     res.quiktvs_tv0_fill = TV0.apply_quiktvs_tv0_blank_fill(
         res.factor_rows, sp_plans, source_decimals=config.source_decimals,
+    )
+    res.quikdvs_dv0_fill = TV0.apply_quikdvs_dv0_blank_fill(
+        res.factor_rows, source_decimals=config.source_decimals,
     )
 
     for table, grid in res.grids.items():
@@ -510,12 +636,42 @@ def run(config_path, repo_root):
     # Issue #77: member codes for stub keys (e.g. GENDER=0 / UW=00)
     MB.ensure_members_for_keys(res.member_rows, res.key_rows, effdate=config.effdate)
 
+    # PSUBSSEG scope entries legitimize their (PLAN, EFFDATE) era generations for V07
+    psubsseg_generations = {
+        (e["issuing_plan"], e["effdate"])
+        for e in res.psubsseg_manifest
+        if e["effdate"] != S.STANDARD_EFFDATE
+    }
     res.issues, res.summary = V.validate(res.grids, res.factor_rows, res.fmt_issues,
-                                         res.key_rows, res.deps, res.authoritative_plans, config)
+                                         res.key_rows, res.deps, res.authoritative_plans, config,
+                                         allowed_effdate_generations=psubsseg_generations)
     for blocker in res.quiknps_level_np.get("blockers") or []:
         res.issues.append(blocker)
     for blocker in res.l17_rv_expansion.get("blockers") or []:
         res.issues.append(blocker)
+    # PSUBSSEG fail-closed gates: manifest drift and empty copy sources block emit
+    for issue in res.psubsseg_scope_issues:
+        res.issues.append(issue)
+    for blocker in (res.psubsseg_plan_copy or {}).get("blockers") or []:
+        res.issues.append(blocker)
+    if res.psubsseg_enabled and res.psubsseg_status.get("SOURCE_SEGMENT_ABSENT"):
+        res.issues.append({
+            "id": "PSUBSSEG_SOURCE_ABSENT", "severity": "BLOCKER", "table": "rates",
+            "detail": (
+                f"{res.psubsseg_status['SOURCE_SEGMENT_ABSENT']} scoped substitution "
+                f"source segment(s) missing from merged PDAGE extract"
+            ),
+        })
+    if res.psubsseg_enabled and res.psubsseg_manifest:
+        res.issues.append({
+            "id": "PSUBSSEG_SUBSTITUTION_EMIT", "severity": "INFO", "table": "rates",
+            "detail": (
+                f"PSUBSSEG substitution: {len(res.psubsseg_manifest)} scope entries, "
+                f"row status {dict(res.psubsseg_status)}, "
+                f"plan_copy keys={res.psubsseg_plan_copy.get('keys_copied', 0)} "
+                f"cells={res.psubsseg_plan_copy.get('cells_copied', 0)}"
+            ),
+        })
     if res.l17_rv_expansion.get("applied"):
         prov = res.l17_rv_expansion.get("provenance") or {}
         detail_parts = [
@@ -567,6 +723,16 @@ def run(config_path, repo_root):
                 f"on plan(s) {', '.join(res.quiktvs_tv0_fill.get('sp_blank_plans') or []) or 'none'}"
             ),
         })
+    if res.quikdvs_dv0_fill.get("filled"):
+        res.issues.append({
+            "id": "QUIKDVS_DV0_BLANK_FILL",
+            "severity": "WARNING",
+            "table": "QuikDvs",
+            "detail": (
+                f"DV0 blank fill (DV native identity 2026-08-13): "
+                f"{res.quikdvs_dv0_fill.get('filled', 0)} cell(s) set to numeric zero"
+            ),
+        })
     # cap-induced collisions resolved in favor of genuine data (WARNING, audited)
     cc = collections.Counter()
     for (table, key, col, plan, type_code, dropped, kept) in res.cap_collisions:
@@ -592,6 +758,10 @@ def run(config_path, repo_root):
         if res.quikissc_status.get("BLOCKER_INCOMPLETE_SL"):
             res.issues.append({"id": "V-ISSC-SL", "severity": "BLOCKER", "table": "QuikIssc",
                                "detail": "Rate_Table SL hub schedule incomplete (<14 durations)"})
+    # Issue #140: written here rather than at emit so every runner (rate_emit, the R5
+    # loader, the batch finale) leaves quikplan the same attained-age plan set. The
+    # membership is a property of the loaders, so it holds for either storage layout.
+    AASF.write_manifest(repo_root, res.attained_age_slot_plans)
     return res
 
 
@@ -630,11 +800,11 @@ def build_summary(res, phase, source, extra=None):
         "paagerat_pr": {
             "vargp3_plan_count": len(res.paagerat_vargp3_plans),
             "row_status": dict(res.paagerat_status),
-            "grid_mode": "VARGP=3 attained-age (SEQ->AGE, CNTL=00/GP0)",
+            "grid_mode": "VARGP=3 attained-age (Issue 140 slot axis: AGE=00, slot=SEQ-1)",
         },
         "paagerat_nf": {
             "row_status": dict(res.paagerat_nf_status),
-            "grid_mode": "VARGP=3 attained-age (SEQ->AGE, CNTL=00/NFF0)",
+            "grid_mode": "attained-age SEQ->AGE, CNTL=00/NFF0 (no VARNF code; Issue 140 deferred)",
         },
         "paagerat_bp": {
             "enabled": res.paagerat_bp_enabled,
@@ -659,7 +829,24 @@ def build_summary(res, phase, source, extra=None):
             "db_plan_count": len(res.paagerat_db_plans),
             "row_status": dict(res.paagerat_db_status),
             "mplan_allowlist": res.paagerat_db_mplan_allowlist,
-            "grid_mode": "VARDB=3 attained-age (SEQ->AGE, CNTL=00/DB0)",
+            "grid_mode": "VARDB=3 attained-age (Issue 140 slot axis: AGE=00, slot=SEQ)",
+        },
+        "paagerat_pua_cv": {
+            "enabled": res.paagerat_pua_cv_enabled,
+            "cv_plan_count": len(res.paagerat_pua_cv_plans),
+            "row_status": dict(res.paagerat_pua_cv_status),
+            "mplan_allowlist": res.paagerat_pua_cv_mplan_allowlist,
+            "grid_mode": "PUA attained-age CV (Issue 140 slot axis: AGE=00, slot=SEQ)",
+        },
+        "paagerat_np": {
+            "enabled": res.paagerat_np_enabled,
+            "np_plan_count": len(res.paagerat_np_plans),
+            "row_status": dict(res.paagerat_np_status),
+            "mplan_allowlist": res.paagerat_np_mplan_allowlist,
+            "grid_mode": (
+                "Issue #169 attained-age NP expanded to issue-age x duration "
+                "(QuikNps[age][idx] = vector[age + idx + 1]); QuikNps has no VARY field"
+            ),
         },
         "quikuint": {
             "enabled": res.quikuint_enabled,
@@ -689,11 +876,22 @@ def build_summary(res, phase, source, extra=None):
             "row_status": dict(res.shared_rate_status),
             "issuing_plans": sorted({e["issuing_plan"] for e in res.shared_rate_manifest}),
             "rate_types": sorted({e["rate_type"] for e in res.shared_rate_manifest}),
+            # Issue #158: plans that now take QuikGps from their own SEQ 1 segment
+            "pr_dropped_plans": sorted(res.shared_pr_dropped_plans),
         },
         "issue42_pdage_missfill": {
             "enabled": res.pdage_missfill_enabled,
             "merge": res.pdage_merge_summary,
             "row_status": dict(res.pdage_missfill_status),
+        },
+        "psubsseg_substitution": {
+            "enabled": res.psubsseg_enabled,
+            "scope_entries": len(res.psubsseg_manifest),
+            "scope_issues": len(res.psubsseg_scope_issues),
+            "row_status": dict(res.psubsseg_status),
+            "plan_copy": {k: v for k, v in (res.psubsseg_plan_copy or {}).items()
+                          if k != "blockers"},
+            "issuing_plans": sorted({e["issuing_plan"] for e in res.psubsseg_manifest}),
         },
         "quiknps_level_np": res.quiknps_level_np,
     }

@@ -1,0 +1,9 @@
+jill_form_number,lifepro_plan_label,ql_plan_code,description,role
+960 LP85-M,960,196085,Life Paid Up at Age 85-88 (source coverage_id truncates to "960 LP85-8" at 11 chars),base plan
+SAL ADB,SAL ADB,9SLADB,SAL Accidental Death Benefit,rider on SAL ML
+619 SPS PU,619,7619PU,Decreasing Term Paid Up for Spouse,base plan
+1595 (667 ART),1595,9595WP,Disability Waiver of Premium rider on 667 ART,rider on 667 ART
+1595 (667 ART) - base,667,5667AT,Annual Renewable Term (base plan the 1595 WP rider sits on),base plan
+1596 LO1 (read as 1596 L01),1596 L01,901ADB,Accidental DB Rider - L01 10Y LT,rider on L01
+1596 LO1 - sibling,1596,996ADB,Accidental Death Benefit Rider (bare 1596 base),rider (bare)
+1596 LO1 - sibling,1596 667,967ADB,Accidental Death Benefit Rider on 667 family,rider on 667

@@ -1,0 +1,51 @@
+============================================================================================================
+ART RESERVE COMPARE — LifePRO VALXLIFE vs Q:\CSO\CSO_Test_6_30_2026 QuikValf
+Generated: 2026-09-16 08:06
+QuikValf mtime: 2026-09-15 10:04:01.375351
+QuikNps  mtime: 2026-09-15 07:23:35.852480
+QuikPlTv mtime: 2026-09-15 07:23:36.301996
+LifePRO: C:\Users\warren\Documents\GitHub\Warrenhughes1974\docs\Valuation\VALXLIFE.TXT  mtime=2026-09-02 14:24:19.897214
+============================================================================================================
+
+A) Are the #169 5667AT net-premium rows on the TEST REGION?
+  QuikNps  5667AT by UWCLASS: {}
+  QuikPlTv 5667AT by UWCLASS: {'00': {'rows': 2, 'nonzero': 2}, 'PR': {'rows': 2, 'nonzero': 2}, 'ST': {'rows': 2, 'nonzero': 2}}
+  QuikTvs  5667AT by UWCLASS: {'ST': {'rows': 1976, 'nonzero': 0}, 'PR': {'rows': 22, 'nonzero': 0}, '00': {'rows': 22, 'nonzero': 0}}
+  VERDICT: 5667AT QuikNps is EMPTY on the test region — #169 grid was not loaded.
+  Repo Output/rates/QuikNps 5667AT: {'PR': 960, 'ST': 776} total=1736
+
+B) ART / *AT riders on quikridr in the test region
+  5646AT     00   riders=1
+  5667AT     PR   riders=167
+  5667AT     ST   riders=28
+  57ATCR     PR   riders=1
+  9595WP     PR   riders=32
+  9595WP     ST   riders=6
+  967ADB     PR   riders=6
+  967ADB     ST   riders=2
+  9SLADB     00   riders=6
+
+C) QUIKVALF vs LIFEPRO by ART plan  ($1 tol)
+------------------------------------------------------------------------------------------------------------
+PLAN       ROWS  QLA nz LP nz MATCH  QLA$0 LP>0   QLA reserve    LP reserve        diff
+5667AT       96       0    95     1          95          0.00    132,229.48 -132,229.48
+9595WP        3       3     0     0           0         55.25          0.00       55.25
+967ADB        2       2     0     0           0         43.00          0.00       43.00
+9SLADB        5       5     0     4           0          3.60          0.00        3.60
+
+D) Issue #169 named anchors on this morning's (or current) QuikValf
+  9010764158C units=25.00 MRESERVE=0.00 expected=181.87 MTABNET=0.00  FAIL
+  9010764248C units=50.00 MRESERVE=0.00 expected=474.50 MTABNET=0.00  FAIL
+  9010768802C units=30.00 MRESERVE=0.00 expected=490.35 MTABNET=0.00  FAIL
+  9010773561C units=100.00 MRESERVE=0.00 expected=3,790.50 MTABNET=0.00  FAIL
+  9010777321C units=200.00 MRESERVE=0.00 expected=4,285.00 MTABNET=0.00  FAIL
+  9010800356C units=200.00 MRESERVE=0.00 expected=8,239.00 MTABNET=0.00  FAIL
+  9010816232C units=100.00 MRESERVE=0.00 expected=6,312.50 MTABNET=0.00  FAIL
+  9010837136C units=200.00 MRESERVE=0.00 expected=6,954.00 MTABNET=0.00  FAIL
+  9010844919C units=100.00 MRESERVE=0.00 expected=4,855.00 MTABNET=0.00  FAIL
+  9010886099C phase=1 units=100.00 MTABNET=0.00 MRESERVE=0.00  (zero-units exception)
+
+E) ART rows QLA $0 / LifePRO > 0: 95
+  5667AT: 95 rows  LifePRO $132,229.48
+
+Full policy listing: C:\Users\warren\Documents\GitHub\Warrenhughes1974\Issue_Log_Items\Issue_169\evidence\art_policy_listing_20260916_0806.csv

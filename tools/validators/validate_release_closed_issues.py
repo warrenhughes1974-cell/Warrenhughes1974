@@ -169,6 +169,16 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue168_l14_reserve_class_replication.py"],
         True,
     ),
+    (
+        "#169 667 ART net premium",
+        ["tools/validators/validate_issue169_667art_np.py"],
+        True,
+    ),
+    (
+        "#169-TV 667 ART terminal-reserve reachability",
+        ["tools/validators/validate_issue169_667art_tvs_reachable.py"],
+        True,
+    ),
 ]
 
 

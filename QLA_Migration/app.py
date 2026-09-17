@@ -654,7 +654,24 @@ RATE_LOADER_RUNNER_TIMEOUT = 900
 RATE_LOADER_RUNNER = os.path.join("plan_governance", "phase_r5_rate_loader_runner", "rate_loader_gui_runner.py")
 QUIKISRR_EMIT_RUNNER_TIMEOUT = 600
 QUIKISRR_EMIT_RUNNER = os.path.join("Issue_Log_Items", "Issue_34", "tools", "quikisrr_pr7_emit.py")
-APP_VERSION = "v59.13"
+# Reserve-factor patches that only exist after the rate loader writes Output/rates.
+# A re-emit rebuilds those tables from source and silently drops them: #168 was
+# lost that way on 2026-09-16. Each script is append-only and idempotent, so
+# re-running on an already-patched package is a no-op skip.
+POST_EMIT_RATE_PATCH_TIMEOUT = 300
+POST_EMIT_RATE_PATCHES = (
+    (
+        "Issue #169 667 ART terminal-reserve base generation",
+        os.path.join("Issue_Log_Items", "Issue_169", "tools",
+                     "apply_issue169_667art_tvs_base_generation.py"),
+    ),
+    (
+        "Issue #168 L14 reserve class keys",
+        os.path.join("Issue_Log_Items", "Issue_168", "tools",
+                     "apply_issue168_l14_reserve_class_replication.py"),
+    ),
+)
+APP_VERSION = "v59.16"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -4193,6 +4210,9 @@ class QLAdminEnterpriseIntegrationSuite:
                         )
                 except Exception as exc:
                     self.log(f"Issue #96: post-rate PVO refresh skipped: {exc}")
+                # #169 / #168: a re-emit rebuilds QuikTvs and drops the reserve
+                # rows those fixes add. Re-apply them before the package ships.
+                self._apply_post_emit_rate_patches()
             if not from_batch:
                 self.update_run_progress(4, detail=f"validation — status={status}")
                 package_ok = self._run_output_hygiene(run_error_log)
@@ -5697,6 +5717,41 @@ class QLAdminEnterpriseIntegrationSuite:
         except Exception as exc:
             self.log(f"QUIKISRR ERROR: {exc}")
             return {"status": "FAILED", "error": str(exc)}
+
+    def _apply_post_emit_rate_patches(self):
+        """Re-apply reserve-factor patches the rate loader cannot emit from source.
+
+        Runs after the R7B quikplan refresh so the PVO / *VARY* flags stay on the
+        values proven to work, and only the factor rows are added.
+        """
+        results = []
+        for label, relpath in POST_EMIT_RATE_PATCHES:
+            script = os.path.normpath(os.path.join(self._repo_root(), relpath))
+            if not os.path.isfile(script):
+                self.log(f"POST-EMIT RATE PATCH: {label} — script not found: {script}")
+                results.append((label, "MISSING"))
+                continue
+            try:
+                proc = subprocess.run(
+                    [sys.executable, script],
+                    capture_output=True,
+                    text=True,
+                    timeout=POST_EMIT_RATE_PATCH_TIMEOUT,
+                    cwd=self._repo_root(),
+                )
+                self._log_subprocess_stream("post-emit-rate-patch", proc.stdout or "")
+                if proc.returncode != 0:
+                    self._log_subprocess_stream(
+                        "post-emit-rate-patch-err", proc.stderr or ""
+                    )
+                status = "PASS" if proc.returncode == 0 else f"FAIL rc={proc.returncode}"
+            except subprocess.TimeoutExpired:
+                status = "TIMEOUT"
+            except Exception as exc:
+                status = f"ERROR {exc}"
+            self.log(f"POST-EMIT RATE PATCH: {label} — {status}")
+            results.append((label, status))
+        return results
 
     def _execute_batch_quikisrr_finale(self, batch_claims_result=None):
         if not self._batch_include_quikisrr_enabled():
