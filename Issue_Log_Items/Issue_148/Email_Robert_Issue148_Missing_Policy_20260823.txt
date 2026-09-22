@@ -1,0 +1,14 @@
+Subject: Policy 9011284087 missing from the valuation file - can you check the QLAdmin side?
+
+Robert,
+
+I ran down the L10 units question from Eric's comparison (policy 9011284087, group 0777L) and it turns out it isn't a units problem at all. The policy never shows up in the valuation file - it's the only one out of all 5,083 policies in the load that didn't pull in.
+
+Everything on my side checks out. LifePRO has it as active with 100 units at $1,000 per unit, my conversion output has it with the same values, and the load package I sent over has it too - it's in quikmstr.dbf and quikridr.dbf in the Q_CSO_Test_6_30_2026 folder, policy 9011284087C, plan 1L1095. All 377 other policies on that same plan and the other 9 policies in that same group pulled into the valuation file fine. I compared it field by field against a sister policy that did pull in and can't find anything different about it.
+
+So the question is on the QLAdmin side: is 9011284087C in the policy master after the load? If it is, something in the valuation run is skipping it. If it isn't, something rejected it on import. Either way, once it pulls in it should match LifePRO exactly - no changes needed on the conversion.
+
+One heads up - Eric mentioned this is the company president's policy, so I'd like to get it sorted before the next comparison.
+
+Thanks,
+Warren
