@@ -1,6 +1,7 @@
 """Issue 146 — exclude locked former-vanish 0561 events from QuikIsrr emit.
 
-Identity is the 20-policy allowlist (19 PC + 9010808831).
+Identity is the 21-policy allowlist (20 PC + 9010808831).
+Warren approved 2026-09-22 adding 9010969231 (Issue 151; 20 → 21).
 Do not use BILLING_REASON=PC as a fleet filter.
 Do not set quikspec.VANISH.
 """
@@ -30,6 +31,7 @@ ALLOWLIST_SOURCE = (
     "9011048543",
     "9011077629",
     "9010808831",
+    "9010969231",  # Issue 151; Warren 2026-09-22
 )
 
 KEEP_SOURCE = (

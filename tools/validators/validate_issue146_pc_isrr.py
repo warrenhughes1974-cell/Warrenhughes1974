@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Issue 146 — fail-closed: no allowlist 0561 history in QuikIsrr / PR-7 companions.
 
-Exit 1 if the 20 former-vanish policies still have QuikIsrr or matching
+Exit 1 if the 21 former-vanish policies still have QuikIsrr or matching
 companions, or if #145B leftover golds / gold units are missing.
+Warren approved 2026-09-22 adding 9010969231 (Issue 151; 20 → 21).
 """
 from __future__ import annotations
 

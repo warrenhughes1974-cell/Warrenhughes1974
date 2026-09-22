@@ -125,6 +125,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         True,
     ),
     (
+        "#151 9010969231 former-vanish 0561s out of ISRR",
+        ["tools/validators/validate_issue151_pc_isrr.py"],
+        True,
+    ),
+    (
         "#142 SL rider 9SUBLF",
         ["tools/validators/validate_issue142_sl_rider.py"],
         True,

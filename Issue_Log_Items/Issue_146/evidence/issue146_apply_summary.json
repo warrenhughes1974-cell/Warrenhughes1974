@@ -1,23 +1,23 @@
 {
   "issue": "146",
-  "applied_utc": "2026-08-26T17:10:29Z",
+  "applied_utc": "2026-09-22T16:57:15Z",
   "before": {
-    "QuikIsrr": 205,
-    "quikclms": 2592,
-    "quikclmp": 3084,
-    "quikbenh": 41560
+    "QuikIsrr": 110,
+    "quikclms": 2497,
+    "quikclmp": 2994,
+    "quikbenh": 42071
   },
   "after": {
-    "QuikIsrr": 101,
-    "quikclms": 2488,
-    "quikclmp": 2980,
-    "quikbenh": 41456
+    "QuikIsrr": 102,
+    "quikclms": 2489,
+    "quikclmp": 2986,
+    "quikbenh": 42063
   },
   "removed": {
-    "QuikIsrr": 104,
-    "quikclms": 104,
-    "quikclmp": 104,
-    "quikbenh": 104
+    "QuikIsrr": 8,
+    "quikclms": 8,
+    "quikclmp": 8,
+    "quikbenh": 8
   },
   "leftover_keep_gold_isrr": 3,
   "gold_remove": [
