@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "QLA_Migration" / "Output"
 TV = OUT / "Test_Validation"
 PY = sys.executable
-SCRIPT_VERSION = "1.13"
+SCRIPT_VERSION = "1.14"
 
 SOURCE = ROOT / "QLA_Migration" / "Source"
 
@@ -795,6 +795,7 @@ def main() -> int:
         ("#156", ["QLA_Migration/_validate_issue156_sor_pol.py"], True),
         ("#146", ["tools/validators/validate_issue146_pc_isrr.py"], True),
         ("#151", ["tools/validators/validate_issue151_pc_isrr.py"], True),
+        ("#152", ["tools/validators/validate_issue152_mprem_rider.py"], True),
         ("#142", ["tools/validators/validate_issue142_sl_rider.py"], True),
         ("#158", ["tools/validators/validate_issue158_pr_segment_ownership.py"], True),
         ("#159", ["tools/validators/validate_issue159_muwclass_plan_aware.py"], True),

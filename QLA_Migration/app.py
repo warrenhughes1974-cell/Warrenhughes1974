@@ -408,6 +408,11 @@ from qla_core.quikmemo_converter import convert_quikmemo_from_pnote_pense
 from qla_core.quikmemo_dbf_generator import write_quikmemo_dbf
 from qla_core.quikdate_converter import emit_quikdate_csv
 from qla_core.quiklist_converter import emit_quiklist_csv
+from qla_core.issue152_rider_modal import (
+    active_rider_modal_sums,
+    is_phase1_bf,
+    mode_after_active_riders,
+)
 from qla_core.modal_premium_factors import (
     apply_modal_factors_to_quikplan as apply_issue21j_modal_factors,
     apply_modal_policy_fees_to_quikridr,
@@ -671,7 +676,7 @@ POST_EMIT_RATE_PATCHES = (
                      "apply_issue168_l14_reserve_class_replication.py"),
     ),
 )
-APP_VERSION = "v59.18"
+APP_VERSION = "v59.19"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -8728,6 +8733,23 @@ class QLAdminEnterpriseIntegrationSuite:
                         self._policy_fee_map = {}
                         self._modal_factor_map = {}
 
+                    # Issue #152: active SU/SL/OR modal premium, removed from blank-ANN base MODE only.
+                    try:
+                        self._issue152_rider_modal_sum = {}
+                        self._issue152_mprem_adjusted = 0
+                        if "BENEFIT_TYPE" in source.columns and "MODE_PREMIUM" in source.columns:
+                            self._issue152_rider_modal_sum = active_rider_modal_sums(
+                                source.to_dict("records")
+                            )
+                        if self._issue152_rider_modal_sum:
+                            self.log(
+                                f"Issue #152: loaded active SU/SL/OR modal sums "
+                                f"({len(self._issue152_rider_modal_sum)} policies)"
+                            )
+                    except Exception as e:
+                        self.log(f"Warning: Issue #152 rider modal cache failed - {e}")
+                        self._issue152_rider_modal_sum = {}
+
                     # Issue #143: seq-1 TYPE_CODE + BF_CURRENT_DB (PPBENTYP Column DD)
                     try:
                         _src_dir_i143 = os.path.dirname(src_path)
@@ -9124,6 +9146,22 @@ class QLAdminEnterpriseIntegrationSuite:
                                             bill_form = getattr(self, "_billing_form_map", {}).get(pol_key, "")
                                             mplan_key = self.normalize(row_data.get("MPLAN", ""))
                                             plan_factors = getattr(self, "_modal_factor_map", {}).get(mplan_key)
+                                            # Issue #152: Warren 2026-09-22 exception to #88.
+                                            # Phase-1 BF only. Rider rows keep their own premium.
+                                            if is_phase1_bf(
+                                                src_row.get("BENEFIT_TYPE"),
+                                                src_row.get("BENEFIT_SEQ"),
+                                            ):
+                                                _rider_sum = getattr(
+                                                    self, "_issue152_rider_modal_sum", {}
+                                                ).get(pol_key, 0.0)
+                                                if _rider_sum > 0.0:
+                                                    mode_prem = mode_after_active_riders(
+                                                        mode_prem, _rider_sum
+                                                    )
+                                                    self._issue152_mprem_adjusted = (
+                                                        getattr(self, "_issue152_mprem_adjusted", 0) + 1
+                                                    )
                                             annual_ppu, _mprem_method = blank_ann_annual_ppu(
                                                 mode_prem,
                                                 units,

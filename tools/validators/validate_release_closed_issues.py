@@ -130,6 +130,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         True,
     ),
     (
+        "#152 base Prem/Unit excludes active rider",
+        ["tools/validators/validate_issue152_mprem_rider.py"],
+        True,
+    ),
+    (
         "#142 SL rider 9SUBLF",
         ["tools/validators/validate_issue142_sl_rider.py"],
         True,

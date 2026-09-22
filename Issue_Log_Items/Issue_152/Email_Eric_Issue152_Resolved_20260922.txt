@@ -1,0 +1,9 @@
+Eric,
+
+152 is closed. On these policies the base premium we loaded already included the rider, and the rider was also on its own row, so the valuation counted the rider twice.
+
+That was 33 policies on the current file. The base premium per unit is now just the base. 9010723388 is 7.82, so the base should value at 782 instead of 882. 9010723386 is 7.52 (752). 9011069655 is 8.47 (847). The rider is still on the policy. Billed premium and the fee were not changed.
+
+The valuation file you have still shows the old base amounts until the next QLAdmin valuation. That run should match Val X on these.
+
+Warren

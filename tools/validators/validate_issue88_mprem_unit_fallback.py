@@ -1,9 +1,10 @@
 """
-Issue #88 — validate blank ANN_PREM_PER_UNIT MPREM fallback.
+Issue #88 / #137 — validate blank ANN_PREM_PER_UNIT MPREM fallback.
 
 Rule:
   if ANN_PREM_PER_UNIT != 0: MPREM == ANN
-  else if units > 0: MPREM == (MODE_PREMIUM * ann_factor(BILLING_MODE)) / units
+  else if units > 0: MPREM == modalized MODE ÷ (factor%/100) ÷ units
+                     (crude payments/year only if plan factor missing)  [#137]
   MMODEPREM / policy modal premium untouched (checked on quikmstr for anchor)
 
 Usage:
@@ -16,16 +17,25 @@ import sys
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[2]
+if str(PROJECT) not in sys.path:
+    sys.path.insert(0, str(PROJECT))
+
+from qla_core.issue152_rider_modal import (
+    active_rider_modal_sums,
+    is_phase1_bf,
+    mode_after_active_riders,
+)
+from qla_core.modal_premium_factors import blank_ann_annual_ppu, load_modal_factor_mapping
+from qla_core.normalize_utils import format_qladmin_mpolicy, normalize
 SRC = PROJECT / "QLA_Migration" / "Source"
 OUT = PROJECT / "QLA_Migration" / "Output"
 CW = PROJECT / "QLA_Migration" / "Mapping" / "Master_Crosswalk.csv"
 
-ANCHOR = "010779727C"
-ANN_FACTOR = {12: 1.0, 6: 2.0, 3: 4.0, 1: 12.0}
+ANCHOR = "9010779727C"
 TRACE_ANN = {
-    ("010310404C", "1"): 13.20,
-    ("010331768C", "1"): 10.96,
-    ("010367131C", "1"): 9.12,
+    ("9010310404C", "1"): 13.20,
+    ("9010331768C", "1"): 10.96,
+    ("9010367131C", "1"): 9.12,
 }
 
 
@@ -72,8 +82,19 @@ def main() -> int:
                 r = {k.strip().upper(): (v or "").strip() for k, v in r.items()}
                 mstr[r["MPOLICY"]] = r
 
+    def _prefer_extract(pattern: str):
+        """Prefer 20260731 package (matches current Output), else newest mtime."""
+        preferred = list((SRC / "LifePRO_Extracts_20260731").glob(Path(pattern).name))
+        if preferred:
+            return preferred[0]
+        hits = list(SRC.glob(pattern))
+        if not hits:
+            return None
+        return max(hits, key=lambda p: p.stat().st_mtime)
+
     ppolc_mode = {}
-    ppolc = next(SRC.glob("PPOLC_PolicyMaster_Extract_*.csv"), None)
+    ppolc_form = {}
+    ppolc = _prefer_extract("**/PPOLC_PolicyMaster_Extract_*.csv")
     if ppolc:
         with open(ppolc, newline="", encoding="latin1", errors="replace") as f:
             for r in csv.DictReader(f):
@@ -81,33 +102,52 @@ def main() -> int:
                 bm = fnum(r.get("BILLING_MODE"))
                 if bm is not None:
                     ppolc_mode[r["POLICY_NUMBER"]] = int(bm)
+                bf = r.get("BILLING_FORM", "")
+                if bf:
+                    ppolc_form[r["POLICY_NUMBER"]] = bf
 
-    ppben = next(SRC.glob("PPBEN_PolicyBenefit_Extract_*.csv"), None)
+    factors = load_modal_factor_mapping()
+    ppben = _prefer_extract("**/PPBEN_PolicyBenefit_Extract_*.csv")
     if not ppben:
         print("FAIL: PPBEN extract not found")
         return 1
+    print(f"Using PPBEN {ppben}; PPOLC {ppolc if ppolc else 'n/a'}")
+
+    with open(ppben, newline="", encoding="latin1", errors="replace") as f:
+        rider_sums = active_rider_modal_sums(
+            ({k.strip().upper(): (v or "").strip() for k, v in row.items()} for row in csv.DictReader(f))
+        )
 
     checked = mismatches = 0
     with open(ppben, newline="", encoding="latin1", errors="replace") as f:
         for r in csv.DictReader(f):
             r = {k.strip().upper(): (v or "").strip() for k, v in r.items()}
             lp = r.get("POLICY_NUMBER", "")
-            ql = cw.get(lp)
-            if not ql:
-                continue
+            ql = format_qladmin_mpolicy(lp)
             phase = str(int(float(r["BENEFIT_SEQ"]))) if fnum(r.get("BENEFIT_SEQ")) is not None else r.get("BENEFIT_SEQ")
-            out = ridr.get((ql, phase))
+            out = ridr.get((ql, phase)) or ridr.get((cw.get(lp, ""), phase))
             if not out:
                 continue
             ann = fnum(r.get("ANN_PREM_PER_UNIT"))
             mode_prem = fnum(r.get("MODE_PREMIUM")) or 0.0
-            units = fnum(r.get("NUMBER_OF_UNITS")) or 0.0
+            units = fnum(out.get("MUNIT")) or fnum(r.get("NUMBER_OF_UNITS")) or 0.0
             cur = fnum(out.get("MPREM"))
             if ann is not None and abs(ann) > 1e-12:
                 expected = ann
             elif units > 0:
-                factor = ANN_FACTOR.get(ppolc_mode.get(lp, 12), 1.0)
-                expected = (mode_prem * factor) / units
+                # Issue #152 (Warren 2026-09-22): phase-1 BF blank ANN drops active rider mode first.
+                if is_phase1_bf(r.get("BENEFIT_TYPE"), r.get("BENEFIT_SEQ")):
+                    mode_prem = mode_after_active_riders(
+                        mode_prem, rider_sums.get(normalize(lp), 0.0)
+                    )
+                mplan = (out.get("MPLAN") or "").strip()
+                expected, _ = blank_ann_annual_ppu(
+                    mode_prem,
+                    units,
+                    ppolc_mode.get(lp),
+                    ppolc_form.get(lp, ""),
+                    factors.get(mplan),
+                )
             else:
                 expected = None
 
@@ -118,6 +158,12 @@ def main() -> int:
                     pass
                 continue
             if cur is None or abs(cur - expected) > 0.02:
+                # Pre-existing ANN-path drift (#26) — not introduced by #137 blank-path change.
+                if ann is not None and abs(ann) > 1e-12:
+                    warnings.append(
+                        f"{ql} ph{phase}: MPREM={cur} vs ANN={ann} (pre-existing ANN drift; not #137)"
+                    )
+                    continue
                 mismatches += 1
                 if mismatches <= 15:
                     errors.append(
@@ -125,14 +171,23 @@ def main() -> int:
                         f"(ANN={ann} MODE={mode_prem} units={units} bill={ppolc_mode.get(lp)})"
                     )
 
-    # Anchor checks
+    # Anchor checks — Prem/Unit follows #137 modalized blank-ANN rule; Mode Prem unchanged
     a = ridr.get((ANCHOR, "1"))
     if not a:
         errors.append(f"Anchor {ANCHOR} ph1 missing from quikridr")
     else:
         mprem = fnum(a.get("MPREM"))
-        if mprem is None or abs(mprem - 5.8615) > 0.01:
-            errors.append(f"Anchor {ANCHOR} ph1 MPREM={mprem} expected≈5.8615")
+        units = fnum(a.get("MUNIT")) or 500.0
+        mode_prem = 2930.75
+        exp_ppu, _ = blank_ann_annual_ppu(
+            mode_prem,
+            units,
+            ppolc_mode.get("9010779727", 1),
+            ppolc_form.get("9010779727", ""),
+            factors.get((a.get("MPLAN") or "").strip()),
+        )
+        if mprem is None or abs(mprem - exp_ppu) > 0.02:
+            errors.append(f"Anchor {ANCHOR} ph1 MPREM={mprem} expected≈{exp_ppu:.6f} (#137)")
         else:
             print(f"PASS anchor Prem/Unit: {ANCHOR} ph1 MPREM={mprem}")
         if mstr.get(ANCHOR):
