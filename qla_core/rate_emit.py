@@ -11,6 +11,7 @@ import json
 import os
 from datetime import datetime
 
+from qla_core import pdage_missfill as PDM
 from qla_core import rate_dbf_schema as S
 from qla_core import rate_dbf_writer as W
 from qla_core import rate_pipeline as P
@@ -267,6 +268,14 @@ def run_rate_emit(
         # Final boundary guard: companion/default enrichment must not restore
         # superseded CV/TV UW keys before CSV/DBF writers consume the rows.
         _finalize_equal_cv_tv_keys(res.factor_rows, res.key_rows)
+        _tv_restore = PDM.restore_zero_terminal_class_rows(res.factor_rows, res.key_rows)
+        if _tv_restore.get("rows_added"):
+            messages.append(
+                "Zero terminal-reserve class rows: "
+                f"{_tv_restore['rows_added']} QuikTvs row(s) on "
+                f"{_tv_restore['classes_added']} class key(s) "
+                f"({', '.join(_tv_restore['plans'])})"
+            )
         # Idempotent re-apply after UW collapse (pipeline already filled; catches edge rows).
         with open(config_path, encoding="utf-8") as _cfg_f:
             _cfg = json.load(_cfg_f)

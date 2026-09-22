@@ -1,10 +1,13 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.13
-# Date:        2026-09-13
+# Version:     v59.21
+# Date:        2026-09-22
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v59.13 — Issue 166: quikdvdp.MDEPINT follows #95 plan buckets
+# Change Note: v59.21 — PDAGE miss-fill expands each page into the ten policy
+#              years (VALUE1-VALUE10). A zero terminal-reserve row is kept at
+#              each net-premium class so QLAdmin can reserve half the net premium.
+#              v59.13 — Issue 166: quikdvdp.MDEPINT follows #95 plan buckets
 #              (4.50 ISWL/1668SP, 2.00 SAL OL/ML, 3.50 residual). Year-end
 #              MINTDATE on deposit rows overlays to the prior anniversary.
 #              Warren #21D override 2026-09-13: non-ISWL no longer locked at 4.00.
@@ -677,7 +680,7 @@ POST_EMIT_RATE_PATCHES = (
                      "apply_issue168_l14_reserve_class_replication.py"),
     ),
 )
-APP_VERSION = "v59.19"
+APP_VERSION = "v59.21"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"

@@ -4,6 +4,12 @@ Issue #42 — PDAGE age/duration miss-fill into Rate_Table-shaped emit.
 Streams PDAGE rows only when (COVERAGE_ID, TYPE_CODE) is absent from the
 authoritative Rate_Table extract. Segment-only coverage IDs resolve to issuing
 PLAN codes via PCOVRSGT (same chain as PAAGERAT segment resolution).
+
+PDAGE DURATION is a page of ten years (VALUE1–VALUE10), the same layout
+load_cv_native_first and the PSUBSSEG loader already expand. Miss-fill writes
+one Rate_Table row per value, with DURATION set to the policy year
+(page - 1) * 10 + column. Zero cells are omitted; a later step puts a zero
+terminal-reserve row on any net-premium class that would otherwise have none.
 """
 from __future__ import annotations
 
@@ -23,6 +29,13 @@ RATE_TABLE_HEADER = (
     "DURATION",
     "VALUE",
 )
+
+# Bust the merged staging cache when the page layout changes.
+PAGE_EXPAND_TOKEN = "pdage-page-expand-v1"
+
+# Issue #169's post-emit patch counts 5667AT QuikTvs rows exactly. That plan's
+# terminal grid is supplied there, not by this class-row restore.
+_TV_CLASS_RESTORE_EXCLUDED_PLANS = frozenset({"5667AT"})
 
 
 def rate_table_key_index(rate_table_path: str) -> set[tuple[str, str]]:
@@ -50,37 +63,56 @@ def _pdage_row_mappable(row: dict) -> bool:
     sex = row.get("SEX", "")
     band = row.get("BAND", "")
     uw = row.get("UWCLS", "")
+    cov = row.get("COVERAGE_ID", "")
     if S.map_sex(sex) is None:
         return False
-    if S.map_uwclass(uw) is None:
+    if S.map_uwclass(uw, coverage_id=cov) is None:
         return False
     if S.map_band(band) is None:
         return False
     return True
 
 
-def _pdage_to_rate_table_row(row: dict) -> list[str] | None:
+def _pdage_cell_text(row: dict, index: int) -> str:
+    val = row.get(f"VALUE{index}", "")
+    if not val:
+        val = row.get(f"VALUE{index}_FLOAT", "")
+    return val
+
+
+def _pdage_page_to_rate_table_rows(row: dict) -> list[list[str]]:
+    """Expand one PDAGE page into Rate_Table rows, one per nonzero year."""
     cov = row.get("COVERAGE_ID", "")
     typ = row.get("TYPE_CODE", "")
     if not cov or not typ:
-        return None
+        return []
     if not _pdage_row_mappable(row):
-        return None
-    val = row.get("VALUE1", "")
-    if not val:
-        val = row.get("VALUE1_FLOAT", "")
-    if not val or val in (".", "-", "-."):
-        return None
-    return [
-        cov,
-        typ,
-        row.get("AGE", ""),
-        row.get("SEX", ""),
-        row.get("BAND", ""),
-        row.get("UWCLS", ""),
-        row.get("DURATION", ""),
-        val,
-    ]
+        return []
+    try:
+        page = int(row.get("DURATION", ""))
+    except ValueError:
+        return []
+    if page < 1:
+        return []
+    out: list[list[str]] = []
+    for vi in range(1, S.N_DURATION_COLS + 1):
+        val = _pdage_cell_text(row, vi)
+        if not val or val in (".", "-", "-."):
+            continue
+        if L._to_float(val) in (None, 0.0):
+            continue
+        annual = (page - 1) * S.N_DURATION_COLS + vi
+        out.append([
+            cov,
+            typ,
+            row.get("AGE", ""),
+            row.get("SEX", ""),
+            row.get("BAND", ""),
+            row.get("UWCLS", ""),
+            str(annual),
+            val,
+        ])
+    return out
 
 
 def _resolve_plan(cov: str, cov2plan: dict, segment_resolver) -> tuple[str | None, str]:
@@ -185,7 +217,7 @@ def _transform_rate_table_row(
         return
 
     gender = S.map_sex(sex)
-    uwclass = S.map_uwclass(uw)
+    uwclass = S.map_uwclass(uw, plan=plan, coverage_id=cov)
     band2 = S.map_band(band)
     if gender is None or uwclass is None or band2 is None:
         yield {
@@ -214,7 +246,9 @@ def _transform_rate_table_row(
         fnz_key = (cov, sex, int(original_age if original_age.isdigit() else age))
         fnz = cv_fnz.get(fnz_key)
         if fnz is not None:
-            ql_dur = L.cv_remap_ql_duration(source_d, sex, fnz_key[2], fnz)
+            ql_dur = L.cv_remap_ql_duration(
+                source_d, sex, fnz_key[2], fnz, coverage_id=cov
+            )
             if ql_dur is None:
                 yield {
                     "status": "EXCLUDED",
@@ -321,21 +355,22 @@ def transform_pdage_missfill(
             if typ in S.EXCLUDED_TYPE_CODES or typ not in S.TYPE_TO_TABLE:
                 stats["skipped_type"] += 1
                 continue
-            rt_row = _pdage_to_rate_table_row(row)
-            if rt_row is None:
+            rt_rows = _pdage_page_to_rate_table_rows(row)
+            if not rt_rows:
                 stats["skipped_bad_value"] += 1
                 continue
-            stats["rows_considered"] += 1
-            for out in _transform_rate_table_row(
-                rt_row,
-                lineno,
-                cov2plan,
-                config,
-                segment_resolver,
-                cv_fnz,
-            ):
-                stats[f"status_{out['status']}"] += 1
-                yield out
+            for rt_row in rt_rows:
+                stats["rows_considered"] += 1
+                for out in _transform_rate_table_row(
+                    rt_row,
+                    lineno,
+                    cov2plan,
+                    config,
+                    segment_resolver,
+                    cv_fnz,
+                ):
+                    stats[f"status_{out['status']}"] += 1
+                    yield out
 
     stats["rt_key_count"] = len(rt_keys)
 
@@ -360,7 +395,7 @@ def merge_pdage_missfill_to_staging(
     allowed = frozenset(approved_types) if approved_types else None
 
     def _file_sig(*paths):
-        parts = []
+        parts = [PAGE_EXPAND_TOKEN]
         for p in paths:
             st = os.stat(p)
             parts.append(f"{p}|{st.st_size}|{int(st.st_mtime)}")
@@ -400,12 +435,13 @@ def merge_pdage_missfill_to_staging(
                 if typ in S.EXCLUDED_TYPE_CODES or typ not in S.TYPE_TO_TABLE:
                     skipped += 1
                     continue
-                rt_row = _pdage_to_rate_table_row(row)
-                if rt_row is None:
+                rt_rows = _pdage_page_to_rate_table_rows(row)
+                if not rt_rows:
                     skipped += 1
                     continue
-                w.writerow(rt_row)
-                appended += 1
+                for rt_row in rt_rows:
+                    w.writerow(rt_row)
+                    appended += 1
     with open(sig_path, "w", encoding="utf-8") as f:
         f.write(sig)
     return {
@@ -428,12 +464,150 @@ def missfill_summary(pdage_path: str, rate_table_path: str) -> dict:
             typ = row.get("TYPE_CODE", "")
             if not cov or (cov, typ) in rt_keys:
                 continue
-            if _pdage_to_rate_table_row(row) is None:
+            n_cells = len(_pdage_page_to_rate_table_rows(row))
+            if n_cells == 0:
                 continue
-            by_key[(cov, typ)] += 1
+            by_key[(cov, typ)] += n_cells
     return {
         "rate_table_keys": len(rt_keys),
         "missfill_keys": len(by_key),
         "missfill_rows": sum(by_key.values()),
         "keys": sorted(f"{c}|{t}|{n}" for (c, t), n in by_key.items()),
     }
+
+
+def _row_text(row: dict, field: str) -> str:
+    return (row.get(field) or "").strip()
+
+
+def _factor_nonzero(text: str) -> bool:
+    value = L._to_float(text)
+    return value is not None and value != 0.0
+
+
+def _tv_base(row: dict) -> tuple:
+    return (
+        _row_text(row, "PLAN"),
+        _row_text(row, "AGE"),
+        _row_text(row, "GENDER"),
+        _row_text(row, "BAND"),
+        _row_text(row, "ISSCNTRY"),
+        _row_text(row, "ISSUEST"),
+        _row_text(row, "EFFDATE"),
+    )
+
+
+def _tv_ident(row: dict, uwclass: str | None = None) -> tuple:
+    base = _tv_base(row)
+    uw = _row_text(row, "UWCLASS") if uwclass is None else uwclass
+    return (base[0], base[1], base[2], uw, base[3], base[4], base[5], base[6])
+
+
+def restore_zero_terminal_class_rows(factor_rows: dict, key_rows: dict) -> dict:
+    """Put a zero QuikTvs row on each net-premium class that lost its terminal row.
+
+    Equal-UW collapse folds an all-zero terminal grid onto UWCLASS 00. QLAdmin
+    does not read that 00 row for a Standard or Preferred policy, and it ignores
+    QuikNps unless a QuikTvs row exists at the same age, sex, class, and
+    generation. Plans that still have a nonzero terminal factor are left alone.
+    """
+    stats = {"rows_added": 0, "classes_added": 0, "keys_added": 0, "plans": []}
+    nps = factor_rows.get("QuikNps") or []
+    tvs = factor_rows.setdefault("QuikTvs", [])
+    zero = S.format_factor(0.0)[0]
+    plans_touched: set[str] = set()
+
+    nonzero_bases: set[tuple] = set()
+    tv_by_ident: dict[tuple, list[dict]] = defaultdict(list)
+    for row in tvs:
+        base = _tv_base(row)
+        if any(_factor_nonzero(_row_text(row, f"TV{i}")) for i in range(S.N_DURATION_COLS)):
+            nonzero_bases.add(base)
+        tv_by_ident[_tv_ident(row)].append(row)
+
+    np_classes: dict[tuple, set[str]] = defaultdict(set)
+    np_sample: dict[tuple, dict] = {}
+    for row in nps:
+        plan = _row_text(row, "PLAN")
+        if not plan or plan in _TV_CLASS_RESTORE_EXCLUDED_PLANS:
+            continue
+        base = _tv_base(row)
+        uw = _row_text(row, "UWCLASS")
+        if not uw:
+            continue
+        np_classes[base].add(uw)
+        np_sample.setdefault(base, row)
+
+    key_table = key_rows.setdefault("QuikPlTv", [])
+    key_sigs = {
+        (
+            _row_text(row, "PLAN"),
+            _row_text(row, "GENDER"),
+            _row_text(row, "UWCLASS"),
+            _row_text(row, "BAND"),
+            _row_text(row, "ISSCNTRY"),
+            _row_text(row, "ISSUEST"),
+            _row_text(row, "EFFDATE"),
+        )
+        for row in key_table
+    }
+    keys_by_plan_gender: dict[tuple, dict] = {}
+    for row in key_table:
+        keys_by_plan_gender.setdefault(
+            (_row_text(row, "PLAN"), _row_text(row, "GENDER"), _row_text(row, "EFFDATE")),
+            row,
+        )
+
+    for base, classes in np_classes.items():
+        if base in nonzero_bases:
+            continue
+        template = None
+        for uw in ("00", *sorted(classes)):
+            found = tv_by_ident.get(_tv_ident(np_sample[base], uw))
+            if found:
+                template = found
+                break
+        for uw in sorted(classes):
+            ident = _tv_ident(np_sample[base], uw)
+            if ident in tv_by_ident:
+                continue
+            if template:
+                new_rows = []
+                for src in template:
+                    copied = dict(src)
+                    copied["UWCLASS"] = uw
+                    new_rows.append(copied)
+            else:
+                new_rows = [{
+                    "PLAN": base[0],
+                    "AGE": base[1],
+                    "CNTL": "00",
+                    "GENDER": base[2],
+                    "UWCLASS": uw,
+                    "BAND": base[3],
+                    "ISSCNTRY": base[4],
+                    "ISSUEST": base[5],
+                    "EFFDATE": base[6],
+                    **{f"TV{i}": zero for i in range(S.N_DURATION_COLS)},
+                }]
+            tvs.extend(new_rows)
+            tv_by_ident[ident] = new_rows
+            stats["rows_added"] += len(new_rows)
+            stats["classes_added"] += 1
+            plans_touched.add(base[0])
+
+            key_sig = (base[0], base[2], uw, base[3], base[4], base[5], base[6])
+            if key_sig not in key_sigs:
+                donor = keys_by_plan_gender.get((base[0], base[2], base[6]))
+                if donor is not None:
+                    key = dict(donor)
+                    key["UWCLASS"] = uw
+                    key["BAND"] = base[3]
+                    key["ISSCNTRY"] = base[4]
+                    key["ISSUEST"] = base[5]
+                    key_table.append(key)
+                    key_sigs.add(key_sig)
+                    stats["keys_added"] += 1
+
+    stats["plans"] = sorted(plans_touched)
+    return stats

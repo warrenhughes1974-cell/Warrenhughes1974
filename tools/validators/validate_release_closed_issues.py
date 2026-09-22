@@ -180,6 +180,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         True,
     ),
     (
+        "#168 PDAGE page expansion",
+        ["tools/validators/validate_issue168_pdage_page_expand.py"],
+        True,
+    ),
+    (
         "#169 667 ART net premium",
         ["tools/validators/validate_issue169_667art_np.py"],
         True,
