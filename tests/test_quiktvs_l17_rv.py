@@ -138,7 +138,8 @@ class TestL17RvPageExpansion(unittest.TestCase):
             stats = L17.apply_l17_rv_quiktvs_grid(grid, str(ROOT), str(pdage), L.LoaderConfig())
             self.assertTrue(stats["applied"], stats.get("blockers"))
 
-            vals = _grid_slice(grid, "1L17SP", "F", "00", "SM")
+            # Issue #118 UW domain: LifePRO S -> ST (SM retired).
+            vals = _grid_slice(grid, "1L17SP", "F", "00", "ST")
             self.assertNotIn(0, vals)
             self.assertAlmostEqual(float(vals[1]), 56.09, places=2)
             self.assertAlmostEqual(float(vals[2]), 57.81, places=2)
@@ -159,7 +160,7 @@ class TestL17RvPageExpansion(unittest.TestCase):
                 if r["PLAN"] == "1L17SP"
                 and r["GENDER"] == "F"
                 and r["AGE"] == "00"
-                and r["UWCLASS"] == "SM"
+                and r["UWCLASS"] == "ST"
                 and r["CNTL"] == "00"
             )
             self.assertIn(sp_row.get("TV0"), ("", ".00"))
@@ -214,7 +215,7 @@ class TestL17RvPageExpansion(unittest.TestCase):
         grid: dict = {}
         stats = L17.apply_l17_rv_quiktvs_grid(grid, str(ROOT), str(ACTIVE_PDAGE), L.LoaderConfig())
         self.assertTrue(stats["applied"], stats.get("blockers"))
-        vals = _grid_slice(grid, "1L17SP", "F", "00", "SM")
+        vals = _grid_slice(grid, "1L17SP", "F", "00", "ST")  # Issue #118: S -> ST
         self.assertAlmostEqual(float(vals[1]), 56.09, places=2)
         self.assertAlmostEqual(float(vals[11]), 78.29, places=2)
 

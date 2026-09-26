@@ -33,7 +33,9 @@ Read and follow:
 - AI_Agents/Intake_Agent.md
 - AI_Agents/Planning_Agent.md
 - AI_Agents/Dependency_Gate.md
+- Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md
 - .cursor/rules/issue-framework-stage-agents.mdc
+- .cursor/rules/completed-issues-release-guide.mdc
 
 Use the locked stage→model map in Framework.md.
 
@@ -61,12 +63,15 @@ DO:
 - Save deliverables under Issue_Log_Items/Issue_<ID>/
 - Create read-only diagnostic scripts under QLA_Migration/_research_issue*.py if needed
 - Preserve Issue #25 MPOLICY padding and Issue #26 MPREM mapping in all recommendations
+- Consult Completed_Issues_Release_Validation_Guide.md so prior Closed fixes are not undone
+- On Closure: add/update that guide row (Resolution + source validation + validator + examples)
 - Follow AGENTS.md surgical-change rules
+- These rules apply to every model (Grok, Luna, Composer, overrides)
 
 After Discovery, wait for: "Proceed to Intake."
 After Risk GO, wait for: "Approved for Development."
 Then run Development → Validation and stop with Validation readout.
-On Validation PASS, continue Regression → Closure.
+On Validation PASS, continue Regression → Closure (including guide update and always-on smoke).
 
 At the end of Discovery, report:
 1. Verdict — what must change / must not
@@ -131,16 +136,20 @@ Issue [ID] is approved for Development.
 Switch to Composer 2.5. Read AI_Agents/Development_Agent.md.
 Make surgical changes only. Version-bump app.py. Add validation script.
 Do not regress Issue #25 MPOLICY padding or Issue #26 MPREM mapping.
+Consult Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md for overlapping Closed fixes.
 ```
 
-### Validation + Regression (Cursor Grok 4.5) + Closure (Composer 2.5)
+### Validation + Regression (Cursor Grok 4.5) + Closure
 
 ```
 Issue [ID] development is complete.
 
-Run Validation Agent then Regression Agent on Cursor Grok 4.5; then Closure Agent on Composer 2.5 per AI_Agents/*.md.
+Run Validation Agent then Regression Agent on Cursor Grok 4.5; then Closure Agent per AI_Agents/*.md.
 Produce validation and regression reports from Templates/.
 End with issue-log-ready resolution summary.
+Update Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md in the same Closure commit
+(Resolution, Output tables, LifePRO source validation, validator, examples).
+Applies to Grok, Luna, and any assist model reviewing Close/release.
 ```
 
 ---

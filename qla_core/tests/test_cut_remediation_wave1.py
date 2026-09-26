@@ -77,10 +77,6 @@ def test_issue78_does_not_double_append_c(tmp_path):
 
 def test_issue114_baseline_includes_issue54_seeds():
     assert v114.ISSUE54_SEED_DELTA == 556
+    assert v114.BASELINE_LOAN_FLOOR["10"] == 4118
+    assert v114.TYPE8_MIN == 1
     assert v114.BASELINE_PRESERVED["10"] == 4118
-    assert v114.BASELINE_PRESERVED["8"] == 3657
-    assert v114.BASELINE_TOTAL_ROWS == 41066
-    # Additive identity used by validator
-    div = 3079
-    ledger = 867
-    assert v114.BASELINE_TOTAL_ROWS + div + ledger == 45012

@@ -3,7 +3,8 @@ PAAGERAT death benefit (DB) loader — Wave 2 QUIKDBS / QUIKPLDB.
 
 Business rules:
   * TYPE_CODE = 'DB' only.
-  * Attained-age scalar: SEQ -> QuikDbs.AGE, CNTL=00, VALUE_INFO -> DB0 (VARDB=3).
+  * Attained-age series on the slot axis: AGE=00, CNTL=SEQ//10, column SEQ%10 (VARDB=3;
+    Issue 140).
   * Scope: Wave 2 PAAGERAT-only DB MPLAN allowlist.
   * Segment resolution: PAAGERAT.COVERAGE_ID -> PCOVRSGT -> PCOVR -> crosswalk PLAN.
 """
@@ -74,4 +75,5 @@ def transform_paagerat_db(paagerat_csv, resolver: SR.SegmentResolver, config: Lo
         paagerat_csv, resolver, config,
         type_code=DB_TYPE_CODE,
         plan_allowlist=allow,
+        slot_axis=True,
     )

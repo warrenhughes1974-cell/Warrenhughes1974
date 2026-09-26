@@ -95,10 +95,70 @@ def cv_lifepro_last_duration(age_int):
     return CV_MATURITY_AGE - age_int
 
 
+def load_cv_native_first(pdage_path):
+    """
+    Pre-scan PDAGE for the first non-zero NATIVE LifePRO year per CV slice.
+
+    Native year = (DURATION-1)*10 + column + 1 straight from the PDAGE page
+    layout (DURATION is a page of ten VALUEn cells). The Rate_Table extract
+    compacts leading zero years away, so its DURATION labels do not carry the
+    real policy year; PDAGE does. This map replaces the hardcoded
+    cv_lifepro_first_duration() guess with per-slice source truth
+    (rate identity fix, Warren approval 2026-08-13).
+
+    Keys at TWO granularities in one dict (Eric 8/13 evidence: UW classes of
+    the same coverage/sex/age can start in different years, e.g. L10 PRE97
+    F/3 B and P start year 7, S starts year 6 — a coarse min shifts B/P early):
+      (cov, sex, age, band, uw)  exact subslice first
+      (cov, sex, age)            min across subslices (fallback)
+    """
+    first = {}
+    if not pdage_path:
+        return first
+    with open(pdage_path, encoding="utf-8-sig", errors="replace", newline="") as f:
+        rd = csv.reader(f)
+        header = [h.strip() for h in (next(rd, None) or [])]
+        try:
+            ix = {h: header.index(h)
+                  for h in ("COVERAGE_ID", "TYPE_CODE", "AGE", "SEX", "BAND", "UWCLS", "DURATION")}
+            val_ix = [header.index(f"VALUE{i}") for i in range(1, 11)]
+        except ValueError:
+            return first
+        for r in rd:
+            if len(r) <= val_ix[-1]:
+                continue
+            if r[ix["TYPE_CODE"]].strip() != "CV":
+                continue
+            cov = r[ix["COVERAGE_ID"]].strip()
+            if not cov or set(cov) == {"-"}:
+                continue
+            try:
+                age_int = int(float(r[ix["AGE"]].strip()))
+                page = int(float(r[ix["DURATION"]].strip()))
+            except ValueError:
+                continue
+            sex = r[ix["SEX"]].strip()
+            band = r[ix["BAND"]].strip()
+            uw = r[ix["UWCLS"]].strip()
+            base = (page - 1) * 10
+            for i, ci in enumerate(val_ix):
+                v = _to_float(r[ci])
+                if v:
+                    year = base + i + 1
+                    for key in ((cov, sex, age_int, band, uw), (cov, sex, age_int)):
+                        if key not in first or year < first[key]:
+                            first[key] = year
+                    break
+    return first
+
+
 def load_cv_slice_fnz(source_csv):
     """
-    Pre-scan CV rows for the first non-zero source DURATION per (COVERAGE_ID, SEX, AGE).
+    Pre-scan CV rows for the first non-zero source DURATION per slice.
     Required because CV placement is slice-relative, not row-local.
+
+    Keys at two granularities in one dict (matches load_cv_native_first):
+      (cov, sex, age, band, uw) exact subslice; (cov, sex, age) min fallback.
     """
     fnz = {}
     with open(source_csv, encoding="utf-8-sig", errors="replace", newline="") as f:
@@ -122,12 +182,23 @@ def load_cv_slice_fnz(source_csv):
             if val is None or val == 0.0:
                 continue
             sex = r[3].strip()
-            key = (cov, sex, age_int)
-            fnz[key] = min(fnz.get(key, dur), dur)
+            band = r[4].strip()
+            uw = r[5].strip()
+            for key in ((cov, sex, age_int, band, uw), (cov, sex, age_int)):
+                fnz[key] = min(fnz.get(key, dur), dur)
     return fnz
 
 
-def cv_remap_ql_duration(source_d, sex, age_int, fnz):
+# Issue L14 history: L14 was frozen to identity (extract label = QL Dur) while the
+# fleet used the first-duration guess. With the PDAGE-truth remap (2026-08-13) the
+# freeze became wrong: Eric's 8/13 workbook proved L14 M/54 must land 538.30 at
+# native Dur 24 (identity parked it at 23 / terminal at attained age 99). Warren
+# approved removing the freeze 2026-08-13; the PDAGE native-first shift keeps
+# F/69 identical (native first = 2) and corrects first-year-3 cohorts (+1).
+CV_IDENTITY_DURATION_COVERAGES = frozenset()
+
+
+def cv_remap_ql_duration(source_d, sex, age_int, fnz, coverage_id=None, native_first=None):
     """
     Map LifePRO extract duration -> QLAdmin duration index for CV grids.
 
@@ -136,9 +207,24 @@ def cv_remap_ql_duration(source_d, sex, age_int, fnz):
     policy duration index here keeps the terminal 1000 value at attained age 100
     instead of one duration early.
 
+    Issue L14: the identity-coverage freeze is retired (empty set) as of
+    2026-08-13 — PDAGE native-first truth supersedes it (see
+    CV_IDENTITY_DURATION_COVERAGES comment). Mechanism kept for rollback.
+
+    Rate identity fix (Warren approval 2026-08-13): when native_first is
+    supplied (PDAGE first non-zero native year for this slice, see
+    load_cv_native_first) it replaces the cv_lifepro_first_duration() guess.
+    Slices whose extract labels already equal the native year self-cancel
+    (native_first == fnz -> identity), so this generalizes the L14 case.
+
     Returns int ql_duration, or None when the row is truncated past maturity.
     """
-    lp_d = source_d + cv_lifepro_first_duration(sex, age_int) - fnz
+    cov = (coverage_id or "").strip().upper()
+    if cov in CV_IDENTITY_DURATION_COVERAGES:
+        lp_d = int(source_d)
+    else:
+        first = native_first if native_first is not None else cv_lifepro_first_duration(sex, age_int)
+        lp_d = source_d + first - fnz
     if lp_d > cv_lifepro_last_duration(age_int):
         return None
     if lp_d < 1:
@@ -146,7 +232,8 @@ def cv_remap_ql_duration(source_d, sex, age_int, fnz):
     return lp_d
 
 
-def transform_source(source_csv, cov2plan, config, cv_fnz=None, segment_resolver=None, rt_key_index=None):
+def transform_source(source_csv, cov2plan, config, cv_fnz=None, segment_resolver=None,
+                     rt_key_index=None, cv_native_first=None):
     """
     Stream the LifePRO rate extract and classify/transform each row.
 
@@ -216,7 +303,7 @@ def transform_source(source_csv, cov2plan, config, cv_fnz=None, segment_resolver
                 continue
 
             gender = S.map_sex(sex)
-            uwclass = S.map_uwclass(uw)
+            uwclass = S.map_uwclass(uw, plan=plan, coverage_id=cov)
             band2 = S.map_band(band)
             if gender is None or uwclass is None or band2 is None:
                 yield {"status": "BAD_VALUE", "type_code": typ, "coverage_id": cov,
@@ -235,11 +322,20 @@ def transform_source(source_csv, cov2plan, config, cv_fnz=None, segment_resolver
                 age_capped = True
             age2 = emitted_age_int
 
+            cv_first_fallback = False
             if table == "QuikCvs" and cv_fnz is not None and age.isdigit():
-                fnz_key = (cov, sex, int(original_age if original_age.isdigit() else age))
-                fnz = cv_fnz.get(fnz_key)
+                age_i = int(original_age if original_age.isdigit() else age)
+                key5 = (cov, sex, age_i, band, uw)
+                key3 = (cov, sex, age_i)
+                fnz = cv_fnz.get(key5, cv_fnz.get(key3))
                 if fnz is not None:
-                    ql_dur = cv_remap_ql_duration(source_d, sex, fnz_key[2], fnz)
+                    nf_map = cv_native_first or {}
+                    native_first = nf_map.get(key5, nf_map.get(key3))
+                    cv_first_fallback = cv_native_first is not None and native_first is None
+                    ql_dur = cv_remap_ql_duration(
+                        source_d, sex, age_i, fnz, coverage_id=cov,
+                        native_first=native_first,
+                    )
                     if ql_dur is None:
                         yield {"status": "EXCLUDED", "type_code": typ, "coverage_id": cov,
                                "lineno": lineno, "note": "CV_TRUNCATED_PAST_MATURITY"}
@@ -272,6 +368,7 @@ def transform_source(source_csv, cov2plan, config, cv_fnz=None, segment_resolver
                 "value": value, "raw_value": val, "lineno": lineno,
                 "original_age": original_age, "age_capped": age_capped,
                 "segment_resolution": segment_resolution,
+                "cv_first_fallback": cv_first_fallback,
             }
 
 

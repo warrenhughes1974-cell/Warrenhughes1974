@@ -1,5 +1,9 @@
 """
-Issue #74 — quikplan VARDB: only former default `4` → `0`; keep structure codes 1/2/3.
+Issue #74 — quikplan VARDB: no `4` residual; structure codes follow the rate grid.
+
+Issue A7 (Warren approved 2026-08-09) moved VARDB authority from the rulebook
+literal to the emitted QuikDbs grid, so the fixed 121/20 split and the frozen
+structure baseline are only used when Output/rates is unavailable.
 
 Usage:
   python tools/validators/validate_issue74_vardb.py
@@ -15,11 +19,22 @@ from collections import Counter
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from qla_core.attained_age_grid_fill import load_manifest  # noqa: E402
+from qla_core.quikplan_rate_variation_flags import (  # noqa: E402
+    CODE_ATTAINED_AGE,
+    CODE_LEVEL,
+    CODE_NOT_ON_FILE,
+    classify_factor_grid,
+    scan_factor_grid,
+)
+
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 EVIDENCE = PROJECT_ROOT / "Issue_Log_Items" / "Issue_74" / "evidence"
 BASELINE_STRUCTURE = EVIDENCE / "issue74_risk_structure_plans_unchanged.csv"
 
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "1.1"
 EXPECTED_ROW_COUNT = 141
 EXPECTED_ZERO_COUNT = 121
 EXPECTED_STRUCTURE_COUNT = 20
@@ -32,6 +47,28 @@ TRACE_PLANS = {
     "1659SR": "1",
     "A60MIR": "2",
 }
+
+
+def _expected_vardb_from_rates(output_dir: Path) -> dict[str, str]:
+    """Issue A7: VARDB each plan should carry given its emitted QuikDbs grid."""
+    rates_dir = output_dir / "rates"
+    if not rates_dir.is_dir():
+        return {}
+    shapes = scan_factor_grid(str(rates_dir), "QuikDbs", "DB")
+    if not shapes:
+        return {}
+    # Issue #140: an attained-age grid on the slot axis reads as policy-year by shape,
+    # so its membership comes from the emit manifest.
+    slot_plans = load_manifest(str(PROJECT_ROOT)).get("QuikDbs", set())
+    expected: dict[str, str] = {}
+    for plan, shape in shapes.items():
+        if plan in slot_plans and shape is not None and shape.real_rows:
+            expected[plan] = CODE_ATTAINED_AGE
+            continue
+        code = classify_factor_grid(shape)
+        # No DB grid means level death benefit off INITVAL, which is Issue #74's 0.
+        expected[plan] = CODE_LEVEL if code == CODE_NOT_ON_FILE else code
+    return expected
 
 
 def _n(v: object) -> str:
@@ -82,20 +119,32 @@ def main() -> int:
     if counts.get("4", 0):
         errors.append(f"VARDB=4 residual: {counts.get('4', 0)} rows")
 
-    zero_count = counts.get("0", 0)
-    if zero_count != EXPECTED_ZERO_COUNT:
-        errors.append(f"VARDB=0 count {zero_count} != expected {EXPECTED_ZERO_COUNT}")
-
-    structure_count = sum(counts.get(v, 0) for v in ("1", "2", "3"))
-    if structure_count != EXPECTED_STRUCTURE_COUNT:
-        errors.append(
-            f"structure VARDB 1/2/3 count {structure_count} != expected {EXPECTED_STRUCTURE_COUNT}"
-        )
-
+    grid_expected = _expected_vardb_from_rates(args.output_dir)
     baseline = _load_structure_baseline()
-    if not baseline:
-        errors.append(f"missing structure baseline: {BASELINE_STRUCTURE}")
+
+    if grid_expected:
+        authority = "QuikDbs grid (Issue A7)"
+        for plan in sorted(by_plan):
+            actual = _n(by_plan[plan].get("VARDB"))
+            expected_vardb = grid_expected.get(plan, CODE_LEVEL)
+            if actual != expected_vardb:
+                errors.append(
+                    f"{plan}: VARDB={actual!r}, expected {expected_vardb!r} from QuikDbs grid"
+                )
     else:
+        authority = "frozen Issue #74 baseline (no Output/rates)"
+        zero_count = counts.get("0", 0)
+        if zero_count != EXPECTED_ZERO_COUNT:
+            errors.append(f"VARDB=0 count {zero_count} != expected {EXPECTED_ZERO_COUNT}")
+
+        structure_count = sum(counts.get(v, 0) for v in ("1", "2", "3"))
+        if structure_count != EXPECTED_STRUCTURE_COUNT:
+            errors.append(
+                f"structure VARDB 1/2/3 count {structure_count} != expected {EXPECTED_STRUCTURE_COUNT}"
+            )
+
+        if not baseline:
+            errors.append(f"missing structure baseline: {BASELINE_STRUCTURE}")
         for plan, expected_vardb in sorted(baseline.items()):
             row = by_plan.get(plan)
             if not row:
@@ -115,8 +164,6 @@ def main() -> int:
         actual = _n(row.get("VARDB"))
         if actual != expected_vardb:
             errors.append(f"{plan}: VARDB={actual!r}, expected {expected_vardb!r}")
-        if _n(row.get("VARGP")) != "4":
-            errors.append(f"{plan}: VARGP={row.get('VARGP')!r}, expected '4' unchanged")
 
     EVIDENCE.mkdir(parents=True, exist_ok=True)
     summary_path = EVIDENCE / "issue74_validation_summary.csv"
@@ -133,6 +180,7 @@ def main() -> int:
     print(f"Issue #74 VARDB validator v{SCRIPT_VERSION}")
     print(f"  quikplan rows: {len(rows)}")
     print(f"  VARDB distribution: {dict(counts)}")
+    print(f"  VARDB authority: {authority}")
     print(f"  structure baseline plans: {len(baseline)}")
     print(f"  trace plans: {len(TRACE_PLANS)}")
 

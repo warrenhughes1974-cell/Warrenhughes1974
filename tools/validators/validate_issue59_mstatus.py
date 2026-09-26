@@ -25,7 +25,7 @@ import csv
 import sys
 from pathlib import Path
 
-SCRIPT_VERSION = "2.2"
+SCRIPT_VERSION = "2.3"  # 2.3: named Active+LP traces are source-aware (8/31+ T/DC)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 DEFAULT_SOURCE = PROJECT_ROOT / "QLA_Migration" / "Source"
@@ -110,6 +110,60 @@ def _ppolc_row_for_death_claim(source_root: Path) -> dict[str, str]:
     raise FileNotFoundError(f"9010521213 not found in {ppolc}")
 
 
+def _source_policy_number(mpolicy: str) -> str:
+    p = _norm(mpolicy)
+    return p[:-1] if p.endswith("C") else p
+
+
+def _ppolc_status_fields(source_root: Path, policy_numbers: set[str]) -> tuple[dict, str, str]:
+    """Return {POLICY_NUMBER: status fields} from the active valuation PPOLC."""
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from qla_core.valuation_date import apply_valuation_date_env, select_ppolc_path
+
+    vd, _src = apply_valuation_date_env(source_root)
+    ppolc = Path(select_ppolc_path(source_root, vd))
+    want = {_norm(p) for p in policy_numbers}
+    found: dict[str, dict[str, str]] = {}
+    with ppolc.open(newline="", encoding="latin-1", errors="replace") as f:
+        for row in csv.DictReader(f):
+            pol = _norm(row.get("POLICY_NUMBER"))
+            if pol not in want:
+                continue
+            found[pol] = {
+                "CONTRACT_CODE": _norm(row.get("CONTRACT_CODE")).upper(),
+                "CONTRACT_REASON": _norm(row.get("CONTRACT_REASON")).upper(),
+                "PAID_UP_TYPE": _norm(row.get("PAID_UP_TYPE")).upper(),
+            }
+            if len(found) == len(want):
+                break
+    return found, vd, str(ppolc)
+
+
+def expected_named_lp_mstatus(source_root: Path, mpolicy: str) -> tuple[str, str]:
+    """Issue #59 named Active+LP traces: stay 22 only while LifePRO is still A/LP."""
+    st = load_st()
+    src_pol = _source_policy_number(mpolicy)
+    rows, vd, ppolc = _ppolc_status_fields(source_root, {src_pol})
+    src = rows.get(src_pol)
+    if not src:
+        raise FileNotFoundError(f"{src_pol} not found in {ppolc}")
+    code = src["CONTRACT_CODE"]
+    reason = src["CONTRACT_REASON"]
+    put = src["PAID_UP_TYPE"]
+    detail = (
+        f"{vd} {Path(ppolc).name} {src_pol} "
+        f"CONTRACT={code}/{reason} PUT={put}"
+    )
+    if code == "A" and put == "LP":
+        return "22", detail
+    key = f"ST_{code}_{reason}" if reason else f"ST_{code}_"
+    expected = st.get(key, "")
+    if not expected:
+        raise ValueError(f"No ST translation for {key} ({detail})")
+    return expected, detail
+
+
 def expected_death_claim_mstatus(source_root: Path) -> tuple[str, str]:
     """
     Source-aware expected MSTATUS for 9010521213C.
@@ -133,10 +187,11 @@ def expected_death_claim_mstatus(source_root: Path) -> tuple[str, str]:
 
 def simulate_scoped_keys(source_root: Path) -> dict[str, str]:
     """Expected ST results for the scoped policies (Active+LP fixed; DP source-aware)."""
-    st = load_st()
     dp_exp, _ = expected_death_claim_mstatus(source_root)
-    out = {pol: st["ST_A_"] for pol in EXPECTED_ACTIVE_LP}
-    out[DEATH_CLAIM_POLICY] = dp_exp
+    out = {DEATH_CLAIM_POLICY: dp_exp}
+    for pol in EXPECTED_ACTIVE_LP:
+        exp, _ = expected_named_lp_mstatus(source_root, pol)
+        out[pol] = exp
     return out
 
 
@@ -186,9 +241,17 @@ def main() -> int:
         print(f"FAIL - cannot resolve death-claim source expectation: {exc}")
         return 1
 
-    expected_mstatus = dict(EXPECTED_ACTIVE_LP)
-    expected_mstatus[DEATH_CLAIM_POLICY] = dp_expected
+    expected_mstatus = {DEATH_CLAIM_POLICY: dp_expected}
     print(f"  Death-claim expectation: {DEATH_CLAIM_POLICY}={dp_expected} ({dp_detail})")
+    try:
+        for pol in EXPECTED_ACTIVE_LP:
+            exp, lp_detail = expected_named_lp_mstatus(args.source_dir, pol)
+            expected_mstatus[pol] = exp
+            if exp != EXPECTED_ACTIVE_LP[pol]:
+                print(f"  Named LP source change: {pol} expect {exp} ({lp_detail})")
+    except Exception as exc:  # noqa: BLE001
+        print(f"FAIL - cannot resolve named LP source expectation: {exc}")
+        return 1
 
     sim = simulate_scoped_keys(args.source_dir)
     for pol, exp in expected_mstatus.items():

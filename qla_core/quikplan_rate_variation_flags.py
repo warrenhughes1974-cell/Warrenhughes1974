@@ -12,9 +12,11 @@ import os
 from collections import defaultdict
 from dataclasses import dataclass, field
 
+from qla_core import attained_age_grid_fill as AASF
 from qla_core import plan_source_paths as PSP
 from qla_core import rate_dbf_schema as S
 from qla_core import rate_segment_resolution as SR
+from qla_core.paagerat_pr_loader import PR_OWNERSHIP_SLOT, pr_slot_ownership_enabled
 from qla_core.rate_factor_loader import load_plan_crosswalk
 from qla_core.schema_constants import QUIKPLAN_SCHEMA
 
@@ -90,9 +92,11 @@ def _is_separator(cov: str) -> bool:
     return bool(cov) and set(cov) == {"-"}
 
 
-def _map_segmentation(sex: str, band: str, uw: str) -> tuple[str | None, str | None, str | None]:
+def _map_segmentation(
+    sex: str, band: str, uw: str, plan=None, coverage_id=None,
+) -> tuple[str | None, str | None, str | None]:
     gender = S.map_sex(sex)
-    uwclass = S.map_uwclass(uw)
+    uwclass = S.map_uwclass(uw, plan=plan, coverage_id=coverage_id)
     band_raw = (band or "").strip()
     if band_raw and band_raw not in S.BAND_MAP:
         return None, None, None
@@ -158,6 +162,7 @@ def scan_rate_table(path: str, cov2plan: dict) -> dict[tuple[str, str], Segmenta
                 continue
             gender, uwclass, band2 = _map_segmentation(
                 row[si].strip(), row[bi].strip(), row[ui].strip(),
+                plan=plan, coverage_id=cov,
             )
             if gender is None and uwclass is None and band2 is None:
                 continue
@@ -182,19 +187,28 @@ def scan_paagerat(path: str, resolver: SR.SegmentResolver) -> dict[tuple[str, st
                 continue
             if "RECORD_SEQ" in idx and row[idx["RECORD_SEQ"]].strip() != "1":
                 continue
-            resolved = resolver.resolve(seg, source="paagerat")
-            if not resolved or " " in resolved.plan:
-                continue
-            gender, uwclass, band2 = _map_segmentation(
-                row[idx["SEX"]].strip(),
-                row[idx["BAND"]].strip(),
-                row[idx["UWCLS"]].strip(),
-            )
-            if gender is None and uwclass is None and band2 is None:
-                continue
-            key = (resolved.plan, TYPE_TO_FLAG_SUFFIX[typ])
-            out[key].sources.add("PAAGERAT")
-            _ingest_row(out[key], gender, uwclass, band2)
+            # Issue #158: PR ownership follows the PCOVRSGT SEQ 1 slot and can name more
+            # than one plan, so VARGP is derived from the same grid the PR loader emits.
+            # Other TYPE_CODEs keep single-parent resolution until their own issue.
+            if typ == "PR" and pr_slot_ownership_enabled():
+                resolutions = resolver.resolve_all(seg, slot=PR_OWNERSHIP_SLOT)
+            else:
+                single = resolver.resolve(seg, source="paagerat")
+                resolutions = [single] if single else []
+            for resolved in resolutions:
+                if " " in resolved.plan:
+                    continue
+                gender, uwclass, band2 = _map_segmentation(
+                    row[idx["SEX"]].strip(),
+                    row[idx["BAND"]].strip(),
+                    row[idx["UWCLS"]].strip(),
+                    plan=resolved.plan, coverage_id=seg,
+                )
+                if gender is None and uwclass is None and band2 is None:
+                    continue
+                key = (resolved.plan, TYPE_TO_FLAG_SUFFIX[typ])
+                out[key].sources.add("PAAGERAT")
+                _ingest_row(out[key], gender, uwclass, band2)
     return out
 
 
@@ -473,7 +487,9 @@ def validate_enrichment(
 ) -> list[dict]:
     """Return list of validation issues (empty = pass)."""
     issues = []
-    vary_cols = {"PLANVALOPT", *VARY_FIELD_NAMES}
+    # Issue A7 put VARGP / VARDB under this pass, so they join the fields the
+    # enrichment is allowed to move.
+    vary_cols = {"PLANVALOPT", *VARY_FIELD_NAMES, *VARIATION_CODE_COLUMNS}
     orig_by_plan = {r["PLAN"]: r for r in original_rows if r.get("PLAN")}
 
     for plan, upd in updates.items():
@@ -800,7 +816,7 @@ def compute_field_diffs(
     for plan, upd in sorted(updates.items()):
         old = orig_by_plan.get(plan, {})
         reason = upd.get("UPDATE_REASON", "rate segmentation enrichment")
-        for col in VARY_COLUMNS:
+        for col in (*VARY_COLUMNS, *VARIATION_CODE_COLUMNS):
             old_v = _row_value(old, col)
             new_v = upd.get(col, old_v)
             if old_v != new_v:
@@ -1069,6 +1085,204 @@ def apply_default_only_pvo_clear(
     return out, cleared
 
 
+# ---------------------------------------------------------------------------
+# Issue A7 — VARGP / VARDB derived from the emitted factor grids
+# ---------------------------------------------------------------------------
+
+# QLAdmin variation code semantics (Warren 2026-08-09):
+#   0 = level, 1 = varies by policy year, 2 = varies by issue age and year,
+#   3 = varies by attained age, 4 = no rate table on file.
+CODE_LEVEL = "0"
+CODE_POLICY_YEAR = "1"
+CODE_ISSUE_AGE_YEAR = "2"
+CODE_ATTAINED_AGE = "3"
+CODE_NOT_ON_FILE = "4"
+
+VARIATION_CODE_COLUMNS = ("VARGP", "VARDB")
+
+# quikplan field -> (factor table, factor column prefix)
+VARIATION_CODE_SOURCES = {
+    "VARGP": ("QuikGps", "GP"),
+    "VARDB": ("QuikDbs", "DB"),
+}
+
+FACTOR_COLUMNS_PER_PAGE = 10
+
+
+@dataclass
+class FactorGridShape:
+    """Observed axes of one plan's emitted factor grid."""
+    real_rows: int = 0
+    ages: set = field(default_factory=set)
+    duration_slots: set = field(default_factory=set)
+
+    @property
+    def varies_by_age(self) -> bool:
+        return len(self.ages) > 1
+
+    @property
+    def varies_by_duration(self) -> bool:
+        return len(self.duration_slots) > 1
+
+
+def _resolve_rate_csv(rates_csv_dir: str, table_name: str) -> str | None:
+    path = os.path.join(rates_csv_dir, f"{table_name}.csv")
+    if os.path.isfile(path):
+        return path
+    for name in os.listdir(rates_csv_dir):
+        if name.lower() == f"{table_name}.csv".lower():
+            return os.path.join(rates_csv_dir, name)
+    return None
+
+
+def scan_factor_grid(rates_csv_dir: str, table_name: str, col_prefix: str) -> dict[str, FactorGridShape]:
+    """Measure each plan's emitted factor grid: which axes actually carry rates.
+
+    Duration is encoded as CNTL page x 10 + factor column index, so a plan whose
+    rates sit only in <prefix>0 on CNTL=00 has a single duration slot.
+    """
+    shapes: dict[str, FactorGridShape] = defaultdict(FactorGridShape)
+    if not rates_csv_dir or not os.path.isdir(rates_csv_dir):
+        return shapes
+    path = _resolve_rate_csv(rates_csv_dir, table_name)
+    if not path:
+        return shapes
+    cols = [f"{col_prefix}{i}" for i in range(FACTOR_COLUMNS_PER_PAGE)]
+    with open(path, encoding="utf-8-sig", errors="replace", newline="") as f:
+        for row in csv.DictReader(f):
+            plan = (row.get("PLAN") or "").strip()
+            if not plan:
+                continue
+            cntl = (row.get("CNTL") or "").strip() or "00"
+            page = int(cntl) if cntl.isdigit() else 0
+            slots = set()
+            for idx, col in enumerate(cols):
+                raw = (row.get(col) or "").strip()
+                if not raw:
+                    continue
+                try:
+                    value = float(raw)
+                except ValueError:
+                    continue
+                if value != 0:
+                    slots.add(page * FACTOR_COLUMNS_PER_PAGE + idx)
+            if not slots:
+                continue
+            shape = shapes[plan]
+            shape.real_rows += 1
+            shape.ages.add((row.get("AGE") or "").strip())
+            shape.duration_slots |= slots
+    return shapes
+
+
+def classify_factor_grid(shape: FactorGridShape | None) -> str:
+    """Map an observed grid to its QLAdmin variation code."""
+    if shape is None or shape.real_rows == 0:
+        return CODE_NOT_ON_FILE
+    if shape.varies_by_age and shape.varies_by_duration:
+        return CODE_ISSUE_AGE_YEAR
+    if shape.varies_by_duration:
+        return CODE_POLICY_YEAR
+    if shape.varies_by_age:
+        return CODE_ATTAINED_AGE
+    return CODE_LEVEL
+
+
+def _looks_like_slot_axis(shape: FactorGridShape | None) -> bool:
+    """Issue #140 shape signature: every row on the attained-age key, many slots."""
+    if shape is None or shape.real_rows == 0:
+        return False
+    return (
+        not shape.varies_by_age
+        and shape.varies_by_duration
+        and shape.ages == {S.ATTAINED_AGE_KEY}
+    )
+
+
+def apply_variation_codes_from_emitted_rates(
+    rows: list[dict],
+    rates_csv_dir: str | None,
+    attained_age_plans: dict | None = None,
+) -> tuple[list[dict], dict[str, dict]]:
+    """Issue A7: set VARGP / VARDB from the grid QLAdmin will actually read.
+
+    A plan left at 4 while its factor table holds rates makes QLAdmin report
+    "Values Not on File" and ignore the loaded grid.
+
+    A missing DB grid means the death benefit is level off INITVAL, so VARDB
+    falls back to 0 rather than 4 (preserves Issue #74). Annuities are not
+    special-cased: A60MIR carries a real DB grid, and Issue A A8b's "no DB rates
+    expected" premise does not hold for it.
+
+    Issue #140 (Warren approved 2026-08-09): once an attained-age series sits on
+    the slot axis it is shape-identical to a policy-year grid, so shape alone can
+    no longer produce code 3. Membership comes from the emit manifest instead.
+    Absent a manifest the plan keeps whatever code it already has — never guess
+    a downgrade.
+    """
+    if not rates_csv_dir or not os.path.isdir(rates_csv_dir):
+        return [dict(r) for r in rows], {}
+    shapes = {
+        field_name: scan_factor_grid(rates_csv_dir, table, prefix)
+        for field_name, (table, prefix) in VARIATION_CODE_SOURCES.items()
+    }
+    if not any(shapes.values()):
+        return [dict(r) for r in rows], {}
+
+    touched: dict[str, dict] = {}
+    out = []
+    for row in rows:
+        r = dict(row)
+        plan = (r.get("PLAN") or "").strip()
+        if not plan:
+            out.append(r)
+            continue
+        changes = {}
+        for field_name in VARIATION_CODE_COLUMNS:
+            table = VARIATION_CODE_SOURCES[field_name][0]
+            shape = shapes[field_name].get(plan)
+            if plan in (attained_age_plans or {}).get(table, ()):
+                # Manifest says this plan's grid is an attained-age series; only a
+                # plan that lost its rates entirely may fall back to "not on file".
+                code = (
+                    CODE_NOT_ON_FILE
+                    if shape is None or shape.real_rows == 0
+                    else CODE_ATTAINED_AGE
+                )
+            elif _looks_like_slot_axis(shape):
+                # Slot-axis shape with no manifest entry: do not invent code 3.
+                # But never leave "not on file" (4) / blank when a real grid
+                # exists — that makes QLAdmin ignore loaded rates (A7). Also
+                # upgrade VARDB level(0) when the emitted grid clearly varies.
+                current = (r.get(field_name) or "").strip()
+                classified = classify_factor_grid(shape)
+                if shape is None or shape.real_rows == 0:
+                    continue
+                if current in ("", CODE_NOT_ON_FILE) or (
+                    field_name == "VARDB"
+                    and current == CODE_LEVEL
+                    and classified not in (CODE_LEVEL, CODE_NOT_ON_FILE)
+                ):
+                    code = classified
+                else:
+                    continue
+            else:
+                code = classify_factor_grid(shape)
+            if field_name == "VARDB" and code == CODE_NOT_ON_FILE:
+                code = CODE_LEVEL
+            if (r.get(field_name) or "").strip() != code:
+                r[field_name] = code
+                changes[field_name] = code
+        if changes:
+            touched[plan] = {
+                "PLAN": plan,
+                **changes,
+                "UPDATE_REASON": "Issue A7 variation code from emitted factor grid",
+            }
+        out.append(r)
+    return out, touched
+
+
 def enrich_quikplan_rows(
     rows: list[dict],
     config: RateVariationEnrichmentConfig | None = None,
@@ -1161,6 +1375,15 @@ def enrich_quikplan_rows(
                 **{f: "N" for f in VARY_FIELD_NAMES},
                 "UPDATE_REASON": "Issue A3 default-only PVO keys; no real factor rows",
             }
+    # Issue A7: variation codes follow the emitted grids, so this runs after all
+    # factor gating and only has effect once Output/rates exists.
+    enriched, code_touch = apply_variation_codes_from_emitted_rates(
+        enriched, rates_dir, AASF.load_manifest(repo_root),
+    )
+    for plan, upd in code_touch.items():
+        base = dict(applicable.get(plan) or {"PLAN": plan})
+        base.update(upd)
+        applicable[plan] = base
     diffs = compute_field_diffs(original, enriched, applicable)
     checks = run_integration_validation(original, enriched, applicable)
     blockers = sum(1 for c in checks if c["STATUS"] == "FAIL")

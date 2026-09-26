@@ -111,12 +111,21 @@ Implementation needs form → QL `PLAN` resolution (existing coverage_id / cross
 
 ## 5. Open Client Questions
 
-1. **Confirm LifePRO letter → client code by form family** (especially `S→SM` vs `S→ST`, `B→BL`, `N→NT`, `Q→PQ`). Please validate or correct the §4a matrix.
-2. **L14:** Rate_Table only has letter `N` today, but the sheet lists NT/ST/PQ/PR. Where do ST/PQ/PR rate rows come from (other extract, inherit, or membership-only with rates only on NT)?
-3. **QuikUwpo labels:** One label per code fleet-wide. Approve labels, e.g. `BL=BLENDED`, `NT=STD NON-TOBACCO`, `PQ=PREF NON-TOBACCO`, `PR=PREFERRED`, `SM=STD SMOKER`, `ST=STANDARD` (even if L10 sheet says "Preferred Non-Smoker" for PR).
-4. **Forms not on the sheet** (ISWL 1658/1659, riders, SAL annuities using `00`): keep current codes, force `ST`, or add rows to the spreadsheet?
-5. **Retire `NS`?** If L14 moves to `NT` and other `N` usages are remapped, should `NS` disappear from QuikUwpo?
-6. **UAT example policies** per L10 / L14 / Preferred-Standard form for screen proof.
+**2026-08-07 update:** see `Issue_118_Client_Clarification_20260807.md`.
+
+| # | Question | Status |
+|---|----------|--------|
+| 1a | L14 letter map `N→NT`, `T→ST`, `Q→PQ`, `R→PR` | **CLOSED** — Eric approved |
+| 1b | Form-aware `S→SM` vs `S→ST`, `B→BL` (§4a) | **CLOSED** — spreadsheet is source of truth (Clarification §5, 2026-08-07) |
+| 2 | L14 rate source for ST/PQ/PR (Rate_Table has `N` only) | **CLOSED** — map policies + emit premiums; do not invent CV; note missing cash values on final report (Clarification §7, 2026-08-08) |
+| 3 | QuikUwpo labels BL/NT/PQ/PR/SM/ST | **CLOSED** — Eric confirmed |
+| 4a | ISWL membership ST + PR | **CLOSED** — Eric |
+| 4b | Non-ISWL riders / other unlisted / annuity `00` | **OPEN** |
+| 5 | Retire `NS` from QuikUwpo? | **OPEN** |
+| 6 | UAT example policies | **OPEN** |
+| 7 | Class `0` / sheet ST forms: re-key `00→ST` or keep `00`? | **CLOSED** — keep `00`, description **Standard** (Clarification §4, 2026-08-07) |
+| 8 | No orphan MUWCLASS / valid QLA rate class on every policy | **CLOSED** — standard validation required (Clarification §6, 2026-08-07) |
+| 9 | NT/PQ label overflow C(20) | **CLOSED** — truncate (Clarification §8, 2026-08-08) |
 
 ---
 

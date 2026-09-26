@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+137	Ready for Client UAT	Names-tab Modalized Annual	QLAdmin Names Modal Premiums Annl uses calendar annualization (MODE x 12 etc via MPREM) instead of LifePRO modalized annual (mode premium / mode factor). Gold 9010722550C LifePRO 436 vs QLA ~506.	2026-08-05	Go-No Go	Warren	Warren		v58.80 Validation PASS: blank-ANN MPREM modalized; gold 9010722550C base ~435.98; MMODEPREM unchanged; Test_Validation/quikridr published. Awaiting Regression/Closure after UAT.

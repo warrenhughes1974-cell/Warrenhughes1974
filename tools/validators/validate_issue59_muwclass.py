@@ -13,9 +13,9 @@ RIDR = ROOT / "QLA_Migration" / "Output" / "quikridr.csv"
 FORBIDDEN = {"55", "41", "56"}
 # T was N→T (boolean) corruption; after fix N→NS so bare T should be rare (true LifePRO T only)
 SAMPLE_EXPECT = {
-    "011208260C": "SM",  # LifePRO S
-    "011208334C": "SM",  # LifePRO S
-    "011207563C": "NS",  # LifePRO Q → NS
+    "9011208260C": "SM",  # LifePRO S (L10) — Issue #2 901…C key
+    "9011208334C": "SM",  # LifePRO S (L10)
+    "9011207563C": "PQ",  # Issue #118: LifePRO Q → PQ on L14 (was NS)
 }
 
 

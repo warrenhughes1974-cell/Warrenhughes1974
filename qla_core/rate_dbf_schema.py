@@ -39,19 +39,29 @@ EXCLUDED_TYPE_CODES = frozenset({"NN", "PN", "TP", "TX", "UF", "SL"})
 # ---- segmentation crosswalks (business-confirmed) ----
 SEX_MAP = {"F": "F", "M": "M", "J": "J"}
 BAND_MAP = {"1": "01", "2": "02", "3": "03"}
+# Issue #118 — form-aware UW map (Underwriting Classes by Form + Eric L14).
+# Legacy flat UWCLASS_MAP kept for reference/tests; runtime uses map_uwclass(..., plan/coverage).
 UWCLASS_MAP = {"0": "00", "N": "NS", "S": "SM", "P": "PR", "B": "ST"}
-# Rider MUWCLASS (Issue #59): LifePRO UW letters → QLAdmin rate keys.
-# Includes Q→NS (L14 policies use Q; rate grids are N→NS). Do NOT use bare
-# Master_Value_Translation status rows (S→55, P→41, N→T, T→56).
-RIDER_UWCLASS_MAP = {
-    "0": "00",
-    "N": "NS",
-    "S": "SM",
-    "P": "PR",
-    "B": "ST",
-    "Q": "NS",
-}
-QLA_RIDER_UWCLASS_PASS = frozenset({"00", "NS", "SM", "PR", "ST"})
+# L10 smoker/blend family — LifePRO S = Smoker, B = Blended
+L10_COVERAGE_PREFIXES = ("L10",)
+L10_COVERAGE_IDS = frozenset({
+    "L10 LP95", "L10 LP95SR", "L10 PRE97", "L10 PREUNI", "L10 CDT", "L10 SDT",
+    "L10 OLD", "L10 SR OLD",
+})
+# Must cover every "L10*" coverage in the Policy Form Crosswalk. QLAdmin plan codes do not
+# carry the family name consistently (910SWP, 9CDTWP), so the set is enumerated and guarded
+# by validate_issue118_uwclass.py rather than pattern-matched.
+L10_PLANS = frozenset({
+    "1L1095", "1L10OD", "1L10PR", "1L10SO", "1L10SR",
+    "5CDT10", "7SDT10", "9ADB10", "9OLDWP", "9WPL10", "910RWP",
+    "9GPO10", "9JPO10", "910SWP", "9CDTWP",
+})
+L14_COVERAGE_IDS = frozenset({"L14"})
+L14_PLANS = frozenset({"1L14SC"})
+# Approved QLAdmin UW domain after #118 (NS retired from QuikUwpo / new emits)
+QLA_UWCLASS_DOMAIN = frozenset({"00", "ST", "PR", "SM", "BL", "NT", "PQ"})
+# Backward-compatible alias used by older rider pass-through checks
+QLA_RIDER_UWCLASS_PASS = QLA_UWCLASS_DOMAIN
 
 FACTOR_FIELD_LEN = 7
 COI_FACTOR_FIELD_LEN = 10  # QuikCoi/QuikGcoi QX0–QX9 per QLAdmin Help §7.73 / §7.93
@@ -122,9 +132,17 @@ _MEMBER_TABLE_FIELDS = {
 MEMBER_TABLES = list(_MEMBER_TABLE_FIELDS.keys())
 
 # Standard member-code descriptions (conventional labels; not actuarial/business values).
+# Issue #118: 00 = Standard (LifePRO class 0); NT/PQ truncated to C(20).
 GENDER_LABEL = {"0": "NOT APPLICABLE", "M": "MALE", "F": "FEMALE", "J": "JOINT"}
-UWCLASS_LABEL = {"00": "NOT APPLICABLE", "NS": "NON-SMOKER", "SM": "SMOKER",
-                 "PR": "PREFERRED", "ST": "STANDARD"}
+UWCLASS_LABEL = {
+    "00": "STANDARD",
+    "ST": "STANDARD",
+    "PR": "PREFERRED",
+    "SM": "STANDARD SMOKER",
+    "BL": "BLENDED",
+    "NT": "STANDARD NON-TOBACCO",  # 20
+    "PQ": "PREFERRED NON-TOBAC",   # 18
+}
 BAND_LABEL = {"00": "NOT APPLICABLE", "01": "BAND 1", "02": "BAND 2", "03": "BAND 3"}
 DEFAULT_CNTRY_TXT = "ALL (OTHER)"
 DEFAULT_STATE_TXT = "ALL (OTHER)"
@@ -215,29 +233,93 @@ def band_collapse_priority(raw):
     return 99
 
 
-def map_uwclass(raw):
-    return UWCLASS_MAP.get((raw or "").strip(), None)
+def _is_l10_context(plan=None, coverage_id=None):
+    """True when product is L10 smoker/blend family (S=Smoker, B=Blended)."""
+    plan = (plan or "").strip().upper()
+    cov = (coverage_id or "").strip().upper()
+    if plan in {p.upper() for p in L10_PLANS}:
+        return True
+    if cov in {c.upper() for c in L10_COVERAGE_IDS}:
+        return True
+    if plan in {c.upper() for c in L10_COVERAGE_IDS}:
+        return True
+    if cov.startswith(L10_COVERAGE_PREFIXES) or plan.startswith(L10_COVERAGE_PREFIXES):
+        return True
+    return False
 
 
-def map_rider_uwclass(raw):
-    """Map LifePRO UNDERWRITING_CLASS → quikridr MUWCLASS (rate-key codes).
+def _is_l14_context(plan=None, coverage_id=None):
+    plan = (plan or "").strip().upper()
+    cov = (coverage_id or "").strip().upper()
+    if plan in {p.upper() for p in L14_PLANS} or cov in {p.upper() for p in L14_PLANS}:
+        return True
+    if cov in {c.upper() for c in L14_COVERAGE_IDS} or plan in {c.upper() for c in L14_COVERAGE_IDS}:
+        return True
+    return False
 
-    Never apply status/boolean bare translations (S→55, P→41, N→T, T→56).
-    Unknown codes (e.g. R, T) pass through unchanged for business review.
+
+def map_uwclass(raw, plan=None, coverage_id=None):
+    """Map LifePRO UW letter → QLAdmin UWCLASS (Issue #118 form-aware).
+
+    Returns None only when the letter cannot be mapped (caller treats as BAD_VALUE).
     """
     v = (raw or "").strip()
-    if not v:
+    if not v or set(v) <= {"-"}:
+        return "00"
+    if v in QLA_UWCLASS_DOMAIN:
         return v
-    if v in RIDER_UWCLASS_MAP:
-        return RIDER_UWCLASS_MAP[v]
-    if v in QLA_RIDER_UWCLASS_PASS:
+    l14 = _is_l14_context(plan, coverage_id)
+    l10 = _is_l10_context(plan, coverage_id)
+    if v == "0":
+        return "00"
+    if v == "P":
+        return "PR"
+    if v == "B":
+        return "BL"
+    if v == "S":
+        return "SM" if l10 else "ST"
+    if l14:
+        return {"N": "NT", "T": "ST", "Q": "PQ", "R": "PR"}.get(v)
+    # Non-L14 residual letters (Risk Option A — retire NS; no orphans)
+    if v in ("N", "Q", "T", "R", "M"):
+        return "00"
+    return None
+
+
+def map_rider_uwclass(raw, plan=None, coverage_id=None):
+    """Map LifePRO UNDERWRITING_CLASS → quikridr MUWCLASS (rate-key codes).
+
+    Issue #118: form/plan-aware; never apply bare status map (S→55/P→41/N→T/T→56).
+    Blank → 00 (Standard). Always returns an approved domain code when possible.
+    """
+    v = (raw or "").strip()
+    if not v or set(v) <= {"-"}:
+        return "00"
+    if v in QLA_UWCLASS_DOMAIN:
         return v
-    return v
+    mapped = map_uwclass(v, plan=plan, coverage_id=coverage_id)
+    if mapped:
+        return mapped
+    # Last resort: do not emit orphan LifePRO letters
+    return "00"
 
 
 def duration_to_cntl_col(ql_duration):
     """0-based QL duration -> (CNTL 2-char page, column index 0..9)."""
     return str(ql_duration // 10).zfill(2), ql_duration % 10
+
+
+# Issue #140: QLAdmin Help 7.94 / 7.82 define the factor columns as the year axis
+# (column n holds slot n + CNTL*10) and AGE as the issue-age key. An attained-age
+# grid has no issue-age axis, so AGE stays 00 and the age itself is the slot that
+# quikplan VARGP / VARDB = 3 ("Vary by Attained Age") tells QLAdmin to read.
+ATTAINED_AGE_KEY = "00"
+
+
+def attained_age_to_age_cntl_col(attained_age):
+    """Attained age -> (AGE key, CNTL 2-char page, column index 0..9)."""
+    cntl, col = duration_to_cntl_col(attained_age)
+    return ATTAINED_AGE_KEY, cntl, col
 
 
 def source_duration_to_ql(source_duration):
@@ -251,8 +333,16 @@ def rv_source_duration_to_ql(source_duration):
 
 
 def duration_to_ql_for_type(type_code, source_duration):
-    """Route duration indexing by TYPE_CODE. RV=#106 identity; other non-CV=source-1."""
-    if (type_code or "").strip() == "RV":
+    """Route duration indexing by TYPE_CODE.
+
+    RV = #106 identity. DV = identity as of 2026-08-13 (Warren approval, Eric
+    'Rates of Identified Issues - 8.13.26' evidence: LifePRO pays the dividend
+    for anniversary year N from native Dur N — e.g. 670 GL85-8 M/3 18.52@56,
+    960 PO M/26 22.61@58 — and every extract DV subslice's duration labels were
+    proven equal to PDAGE native years, so identity is exact). Other non-CV
+    types remain source-1.
+    """
+    if (type_code or "").strip() in ("RV", "DV"):
         return rv_source_duration_to_ql(source_duration)
     return source_duration_to_ql(source_duration)
 

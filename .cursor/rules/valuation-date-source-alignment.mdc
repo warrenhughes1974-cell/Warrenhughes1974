@@ -11,3 +11,4 @@ alwaysApply: true
 - For a 2026-06-30 source package, use `QLA_VALUATION_DATE=20260630`.
 - For a 2026-07-31 source package, use `QLA_VALUATION_DATE=20260731`.
 - Confirm the selected source package and valuation date in the run summary before handing off output.
+- Older policy cuts keep the newest plan/rate package already in Output (do not rebuild `quikplan` / `rates/`). See `.cursor/rules/older-cut-keep-newest-plan-rates.mdc`.

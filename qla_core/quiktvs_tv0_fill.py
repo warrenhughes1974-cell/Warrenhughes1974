@@ -141,3 +141,32 @@ def apply_quiktvs_tv0_blank_fill(
 
     stats["sp_blank_plans"] = sorted(stats["sp_blank_plans"])
     return stats
+
+
+def apply_quikdvs_dv0_blank_fill(
+    factor_rows: dict[str, list[dict]],
+    source_decimals: int = 2,
+) -> dict[str, Any]:
+    """Fill blank QuikDvs DV0 with formatted zero (DV identity, 2026-08-13).
+
+    DV duration indexing moved to native identity (rate_dbf_schema.
+    duration_to_ql_for_type), so slot 0 no longer receives native year 1 and
+    would emit blank. LifePRO has no year-0 dividend; a numeric zero keeps the
+    DV0 cell populated exactly as the prior convention did (native year 1 DV is
+    0.00 fleet-wide). Same rationale as the Issue 106 QuikTvs TV0 fill; no
+    single-premium exception because the old DV emit had none.
+    """
+    rows = factor_rows.get("QuikDvs")
+    stats: dict[str, Any] = {"filled": 0, "preserved_nonblank": 0}
+    if not rows:
+        return stats
+    text, _, _ = S.format_factor(
+        0.0, max_len=S.factor_field_len("QuikDvs"), source_decimals=source_decimals,
+    )
+    for row in rows:
+        if _normalize_plan(row.get("DV0")) == "":
+            row["DV0"] = text
+            stats["filled"] += 1
+        else:
+            stats["preserved_nonblank"] += 1
+    return stats

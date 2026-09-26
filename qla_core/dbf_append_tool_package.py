@@ -32,12 +32,21 @@ from qla_core.quikmemo_dbf_generator import write_quikmemo_dbf
 
 DEFAULT_APPEND_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DEFAULT_APPEND_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
+CSO_PRODUCT_DBF_DIR = Path(DEFAULT_APPEND_INPUT) / "Product_Files_From_CSO"
+
+# Plan key tables CSO edits in QLAdmin. Never rebuild these from conversion CSVs.
+CSO_PRODUCT_DBFS = (
+    "QuikPlCv.dbf",
+    "QuikPlTv.dbf",
+)
 
 # CSVs that must not be fed to Append Tool EXECUTE (memo packing / claims UAT DBF).
 APPEND_INPUT_SKIP_CSVS = frozenset({
     "quikmemo.csv",
     "quikclms.csv",
     "quikclmp.csv",
+    "quikplcv.csv",
+    "quikpltv.csv",
 })
 
 
@@ -87,7 +96,11 @@ def publish_append_input_csvs(
     if rates.is_dir():
         for src in sorted(rates.glob("*.csv")):
             low = src.name.lower()
-            if low in skip_extra:
+            if low in skip_extra or low in APPEND_INPUT_SKIP_CSVS:
+                skipped.append(f"rates/{src.name}")
+                stale = dest / src.name
+                if stale.is_file():
+                    stale.unlink()
                 continue
             shutil.copy2(src, dest / src.name)
             copied.append(f"rates/{src.name}")
@@ -98,6 +111,43 @@ def publish_append_input_csvs(
         "dest": _norm(dest),
         "files": copied,
     }
+
+
+def place_cso_product_dbfs(
+    append_output: str | Path = DEFAULT_APPEND_OUTPUT,
+    source_dir: str | Path = CSO_PRODUCT_DBF_DIR,
+) -> dict[str, Any]:
+    """Copy CSO's QuikPlCv and QuikPlTv into Append Tool output.
+
+    The conversion rate CSVs are not the source for these two tables.
+    """
+    src_dir = Path(source_dir)
+    dest = Path(append_output)
+    dest.mkdir(parents=True, exist_ok=True)
+    copied: list[dict[str, Any]] = []
+    missing: list[str] = []
+    for name in CSO_PRODUCT_DBFS:
+        src = src_dir / name
+        if not src.is_file():
+            missing.append(name)
+            continue
+        dst = dest / name
+        shutil.copy2(src, dst)
+        copied.append(
+            {
+                "src": str(src),
+                "dst": str(dst),
+                "size": dst.stat().st_size,
+            }
+        )
+    ok = len(missing) == 0 and len(copied) == len(CSO_PRODUCT_DBFS)
+    result = {"ok": ok, "copied": copied, "missing": missing, "source": str(src_dir)}
+    if not ok:
+        raise DbfAppendPackageError(
+            "CSO product DBFs missing from "
+            f"{src_dir}: {missing or 'copy failed'}"
+        )
+    return result
 
 
 def place_quikmemo_dbf(
@@ -473,9 +523,11 @@ def finalize_dbf_append_tool_package(
             "reason": "memo_not_required_no_csv",
         }
 
+    result["cso_product_dbfs"] = place_cso_product_dbfs(append_output)
     claims_ok = bool((result.get("claims") or {}).get("ok"))
     memo_ok = bool((result.get("quikmemo") or {}).get("ok"))
-    result["ok"] = claims_ok and memo_ok
+    cso_ok = bool((result.get("cso_product_dbfs") or {}).get("ok"))
+    result["ok"] = claims_ok and memo_ok and cso_ok
     if not result["ok"]:
         raise DbfAppendPackageError("Append Tool package incomplete")
     return result

@@ -60,6 +60,23 @@ At the top, under **System Configuration & Path Mapping**, check these paths:
 
 `Output` should contain **CSV files only** after a run. Logs and reports go elsewhere.
 
+### Cut Completeness Gate (Wave 1 — v58.69+)
+
+After Output hygiene and **before** Complete / DBF Append handoff, full-batch runs evaluate a fail-closed **Cut Completeness Manifest**.
+
+| Result | Meaning |
+|--------|---------|
+| **PASS** | Cut Control + Required Registry PASS (required tables rewritten, flags coherent, hygiene clean, required issue validators green). **Not** a claim that every Closed fleet issue is IN_DATA — deferred gaps (e.g. #55/#60/#76/#96/#116/#117/#136) stay listed on the manifest. |
+| **FAIL** | Append is **not** launched and Complete success is **blocked**. |
+
+Artifacts (never in Output root):
+
+- `QLA_Migration/Reports/cut_manifest_<timestamp>.json`
+- `QLA_Migration/Reports/cut_manifest_<timestamp>.md`
+- `QLA_Migration/Reports/cut_manifest_latest.json`
+
+Prefer **`QLA_Migration/run_converter.bat`** (sets UAT ENABLE/WRITE pairs). UI Full Batch without those flags will correctly FAIL. Break-glass `QLA_SKIP_CUT_MANIFEST=1` is off by default and requires an explicit dated waiver via `QLA_CUT_WAIVER_PATH`.
+
 ---
 
 ## Recommended run order (full conversion)
@@ -359,6 +376,7 @@ Most operators don’t need these. They’re for claims UAT and special modes:
 - `QLA_BATCH_INCLUDE_CLAIMS_UAT=1` — include claims in batch (UAT mode)
 - `QLA_BATCH_INCLUDE_RATE_TABLES=1` — same as “Include in full batch migration” checkbox
 - `QLA_PRODUCT_SETUP_ISOLATED=1` — same as “Isolate from batch” checkbox
+- **Older policy cut (locked 2026-09-02):** when `QLA_VALUATION_DATE` is older than the newest plan/rate package (`QLA_Migration/Reports/rates/newest_plan_rate_package.json`), the headless full batch **automatically** sets isolate-plan + skip-rates so `quikplan` and `Output/rates/` stay on the current generation. The DBF Append still loads those newest plan/rate CSVs with the older policy tables. Smoke: `python tools/validators/validate_newest_plan_rates_kept.py`. Override only with `QLA_KEEP_NEWEST_PLAN_RATES=0` (rebuild) or `=1` (force the hash check).
 - `QLA_ENABLE_REINSURANCE_EMIT=1` — run Phase 1 QuikRein/QuikRmst in batch (off by default)
 - `QLA_REINSURANCE_WRITE_OUTPUT=1` — write `quikrein.csv` + `quikrmst.csv` to Output (requires emit flag)
 

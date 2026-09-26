@@ -29,7 +29,7 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCRIPT_VERSION = "1.3"
+SCRIPT_VERSION = "1.4"
 ENGINE_VERSION = "v58.70"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
@@ -41,16 +41,18 @@ TEST_VALIDATION = DEFAULT_OUTPUT / "Test_Validation"
 # History: v58.35 pre-#114 freeze had type10=3562 / total=40510.
 # Cut Completeness Wave 0 / Issue #54 restored 556 opening loan seeds (MBENTYP=10),
 # so midyear preserved type10 is 3562+556=4118 and preserved total is 40510+556=41066.
-# Type 8 (#34) is hard-frozen. Loan types 10/11/12 may grow on later cuts (#54 source
-# drift) — fail only if they shrink below this floor.
+# Type 8 is ISRR companion history. #145B pulled vanish-policy 0561s out, so
+# leftover count is extract-dependent. Fail if type 8 is gone, not if != 3657.
+# Loan types 10/11/12 may grow on later cuts (#54) — fail only if they shrink.
 ISSUE54_SEED_DELTA = 556
-BASELINE_TYPE8 = 3657
+TYPE8_MIN = 1
+BASELINE_TYPE8 = TYPE8_MIN  # leftover floor after #145B (was exact 3657)
 BASELINE_LOAN_FLOOR = {
     "10": 3562 + ISSUE54_SEED_DELTA,
     "11": 14156,
     "12": 19135,
 }
-BASELINE_PRESERVED = {"8": BASELINE_TYPE8, **BASELINE_LOAN_FLOOR}
+BASELINE_PRESERVED = {"8": TYPE8_MIN, **BASELINE_LOAN_FLOOR}
 
 DIVIDEND_TYPES = ("1", "2", "3", "4", "5")
 # Issue #117 ledger extensions (interest credited / withdrawals) — not #114 amounts
@@ -188,12 +190,12 @@ def validate(
     type_counts = Counter(r.get("MBENTYP", "") for r in rows)
     print(f"OK: quikbenh.csv rows={len(rows)} MBENTYP counts={dict(type_counts)}")
 
-    # 2. Prior-issue rows: type 8 hard-frozen; loan types must not shrink below floor
+    # 2. Type 8 leftover present (#145B); loan types must not shrink below floor
     type8 = type_counts.get("8", 0)
-    if type8 != BASELINE_TYPE8:
-        errors.append(f"MBENTYP=8 count={type8} expected preserved baseline {BASELINE_TYPE8}")
+    if type8 < TYPE8_MIN:
+        errors.append(f"MBENTYP=8 count={type8} missing leftover ISRR companions")
     else:
-        print(f"OK: MBENTYP=8 preserved ({type8} rows)")
+        print(f"OK: MBENTYP=8 leftover ({type8} rows; #145B vanish 0561s excluded)")
 
     loan_counts = {t: type_counts.get(t, 0) for t in BASELINE_LOAN_FLOOR}
     for t, floor in BASELINE_LOAN_FLOOR.items():

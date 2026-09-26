@@ -224,6 +224,41 @@ def ensure_members_for_keys(member_rows, key_rows, effdate=None):
     return added - removed if removed else added
 
 
+def ensure_members_for_rider_uw(member_rows, quikridr_path):
+    """Issue #118 — every quikridr.MUWCLASS must be a QuikPlUw member on that plan.
+
+    Rate grids alone under-state rider membership (ADB/WP/discount/PA plans often have
+    policy UW classes with no rate-key rows). Call after keys are ensured and before emit
+    when Output/quikridr.csv already exists (full batch rate stage).
+    """
+    import csv
+    import os
+
+    if not quikridr_path or not os.path.isfile(quikridr_path):
+        return 0
+    member_rows.setdefault("QuikPlUw", [])
+    have = {(r.get("PLAN"), (r.get("UWCODE") or "").strip()) for r in member_rows["QuikPlUw"]}
+    added = 0
+    with open(quikridr_path, newline="", encoding="utf-8-sig") as f:
+        for r in csv.DictReader(f):
+            plan = (r.get("MPLAN") or "").strip()
+            code = (r.get("MUWCLASS") or "").strip()
+            if not plan or not code or code not in S.QLA_UWCLASS_DOMAIN:
+                continue
+            if (plan, code) in have:
+                continue
+            member_rows["QuikPlUw"].append(
+                {
+                    "PLAN": plan,
+                    "UWCODE": code,
+                    "UWDESCR": S.UWCLASS_LABEL.get(code, code)[:20],
+                }
+            )
+            have.add((plan, code))
+            added += 1
+    return added
+
+
 def build_quikuwpo_rows(member_rows, key_rows=None):
     """Issue A A10 — distinct UWCODE master for QuikUwpo (one row per code, always include 00)."""
     codes = {"00"}

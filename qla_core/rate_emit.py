@@ -17,7 +17,9 @@ from qla_core import rate_dbf_writer as W
 from qla_core import rate_pipeline as P
 from qla_core import quikaint_closed_riders as QAINT
 from qla_core import quiktvs_tv0_fill as TV0
-from qla_core.rate_member_setup import build_quikuwpo_rows
+from qla_core import attained_age_grid_fill as AASF
+from qla_core import issue172_shared_uw_keys as I172
+from qla_core.rate_member_setup import build_quikuwpo_rows, ensure_members_for_rider_uw
 
 # Blockers that must not prevent CV / factor / key / member CSV emit.
 PARTIAL_EMIT_BLOCKERS = frozenset({"V-UINT-PDINT", "V-ISSC-RATE", "V-ISSC-SL"})
@@ -268,6 +270,13 @@ def run_rate_emit(
         # Final boundary guard: companion/default enrichment must not restore
         # superseded CV/TV UW keys before CSV/DBF writers consume the rows.
         _finalize_equal_cv_tv_keys(res.factor_rows, res.key_rows)
+        # Issue #172 Option K: exact-class shared UW copies AFTER equal-CV/TV
+        # collapse so identical class keys are not collapsed to UWCLASS=00.
+        _i172 = I172.apply_shared_uw_key_replication(
+            res.factor_rows, res.key_rows, repo_root=repo_root,
+        )
+        for _msg in _i172.get("messages") or []:
+            messages.append(_msg)
         _tv_restore = PDM.restore_zero_terminal_class_rows(res.factor_rows, res.key_rows)
         if _tv_restore.get("rows_added"):
             messages.append(
@@ -282,6 +291,7 @@ def run_rate_emit(
         _sp = TV0.load_true_single_premium_plans(repo_root, config=_cfg)
         _dec = int((_cfg.get("segmentation_defaults") or {}).get("source_decimals", 2))
         TV0.apply_quiktvs_tv0_blank_fill(res.factor_rows, _sp, source_decimals=_dec)
+        TV0.apply_quikdvs_dv0_blank_fill(res.factor_rows, source_decimals=_dec)
         P.write_issue_reports(res, phase_report_dir)
     except Exception as exc:
         return {
@@ -308,6 +318,14 @@ def run_rate_emit(
     csv_manifest_path = ""
 
     if can_emit:
+        # Issue #118: when quikridr already exists (full-batch rate stage), fold every
+        # policy MUWCLASS into QuikPlUw so riders/PA plans are not missing from membership.
+        _ridr = os.path.normpath(os.path.join(os.path.dirname(csv_dir), "quikridr.csv"))
+        _uw_added = ensure_members_for_rider_uw(res.member_rows, _ridr)
+        if _uw_added:
+            messages.append(
+                f"Issue #118 QuikPlUw: added {_uw_added} policy MUWCLASS membership row(s)"
+            )
         if emit_dbf:
             os.makedirs(dbf_dir, exist_ok=True)
             _write_dbf_tables(res, dbf_dir, manifest)
@@ -348,6 +366,11 @@ def run_rate_emit(
                 })
                 messages.append(f"Issue #88 QuikIssc: {issc_n} row(s)")
             manifest_dir = os.path.join(repo_root, "QLA_Migration", "Reports", "rates")
+            aa_plans = sum(len(p) for p in res.attained_age_slot_plans.values())
+            messages.append(
+                f"Issue #140 attained-age slot axis: {aa_plans} plan/table pair(s); "
+                f"manifest {AASF.manifest_path(repo_root)}"
+            )
             csv_manifest_path = _write_csv_manifest(csv_dir, manifest, manifest_dir)
             pointer_path = os.path.join(phase_report_dir, "rate_csv_manifest_pointer.txt")
             with open(pointer_path, "w", encoding="utf-8") as pointer:

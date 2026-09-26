@@ -155,7 +155,7 @@ def _transform_row(r, lineno, cov, entry, config):
         }
 
     gender = S.map_sex(sex)
-    uwclass = S.map_uwclass(uw)
+    uwclass = S.map_uwclass(uw, plan=issuing_plan, coverage_id=cov)
     band2 = S.map_band(band)
     original_age = age
     emitted_age_int = age.zfill(2)
@@ -296,7 +296,7 @@ def merged_source_rows(source_csv, entry, config):
             cov,
             r[3].strip(),
             int(r[2].strip()) if r[2].strip().isdigit() else r[2].strip(),
-            S.map_uwclass(r[5].strip()),
+            S.map_uwclass(r[5].strip(), coverage_id=cov),
             S.map_band(r[4].strip()),
             int(r[6].strip()),
             out["ql_duration"],

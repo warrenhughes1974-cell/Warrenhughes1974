@@ -87,9 +87,12 @@ def build_inheritance_manifest(audit_csv, pcovrsgt_csv, source_csv):
     return entries
 
 
-def transform_inherited_cv(source_csv, manifest, config, cv_fnz=None):
+def transform_inherited_cv(source_csv, manifest, config, cv_fnz=None, cv_native_first=None):
     """
     Stream inherited CV rows: rate_owner Coverage -> issuing PLAN QuikCvs keys.
+
+    cv_native_first: PDAGE first non-zero native year per (cov, sex, age) —
+    keyed by the rate-owner coverage (the slice whose rows we read here).
     """
     if not manifest:
         return
@@ -139,7 +142,8 @@ def transform_inherited_cv(source_csv, manifest, config, cv_fnz=None):
                 continue
 
             gender = S.map_sex(sex)
-            uwclass = S.map_uwclass(uw)
+            # plan varies per owner entry; map with coverage (L10/L14) first
+            uwclass = S.map_uwclass(uw, coverage_id=cov)
             band2 = S.map_band(band)
             original_age = age
             emitted_age_int = age.zfill(2)
@@ -149,10 +153,16 @@ def transform_inherited_cv(source_csv, manifest, config, cv_fnz=None):
                 age_capped = True
             age2 = emitted_age_int
 
-            fnz_key = (cov, sex, int(original_age if original_age.isdigit() else age))
-            fnz = cv_fnz.get(fnz_key) if cv_fnz is not None else None
+            age_i = int(original_age if original_age.isdigit() else age)
+            key5 = (cov, sex, age_i, band, uw)
+            key3 = (cov, sex, age_i)
+            fnz = cv_fnz.get(key5, cv_fnz.get(key3)) if cv_fnz is not None else None
             if fnz is not None and age.isdigit():
-                ql_dur = L.cv_remap_ql_duration(source_d, sex, fnz_key[2], fnz)
+                nf_map = cv_native_first or {}
+                ql_dur = L.cv_remap_ql_duration(
+                    source_d, sex, age_i, fnz, coverage_id=cov,
+                    native_first=nf_map.get(key5, nf_map.get(key3)),
+                )
                 if ql_dur is None:
                     for entry in owner_to_entries[cov]:
                         yield {

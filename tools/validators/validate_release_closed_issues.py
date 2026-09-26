@@ -180,8 +180,18 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         True,
     ),
     (
+        "#172 shared UW-class cash-value keys",
+        ["tools/validators/validate_issue172_shared_uw_keys.py"],
+        True,
+    ),
+    (
         "#168 PDAGE page expansion",
         ["tools/validators/validate_issue168_pdage_page_expand.py"],
+        True,
+    ),
+    (
+        "CEN NP issue-year level on every page",
+        ["tools/validators/validate_cen_np_issue_year_level.py"],
         True,
     ),
     (
@@ -192,6 +202,16 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
     (
         "#169-TV 667 ART terminal-reserve reachability",
         ["tools/validators/validate_issue169_667art_tvs_reachable.py"],
+        True,
+    ),
+    (
+        "#108H NFO election not forced to status",
+        ["tools/validators/validate_issue108h_nfo_election.py"],
+        True,
+    ),
+    (
+        "#133 PUA terminal base does not reactivate MSTATUS",
+        ["tools/validators/validate_issue133_pua_header_status.py"],
         True,
     ),
 ]

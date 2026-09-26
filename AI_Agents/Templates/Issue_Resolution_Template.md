@@ -98,10 +98,25 @@
 | Check | Status |
 |-------|--------|
 | Validators PASS (G5 + G6) | |
+| Accountability IN_DATA on full Output | |
+| `Completed_Issues_Release_Validation_Guide.md` row added/updated | |
+| Always-on smoke in `SMOKE_JOBS` (`validate_release_closed_issues.py`) | |
 | `app.py` version bumped (if batch/rate path changed) | |
 | Issue-scoped git commit | hash: |
 | **`git push` to remote** | branch: |
 | Network batch note (`Output/` gitignored) | GENERATE RATE TABLES / full batch after pull |
+
+### Completed Issues guide row (required)
+
+| Field | Value |
+|-------|-------|
+| ID | |
+| Short name | |
+| Resolution | |
+| Output tables | |
+| Validate from source (LifePRO extract + how) | |
+| Validator / check | |
+| Examples | |
 
 ---
 
@@ -148,4 +163,5 @@
 - [x] Validation PASS
 - [x] Regression PASS
 - [x] Closure — **`Resolution:`** one-line + long-form summary
+- [x] Completed Issues Release Validation Guide row updated
 - [x] Git commit + push (G7 release gate)

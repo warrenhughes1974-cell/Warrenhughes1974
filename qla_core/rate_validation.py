@@ -15,7 +15,8 @@ import collections
 from qla_core import rate_dbf_schema as S
 
 GENDER_DOMAIN = {"F", "M", "J", "0"}
-UWCLASS_DOMAIN = {"00", "NS", "SM", "PR", "ST"}
+# Issue #118 — approved UW domain (NS retired; BL/NT/PQ added)
+UWCLASS_DOMAIN = {"00", "ST", "PR", "SM", "BL", "NT", "PQ"}
 BAND_DOMAIN = {"00", "01", "02", "03"}
 TYPE_FAMILY = {"PR": "GROSS_PREMIUM", "BP": "GROSS_PREMIUM", "U6": "CURRENT_COI", "U5": "GUARANTEED_COI",
                "CV": "CASH_VALUE", "DB": "DEATH_BENEFIT",
@@ -45,11 +46,18 @@ def _valid_effdate(s):
 
 
 def validate(grids, factor_rows_by_table, fmt_issues, key_rows_by_table,
-             dependency_notes, authoritative_plans, config):
-    """Run all applicable gates. Returns (issues, summary Counter)."""
+             dependency_notes, authoritative_plans, config,
+             allowed_effdate_generations=None):
+    """Run all applicable gates. Returns (issues, summary Counter).
+
+    allowed_effdate_generations: set of (PLAN, EFFDATE) pairs permitted to carry
+    a non-standard EFFDATE (PSUBSSEG substitution era bands from the reviewed
+    scope manifest). Everything else still gates V07 on STANDARD_EFFDATE.
+    """
     issues = []
     summary = collections.Counter()
     auth = set(authoritative_plans or [])
+    allowed_gen = set(allowed_effdate_generations or [])
 
     # ---- factor-row gates ----
     for table, rows in factor_rows_by_table.items():
@@ -85,8 +93,10 @@ def validate(grids, factor_rows_by_table, fmt_issues, key_rows_by_table,
                 _issue(issues, "V12", "BLOCKER", table, f"UWCLASS '{row['UWCLASS']}' out of domain key={key}")
             if row["BAND"] not in BAND_DOMAIN:
                 _issue(issues, "V12", "BLOCKER", table, f"BAND '{row['BAND']}' out of domain key={key}")
-            # V07 EFFDATE must be the authoritative standard generation
-            if row["EFFDATE"] != S.STANDARD_EFFDATE:
+            # V07 EFFDATE must be the standard generation, except era-banded
+            # (PLAN, EFFDATE) generations declared by the PSUBSSEG scope manifest
+            if row["EFFDATE"] != S.STANDARD_EFFDATE and \
+                    (plan, row["EFFDATE"]) not in allowed_gen:
                 _issue(issues, "V07", "BLOCKER", table,
                        f"EFFDATE '{row['EFFDATE']}' != {S.STANDARD_EFFDATE} key={key}")
 
@@ -116,8 +126,10 @@ def validate(grids, factor_rows_by_table, fmt_issues, key_rows_by_table,
             seg = (row["PLAN"], row["GENDER"], row["UWCLASS"], row["BAND"],
                    row["ISSCNTRY"], row["ISSUEST"], row["EFFDATE"])
             keyset.add(seg)
-            # V07 EFFDATE must be the authoritative standard generation (key rows)
-            if row["EFFDATE"] != S.STANDARD_EFFDATE:
+            # V07 EFFDATE must be the standard generation (key rows), except
+            # era-banded generations declared by the PSUBSSEG scope manifest
+            if row["EFFDATE"] != S.STANDARD_EFFDATE and \
+                    (row["PLAN"], row["EFFDATE"]) not in allowed_gen:
                 _issue(issues, "V07", "BLOCKER", kt,
                        f"key EFFDATE '{row['EFFDATE']}' != {S.STANDARD_EFFDATE} {seg}")
             # V04 no duplicate key rows

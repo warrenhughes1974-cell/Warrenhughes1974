@@ -8,7 +8,10 @@
 
 ## Purpose
 
-Ensure the issue fix did **not break unrelated conversion behavior**: other tables, fields, row counts, schema integrity, and **prior issue fixes** (#25 MPOLICY, #26 MPREM). Validation proves the fix works; Regression proves nothing else broke.
+Ensure the issue fix did **not break unrelated conversion behavior**: other tables, fields, row counts, schema integrity, and **prior closed fixes**. Validation proves the fix works; Regression proves nothing else broke.
+
+**Prior-fix catalog:** `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md` (Framework rule 12). Always spot-check #25 MPOLICY and #26 MPREM; also sample other Closed rows that share touched tables.  
+**Full release / cut proof (default Luna):** use the guide’s **Luna / Composer release checklist** and `python tools/validators/validate_release_closed_issues.py`.
 
 ---
 
@@ -29,8 +32,9 @@ Ensure the issue fix did **not break unrelated conversion behavior**: other tabl
 1. **Row count comparison** — quikmstr, quikridr, quikprmh, quikplan, quikclid, quikclnt (+ issue-specific tables)
 2. **Non-target field diff** — affected table(s): all columns except intentional change
 3. **Prior fix spot-checks:**
-   - Issue #25: MPOLICY 10-char width on sample policies
+   - Issue #25: MPOLICY width / Issue #2 source+C width-11 on sample policies (per current closed rule)
    - Issue #26: MPREM = ANN_PPU where populated; MMODPREM stable
+   - From `Completed_Issues_Release_Validation_Guide.md`: any Closed issues whose Output tables overlap this change — re-run listed validators or source checks
 4. **Schema manifest** — field order/types unchanged (AGENTS.md)
 5. **MRIDRID / crosswalk** — no new blank keys introduced (if applicable)
 6. Optional: run `_run_full_batch_test.py` if batch not already run post-fix
@@ -64,7 +68,8 @@ Include:
 
 - [ ] Row counts stable (except intentional target changes)
 - [ ] Unrelated fields unchanged
-- [ ] #25 / #26 preservation verified
+- [ ] #25 / #26 (and #2 policy-key) preservation verified
+- [ ] Overlapping Closed rows from Completed Issues guide spot-checked
 - [ ] Regression report published
 - [ ] No schema integrity violations
 

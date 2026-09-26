@@ -1,0 +1,2 @@
+ID	Status	Short Name 	Description	Date Raised	Priority (Go-No Go)	Issue Owner	Assigned 	Date Resolved	Notes
+L14	Ready for Client UAT	L14 CV Dur Off-by-One	L14/1L14SC QuikCvs cash values one duration late vs LifePRO (Dur2=14.73 at Dur3; terminal 1000 missing). Extension of #37 CV placement; #98 GL85 remains regression control.	2026-08-05	Go-No Go	Eric	Warren		v58.82: L14 CV identity Dur N→N; F/69 Dur2=14.73 Dur31=1000; F/45 Dur2=8.37; #98 PASS; release smoke L14 PASS; Grok audit PASS. Rates re-emitted; Append Tool for DBF. Detail: Issue_Log_Items/Issue_L14/

@@ -40,6 +40,7 @@ Implement the **approved** fix from Planning + Risk. Changes must be minimal, is
 2. Confirm exact rulebook line(s) to change
 3. Identify whether fix is rulebook-only, engine hook, or new table path
 4. Plan version bump if `app.py` modified (per AGENTS.md)
+5. Skim `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md` for Closed issues that own the same Output tables — do not regress them
 
 ---
 
@@ -47,7 +48,7 @@ Implement the **approved** fix from Planning + Risk. Changes must be minimal, is
 
 1. **Surgical code/rulebook diff** (minimal blast radius)
 2. **Version bump** in `app.py` / `QLA_Migration/app.py` header if engine touched
-3. **Validation script** — `QLA_Migration/_validate_issue<id>_*.py`
+3. **Validation script** — fail-closed against Output (`QLA_Migration/_validate_issue<id>_*.py` or `tools/validators/validate_issue<id>_*.py`). Exit 1 if the fix is missing. Closure will register this in `SMOKE_JOBS`.
 4. **Implementation summary** in issue folder: `Issue_<ID>_Implementation_Notes.md`
 5. Before/after trace table for example policies
 6. List of files changed (for Validation Agent)
@@ -59,6 +60,8 @@ Implement the **approved** fix from Planning + Risk. Changes must be minimal, is
 - Do NOT change crosswalk behavior unless issue requires it
 - Do NOT break Issue #25 `format_qladmin_mpolicy()` behavior
 - Do NOT revert Issue #26 `ANN_PREM_PER_UNIT` → `MPREM` + fallback
+- Do NOT regress Closed behaviors listed in `Completed_Issues_Release_Validation_Guide.md` for overlapping tables
+- If the approved fix would **conflict with** a Closed guide row: **stop and notify Warren** before coding; do not implement the override until Warren approves (Framework rule 13)
 - Prefer rulebook + minimal engine hook over new frameworks
 
 ---

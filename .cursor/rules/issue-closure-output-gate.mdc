@@ -20,6 +20,13 @@ Before status **Closed** (or “CLOSED ✓” / “RELEASED” treated as client
 
 3. **Affected tables published** to `Output/Test_Validation/` on PASS (see `test-validation-folder.mdc`) so partial UAT reload matches what was proven.
 
+4. **Completed Issues Release Validation Guide updated** — add/update the Closed row in  
+   `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`  
+   (Resolution, Output tables, LifePRO source validation method, validator, examples).  
+   Same commit as Closure. Applies to all models including Luna. See Framework rule 12.
+
+5. **Always-on smoke registered** — fail-closed validator (exit 1 if the fix is missing from Output) added to `SMOKE_JOBS` in `tools/validators/validate_release_closed_issues.py`, listed in the guide high-risk smoke table, and proven PASS via `--smoke-only`. Do not Close without it (Framework rule 14 / `.cursor/rules/closed-issue-smoke-test.mdc`).
+
 ## Do not close if
 
 | Condition | Required status instead |
@@ -28,6 +35,8 @@ Before status **Closed** (or “CLOSED ✓” / “RELEASED” treated as client
 | Accountability **GAP** for this issue | Ready for Validation — fix Output / re-batch |
 | Fix only in code or `Test_Validation`, absent from full Output | Ready for Validation — full batch required |
 | Validation/Regression PASS but Output stale vs this commit | Re-batch, then re-validate before Closure |
+| Guide row missing/stale for this Closed issue | Stay Ready for Client UAT / Closure incomplete — update guide |
+| Smoke job not in `SMOKE_JOBS` / `--smoke-only` does not run it | Stay Ready for Client UAT — register smoke (rule 14) |
 
 ## Waivers
 
@@ -36,6 +45,10 @@ Only the **user** may waive this gate (document reason + date in the resolution 
 ## Related
 
 - `AI_Agents/Closure_Agent.md` (G7 checklist)
-- `AI_Agents/Framework.md` (G7 criteria)
+- `AI_Agents/Framework.md` (G7 criteria + rule 12)
+- `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`
 - `tools/validators/validate_issue_log_accountability.py`
 - `.cursor/rules/test-validation-folder.mdc`
+- `.cursor/rules/completed-issues-release-guide.mdc`
+- `.cursor/rules/closed-issue-smoke-test.mdc`
+- Release handoff gate: `tools/validators/validate_release_closed_issues.py`

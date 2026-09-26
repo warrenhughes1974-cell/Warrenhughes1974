@@ -1,0 +1,48 @@
+---
+description: QLAdmin DBFs must be APPENDED via Desktop DBF Append Tool — never recreated as one-offs
+alwaysApply: true
+---
+
+# DBF Append Only (locked 2026-08-06)
+
+## Hard rule
+
+**Never recreate / wipe / schema-build QLAdmin `.dbf` tables as one-offs.**
+
+All conversion DBFs (except memo/claims special packaging below) must be produced by the **Desktop DBF Append Tool**:
+
+- Path: `C:\Users\warren\Desktop\DBF_Append_Tool\`
+- Headless: `run_append_batch.bat` or `python src\run_append_batch.py`
+- GUI: `run_app.bat` → **EXECUTE APPEND PROCESS**
+- Engine: `src\append_engine.py` — copy master template, **APPEND** CSV rows after existing records
+
+## Allowed packaging flow
+
+1. Conversion writes `QLA_Migration/Output/quik*.csv` (+ `rates/`).
+2. Publish safe CSVs to Append Tool `input/` (`qla_core/dbf_append_tool_package.py`).
+3. Run Append Tool APPEND onto `templates/` masters → `output/`.
+4. Place `quikmemo` / `quikclms` / `quikclmp` via dedicated generators (Append EXECUTE blanks MEMO fields — those three stay excluded from Append input).
+
+Repo helper that must call the tool (not rewrite DBFs itself):
+
+- `Issue_Log_Items/Issue_A/tools/build_full_dbf_append_package.py`
+
+## After every full / new batch (Warren 2026-08-26)
+
+Do **not** stop at `QLA_Migration/Output` CSVs. Always run the official package script so Desktop `DBF_Append_Tool\input\` **and** `output\` match the batch just finished.
+
+- Headless APPEND only — do not pop the GUI (`QLA_LAUNCH_DBF_APPEND_TOOL=0` stays).
+- `python Issue_Log_Items/Issue_A/tools/build_full_dbf_append_package.py`
+- Confirm `QuikIsrr.dbf` / `quikmstr.dbf` (and other load tables) have **today’s** timestamp in `C:\Users\warren\Desktop\DBF_Append_Tool\output\`
+- Headless `run_full_batch_test.py` already runs this after release-gate smokes PASS
+
+## Forbidden
+
+- Truncating template data / setting `num_records = 0` / “structure only” rebuilds
+- In-repo `_append_csv_to_dbf` or `dbf.create` / pandas→DBF one-offs for load tables
+- Building a fresh DBF from field definitions instead of copying the master template
+- Leaving hand-built DBFs in `Output/` as the client load path
+
+## If a template is wrong
+
+Fix or replace the **master template** under `DBF_Append_Tool\templates\`, then APPEND again. Do not invent a parallel writer.

@@ -253,7 +253,7 @@ def iter_l17_rv_expanded_transforms(
                 continue
 
             gender = S.map_sex(sex)
-            uwclass = S.map_uwclass(uw)
+            uwclass = S.map_uwclass(uw, coverage_id=row.get("COVERAGE_ID", ""))
             band2 = S.map_band(band)
             if gender is None or uwclass is None or band2 is None:
                 continue

@@ -2,7 +2,9 @@
 
 **Stage:** 8 of 8  
 **Code changes:** **Prohibited** (documentation only)  
-**Assigned model (locked 2026-07-22):** **Cursor Grok 4.5** — change only if user manually overrides Framework / stage-agents rule
+**Assigned model (locked 2026-07-22):** **Cursor Grok 4.5** — change only if user manually overrides Framework / stage-agents rule  
+**All models (incl. Luna):** must update `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md` before Closed (Framework rule 12)  
+**Release proof (default Luna):** follow guide section **Luna / Composer release checklist** + `validate_release_closed_issues.py`
 
 ---
 
@@ -67,6 +69,7 @@ Also update (required at G7):
 
 - `Issue_Log_Items/Issue_Log_Master_Tracking_Sheet.md` → status **Closed** + **Resolution** column/field
 - Sub-tracking sheet row if applicable — include **Resolution:** line in the row (Description or dedicated column)
+- **`Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`** → add/update the Closed row (Resolution, Output tables, Source validation method, Validator, Examples) so every release can re-prove the fix
 - **`app.py` / `QLA_Migration/app.py` version bump** when batch or rate pipeline changed (sync both files)
 - **Git:** stage issue-scoped files only → commit → **`git push -u origin HEAD`** (user-approved branch)
 - Resolution summary records **commit hash** and **remote branch** for network rollout
@@ -115,6 +118,7 @@ An issue must **not** be marked **Closed** until the fix is proven in **full** `
    `python tools/validators/validate_issue_log_accountability.py`  
    (or an equivalent spot-check recorded in the resolution summary). **GAP blocks Closure.** Environmental WARN is allowed.
 3. **Publish** modified tables to `Output/Test_Validation/` on PASS (partial UAT reload).
+4. **Always-on smoke registered** — fail-closed validator in `SMOKE_JOBS` (`tools/validators/validate_release_closed_issues.py`), guide high-risk row, `--smoke-only` PASS for this issue. Do not Close without it (Framework rule 14).
 
 Record validator command + accountability status (**IN_DATA**) in `Issue_<ID>_Resolution_Summary.md`.
 
@@ -125,6 +129,8 @@ Record validator command + accountability status (**IN_DATA**) in `Issue_<ID>_Re
 - [ ] **`Resolution:`** one-line fix summary published (paste-ready)
 - [ ] Resolution summary published (long-form)
 - [ ] Tracking sheets updated with **Resolution** + status **Closed**
+- [ ] **Completed Issues Release Validation Guide** row added/updated (`Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`)
+- [ ] **Always-on smoke:** fail-closed job in `SMOKE_JOBS`; `--smoke-only` PASS for this issue
 - [ ] All artifact paths linked
 - [ ] Status set to **Closed** in tracking
 - [ ] No open blockers without owner
@@ -156,6 +162,8 @@ Produce Issue_<ID>_Resolution_Summary.md suitable for issue log and client reado
 Lead with the required **`Resolution:`** one-line fix summary.
 Cite Output gate evidence (validator + IN_DATA).
 Update tracking sheet to Closed and include the same Resolution line.
+Add/update the Closed row in Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md
+(Resolution, Output tables, how to validate from LifePRO source, validator command, examples).
 If Development touched code: bump app.py version, commit issue-scoped files, git push to remote.
 Record commit hash in resolution summary.
 

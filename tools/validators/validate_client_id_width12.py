@@ -10,10 +10,9 @@ Usage:
 """
 from __future__ import annotations
 
+import csv
 import sys
 from pathlib import Path
-
-import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
@@ -47,31 +46,36 @@ def main() -> int:
         if not path.is_file():
             errors.append(f"missing {name}")
             continue
-        df = pd.read_csv(path, dtype=str).fillna("")
-        cols = {c.strip().upper(): c for c in df.columns}
-        for field in CLIENT_ID_TARGET_FIELDS:
-            src = cols.get(field)
-            if not src:
+        # csv.reader — pandas read_csv dtype=str still strips leading spaces on
+        # numeric-looking IDs (e.g. '      314894' becomes '  314894').
+        with path.open(newline="", encoding="utf-8-sig", errors="replace") as f:
+            rd = csv.DictReader(f)
+            if not rd.fieldnames:
+                errors.append(f"{name}: empty header")
                 continue
-            for idx, raw in enumerate(df[src].astype(str).tolist()):
-                if not str(raw).strip():
-                    continue
-                checked += 1
-                expected = format_qladmin_mclientid(raw)
-                if raw != expected:
-                    if len(errors) < 12:
-                        errors.append(
-                            f"{name}.{field} row{idx}: got {raw!r} expected {expected!r}"
-                        )
-                    else:
-                        errors.append("…")
-                        print(
-                            f"FAIL: client-ID width-12 — {len(errors)}+ mismatches "
-                            f"(checked {checked})"
-                        )
-                        for e in errors[:12]:
-                            print(" ", e)
-                        return 1
+            cols = {c.strip().upper(): c for c in rd.fieldnames if c}
+            field_map = {field: cols[field] for field in CLIENT_ID_TARGET_FIELDS if field in cols}
+            for idx, row in enumerate(rd):
+                for field, src in field_map.items():
+                    raw = row.get(src) or ""
+                    if not str(raw).strip():
+                        continue
+                    checked += 1
+                    expected = format_qladmin_mclientid(raw)
+                    if raw != expected:
+                        if len(errors) < 12:
+                            errors.append(
+                                f"{name}.{field} row{idx}: got {raw!r} expected {expected!r}"
+                            )
+                        else:
+                            errors.append("…")
+                            print(
+                                f"FAIL: client-ID width-12 — {len(errors)}+ mismatches "
+                                f"(checked {checked})"
+                            )
+                            for e in errors[:12]:
+                                print(" ", e)
+                            return 1
 
     if errors:
         print(f"FAIL: client-ID width-12 — {len(errors)} issues (checked {checked})")

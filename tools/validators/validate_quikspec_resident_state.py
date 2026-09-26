@@ -18,9 +18,12 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from qla_core.lifepro_source_resolver import resolve_table_source  # noqa: E402
 from qla_core.normalize_utils import format_qladmin_mpolicy, normalize  # noqa: E402
 from qla_core.run_logging import _is_allowed_output_table_csv  # noqa: E402
+from qla_core.valuation_date import (  # noqa: E402
+    resolve_valuation_date_yyyymmdd,
+    select_ppolc_path,
+)
 
 OUT = ROOT / "QLA_Migration" / "Output"
 SPEC = OUT / "quikspec.csv"
@@ -32,9 +35,14 @@ REQUIRED_COLS = ("MPOLICY", "VANISH", "VANISHDT", "RESSTATE", "RESRVCAT")
 
 
 def _load_ppolc_res_state(src_dir: Path) -> dict[str, str]:
-    path, _label = resolve_table_source(str(src_dir), "quikspec")
-    if not path:
-        path, _label = resolve_table_source(str(src_dir), "quikmstr")
+    """Load RES_STATE from the PPOLC that matches QLA_VALUATION_DATE.
+
+    Do not pick the newest file on Source root — that can be a prior cut
+    (e.g. 6/30) while Output was built from LifePRO_Extracts_YYYYMMDD.
+    """
+    vd, vd_src = resolve_valuation_date_yyyymmdd(source_dir=src_dir)
+    path = select_ppolc_path(src_dir, vd)
+    print(f"PPOLC source: {path} ({vd_src})")
     if not path or not Path(path).is_file():
         raise FileNotFoundError(f"PPOLC extract not found under {src_dir}")
 

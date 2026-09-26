@@ -11,6 +11,17 @@ Display status for phase 1 mirrors the existing phase-1 MPHSTAT inherit rule
 (app.py BASE PHASE TERMINAL STATUS SYNCHRONIZATION): if provisional MSTATUS is
 not in {"", "11", "22", "ACTIVE"}, phase 1 displays provisional MSTATUS;
 later phases use bare-letter STATUS_CODE translation only.
+
+Issue #133: a later PUA (paid-up addition, BENEFIT_TYPE "PU") phase mirrors the
+same terminal-status inheritance already applied to quikridr PUA rows by
+Issue #160 (app.py `_apply_pua_rider_inheritance`). When the base (phase 1)
+display status is terminal (>=50, excluding 44/45), a later PUA phase's
+display status inherits the base's display status instead of its own
+bare-letter STATUS_CODE translation. This prevents a PUA benefit that
+LifePRO still shows coded "A"/Active from re-activating the quikmstr.MSTATUS
+header via the Issue #49 first-active-later-phase override. Non-PUA later
+phases (riders such as SU/OR) are unaffected — that population is the
+already-Closed Issue #49 override set and must not change.
 """
 
 from __future__ import annotations
@@ -21,7 +32,10 @@ from typing import Callable, Dict, List, Optional, Sequence, Tuple
 # Mirror app.py phase-1 inherit block list (do not widen to full 0–49 here).
 PHASE1_INHERIT_BLOCK = frozenset({"", "11", "22", "ACTIVE"})
 
-PhaseRow = Tuple[int, int, str]  # (benefit_seq, source_row_order, status_code)
+# Issue #133 / #160: BENEFIT_TYPE values treated as paid-up-addition benefits.
+PUA_BENEFIT_TYPES = frozenset({"PU"})
+
+PhaseRow = Tuple[int, int, str, str]  # (benefit_seq, source_row_order, status_code, benefit_type)
 
 
 def parse_status_int(raw) -> Optional[int]:
@@ -78,14 +92,22 @@ def simulate_display_phase_statuses(
         provisional = provisional[:-2]
 
     display: List[str] = []
-    for idx, (_seq, _ord, status_code) in enumerate(phases):
+    base_num: Optional[int] = None
+    for idx, phase_row in enumerate(phases):
+        seq, ord_, status_code = phase_row[0], phase_row[1], phase_row[2]
+        benefit_type = str(phase_row[3]).strip().upper() if len(phase_row) > 3 else ""
         translated = translate_phase_status_code(status_code, bare_status_map)
         if idx == 0:
             if provisional not in PHASE1_INHERIT_BLOCK and parse_status_int(provisional) is not None:
-                display.append(provisional)
-            else:
-                display.append(translated)
+                translated = provisional
+            base_num = parse_status_int(translated)
+            display.append(translated)
         else:
+            # Issue #133: later PUA phase mirrors quikridr's Issue #160 terminal
+            # inheritance so a LifePRO-"Active"-coded PUA cannot reactivate the
+            # quikmstr.MSTATUS header when the base is genuinely terminal.
+            if benefit_type in PUA_BENEFIT_TYPES and base_num is not None and base_num >= 50 and base_num not in (44, 45):
+                translated = display[0]
             display.append(translated)
     return display
 
@@ -127,10 +149,12 @@ def build_ppben_phase_cache(
 ) -> Dict[str, List[PhaseRow]]:
     """
     Map normalized LifePRO POLICY_NUMBER -> ordered phase rows
-    (benefit_seq, source_row_order, STATUS_CODE).
+    (benefit_seq, source_row_order, STATUS_CODE, BENEFIT_TYPE).
 
     Aligns with quikridr emit filters: drop BENEFIT_TYPE UV/FV/SL and
     non-numeric / <1 BENEFIT_SEQ so selection matches QLAdmin phases.
+    BENEFIT_TYPE is carried through for Issue #133 (PUA terminal-status
+    inheritance in the #49 header override simulation).
     """
     import pandas as pd
 
@@ -166,7 +190,8 @@ def build_ppben_phase_cache(
             continue
         seq = int(seq_raw)
         status_code = str(row.get("STATUS_CODE", "")).strip()
-        cache.setdefault(pol, []).append((seq, row_ord, status_code))
+        benefit_type = str(row.get("BENEFIT_TYPE", "")).strip().upper()
+        cache.setdefault(pol, []).append((seq, row_ord, status_code, benefit_type))
 
     for pol, rows in cache.items():
         rows.sort(key=lambda t: (t[0], t[1]))

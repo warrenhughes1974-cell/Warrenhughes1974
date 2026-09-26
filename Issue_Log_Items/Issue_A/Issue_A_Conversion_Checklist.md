@@ -45,10 +45,11 @@ When Robert (or internal review) finds another plan-setup defect:
 When the user asks to run a conversion / full batch / re-emit / production package:
 
 1. Open this file.
-2. Against the **new** `QLA_Migration/Output/` (and `rates/` if emitted), evaluate every **OPEN** check.
-3. Append a **Run log** below with date, engine version, source package, and PASS/FAIL per ID.
-4. Call out FAIL plan codes (sample or full list in `Issue_Log_Items/Issue_A/Reports/` if large).
-5. Do not claim conversion “clean” if any OPEN check FAILs unless user waives in writing.
+2. If this conversion is an **older policy cut** than the newest plan/rate package, keep `quikplan` + `Output/rates/` (do not rebuild). Confirm the PLAN-KEEP smoke PASS.
+3. Against the **new** `QLA_Migration/Output/` (and `rates/` if emitted), evaluate every **OPEN** check.
+4. Append a **Run log** below with date, engine version, source package, and PASS/FAIL per ID.
+5. Call out FAIL plan codes (sample or full list in `Issue_Log_Items/Issue_A/Reports/` if large).
+6. Do not claim conversion “clean” if any OPEN check FAILs unless user waives in writing.
 
 ---
 
@@ -610,3 +611,560 @@ Notes:
 - Anchor `9010331768C` → MLOANPRIN/MLOANBAL=3331.46; MLOANINT=5.00; MLOANINTX=A; MLOANACCR=0.00.
 - Smoke: `python tools/validators/validate_issue104_loan_pilot.py` PASS.
 - Batch log: `QLA_Migration/Logs/_full_batch_test_log.txt`.
+
+### Run 2026-08-13 — app.py v58.94 — Rates-only re-emit (CV first-duration PDAGE-truth fix, Issues 37/41/98 lineage)
+
+Operator: Agent (Warren-approved Development: CV duration placement from PDAGE native grid)  
+Scope: **`rate_loader_emit.py --csv-only` rates re-emit only** — no policy batch, no quikplan/product setup regeneration  
+Source: Rate_Table_Extract_20260427 (resolver fallback; `Source/Rate_Table_Extract_Txt.txt` absent) + PDAGE/PAAGERAT/PAAGE 20260714  
+Result summary: rate emit **SUCCESS blockers=0 tables=23** · CV source-identity **95.18% at offset 0** (traditional book 100%) · plan checks not in scope N/A
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | N/A | quikplan not regenerated this run |
+| A2 | N/A | quikplan not regenerated |
+| A3 | N/A | PVO keys not re-scored |
+| A4 | **PASS** | 0 blank-PLAN rows across `Output/rates/*.csv` |
+| A5 | N/A | Basis out of scope |
+| A6 | N/A | Category/key flags not re-scored |
+| A7 | **OPEN** | VARGP / Item 09 unchanged; awaiting Eric |
+| A8a–A8e | N/A | Annuity plan fields not regenerated |
+| A9a/A9b | N/A | Prefix-9 plan fields not regenerated |
+| A10 | **PASS** | QuikUwpo 7 rows (00/BL/NT/PQ/PR/SM/ST); 0 dupes |
+| A11h/#136 | N/A | PVO variation flags not re-scored (quikplan untouched) |
+| A12 | N/A | Client tables not regenerated |
+
+Notes:
+- **CV fix (v58.94):** `cv_lifepro_first_duration` guess replaced by PDAGE native first non-zero year per (coverage, sex, age) — `load_cv_native_first` in `qla_core/rate_factor_loader.py`; wired through `rate_pipeline` + `cv_inheritance_loader`. Fallback to legacy guess only when PDAGE lacks the slice (row-flagged `cv_first_fallback`).
+- Independent validator `tools/validators/validate_rate_source_identity.py`: CV leg-1 95.18% at offset 0 (was per-age split ±1); 170858/17085M/170588 + CEN/SAL/END/ME65/CSI = 100.00%. CV policy dollars: 447 Valx policies, 446 land on the loaded grid.
+- Closed-issue anchors re-proven on this Output: Issue 98 endpoint PASS; Issue L14 PASS; Issue 106 QuikTvs PASS; `tests/test_cv_l14_duration_identity.py` 3/3.
+- Residual CV exceptions (pre-existing, not from this fix): `196085` loaded CV matches no LifePRO source (coverage `960 LP85-M` has zero CV rows in Rate_Table AND PDAGE; 1 in-force Valx policy fails dollar check) — needs own issue; `1658C1` 94.06%; `1L17SP` (fund/expand path); `A96DAR` 86.93%; `1L14SC` offset −1 vs PDAGE native is the client-confirmed L14 screen identity, not a defect.
+- Pre-existing test failures (proven on unmodified code via stash): `test_quiktvs_l17_rv` ×2 + `test_validate_issue96_cso_pvo` integration — L17 anchor expectations tied to archived 20260731 PDAGE cut; active cut is 20260714.
+- Published `Output/Test_Validation/rates/QuikCvs.csv` (hash-verified).
+- Evidence: `QLA_Migration/Validation/rate_source_identity/` (grid_identity_by_plan.csv, policy_dollar_by_plan.csv, summary.json).
+- **Same-day revision (Eric workbook `docs/Rates of Identified Issues - 8.13.26.xlsx`):** native-first + fnz maps re-keyed to (cov, sex, age, band, uw) — UW classes of one coverage can start in different years (L10 PRE97 F/3: B/P year 7 vs S year 6). Re-emit: CV grid identity 95.52%, policy dollars 418/447 at offset 0; Eric anchors 1L10OD/17085M/1960PO/1960OL CV all exact; closed anchors 98/L14/106 still PASS. Outstanding from Eric's file (need Warren approval / new issues): L14 CV still off 1 (frozen identity rule), DV family off 1 fleet-wide, PUA plans (1708PA/1960PA) missing CV factors, L14 UW classes (Q vs NT; PQ/PR/ST factors), 17085M premium-history gap, 1960PO bogus 7/29/2026 dividend-history row.
+
+### Run 2026-08-13 — app.py v58.95 — Rates-only re-emit (Warren "fix everything": L14 unfreeze + DV native identity + PUA CV loader)
+
+Operator: Agent (Warren approval in chat 2026-08-13 "Please fix everything")  
+Scope: **rates re-emit only** — no policy batch, no quikplan regeneration  
+Source: Rate_Table_Extract_20260427 (resolver fallback) + PDAGE/PAAGERAT/PAAGE 20260714  
+Result summary: rate emit **SUCCESS blockers=0 tables=23 csv rows=180880** · CV 95.53% / DV 89.98% / RV 90.67% at offset 0
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | N/A | quikplan not regenerated this run |
+| A2 | N/A | quikplan not regenerated |
+| A3 | N/A | PVO keys not re-scored |
+| A4 | **PASS** | 0 blank-PLAN rows across `Output/rates/*.csv` |
+| A5 | N/A | Basis out of scope |
+| A6 | N/A | Category/key flags not re-scored |
+| A7 | **OPEN** | VARGP / Item 09 unchanged; awaiting Eric |
+| A8a–A8e | N/A | Annuity plan fields not regenerated |
+| A9a/A9b | N/A | Prefix-9 plan fields not regenerated |
+| A10 | **PASS** | QuikUwpo 7 rows; 0 dupes |
+| A11h/#136 | N/A | PVO variation flags not re-scored (quikplan untouched) |
+| A12 | N/A | Client tables not regenerated |
+
+Notes:
+- **L14 unfreeze (closed-row override, Warren approved):** `CV_IDENTITY_DURATION_COVERAGES` emptied; L14 now uses the PDAGE native-first remap. 1L14SC M/54: 20.94@3, 538.30@24, 1000@46 (matches Eric's LifePRO screen); F/69 unchanged; F/45 terminal 1000 now @55 (attained 100). Closed L14 validator + `tests/test_cv_l14_duration_identity.py` rewritten to the native gold; PASS.
+- **DV native identity (family convention change):** `duration_to_ql_for_type` routes DV like RV (#106 identity). Proven safe first: all 1,020 extract DV subslices have first-nonzero shift 0 vs PDAGE native. QuikDvs DV0 blank-filled with numeric zero (mirror of #106 TV0 fill; `apply_quikdvs_dv0_blank_fill`). Eric anchors: 17085M 18.52@56/19.03@57, 1960PO 22.24@57/22.61@58 exact. Leg-2 policy dollars: 185/186 paid dividends triangulate at offset 0 (validator DV year convention corrected to native py, comment in validator).
+- **PUA CV loader (new):** `qla_core/paagerat_cv_loader.py` + config `pua_cv` emits PAAGERAT TYPE=CV attained-age grids for 121PUA/165PUA/170PUA/185PUA/1OLPUA/1POPUA/1970PA on the Issue 140 slot axis (91 QuikCvs rows; gendered QuikPlCv keys created). All 7 plans grid-identical to PAAGERAT at offset 0; 170PUA M@60=667.90 and 1POPUA M@84/85=837.29/844.99 bracket Eric's implied 668.16/840.52 (LifePRO mid-year interpolation). Attained-100 cell caps to 99 per MAX_AGE (Issue 140 convention; 1 cell/sex on 1OLPUA/1POPUA).
+- **Stale-test repair:** `test_quiktvs_l17_rv` ×2 + Issue 96 validator anchors were pinned to retired UW class SM; Issue #118 maps LifePRO S→ST. Updated to ST; full pytest suite now **84 passed, 1 skipped, 0 failed**; Issue 96 validator PASS.
+- Closed anchors re-proven on this Output: Issue 98 PASS, Issue L14 (revised) PASS, Issue 106 PASS, Issue 96 PASS.
+- Published `Output/Test_Validation/rates/`: QuikCvs.csv, QuikDvs.csv, QuikPlCv.csv.
+- Validator upgrades: leg-1 CV now validates attained-age (PUA) plans against PAAGERAT CV (plans whose rows are all AGE=00); leg-2 DV year convention native (Eric-proven).
+- Remaining rate exceptions (pre-existing, own issues): `196085` CV/DV matches no LifePRO source (no CV rows in Rate_Table or PDAGE for `960 LP85-M`); NP family fleet at −1 (62.65%, level-NP lineage); DB family −1 (Wave-2 attained-age comparison artifact); `A96DAR` 84%; `1L17SP` CV (fund path); `280END`/`280PUA` DV 94% at 0 = Rate_Table 20260427 vs PDAGE 20260714 dividend-scale drift (source freshness, needs newer Rate_Table extract or PDAGE-preferred merge).
+- Eric items **not code-fixable from current sources** (data requests / client answers needed): 17085M tax-screen Premiums Paid 5,720.27 has no field in any extract (QLAdmin's 5,489.63 is its own calc) — need LifePRO tax accumulator extract; L14 UW classes — PDAGE carries only N-class L14 CV rates, need Eric's PQ/PR/ST rates or confirmation N applies; 1960PO "bogus 7/29/2026 dividend row" — current quikbenh has a clean 1/28 anniversary series (283.20→333.60) with no 7/29 row, so the artifact was in the earlier loaded cut (re-load Test_Validation and re-check).
+
+### Run 2026-08-13 — app.py v58.95 — DBF Append Tool package (new rates + current Output CSVs)
+
+Operator: Agent (Warren: produce all new rates and put them into DBF via append tool)  
+Scope: **no new rate emit** — used the same-day v58.95 `Output/rates/` already on disk; published CSVs to Desktop Append Tool `input/`; APPEND onto master templates → `output/`  
+Source: existing `QLA_Migration/Output/` (policy CSVs from last full batch + v58.95 rates)  
+Result summary: **FULL_DBF_APPEND PASS** · 43/43 files · memo OK · claims OK
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | N/A | quikplan not regenerated; last batch reused |
+| A2 | N/A | unchanged; awaiting CSO |
+| A3 | N/A | PVO keys not re-scored |
+| A4 | **PASS** | 0 blank-PLAN on QuikPl* / factor tables (QuikCvs/Dvs/Gps/Nps/Tvs). QuikUwpo/QuikUint/QuikAint have no PLAN field by design |
+| A5 | N/A | Basis not re-scored |
+| A6 | N/A | Category flags not re-scored |
+| A7 | **OPEN** | VARGP / Item 09 unchanged; awaiting Eric |
+| A8a–A8e | N/A | Annuity fields not regenerated |
+| A9a | **OPEN** | Supp type unchanged; awaiting Eric |
+| A9b | N/A | Prefix-9 PAR not regenerated |
+| A10 | **PASS** | QuikUwpo 7 codes appended (template kept 1 master row) |
+| A11h/#136 | N/A | PVO flags not re-scored |
+| A12 | N/A | Client tables from last batch; high-water not re-run |
+
+Notes:
+- Append path: `python Issue_Log_Items/Issue_A/tools/build_full_dbf_append_package.py` (Desktop `DBF_Append_Tool` only; no in-repo DBF rewrite).
+- Rate DBFs written to `C:\Users\warren\Desktop\DBF_Append_Tool\output\`: QuikCvs 38,490 rows; QuikDvs 7,484; QuikGps 2,219; QuikNps 52,483; QuikTvs 54,642; plus keys/UW/COI/NFF/Uint.
+- Conversion is **not** clean: A7 and A9a remain OPEN (pre-existing, awaiting Eric). Do not treat this package as a full Issue A sign-off.
+- Evidence: `Issue_Log_Items/Issue_A/evidence/full_dbf_append_package_summary.json`
+
+### Run 2026-08-14 — app.py v58.95 — Rates-only re-emit + DBF Append for Eric region
+
+Operator: Agent (Warren: rebuild all rate tables, check they are good, move to Eric's region)  
+Scope: **rates re-emit only** via production `run_rate_emit` (no policy batch, no quikplan regeneration), then official Desktop DBF Append  
+Source: Rate_Table_Extract_20260427 (resolver fallback; `Source/Rate_Table_Extract_Txt.txt` absent) + PDAGE/PAAGERAT/PAAGE 20260714  
+Valuation: `QLA_VALUATION_DATE=20260630` (same 6/30 policy book already in Output)  
+Result summary: rate emit **SUCCESS blockers=0 tables=23 csv rows=180880** · **FULL_DBF_APPEND PASS** 43/43 · closed anchors PASS · source-identity overall FAIL (known residuals)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | N/A | quikplan not regenerated this run |
+| A2 | N/A | unchanged; awaiting CSO |
+| A3 | N/A | PVO keys not re-scored |
+| A4 | **PASS** | 0 blank-PLAN rows across `Output/rates/*.csv` |
+| A5 | N/A | Basis not re-scored |
+| A6 | N/A | Category flags not re-scored |
+| A7 | **OPEN** | VARGP / Item 09 unchanged; awaiting Eric |
+| A8a–A8e | N/A | Annuity fields not regenerated |
+| A9a | **OPEN** | Supp type unchanged; awaiting Eric |
+| A9b | N/A | Prefix-9 PAR not regenerated |
+| A10 | **PASS** | QuikUwpo 7 codes (00/BL/NT/PQ/PR/SM/ST); 0 dupes |
+| A11h/#136 | N/A | PVO flags not re-scored (quikplan untouched) |
+| A12 | N/A | Client tables from last batch; high-water not re-run |
+
+Notes:
+- CV native-first map: 8,210 PDAGE slices. QuikCvs 38,490; QuikDvs 7,484; QuikGps 2,219; QuikNps 52,483; QuikTvs 54,642.
+- Closed validators PASS: Issue 98, L14, 106, 96. Issue #40 inherited CV PASS (10 plans). Issue #118 added 42 QuikPlUw membership rows.
+- Eric 8/13 screen anchors PASS on the UW class he showed: 1L10OD F/03 BL (104@32, 110@33, 1@7, 1000@97); 1L14SC M/54 NT (20.94@3, 538.30@24, 1000@46); 17085M M/03 CV/DV; 1960PO M/26 CV/DV; 1960OL M/25 CV. 1L10OD PR/SM grids are different class factors (not the B-class screenshot). `1708PA`/`1960PA` still have no CV rows (Issue 111).
+- Source-identity overall FAIL (same residuals as 2026-08-13): CV 95.53% / DV 89.98% / RV 90.67% at offset 0; NP 62.65% at −1 (intended NP0=year-1); `196085` no usable CV/DV source; Wave-2 DB −1 artifact; `280END`/`280PUA` DV April vs July scale drift.
+- Published `Output/Test_Validation/rates/` (23 tables). DBFs: `C:\Users\warren\Desktop\DBF_Append_Tool\output\`.
+- Conversion is **not** clean: A7 and A9a remain OPEN. Do not tell Eric the whole book is correct — traditional examples he sent are.
+- Evidence: `QLA_Migration/Reports/rates/rate_csv_manifest.csv`; `Issue_Log_Items/Issue_A/evidence/full_dbf_append_package_summary.json`
+
+### Run 2026-08-19 — app.py v58.97 — quikmstr-only Bank Acct restore for 7/31
+
+Operator: Agent (Warren: Bank Acct fill from `LifePRO_Extracts_20260731` for testing region)  
+Scope: **quikmstr only** — convert from `PPOLC_PolicyMaster_Extract_20260731.csv` with `QLA_VALUATION_DATE=20260731`, then overlay `MBANKNO` from 7/31 PPACH/PPPAC + existing PPCOM ABA lookup. No rates, no other tables.  
+Source: `QLA_Migration/Source/LifePRO_Extracts_20260731`  
+Valuation: `QLA_VALUATION_DATE=20260731`  
+Result summary: Issue #75 validator **PASS** (PAC filled 2078 / blank 51 / invalid 0). Published `Output/Test_Validation/quikmstr.csv`. Working `Output/quikmstr.csv` restored to 6/30 bank-filled copy so Output is not mixed-vintage.
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | N/A | quikplan / rates not regenerated |
+| A2 | N/A | unchanged; awaiting CSO |
+| A3 | N/A | PVO keys not re-scored |
+| A4 | N/A | rate tables not emitted |
+| A5 | N/A | Basis not re-scored |
+| A6 | N/A | Category flags not re-scored |
+| A7 | N/A | VARGP not re-scored |
+| A8a–A8e | N/A | Annuity fields not regenerated |
+| A9a | N/A | Supp type not regenerated |
+| A9b | N/A | Prefix-9 PAR not regenerated |
+| A10 | N/A | QuikUwpo not emitted |
+| A11h/#136 | N/A | PVO flags not re-scored |
+| A12 | N/A | Client tables not regenerated |
+
+Notes:
+- 7/31 PAC universe is 2,129 (vs 2,132 on 6/30). Bank Acct filled 2,078; 51 still blank (no usable routing/account). Bill Acct (`MACCTNO`) still not mapped.
+- Load file for testing region: `QLA_Migration/Output/Test_Validation/quikmstr.csv`.
+- Evidence: `Issue_Log_Items/Issue_75/evidence/quikmstr_20260731_bankfilled.csv`.
+
+### Run 2026-08-23 — app.py v59.01 — Midyear UAT full batch — Source=`PPOLC_PolicyMaster_Extract_20260630.csv`
+
+Operator: Agent (Warren: full 6/30 batch to prove closed items)  
+Env: UAT; `QLA_VALUATION_DATE=20260630`; `QLA_FORCE_PPOLC_EXTRACT` = Source-root 6/30 PPOLC; rates ON; Append GUI OFF  
+Source lock: `QLA_Migration/Source` (PPOLC / PPBEN / PACTG / RNA all `…20260630`); 7/31 folder present but not used  
+Result summary: Conversion CSVs written · release-gate smokes **RELEASE_OK** · Cut Completeness **FAIL** (DBF Append launch skipped) · A1/A2/A4/A10/A12 **PASS**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **PASS** | DEFICIENCY=N 141/141 (still awaiting CSO for Y) |
+| A3 | **BLOCKED** | Default PVO keys — prior open, not this run |
+| A4 | **PASS** | 0 blank-PLAN rows in 10 QuikPl* rate files |
+| A5 | **BLOCKED** | Basis = Valuation_Setup / #80 — not re-opened |
+| A6 | **N/A** | Category checkbox vs keys not re-scored |
+| A7 | **PASS** | Release smoke A7 VARGP/VARDB vs rate grids PASS |
+| A8a | **N/A** | Annuity PAR not re-scored (implemented v58.21) |
+| A8b | **N/A** | Annuity VarDB not re-scored |
+| A8c | **BLOCKED** | Annuity interest — awaiting Eric |
+| A8d | **BLOCKED** | Annuity schg — awaiting Eric |
+| A8e | **N/A** | Annuity PVO defaults not re-scored |
+| A9a | **BLOCKED** | Supp type — awaiting Eric field name |
+| A9b | **N/A** | Prefix-9 PAR not re-scored |
+| A10 | **PASS** | `Output/rates/QuikUwpo.csv` 7 codes: 00/BL/NT/PQ/PR/SM/ST |
+| A11h/#136 | **PASS** | Release smoke #136 PVO flags PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ width-12 release smokes PASS |
+
+Notes:
+- #145B held on this rebatch: QuikIsrr 205 / 50 policies; vanish golds 0 ISRR; units 25/25/50; leftovers $271 and $716.40.
+- #145 VANISH T=636; #139 ISWL gold `9010713704C` fees 0 / MMODEPREM 41.71.
+- Cut Completeness FAIL (4): `quikrein`/`quikrmst` REUSED_EXISTING (no journal); #114 validator FAIL because it still freezes type-8 at 3657 (pre-#145B). Dividend dollars themselves tied (99.25%). Same class-A pattern as the #54 floor we already unfroze.
+- Twin `app.py` hash WARN (root vs `QLA_Migration/app.py`).
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt`. Manifest: `QLA_Migration/Reports/cut_manifest_20260823T175411Z.json`.
+
+### Run 2026-08-23 — app.py v59.01 — DBF Append Tool package (6/30 Output)
+
+Operator: Agent (Warren: load latest tables into Desktop Append Tool)  
+Source CSVs: `QLA_Migration/Output` (valuation 20260630, v59.01 full batch)  
+Result: **FULL_DBF_APPEND PASS** 43/43 · memo OK · claims OK (2592 / 3084)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1–A12 | N/A | No conversion rebatch; package only |
+
+Notes:
+- Load folder: `C:\Users\warren\Desktop\DBF_Append_Tool\output`
+- QuikIsrr 205; quikbenh 41560; quikridr 6934; quikmstr 5083; quikprmh 211709.
+- Memo/claims placed by dedicated generators (not Append EXECUTE).
+- `quikclnt` appended 13,598 onto 18,214 template rows (master template, not a wipe).
+
+### Run 2026-08-26 — app.py v59.03 — Midyear UAT full batch — Source=`PPOLC_PolicyMaster_Extract_20260630.csv`
+
+Operator: Agent (Warren: close #146, commit, full 6/30 batch)  
+Env: UAT; `QLA_VALUATION_DATE=20260630`; rates ON  
+Source: `QLA_Migration/Source/LifePRO_Extracts_20260630/PPOLC_PolicyMaster_Extract_20260630.csv`  
+Result summary: Conversion CSVs written · release-gate smokes **RELEASE_OK** (incl. #146 / #145B) · A1/A2/A4/A8a/A9b/A10/A11h/A12 **PASS** · A8b **FAIL** · A7 **OPEN**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **PASS** | DEFICIENCY=N 141/141 (still awaiting CSO for Y) |
+| A3 | **BLOCKED** | Default PVO keys — prior open, not this run |
+| A4 | **PASS** | 0 blank-PLAN rows in 10 QuikPl*/QuikPI* files |
+| A5 | **BLOCKED** | Basis = Valuation_Setup / #80 — not re-opened |
+| A6 | **N/A** | Category checkbox vs keys not re-scored |
+| A7 | **OPEN** | 32/141 VARGP=4; release smoke A7 VARGP/VARDB vs rate grids PASS |
+| A8a | **PASS** | A-prefix PAR=0 (A60MIR, A96DAR) |
+| A8b | **FAIL** | A60MIR VARDB=2 (expected 0); A96DAR=0 |
+| A8c | **BLOCKED** | Annuity interest — awaiting Eric |
+| A8d | **BLOCKED** | Annuity schg — awaiting Eric |
+| A8e | **N/A** | Annuity PVO defaults not re-scored |
+| A9a | **BLOCKED** | Supp type — awaiting Eric field name |
+| A9b | **PASS** | 56 prefix-9 plans; PAR=1 count 0 |
+| A10 | **PASS** | `Output/rates/QuikUwpo.csv` 7 codes: 00/BL/NT/PQ/PR/SM/ST |
+| A11h/#136 | **PASS** | Release smoke #136 PVO flags PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ width-12 release smokes PASS |
+
+Notes:
+- Engine v59.03; HEAD `5fa1691` (#146 Closed, local only, not pushed).
+- #146 held on fresh emit: QuikIsrr 101; allowlist 0 rows; golds 9011077629 / 9010817956 / 9010808831 keep units; leftovers $271 / $716.40 stay.
+- #145B smoke PASS. QuikSpec 5083. Claims alignment PASS (2488 / 2980).
+- Rate source: `Rate_Table_Extract_Txt.txt` missing; fallback `Rate_Table_Extract_20260427.csv` + PAAGE/PAAGERAT/PDAGE 20260714.
+- Output root: 23 `quik*.csv` + `rates/` (46). Test_Validation republished for #146: quikisrr, quikclms, quikclmp, quikbenh.
+- Conversion is **not** clean on Issue A: A8b FAIL (A60MIR VARDB=2) and A7/A9a still open. Do not treat this package as a full Issue A sign-off.
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt`.
+
+### Run 2026-08-28 — app.py v59.03 — 7/31 UAT full batch — Source=`PPOLC_PolicyMaster_Extract_20260731.csv`
+
+Operator: Agent (Warren: 7/31 full batch + smokes + DBF append)  
+Env: UAT; `QLA_VALUATION_DATE=20260731`; rates ON  
+Source: `QLA_Migration/Source/LifePRO_Extracts_20260731/PPOLC_PolicyMaster_Extract_20260731.csv`  
+Result summary: Conversion CSVs written · release-gate smokes **RELEASE_OK** · DBF Append **43/43 PASS** · A1/A2/A4/A8a/A9b/A10/A11h/A12 **PASS** · A8b **FAIL** · A7 **OPEN**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **PASS** | DEFICIENCY=N 141/141 (still awaiting CSO for Y) |
+| A3 | **BLOCKED** | Default PVO keys — prior open, not this run |
+| A4 | **PASS** | 0 blank-PLAN rows in 10 QuikPl*/QuikPI* files |
+| A5 | **BLOCKED** | Basis = Valuation_Setup / #80 — not re-opened |
+| A6 | **N/A** | Category checkbox vs keys not re-scored |
+| A7 | **OPEN** | 32/141 VARGP=4; release smoke A7 VARGP/VARDB vs rate grids PASS |
+| A8a | **PASS** | A-prefix PAR=0 (A60MIR, A96DAR) |
+| A8b | **FAIL** | A60MIR VARDB=2 (expected 0); A96DAR=0 |
+| A8c | **BLOCKED** | Annuity interest — awaiting Eric |
+| A8d | **BLOCKED** | Annuity schg — awaiting Eric |
+| A8e | **N/A** | Annuity PVO defaults not re-scored |
+| A9a | **BLOCKED** | Supp type — awaiting Eric field name |
+| A9b | **PASS** | 56 prefix-9 plans; PAR=1 count 0 |
+| A10 | **PASS** | `Output/rates/QuikUwpo.csv` 7 codes: 00/BL/NT/PQ/PR/SM/ST |
+| A11h/#136 | **PASS** | Release smoke #136 PVO flags PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ width-12 release smokes PASS |
+
+Notes:
+- Locked source folder `LifePRO_Extracts_20260731`. QuikSpec 5083. Claims alignment PASS (2488 / 2981).
+- First post-check FAIL was class A: QuikSpec/Issue 104 scored Source-root 6/30 extracts. Output matched 7/31 (2 RESSTATE moves: `9010815524C` FL→IN, `9010933370C` IL→NE). Validators now use `QLA_VALUATION_DATE`.
+- First DBF append hit WinError 5 on `quikclmp.csv` (Excel was open). Retry **PASS** 43/43. Load folder: `C:\Users\warren\Desktop\DBF_Append_Tool\output` (quikmstr / QuikIsrr timestamps 2026-08-28 11:00).
+- `quikclnt` appended 13,605 onto 18,214 template rows. QuikIsrr 101. quikridr 6934. quikprmh 213050.
+- Conversion is **not** clean on Issue A: A8b FAIL (A60MIR VARDB=2) and A7/A9a still open.
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt`.
+
+### Run 2026-08-30 — app.py v59.05 — 7/31 UAT full batch — Source=`PPOLC_PolicyMaster_Extract_20260731.csv`
+
+Operator: Agent (Warren: build 7/31 data, full batch for UAT)  
+Env: UAT; `QLA_VALUATION_DATE=20260731`; rates ON  
+Source: `QLA_Migration/Source/LifePRO_Extracts_20260731/PPOLC_PolicyMaster_Extract_20260731.csv`  
+Result summary: Conversion CSVs written · release-gate smokes **RELEASE_OK** · DBF Append **43/43 PASS** · A1/A2/A4/A8a/A9b/A10/A11h/A12 **PASS** · A8b **FAIL** · A7 **OPEN** (21/142 VARGP=4)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **PASS** | DEFICIENCY=N 142/142 (still awaiting CSO for Y) |
+| A3 | **BLOCKED** | Default PVO keys — prior open, not this run |
+| A4 | **PASS** | 0 blank-PLAN rows in 10 QuikPl*/QuikPI* files |
+| A5 | **BLOCKED** | Basis = Valuation_Setup / #80 — not re-opened |
+| A6 | **N/A** | Category checkbox vs keys not re-scored |
+| A7 | **OPEN** | 21/142 VARGP=4; release smoke A7 VARGP/VARDB vs rate grids PASS |
+| A8a | **PASS** | A-prefix PAR=0 (A60MIR, A96DAR) |
+| A8b | **FAIL** | A60MIR VARDB=2 (expected 0); A96DAR=0 |
+| A8c | **BLOCKED** | Annuity interest — awaiting Eric |
+| A8d | **BLOCKED** | Annuity schg — awaiting Eric |
+| A8e | **N/A** | Annuity PVO defaults not re-scored |
+| A9a | **BLOCKED** | Supp type — awaiting Eric field name |
+| A9b | **PASS** | 57 prefix-9 plans; PAR=1 count 0 |
+| A10 | **PASS** | `Output/rates/QuikUwpo.csv` 7 codes: 00/BL/NT/PQ/PR/SM/ST |
+| A11h/#136 | **PASS** | Release smoke #136 PVO flags PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ width-12 release smokes PASS |
+
+Notes:
+- Locked source folder `LifePRO_Extracts_20260731`. Rate emit SUCCESS (23 tables). QuikSpec 5083. quikmstr 5083. quikridr 6956. Claims alignment PASS (2488 / 2980).
+- Desktop load folder refreshed today: `C:\Users\warren\Desktop\DBF_Append_Tool\output` (quikmstr / quikplan 2026-08-30 5:32 PM).
+- Conversion is **not** clean on Issue A: A8b FAIL (A60MIR VARDB=2) and A7/A9a still open. Do not treat this package as a full Issue A sign-off.
+- Log: `QLA_Migration/Logs/_full_batch_test_log.txt`.
+
+### Run 2026-09-01 — app.py v59.06 — 6/30 UAT full batch — Source=`PPOLC_PolicyMaster_Extract_20260630.csv` (PSUBSSEG era rates + 0831 rate extracts)
+
+Operator: Agent (Warren: PSUBSSEG rate fix + full migration + smoke validations)
+Env: UAT; `QLA_VALUATION_DATE=20260630`; rates ON; Append GUI OFF
+Source: `QLA_Migration/Source/LifePRO_Extracts_20260630/PPOLC_PolicyMaster_Extract_20260630.csv`; rates via PAAGE/PAAGERAT/PDAGE dated merge **incl. 20260831** + PSUBS/PSUBSSEG scope manifest
+Result summary: Conversion CSVs written · release-gate smokes **RELEASE_OK** (incl. new **PSUB** era-rate smoke) · DBF Append **43/43 PASS** · A1/A2/A4/A8a/A9b/A10/A11h/A12 **PASS** · A8b **FAIL** (pre-existing) · A7 **OPEN**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **PASS** | DEFICIENCY=N 142/142 (still awaiting CSO for Y) |
+| A3 | **BLOCKED** | Default PVO keys — prior open, not this run |
+| A4 | **PASS** | 0 blank-PLAN rows in QuikPl*/QuikPI* files |
+| A5 | **BLOCKED** | Basis = Valuation_Setup / #80 — not re-opened |
+| A6 | **N/A** | Category checkbox vs keys not re-scored |
+| A7 | **OPEN** | 21/142 VARGP=4; release smoke A7 VARGP/VARDB vs rate grids PASS |
+| A8a | **PASS** | A-prefix PAR=0 (A60MIR, A96DAR) |
+| A8b | **FAIL** | A60MIR VARDB=2 (expected 0); A96DAR=0 — pre-existing, unchanged |
+| A8c | **BLOCKED** | Annuity interest — awaiting Eric |
+| A8d | **BLOCKED** | Annuity schg — awaiting Eric |
+| A8e | **N/A** | Annuity PVO defaults not re-scored |
+| A9a | **BLOCKED** | Supp type — awaiting Eric field name |
+| A9b | **PASS** | 57 prefix-9 plans; PAR=1 count 0 |
+| A10 | **PASS** | `Output/rates/QuikUwpo.csv` 7 codes: 00/BL/NT/PQ/PR/SM/ST; 0 dupes |
+| A11h/#136 | **PASS** | Release smoke #136 PVO flags PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ width-12 release smokes PASS |
+
+Notes:
+- **PSUBSSEG era-banded rates first full batch:** loader `qla_core/psubsseg_substitution_loader.py` (v59.06) emits 50 scoped generations (42 EXTRACT / 8 PLAN_COPY); fail-closed validator PASS (633,044 cells); new always-on smoke **PSUB** registered in `SMOKE_JOBS` (gate v2.0) and PASS. QuikTvs +37,016 / QuikNps +34,114 / QuikCvs +1,464 rows vs loader-off control; 19000101 generations untouched.
+- 0831 rate/substitution extracts staged (PAAGE/PAAGERAT/PDAGE/PSUBS/PSUBSSEG/PSEGT); PDAGE 0831 delivered NP/RV for 11 missing segments; PAAGE/PAAGERAT 0831 delivered 667 ART 95 + 991 PWL73 PR (unowned at SEQ 1 — does not emit; Eric question).
+- **QuikGps order-sensitivity found (pre-existing):** 81 rows across 6 plans flip between sibling same-tier PAAGERAT PR segments because `build_factor_grid` first-in-stream wins and New Era re-sorted the 0831 PAAGERAT. Not caused by PSUBSSEG (control-run proven). Needs deterministic tiebreak or PR era-banding — Eric/own issue.
+- #106 validator updated to pin the 19000101 generation (era generations share PLAN).
+- Full 0831 policy package (149 extracts incl. PPOLC) is in `LifePRO_Extracts_20260831.zip` but **not** converted this run — policy book stays 6/30 pending Warren's valuation decision (prior batch 8/30 was 7/31).
+- Claims alignment PASS (2488 / 2980). quikprmh 211,709; quikmstr 5,083; quikridr 6,956; quikplan 142.
+- Conversion is **not** clean on Issue A: A8b FAIL (A60MIR VARDB=2) and A7/A9a still open. Do not treat this package as a full Issue A sign-off.
+- Log: `QLA_Migration/Logs/full_batch_psubsseg_20260901.log`.
+
+### Run 2026-09-01 — app.py v59.06 emit / v59.07 post-fixes — 8/31 UAT full batch — Source=`PPOLC_PolicyMaster_Extract_20260831.csv`
+
+Operator: Agent (Warren: full 8/31 batch + all smokes + DBF append)
+Env: UAT; `QLA_VALUATION_DATE=20260831`; rates ON; PSUBSSEG ON; Append GUI OFF
+Source: `QLA_Migration/Source/LifePRO_Extracts_20260831/` (extracted from zip; required tables also at Source root). PPCOM (5.3 GB) not extracted — ABA lookup already on disk.
+Result summary: Conversion CSVs written · release-gate smokes **RELEASE_OK** (incl. **PSUB**) · DBF Append **43/43 PASS** · A1/A2/A4/A8a/A9b/A10 **PASS** · A8b **FAIL** (pre-existing) · A7 **OPEN**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; SEMI/QTRL/MTHD/MTHB=0 |
+| A2 | **PASS** | DEFICIENCY=N 142/142 (still awaiting CSO for Y) |
+| A3 | **BLOCKED** | Default PVO keys — prior open |
+| A4 | **PASS** | 0 blank-PLAN rows in QuikPl* |
+| A5 | **BLOCKED** | Basis = Valuation_Setup / #80 |
+| A6 | **N/A** | Category checkbox vs keys not re-scored |
+| A7 | **OPEN** | 21/142 VARGP=4; release smoke A7 PASS |
+| A8a | **PASS** | A-prefix PAR=0 (A60MIR, A96DAR) |
+| A8b | **FAIL** | A60MIR VARDB=2 (expected 0); A96DAR=0 — pre-existing |
+| A8c | **BLOCKED** | Annuity interest — Eric |
+| A8d | **BLOCKED** | Annuity schg — Eric |
+| A8e | **N/A** | Annuity PVO defaults not re-scored |
+| A9a | **BLOCKED** | Supp type — Eric |
+| A9b | **PASS** | 57 prefix-9 plans; PAR=1 count 0 |
+| A10 | **PASS** | QuikUwpo 7 codes: 00/BL/NT/PQ/PR/SM/ST |
+| A11h/#136 | **PASS** | Release smoke #136 PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ width-12 release smokes PASS |
+
+Notes:
+- Locked source folder `LifePRO_Extracts_20260831`. Resolver picks 8/31 PPOLC/PPBEN/PPBENTYP/RNA/PACTG/PLOAN/PNOTE/PENSE/PPACH/PPPAC/PREIN/PREINTRT/rates/PSUBS/PSUBSSEG.
+- First smoke run blocked on two class-A items (not conversion defects): #59 still expected `901ML8250C` Active 22 but 8/31 PPOLC is T/DC (Output correctly 53); CLNT-RJ pandas reader stripped spaces on `      314894` (file already width 12). Validators updated (#59 v2.3 source-aware named LP; CLNT-RJ uses csv.reader). Re-smoke **RELEASE_OK**.
+- PSUBSSEG smoke PASS on this 8/31 Output. Rate tables include era generations (QuikTvs 91,658 / QuikNps 86,597).
+- Row counts: quikmstr 5,083 · quikridr 6,956 · quikplan 142 · quikprmh 214,339 · quikbenh 42,071 · quikloan 350 · quikclnt 13,604 · quikclid 32,301 · claims 2,497 / 2,994.
+- Desktop `DBF_Append_Tool\output` refreshed this run (43/43 + memo + claims). No Q: deploy.
+- Conversion is **not** clean on Issue A: A8b FAIL and A7/A9a still open.
+- Log: `QLA_Migration/Logs/full_batch_20260831_20260901.log`.
+
+### Run 2026-09-02 — app.py v59.07 — 6/30 policy batch, 8/31 plan/rates kept
+
+Operator: Agent (Warren: older cut keeps newest plan/rates + PLAN-KEEP smoke)
+Env: UAT; `QLA_VALUATION_DATE=20260630`; auto `PRODUCT_SETUP_ISOLATED=1` `BATCH_INCLUDE_RATE_TABLES=0`
+Source: `LifePRO_Extracts_20260630/PPOLC_PolicyMaster_Extract_20260630.csv`
+Result: Conversion CSVs written · release-gate **RELEASE_OK** (incl. PLAN-KEEP + PSUB) · DBF Append **43/43 PASS** · A1/A2/A4/A8a/A9b **PASS** · A8b **FAIL** (pre-existing, on kept 8/31 quikplan)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP PAYYRS=1; S/Q/M=0 (kept 8/31 quikplan) |
+| A2 | **PASS** | DEFICIENCY=N 142/142 |
+| A3 | **BLOCKED** | Prior open |
+| A4 | **PASS** | 0 blank-PLAN in QuikPl* |
+| A5 | **BLOCKED** | Valuation_Setup / #80 |
+| A6 | **N/A** | Not re-scored |
+| A7 | **OPEN** | 21/142 VARGP=4 (kept plan) |
+| A8a | **PASS** | A-prefix PAR=0 |
+| A8b | **FAIL** | A60MIR VARDB=2 — pre-existing on kept catalog |
+| A8c/A8d/A9a | **BLOCKED** | Eric |
+| A9b | **PASS** | 57 prefix-9; PAR≠0 count 0 |
+| A10 | **PASS** | QuikUwpo unchanged (kept rates) |
+| A11h/#136 | **PASS** | Release smoke PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ smokes PASS |
+
+Notes:
+- PLAN-KEEP smoke PASS: 25 pinned plan/rate files byte-identical to 8/31 package. `quikplan` / `QuikTvs` timestamps still 9/1 10:10. `quikmstr` rewritten 9/2 7:27 (6/30 book).
+- Desktop Append output is the mixed package: 6/30 policy tables + 8/31 plan/rates.
+- Log: `QLA_Migration/Logs/full_batch_20260630_keep_newest_20260902.log`.
+
+### Run 2026-09-02 — app.py v59.08 — 6/30 policy batch, 8/31 plan/rates kept (post-#159)
+
+Operator: Agent (Warren: full 6/30 batch after #159 close; keep newest plan/rates)
+Env: UAT; `QLA_VALUATION_DATE=20260630`; auto `PRODUCT_SETUP_ISOLATED=1` `BATCH_INCLUDE_RATE_TABLES=0`
+Source: `LifePRO_Extracts_20260630/PPOLC_PolicyMaster_Extract_20260630.csv`
+Result: Conversion CSVs written · release-gate **RELEASE_OK** (incl. PLAN-KEEP + #159 + PSUB) · DBF Append **43/43 PASS** · A1/A2/A4/A8a/A9b/A10 **PASS** · A8b **FAIL** (pre-existing, on kept 8/31 quikplan)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; S/Q/M=0 (kept 8/31 quikplan) |
+| A2 | **PASS** | DEFICIENCY=N 142/142 |
+| A3 | **BLOCKED** | Prior open |
+| A4 | **PASS** | 0 blank-PLAN in QuikPl* |
+| A5 | **BLOCKED** | Valuation_Setup / #80 |
+| A6 | **N/A** | Not re-scored |
+| A7 | **OPEN** | 21/142 VARGP=4 (kept plan); A7 smoke PASS |
+| A8a | **PASS** | A-prefix PAR=0 |
+| A8b | **FAIL** | A60MIR VARDB=2 — pre-existing on kept catalog |
+| A8c/A8d/A9a | **BLOCKED** | Eric |
+| A9b | **PASS** | 57 prefix-9; PAR≠0 count 0 |
+| A10 | **PASS** | QuikUwpo 7 codes 00/BL/NT/PQ/PR/SM/ST (kept rates) |
+| A11h/#136 | **PASS** | Release smoke PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ smokes PASS |
+
+Notes:
+- PLAN-KEEP smoke PASS: 25 pinned plan/rate files byte-identical to 8/31 package. `quikplan` / `QuikTvs` still 9/1 10:10. `quikmstr`/`quikridr` rewritten 9/2 16:13 (6/30 book, v59.08 plan-aware MUWCLASS).
+- #159 smoke PASS on this 6/30 emit: L10 smokers SM, L14 NT/PQ/ST, non-L10 S stays ST.
+- Desktop Append 43/43: 6/30 policy tables + 8/31 plan/rates.
+- Row counts: quikmstr 5,083 · quikridr 6,956 · quikprmh 211,709 · quikclnt 13,598 · quikclid 32,285.
+- Conversion is **not** clean on Issue A: A8b FAIL and A7/A9a still open.
+- Log: `QLA_Migration/Logs/full_batch_20260630_keep_newest_20260902_v5908.log`.
+
+### Run 2026-09-13 — app.py v59.13 — 6/30 policy batch, 8/31 plan/rates kept
+
+Operator: Agent (Warren: build 6/30 data; keep newest plan/rates)
+Env: UAT; `QLA_VALUATION_DATE=20260630`; auto `PRODUCT_SETUP_ISOLATED=1` `BATCH_INCLUDE_RATE_TABLES=0`
+Source: `QLA_Migration/Source/PPOLC_PolicyMaster_Extract_20260630.csv` (8/31 extracts parked during convert, then restored)
+Result: Conversion CSVs written · PLAN-KEEP **PASS** (25 files) · A1/A2/A4/A8a/A9b/A10/A12 **PASS** · A8b **FAIL** (pre-existing, on kept 8/31 quikplan) · release-gate first pass **RELEASE_BLOCKED** (#158 parked PAAGERAT; #161 missing quikcloth post-step; #160 archive snapshot missing) · #158/#161 re-run **PASS** after PAAGERAT restore + quikcloth build · #160 smoke still FAIL (archive file missing; business inherit checks PASS)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; SEMI=0 (kept 8/31 quikplan) |
+| A2 | **PASS** | DEFICIENCY=N 142/142 |
+| A3 | **BLOCKED** | Prior open |
+| A4 | **PASS** | 0 blank-PLAN in QuikPl* |
+| A5 | **BLOCKED** | Valuation_Setup / #80 |
+| A6 | **N/A** | Not re-scored (orphan vary flags 0 on kept catalog) |
+| A7 | **OPEN** | 20/142 VARGP=4 (kept plan); A7 smoke PASS |
+| A8a | **PASS** | A-prefix PAR=0 |
+| A8b | **FAIL** | A60MIR VARDB=2 — pre-existing on kept catalog |
+| A8c/A8d/A9a | **BLOCKED** | Eric |
+| A9b | **PASS** | 57 prefix-9; PAR≠0 count 0 |
+| A10 | **PASS** | QuikUwpo 7 codes 00/BL/NT/PQ/PR/SM/ST (kept rates) |
+| A11h/#136 | **PASS** | Release smoke PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ smokes PASS |
+
+Notes:
+- PLAN-KEEP smoke PASS: 25 pinned plan/rate files byte-identical to 8/31 package. `quikplan` / `QuikTvs` still 9/1 10:10.
+- Row counts: quikmstr 5,083 · quikridr 6,956 · quikprmh 211,709 · quikclnt 13,598 · quikclid 32,285 · quikcloth 341.
+- #161 quikcloth built after batch (not emitted by headless runner): 341 POFA rows; examples 9010442216C / 9010451650C / 9011045619C.
+- #160 archive `QLA_Migration/Archive/issue160_pre_remap/quikridr_pre_issue160.csv` missing; live inherit checks: terminal 239, #108D 27, #60 228, all PASS.
+- Conversion is **not** clean on Issue A: A8b FAIL and A7/A9a still open.
+- Desktop Append **44/44 PASS** (includes quikcloth 341): 6/30 policy tables + 8/31 plan/rates.
+- Log: `QLA_Migration/Logs/full_batch_20260630_keep_newest_20260913.log`.
+
+### Run 2026-09-13 — app.py v59.13 — 8/31 current-cut full batch (rates ON)
+
+Operator: Agent (Warren: run the 8/31/2026 conversion)
+Env: UAT; `QLA_VALUATION_DATE=20260831`; `PRODUCT_SETUP_ISOLATED=0`; `BATCH_INCLUDE_RATE_TABLES=1`; Append GUI OFF
+Source: `QLA_Migration/Source/PPOLC_PolicyMaster_Extract_20260831.csv` (6/30 extracts parked during convert, then restored)
+Result: Conversion CSVs written · rate loader **SUCCESS** 23 tables · A1/A2/A4/A8a/A9b/A10/A12 **PASS** · A8b **FAIL** (A60MIR VARDB=2) · first release-gate **RELEASE_BLOCKED** (#143 hardcoded 6/30 PPOLC while parked; #161 missing quikcloth; #160 archive missing) · #143/#161 re-run **PASS** · #160 smoke still FAIL (archive missing; business inherit PASS) · plan/rate pin refreshed (only `rates/QuikPlUw.csv` drifted vs prior pin)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; SEMI=0 |
+| A2 | **PASS** | DEFICIENCY=N 142/142 |
+| A3 | **BLOCKED** | Prior open |
+| A4 | **PASS** | 0 blank-PLAN in QuikPl* |
+| A5 | **BLOCKED** | Valuation_Setup / #80 |
+| A6 | **N/A** | Orphan vary flags 0 |
+| A7 | **OPEN** | 20/142 VARGP=4; A7 smoke PASS |
+| A8a | **PASS** | A-prefix PAR=0 |
+| A8b | **FAIL** | A60MIR VARDB=2 |
+| A8c/A8d/A9a | **BLOCKED** | Eric |
+| A9b | **PASS** | 57 prefix-9; PAR≠0 count 0 |
+| A10 | **PASS** | QuikUwpo 7 codes 00/BL/NT/PQ/PR/SM/ST |
+| A11h/#136 | **PASS** | Release smoke PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ smokes PASS |
+
+Notes:
+- 6/30 Output snapshotted to `QLA_Migration/Archive/output_20260630_before_20260831_batch_20260913_185126` before overwrite.
+- Row counts: quikmstr 5,083 · quikridr 6,956 · quikprmh 214,339 · quikclnt 13,604 · quikclid 32,301 · quikcloth 348.
+- #161 quikcloth built after batch: 348 POFA rows.
+- #160 live inherit: terminal 244, #108D 27, #60 223, all PASS.
+- Conversion is **not** clean on Issue A: A8b FAIL and A7/A9a still open.
+- Desktop Append **44/44 PASS** (includes quikcloth 348).
+- Log: `QLA_Migration/Logs/full_batch_20260831_20260913.log`.
+
+### Run 2026-09-18 — app.py v59.16 — 6/30 policy batch, 8/31 plan/rates kept
+
+Operator: Agent (Warren: full rerun of 6/30; confirm committed duration work)
+Env: UAT; `QLA_VALUATION_DATE=20260630`; auto `PRODUCT_SETUP_ISOLATED=1` `BATCH_INCLUDE_RATE_TABLES=0`
+Source: `QLA_Migration/Source/PPOLC_PolicyMaster_Extract_20260630.csv` (7/14, 7/31, and 8/31 extracts parked during convert, then restored)
+Result: Conversion CSVs written · PLAN-KEEP **PASS** (25 files) · A1/A2/A4/A8a/A9b/A10/A12 **PASS** · A8b **FAIL** (pre-existing, on kept 8/31 quikplan) · first-pass release-gate **RELEASE_BLOCKED** (#158 parked PAAGERAT; #161 missing quikcloth post-step; #160 archive snapshot missing) · #158/#161 re-run **PASS** after PAAGERAT restore + quikcloth build · #160 smoke still FAIL (archive file missing) · #167 duration **PASS**
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | SP `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; SEMI=0 QTRL=0 (kept 8/31 quikplan) |
+| A2 | **PASS** | DEFICIENCY=N 142/142 |
+| A3 | **BLOCKED** | Prior open |
+| A4 | **PASS** | 0 blank-PLAN in QuikPl* |
+| A5 | **BLOCKED** | Valuation_Setup / #80 |
+| A6 | **N/A** | Not re-scored (kept catalog) |
+| A7 | **OPEN** | 21/142 VARGP=4 (kept plan); A7 smoke PASS |
+| A8a | **PASS** | A-prefix PAR=0 |
+| A8b | **FAIL** | A60MIR VARDB=2 — pre-existing on kept catalog |
+| A8c/A8d/A9a | **BLOCKED** | Eric |
+| A9b | **PASS** | 57 prefix-9; PAR≠0 count 0 |
+| A10 | **PASS** | QuikUwpo 7 codes 00/BL/NT/PQ/PR/SM/ST (kept rates) |
+| A11h/#136 | **PASS** | Release smoke PASS |
+| A12 | **PASS** | CLNT-HW + CLNT-RJ smokes PASS |
+
+Notes:
+- First attempt mixed 8/31 extracts (resolver newest-mtime). Parked later cuts and reran. True 6/30 log has no `20260831` source hits.
+- PLAN-KEEP smoke PASS: 25 pinned plan/rate files byte-identical to 8/31 package.
+- Row counts: quikmstr 5,083 · quikridr 6,956 · quikprmh 211,709 · quikclnt 13,598 · quikclid 32,285 · quikcloth 341.
+- #167 MLASTANN gold: 9010397528C 54; 9010367704C 55; 9010412641C 54; NFO 9010149295C 33 / 9010374099C 16.
+- #161 quikcloth built after batch (not emitted by headless runner): 341 POFA rows; examples 9010442216C / 9010451650C / 9011045619C.
+- #160 archive `QLA_Migration/Archive/issue160_pre_remap/quikridr_pre_issue160.csv` missing (same as 9/13).
+- Conversion is **not** clean on Issue A: A8b FAIL and A7/A9a still open.
+- Desktop Append **44/44 PASS** (includes quikcloth 341): 6/30 policy tables + 8/31 plan/rates. `quikmstr.dbf` / `quikridr.dbf` timestamp 9/18/2026 9:17 AM.
+- Log: `QLA_Migration/Logs/full_batch_20260630_keep_newest_20260918.log`.
+
+### Run 2026-09-24 — app.py v59.23 — 6/30 attempt BLOCKED
+
+Operator: Validation (Issue #155). Env: `QLA_VALUATION_DATE=20260630`; auto plan/rate keep.
+Result: **BLOCKED — not a 6/30 package.** Converter resolved policy extracts to `*_20260831.csv` (newest file), then died on quikprmh `KeyError: 'MISWL'` before QuikIswl re-emit and the release smokes. OPEN checks not re-scored. Desktop `output\` DBFs unchanged (9/22).
+Log: `QLA_Migration/Logs/full_batch_20260924_issue155_0630.log` and `QLA_Migration/Logs/_full_batch_test_log.txt`.
+
+### Run 2026-09-24 — app.py v59.24 — 6/30 rerun, later extracts parked then restored
+
+Operator: Validation (Issue #155). Env: `QLA_VALUATION_DATE=20260630`; plan/rate keep.
+Result: Conversion written from 6/30 extracts (no `20260831` source hits). PLAN-KEEP **PASS** (24 files). #155 gold 9010713704C 20260619 / 506 / 45551.94. #148 9011284087C 100 units / 1000. #149 20 of 20 1L17SP at 1000. Release gate **RELEASE_BLOCKED** on #160 missing archive only after #161 quikcloth post-build **PASS** (341). Resident state **PASS**. Desktop Append **44/44 PASS**. `quikmstr.dbf` / `QuikIswl.dbf` / `quikprmh.dbf` timestamp 9/24/2026 12:44 PM. quikprmh.MISWL present.
+Log: `QLA_Migration/Logs/full_batch_20260924_issue155_0630_rerun.log`.

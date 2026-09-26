@@ -47,7 +47,7 @@ Report Validation PASS/FAIL. Do **not** auto-run Regression/Closure yet.
 
 When Validation **PASS**es (or user says validation is complete / proceed to Closure):
 
-**Regression → Closure** (including G7 Output accountability gate).
+**Regression → Closure** (including G7 Output accountability gate + Completed Issues guide update + always-on smoke).
 
 **Opt-out:** “Discovery only” → stop after Discovery. “Intake only” / “stop after Intake” → stop after Intake. Dependency Gate **BLOCKED** → stop; do not Risk.
 
@@ -62,10 +62,15 @@ When Validation **PASS**es (or user says validation is complete / proceed to Clo
 7. After Validation PASS, continue Regression → Closure in the same session (or when user confirms).
 8. Canonical copy: `AI_Agents/Framework.md` — keep both in sync.
 9. **G7 Closure Output gate:** do **not** mark **Closed** until issue validator PASS on full `QLA_Migration/Output/` and accountability **IN_DATA** (see `.cursor/rules/issue-closure-output-gate.mdc`).
+10. **Completed Issues guide:** Closure must update `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md` (Framework rule 12). Applies to Grok, Luna, Composer, and any override — see `.cursor/rules/completed-issues-release-guide.mdc`.
+11. **Closed-issue smoke:** Closure must register a fail-closed always-on smoke in `SMOKE_JOBS` (Framework rule 14). See `.cursor/rules/closed-issue-smoke-test.mdc`.
 
 ## Related
 
 - `AI_Agents/Framework.md`
 - `AI_Agents/Discovery_Agent.md`
 - `AI_Agents/Run_Issue_Framework_Prompt.md`
+- `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`
+- `.cursor/rules/completed-issues-release-guide.mdc`
+- `.cursor/rules/closed-issue-smoke-test.mdc`
 - `AGENTS.md`

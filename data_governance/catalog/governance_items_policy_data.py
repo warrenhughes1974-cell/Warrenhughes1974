@@ -597,8 +597,9 @@ RULE_DG_QUIKMSTR_031 = RuleDefinition(
     business_rule=(
         "When QuikMstr MSTATUS is 44 the election MNFOPT is expected to be 2 (ETI); when "
         "MSTATUS is 45 it is expected to be 3 (RPU). Report disagreements for source review. "
-        "Do not overwrite the election — it carries the source value on purpose (Issue #72 "
-        "downgrade, Issue #108F)."
+        "Do not overwrite the election. Robert De Sarro, email 2026-07-25: the election "
+        "should not be forced to match status 44 or 45 (Issue #108H). It carries the "
+        "LifePRO value on purpose (Issue #72 downgrade, Issue #108F)."
     ),
     severity="Advisory",
     failure_conditions=(

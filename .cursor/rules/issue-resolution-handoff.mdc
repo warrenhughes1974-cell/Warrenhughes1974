@@ -1,0 +1,47 @@
+---
+description: Final issue resolution handoff format
+alwaysApply: true
+---
+
+# Issue Resolution Handoff
+
+At the final step of an issue, provide a concise resolution that is:
+
+- Written in plain, non-technical language suitable for a client or business user.
+- Ready to copy and paste into Google Sheets.
+- One physical line per issue; do not embed newlines inside a cell.
+- Limited to the resolution handoff, not the complete issue-log row.
+
+## Required copy/paste format (locked)
+
+```text
+MM/DD/YYYY Resolution: <what we fixed and verified>. Examples: <policy/example 1>; <policy/example 2>; <policy/example 3>.
+```
+
+### Pattern
+
+1. **Date first** — `MM/DD/YYYY` (closure / resolution date).
+2. **Literal label** — `Resolution:` (capital R, colon, then a space).
+3. **What we did** — one plain-language sentence of the fix and verification.
+4. **Examples** — concrete policy numbers / outcomes, separated by semicolons.
+
+### Correct example
+
+```text
+08/02/2026 Resolution: For seven client-cited policies only, Active contracts with PAID_UP_TYPE=LP now emit Active (22) instead of Lapsed (54), and Suspended Death Claim Pending (S/DP) emits status 50 instead of Paid Up. Examples: 01122D991C Active (22); 014FG8217C Active (22); 016FG8217C Active (22); 01ML8171C Active (22); 01ML8250C Active (22); 01ML8522C Active (22); 010521213C Death Claim Pending (50).
+```
+
+### Do not use these wrong patterns
+
+| Wrong | Why |
+|-------|-----|
+| `Resolution: 2026-08-02 - Updated v58.52...` | Date must lead; no version/engine chatter unless user asks |
+| Full 10-column tracking row as the “resolution” | Resolution handoff is the Notes-style line only |
+| `Resolution: For seven...` with no date | Date is required |
+| Bullet lists / multi-line cells | Sheets will split the row |
+
+Keep internal paths, commit hashes, validator names, and engine versions **out** of the resolution line unless the user asks for them.
+
+Do not output the complete 10-column tracking-sheet row unless the user explicitly asks for the issue line, tracking row, full list, or sheet reprint.
+
+This resolution handoff is always the final step after validation, regression, required approvals, and closure documentation are complete.

@@ -34,8 +34,10 @@ BUSINESS RULES:
 
 OUTPUT FOLDER:
 - `QLA_Migration/Output/` — QLAdmin table CSVs only (`quik*.csv` + optional `rates/`)
+- **Older policy cut:** keep the newest `quikplan` + `rates/` already in Output (`QLA_PRODUCT_SETUP_ISOLATED=1`, `QLA_BATCH_INCLUDE_RATE_TABLES=0`). Do not rebuild plan setup from the older extract. Smoke: `validate_newest_plan_rates_kept.py`.
 - audits, logs, validation, DBF staging → `Reports/`, `Logs/`, `Validation/`, `Staging/` (see `.cursor/rules/qla-output-folder.mdc`)
 - **`QLA_Migration/Output/Test_Validation/`** — after each issue fix, copy **only modified** `quik*.csv` tables here on validator PASS for partial UAT reload (see `.cursor/rules/test-validation-folder.mdc`)
+- **DBFs:** APPEND only via Desktop `DBF_Append_Tool` (never recreate/wipe as one-offs; see `.cursor/rules/dbf-append-only.mdc`)
 
 TESTING REQUIREMENTS:
 - validate output schema integrity
@@ -46,6 +48,10 @@ TESTING REQUIREMENTS:
 - run issue validator + regression: intended policies change correctly; **non-candidate policies unchanged**
 - publish modified tables to `Output/Test_Validation/` when validation passes
 - **Closure (G7):** do not mark Closed until issue validator PASS on full `QLA_Migration/Output/` **and** accountability **IN_DATA** for that issue (`tools/validators/validate_issue_log_accountability.py`); see `.cursor/rules/issue-closure-output-gate.mdc`
+- **Completed issues guide:** on every Closed issue or conversion-behavior commit, update `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md` (resolution + source validation method) so each release can re-prove prior fixes; Framework rule 12 / G7. Applies to **all models including Luna**. See `.cursor/rules/completed-issues-release-guide.mdc` and `AI_Agents/Framework.md`
+- **Closed-issue smoke:** on every Closed issue, register a fail-closed always-on smoke in `tools/validators/validate_release_closed_issues.py` `SMOKE_JOBS` and prove `--smoke-only` PASS (Framework rule 14). See `.cursor/rules/closed-issue-smoke-test.mdc`
+- **Notify Warren on conflicts:** if a change would go against a Closed row in that guide, stop and tell Warren before implementing; no silent override (Framework rule 13)
+- **Release gate:** before handing off a package, run `python tools/validators/validate_release_closed_issues.py` (exit 1 = do not ship); see Completed Issues guide
 
 CHANGE RESTRICTIONS:
 - never replace entire app.py unless explicitly requested

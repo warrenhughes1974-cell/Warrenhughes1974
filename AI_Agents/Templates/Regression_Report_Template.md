@@ -44,12 +44,14 @@
 
 ## 4. Prior Issue Fix Regression
 
-### Issue #25 — MPOLICY padding
+Catalog: `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md` (Framework rule 12).
+
+### Issue #25 / #2 — Policy key width
 
 | Check | Result |
 |-------|--------|
-| `_validate_mpolicy_width.py` | PASS / FAIL |
-| Sample policies width = 10 | |
+| Current closed policy-key validator | PASS / FAIL |
+| Sample policies match closed rule | |
 
 ### Issue #26 — MPREM mapping
 
@@ -57,6 +59,12 @@
 |-------|--------|
 | `_validate_issue26_mprem.py` | PASS / FAIL |
 | MMODPREM unchanged | |
+
+### Other Closed rows overlapping this change
+
+| Issue ID | Guide check / validator | Result |
+|----------|-------------------------|--------|
+| | | PASS / FAIL / N/A |
 
 ---
 

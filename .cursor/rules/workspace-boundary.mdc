@@ -1,0 +1,9 @@
+---
+description: Workspace boundary — stay in this repo only
+alwaysApply: true
+---
+
+# Workspace boundary
+
+- Work only inside: `C:\Users\warren\Documents\GitHub\Warrenhughes1974`
+- Do **not** read, search, write, or delete anywhere else on the C: drive unless the user explicitly grants permission for that path in chat.

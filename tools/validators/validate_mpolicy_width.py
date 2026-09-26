@@ -48,7 +48,6 @@ TABLES_WITH_MPOLICY = [
     "quikbenh.csv",
     "QuikIsrr.csv",
     "QuikIswl.csv",
-    "quikrmst.csv",
 ]
 
 

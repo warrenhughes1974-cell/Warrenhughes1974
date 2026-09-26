@@ -10,12 +10,17 @@ import csv
 
 from qla_core import rate_dbf_schema as S
 from qla_core import rate_factor_loader as L
+from qla_core.paagerat_pr_loader import PR_AGE_OFFSET, attained_age_slot_axis_enabled
 
 CONFIRMED_TYPES = frozenset({"DB", "DV", "NF", "NP", "PR", "RV"})
 RATE_TABLE_STATUS = "Candidate for inherited/shared loader"
 PAAGERAT_STATUS = "Candidate for PAAGERAT shared segment loader"
 PAAGERAT_TYPES = frozenset({"NF", "PR"})
 QLADMIN_BANDS = frozenset({"00", "01", "02", "03"})
+
+# Issue #158 audit trail: plans whose shared PR candidates were dropped because the
+# plan owns its premium segment at PCOVRSGT SEQ 1. Reported in the rate run summary.
+SHARED_PR_DROPPED_PLANS: list[str] = []
 
 
 def _dedupe_preserve_order(values):
@@ -36,9 +41,18 @@ def _row_sort_key(row):
     return (seq, (row.get("source_segment") or "").strip())
 
 
-def build_shared_manifest(candidate_csv):
-    """Build grouped manifest entries from inherited_shared_rate_candidates.csv."""
+def build_shared_manifest(candidate_csv, pr_owner_plans=None):
+    """Build grouped manifest entries from inherited_shared_rate_candidates.csv.
+
+    Issue #158: `pr_owner_plans` names plans that own a PCOVRSGT SEQ 1 premium segment
+    with PAAGERAT PR rows. Their QuikGps grid comes from the PR loader, so shared PR
+    candidates for those plans are dropped — the manifest's PR entries were keyed on
+    non-SEQ-1 slots while PR segments were misrouted, and they transpose the L10 family
+    (1L1095 held L10 PRE97's rates, 1L10OD held L10 LP95's).
+    """
+    pr_owner_plans = frozenset(pr_owner_plans or ())
     grouped = {}
+    dropped_pr = []
     with open(candidate_csv, encoding="utf-8-sig", newline="") as f:
         for row in csv.DictReader(f):
             source_family = (row.get("source_family") or "").strip()
@@ -59,6 +73,10 @@ def build_shared_manifest(candidate_csv):
                 continue
             if rate_type == "CV":
                 # CV inheritance remains owned by the Issue #40 loader.
+                continue
+            if rate_type == "PR" and issuing_plan in pr_owner_plans:
+                # Issue #158: the plan owns its premium segment at SEQ 1.
+                dropped_pr.append((issuing_plan, source_segment))
                 continue
 
             key = (source_family, issuing_plan, rate_type, table)
@@ -88,7 +106,12 @@ def build_shared_manifest(candidate_csv):
                 (row.get("source_segment") or "").strip() for row in ordered
             ),
         })
-    return sorted(entries, key=lambda e: (e["source_family"], e["issuing_plan"], e["rate_type"]))
+    entries = sorted(entries, key=lambda e: (e["source_family"], e["issuing_plan"], e["rate_type"]))
+    if dropped_pr:
+        entries_meta = sorted({plan for plan, _seg in dropped_pr})
+        SHARED_PR_DROPPED_PLANS.clear()
+        SHARED_PR_DROPPED_PLANS.extend(entries_meta)
+    return entries
 
 
 def _cell_key(plan, table, age2, cntl, col, gender, uwclass, band, config):
@@ -138,7 +161,7 @@ def _transform_rate_table_row(row, lineno, cov, entry, config):
         return None
 
     gender = S.map_sex(sex)
-    uwclass = S.map_uwclass(uw)
+    uwclass = S.map_uwclass(uw, plan=entry["issuing_plan"], coverage_id=cov)
     band2 = S.map_band(band)
     if gender is None or uwclass is None or band2 is None or band2 not in QLADMIN_BANDS:
         return {
@@ -255,7 +278,7 @@ def _transform_paagerat_row(row, col, lineno, seg, entry, config):
         }
 
     gender = S.map_sex(sex)
-    uwclass = S.map_uwclass(uw)
+    uwclass = S.map_uwclass(uw, plan=entry["issuing_plan"], coverage_id=seg)
     band2 = S.map_band(band)
     if gender is None or uwclass is None or band2 is None or band2 not in QLADMIN_BANDS:
         return {
@@ -271,13 +294,30 @@ def _transform_paagerat_row(row, col, lineno, seg, entry, config):
         }
 
     original_age = seq
-    age_int = int(seq)
+    # Issue 138: PR SEQ is 1-based and rates SEQ-1. Shared PR rows must ride the
+    # same axis as the PR loader, or a plan's inherited grid sits a year off its donor.
+    age_int = int(seq) + (PR_AGE_OFFSET if typ == "PR" else 0)
     age_capped = False
+    if age_int < 0:
+        return {
+            "status": "BAD_VALUE", "source": "SHARED_PAAGERAT",
+            "type_code": typ, "coverage_id": seg, "plan": entry["issuing_plan"],
+            "raw_age": seq, "lineno": lineno,
+            "note": f"SEQ {seq} below age floor at offset {PR_AGE_OFFSET}",
+        }
     if age_int > S.MAX_AGE:
         age_int = S.MAX_AGE
         age_capped = True
-    age2 = str(age_int).zfill(2)
-    cntl, col_idx = S.duration_to_cntl_col(0)
+    # Issue 140: shared PR rows must ride the same axis as the PR loader, or an
+    # inherited grid lands on a different layout than its donor.
+    use_slot_axis = typ == "PR" and attained_age_slot_axis_enabled()
+    if use_slot_axis:
+        age2, cntl, col_idx = S.attained_age_to_age_cntl_col(age_int)
+        ql_duration = age_int
+    else:
+        age2 = str(age_int).zfill(2)
+        cntl, col_idx = S.duration_to_cntl_col(0)
+        ql_duration = 0
     return {
         "status": "IN_SCOPE",
         "source": "SHARED_PAAGERAT",
@@ -296,7 +336,8 @@ def _transform_paagerat_row(row, col, lineno, seg, entry, config):
         "issuest": config.issuest,
         "effdate": config.effdate,
         "source_duration": "1",
-        "ql_duration": 0,
+        "ql_duration": ql_duration,
+        "attained_age_slot": use_slot_axis,
         "attained_age_seq": seq,
         "value": value,
         "raw_value": val_raw,

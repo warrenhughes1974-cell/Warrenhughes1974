@@ -772,6 +772,7 @@ def main() -> int:
         ("#60", ["tools/validators/validate_issue60_pua_phase.py"], True),
         ("#70", ["QLA_Migration/_validate_issue70_loanintx.py"], True),
         ("#72", ["tools/validators/validate_issue72_mnfopt_status.py"], True),
+        ("#108H", ["tools/validators/validate_issue108h_nfo_election.py"], True),
         ("#75", ["Issue_Log_Items/Issue_75/scripts/validate_issue75_mbankno.py"], True),
         ("#76", ["tools/validators/validate_issue76_eti_rpu_payup.py"], True),
         ("#95", ["tools/validators/validate_issue95_quikuint_pdinttbl.py"], True),
@@ -806,6 +807,7 @@ def main() -> int:
         ("#134", ["QLA_Migration/_validate_issue134_claim_memos.py"], True),
         ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
         ("#136", ["tools/validators/validate_issue136_pvo_flags.py"], True),
+        ("#172", ["tools/validators/validate_issue172_shared_uw_keys.py"], True),
     ]
 
     val_results = []

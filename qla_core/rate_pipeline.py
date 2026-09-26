@@ -694,8 +694,8 @@ def run(config_path, repo_root):
             "severity": "WARNING",
             "table": "QuikNps",
             "detail": (
-                f"Level NP1..NP9 from source DURATION={NPS.SOURCE_DURATION_ISSUE_YEAR} "
-                f"(VALUE1): {res.quiknps_level_np.get('rows_flattened', 0)} row(s) flattened, "
+                f"Level every year to source DURATION={NPS.SOURCE_DURATION_ISSUE_YEAR} "
+                f"(CNTL 00 NP0): {res.quiknps_level_np.get('rows_flattened', 0)} row(s) flattened, "
                 f"{res.quiknps_level_np.get('rows_already_level', 0)} already level, "
                 f"{res.quiknps_level_np.get('cells_set', 0)} cell(s) set"
             ),

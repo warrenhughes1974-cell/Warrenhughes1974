@@ -34,13 +34,29 @@ from qla_core.quikloan_converter import (  # noqa: E402
     sanitize_ploan_rows,
     select_latest_ploan_row_per_policy,
 )
+from qla_core.valuation_date import resolve_valuation_date_yyyymmdd  # noqa: E402
 
 OUT = ROOT / "QLA_Migration" / "Output" / "quikloan.csv"
 SRC = ROOT / "QLA_Migration" / "Source"
 
 
+def _ploan_source_dir() -> Path:
+    """Use LifePRO_Extracts_{QLA_VALUATION_DATE} so 7/31 Output is not scored vs 6/30 PLOAN."""
+    try:
+        vd, vd_src = resolve_valuation_date_yyyymmdd(source_dir=SRC)
+    except ValueError:
+        print(f"PLOAN source dir: {SRC} (no QLA_VALUATION_DATE)")
+        return SRC
+    dated = SRC / f"LifePRO_Extracts_{vd}"
+    if dated.is_dir():
+        print(f"PLOAN source dir: {dated} ({vd_src})")
+        return dated
+    print(f"PLOAN source dir: {SRC} ({vd_src})")
+    return SRC
+
+
 def _latest_active_by_mpolicy() -> dict[str, dict]:
-    path, _ = resolve_table_source(str(SRC), "quikloan")
+    path, _ = resolve_table_source(str(_ploan_source_dir()), "quikloan")
     if not path:
         return {}
     rules = load_derivation_rules()
@@ -67,6 +83,8 @@ def main() -> int:
         "runtime_formula_failures": 0,
         "non_cohort_loans_changed": 0,
         "missing_required_source_fields": 0,
+        "allowlisted_not_present": 0,
+        "smoke": "FAIL",
     }
     failures: list[str] = []
 
@@ -74,12 +92,15 @@ def main() -> int:
         # QuikLoan emit is gated; missing file is not an Issue 104 failure when emit is off.
         if os_env_quikloan_enabled():
             print("FAIL: quikloan.csv missing while QuikLoan emit is enabled")
+            _print(summary)
             return 1
+        summary["smoke"] = "PASS"
         print("PASS: Issue 104 smoke skipped — quikloan.csv not emitted this run")
         _print(summary)
         return 0
 
     if not issue104_loan_pilot_enabled():
+        summary["smoke"] = "PASS"
         print("PASS: Issue 104 pilot flag disabled (QLA_ISSUE104_VALIDATED_LOAN_BACKOUT=0)")
         _print(summary)
         return 0
@@ -87,6 +108,7 @@ def main() -> int:
     allow = load_issue104_allowlist(DEFAULT_ALLOWLIST_PATH)
     if not allow:
         print(f"FAIL: missing/empty Issue 104 allowlist at {DEFAULT_ALLOWLIST_PATH}")
+        _print(summary)
         return 1
 
     ql = pd.read_csv(OUT, dtype=str).fillna("")
@@ -94,7 +116,15 @@ def main() -> int:
     for col in ("MPOLICY", "MLOANPRIN", "MLOANBAL"):
         if col not in ql.columns:
             print(f"FAIL: quikloan missing {col}")
+            _print(summary)
             return 1
+
+    emitted = {
+        format_qladmin_mpolicy(r.get("MPOLICY", ""))
+        for _, r in ql.iterrows()
+        if format_qladmin_mpolicy(r.get("MPOLICY", ""))
+    }
+    summary["allowlisted_not_present"] = sum(1 for mp in allow if mp not in emitted)
 
     source_by_mp = _latest_active_by_mpolicy()
     for _, row in ql.iterrows():
@@ -131,6 +161,13 @@ def main() -> int:
                     )
                 continue
             expect = f"{backed:.2f}"
+            try:
+                if float(expect) < 0:
+                    failures.append(f"{mp}: invalid negative adjusted balance {expect}")
+                    continue
+            except Exception:
+                failures.append(f"{mp}: invalid adjusted balance {expect}")
+                continue
             if prin == expect and bal == expect:
                 summary["cohort_adjusted"] += 1
             else:
@@ -146,22 +183,26 @@ def main() -> int:
                         f"{mp}: non-cohort changed prin/bal={prin}/{bal} gross={gross_s}"
                     )
 
-    _print(summary)
     if summary["non_cohort_loans_changed"] > 0:
         failures.append(
             f"non-cohort loans changed={summary['non_cohort_loans_changed']}"
         )
     if failures:
+        summary["smoke"] = "FAIL"
+        _print(summary)
         for f in failures[:20]:
             print(f"FAIL detail: {f}")
         print("FAIL: Issue 104 validated advance-loan pilot smoke")
         return 1
 
+    summary["smoke"] = "PASS"
+    _print(summary)
     print(
         "PASS: Issue 104 loan pilot smoke — "
         f"encountered={summary['approved_cohort_encountered']} "
         f"adjusted={summary['cohort_adjusted']} "
         f"runtime_fail={summary['runtime_formula_failures']} "
+        f"not_present={summary['allowlisted_not_present']} "
         f"non_cohort_changed=0"
     )
     return 0
@@ -176,13 +217,17 @@ def os_env_quikloan_enabled() -> bool:
 
 
 def _print(summary: dict) -> None:
-    print("| Issue 104 Loan Pilot Check     | Result |")
-    print("| ------------------------------ | ------ |")
-    print(f"| Approved cohort encountered    | {summary['approved_cohort_encountered']:<6} |")
-    print(f"| Cohort adjusted                | {summary['cohort_adjusted']:<6} |")
-    print(f"| Runtime formula failures       | {summary['runtime_formula_failures']:<6} |")
-    print(f"| Non-cohort loans changed       | {summary['non_cohort_loans_changed']:<6} |")
-    print(f"| Missing required source fields | {summary['missing_required_source_fields']:<6} |")
+    print("| Issue 104 Check              | Result    |")
+    print("| ---------------------------- | --------- |")
+    print(f"| Approved cohort encountered  | {summary['approved_cohort_encountered']:<9} |")
+    print(f"| Approved cohort adjusted     | {summary['cohort_adjusted']:<9} |")
+    print(f"| Allowlisted not present      | {summary.get('allowlisted_not_present', 0):<9} |")
+    print(f"| Runtime formula failures     | {summary['runtime_formula_failures']:<9} |")
+    print(f"| Non-cohort loans changed     | {summary['non_cohort_loans_changed']:<9} |")
+    print(
+        f"| Missing required loan fields | {summary['missing_required_source_fields']:<9} |"
+    )
+    print(f"| Smoke test                   | {summary.get('smoke', 'FAIL'):<9} |")
 
 
 if __name__ == "__main__":

@@ -58,6 +58,18 @@ try:
     )
 except ValueError as exc:
     raise SystemExit(str(exc)) from exc
+# Older policy cuts keep the newest quikplan + rates already in Output
+# (Warren 2026-09-02). Override: QLA_KEEP_NEWEST_PLAN_RATES=0 to rebuild.
+from qla_core.newest_plan_rate_package import apply_keep_newest_env  # noqa: E402
+
+_keep = apply_keep_newest_env(_valuation_date, BASE)
+if _keep.get("applied"):
+    print(
+        f"KEEP NEWEST PLAN/RATES: valuation={_keep['valuation_date']} "
+        f"< package={_keep['package_valuation_date']} "
+        f"-> PRODUCT_SETUP_ISOLATED=1 BATCH_INCLUDE_RATE_TABLES=0",
+        flush=True,
+    )
 # Headless batch must not pop the Desktop DBF Append Tool GUI
 os.environ["QLA_LAUNCH_DBF_APPEND_TOOL"] = "0"
 
@@ -179,3 +191,28 @@ if _release_gate.returncode != 0:
         "Do not hand off this package."
     )
 print("POST-CHECK PASS: release-gate smoke-only", flush=True)
+
+# Warren 2026-08-26: every full batch must APPEND into Desktop DBF_Append_Tool\output.
+# GUI launch stays off (QLA_LAUNCH_DBF_APPEND_TOOL=0). Headless package only.
+print("=== FULL BATCH DBF APPEND (mandatory) ===", flush=True)
+_append_env = os.environ.copy()
+_append_env["PYTHONPATH"] = BASE + (
+    os.pathsep + _append_env["PYTHONPATH"] if _append_env.get("PYTHONPATH") else ""
+)
+_append = subprocess.run(
+    [
+        sys.executable,
+        os.path.join(
+            BASE, "Issue_Log_Items", "Issue_A", "tools", "build_full_dbf_append_package.py"
+        ),
+    ],
+    cwd=BASE,
+    env=_append_env,
+)
+if _append.returncode != 0:
+    raise SystemExit(
+        "FULL BATCH POST-CHECK FAIL: DBF Append Tool package "
+        "(build_full_dbf_append_package.py). CSVs are in QLA_Migration/Output "
+        "but Desktop DBF_Append_Tool\\output was not refreshed."
+    )
+print("POST-CHECK PASS: DBF Append Tool output refreshed", flush=True)

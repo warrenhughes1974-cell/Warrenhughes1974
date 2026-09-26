@@ -149,7 +149,7 @@ def transform_paagerat_ul_scalar(
             seq = row[col["SEQ"]].strip()
 
             gender = S.map_sex(sex)
-            uwclass = S.map_uwclass(uw)
+            uwclass = S.map_uwclass(uw, plan=plan, coverage_id=seg)
             if band not in S.BAND_MAP:
                 yield {"status": "BAD_VALUE", "type_code": typ, "coverage_id": seg,
                        "plan": plan, "note": f"unsupported BAND {band}", "lineno": lineno}

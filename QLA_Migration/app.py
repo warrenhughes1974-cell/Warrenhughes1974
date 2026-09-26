@@ -1,12 +1,21 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.21
-# Date:        2026-09-22
+# Version:     v59.24
+# Date:        2026-09-24
 # SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
-# Change Note: v59.21 — PDAGE miss-fill expands each page into the ten policy
-#              years (VALUE1-VALUE10). A zero terminal-reserve row is kept at
-#              each net-premium class so QLAdmin can reserve half the net premium.
+# Change Note: v59.23 — Issue 155: QuikIswl adds a conversion-date row carrying the
+#              LifePRO fund balance (PFNDR, negatives floored to 0.00) next to the
+#              Issue 124 month-0 row; quikprmh/QuikIsrr gain MISWL for items already
+#              in that balance.
+#              v59.22 — CEN/ISWL net premium uses the issue-year rate on every
+#              year. Later 10-year pages no longer keep the climbed page-start rate.
+#              v59.21 — PDAGE miss-fill expands each page into ten policy years
+#              (VALUE1–VALUE10) and restores a zero QuikTvs row on net-premium
+#              classes that equal-UW collapse had folded to 00.
+#              v59.20 — Issue 172 Option K: durable shared UW-class rate keys
+#              (1659C2 CV ST→PR; absorb #168 L14 NT→PQ/PR/ST) after equal-CV/TV
+#              collapse; QLA_ISSUE172_SHARED_UW_KEYS default ON; UWVARY* untouched.
 #              v59.13 — Issue 166: quikdvdp.MDEPINT follows #95 plan buckets
 #              (4.50 ISWL/1668SP, 2.00 SAL OL/ML, 3.50 residual). Year-end
 #              MINTDATE on deposit rows overlays to the prior anniversary.
@@ -679,7 +688,7 @@ POST_EMIT_RATE_PATCHES = (
                      "apply_issue168_l14_reserve_class_replication.py"),
     ),
 )
-APP_VERSION = "v59.21"
+APP_VERSION = "v59.24"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -731,7 +740,7 @@ class QLAdminEnterpriseIntegrationSuite:
             "quikclid": ["MCLIENTID", "MPOLICY", "MPHASE", "MRELATION"],
             "quikdvdp": ["MPOLICY", "MDEPOSIT", "MINTYTD", "MDEPINT", "MINTDATE"],
             "quikdvpr": ["MPOLICY", "MDATE", "MDIV"],
-            "quikprmh": ["MPOLICY", "DATEPAID", "RENEWAL", "PREMIUM", "MLIFE", "MTERM", "MSUPP", "MANN", "MHEALTH", "XS", "MPAIDTO", "POSTDATE", "MPOSTDATE", "MSOURCE", "MBATCH", "USER_ID", "MBILLFRM", "MMODEPD"],
+            "quikprmh": ["MPOLICY", "DATEPAID", "RENEWAL", "PREMIUM", "MLIFE", "MTERM", "MSUPP", "MANN", "MHEALTH", "XS", "MPAIDTO", "POSTDATE", "MPOSTDATE", "MSOURCE", "MBATCH", "USER_ID", "MBILLFRM", "MMODEPD", "MISWL"],
             "quikactg": QUIKACTG_SCHEMA,
             "quikloan": QUIKLOAN_SCHEMA,
             "quikbenh": QUIKBENH_SCHEMA,
@@ -5785,12 +5794,12 @@ class QLAdminEnterpriseIntegrationSuite:
         return result
 
     def _execute_batch_quikiswl_seed(self):
-        """Issue #124 — QuikIswl month-0 seeds from converted quikmstr/quikridr."""
+        """Issue #124 / #155 — QuikIswl month-0 + PFNDR conversion-date seeds."""
         if not self._batch_include_quikiswl_enabled():
-            self.log("BATCH QUIKISWL (Issue #124): skipped (QLA_ENABLE_QUIKISWL_EMIT=0).")
+            self.log("BATCH QUIKISWL (Issue #124/#155): skipped (QLA_ENABLE_QUIKISWL_EMIT=0).")
             return None
         self.log("=" * 60)
-        self.log("BATCH QUIKISWL SEED (Issue #124 — month-0 QuikIswl)")
+        self.log("BATCH QUIKISWL SEED (Issue #124 month-0 + #155 PFNDR seeds)")
         try:
             from qla_core.quikiswl_loader import emit_quikiswl_seeds
 
@@ -5799,14 +5808,35 @@ class QLAdminEnterpriseIntegrationSuite:
             self._last_quikiswl_result = summary
             self.log(
                 f"QUIKISWL (batch): status={summary.get('status', '?')} "
-                f"rows={summary.get('rows', '?')} output={summary.get('output', '')}"
+                f"rows={summary.get('rows', '?')} month0={summary.get('rows_month0', '?')} "
+                f"seed={summary.get('rows_seed', '?')} output={summary.get('output', '')}"
             )
+            if summary.get("exceptions"):
+                self.log(f"  seed exceptions: {summary.get('exceptions')}")
             if summary.get("by_plan"):
                 self.log(f"  by_plan: {summary.get('by_plan')}")
             self.log("=" * 60)
             return summary
         except Exception as exc:
             self.log(f"QUIKISWL ERROR: {exc}")
+            self.log("=" * 60)
+            return {"status": "FAILED", "error": str(exc)}
+
+    def _execute_batch_iswl_miswl_stamp(self):
+        """Issue #155 — MISWL on quikprmh / QuikIsrr after QuikIsrr finale."""
+        if not self._batch_include_quikiswl_enabled():
+            return None
+        self.log("=" * 60)
+        self.log("BATCH ISWL MISWL STAMP (Issue #155 — quikprmh + QuikIsrr)")
+        try:
+            from qla_core.quikiswl_loader import stamp_iswl_miswl
+
+            summary = stamp_iswl_miswl(self._migration_output_dir())
+            self.log(f"ISWL MISWL stamp: status={summary.get('status')} {summary}")
+            self.log("=" * 60)
+            return summary
+        except Exception as exc:
+            self.log(f"ISWL MISWL STAMP ERROR: {exc}")
             self.log("=" * 60)
             return {"status": "FAILED", "error": str(exc)}
 
@@ -7486,7 +7516,8 @@ class QLAdminEnterpriseIntegrationSuite:
                                 "MBATCH": self.normalize(src_row.get("BATCH_NUMBER", "")),
                                 "USER_ID": self.normalize(src_row.get("CODER_ADDED", "")),
                                 "MBILLFRM": mbillfrm,
-                                "MMODEPD": mmodepd
+                                "MMODEPD": mmodepd,
+                                "MISWL": "",
                             }
                             output.append([row_data[h] for h in schema])
                         
@@ -10402,6 +10433,7 @@ class QLAdminEnterpriseIntegrationSuite:
                         reason=str(batch_quikisrr_result.get("reason") or "QUIKISRR_SKIPPED"),
                         output_relpath="QuikIsrr.csv",
                     )
+                self._execute_batch_iswl_miswl_stamp()
 
             if is_batch and hasattr(self, "rate_include_batch_var") and self.rate_include_batch_var.get():
                 if self.rate_emit_csv_var.get() or self.rate_emit_dbf_var.get():

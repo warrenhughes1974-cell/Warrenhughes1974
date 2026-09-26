@@ -224,10 +224,36 @@ def run_checks(*, emit: bool = False, skip_regression: bool = False) -> dict:
             break
     checks["V-ISRR-15"] = {"pass": amount_ok, "detail": amount_detail or "all amount fields equal per event"}
 
+    seed_mlastannv: dict[str, str] = {}
+    iswl_csv = OUT_DIR / "QuikIswl.csv"
+    if iswl_csv.is_file():
+        with iswl_csv.open(newline="", encoding="utf-8-sig", errors="replace") as f:
+            for row in csv.DictReader(f):
+                p = norm(row.get("MPOLICY", ""))
+                a = norm(row.get("MLASTANNV", ""))
+                if not p or not a:
+                    continue
+                prev = seed_mlastannv.get(p, "")
+                if not prev or a > prev:
+                    seed_mlastannv[p] = a
+
+    miswl_ok = True
+    miswl_detail = "MISWL absent or within seed MLASTANNV"
+    if isrr_rows and "MISWL" in isrr_rows[0]:
+        bad = []
+        for r in isrr_rows:
+            mv = norm(r.get("MISWL", ""))
+            if not mv:
+                continue
+            seed_max = seed_mlastannv.get(norm(r.get("MPOLICY", "")))
+            if seed_max and mv > seed_max:
+                bad.append(norm(r.get("MPOLICY", "")))
+        if bad:
+            miswl_ok = False
+            miswl_detail = f"MISWL after seed on {len(bad)} policies e.g. {bad[:3]}"
     checks["V-ISRR-16"] = {
-        "pass": "MISWL" not in (isrr_rows[0].keys() if isrr_rows else QUIKISRR_FIELDS)
-        or all(not norm(r.get("MISWL", "")) for r in isrr_rows),
-        "detail": "MISWL omitted from QuikIsrr.csv",
+        "pass": miswl_ok,
+        "detail": miswl_detail,
     }
 
     exc_policies = {r["mpolicy"] for r in emit_result.payee_exceptions}

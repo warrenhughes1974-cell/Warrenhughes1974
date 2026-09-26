@@ -1,0 +1,22 @@
+---
+description: Older policy cuts keep the newest plan setup and rate tables
+alwaysApply: true
+---
+
+# Older cut — keep newest plan/rates (locked 2026-09-02)
+
+When converting a **policy valuation older than the current plan/rate package** (for example 6/30 or 7/31 after an 8/31 plan/rate load):
+
+1. **Do not rebuild** `quikplan.csv` or `QLA_Migration/Output/rates/`. `QuikIswl.csv` is **not** pinned: since Issue 155 (Warren OK 2026-09-24) it carries each policy's LifePRO balance for the cut being converted.
+2. Snapshot those files, then run the batch with `QLA_PRODUCT_SETUP_ISOLATED=1` and `QLA_BATCH_INCLUDE_RATE_TABLES=0`.
+3. Headless `run_full_batch_test.py` does this automatically when `QLA_VALUATION_DATE` is older than `package_valuation_date` in `QLA_Migration/Reports/rates/newest_plan_rate_package.json`.
+4. The Desktop DBF Append still publishes **all** Output tables —  older policy CSVs plus the newest plan/rate CSVs.
+5. After the run, `python tools/validators/validate_newest_plan_rates_kept.py` must **PASS** (always-on release smoke).
+
+Override only with Warren’s written OK: `QLA_KEEP_NEWEST_PLAN_RATES=0` (rebuild) or `=1` (force hash check).
+
+When you **intentionally** emit a new current plan/rate generation, refresh the hash manifest:
+
+```text
+python -c "from qla_core.newest_plan_rate_package import write_manifest; write_manifest('.', package_valuation_date='YYYYMMDD')"
+```

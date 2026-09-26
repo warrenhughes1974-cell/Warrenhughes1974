@@ -1,11 +1,13 @@
 # LifePRO → QLAdmin Issue Resolution Framework
 
-**Version:** 1.4  
+**Version:** 1.5  
 **Project:** Warrenhughes1974 / QLA Migration  
 **Scope:** Gated issue log remediation — no code until Development approved  
 **Agent map locked:** 2026-07-22 — **Cursor Grok 4.5 for all stages** (was mixed Composer/Grok)  
 **Auto-chains locked:** 2026-07-22 — Pre-Dev through Risk; Post-Dev through Validation; Post-Val through Closure  
-**Stage 0 Discovery locked:** 2026-08-01 — Search & Discuss before Intake; stop until “Proceed to Intake”
+**Stage 0 Discovery locked:** 2026-08-01 — Search & Discuss before Intake; stop until “Proceed to Intake”  
+**Completed-issues release guide locked:** 2026-08-04 — living checklist required on every Close/commit (all models, including Luna)  
+**Closed-issue smoke locked:** 2026-08-19 — every Closed issue must have a fail-closed always-on smoke in `validate_release_closed_issues.py`
 
 ---
 
@@ -57,7 +59,7 @@ Do **not** start Development until the user says e.g. “Approved for Developmen
 
 ### Post-Validation Auto-Chain (after Validation PASS)
 
-**Regression → Closure** (G7 Output accountability + commit/push rules still apply).
+**Regression → Closure** (G7 Output accountability + commit/push + **Completed Issues Release Validation Guide** update still apply).
 
 **Hard stops:**
 - Discovery incomplete (no ID / no symptom) → stop; do not Intake
@@ -128,7 +130,7 @@ flowchart TD
 | **G4 — Development complete** | Development | Surgical diff, version bump if `app.py`, validation script added |
 | **G5 — Validation pass** | Validation | Trace policies, field alignment, row counts per test plan |
 | **G6 — Regression pass** | Regression | Unrelated tables/fields unchanged; no schema drift |
-| **G7 — Closure** | Closure | **`Resolution:`** one-line fix summary published; resolution summary + tracking sheets updated; **`app.py` version bumped** if engine/rate path touched; **git commit + push to remote** (issue-scoped); **Output accountability gate:** issue validator PASS on full `QLA_Migration/Output/` + accountability **IN_DATA** for this issue (no GAP) + affected tables in `Test_Validation/`; **production-ready** batch verified (validators + network pull instructions) |
+| **G7 — Closure** | Closure | **`Resolution:`** one-line fix summary published; resolution summary + tracking sheets updated; **`Completed_Issues_Release_Validation_Guide.md` row added/updated** (resolution + source validation); **fail-closed always-on smoke registered** in `validate_release_closed_issues.py` `SMOKE_JOBS` and proven PASS; **`app.py` version bumped** if engine/rate path touched; **git commit + push to remote** (issue-scoped); **Output accountability gate:** issue validator PASS on full `QLA_Migration/Output/` + accountability **IN_DATA** for this issue (no GAP) + affected tables in `Test_Validation/`; **production-ready** batch verified (validators + network pull instructions) |
 
 **Intake cannot begin until G-D is satisfied (or Discovery explicitly skipped).**  
 **Development cannot begin until G1 + G2 + G3 are satisfied.**
@@ -151,7 +153,7 @@ Use these statuses in issue tracking sheets and report headers:
 | **In Development** | Code/rulebook changes in progress | Complete dev + self-check |
 | **Ready for Validation** | Dev complete; awaiting proof | Run Validation Agent |
 | **Ready for Client UAT** | Validation + regression pass | Client QLAdmin review |
-| **Closed** | Resolution summary published; fix **proven in full Output** (validator PASS + accountability IN_DATA); **committed and pushed** | Archive artifacts; network batch at new `app.py` version |
+| **Closed** | Resolution summary published; fix **proven in full Output** (validator PASS + accountability IN_DATA); **always-on smoke registered**; row added to **Completed Issues Release Validation Guide**; **committed and pushed** | Archive artifacts; network batch at new `app.py` version; guide + smoke used on next release proof |
 
 ---
 
@@ -167,7 +169,27 @@ Use these statuses in issue tracking sheets and report headers:
 8. **G7 brief resolution (required):** Closure must publish a single paste-ready line — **`Resolution:`** followed by one brief sentence stating what the fix was (**do not include engine version** in this line; version belongs in the summary header / Release column). This line goes in the resolution summary header, tracking sheets, and client readout — not only the long-form report.
 9. **G7 release gate:** When Development touched conversion or rate code, Closure must **commit issue-scoped changes and `git push` to remote** so network batch machines can pull the fix. Bump **`app.py` version** when the batch path changes.
 10. **G7 Output accountability gate:** Do **not** mark **Closed** until (a) the issue validator PASSes on **full** `QLA_Migration/Output/`, (b) `validate_issue_log_accountability.py` (or equivalent) shows this issue **IN_DATA** (GAP blocks Closure), and (c) affected tables are published to `Output/Test_Validation/`. Code-only or TV-only proof is insufficient. User waiver only, with reason + date.
-11. **Preserve prior fixes:** Issue #25 MPOLICY padding (`format_qladmin_mpolicy`) and Issue #26 MPREM mapping (`ANN_PREM_PER_UNIT` + fallback) must not regress.
+11. **Preserve prior fixes:** Do not regress closed modifications. Minimum anchors remain Issue #25 MPOLICY padding (`format_qladmin_mpolicy`) and Issue #26 MPREM mapping (`ANN_PREM_PER_UNIT` + fallback). The full closed catalog is `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md` — Regression and release proof use that list.
+12. **Completed Issues Release Validation Guide (required):** On every **Closed** issue and every commit that changes conversion Output behavior, add/update the issue row in `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md` with Resolution, Output tables, LifePRO source validation method, validator command, and examples. Applies to **every agent/model** working this repo (Cursor Grok 4.5, Luna / `gpt-5.6-luna-*`, Composer, and any override). Mirror: `.cursor/rules/completed-issues-release-guide.mdc`.
+13. **Notify Warren on conflicts:** If any work would contradict, undo, weaken, or bypass a Closed row in the Completed Issues guide, **stop and notify Warren in chat before implementing**. Do not ship the override until Warren approves in writing; then update the guide.
+14. **Closed-issue always-on smoke (required):** On every **Closed** issue, register a **fail-closed** smoke (exit 1 if the fix is missing from full Output) in `SMOKE_JOBS` in `tools/validators/validate_release_closed_issues.py`, list it in the Completed Issues guide high-risk smoke table, and prove `--smoke-only` PASS. Do not Close without it. User waiver only. Mirror: `.cursor/rules/closed-issue-smoke-test.mdc`.
+
+---
+
+## Completed Issues Release Validation Guide
+
+**Canonical file:** `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`
+
+| Use | Required action |
+|-----|-----------------|
+| Closing an issue (G7) | Add/update the Closed row **and** register the fail-closed smoke in `SMOKE_JOBS` before status **Closed** |
+| Committing a conversion modification | Same commit must keep the guide row current |
+| Full batch / release proof | Walk Closed rows (or accountability + listed validators); do not call release clean if a Closed row fails without waiver |
+| Regression (G6) | Spot-check prior Closed fixes from this guide, not only #25/#26 |
+| Luna / assist reviews | Read this guide before approving Close or release readiness |
+| **Every release / delivery / fix (default Luna)** | Use guide section **Luna / Composer release checklist**. Luna orchestrates only (no coding). **Composer only** codes. Luna must not use Cursor Grok; escalate to Warren on new classes, Closed conflicts, or Composer stuck |
+| Conflict with a Closed row | **Stop and notify Warren** before implementing; no silent override |
+| Pre-handoff release proof | `python tools/validators/validate_release_closed_issues.py` — exit 1 blocks handoff |
 
 ---
 
@@ -176,6 +198,7 @@ Use these statuses in issue tracking sheets and report headers:
 | Artifact type | Typical path |
 |---------------|--------------|
 | Issue deliverables | `Issue_Log_Items/Issue_<NN>/` or `Issue_<NN><Letter>/` |
+| **Completed issues release checklist** | **`Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`** |
 | Research scripts | `tools/validators/`, `Issue_Log_Items/Issue_*/scripts/`, legacy stubs at `QLA_Migration/_*.py` |
 | Rulebooks | `QLA_Migration/Configs/Sync_Rulebook_*.csv` |
 | Crosswalk | `QLA_Migration/Mapping/Master_Crosswalk.csv` |
@@ -256,7 +279,7 @@ Use these statuses in issue tracking sheets and report headers:
 2. Agent runs **Discovery (Search & Discuss)** on Cursor Grok 4.5, then **stops** and asks whether to Proceed to Intake
 3. Say **“Proceed to Intake”** → agent runs **Intake → Planning → Dependency Gate → Risk**, then stops and asks for Development approval
 4. Say **“Approved for Development”** → agent runs **Development → Validation**, then stops with Validation readout
-5. On Validation **PASS**, agent continues **Regression → Closure** (G7 gates still apply)
+5. On Validation **PASS**, agent continues **Regression → Closure** (G7 gates still apply, including Completed Issues guide update)
 
 ---
 
@@ -265,5 +288,9 @@ Use these statuses in issue tracking sheets and report headers:
 - `AGENTS.md` — Enterprise conversion guardrails
 - `AI_Agents/Discovery_Agent.md` — Stage 0 Search & Discuss
 - `AI_Agents/Dependency_Gate.md` — Blocker checklist
+- `AI_Agents/Closure_Agent.md` — G7 closure + guide update + always-on smoke
 - `AI_Agents/Templates/` — Report templates
 - `Issue_Log_Items/Issue_Log_Master_Tracking_Sheet.md` — Master issue index
+- `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md` — Living closed-issue release checklist (all models)
+- `.cursor/rules/completed-issues-release-guide.mdc` — Always-on rule for Grok / Luna / Composer
+- `.cursor/rules/closed-issue-smoke-test.mdc` — Every Closed issue must register a fail-closed smoke

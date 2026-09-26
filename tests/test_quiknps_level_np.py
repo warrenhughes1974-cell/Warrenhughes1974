@@ -105,69 +105,63 @@ def test_missing_issue_year_emits_blocker_not_invented():
     assert grid[key][1][0] == 49.0
 
 
-def test_1658c1_cntl01_flattens_to_own_np0():
-    """CNTL01 M/37 PR — NP0=49; climbing NP1..NP9 must level to 49."""
-    key = _nps_key("1658C1", cntl="01", uwclass="PR")
+def test_later_page_uses_issue_year_not_its_own_np0():
+    """CNTL 01 must become the CNTL 00 duration-1 rate, not 49."""
+    key00 = _nps_key("1658C1", cntl="00", uwclass="PR")
+    key01 = _nps_key("1658C1", cntl="01", uwclass="PR")
     climbing = [49.0, 55.0, 61.0, 67.0, 73.0, 80.0, 86.0, 93.0, 100.0, 107.0]
     grid = {
-        key: {
-            col: _cell(climbing[col], f"{climbing[col]:.7f}")
-            for col in range(10)
-        }
+        key00: {0: _cell(4.0, "4.0000000"), 1: _cell(49.0, "49.0000000")},
+        key01: {col: _cell(climbing[col], f"{climbing[col]:.7f}") for col in range(10)},
     }
     stats = apply_quiknps_level_np_grid(grid)
-    cells = grid[key]
-    assert cells[0][0] == 49.0
-    for col in range(1, 10):
-        assert cells[col][0] == 49.0
-        assert cells[col][1] == "49.0000000"
-    assert stats["rows_flattened"] == 1
-    assert stats["cells_set"] == 9
-    assert stats["level_source"] == "row_np0"
+    assert all(grid[key00][col][0] == 4.0 for col in range(10))
+    assert all(grid[key01][col][0] == 4.0 for col in range(10))
+    assert grid[key01][0][1] == "4.0000000"
+    assert stats["level_source"] == "issue_year_np0"
+    assert not stats["blockers"]
 
 
-def test_1658c1_cntl02_and_later_pages_flatten_to_own_np0():
-    """CNTL02+ pages level NP1..NP9 to that page's NP0, not CNTL00."""
-    cntl02_np = [113.0, 121.0, 128.0, 136.0, 144.0, 152.0, 160.0, 168.0, 179.0, 179.0]
+def test_later_page_without_issue_year_is_a_blocker():
+    """Do not invent a level rate when CNTL 00 duration 1 is missing."""
     key02 = _nps_key("1658C1", cntl="02", uwclass="PR")
     key09 = _nps_key("1658C1", cntl="09", uwclass="PR")
     grid = {
-        key02: {col: _cell(cntl02_np[col], f"{cntl02_np[col]:.7f}") for col in range(10)},
-        key09: {0: _cell(200.0, "200.0000000"), 1: _cell(210.0), 2: _cell(220.0)},
+        key02: {0: _cell(113.0, "113.0000000"), 1: _cell(121.0)},
+        key09: {0: _cell(200.0, "200.0000000"), 1: _cell(210.0)},
     }
     stats = apply_quiknps_level_np_grid(grid)
     assert grid[key02][0][0] == 113.0
-    assert all(grid[key02][col][0] == 113.0 for col in range(1, 10))
+    assert grid[key02][1][0] == 121.0
     assert grid[key09][0][0] == 200.0
-    assert grid[key09][1][0] == 200.0
-    assert grid[key09][2][0] == 200.0
-    assert stats["rows_flattened"] == 2
-    assert stats["rows_examined"] == 2
+    assert len(stats["blockers"]) == 2
+    assert stats["blockers"][0]["id"] == "QUIKNPS_LEVEL_NP_MISSING_ISSUE_YEAR"
 
 
-def test_1658c1_all_cntl_pages_independent_level_source():
-    """Each CNTL page uses its own NP0 — not cross-page CNTL00 value."""
-    grid = {}
-    cntl00 = [4.0] + [49.0 + i * 6 for i in range(9)]
-    cntl01 = [49.0, 55.0, 61.0, 67.0, 73.0, 80.0, 86.0, 93.0, 100.0, 107.0]
-    for cntl, values in (("00", cntl00), ("01", cntl01)):
-        key = _nps_key("1658C1", cntl=cntl, uwclass="PR")
-        grid[key] = {col: _cell(values[col], f"{values[col]:.7f}") for col in range(10)}
-    stats = apply_quiknps_level_np_grid(grid)
-    assert grid[_nps_key("1658C1", cntl="00")][0][0] == 4.0
-    assert all(grid[_nps_key("1658C1", cntl="00")][col][0] == 4.0 for col in range(1, 10))
-    assert grid[_nps_key("1658C1", cntl="01")][0][0] == 49.0
-    assert all(grid[_nps_key("1658C1", cntl="01")][col][0] == 49.0 for col in range(1, 10))
-    assert stats["rows_flattened"] == 2
-
-
-def test_sibling_family_cntl01_flattens():
-    key = _nps_key("1659CS", cntl="01")
-    grid = {key: {0: _cell(7.5, "7.5000000"), 1: _cell(8.0), 2: _cell(9.0)}}
+def test_1659cr_year_36_uses_duration_1():
+    """1659CR age 51 F ST year 36 is the $18 issue-year rate, not 640."""
+    key00 = _nps_key("1659CR", age="51", cntl="00", gender="F", uwclass="ST")
+    key03 = _nps_key("1659CR", age="51", cntl="03", gender="F", uwclass="ST")
+    grid = {
+        key00: {0: _cell(18.0, "18.0000000"), 1: _cell(33.0, "33.0000000")},
+        key03: {col: _cell(640.0, "640.0000000") for col in range(10)},
+    }
     apply_quiknps_level_np_grid(grid)
-    assert grid[key][0][0] == 7.5
-    assert grid[key][1][0] == 7.5
-    assert grid[key][2][0] == 7.5
+    assert grid[key03][6][0] == 18.0
+    assert grid[key03][0][0] == 18.0
+
+
+def test_sibling_family_later_page_uses_issue_year():
+    key00 = _nps_key("1659CS", cntl="00")
+    key01 = _nps_key("1659CS", cntl="01")
+    grid = {
+        key00: {0: _cell(4.0, "4.0000000")},
+        key01: {0: _cell(7.5, "7.5000000"), 1: _cell(8.0), 2: _cell(9.0)},
+    }
+    apply_quiknps_level_np_grid(grid)
+    assert grid[key01][0][0] == 4.0
+    assert grid[key01][1][0] == 4.0
+    assert grid[key01][2][0] == 4.0
 
 
 def test_non_allowlisted_cntl01_unchanged():

@@ -1,0 +1,65 @@
+---
+description: Keep the Completed Issues Release Validation Guide updated on every conversion commit and closure (all models including Luna)
+alwaysApply: true
+---
+
+# Completed Issues Release Validation Guide
+
+**Canonical file:** `Issue_Log_Items/Completed_Issues_Release_Validation_Guide.md`  
+**Framework:** `AI_Agents/Framework.md` rule 12 / G7 (v1.5+)  
+**Applies to:** every agent and model in this workspace — Cursor Grok 4.5, **Luna** (`gpt-5.6-luna-*`), Composer, and any user override.
+
+## Hard rule
+
+Whenever you:
+
+1. Mark an issue **Closed**, or
+2. Commit a conversion modification that changes Output behavior (maps, loaders, rulebooks, rate emit, validators tied to a fix),
+
+you **must** add or update that issue’s row in `Completed_Issues_Release_Validation_Guide.md` **in the same change set / commit**.
+
+On **Closed**, you **must** also register a fail-closed always-on smoke in `SMOKE_JOBS` (`tools/validators/validate_release_closed_issues.py`) and the guide high-risk smoke table. See `.cursor/rules/closed-issue-smoke-test.mdc` and Framework rule 14.
+
+If you are Luna (or any assist model) reviewing Close / release / regression: **read the guide first** and refuse Close readiness when the new issue row is missing, the smoke job is missing, or a prior Closed row cannot be validated without waiver.
+
+## Conflict with a Closed row — notify Warren
+
+If implementing (or about to implement) anything that **goes against** a Closed row in the guide — undoes, weakens, bypasses, or conflicts with that prior fix:
+
+1. **Stop** and **notify Warren in chat** before shipping.
+2. Name the Closed issue ID(s), the conflict, and why the new work seems to require it.
+3. Do **not** proceed until Warren approves the override in writing.
+4. After approval, update the guide row to reflect the new rule and Warren’s approval date.
+
+## Required row fields
+
+| Column | Content |
+|--------|---------|
+| ID | Issue number (e.g. `135`, `21A`) |
+| Short name | Client-facing short title |
+| Resolution | Plain-language what was fixed |
+| Output tables | `quik*` / `rates/*` fields owned by the fix |
+| Validate from source | LifePRO extract(s) + how to prove Output still matches |
+| Validator / check | Issue validator command or accountability check |
+| Examples | Policy/plan anchors |
+
+## Release use
+
+Before calling a release clean:
+
+1. Confirm git commit + `APP_VERSION` on the batch machine.
+2. Full policy batch **and** rate regenerate when any Closed rate fix is in play (`Output/` is gitignored — code pull alone is not a release).
+3. Run `python tools/validators/validate_release_closed_issues.py` — exit 1 blocks handoff.
+4. Handoff must be **full Output**, not `Test_Validation/` alone.
+
+**Default orchestrator: Luna (no coding).** Follow the locked **Luna / Composer release checklist** in the guide. **Composer only** writes code/validators/`app.py`. Luna must **not** use Cursor Grok or hand coding to Grok — Warren alone may bring Grok in. Escalate to Warren on new failure classes, Closed-row conflicts, or Composer stuck.
+
+On validator FAIL against a named golden: first ask whether active source/Output already matches and the check is stuck on a prior cut (class A → source/Output-aware validator, not a blind engine rewrite).
+
+Do not drop a Closed row from history; mark Reopened if it regresses.
+
+## Related
+
+- Closure G7: `AI_Agents/Closure_Agent.md`
+- Accountability: `tools/validators/validate_issue_log_accountability.py`
+- Seed rebuild (optional): `Issue_Log_Items/_build_completed_issues_guide.py` then `_generate_completed_issues_guide.py` - always hand-verify new rows before commit
