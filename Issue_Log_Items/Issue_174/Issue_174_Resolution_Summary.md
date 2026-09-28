@@ -86,7 +86,7 @@ The 6/30 package was corrected in place: 17 coverage rows, status and save statu
 | Test_Validation published | `quikridr.csv` |
 | Completed Issues guide | Row 174 added. Rows 160 and 133-PS updated. |
 | Always-on smoke | `#174 pending death keeps coverage Active` |
-| Git | Close commit on the current branch. Push was not requested. |
+| Git | Close commit `2951c2d` on `issue-34-pr7-quikisrr`. Push was not requested. |
 
 `Output/` is not in git. The 17-row correction is already in the local 6/30 package. A later batch on this engine keeps the same rule. An 8/31 batch must not freeze a policy at phase 22 after LifePRO has moved it to a real death.
 
