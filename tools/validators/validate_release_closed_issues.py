@@ -224,6 +224,16 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue175_resrvcat.py"],
         True,
     ),
+    (
+        "#176 1659C2 Preferred cash value for 9010715467C",
+        ["tools/validators/validate_issue176_preferred_cv.py"],
+        True,
+    ),
+    (
+        "#173 negative ISWL fund on last history row",
+        ["tools/validators/validate_issue173_negative_fund.py"],
+        True,
+    ),
 ]
 
 
