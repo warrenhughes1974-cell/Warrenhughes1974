@@ -84,7 +84,7 @@ Those three coverages now load as 13, 13, and 12. Other product types, including
 | Test_Validation published | `quikspec.csv` |
 | Completed Issues guide | Row 175 added. Row 141 notes the exception. |
 | Always-on smoke | `#175 L15/L16/L17 reserve category` |
-| Git | Close commit on the current branch. Push was not requested. |
+| Git | Close commit `5e93e09` on `issue-34-pr7-quikisrr`. Push was not requested. |
 
 `Output/` is not in git. The 33-cell correction is already in the local package. A later batch on this filler keeps the same three-coverage map.
 
