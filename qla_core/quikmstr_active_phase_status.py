@@ -9,8 +9,10 @@ Otherwise the provisional Issue #13 / ST_* MSTATUS is preserved.
 
 Display status for phase 1 mirrors the existing phase-1 MPHSTAT inherit rule
 (app.py BASE PHASE TERMINAL STATUS SYNCHRONIZATION): if provisional MSTATUS is
-not in {"", "11", "22", "ACTIVE"}, phase 1 displays provisional MSTATUS;
-later phases use bare-letter STATUS_CODE translation only.
+not in {"", "11", "22", "50", "ACTIVE"}, phase 1 displays provisional MSTATUS.
+Status 50 is Death Claim Pending (Issue 174, Warren 2026-09-28): the policy
+keeps 50 and the phase keeps its own Active code. Later phases use bare-letter
+STATUS_CODE translation only.
 
 Issue #133: a later PUA (paid-up addition, BENEFIT_TYPE "PU") phase mirrors the
 same terminal-status inheritance already applied to quikridr PUA rows by
@@ -30,7 +32,8 @@ import os
 from typing import Callable, Dict, List, Optional, Sequence, Tuple
 
 # Mirror app.py phase-1 inherit block list (do not widen to full 0–49 here).
-PHASE1_INHERIT_BLOCK = frozenset({"", "11", "22", "ACTIVE"})
+# 50 = Issue 174 pending death. Do not paint it onto the phase.
+PHASE1_INHERIT_BLOCK = frozenset({"", "11", "22", "50", "ACTIVE"})
 
 # Issue #133 / #160: BENEFIT_TYPE values treated as paid-up-addition benefits.
 PUA_BENEFIT_TYPES = frozenset({"PU"})

@@ -214,6 +214,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue133_pua_header_status.py"],
         True,
     ),
+    (
+        "#174 pending death keeps coverage Active",
+        ["tools/validators/validate_issue174_pending_death_phase.py"],
+        True,
+    ),
 ]
 
 

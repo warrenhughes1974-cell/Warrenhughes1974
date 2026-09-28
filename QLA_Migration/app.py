@@ -1,10 +1,16 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.24
-# Date:        2026-09-24
+# Version:     v59.26
+# Date:        2026-09-28
 # SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
-# Change Note: v59.23 — Issue 155: QuikIswl adds a conversion-date row carrying the
+# Change Note: v59.26 — Issue 174: Death Claim Pending (50) stays on the policy.
+#              The coverage phase stays Active (22), including a paid-up addition.
+#              Warren 2026-09-28. Other terminal statuses still copy onto the phase.
+#              v59.25 — Issue 172: after the post-rate plan refresh, identical
+#              shared UW copies stay UWVARY*=N. Issue 161: each batch writes
+#              quikcloth.csv from the POFA rows already on quikclid.
+#              v59.23 — Issue 155: QuikIswl adds a conversion-date row carrying the
 #              LifePRO fund balance (PFNDR, negatives floored to 0.00) next to the
 #              Issue 124 month-0 row; quikprmh/QuikIsrr gain MISWL for items already
 #              in that balance.
@@ -688,7 +694,7 @@ POST_EMIT_RATE_PATCHES = (
                      "apply_issue168_l14_reserve_class_replication.py"),
     ),
 )
-APP_VERSION = "v59.24"
+APP_VERSION = "v59.26"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -3676,7 +3682,16 @@ class QLAdminEnterpriseIntegrationSuite:
         if base_mage:
             row_data["MAGE"] = base_mage
         base_status = self._quikridr_status_code_int(entry.get("MPHSTAT", ""))
-        if base_status in (44, 45):
+        policy_status = self.normalize(
+            (getattr(self, "_mstatus_provisional_for_phase1_cache", None) or {}).get(mpolicy)
+            or (getattr(self, "_qm_status_cache", None) or {}).get(mpolicy)
+            or ""
+        )
+        if policy_status == "50":
+            # Issue #174 (Warren 2026-09-28): pending death keeps the PUA's own
+            # Active status. Do not apply #60 (Paid Up 41) or #160 (copy base).
+            pass
+        elif base_status in (44, 45):
             # Issue #108D: base on ETI/RPU terminates every other coverage (spec 54).
             # Statuses 44/45 fall inside the Issue #60 "< 50" window but are not the
             # active base that rule was written for.
@@ -3684,10 +3699,9 @@ class QLAdminEnterpriseIntegrationSuite:
         elif base_status < 50:
             row_data["MPHSTAT"] = "41"
         else:
-            # Issue #160: PUA follows base phase's terminal status (e.g. 50 Suspended,
-            # 53 Terminated/Death, 55 Surrendered, 57 Matured) instead of keeping its
-            # own PPBEN-mapped status. Carve-out approved by Warren against SD-60-12
-            # (Issue #60), which only addressed base < 50 and 44/45.
+            # Issue #160: PUA follows base phase's terminal status (53 Terminated/Death,
+            # 55 Surrendered, 57 Matured) instead of keeping its own PPBEN-mapped status.
+            # Status 50 is not this branch — Issue #174 leaves that PUA Active.
             base_mphstat_raw = self.normalize(entry.get("MPHSTAT", ""))
             if base_mphstat_raw:
                 row_data["MPHSTAT"] = base_mphstat_raw
@@ -9800,8 +9814,9 @@ class QLAdminEnterpriseIntegrationSuite:
                             # Prefer Issue #13 provisional status so #49 QuikMstr override does not change phase 1
                             _prov_map = getattr(self, "_mstatus_provisional_for_phase1_cache", None) or {}
                             qm_status = _prov_map.get(tp) or self._qm_status_cache.get(tp)
-                            # Inherit meaningful policy-level terminal status; block active statuses
-                            if qm_status and qm_status not in ["", "11", "22", "ACTIVE"]:
+                            # Inherit meaningful policy-level terminal status; block active
+                            # statuses. Issue #174: do not copy Death Claim Pending (50).
+                            if qm_status and qm_status not in ["", "11", "22", "50", "ACTIVE"]:
                                 row_data['MPHSTAT'] = qm_status
                         # --------------------------------------------
 

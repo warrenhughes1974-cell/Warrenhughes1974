@@ -808,6 +808,7 @@ def main() -> int:
         ("#135", ["Issue_Log_Items/Issue_135/tools/_validate_issue135_production.py"], True),
         ("#136", ["tools/validators/validate_issue136_pvo_flags.py"], True),
         ("#172", ["tools/validators/validate_issue172_shared_uw_keys.py"], True),
+        ("#174", ["tools/validators/validate_issue174_pending_death_phase.py"], True),
     ]
 
     val_results = []

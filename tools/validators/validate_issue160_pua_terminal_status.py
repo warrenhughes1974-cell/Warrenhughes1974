@@ -70,6 +70,14 @@ def main() -> int:
 
     fields, rows = _load(RIDR)
     arch_fields, arch_rows = _load(ARCHIVE)
+    mstr_path = ROOT / "QLA_Migration" / "Output" / "quikmstr.csv"
+    mstatus_by_pol: dict[str, str] = {}
+    if mstr_path.is_file():
+        _, mrows = _load(mstr_path)
+        for mrow in mrows:
+            mstatus_by_pol[str(mrow.get("MPOLICY") or "").strip()] = str(
+                mrow.get("MSTATUS") or ""
+            ).strip()
 
     print("Issue #160 PUA terminal status validator")
     print(f"quikridr rows={len(rows)}")
@@ -94,6 +102,8 @@ def main() -> int:
     eti_fail = 0
     active_ok = 0
     active_fail = 0
+    pending_ok = 0
+    pending_fail = 0
     fail_shown = 0
 
     for _pol, prow in by_policy.items():
@@ -112,6 +122,21 @@ def main() -> int:
             pua_raw = row.get("MPHSTAT", "")
             pol = str(row.get("MPOLICY") or "").strip()
             plan = str(row.get("MPLAN") or "").strip()
+            # Issue #174 (Warren 2026-09-28): policy status 50 keeps every phase
+            # Active (22), including the PUA. That is not the #60 Paid Up (41) path.
+            if mstatus_by_pol.get(pol) == "50":
+                if str(base_raw).strip() == "22" and str(pua_raw).strip() == "22":
+                    pending_ok += 1
+                else:
+                    pending_fail += 1
+                    ok = False
+                    if fail_shown < 20:
+                        fail_shown += 1
+                        print(
+                            f"  FAIL: #174 pending-death PUA MPOLICY={pol} MPLAN={plan} "
+                            f"expected base/PUA 22 actual base={base_raw!r} pua={pua_raw!r}"
+                        )
+                continue
             if base_status in (44, 45):
                 if str(pua_raw).strip() == "54":
                     eti_ok += 1
@@ -170,6 +195,11 @@ def main() -> int:
     else:
         print(f"  FAIL: base <50 PUA mismatches={active_fail} ok={active_ok}")
 
+    if pending_fail == 0:
+        print(f"  OK: policy status 50 PUA stays 22 ({pending_ok} rows)")
+    else:
+        print(f"  FAIL: policy status 50 PUA mismatches={pending_fail} ok={pending_ok}")
+
     # Check 5 — non-MPHSTAT columns vs archive, matched by MPOLICY+MPHASE
     arch_by_key: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for row in arch_rows:
@@ -204,6 +234,9 @@ def main() -> int:
         for a_row, c_row in zip(a_list, c_list):
             compared_rows += 1
             for col in compare_fields:
+                # Issue #174 rewrites MSAVESTAT 50 → 22 on a pending-death policy.
+                if col == "MSAVESTAT" and mstatus_by_pol.get(key[0]) == "50":
+                    continue
                 if a_row.get(col, "") != c_row.get(col, ""):
                     drift += 1
                     ok = False
