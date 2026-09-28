@@ -1,7 +1,8 @@
 """Issue 141: quikspec.RESRVCAT from PCOVR.PRODUCT_TYPE via PPBEN BENEFIT_SEQ=1.
 
 Do not copy quikplan.PRODUCT (ISWL overlay is ISWLFE). Traditional seq-1 is BA;
-ISWL seq-1 is BF. Emit PRODUCT_TYPE as-is (including L).
+ISWL seq-1 is BF. Emit PRODUCT_TYPE as-is, including L, except the Issue 175
+coverages below (Warren 2026-09-28).
 """
 from __future__ import annotations
 
@@ -15,6 +16,22 @@ from qla_core.lifepro_source_resolver import resolve_table_source
 from qla_core.normalize_utils import format_qladmin_mpolicy, normalize
 
 RESRVCAT_FIELD = "RESRVCAT"
+
+# LifePRO stores PRODUCT_TYPE L on these bases. The policy category is the
+# plan product code. Do not apply this map to discount coverages that are also L.
+ISSUE175_RESERVE_CATEGORY = {
+    "L15": "13",
+    "L16": "13",
+    "L17 BASE": "12",
+}
+
+
+def reserve_category(coverage_id: str, product_type: str) -> str:
+    """Issue 141 product type, with the Issue 175 exception."""
+    mapped = ISSUE175_RESERVE_CATEGORY.get(_compact(coverage_id))
+    if mapped:
+        return mapped
+    return str(product_type or "").strip()
 
 
 def _iter_extract_rows(path: str) -> Iterable[dict[str, str]]:
@@ -122,7 +139,8 @@ def apply_quikspec_resrvcat(
             if key in seq1:
                 plan = seq1[key]
                 break
-        pt = cov_pt.get(plan, "") if plan else ""
+        raw = cov_pt.get(plan, "") if plan else ""
+        pt = reserve_category(plan, raw)
         out.at[idx, RESRVCAT_FIELD] = pt
         if pt:
             stats["filled"] += 1

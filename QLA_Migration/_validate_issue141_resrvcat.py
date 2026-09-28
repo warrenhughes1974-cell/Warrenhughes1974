@@ -22,6 +22,7 @@ from qla_core.quikspec_resrvcat import (  # noqa: E402
     apply_quikspec_resrvcat,
     load_pcovr_product_types,
     load_ppben_seq1_plans,
+    reserve_category,
 )
 
 OUT = ROOT / "QLA_Migration" / "Output"
@@ -90,7 +91,9 @@ def main() -> int:
             pol = str(row.get("MPOLICY", "")).strip()
             got = str(row.get(RESRVCAT_FIELD, "") or "").strip()
             plan = seq1.get(pol, "")
-            exp = cov_pt.get(plan, "") if plan else ""
+            raw = cov_pt.get(plan, "") if plan else ""
+            # Issue 175: L15/L16 -> 13, L17 BASE -> 12. Other rows stay product type.
+            exp = reserve_category(plan, raw)
             if got != exp:
                 mismatches += 1
         summary["join_mismatches"] = mismatches

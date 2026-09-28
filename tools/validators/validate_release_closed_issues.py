@@ -219,6 +219,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue174_pending_death_phase.py"],
         True,
     ),
+    (
+        "#175 L15/L16/L17 reserve category",
+        ["tools/validators/validate_issue175_resrvcat.py"],
+        True,
+    ),
 ]
 
 
