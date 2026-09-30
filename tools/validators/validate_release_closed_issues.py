@@ -234,6 +234,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue173_negative_fund.py"],
         True,
     ),
+    (
+        "#179 female dividend scale on 221END, 196065, and 1960OL",
+        ["tools/validators/validate_issue179_female_dividend.py"],
+        True,
+    ),
 ]
 
 

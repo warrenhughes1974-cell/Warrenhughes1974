@@ -812,6 +812,7 @@ def main() -> int:
         ("#175", ["tools/validators/validate_issue175_resrvcat.py"], True),
         ("#176", ["tools/validators/validate_issue176_preferred_cv.py"], True),
         ("#173", ["tools/validators/validate_issue173_negative_fund.py"], True),
+        ("#179", ["tools/validators/validate_issue179_female_dividend.py"], True),
     ]
 
     val_results = []
