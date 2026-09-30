@@ -51,4 +51,4 @@ Restore `QLA_Migration/Archive/issue181_pre_shift/QuikTvs.csv`, remove the Issue
 
 ## Git
 
-Commit hash is recorded after the close commit. Not pushed.
+Commit `3a3db22258dad4674715a4a38df658104f5f1307` on `issue-34-pr7-quikisrr`. Not pushed.

@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-30
 **Version:** v59.28
-**Status:** On hold. Developed and validated. Not closed. Waiting for Robert's QLAdmin Store Means flag before Regression or Closure.
+**Status:** Closed 2026-09-30. Commit 3a3db22. Waiting was lifted after Robert's Store Means change. Regression passed.
 
 ## What changed
 
