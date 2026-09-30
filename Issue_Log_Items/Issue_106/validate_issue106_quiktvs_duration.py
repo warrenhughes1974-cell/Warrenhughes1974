@@ -14,7 +14,9 @@ PROOFS = [
     ("170858", "M", 17, None, {1: 0.0, 2: 8.76, 83: 1000.0}),
     ("17085M", "M", 17, None, {1: 0.0, 2: 8.76, 83: 1000.0}),
     ("170588", "M", 17, None, {1: 0.0, 2: 8.76, 83: 1000.0}),
-    ("1659C2", "M", 17, "SM", {1: 1.0, 83: 978.0}),
+    # Issue 181 (Warren 2026-09-30): 1659C2 and the other 658/659 plans are
+    # mean reserves. Store Means reads one year earlier, so those grids are
+    # shifted and checked by validate_issue181_cen_tv_shift.py instead.
     ("221END", "M", 17, None, {1: 0.0}),
     ("1960OL", "M", 17, None, {1: 4.0}),
 ]
@@ -32,6 +34,10 @@ def _load_slice(path: Path, plan: str, gender: str, age: int, uw: str | None) ->
             if r["AGE"].strip() != age_s:
                 continue
             if uw is not None and r["UWCLASS"].strip() != uw:
+                continue
+            # PSUBSSEG (2026-09-01): era-banded generations share the PLAN; these
+            # proofs pin the standard 19000101 generation only.
+            if (r.get("EFFDATE") or "").strip() not in ("", "19000101"):
                 continue
             cntl = int(r["CNTL"])
             for i in range(10):
@@ -57,7 +63,7 @@ def main() -> int:
         d0 = vals.get(0)
         if d0 is not None and float(d0) != 0.0:
             # GL85/CEN proofs: Dur0 should be blank after identity (source starts at 1)
-            if plan in ("170858", "17085M", "170588", "1659C2", "221END", "1960OL"):
+            if plan in ("170858", "17085M", "170588", "221END", "1960OL"):
                 print(f"  FAIL Dur0 unexpected nonzero/present: {d0}")
                 failures += 1
         for dur, exp in expect.items():

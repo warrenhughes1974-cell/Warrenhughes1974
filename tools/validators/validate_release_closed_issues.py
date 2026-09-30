@@ -239,6 +239,11 @@ SMOKE_JOBS: list[tuple[str, list[str], bool]] = [
         ["tools/validators/validate_issue179_female_dividend.py"],
         True,
     ),
+    (
+        "#181 658/659 QuikTvs one year earlier",
+        ["tools/validators/validate_issue181_cen_tv_shift.py"],
+        True,
+    ),
 ]
 
 

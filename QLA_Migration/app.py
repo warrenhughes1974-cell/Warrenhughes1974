@@ -698,8 +698,13 @@ POST_EMIT_RATE_PATCHES = (
         os.path.join("Issue_Log_Items", "Issue_179", "tools",
                      "apply_issue179_female_dividend.py"),
     ),
+    (
+        "Issue #181 658/659 reserve duration",
+        os.path.join("Issue_Log_Items", "Issue_181", "tools",
+                     "apply_issue181_cen_tv_shift.py"),
+    ),
 )
-APP_VERSION = "v59.27"
+APP_VERSION = "v59.28"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
