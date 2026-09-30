@@ -21,7 +21,7 @@ The factors are mean reserves. With Store Means on, QLAdmin reads one year earli
 
 ## Fix
 
-Each populated QuikTvs factor on the six plans moved one year earlier. The last populated year is repeated. No other plan or table was changed. QuikPlTv was not changed, so a reload of that file would turn Store Means back off. The shift is re-applied after a rate rebuild. Robert's QLAdmin Store Means change was confirmed in by Warren on 2026-09-30. That flag is what stops other plans from moving when Store Means is on for these six.
+Each populated QuikTvs factor on the six plans moved one year earlier. The last populated year is repeated. No other plan or table was changed. QuikPlTv was not changed, so a reload of that file would turn Store Means back off. The shift is re-applied after every rate load, including a full batch, and the release smoke fails if it is missing. Robert's QLAdmin Store Means change was confirmed in by Warren on 2026-09-30. On 2026-09-30 Warren emailed Jill Burns and Eric Scow. The file on the CSO share is S:\Shared Folders\CSO\FromQLAdmin\quiktvs_Issue181_93302026. They were asked to copy it into the 8/31 and 6/30 regions, reindex both regions, and run valuation, with Store Means left on for the six plans. That flag is what stops other plans from moving when Store Means is on for these six.
 
 ## Evidence
 

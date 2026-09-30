@@ -704,7 +704,7 @@ POST_EMIT_RATE_PATCHES = (
                      "apply_issue181_cen_tv_shift.py"),
     ),
 )
-APP_VERSION = "v59.28"
+APP_VERSION = "v59.29"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -10484,6 +10484,10 @@ class QLAdminEnterpriseIntegrationSuite:
                                     "WRITTEN",
                                     output_relpath=f"rates/{fn}",
                                 )
+                        # A rate rebuild rewrites QuikTvs from LifePRO and drops the
+                        # 658/659 duration shift. Re-apply #169, #168, #179, and #181
+                        # before the package ships.
+                        self._apply_post_emit_rate_patches()
                     else:
                         self._cut_record(
                             "rates/QuikUint",
