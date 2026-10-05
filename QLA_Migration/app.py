@@ -1,10 +1,17 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.26
-# Date:        2026-09-28
+# Version:     v59.32
+# Date:        2026-10-05
 # SYNC:        Must match repo-root app.py — run_converter.bat launches root app.py.
-# Change Note: v59.26 — Issue 174: Death Claim Pending (50) stays on the policy.
+# Change Note: v59.32 — Issue 186: every Active contract with PAID_UP_TYPE=LP
+#              emits A_ (22), not only the Issue #59 list. T still wins, every
+#              S/DP stays 50, and other Suspended reasons stay list-gated.
+#              v59.31 — Issue 182: claims UAT emit prefers the 9/30 PACTG candidate
+#              and maps credit-38/debit-110 premium refunds onto quikclms.PREMIUM.
+#              v59.30 — Issue 174: every S/DP contract stays Death Claim Pending
+#              even when PAID_UP_TYPE is ET, RU, or LP.
+#              v59.26 — Issue 174: Death Claim Pending (50) stays on the policy.
 #              The coverage phase stays Active (22), including a paid-up addition.
 #              Warren 2026-09-28. Other terminal statuses still copy onto the phase.
 #              v59.25 — Issue 172: after the post-rate plan refresh, identical
@@ -704,7 +711,7 @@ POST_EMIT_RATE_PATCHES = (
                      "apply_issue181_cen_tv_shift.py"),
     ),
 )
-APP_VERSION = "v59.29"
+APP_VERSION = "v59.32"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -1707,13 +1714,69 @@ class QLAdminEnterpriseIntegrationSuite:
             self.log(f"PHASE 22 LINEAGE REFRESH ERROR: {exc}")
             return False
 
+    def _issue182_claims_dir(self):
+        """Issue 182 candidate built from PACTG 20260930. Lives under QLA_Migration."""
+        here = os.path.dirname(os.path.abspath(__file__))
+        if os.path.basename(os.path.normpath(here)).lower() == "qla_migration":
+            return os.path.normpath(os.path.join(here, "claims_930"))
+        return os.path.normpath(os.path.join(here, "QLA_Migration", "claims_930"))
+
+    def _issue182_premium_refunds(self):
+        cached = getattr(self, "_issue182_premium_by_rc", None)
+        if cached is not None:
+            return cached
+        mapping = {}
+        path = os.path.join(self._issue182_claims_dir(), "premium_refund_by_rc.csv")
+        if os.path.isfile(path):
+            try:
+                df = pd.read_csv(path, dtype=str).fillna("")
+                for _, row in df.iterrows():
+                    rc = str(row.get("reconstructed_claim_id", "")).strip()
+                    amt = str(row.get("premium_refund", "")).strip()
+                    if rc and amt:
+                        mapping[rc] = amt
+            except Exception:
+                mapping = {}
+        self._issue182_premium_by_rc = mapping
+        return mapping
+
+    def _merge_issue182_derivation_supplement(self, table_key, index):
+        names = {
+            "quikclms": "quikclms_derivation_supplement.csv",
+            "quikclmp": "quikclmp_derivation_supplement.csv",
+        }
+        name = names.get(table_key)
+        if not name:
+            return
+        path = os.path.join(self._issue182_claims_dir(), name)
+        if not os.path.isfile(path):
+            return
+        try:
+            df = pd.read_csv(path, dtype=str).fillna("")
+        except Exception:
+            return
+        for _, row in df.iterrows():
+            row_dict = {
+                str(k).strip().lower(): str(v).strip()
+                for k, v in row.to_dict().items()
+            }
+            deriv_id = row_dict.get("derivation_candidate_id", "")
+            if deriv_id and deriv_id not in index:
+                index[deriv_id] = row_dict
+
     def _resolve_claims_uat_candidate_sources(self):
-        """Prefer client-decision populations (Phases 23–24) for UAT emit; fall back to Phase 17."""
+        """Prefer the 9/30 Issue 182 candidate, then Phases 23–24, then Phase 17."""
         claims_root = self._claims_analysis_root()
+        issue182 = self._issue182_claims_dir()
         p17 = os.path.join(claims_root, "phase17_uat_governance_reporting")
         p23 = os.path.join(claims_root, "phase23_client_decision_application")
         p24 = os.path.join(claims_root, "phase24_client_balancing_rerun")
         candidates = [
+            (
+                "Issue 182 PACTG 20260930 (Phase 24 population plus later deaths)",
+                os.path.join(issue182, "uat_candidate_quikclms_20260930.csv"),
+                os.path.join(issue182, "uat_candidate_quikclmp_20260930.csv"),
+            ),
             (
                 "Phase24 post-rebalance (client Items 14–16)",
                 os.path.join(p24, "uat_candidate_quikclms_post_rebalance.csv"),
@@ -4249,6 +4312,16 @@ class QLAdminEnterpriseIntegrationSuite:
                             f"Issue #96: post-rate quikplan PVO refresh — "
                             f"PLANVALOPT=Y plans={r7.planvalopt_y} blockers={r7.validation_blockers}"
                         )
+                        from qla_core.issue172_shared_uw_keys import (
+                            pin_identical_shared_uwvary,
+                        )
+                        pinned = pin_identical_shared_uwvary(
+                            qp_path, repo_root=self._repo_root()
+                        )
+                        self.log(
+                            "Issue #172: identical shared UW copies "
+                            f"UWVARY pinned N ({pinned} fields)"
+                        )
                 except Exception as exc:
                     self.log(f"Issue #96: post-rate PVO refresh skipped: {exc}")
                 # #169 / #168: a re-emit rebuilds QuikTvs and drops the reserve
@@ -4542,6 +4615,7 @@ class QLAdminEnterpriseIntegrationSuite:
             deriv_id = row_dict.get("derivation_candidate_id", "")
             if deriv_id:
                 index[deriv_id] = row_dict
+        self._merge_issue182_derivation_supplement(table_key, index)
         return index, path
 
     def _load_claims_sync_rulebook(self, table_key):
@@ -4819,6 +4893,11 @@ class QLAdminEnterpriseIntegrationSuite:
 
             if table_key == "quikclmp" and clms_p10_by_rc:
                 combined = self._enrich_payment_combined_from_claim(combined, clms_p10_by_rc)
+
+            if table_key == "quikclms":
+                refund = self._issue182_premium_refunds().get(rc, "")
+                if refund:
+                    combined["premium_refund"] = refund
 
             qla_row = self._transform_claims_source_row(combined, table_key, rules, crosswalk)
             qla_row = apply_claims_emit_enhancements(
@@ -9240,12 +9319,12 @@ class QLAdminEnterpriseIntegrationSuite:
                                             val = ""
                                 # -----------------------------------------------------------------
     
-                                # --- MSTATUS COMPOSITE KEY INTERCEPTOR (Issue #13: T wins; Issue #59 scoped) ---
+                                # --- MSTATUS COMPOSITE KEY INTERCEPTOR (Issue #13: T wins; Issue #186 Active+LP; Issue #59 S scoped) ---
                                 if t_f == 'MSTATUS' and t_id.lower() == "quikmstr":
                                     c_code = self.normalize(src_row.get('CONTRACT_CODE', val))
                                     c_reason = self.normalize(src_row.get('CONTRACT_REASON', ''))
                                     put = self.normalize(src_row.get('PAID_UP_TYPE', ''))
-                                    # Issue #59: only the 7 client-cited policies may take the new branches
+                                    # Issue #59 list gates other Suspended reasons. Issue #186: Active+LP is every policy.
                                     _i59_lp = self.normalize(src_row.get('POLICY_NUMBER', ''))
                                     _i59_ql = self.normalize(row_data.get('MPOLICY', ''))
                                     _i59_keys = {
@@ -9260,11 +9339,16 @@ class QLAdminEnterpriseIntegrationSuite:
                                     _i59 = (_i59_lp in _i59_keys) or (_i59_ql in _i59_keys)
                                     if c_code == 'T':
                                         val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
+                                    elif c_code == 'S' and c_reason == 'DP':
+                                        # Issue #174: every Suspended/Death Pending contract
+                                        # stays Death Claim Pending. Paid-up type must not
+                                        # turn it into ETI, RPU, or Lapsed.
+                                        val = f"{c_code}_{c_reason}"
                                     elif _i59 and c_code == 'S':
-                                        # Death Claim Pending / Suspended reason wins over PUT
+                                        # Other suspended reasons on the Issue #59 list win over PUT
                                         val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
-                                    elif _i59 and c_code == 'A' and put == 'LP':
-                                        # Active contract: do not emit Lapsed via PUT_LP
+                                    elif c_code == 'A' and put == 'LP':
+                                        # Issue #186: Active + LP emits A_ (22) for every policy.
                                         val = 'A_'
                                     elif put in ['PU', 'RU', 'ET', 'LE', 'LP', 'SP']:
                                         # Issue #121: ART (Annual Renewable Term) must not become ETI
@@ -10528,6 +10612,29 @@ class QLAdminEnterpriseIntegrationSuite:
 
             current_stage = "Writing final CSV outputs and summaries"
             self.update_run_progress(9, detail="finalizing")
+            if is_batch:
+                try:
+                    cloth_script = os.path.join(
+                        self._repo_root(),
+                        "Issue_Log_Items",
+                        "Issue_161",
+                        "tools",
+                        "build_issue161_quikcloth_poa.py",
+                    )
+                    if os.path.isfile(cloth_script):
+                        proc = subprocess.run(
+                            [sys.executable, cloth_script],
+                            cwd=self._repo_root(),
+                            capture_output=True,
+                            text=True,
+                        )
+                        tail = (proc.stdout or proc.stderr or "").strip().splitlines()
+                        self.log(
+                            "Issue #161 quikcloth: "
+                            + (tail[-1] if tail else f"exit {proc.returncode}")
+                        )
+                except Exception as exc:
+                    self.log(f"Issue #161 quikcloth skipped: {exc}")
             package_ok = self._run_output_hygiene(run_error_log)
             cut_ok = True
             if is_batch:
