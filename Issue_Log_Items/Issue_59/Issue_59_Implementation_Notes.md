@@ -86,6 +86,12 @@ python tools/validators/validate_issue59_mstatus.py --publish-test-validation
 
 Fails if any non-scoped `MPOLICY` changes `MSTATUS` vs baseline.
 
+### Issue #186 addendum (v59.27, 2026-10-05)
+
+Active + `PAID_UP_TYPE=LP` now emits `A_` (22) for every policy, not only the seven keys above. Suspended (`S`) stays on this list. Terminated (`T`) still wins. `PU` / `RU` / `ET` / `LE` / `SP` are unchanged.
+
+`validate_issue59_mstatus.py` 2.4 treats a baseline delta as accepted when the policy is Active+LP in the valuation extract and the new `MSTATUS` is 22. Any other new code is still a failure. `9015FG8217C` is a source-aware trace: 22 while LifePRO is A/LP, and `ST_T_LP` (54) on the 6/30 terminated cut. `--rule-check` does not need the extract.
+
 ---
 
 ## UAT

@@ -1,21 +1,28 @@
 """
-Issue #59 MSTATUS validation.
+Issue #59 MSTATUS validation, with the Issue #186 Active+LP widening.
 
 Scoped client-policy outcomes (Issue #2 MPOLICY = source + C):
-  - 6 Active+LP policies: MSTATUS = 22
+  - 6 Active+LP policies from Issue #59: MSTATUS = 22 while LifePRO stays A/LP
+  - 9015FG8217C (Issue #186): MSTATUS = 22 while LifePRO is A + PAID_UP_TYPE=LP.
+    On the 6/30 cut this policy was terminated (T/LP) and stays ST_T_LP (54).
   - 9010521213C (client 010521213C):
       * when LifePRO is Suspended/Death Pending (S/DP) → 50
       * when LifePRO later terminates as Death Claim (T/DC) → 53
         (7/31+ source; Issue #13 termination mapping — do not force 50)
 
-Hard guard: vs pre-v58.52 current-package baseline (901…C keyspace), NO other
-MPOLICY may change MSTATUS except 9010521213C, which may move to the
-source-derived expected status.
+Hard guard: vs pre-v58.52 current-package baseline (901…C keyspace), no other
+MPOLICY may change MSTATUS except:
+  - 9010521213C, which may move to the source-derived expected status
+  - an Active + PAID_UP_TYPE=LP policy whose new MSTATUS is 22 (Issue #186).
+    That is the accepted false-lapse correction. A change to any other code,
+    or a 22 on a contract that is not Active+LP, is still a failure.
+    Suspended (S) stays on the Issue #59 list. Terminated (T) still wins.
 
 Usage:
   python tools/validators/validate_issue59_mstatus.py
   python tools/validators/validate_issue59_mstatus.py --output-dir QLA_Migration/Output
   python tools/validators/validate_issue59_mstatus.py --simulate-only
+  python tools/validators/validate_issue59_mstatus.py --rule-check
 """
 
 from __future__ import annotations
@@ -25,7 +32,7 @@ import csv
 import sys
 from pathlib import Path
 
-SCRIPT_VERSION = "2.3"  # 2.3: named Active+LP traces are source-aware (8/31+ T/DC)
+SCRIPT_VERSION = "2.4"  # 2.4: Issue #186 Active+LP → 22 is an accepted baseline delta
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 DEFAULT_SOURCE = PROJECT_ROOT / "QLA_Migration" / "Source"
@@ -54,6 +61,9 @@ EXPECTED_ACTIVE_LP = {
 
 DEATH_CLAIM_POLICY = "9010521213C"
 ALLOWED_DELTA_KEYS = {DEATH_CLAIM_POLICY}
+
+# Issue #186 trace. Source-aware: A+LP → 22; 6/30 T/LP stays ST_T_LP (54).
+ISSUE186_TRACE = "9015FG8217C"
 
 # Issue #49 preserve samples (must remain unchanged vs baseline; 901…C keyspace)
 ISSUE49_PRESERVE = (
@@ -140,6 +150,117 @@ def _ppolc_status_fields(source_root: Path, policy_numbers: set[str]) -> tuple[d
     return found, vd, str(ppolc)
 
 
+def composite_mstatus_key(
+    c_code: str,
+    c_reason: str,
+    put: str,
+    on_issue59_list: bool,
+    art_policy: bool = False,
+) -> str:
+    """Mirror the v59.27 quikmstr MSTATUS interceptor. Keep in lockstep with app.py.
+
+    T wins. Issue #59 still list-gates Suspended (S). Issue #186 emits A_ for
+    every Active + LP contract. PU/RU/ET/LE/SP stay on PUT_ unless the ART
+    guard blocks LE/ET.
+    """
+    code = _norm(c_code).upper()
+    reason = _norm(c_reason).upper()
+    paid = _norm(put).upper()
+    if code == "T":
+        return f"{code}_{reason}" if reason else f"{code}_"
+    if on_issue59_list and code == "S":
+        return f"{code}_{reason}" if reason else f"{code}_"
+    if code == "A" and paid == "LP":
+        return "A_"
+    if paid in ("PU", "RU", "ET", "LE", "LP", "SP"):
+        if art_policy and paid in ("LE", "ET"):
+            return f"{code}_{reason}" if reason else f"{code}_"
+        return f"PUT_{paid}"
+    return f"{code}_{reason}" if reason else f"{code}_"
+
+
+def issue186_delta_accepted(before: str, after: str, contract_code: str, paid_up_type: str) -> bool:
+    """True when a baseline MSTATUS change is the accepted Issue #186 correction."""
+    if _norm(after) != "22" or _norm(before) == "22":
+        return False
+    return _norm(contract_code).upper() == "A" and _norm(paid_up_type).upper() == "LP"
+
+
+def _app_sources_match_v5927() -> list[str]:
+    """Confirm both engines carry the ungated Active+LP branch and v59.27."""
+    errors: list[str] = []
+    root = PROJECT_ROOT
+    for rel in ("app.py", "QLA_Migration/app.py"):
+        text = (root / rel).read_text(encoding="utf-8", errors="replace")
+        if 'APP_VERSION = "v59.27"' not in text:
+            errors.append(f"{rel} APP_VERSION is not v59.27")
+        if "elif c_code == 'A' and put == 'LP':" not in text:
+            errors.append(f"{rel} missing ungated Active+LP branch")
+        if "elif _i59 and c_code == 'A' and put == 'LP':" in text:
+            errors.append(f"{rel} still list-gates Active+LP")
+        if "elif _i59 and c_code == 'S':" not in text:
+            errors.append(f"{rel} lost the list-gated Suspended branch")
+        if "if c_code == 'T':" not in text:
+            errors.append(f"{rel} lost termination-first")
+    return errors
+
+
+def run_rule_check() -> int:
+    """Before/after of the composite key. No LifePRO extract required."""
+    print(f"validate_issue59_mstatus.py {SCRIPT_VERSION} --rule-check")
+    errors = _app_sources_match_v5927()
+    st = load_st()
+    if st.get("ST_A_") != "22":
+        errors.append(f"ST_A_ maps to {st.get('ST_A_')!r}, expected 22")
+    if st.get("ST_A_RS") != "22":
+        errors.append(f"ST_A_RS maps to {st.get('ST_A_RS')!r}, expected 22")
+    if st.get("ST_PUT_LP") != "54":
+        errors.append(f"ST_PUT_LP maps to {st.get('ST_PUT_LP')!r}, expected 54")
+    if st.get("ST_T_LP") != "54":
+        errors.append(f"ST_T_LP maps to {st.get('ST_T_LP')!r}, expected 54")
+
+    # (label, code, reason, put, on_list, art, old_list_gated_key, new_key)
+    cases = [
+        ("9015 restored Active+LP", "A", "RS", "LP", False, False, "PUT_LP", "A_"),
+        ("9014 allowlisted Active+LP", "A", "", "LP", True, False, "A_", "A_"),
+        ("9016 allowlisted Active+LP", "A", "", "LP", True, False, "A_", "A_"),
+        ("terminated lapse still T", "T", "LP", "LP", False, False, "T_LP", "T_LP"),
+        ("listed Suspended DP", "S", "DP", "PU", True, False, "S_DP", "S_DP"),
+        ("unlisted Suspended stays PUT", "S", "DP", "PU", False, False, "PUT_PU", "PUT_PU"),
+        ("paid-up PU unchanged", "A", "", "PU", False, False, "PUT_PU", "PUT_PU"),
+        ("RPU unchanged", "A", "", "RU", False, False, "PUT_RU", "PUT_RU"),
+        ("ETI unchanged", "A", "", "ET", False, False, "PUT_ET", "PUT_ET"),
+        ("ART LE still suppressed", "A", "RS", "LE", False, True, "A_RS", "A_RS"),
+        ("Active without LP uses reason", "A", "RS", "", False, False, "A_RS", "A_RS"),
+    ]
+    for label, code, reason, put, on_list, art, old_key, new_key in cases:
+        got = composite_mstatus_key(code, reason, put, on_list, art)
+        if got != new_key:
+            errors.append(f"{label}: key {got} expected {new_key}")
+            continue
+        # v59.26 list-gated Active+LP. Reconstructed here so the check does not
+        # depend on the LifePRO extract.
+        if code == "A" and put == "LP":
+            old = "A_" if on_list else "PUT_LP"
+        else:
+            old = got
+        if old != old_key:
+            errors.append(f"{label}: v59.26 key {old} expected {old_key}")
+        print(
+            f"  {label}: {old_key} -> {new_key} "
+            f"(ST_{old_key}={st.get('ST_' + old_key, '')} "
+            f"ST_{new_key}={st.get('ST_' + new_key, '')})"
+        )
+
+    if errors:
+        print("FAIL (rule-check)")
+        for e in errors:
+            print(" ", e)
+        return 1
+    print("PASS (rule-check) — Active+LP emits A_ for every policy; S stays listed; T wins")
+    return 0
+
+
 def expected_named_lp_mstatus(source_root: Path, mpolicy: str) -> tuple[str, str]:
     """Issue #59 named Active+LP traces: stay 22 only while LifePRO is still A/LP."""
     st = load_st()
@@ -192,6 +313,8 @@ def simulate_scoped_keys(source_root: Path) -> dict[str, str]:
     for pol in EXPECTED_ACTIVE_LP:
         exp, _ = expected_named_lp_mstatus(source_root, pol)
         out[pol] = exp
+    exp_186, _ = expected_named_lp_mstatus(source_root, ISSUE186_TRACE)
+    out[ISSUE186_TRACE] = exp_186
     return out
 
 
@@ -219,6 +342,11 @@ def main() -> int:
     ap.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     ap.add_argument("--source-dir", type=Path, default=DEFAULT_SOURCE)
     ap.add_argument("--simulate-only", action="store_true")
+    ap.add_argument(
+        "--rule-check",
+        action="store_true",
+        help="Check the v59.27 composite-key rules against both app.py copies. No extract required.",
+    )
     ap.add_argument("--publish-test-validation", action="store_true")
     ap.add_argument(
         "--strict-baseline",
@@ -230,6 +358,9 @@ def main() -> int:
         ),
     )
     args = ap.parse_args()
+
+    if args.rule_check:
+        return run_rule_check()
 
     print(f"validate_issue59_mstatus.py {SCRIPT_VERSION}")
     errors: list[str] = []
@@ -251,6 +382,13 @@ def main() -> int:
                 print(f"  Named LP source change: {pol} expect {exp} ({lp_detail})")
     except Exception as exc:  # noqa: BLE001
         print(f"FAIL - cannot resolve named LP source expectation: {exc}")
+        return 1
+    try:
+        exp_186, detail_186 = expected_named_lp_mstatus(args.source_dir, ISSUE186_TRACE)
+        expected_mstatus[ISSUE186_TRACE] = exp_186
+        print(f"  Issue 186 trace: {ISSUE186_TRACE}={exp_186} ({detail_186})")
+    except Exception as exc:  # noqa: BLE001
+        print(f"FAIL - cannot resolve Issue 186 trace: {exc}")
         return 1
 
     sim = simulate_scoped_keys(args.source_dir)
@@ -291,13 +429,29 @@ def main() -> int:
 
     same_cut_baseline = active_vd == BASELINE_VALUATION_DATE or args.strict_baseline
     if same_cut_baseline:
-        # Hard guard: only ALLOWED_DELTA_KEYS may differ from midyear package baseline
+        # Hard guard: only the death-claim policy, and Issue #186 Active+LP → 22,
+        # may differ from the midyear package baseline.
         unexpected: list[str] = []
+        issue186_accepted: list[str] = []
+        changed: list[tuple[str, str, str]] = []
         for pol, before in baseline.items():
             after = current.get(pol)
-            if after is None:
+            if after is None or after == before:
                 continue
-            if after == before:
+            changed.append((pol, before, after))
+        src_fields: dict = {}
+        if changed:
+            want = {_source_policy_number(pol) for pol, _, _ in changed}
+            src_fields, _, _ = _ppolc_status_fields(args.source_dir, want)
+        for pol, before, after in changed:
+            src = src_fields.get(_source_policy_number(pol), {})
+            if issue186_delta_accepted(
+                before,
+                after,
+                src.get("CONTRACT_CODE", ""),
+                src.get("PAID_UP_TYPE", ""),
+            ):
+                issue186_accepted.append(f"{pol}: {before} -> {after}")
                 continue
             if pol not in ALLOWED_DELTA_KEYS:
                 unexpected.append(f"{pol}: {before} -> {after}")
@@ -306,6 +460,11 @@ def main() -> int:
                     f"ALLOWED delta wrong {pol}: {before} -> {after} "
                     f"(want {expected_mstatus.get(pol)})"
                 )
+        if issue186_accepted:
+            print(
+                f"  Issue 186 accepted Active+LP deltas: {len(issue186_accepted)} "
+                "(MSTATUS -> 22)"
+            )
 
         if unexpected:
             errors.append(f"UNEXPECTED MSTATUS changes ({len(unexpected)}):")
