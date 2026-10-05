@@ -1,4 +1,4 @@
-# Issue 186 acceptance run (v59.27)
+# Issue 186 acceptance run (v59.31)
 
 The 9/30 LifePRO extract stays on Warren's PC. It is gitignored (`QLA_Migration/Source/`) and must not be committed. This repo is public.
 
@@ -6,7 +6,7 @@ The converter has no headless switch. `python app.py` always opens the QUIKConve
 
 ## What gets overwritten
 
-Back these up before the v59.27 run. Copy the folders. Do not move them.
+Back these up before the v59.31 run. Copy the folders. Do not move them.
 
 | Path | Why |
 |---|---|
@@ -18,7 +18,7 @@ Those two desktop paths are constants in `app.py` (`DBF_APPEND_TOOL_INPUT` and `
 
 `QLA_LAUNCH_DBF_APPEND_TOOL=0` only skips opening the Append Tool window. The copy into `\input` and `\output` still happens.
 
-The CSV output folder can be redirected. In the UI, set Output to a new empty folder (for example `C:\temp\issue186-v5927-output`). The compare script reads that folder. It can also read the desktop `\input` CSVs, or `\output` DBFs after the Append Tool has been run. If a folder contains both the CSV and the DBF, the script uses the CSV.
+The CSV output folder can be redirected. In the UI, set Output to a new empty folder (for example `C:\temp\issue186-v5931-output`). The compare script reads that folder. It can also read the desktop `\input` CSVs, or `\output` DBFs after the Append Tool has been run. If a folder contains both the CSV and the DBF, the script uses the CSV.
 
 ## Fields the script compares
 
@@ -30,9 +30,11 @@ The CSV output folder can be redirected. In the UI, set Output to a new empty fo
 
 QLAdmin `MPOLICY` is the LifePRO `POLICY_NUMBER` plus `C`, right-justified to 11 characters (Issue #2). `9015FG8217` becomes `9015FG8217C`. Shorter numbers keep a leading space. The script compares them with the spaces removed.
 
-## 1. Save the v59.26 results (before)
+## 1. Save the v59.30 results (before)
 
-If the last 9/30 conversion is still the v59.26 output, copy that Output folder aside and do not run v59.26 again:
+The before package is the 10/4 conversion built by v59.30. That build keeps every Suspended/Death Pending contract at header 50. v59.30 was not pushed, so do not rebuild "before" from `origin/issue-34-pr7-quikisrr` (that tip is v59.26 and still list-gates S).
+
+If that v59.30 output is still the last 9/30 conversion, copy that Output folder aside and do not run it again:
 
 ```bat
 mkdir C:\temp\issue186-before
@@ -47,15 +49,9 @@ copy /Y C:\Users\warren\Desktop\DBF_Append_Tool\input\quikmstr.csv C:\temp\issue
 copy /Y C:\Users\warren\Desktop\DBF_Append_Tool\input\quikridr.csv C:\temp\issue186-before\
 ```
 
-If the v59.26 output is already gone, check out the base branch in a second worktree and run the same GUI steps into `C:\temp\issue186-before`:
+If the v59.30 output is already gone, the compare cannot be rebuilt from this repository. v59.27 through v59.30 are not commits here.
 
-```bat
-cd /d C:\path\to\Warrenhughes1974
-git fetch origin
-git worktree add C:\temp\qla-v5926 origin/issue-34-pr7-quikisrr
-```
-
-## 2. Worktree for v59.27
+## 2. Worktree for v59.31
 
 Do this from the existing clone. Do not copy the extract into git.
 
@@ -92,9 +88,9 @@ QLA_Migration\run_converter.bat
 
 `run_converter.bat` starts `python app.py` from the worktree root. In the window:
 
-1. Confirm the version banner says **v59.27**.
+1. Confirm the version banner says **v59.31**.
 2. Source must resolve to `PPOLC_PolicyMaster_Extract_20260930.csv` (the log line shows the source file). If it does not, browse Source to the real `QLA_Migration\Source` folder.
-3. Set Output to `C:\temp\issue186-v5927-output` (create the folder first). Leaving the worktree `QLA_Migration\Output` is also fine, because that folder is not the main checkout's Output.
+3. Set Output to `C:\temp\issue186-v5931-output` (create the folder first). Leaving the worktree `QLA_Migration\Output` is also fine, because that folder is not the main checkout's Output.
 4. Click **EXECUTE FULL BATCH MIGRATION**.
 5. Wait for the Complete dialog and click OK.
 
@@ -102,22 +98,23 @@ There is no command that runs this batch without the window.
 
 ## 4. Compare
 
-From the worktree, so the script is the v59.27 copy:
+From the worktree, so the script is the v59.31 copy:
 
 ```bat
 cd /d C:\temp\qla-issue186
-python tools\validators\issue186_before_after.py --source-dir C:\path\to\Warrenhughes1974\QLA_Migration\Source --before-dir C:\temp\issue186-before --after-dir C:\temp\issue186-v5927-output --out C:\temp\issue186-compare.csv
+python tools\validators\issue186_before_after.py --source-dir C:\path\to\Warrenhughes1974\QLA_Migration\Source --before-dir C:\temp\issue186-before --after-dir C:\temp\issue186-v5931-output --out C:\temp\issue186-compare.csv
 ```
 
 `--source-dir` is the folder that contains `PPOLC_PolicyMaster_Extract_20260930.csv` (or a single subfolder that contains it). `--before-dir` and `--after-dir` are the folders that contain `quikmstr` and `quikridr` as CSV or DBF.
 
-The script prints `Active+LP policies found: N` (about 40 on the 9/30 extract) and `PASS` or `FAIL`.
+The script prints `Active+LP policies found: N` (about 40 on the 9/30 extract), `Suspended/Death Pending policies found: N`, and `PASS` or `FAIL`.
 
-PASS means all three of these:
+PASS means all four of these:
 
 - Every Active + `PAID_UP_TYPE=LP` policy is 22 on header, phase 1, and save status after the run.
 - `9015FG8217C` moves from 54 to 22 on all three.
-- No policy outside that Active+LP set changes header `MSTATUS` between before and after. Any that do are listed on screen and in the CSV as `HEADER_CHANGE`.
+- Every Suspended/Death Pending policy (`CONTRACT_CODE` S, `CONTRACT_REASON` DP) has header `MSTATUS` 50 after the run. That includes `9010766679C` (ET), `901330D153C` (RU), `9018900C` (RU), and `901ML8556C` (LP). A move to 50 is accepted. A move away from 50 is `SDP` / FAIL.
+- No other policy changes header `MSTATUS` between before and after. Any that do are listed on screen and in the CSV as `HEADER_CHANGE`.
 
 Exit code 0 is PASS, 1 is FAIL, 2 means a file or column was missing. The report is only the `--out` CSV. Client extracts are not written.
 

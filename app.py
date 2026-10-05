@@ -1,11 +1,12 @@
 # =============================================================================
 # APPLICATION VERSION
 # =============================================================================
-# Version:     v59.27
+# Version:     v59.31
 # Date:        2026-10-05
 # SYNC:        Must match QLA_Migration/app.py — run_converter.bat launches THIS file (repo root app.py).
-# Change Note: v59.27 — Issue 186: Active + PAID_UP_TYPE=LP emits A_ (22) for every policy.
-#              Issue #59 had limited that branch to seven 6/30 policies.
+# Change Note: v59.31 — Issue 186 Active+LP emits A_ (22) for every policy. Suspended/Death
+#              Pending (S/DP) emits S_DP (50) for every policy; paid-up type does not win,
+#              and Issue #49 does not replace header 50. v59.27–v59.30 are not in this repo.
 #              v59.26 — Issue 174: Death Claim Pending (50) stays on the policy.
 #              The coverage phase stays Active (22), including a paid-up addition.
 #              Warren 2026-09-28. Other terminal statuses still copy onto the phase.
@@ -697,7 +698,7 @@ POST_EMIT_RATE_PATCHES = (
                      "apply_issue168_l14_reserve_class_replication.py"),
     ),
 )
-APP_VERSION = "v59.27"
+APP_VERSION = "v59.31"
 DBF_APPEND_TOOL_INPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\input"
 DBF_APPEND_TOOL_OUTPUT = r"C:\Users\warren\Desktop\DBF_Append_Tool\output"
 DBF_APPEND_TOOL_BAT = r"C:\Users\warren\Desktop\DBF_Append_Tool\run_app.bat"
@@ -9233,13 +9234,14 @@ class QLAdminEnterpriseIntegrationSuite:
                                             val = ""
                                 # -----------------------------------------------------------------
     
-                                # --- MSTATUS COMPOSITE KEY INTERCEPTOR (Issue #13: T wins; Issue #186 Active+LP; Issue #59 S scoped) ---
+                                # --- MSTATUS COMPOSITE KEY INTERCEPTOR (Issue #13: T wins; S/DP=50 all; Issue #186 Active+LP) ---
                                 if t_f == 'MSTATUS' and t_id.lower() == "quikmstr":
                                     c_code = self.normalize(src_row.get('CONTRACT_CODE', val))
                                     c_reason = self.normalize(src_row.get('CONTRACT_REASON', ''))
                                     put = self.normalize(src_row.get('PAID_UP_TYPE', ''))
-                                    # Issue #59: Suspended (S) stays limited to the client-cited policy.
                                     # Issue #186: Active+LP is not list-gated.
+                                    # S/DP is 50 for every policy (not only the Issue #59 list).
+                                    # Other Suspended reasons stay on that list.
                                     _i59_lp = self.normalize(src_row.get('POLICY_NUMBER', ''))
                                     _i59_ql = self.normalize(row_data.get('MPOLICY', ''))
                                     _i59_keys = {
@@ -9254,8 +9256,12 @@ class QLAdminEnterpriseIntegrationSuite:
                                     _i59 = (_i59_lp in _i59_keys) or (_i59_ql in _i59_keys)
                                     if c_code == 'T':
                                         val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
+                                    elif c_code == 'S' and c_reason == 'DP':
+                                        # Every Suspended/Death Pending contract is 50.
+                                        # ET/RU/LP/PU must not replace it.
+                                        val = 'S_DP'
                                     elif _i59 and c_code == 'S':
-                                        # Death Claim Pending / Suspended reason wins over PUT
+                                        # Other Suspended reasons: Issue #59 list only.
                                         val = f"{c_code}_{c_reason}" if c_reason else f"{c_code}_"
                                     elif c_code == 'A' and put == 'LP':
                                         # Issue #186: a restored Active contract can still carry LP.
@@ -9514,19 +9520,9 @@ class QLAdminEnterpriseIntegrationSuite:
                                             _new_status, _overridden = select_mstatus_from_active_phase(
                                                 val, _phases, self._issue49_bare_status_map
                                             )
-                                            # Issue #59: keep Death Claim Pending (50) for the one
-                                            # client S/DP policy; #49 later-active-phase must not
-                                            # replace it with a later PUA/active phase (22).
-                                            _i59_dp_keys = {
-                                                "9010521213",
-                                                "9010521213C",
-                                                "010521213C",
-                                            }
-                                            _i59_dp = (
-                                                _lp_pol in _i59_dp_keys
-                                                or _prov_pol in _i59_dp_keys
-                                            )
-                                            if _overridden and not _i59_dp:
+                                            # Death Claim Pending (50) stays on every S/DP policy.
+                                            # A later active phase must not replace it.
+                                            if _overridden and self.normalize(val) != "50":
                                                 val = _new_status
                                                 self._issue49_mstatus_override_count = (
                                                     getattr(self, "_issue49_mstatus_override_count", 0) + 1

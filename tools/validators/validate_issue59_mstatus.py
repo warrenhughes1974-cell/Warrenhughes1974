@@ -16,7 +16,9 @@ MPOLICY may change MSTATUS except:
   - an Active + PAID_UP_TYPE=LP policy whose new MSTATUS is 22 (Issue #186).
     That is the accepted false-lapse correction. A change to any other code,
     or a 22 on a contract that is not Active+LP, is still a failure.
-    Suspended (S) stays on the Issue #59 list. Terminated (T) still wins.
+  - a Suspended/Death Pending (S/DP) policy whose new MSTATUS is 50.
+    Paid-up type does not replace 50. A move away from 50 is a failure.
+    Other Suspended reasons stay on the Issue #59 list. Terminated (T) still wins.
 
 Usage:
   python tools/validators/validate_issue59_mstatus.py
@@ -32,7 +34,7 @@ import csv
 import sys
 from pathlib import Path
 
-SCRIPT_VERSION = "2.4"  # 2.4: Issue #186 Active+LP → 22 is an accepted baseline delta
+SCRIPT_VERSION = "2.5"  # 2.5: every S/DP contract stays ST_S_DP=50 (not list-gated)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = PROJECT_ROOT / "QLA_Migration" / "Output"
 DEFAULT_SOURCE = PROJECT_ROOT / "QLA_Migration" / "Source"
@@ -157,17 +159,20 @@ def composite_mstatus_key(
     on_issue59_list: bool,
     art_policy: bool = False,
 ) -> str:
-    """Mirror the v59.27 quikmstr MSTATUS interceptor. Keep in lockstep with app.py.
+    """Mirror the v59.31 quikmstr MSTATUS interceptor. Keep in lockstep with app.py.
 
-    T wins. Issue #59 still list-gates Suspended (S). Issue #186 emits A_ for
-    every Active + LP contract. PU/RU/ET/LE/SP stay on PUT_ unless the ART
-    guard blocks LE/ET.
+    T wins. Every Suspended/Death Pending (S/DP) contract emits S_DP (50);
+    paid-up type does not win. Other Suspended reasons stay on the Issue #59
+    list. Issue #186 emits A_ for every Active + LP contract. PU/RU/ET/LE/SP
+    stay on PUT_ unless the ART guard blocks LE/ET.
     """
     code = _norm(c_code).upper()
     reason = _norm(c_reason).upper()
     paid = _norm(put).upper()
     if code == "T":
         return f"{code}_{reason}" if reason else f"{code}_"
+    if code == "S" and reason == "DP":
+        return "S_DP"
     if on_issue59_list and code == "S":
         return f"{code}_{reason}" if reason else f"{code}_"
     if code == "A" and paid == "LP":
@@ -186,29 +191,42 @@ def issue186_delta_accepted(before: str, after: str, contract_code: str, paid_up
     return _norm(contract_code).upper() == "A" and _norm(paid_up_type).upper() == "LP"
 
 
-def _app_sources_match_v5927() -> list[str]:
-    """Confirm both engines carry the ungated Active+LP branch and v59.27."""
+def sdp_delta_accepted(after: str, contract_code: str, contract_reason: str) -> bool:
+    """True when a baseline MSTATUS change leaves Suspended/Death Pending at 50."""
+    return (
+        _norm(after) == "50"
+        and _norm(contract_code).upper() == "S"
+        and _norm(contract_reason).upper() == "DP"
+    )
+
+
+def _app_sources_match_v5931() -> list[str]:
+    """Confirm both engines are v59.31: ungated Active+LP and universal S/DP."""
     errors: list[str] = []
     root = PROJECT_ROOT
     for rel in ("app.py", "QLA_Migration/app.py"):
         text = (root / rel).read_text(encoding="utf-8", errors="replace")
-        if 'APP_VERSION = "v59.27"' not in text:
-            errors.append(f"{rel} APP_VERSION is not v59.27")
+        if 'APP_VERSION = "v59.31"' not in text:
+            errors.append(f"{rel} APP_VERSION is not v59.31")
         if "elif c_code == 'A' and put == 'LP':" not in text:
             errors.append(f"{rel} missing ungated Active+LP branch")
         if "elif _i59 and c_code == 'A' and put == 'LP':" in text:
             errors.append(f"{rel} still list-gates Active+LP")
+        if "elif c_code == 'S' and c_reason == 'DP':" not in text:
+            errors.append(f"{rel} missing universal S/DP branch")
         if "elif _i59 and c_code == 'S':" not in text:
             errors.append(f"{rel} lost the list-gated Suspended branch")
         if "if c_code == 'T':" not in text:
             errors.append(f"{rel} lost termination-first")
+        if 'self.normalize(val) != "50"' not in text:
+            errors.append(f"{rel} still lets Issue #49 replace header 50")
     return errors
 
 
 def run_rule_check() -> int:
     """Before/after of the composite key. No LifePRO extract required."""
     print(f"validate_issue59_mstatus.py {SCRIPT_VERSION} --rule-check")
-    errors = _app_sources_match_v5927()
+    errors = _app_sources_match_v5931()
     st = load_st()
     if st.get("ST_A_") != "22":
         errors.append(f"ST_A_ maps to {st.get('ST_A_')!r}, expected 22")
@@ -218,15 +236,20 @@ def run_rule_check() -> int:
         errors.append(f"ST_PUT_LP maps to {st.get('ST_PUT_LP')!r}, expected 54")
     if st.get("ST_T_LP") != "54":
         errors.append(f"ST_T_LP maps to {st.get('ST_T_LP')!r}, expected 54")
+    if st.get("ST_S_DP") != "50":
+        errors.append(f"ST_S_DP maps to {st.get('ST_S_DP')!r}, expected 50")
 
-    # (label, code, reason, put, on_list, art, old_list_gated_key, new_key)
+    # (label, code, reason, put, on_list, art, v59.26 list-gated key, v59.31 key)
     cases = [
         ("9015 restored Active+LP", "A", "RS", "LP", False, False, "PUT_LP", "A_"),
         ("9014 allowlisted Active+LP", "A", "", "LP", True, False, "A_", "A_"),
         ("9016 allowlisted Active+LP", "A", "", "LP", True, False, "A_", "A_"),
         ("terminated lapse still T", "T", "LP", "LP", False, False, "T_LP", "T_LP"),
         ("listed Suspended DP", "S", "DP", "PU", True, False, "S_DP", "S_DP"),
-        ("unlisted Suspended stays PUT", "S", "DP", "PU", False, False, "PUT_PU", "PUT_PU"),
+        ("unlisted S/DP + PU stays 50", "S", "DP", "PU", False, False, "PUT_PU", "S_DP"),
+        ("unlisted S/DP + ET stays 50", "S", "DP", "ET", False, False, "PUT_ET", "S_DP"),
+        ("unlisted S/DP + RU stays 50", "S", "DP", "RU", False, False, "PUT_RU", "S_DP"),
+        ("unlisted S/DP + LP stays 50", "S", "DP", "LP", False, False, "PUT_LP", "S_DP"),
         ("paid-up PU unchanged", "A", "", "PU", False, False, "PUT_PU", "PUT_PU"),
         ("RPU unchanged", "A", "", "RU", False, False, "PUT_RU", "PUT_RU"),
         ("ETI unchanged", "A", "", "ET", False, False, "PUT_ET", "PUT_ET"),
@@ -240,7 +263,9 @@ def run_rule_check() -> int:
             continue
         # v59.26 list-gated Active+LP. Reconstructed here so the check does not
         # depend on the LifePRO extract.
-        if code == "A" and put == "LP":
+        if code == "S" and reason == "DP":
+            old = "S_DP" if on_list else (f"PUT_{put}" if put in ("PU", "RU", "ET", "LE", "LP", "SP") else got)
+        elif code == "A" and put == "LP":
             old = "A_" if on_list else "PUT_LP"
         else:
             old = got
@@ -257,7 +282,7 @@ def run_rule_check() -> int:
         for e in errors:
             print(" ", e)
         return 1
-    print("PASS (rule-check) — Active+LP emits A_ for every policy; S stays listed; T wins")
+    print("PASS (rule-check) — Active+LP emits A_; every S/DP emits S_DP (50); T wins")
     return 0
 
 
@@ -345,7 +370,7 @@ def main() -> int:
     ap.add_argument(
         "--rule-check",
         action="store_true",
-        help="Check the v59.27 composite-key rules against both app.py copies. No extract required.",
+        help="Check the v59.31 composite-key rules against both app.py copies. No extract required.",
     )
     ap.add_argument("--publish-test-validation", action="store_true")
     ap.add_argument(
@@ -429,10 +454,11 @@ def main() -> int:
 
     same_cut_baseline = active_vd == BASELINE_VALUATION_DATE or args.strict_baseline
     if same_cut_baseline:
-        # Hard guard: only the death-claim policy, and Issue #186 Active+LP → 22,
-        # may differ from the midyear package baseline.
+        # Hard guard: only the death-claim policy, Issue #186 Active+LP → 22,
+        # and Suspended/Death Pending → 50 may differ from the midyear package baseline.
         unexpected: list[str] = []
         issue186_accepted: list[str] = []
+        sdp_accepted: list[str] = []
         changed: list[tuple[str, str, str]] = []
         for pol, before in baseline.items():
             after = current.get(pol)
@@ -453,6 +479,13 @@ def main() -> int:
             ):
                 issue186_accepted.append(f"{pol}: {before} -> {after}")
                 continue
+            if sdp_delta_accepted(
+                after,
+                src.get("CONTRACT_CODE", ""),
+                src.get("CONTRACT_REASON", ""),
+            ):
+                sdp_accepted.append(f"{pol}: {before} -> {after}")
+                continue
             if pol not in ALLOWED_DELTA_KEYS:
                 unexpected.append(f"{pol}: {before} -> {after}")
             elif after != expected_mstatus.get(pol):
@@ -464,6 +497,11 @@ def main() -> int:
             print(
                 f"  Issue 186 accepted Active+LP deltas: {len(issue186_accepted)} "
                 "(MSTATUS -> 22)"
+            )
+        if sdp_accepted:
+            print(
+                f"  Accepted Suspended/Death Pending deltas: {len(sdp_accepted)} "
+                "(MSTATUS -> 50)"
             )
 
         if unexpected:

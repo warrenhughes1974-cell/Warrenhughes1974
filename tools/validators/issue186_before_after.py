@@ -1,12 +1,16 @@
 """Issue 186 acceptance compare. Read-only. Python 3 standard library only.
 
 Finds every Active + PAID_UP_TYPE=LP policy on the 9/30 LifePRO policy extract,
-maps each to the QLAdmin MPOLICY key the converter emits, and compares v59.26
-(before) to v59.27 (after) for:
+maps each to the QLAdmin MPOLICY key the converter emits, and compares the
+saved v59.30 package (before) to v59.31 (after) for:
 
   quikmstr.MSTATUS          policy header
   quikridr.MPHSTAT          coverage phase 1 (MPHASE = 1)
   quikridr.MSAVESTAT        save status on that same phase-1 row
+
+Every Suspended/Death Pending contract (CONTRACT_CODE S, CONTRACT_REASON DP)
+must keep header MSTATUS 50. A move to 50 is accepted. A move away from 50
+fails. Other header changes outside Active+LP still fail.
 
 Each results folder may be converter CSV output, DBF_Append_Tool\\input (CSV),
 or DBF_Append_Tool\\output (DBF). When a folder has both, the CSV is used.
@@ -231,6 +235,34 @@ def load_active_lp(ppolc: Path) -> list[dict[str, str]]:
     return found
 
 
+def load_suspended_dp(ppolc: Path) -> list[dict[str, str]]:
+    """Every Suspended/Death Pending contract. Header must stay 50."""
+    rows = read_csv_rows(ppolc)
+    found = []
+    for row in rows:
+        policy = norm(row.get("POLICY_NUMBER", ""))
+        code = norm(row.get("CONTRACT_CODE", ""))
+        reason = norm(row.get("CONTRACT_REASON", ""))
+        put = norm(row.get("PAID_UP_TYPE", ""))
+        if not policy or code != "S" or reason != "DP":
+            continue
+        mpolicy = qla_mpolicy(policy)
+        if not mpolicy:
+            continue
+        found.append(
+            {
+                "POLICY_NUMBER": policy,
+                "MPOLICY": policy_key(mpolicy),
+                "MPOLICY_PADDED": mpolicy,
+                "CONTRACT_CODE": code,
+                "CONTRACT_REASON": reason,
+                "PAID_UP_TYPE": put,
+            }
+        )
+    found.sort(key=lambda r: r["MPOLICY"])
+    return found
+
+
 def load_header(folder: Path) -> tuple[dict[str, str], str]:
     path, kind = find_table(folder, "quikmstr")
     out: dict[str, str] = {}
@@ -292,12 +324,14 @@ def all_equal(rows: list[tuple[str, str]], status: str, index: int) -> bool:
 def run_compare(source_dir: Path, before_dir: Path, after_dir: Path, out_path: Path) -> int:
     ppolc = find_ppolc(source_dir)
     cohort = load_active_lp(ppolc)
+    sdp = load_suspended_dp(ppolc)
     before_header, before_header_src = load_header(before_dir)
     after_header, after_header_src = load_header(after_dir)
     before_phase, before_phase_src = load_phase1(before_dir)
     after_phase, after_phase_src = load_phase1(after_dir)
 
     cohort_keys = {row["MPOLICY"] for row in cohort}
+    sdp_keys = {row["MPOLICY"] for row in sdp}
     failures: list[str] = []
     report_rows: list[dict[str, str]] = []
     trace_seen = False
@@ -356,9 +390,61 @@ def run_compare(source_dir: Path, before_dir: Path, after_dir: Path, out_path: P
             f"{TRACE_MPOLICY} is not an Active + LP policy on {ppolc.name}"
         )
 
+    sdp_not_50 = 0
+    sdp_moved_to_50 = 0
+    for row in sdp:
+        key = row["MPOLICY"]
+        in_before = key in before_header
+        in_after = key in after_header
+        if not in_before and not in_after:
+            continue
+        b_header = before_header.get(key, "")
+        a_header = after_header.get(key, "")
+        if in_after and a_header == "50":
+            row_result = "PASS"
+            if in_before and b_header != "50":
+                sdp_moved_to_50 += 1
+                note = f"Suspended/Death Pending header {b_header or '(blank)'} to 50"
+            else:
+                note = "Suspended/Death Pending header stays 50"
+        else:
+            sdp_not_50 += 1
+            row_result = "FAIL"
+            if not in_after:
+                note = "Suspended/Death Pending header missing after the run"
+            else:
+                note = "Suspended/Death Pending header must stay 50"
+            failures.append(
+                f"{key}: S/DP header {b_header or '(blank)'} -> {a_header or '(blank)'} (must stay 50)"
+            )
+        report_rows.append(
+            {
+                "ROW_TYPE": "SDP",
+                "POLICY_NUMBER": row["POLICY_NUMBER"],
+                "MPOLICY": key,
+                "CONTRACT_CODE": row["CONTRACT_CODE"],
+                "CONTRACT_REASON": row["CONTRACT_REASON"],
+                "PAID_UP_TYPE": row["PAID_UP_TYPE"],
+                "BEFORE_MSTATUS": b_header,
+                "AFTER_MSTATUS": a_header,
+                "BEFORE_MPHSTAT": "",
+                "AFTER_MPHSTAT": "",
+                "BEFORE_MSAVESTAT": "",
+                "AFTER_MSAVESTAT": "",
+                "PHASE1_ROWS_BEFORE": "",
+                "PHASE1_ROWS_AFTER": "",
+                "ROW_RESULT": row_result,
+                "NOTE": note,
+            }
+        )
+    if sdp_not_50:
+        failures.append(
+            f"{sdp_not_50} Suspended/Death Pending header(s) are not 50"
+        )
+
     outside_changes = []
     shared = set(before_header) & set(after_header)
-    for key in sorted(shared - cohort_keys):
+    for key in sorted(shared - cohort_keys - sdp_keys):
         before = before_header[key]
         after = after_header[key]
         if before == after:
@@ -381,16 +467,16 @@ def run_compare(source_dir: Path, before_dir: Path, after_dir: Path, out_path: P
                 "PHASE1_ROWS_BEFORE": "",
                 "PHASE1_ROWS_AFTER": "",
                 "ROW_RESULT": "FAIL",
-                "NOTE": "Header MSTATUS changed and this policy is not Active+LP",
+                "NOTE": "Header MSTATUS changed and this policy is not Active+LP or Suspended/Death Pending",
             }
         )
     if outside_changes:
         failures.append(
-            f"{len(outside_changes)} policy header(s) outside Active+LP changed MSTATUS"
+            f"{len(outside_changes)} policy header(s) outside Active+LP and S/DP changed MSTATUS"
         )
 
-    only_before = sorted(set(before_header) - set(after_header) - cohort_keys)
-    only_after = sorted(set(after_header) - set(before_header) - cohort_keys)
+    only_before = sorted(set(before_header) - set(after_header) - cohort_keys - sdp_keys)
+    only_after = sorted(set(after_header) - set(before_header) - cohort_keys - sdp_keys)
     for key in only_before:
         report_rows.append(
             {
@@ -457,7 +543,11 @@ def run_compare(source_dir: Path, before_dir: Path, after_dir: Path, out_path: P
                 "PHASE1_ROWS_BEFORE": "",
                 "PHASE1_ROWS_AFTER": "",
                 "ROW_RESULT": result,
-                "NOTE": f"Active+LP count={len(cohort)}; outside header changes={len(outside_changes)}",
+                "NOTE": (
+                    f"Active+LP count={len(cohort)}; S/DP count={len(sdp)}; "
+                    f"S/DP not 50={sdp_not_50}; S/DP moved to 50={sdp_moved_to_50}; "
+                    f"outside header changes={len(outside_changes)}"
+                ),
             }
         )
         for row in report_rows:
@@ -467,7 +557,9 @@ def run_compare(source_dir: Path, before_dir: Path, after_dir: Path, out_path: P
     print(f"Before: header {before_header_src}; phase {before_phase_src}")
     print(f"After:  header {after_header_src}; phase {after_phase_src}")
     print(f"Active+LP policies found: {len(cohort)}")
-    print(f"Outside Active+LP header changes: {len(outside_changes)}")
+    print(f"Suspended/Death Pending policies found: {len(sdp)}")
+    print(f"Suspended/Death Pending headers not 50: {sdp_not_50}")
+    print(f"Outside Active+LP and S/DP header changes: {len(outside_changes)}")
     for key, before, after in outside_changes[:20]:
         print(f"  {key}: {before or '(blank)'} -> {after or '(blank)'}")
     if len(outside_changes) > 20:
@@ -557,6 +649,8 @@ def self_check() -> int:
                 {"POLICY_NUMBER": "901ML4054", "CONTRACT_CODE": "A", "CONTRACT_REASON": "RS", "PAID_UP_TYPE": "LP", "COMPANY_CODE": "03"},
                 {"POLICY_NUMBER": "9010000001", "CONTRACT_CODE": "T", "CONTRACT_REASON": "LP", "PAID_UP_TYPE": "LP", "COMPANY_CODE": "03"},
                 {"POLICY_NUMBER": "9010000002", "CONTRACT_CODE": "A", "CONTRACT_REASON": "", "PAID_UP_TYPE": "PU", "COMPANY_CODE": "03"},
+                {"POLICY_NUMBER": "9010000003", "CONTRACT_CODE": "S", "CONTRACT_REASON": "DP", "PAID_UP_TYPE": "ET", "COMPANY_CODE": "03"},
+                {"POLICY_NUMBER": "9010000004", "CONTRACT_CODE": "S", "CONTRACT_REASON": "DP", "PAID_UP_TYPE": "RU", "COMPANY_CODE": "03"},
                 {"POLICY_NUMBER": "-------------", "CONTRACT_CODE": "A", "CONTRACT_REASON": "", "PAID_UP_TYPE": "LP", "COMPANY_CODE": "03"},
             ],
         )
@@ -570,6 +664,8 @@ def self_check() -> int:
                 {"MPOLICY": " 901ML4054C", "MSTATUS": "22"},
                 {"MPOLICY": "9010000001C", "MSTATUS": "54"},
                 {"MPOLICY": "9010000002C", "MSTATUS": "41"},
+                {"MPOLICY": "9010000003C", "MSTATUS": "50"},
+                {"MPOLICY": "9010000004C", "MSTATUS": "44"},
             ],
         )
         _write_csv(
@@ -591,6 +687,8 @@ def self_check() -> int:
                 {"MPOLICY": " 901ML4054C", "MSTATUS": "22"},
                 {"MPOLICY": "9010000001C", "MSTATUS": "54"},
                 {"MPOLICY": "9010000002C", "MSTATUS": "41"},
+                {"MPOLICY": "9010000003C", "MSTATUS": "50"},
+                {"MPOLICY": "9010000004C", "MSTATUS": "50"},
             ],
         )
         _write_csv(
@@ -621,6 +719,8 @@ def self_check() -> int:
                 {"MPOLICY": " 901ML4054C", "MSTATUS": "22"},
                 {"MPOLICY": "9010000001C", "MSTATUS": "54"},
                 {"MPOLICY": "9010000002C", "MSTATUS": "41"},
+                {"MPOLICY": "9010000003C", "MSTATUS": "50"},
+                {"MPOLICY": "9010000004C", "MSTATUS": "50"},
             ],
         )
         _write_dbf(
@@ -642,6 +742,8 @@ def self_check() -> int:
                 {"MPOLICY": " 901ML4054C", "MSTATUS": "22"},
                 {"MPOLICY": "9010000001C", "MSTATUS": "54"},
                 {"MPOLICY": "9010000002C", "MSTATUS": "45"},
+                {"MPOLICY": "9010000003C", "MSTATUS": "44"},
+                {"MPOLICY": "9010000004C", "MSTATUS": "44"},
             ],
         )
         _write_csv(
@@ -677,6 +779,12 @@ def self_check() -> int:
             errors.append("failing case did not record the outside header change")
         if "9015FG8217C must move 54 to 22" not in bad_text:
             errors.append("failing case did not flag 9015FG8217C")
+        if "9010000003C" not in good_text or "stays 50" not in good_text:
+            errors.append("passing case did not keep the S/DP header at 50")
+        if "9010000004C" not in good_text or "44 to 50" not in good_text:
+            errors.append("passing case did not accept an S/DP move to 50")
+        if "must stay 50" not in bad_text or "9010000003C" not in bad_text:
+            errors.append("failing case did not flag an S/DP header leaving 50")
         # Deleted DBF row must be ignored.
         deleted = after_dbf / "with_deleted.dbf"
         _write_dbf(
@@ -705,8 +813,8 @@ def self_check() -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Issue 186 Active+LP before/after compare")
     parser.add_argument("--source-dir", type=Path, help="Folder containing PPOLC_PolicyMaster_Extract_20260930.csv")
-    parser.add_argument("--before-dir", type=Path, help="v59.26 quikmstr/quikridr CSV or DBF folder")
-    parser.add_argument("--after-dir", type=Path, help="v59.27 quikmstr/quikridr CSV or DBF folder")
+    parser.add_argument("--before-dir", type=Path, help="v59.30 quikmstr/quikridr CSV or DBF folder")
+    parser.add_argument("--after-dir", type=Path, help="v59.31 quikmstr/quikridr CSV or DBF folder")
     parser.add_argument("--out", type=Path, help="CSV report path to write")
     parser.add_argument("--self-check", action="store_true", help="Run synthetic checks and write nothing permanent")
     args = parser.parse_args(argv)

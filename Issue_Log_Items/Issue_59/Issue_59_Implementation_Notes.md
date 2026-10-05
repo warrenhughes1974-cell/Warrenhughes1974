@@ -86,11 +86,13 @@ python tools/validators/validate_issue59_mstatus.py --publish-test-validation
 
 Fails if any non-scoped `MPOLICY` changes `MSTATUS` vs baseline.
 
-### Issue #186 addendum (v59.27, 2026-10-05)
+### Issue #186 addendum (v59.31, 2026-10-05)
 
-Active + `PAID_UP_TYPE=LP` now emits `A_` (22) for every policy, not only the seven keys above. Suspended (`S`) stays on this list. Terminated (`T`) still wins. `PU` / `RU` / `ET` / `LE` / `SP` are unchanged.
+Active + `PAID_UP_TYPE=LP` emits `A_` (22) for every policy, not only the seven keys above. Suspended/Death Pending (`S` + `DP`) emits `S_DP` (50) for every policy; paid-up type does not win, and Issue #49 does not replace header 50. Other Suspended reasons stay on the Issue #59 list. Terminated (`T`) still wins. `PU` / `RU` / `ET` / `LE` / `SP` are unchanged on Active contracts.
 
-`validate_issue59_mstatus.py` 2.4 treats a baseline delta as accepted when the policy is Active+LP in the valuation extract and the new `MSTATUS` is 22. Any other new code is still a failure. `9015FG8217C` is a source-aware trace: 22 while LifePRO is A/LP, and `ST_T_LP` (54) on the 6/30 terminated cut. `--rule-check` does not need the extract.
+v59.27 through v59.30 are not commits in this repository. This branch's first Issue 186 commit was numbered v59.27 and is superseded by v59.31 so it does not collide with those local builds.
+
+`validate_issue59_mstatus.py` 2.5 treats a baseline delta as accepted when the policy is Active+LP in the valuation extract and the new `MSTATUS` is 22, or when the policy is Suspended/Death Pending and the new `MSTATUS` is 50. Any other new code is still a failure. `9015FG8217C` is a source-aware trace: 22 while LifePRO is A/LP, and `ST_T_LP` (54) on the 6/30 terminated cut. `--rule-check` does not need the extract.
 
 ---
 
