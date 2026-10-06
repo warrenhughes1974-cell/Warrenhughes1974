@@ -1168,3 +1168,181 @@ Log: `QLA_Migration/Logs/full_batch_20260924_issue155_0630.log` and `QLA_Migrati
 Operator: Validation (Issue #155). Env: `QLA_VALUATION_DATE=20260630`; plan/rate keep.
 Result: Conversion written from 6/30 extracts (no `20260831` source hits). PLAN-KEEP **PASS** (24 files). #155 gold 9010713704C 20260619 / 506 / 45551.94. #148 9011284087C 100 units / 1000. #149 20 of 20 1L17SP at 1000. Release gate **RELEASE_BLOCKED** on #160 missing archive only after #161 quikcloth post-build **PASS** (341). Resident state **PASS**. Desktop Append **44/44 PASS**. `quikmstr.dbf` / `QuikIswl.dbf` / `quikprmh.dbf` timestamp 9/24/2026 12:44 PM. quikprmh.MISWL present.
 Log: `QLA_Migration/Logs/full_batch_20260924_issue155_0630_rerun.log`.
+
+### Run 2026-09-27 — app.py v59.25 — 8/31 rebuild, then 6/30 keep-newest
+
+Operator: dual-region client packages. Commit `aa89f2d` plus a local v59.25 change so identical shared UW copies stay UWVARY=N after the plan refresh, and so quikcloth stays in Output.
+
+**8/31** (`QLA_VALUATION_DATE=20260831`, rates rebuilt). Cut completeness **PASS**. Release smokes **PASS** except #160 (archive snapshot missing). #143 **PASS** once the 6/30 extracts are visible. #104 **PASS** on the real loan file (174 encountered). Desktop Append **42/42**. Zip `August2026_9272026.zip`.
+
+**6/30** (`QLA_VALUATION_DATE=20260630`, product setup isolated, rates not rebuilt). Plan/rate keep **PASS**. Cut completeness **FAIL** only because that profile requires a rate rebuild and this cut must keep the 8/31 plans. Release smokes **PASS** except #160 (same missing snapshot), #161 until quikcloth was written (341 POFA, then **PASS**), and #133 (those two policies are still Active on 6/30, so status stays 22). Desktop Append **42/42**. Zip `June30_9272026.zip`.
+
+| ID | 8/31 | 6/30 | Evidence |
+|----|------|------|----------|
+| A1 | PASS | PASS | Kept quikplan; single-premium plans already Prem Years = 1 |
+| A2 | BLOCKED | BLOCKED | Awaiting CSO |
+| A3 | BLOCKED | BLOCKED | Default PVO keys not built |
+| A4 | PASS | PASS | Newest-plan keep |
+| A5 | BLOCKED | BLOCKED | Valuation setup / #80 |
+| A6 | N/A | N/A | Kept catalog, not re-scored |
+| A7 | PASS | PASS | Release smoke PASS on both cuts |
+| A8a–A8e | N/A | N/A | Kept catalog, not re-scored |
+| A9a | BLOCKED | BLOCKED | Supp type field still with Eric |
+| A9b | N/A | N/A | Kept catalog |
+| A10 | PASS | PASS | QuikUwpo kept with the rate package |
+| A11h/#136 | PASS | PASS | Release smoke PASS |
+| A12 | PASS | PASS | High-water and client-id width smokes PASS |
+
+Not clean on Issue A: A2, A3, A5, and A9a stay blocked. 8/31 counts: quikmstr 5,083, quikprmh 214,339, QuikIswl 547,695, quikcloth 348. 6/30 counts: quikmstr 5,083, quikprmh 211,709, QuikIswl 545,150, quikcloth 341, quikloan 356. Funds: 9010713704C $45,906.83 on 8/31 and $45,551.94 on 6/30; 9010779727C −$180,012.63 on 8/31 and −$172,395.45 on 6/30.
+
+### Run 2026-09-28 — rates only — newest package rebuild for both regions
+
+Operator: Warren asked for one rate rebuild, append, and a desktop copy. No policy batch. Valuation package date 20260831. `quikplan.csv` hash unchanged (`4851178a`).
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | N/A | quikplan not regenerated |
+| A2 | BLOCKED | Awaiting CSO |
+| A3 | BLOCKED | Default PVO keys not built |
+| A4 | PASS | 0 blank PLAN on `Output/rates/QuikPl*.csv` |
+| A5 | BLOCKED | Valuation setup / #80 |
+| A6 | N/A | quikplan flags unchanged; 1659C2 UWVARYCV stays N |
+| A7 | N/A | quikplan not rewritten |
+| A8a–A8e | N/A | quikplan not rewritten |
+| A9a | BLOCKED | Supp type still with Eric |
+| A9b | N/A | quikplan not rewritten |
+| A10 | PASS | QuikUwpo 00/BL/NT/PQ/PR/SM/ST |
+| A11h/#136 | N/A | quikplan unchanged |
+| A12 | N/A | Client tables not regenerated |
+
+Notes:
+- Rate emit SUCCESS, blockers 0, 23 tables, 274,064 CSV rows, then #169 added 5,906 QuikTvs rows. #168 skip (already present). #172 Preferred cash-value keys present.
+- Desktop Append 23/23. Folder: `C:\Users\warren\Desktop\CSO_Latest_Rates`. Not copied into either Q region.
+- 6/30 region `QuikPlCv` is still the older file (255 rows). It is missing 1659C2 Preferred and the 1L14SC class keys. 8/31 `QuikPlCv` already matches this build (263).
+- Not clean on Issue A: A2, A3, A5, and A9a stay blocked.
+
+### Run 2026-09-30 — app.py v59.26 — 8/31 full batch, rates rebuilt
+
+Operator: Warren asked for a full batch of the current conversion, DBF append, and a zip in the append output folder.
+Env: UAT; `QLA_VALUATION_DATE=20260831`; `PRODUCT_SETUP_ISOLATED=0`; `BATCH_INCLUDE_RATE_TABLES=1`
+Source: `QLA_Migration/Source/PPOLC_PolicyMaster_Extract_20260831.csv` (newest extract of each table is the 8/31 file)
+Result: Conversion written. Cut completeness **PASS**. Rate loader **SUCCESS** 23 tables. Pinned plan/rate hashes **unchanged** (24/24). Release gate **RELEASE_BLOCKED** (#160 missing archive snapshot; #173 smoke still expects the 6/30 ending balances). Desktop Append **42/42**. Zip `C:\Users\warren\Desktop\DBF_Append_Tool\output\August2026_9302026.zip`.
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **PASS** | `1668SP`/`10L171`/`10L172`/`1L17SP` PAYYRS=1; SEMI=QTRL=MTHD=MTHB=0 |
+| A2 | **BLOCKED** | DEFICIENCY=N 142/142; awaiting CSO |
+| A3 | **BLOCKED** | Default PVO keys not built |
+| A4 | **PASS** | 0 blank PLAN on `Output/rates/QuikPl*.csv` |
+| A5 | **BLOCKED** | Valuation setup / #80 |
+| A6 | **N/A** | Rebuilt `quikplan.csv` matches the pinned hash |
+| A7 | **PASS** | Release smoke PASS |
+| A8a | **PASS** | A60MIR and A96DAR PAR=0 |
+| A8b | **FAIL** | A60MIR VARDB=2 (A96DAR VARDB=0). Same pinned quikplan bytes |
+| A8c/A8d | **BLOCKED** | Eric |
+| A8e | **PASS** | A-prefix PLANVALOPT=N and gender/band/UW/state vary flags N |
+| A9a | **BLOCKED** | Supp type still with Eric |
+| A9b | **PASS** | 57 prefix-9; PAR≠0 count 0 |
+| A10 | **PASS** | QuikUwpo 7 codes 00/BL/NT/PQ/PR/SM/ST |
+| A11h/#136 | **PASS** | Release smoke PASS |
+| A12 | **PASS** | High-water and client-id width smokes PASS |
+
+Notes:
+- Row counts: quikmstr 5,083 · quikridr 6,956 · quikprmh 214,339 · quikclnt 13,604 · quikclid 32,301 · quikcloth 348 · quikloan 350 · QuikIswl 547,695 · quikclms 32,619 · quikclmp 2,986.
+- #173 gold is the 6/30 last row. This 8/31 cut: 9010779727C −180,012.63; 9010713704C 45,906.83 (same figures recorded on the 9/27 8/31 package); 9010737619C −754,705.97; 9010735781C −121,065.25 (unchanged vs the 6/30 gold). Negatives were not stored as zero.
+- #160 still missing `QLA_Migration/Archive/issue160_pre_remap/quikridr_pre_issue160.csv`.
+- QuikPlCv / QuikPlTv DBFs were not rebuilt from the rate CSVs. They were left as the CSO product files already in the append output.
+- `quikmstr.dbf` / `QuikIsrr.dbf` timestamp 9/30/2026 9:54 AM.
+- Not clean on Issue A: A8b FAIL; A2, A3, A5, A8c, A8d, and A9a stay blocked.
+- Log: `QLA_Migration/Logs/full_batch_20260831_20260930.log`.
+
+### Run 2026-10-03 — app.py v59.30 — 9/30 dual region, no product or rate rebuild
+
+Operator: Warren asked for two September 30 regions. Actuarial fee OFF. QLA fee ON. Same source. Existing plans and rates kept.
+Env: `QLA_VALUATION_DATE=20260930`; `QLA_KEEP_NEWEST_PLAN_RATES=1`; `PRODUCT_SETUP_ISOLATED=1`; `BATCH_INCLUDE_RATE_TABLES=0`
+Source: `QLA_Migration/Source/PPOLC_PolicyMaster_Extract_20260930.csv`
+Actuarial: `QLA_SUPPRESS_POLICY_FEES=1`. QLA: `QLA_SUPPRESS_POLICY_FEES=0`.
+Result: Both regions converted, appended 42/42, and zipped. Release gate **RELEASE_BLOCKED** on both. Not clean.
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **N/A** | quikplan not regenerated. Timestamp 2026-09-30 09:46 |
+| A2 | **BLOCKED** | DEFICIENCY still awaiting CSO. Plan file unchanged |
+| A3 | **BLOCKED** | Default PVO keys not built |
+| A4 | **PASS** | Newest-plan smoke PASS. Rate files not rewritten |
+| A5 | **BLOCKED** | Valuation setup / #80 |
+| A6 | **N/A** | quikplan flags unchanged |
+| A7 | **PASS** | Release smoke PASS on the kept plan file |
+| A8a–A8e | **N/A** | quikplan not rewritten. Prior A8b FAIL remains on those same bytes |
+| A9a | **BLOCKED** | Supp type still with Eric |
+| A9b | **N/A** | quikplan not rewritten |
+| A10 | **PASS** | Newest-plan smoke PASS |
+| A11h/#136 | **PASS** | Release smoke PASS |
+| A12 | **PASS** | High-water and client-id width smokes PASS on both regions |
+
+Notes:
+- v59.30: every Suspended/Death Pending contract stays status 50 even when paid-up type is ET, RU, or LP. #174 smoke PASS on both regions.
+- Fee proof, policy 9010713704C: Actuarial fees 0 and modal premium 41.71. QLA annual fee 25.00 and modal premium 43.91.
+- The only CSV differences are quikmstr.MMODEPREM (2,249 policies) and the five quikridr fee fields (2,266 ISWL rows).
+- Zips: `C:\Users\warren\Desktop\CSO_0930_Actuarial_NoPolicyFee.zip` and `C:\Users\warren\Desktop\CSO_0930_QLA_WithPolicyFee.zip`.
+- Unresolved on both regions: #143 save-unit gold on a surrendered policy, #160 missing archive snapshot, #166 deposit gold 1875.38 vs 1941.01, #167 matured policy still scored as ETI, #133 policy now terminated death, #173 gold still the 6/30 balances. QLA also fails #139, #151, and #152 because those checks expect the fee to be off.
+- Logs: `QLA_Migration/Logs/full_batch_20260930_actuarial_v5930.log` and `full_batch_20260930_qla_v5930.log`.
+
+### Run 2026-10-05 — app.py v59.32 — Issue 186 status acceptance, 9/30, no product or rate rebuild
+
+Operator: Issue 186 acceptance only. Fees left on to match the 10/4 with-fee package. Plans and rates not rebuilt. Append tool not run. Output redirected to `C:\Users\warren\Documents\Issue186_test\v5932_output`.
+Env: `QLA_VALUATION_DATE=20260930`; `QLA_KEEP_NEWEST_PLAN_RATES=1`; `PRODUCT_SETUP_ISOLATED=1`; `BATCH_INCLUDE_RATE_TABLES=0`; `QLA_SUPPRESS_POLICY_FEES=0`; `QLA_LAUNCH_DBF_APPEND_TOOL=0`
+Source: `QLA_Migration/Source/PPOLC_PolicyMaster_Extract_20260930.csv`
+Result: quikmstr (5,084) and quikridr (6,957) written. Issue 139 fee smoke then stopped the batch because ISWL fees were on. Later tables were not written. Not a full package and not clean.
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **N/A** | quikplan not regenerated |
+| A2 | **BLOCKED** | DEFICIENCY still awaiting CSO. Plan file unchanged |
+| A3 | **N/A** | Plan file not rebuilt |
+| A4 | **N/A** | Rate files not rewritten. Newest-plan smoke not re-run |
+| A5 | **N/A** | Plan file not rebuilt |
+| A6 | **N/A** | quikplan flags unchanged |
+| A7 | **N/A** | Plan file not rebuilt |
+| A8a–A8e | **N/A** | quikplan not rewritten |
+| A9a | **BLOCKED** | Supp type still with Eric. Plan file unchanged |
+| A9b | **N/A** | quikplan not rewritten |
+| A10 | **N/A** | Plan file not rebuilt |
+| A11h/#136 | **N/A** | Not re-run. Status acceptance only |
+| A12 | **N/A** | Client tables were written; high-water smoke not re-run |
+
+Notes:
+- Issue 186 file compare PASS: 40 Active+LP policies are 22 on header, phase 1, and save status. 9015FG8217C went 54 to 22. The four named S/DP policies stayed 50.
+- Error log: `QLA_Migration/Error_Logs/run_20261005_161115`.
+
+### Run 2026-10-05 — app.py v59.32 — full 9/30 QLA with-fee replace
+
+Operator: Warren asked to rerun `CSO_0930_QLA_WithPolicyFee` only, keep plans and rates, prove Issue 186 in the output, run the smoke suite, append, and replace `Q:\CSO\CSO_Test_9_30_2026`.
+Env: `QLA_VALUATION_DATE=20260930`; `QLA_KEEP_NEWEST_PLAN_RATES=1`; `PRODUCT_SETUP_ISOLATED=1`; `BATCH_INCLUDE_RATE_TABLES=0`; `QLA_SUPPRESS_POLICY_FEES=0`; `QLA_ISSUE139_FEE_SMOKE=0` (in-app abort only; the fee smoke still ran)
+Source: `QLA_Migration/Source/PPOLC_PolicyMaster_Extract_20260930.csv`
+Result: Full policy package written, appended 42/42, and copied onto the 9/30 region. Release gate **RELEASE_BLOCKED**. Not clean.
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | **N/A** | quikplan not regenerated. Hash still matches the 8/31 package |
+| A2 | **BLOCKED** | DEFICIENCY still awaiting CSO. Plan file unchanged |
+| A3 | **N/A** | Plan file not rebuilt |
+| A4 | **PASS** | Newest-plan smoke PASS. Rate files not rewritten |
+| A5 | **N/A** | Plan file not rebuilt |
+| A6 | **N/A** | quikplan flags unchanged |
+| A7 | **PASS** | Release smoke PASS on the kept plan file |
+| A8a–A8e | **N/A** | quikplan not rewritten. Prior A8b FAIL remains on those same bytes |
+| A9a | **BLOCKED** | Supp type still with Eric |
+| A9b | **N/A** | quikplan not rewritten |
+| A10 | **PASS** | Newest-plan smoke PASS |
+| A11h/#136 | **PASS** | Release smoke PASS |
+| A12 | **PASS** | High-water and client-id width smokes PASS |
+
+Notes:
+- Row counts: quikmstr 5,084 · quikridr 6,957 · quikprmh 215,646 · quikclnt 13,612 · quikclid 32,329 · quikbenh 42,390 · quikloan 348 · QuikIswl 548,643 · quikclms 2,561 · quikclmp 3,113 · quikmemo 5,084.
+- Issue 186 in the region DBF: 9015FG8217C, 9018499CC, 901FG8033CC, and 901FG8217CC are 22 on header, phase 1, and save status. S/DP stayed 50: 9010766679C (ET), 901330D153C (RU), 9018900C (RU), 901ML8556C (LP). Coverage on those four stayed 22.
+- Fee proof, policy 9010713704C: annual fee 25.00 and modal premium 43.91. #139, #151, and #152 fail because those checks expect the fee off.
+- Other smoke fails, same class as the 10/3 package: #143, #160 missing archive snapshot, #166, #167, #133, #173. Also #135 nine hold policies present in claims, #54 loan-history row count 38,295 vs band 37,300–38,200, #110 row count 5,084 vs expected 5,083 with source mismatches 0.
+- Reinsurance CSVs were not rebuilt. `PROD_PTRTY` is missing from Source, so the August quikrein/quikrmst files were appended again. Sizes match the files already in the region.
+- Append 42/42. `quikmstr.dbf` and `QuikIsrr.dbf` in the region are 10/5/2026 7:23 PM and 7:22 PM. `QuikValf.dbf` left at 9/27/2026. Stale NTX indexes for the replaced tables were removed.
+- Logs: `QLA_Migration/Logs/full_batch_20260930_qla_v5932_complete.log` and `smoke_20260930_qla_v5932.log`.
