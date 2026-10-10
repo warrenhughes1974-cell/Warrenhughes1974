@@ -7,7 +7,9 @@ Business rules:
   * Only TYPE_CODE = 'PR' rows are in scope for policy gross premium rates.
   * QuikPlan.VARGP = 3 (attained age): SEQ -> slot, rate at AGE=00 / CNTL=slot//10,
     column slot%10 (Issue 140). NF keeps the pre-140 single-cell layout.
-  * Do NOT unfold into issue-age x duration grids.
+  * Plans in paagerat_pr_level_period are the exception: their PR rows are
+    rewritten to an issue-age by policy-year grid (VARGP 2). See
+    qla_core.level_period_premium. Every other plan stays on the slot axis.
   * ISWL MPLANs with PAAGERAT BP authority suppress PR emit (Phase 2 — Issue #31).
 """
 import csv
@@ -15,6 +17,11 @@ import os
 
 from qla_core import rate_dbf_schema as S
 from qla_core import rate_segment_resolution as SR
+from qla_core.level_period_premium import (
+    level_period_enabled,
+    renewal_periods,
+    reshape_pr_stream,
+)
 from qla_core.rate_factor_loader import LoaderConfig, _to_float, load_plan_crosswalk
 
 VARGP_ATTAINED_AGE = "3"
@@ -317,9 +324,15 @@ def load_paagerat_vargp3_plan_set_from_config(repo_root, cfg):
 
 
 def transform_paagerat_pr(paagerat_csv, resolver: SR.SegmentResolver, config: LoaderConfig,
-                          plan_exclude: frozenset | None = None):
-    """Stream PAAGERAT rows filtered to TYPE_CODE='PR', segment-resolved to PLAN."""
-    return transform_paagerat_attained_age(
+                          plan_exclude: frozenset | None = None,
+                          level_periods: dict | None = None,
+                          hiage_by_plan: dict | None = None):
+    """Stream PAAGERAT rows filtered to TYPE_CODE='PR', segment-resolved to PLAN.
+
+    Level-period plans are rewritten onto an issue-age by policy-year grid.
+    ``QLA_TL10_LEVEL_PERIOD_PR=0`` yields the slot-axis rows unchanged.
+    """
+    base = transform_paagerat_attained_age(
         paagerat_csv, resolver, config,
         type_code="PR",
         plan_exclude=plan_exclude,
@@ -327,6 +340,12 @@ def transform_paagerat_pr(paagerat_csv, resolver: SR.SegmentResolver, config: Lo
         slot_axis=True,
         ownership_slot=PR_OWNERSHIP_SLOT if pr_slot_ownership_enabled() else None,
     )
+    if not level_period_enabled():
+        return base
+    periods = renewal_periods() if level_periods is None else level_periods
+    if not periods:
+        return base
+    return reshape_pr_stream(base, periods, hiage_by_plan)
 
 
 def transform_paagerat_nf(paagerat_csv, resolver: SR.SegmentResolver, config: LoaderConfig):
