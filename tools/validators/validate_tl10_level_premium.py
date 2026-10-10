@@ -11,11 +11,14 @@ Checks, against QLA_Migration/Output by default:
   (c) every issue age extends past the first renewal when the source has a
       rate at that renewal age (issue age + R). A row that stops earlier
       because the source series ends is a WARNING, not a failure
-  (d) the gold cells below, matched exactly
+  (d) the gold cells below, matched exactly. Those cells are LifePRO band 1.
   (e) with --baseline DIR (a pre-change Output/rates folder): every other
-      plan's QuikGps rows and every other rates file are byte-identical, and
-      each new cell equals the baseline attained-age rate at
-      a + R * (k // R)
+      plan's QuikGps rows and every other rates file are byte-identical.
+      The three plans are not compared cell-by-cell to that baseline: the
+      pre-change slot kept the first source row, which is not always band 1.
+  (info) 5L075Y at 100+ units is a policy-size band 2 case. This grid holds
+      band 1. That note is INFO, not a failure. Check (c) series that end
+      before the source renewal age stay warnings.
 
 Exits 1 on failure. Not part of the closed-issue smoke list.
 
@@ -42,7 +45,8 @@ DEFAULT_OUTPUT = ROOT / "QLA_Migration" / "Output"
 PLANS = ("5L0110", "5L0510", "5L075Y")
 GP_PREFIX = PREFIX["QuikGps"]
 
-# Policy year y is index y - 1. Text is the factor cell, exactly.
+# Policy year y is index y - 1. Text is the LifePRO band-1 factor cell, exactly.
+# 5L0110 F PR years 21-30 is 9.00 (band 1). The first-row slot held band 2, 8.70.
 GOLD = (
     ("5L0110", "F", "PR", 45, 21, 30, "9.00"),
     ("5L0110", "F", "PR", 45, 31, 40, "27.04"),
@@ -50,9 +54,22 @@ GOLD = (
     ("5L0110", "M", "PR", 20, 21, 30, "2.38"),
     ("5L0110", "M", "PR", 20, 31, 40, "4.69"),
     ("5L0110", "M", "PR", 20, 41, 41, "10.08"),
-    ("5L075Y", "M", "ST", 29, 26, 30, "8.51"),
-    ("5L075Y", "M", "ST", 29, 31, 35, "11.86"),
-    ("5L075Y", "M", "ST", 29, 36, 36, "17.41"),
+    ("5L0510", "F", "ST", 28, 21, 30, "4.56"),
+    ("5L0510", "F", "ST", 28, 31, 40, "9.23"),
+    ("5L0510", "F", "ST", 28, 41, 41, "23.91"),
+    ("5L0510", "F", "PR", 24, 21, 30, "2.26"),
+    ("5L0510", "F", "PR", 24, 31, 40, "4.34"),
+    ("5L0510", "F", "PR", 24, 41, 41, "7.34"),
+)
+
+# 5L075Y male standard, issue age 29, is the 100+ unit policy-size band. LifePRO
+# band 2 there is 8.51, 11.86, 17.41, 29.92. This decision holds band 1
+# (8.96, 12.48, 18.33, 31.49) for every face amount. Reported as INFO.
+BAND1_SIZE_LIMITATION = (
+    "INFO 5L075Y at 100+ units is a policy-size band 2 case and a known "
+    "limitation of the band 1 decision. The grid holds band 1 values "
+    "8.96, 12.48, 18.33, 31.49 rather than LifePRO band 2 values "
+    "8.51, 11.86, 17.41, 29.92."
 )
 
 
@@ -110,15 +127,6 @@ def _slices(rows: list[dict], plans: set[str]) -> dict[tuple, dict[int, str]]:
             if text:
                 cells[page * N_DURATION_COLS + col] = text
     return out
-
-
-def _same_rate(left: str, right: str) -> bool:
-    if left.strip() == right.strip():
-        return True
-    try:
-        return abs(float(left) - float(right)) < 1e-6
-    except ValueError:
-        return False
 
 
 def _check_vargp(quikplan_rows: list[dict], failures: list[str]) -> None:
@@ -225,31 +233,7 @@ def _other_plan_bytes(path: Path, skip: set[str]) -> bytes:
     return b"".join(kept)
 
 
-def _baseline_slots(rows: list[dict], plans: set[str]) -> dict[tuple, dict[int, str]]:
-    """Attained-age slot axis: AGE 00, slot = CNTL*10 + column."""
-    slots: dict[tuple, dict[int, str]] = {}
-    for row in rows:
-        plan = _n(row.get("PLAN"))
-        if plan not in plans:
-            continue
-        bucket = slots.setdefault((plan, _sig(row)), {})
-        age = _n(row.get("AGE"))
-        page = _page(row)
-        for col in range(N_DURATION_COLS):
-            text = _n(row.get(f"{GP_PREFIX}{col}"))
-            if not text:
-                continue
-            if age in ("", "00"):
-                attained = page * N_DURATION_COLS + col
-            elif col == 0 and page == 0 and age.isdigit():
-                attained = int(age)
-            else:
-                continue
-            bucket[attained] = text
-    return slots
-
-
-def _check_baseline(rates_dir: Path, baseline_dir: Path, slices: dict, periods: dict, failures: list[str]) -> None:
+def _check_baseline(rates_dir: Path, baseline_dir: Path, failures: list[str]) -> None:
     if not baseline_dir.is_dir():
         failures.append(f"(e) baseline rates folder not found: {baseline_dir}")
         return
@@ -272,32 +256,18 @@ def _check_baseline(rates_dir: Path, baseline_dir: Path, slices: dict, periods: 
         if current_files[name].read_bytes() != baseline_files[name].read_bytes():
             failures.append(f"(e) {name} is not byte-identical to baseline")
 
-    base_gps = _find_csv(baseline_dir, "QuikGps.csv")
-    if base_gps is None:
+    if _find_csv(baseline_dir, "QuikGps.csv") is None:
         failures.append("(e) baseline QuikGps.csv is missing")
-        return
-    slots = _baseline_slots(_read_csv(base_gps), skip)
-    for (plan, seg, issue_age), cells in slices.items():
-        period = periods[plan]
-        base = slots.get((plan, seg))
-        if base is None:
-            failures.append(f"(e) {plan} {seg} has new QuikGps rows and no baseline attained-age grid")
-            continue
-        for index, text in sorted(cells.items()):
-            lookup = issue_age + period * (index // period)
-            expected = base.get(lookup)
-            if expected is None or not _same_rate(text, expected):
-                failures.append(
-                    f"(e) {plan} issue {issue_age} index {index} is {text!r}, "
-                    f"baseline attained age {lookup} is {expected!r}"
-                )
 
 
 def validate(output_dir: Path, baseline_dir: Path | None = None,
-             warnings: list[str] | None = None) -> list[str]:
+             warnings: list[str] | None = None,
+             infos: list[str] | None = None) -> list[str]:
     failures: list[str] = []
     if warnings is None:
         warnings = []
+    if infos is None:
+        infos = []
     output_dir = Path(output_dir)
     plan_path = output_dir / "quikplan.csv"
     rates_dir = output_dir / "rates"
@@ -318,8 +288,10 @@ def validate(output_dir: Path, baseline_dir: Path | None = None,
     slices = _slices(_read_csv(gps_path), set(PLANS))
     _check_blocks(slices, periods, failures, warnings)
     _check_gold(slices, failures)
+    if BAND1_SIZE_LIMITATION not in infos:
+        infos.append(BAND1_SIZE_LIMITATION)
     if baseline_dir is not None:
-        _check_baseline(rates_dir, Path(baseline_dir), slices, periods, failures)
+        _check_baseline(rates_dir, Path(baseline_dir), failures)
     return failures
 
 
@@ -330,11 +302,14 @@ def main(argv: list[str] | None = None) -> int:
                         help="Pre-change Output/rates folder")
     args = parser.parse_args(argv)
     warnings: list[str] = []
-    failures = validate(args.output_dir, args.baseline, warnings)
+    infos: list[str] = []
+    failures = validate(args.output_dir, args.baseline, warnings, infos)
     print("Level renewal-period gross premium")
     print(f"  output: {args.output_dir}")
     if args.baseline is not None:
         print(f"  baseline: {args.baseline}")
+    for info in infos:
+        print(f"  - {info}")
     for warning in warnings[:40]:
         print(f"  - {warning}")
     if len(warnings) > 40:

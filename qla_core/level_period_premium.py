@@ -12,9 +12,12 @@ R is that plan's renewal period. It comes from ``paagerat_pr_level_period`` in
 the rate-loader config, or from ``DEFAULT_RENEWAL_PERIODS`` when the key is
 absent. It is never inferred from the plan name.
 
-The attained-age rate is the cell ``build_factor_grid`` would have stored for
-that age on the slot axis (segment tier, then first row; band-collapse priority
-on any non-PAAGERAT cell). A lookup age with no source rate is left blank.
+For these plans the attained-age rate is the LifePRO band 1 row at that age
+(the original band, before ``map_band`` collapses 1/2/3 to QLAdmin band 00).
+Duplicate band-1 rows keep the first row in the file. If band 1 is absent, the
+lowest band number present is used and a warning is logged. Every other plan
+still uses the PAAGERAT first-row collision rule. A lookup age with no source
+rate is left blank.
 
 ``QLA_TL10_LEVEL_PERIOD_PR=0/false/no/off`` restores the attained-age slot axis
 and leaves VARGP alone.
@@ -34,7 +37,9 @@ import os
 logger = logging.getLogger(__name__)
 
 from qla_core import rate_dbf_schema as S
-from qla_core.rate_factor_loader import build_factor_grid
+
+# LifePRO band kept for these plans. QLAdmin BAND stays 00 (Issue #71).
+PREFERRED_SOURCE_BAND = 1
 
 LEVEL_PERIOD_ENV = "QLA_TL10_LEVEL_PERIOD_PR"
 CONFIG_KEY = "paagerat_pr_level_period"
@@ -219,39 +224,75 @@ def _row_attained_age(row: dict) -> int:
     return int(str(row["age"]))
 
 
-def _collapse_attained(rows: list[dict]) -> dict[tuple, dict[int, dict]]:
-    """One winning source row per attained age, using the factor-grid rules.
+def _source_band_number(row: dict) -> int | None:
+    """Original LifePRO band. ``source_band_raw`` is the value before map_band."""
+    raw = str(row.get("source_band_raw") or "").strip()
+    if raw.isdigit():
+        return int(raw)
+    return None
 
-    ``build_factor_grid`` is the same function that writes today's slot-axis
-    cell, so the first renewal block matches the table the plan carries now.
+
+def _choose_source_row(candidates: list[dict]) -> tuple[dict, bool]:
+    """Band 1, else the lowest band number. First file row wins inside a band.
+
+    Returns ``(row, fell_back)``. ``fell_back`` is true when band 1 was absent.
+    """
+    preferred = [
+        row for row in candidates
+        if _source_band_number(row) == PREFERRED_SOURCE_BAND
+    ]
+    if preferred:
+        return preferred[0], False
+    numbered = [
+        (number, row) for row in candidates
+        if (number := _source_band_number(row)) is not None
+    ]
+    if numbered:
+        lowest = min(number for number, _row in numbered)
+        for number, row in numbered:
+            if number == lowest:
+                return row, True
+    return candidates[0], True
+
+
+def _collapse_attained(rows: list[dict]) -> dict[tuple, dict[int, dict]]:
+    """One source row per attained age for an allow-listed plan.
+
+    Selection is LifePRO band 1, independent of file order across bands.
+    Duplicate rows of that band keep the first. QLAdmin BAND on the row is
+    unchanged (00). This does not call ``build_factor_grid``, so the PAAGERAT
+    first-row collision rule stays in force for every other plan.
     """
     if not rows:
         return {}
-    grids, _collisions, _caps = build_factor_grid(iter(rows), None)
-    by_lineno: dict = {}
+    buckets: dict[tuple, dict[int, list]] = {}
     for row in rows:
-        by_lineno.setdefault(row.get("lineno"), []).append(row)
+        attained = _row_attained_age(row)
+        group = (
+            row.get("plan"), row.get("gender"), row.get("uwclass"), row.get("band"),
+            row.get("isscntry"), row.get("issuest"), row.get("effdate"),
+        )
+        buckets.setdefault(group, {}).setdefault(attained, []).append(row)
 
     grouped: dict[tuple, dict[int, dict]] = {}
-    for key, cells in (grids.get("QuikGps") or {}).items():
-        plan, age, cntl, gender, uwclass, band, isscntry, issuest, effdate = key
-        group = (plan, gender, uwclass, band, isscntry, issuest, effdate)
-        rates = grouped.setdefault(group, {})
-        for col, cell in cells.items():
-            value, _raw, lineno = cell[0], cell[1], cell[2]
-            matches = [
-                row for row in by_lineno.get(lineno, [])
-                if row.get("plan") == plan
-                and abs(float(row["value"]) - float(value)) < 1e-9
-            ]
-            if not matches:
+    warned = set()
+    for group, by_age in buckets.items():
+        plan, gender, uwclass = group[0], group[1], group[2]
+        rates: dict[int, dict] = {}
+        for attained, candidates in by_age.items():
+            chosen, fell_back = _choose_source_row(candidates)
+            rates[attained] = chosen
+            if not fell_back:
                 continue
-            src = matches[0]
-            if src.get("attained_age_slot"):
-                attained = (int(cntl) if str(cntl).isdigit() else 0) * S.N_DURATION_COLS + int(col)
-            else:
-                attained = int(age)
-            rates[attained] = src
+            mark = (plan, gender, uwclass, attained)
+            if mark in warned:
+                continue
+            warned.add(mark)
+            logger.warning(
+                "No LifePRO band 1 for plan %s sex %s class %s age %s; using band %s",
+                plan, gender, uwclass, attained, _source_band_number(chosen),
+            )
+        grouped[group] = rates
     return grouped
 
 

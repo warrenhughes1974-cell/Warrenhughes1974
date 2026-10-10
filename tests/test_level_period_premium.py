@@ -191,8 +191,8 @@ def test_kill_switch_restores_the_slot_axis(tmp_path, monkeypatch, switch):
     assert {row["age"] for row in disabled if row.get("status") == "IN_SCOPE"} == {"00"}
 
 
-def test_first_block_matches_the_slot_axis_winner(tmp_path, monkeypatch):
-    """Sibling PAAGERAT rows: the factor grid keeps the first row, not band priority."""
+def test_first_block_uses_band_1_while_the_slot_axis_keeps_the_first_row(tmp_path, monkeypatch):
+    """Allow-listed grid takes LifePRO band 1. The kill-switch slot keeps file order."""
     path = tmp_path / "pa.csv"
     records = _age_rows("SEG1", "M", "P", [20, 30], lambda age: 1.25 if age == 20 else 4.5, band="2")
     records += _age_rows("SEG2", "M", "P", [20], lambda age: 9.99, band="1")
@@ -211,7 +211,7 @@ def test_first_block_matches_the_slot_axis_winner(tmp_path, monkeypatch):
         level_periods={"TPLN10": 10}, hiage_by_plan={"TPLN10": 20},
     ))
     cells = _cells(enabled, "TPLN10")[("M", "PR", "20")]
-    assert [cells[k] for k in range(0, 10)] == [1.25] * 10
+    assert [cells[k] for k in range(0, 10)] == [9.99] * 10
     grids, _collisions, _caps = build_factor_grid(
         (row for row in disabled if row.get("status") == "IN_SCOPE"), None,
     )
@@ -222,6 +222,77 @@ def test_first_block_matches_the_slot_axis_winner(tmp_path, monkeypatch):
         if key[0] == "TPLN10" and key[1] == "00" and key[2] == cntl
     )
     assert slot == 1.25
+
+
+def test_band_order_in_the_file_does_not_change_the_band_1_rate(tmp_path, monkeypatch):
+    path = tmp_path / "pa.csv"
+    records = [
+        ("SEG", "M", "2", "P", 20, 8.70),
+        ("SEG", "M", "3", "P", 20, 7.00),
+        ("SEG", "M", "1", "P", 20, 9.00),
+        ("SEG", "M", "1", "P", 20, 9.50),
+    ]
+    records += [("SEG", "M", "1", "P", age, 1.00) for age in range(21, 30)]
+    _write_pa(path, records)
+    rows = _run(path, {"SEG": "TPLN10"}, {"TPLN10": 10}, {"TPLN10": 20}, monkeypatch)
+    cells = _cells(rows, "TPLN10")[("M", "PR", "20")]
+    assert [cells[k] for k in range(10)] == [9.00] * 10
+
+
+def test_missing_band_1_falls_back_to_the_lowest_band(tmp_path, monkeypatch, caplog):
+    import logging
+
+    path = tmp_path / "pa.csv"
+    _write_pa(path, [
+        ("SEG", "F", "3", "S", 30, 3.00),
+        ("SEG", "F", "2", "S", 30, 2.00),
+    ])
+    caplog.set_level(logging.WARNING)
+    rows = _run(path, {"SEG": "TPLN10"}, {"TPLN10": 10}, {"TPLN10": 30}, monkeypatch)
+    cells = _cells(rows, "TPLN10")[("F", "ST", "30")]
+    assert cells[0] == 2.00
+    assert "plan TPLN10" in caplog.text
+    assert "sex F" in caplog.text
+    assert "class ST" in caplog.text
+    assert "age 30" in caplog.text
+
+
+def test_outsider_and_kill_switch_keep_the_first_row(tmp_path, monkeypatch):
+    path = tmp_path / "pa.csv"
+    records = [
+        ("SEGX", "M", "2", "P", 20, 8.70),
+        ("SEGX", "M", "1", "P", 20, 9.00),
+        ("SEGL", "F", "2", "P", 20, 8.70),
+        ("SEGL", "F", "3", "P", 20, 7.00),
+        ("SEGL", "F", "1", "P", 20, 9.00),
+    ]
+    _write_pa(path, records)
+    mapping = {"SEGX": "TPLNOT", "SEGL": "TPLN10"}
+    periods = {"TPLN10": 10}
+    hiage = {"TPLN10": 20}
+    enabled = _run(path, mapping, periods, hiage, monkeypatch)
+    disabled = _run(path, mapping, periods, hiage, monkeypatch, switch="0")
+
+    def scoped(rows, plan):
+        return [row for row in rows if row.get("status") == "IN_SCOPE" and row.get("plan") == plan]
+
+    assert scoped(enabled, "TPLNOT") == scoped(disabled, "TPLNOT")
+
+    def slot_value(rows, plan):
+        grids, _collisions, _caps = build_factor_grid(
+            (row for row in rows if row.get("status") == "IN_SCOPE" and row.get("plan") == plan),
+            None,
+        )
+        cntl, col = S.duration_to_cntl_col(20)
+        return next(
+            cells[col][0]
+            for key, cells in grids["QuikGps"].items()
+            if key[0] == plan and key[1] == "00" and key[2] == cntl
+        )
+
+    assert slot_value(disabled, "TPLNOT") == 8.70
+    assert slot_value(disabled, "TPLN10") == 8.70
+    assert _cells(enabled, "TPLN10")[("F", "PR", "20")][0] == 9.00
 
 
 def test_hiage_comes_from_staged_quikplan():
@@ -312,9 +383,12 @@ def _gold_value(plan, sex, uw, age):
         ("5L0110", "M", "P", 40): 2.38,
         ("5L0110", "M", "P", 50): 4.69,
         ("5L0110", "M", "P", 60): 10.08,
-        ("5L075Y", "M", "S", 54): 8.51,
-        ("5L075Y", "M", "S", 59): 11.86,
-        ("5L075Y", "M", "S", 64): 17.41,
+        ("5L0510", "F", "S", 48): 4.56,
+        ("5L0510", "F", "S", 58): 9.23,
+        ("5L0510", "F", "S", 68): 23.91,
+        ("5L0510", "F", "P", 44): 2.26,
+        ("5L0510", "F", "P", 54): 4.34,
+        ("5L0510", "F", "P", 64): 7.34,
     }
     return gold.get((plan, sex, uw, age), (age % 50) + 0.01)
 
@@ -333,6 +407,8 @@ def _build_output(root: Path, monkeypatch, switch=None, ages=range(15, 100), hia
         ("L01", "5L0110", "F", "P"),
         ("L01", "5L0110", "M", "P"),
         ("L05", "5L0510", "M", "P"),
+        ("L05", "5L0510", "F", "S"),
+        ("L05", "5L0510", "F", "P"),
         ("L07", "5L075Y", "M", "S"),
     )
     records = []
@@ -376,7 +452,9 @@ def test_validator_accepts_synthetic_grid_and_baseline(tmp_path, monkeypatch):
         writer.writerow(["5667AT", "3", "75"])
 
     module = _validator()
-    assert module.validate(output, baseline) == []
+    infos: list[str] = []
+    assert module.validate(output, baseline, infos=infos) == []
+    assert any(item.startswith("INFO 5L075Y") for item in infos)
 
     broken = output / "rates" / "QuikGps.csv"
     text = broken.read_text(encoding="utf-8").replace("9.00", "9.01", 1)
@@ -390,7 +468,9 @@ def test_gold_amounts_format_as_the_validator_text():
     expected = {
         9.00: "9.00", 27.04: "27.04", 82.89: "82.89",
         2.38: "2.38", 4.69: "4.69", 10.08: "10.08",
-        8.51: "8.51", 11.86: "11.86", 17.41: "17.41",
+        4.56: "4.56", 9.23: "9.23", 23.91: "23.91",
+        2.26: "2.26", 4.34: "4.34", 7.34: "7.34",
+        8.96: "8.96", 12.48: "12.48", 18.33: "18.33", 31.49: "31.49",
     }
     for number, text in expected.items():
         got, fits, _reduced = S.format_factor(number)
