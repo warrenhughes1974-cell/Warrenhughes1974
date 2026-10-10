@@ -194,12 +194,14 @@ def apply_variation_recommendations(
     auto_apply: bool,
 ) -> dict:
     """Apply structure-based VARGP/VARDB when AUTO_APPLY_VARIATION_CODES is enabled."""
+    from qla_core.level_period_premium import pin_level_period_vargp_row
+
     if not auto_apply or not recommendations:
-        return row_data
+        return pin_level_period_vargp_row(row_data)
     plan = normalize(row_data.get("PLAN", ""))
     rec = recommendations.get(plan)
     if not rec:
-        return row_data
+        return pin_level_period_vargp_row(row_data)
     out = dict(row_data)
     vg = rec.get("Recommended_VARGP")
     vd = rec.get("Recommended_VARDB")
@@ -207,7 +209,7 @@ def apply_variation_recommendations(
         out["VARGP"] = str(vg)
     if vd not in (None, ""):
         out["VARDB"] = str(vd)
-    return out
+    return pin_level_period_vargp_row(out)
 
 
 # Option B: when DB structure is known (policy-year / issue+duration / attained-age),
@@ -444,6 +446,9 @@ def run_quikplan_conversion(
 
     df = seed_9sublf_plan(df)
     df = apply_iswl_product_tags(df)
+    from qla_core.level_period_premium import pin_level_period_vargp_frame
+
+    df = pin_level_period_vargp_frame(df)
     # Issue #70: preserve the authoritative A/R codebook after all enrichment
     # steps, including the A fallback for blank/unknown source values.
     df = _restore_authoritative_loanintx_from_source(df, source)

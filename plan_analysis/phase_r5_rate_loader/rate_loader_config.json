@@ -2,6 +2,12 @@
   "_comment": "R5 rate-loader config — ISWL Phase 1 (QUIKCVS) paths. External Source files need not be in Git.",
   "source_rate_extract": "QLA_Migration/Source/Rate_Table_Extract_Txt.txt",
   "paagerat_pr_extract": "QLA_Migration/Staging/paagerat_dated_merged.csv",
+  "paagerat_pr_level_period": {
+    "_note": "Gross premium stays level for the whole renewal period and steps only at the renewal date. Issue-age by policy-year grid (VARGP 2). The period is per plan; do not infer it from the plan name. QLA_TL10_LEVEL_PERIOD_PR=0 restores the attained-age slot axis.",
+    "5L0110": 10,
+    "5L0510": 10,
+    "5L075Y": 5
+  },
   "paage_extract": "QLA_Migration/Staging/paage_dated_merged.csv",
   "pcovrsgt_csv": "plan_analysis/source_data/coverage/PCOVRSGT.csv",
   "pcovr_csv": "plan_analysis/source_data/coverage/PCOVR.csv",

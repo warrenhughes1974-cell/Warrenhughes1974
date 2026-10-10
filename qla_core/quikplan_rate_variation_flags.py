@@ -16,6 +16,7 @@ from qla_core import attained_age_grid_fill as AASF
 from qla_core import plan_source_paths as PSP
 from qla_core import rate_dbf_schema as S
 from qla_core import rate_segment_resolution as SR
+from qla_core.level_period_premium import pin_level_period_vargp
 from qla_core.paagerat_pr_loader import PR_OWNERSHIP_SLOT, pr_slot_ownership_enabled
 from qla_core.rate_factor_loader import load_plan_crosswalk
 from qla_core.schema_constants import QUIKPLAN_SCHEMA
@@ -1221,13 +1222,13 @@ def apply_variation_codes_from_emitted_rates(
     a downgrade.
     """
     if not rates_csv_dir or not os.path.isdir(rates_csv_dir):
-        return [dict(r) for r in rows], {}
+        return pin_level_period_vargp(rows, {})
     shapes = {
         field_name: scan_factor_grid(rates_csv_dir, table, prefix)
         for field_name, (table, prefix) in VARIATION_CODE_SOURCES.items()
     }
     if not any(shapes.values()):
-        return [dict(r) for r in rows], {}
+        return pin_level_period_vargp(rows, {})
 
     touched: dict[str, dict] = {}
     out = []
@@ -1280,7 +1281,9 @@ def apply_variation_codes_from_emitted_rates(
                 "UPDATE_REASON": "Issue A7 variation code from emitted factor grid",
             }
         out.append(r)
-    return out, touched
+    # Level-period plans stay at VARGP 2 after this refresh, including when the
+    # attained-age manifest would otherwise write 3.
+    return pin_level_period_vargp(out, touched)
 
 
 def enrich_quikplan_rows(

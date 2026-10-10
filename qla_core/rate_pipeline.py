@@ -21,6 +21,7 @@ from qla_core import cv_inheritance_loader as CIL
 from qla_core import rate_inheritance_loader as RIL
 from qla_core import shared_rate_candidate_loader as SCL
 from qla_core import paagerat_pr_loader as PA
+from qla_core import level_period_premium as LPP
 from qla_core import paagerat_bp_loader as BP
 from qla_core import paagerat_ul_coi_loader as COI
 from qla_core import paagerat_db_loader as DB
@@ -364,6 +365,8 @@ def run(config_path, repo_root):
     res.quikuint_enabled = bool(cfg.get("iswl_phase5", {}).get("quikuint_enabled", False))
     res.quikissc_enabled = bool(cfg.get("iswl_phase6", {}).get("quikissc_enabled", False))
     pr_suppress = PA._iswl_bp_suppress_plans(cfg)
+    level_periods = LPP.renewal_periods(cfg)
+    level_hiage = LPP.load_hiage(repo_root, level_periods)
 
     def _track(t):
         res.row_status[t["status"]] += 1
@@ -500,7 +503,12 @@ def run(config_path, repo_root):
         pa_path = paagerat_merged or _resolve_path(repo_root, cfg.get("paagerat_pr_extract", ""))
         if pa_path and os.path.isfile(pa_path) and segment_resolver is not None:
             resolver = segment_resolver
-            for t in PA.transform_paagerat_pr(pa_path, resolver, config, plan_exclude=pr_suppress):
+            # Level-period plans leave this call as issue-age x policy year
+            # (attained_age_slot False), so slot fill and the VARGP 3 manifest skip them.
+            for t in PA.transform_paagerat_pr(
+                pa_path, resolver, config, plan_exclude=pr_suppress,
+                level_periods=level_periods, hiage_by_plan=level_hiage,
+            ):
                 st = t["status"]
                 res.paagerat_status[st] += 1
                 _track(t)
