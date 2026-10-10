@@ -8,7 +8,7 @@
 
 ---
 
-Resolution: Bank-draft `quikmstr.MBANKNO` is rebuilt from June PPCOM routing joined by account digits, emitting only a checksum-valid 9-digit ABA and a digits-only account (source leading zeros kept). Stats: bank-draft 2132; populated QLA-safe 2081; still blank 51; invalid 0; all-policy MBANKNO populated 2706. Loaded examples: 9010161748C=091303855/0000002000581; 9010157076C=104910135/212919; 9010348734C=081518113/208787; 9010713704C=104000016/47374579. Still missing 51 (49 no PPCOM routing e.g. 9010428747C/9010451385C/9010464590C; 2 account too short 9010550564C and 9010919258C acct 238).
+Resolution: Bank-draft `quikmstr.MBANKNO` is rebuilt from June PPCOM routing joined by account digits, emitting only a checksum-valid 9-digit ABA and a digits-only account (source leading zeros kept). Stats: bank-draft 2132; populated QLA-safe 2081; still blank 51; invalid 0; all-policy MBANKNO populated 2706. Loaded examples: 9010161748C=[redacted]; 9010157076C=104910135/212919; 9010348734C=081518113/208787; 9010713704C=[redacted]. Still missing 51 (49 no PPCOM routing e.g. 9010428747C/9010451385C/9010464590C; 2 account too short 9010550564C and 9010919258C acct 238).
 
 ---
 
@@ -31,7 +31,7 @@ QLAdmin rejected Bank Acct on policy edit (`Invalid routing number`) when conver
 | Invalid filled | 0 |
 | quikmstr rows changed (MBANKNO only) | 954 |
 
-Traces: `9010161748C` → `091303855/0000002000581`; `9010713704C` unchanged.
+Traces: `9010161748C` → `[redacted]`; `9010713704C` unchanged.
 
 ## Gates
 

@@ -29,10 +29,10 @@ Full GUI batch still recommended before client UAT reload to prove the in-batch 
 | Bank-draft filled | 1,222 → **2,081** |
 | Bank-draft blank remaining | 910 → **51** |
 | Newly filled | **882** |
-| Trace 9010161748C | `091303855/0000002000581` |
+| Trace 9010161748C | `[redacted]` |
 | Trace 9010157076C | `104910135/212919` |
 | Trace 9010348734C | `081518113/208787` |
-| Regression 9010713704C | `104000016/47374579` unchanged |
+| Regression 9010713704C | `[redacted]` unchanged |
 
 Published: `QLA_Migration/Output/Test_Validation/quikmstr.csv`  
 Audit: `QLA_Migration/Reports/issue75_ppcom_mbankno_apply_audit.csv`
@@ -41,8 +41,8 @@ Audit: `QLA_Migration/Reports/issue75_ppcom_mbankno_apply_audit.csv`
 
 ## Leading zeros (confirmed in emit)
 
-- ABA values that start with `0` (e.g. `091303855`) retained.
-- Account values retain source zeros (e.g. `0000002000581`, `050515635`).
+- ABA values that start with `0` (e.g. `[redacted]`) retained.
+- Account values retain source zeros (e.g. `[redacted]`, `050515635`).
 
 ---
 

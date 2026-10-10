@@ -40,10 +40,10 @@ Evidence: `evidence/issue75_ppcom_blank_draft_recovery.csv`
 
 | MPOLICY | Before | After (unique path) |
 |---------|--------|---------------------|
-| 9010161748C | blank | `091303855/0000002000581` |
+| 9010161748C | blank | `[redacted]` |
 | 9010157076C | blank | `104910135/212919` |
 | 9010348734C | blank | `081518113/208787` |
-| 9010713704C | `104000016/47374579` | unchanged |
+| 9010713704C | `[redacted]` | unchanged |
 
 ### Leading zeros
 
@@ -53,7 +53,7 @@ Evidence: `evidence/issue75_ppcom_blank_draft_recovery.csv`
 
 ### ABA pad note
 
-Blind `zfill(9)` on truncated PPACH ABA is still **unsafe** (e.g. `09130385` → `009130385` fails checksum). PPCOM often supplies the real 9th digit (`091303855`). Development must prefer PPCOM’s native 9-digit value.
+Blind `zfill(9)` on truncated PPACH ABA is still **unsafe** (e.g. `09130385` → `009130385` fails checksum). PPCOM often supplies the real 9th digit (`[redacted]`). Development must prefer PPCOM’s native 9-digit value.
 
 ---
 
