@@ -323,6 +323,7 @@ def _build_output(root: Path, monkeypatch, switch=None):
         for age in range(15, 100):
             records.append((coverage, sex, "1", uw, age, _gold_value(plan, sex, uw, age)))
     path = root / "pa.csv"
+    path.parent.mkdir(parents=True, exist_ok=True)
     _write_pa(path, records)
     mapping = {"L01": "5L0110", "L05": "5L0510", "L07": "5L075Y"}
     hiage = {"5L0110": 85, "5L0510": 85, "5L075Y": 85}
