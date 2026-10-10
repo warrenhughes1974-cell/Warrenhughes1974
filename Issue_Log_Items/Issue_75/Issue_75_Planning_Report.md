@@ -106,10 +106,10 @@ Evidence: `evidence/issue75_ppcom_blank_draft_recovery.csv`
 
 | MPOLICY | PPPAC account (raw) | PPCOM ABA | Proposed `MBANKNO` |
 |---------|---------------------|-----------|--------------------|
-| 9010161748C | `000000  200-058-1` | 091303855 | `091303855/0000002000581` (or PPCOM form if different) |
+| 9010161748C | `000000  200-058-1` | [redacted] | `[redacted]` (or PPCOM form if different) |
 | 9010157076C | `212919` | 104910135 | `104910135/212919` |
 | 9010348734C | `208787` | 081518113 | `081518113/208787` |
-| 9010713704C | `47374579` | 104000016 | **unchanged** `104000016/47374579` |
+| 9010713704C | `[redacted]` | [redacted] | **unchanged** `[redacted]` |
 
 ---
 

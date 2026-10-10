@@ -83,7 +83,7 @@
 | #96 | **IN_DATA** | 1SALMI PVO=Y PlCv=['F', 'M'] PlTv=['F', 'M'] QuikTvs=516; 1L17SP QuikTvs=398 |
 | #44 | **IN_DATA** | quikloan rows=356 |
 | #45 | **IN_DATA** | MBANKNO populated=2703 |
-| #75 | **IN_DATA** | draft MBANKNO filled=2078/2132 invalid=0; 9010161748C=091303855/0000002000581 |
+| #75 | **IN_DATA** | draft MBANKNO filled=2078/2132 invalid=0; 9010161748C=[redacted] |
 | #47 | **IN_DATA** | MBILLDAY non-zero=5083 |
 | #49 | **IN_DATA** | override/preserve traces OK |
 | #50 | **IN_DATA** | memo rows=5083; sample hits={'018495BC': True, '01159D276C': True, '01ML8522C': True, '010335038C': True} |

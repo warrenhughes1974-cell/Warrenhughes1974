@@ -59,8 +59,8 @@ Intentional `MBANKNO` only. No premium, status, bill-form, or ID drift.
 
 | Check | Result |
 |-------|--------|
-| 9010713704C `MBANKNO` | Unchanged `104000016/47374579` |
-| 9010161748C | Filled `091303855/0000002000581` |
+| 9010713704C `MBANKNO` | Unchanged `[redacted]` |
+| 9010161748C | Filled `[redacted]` |
 | 9010157076C | Filled `104910135/212919` |
 | 9010348734C | Filled `081518113/208787` |
 | Issue #26 MPREM | Not in scope; quikridr not modified |

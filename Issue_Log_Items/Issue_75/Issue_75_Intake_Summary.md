@@ -33,10 +33,10 @@ Original symptom (still in force from first intake):
 
 | Client # | Output `MPOLICY` | Current `MBANKNO` | Notes |
 |----------|------------------|-------------------|--------|
-| 010161748C | 9010161748C | blank | PPPAC acct `000000  200-058-1`; PPCOM ABA **091303855** (unique, checksum OK) |
+| 010161748C | 9010161748C | blank | PPPAC acct `000000  200-058-1`; PPCOM ABA **[redacted]** (unique, checksum OK) |
 | 010157076C | 9010157076C | blank | PPCOM ABA **104910135** |
 | 010348734C | 9010348734C | blank | PPCOM ABA **081518113** |
-| 010713704C | 9010713704C | `104000016/47374579` | Already good; regression guard |
+| 010713704C | 9010713704C | `[redacted]` | Already good; regression guard |
 | 9010857359C | same | `082900872/0059281456` | Leading zeros on account vs PPCOM form `59281456` |
 
 ---
