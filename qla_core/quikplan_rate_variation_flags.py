@@ -1222,13 +1222,13 @@ def apply_variation_codes_from_emitted_rates(
     a downgrade.
     """
     if not rates_csv_dir or not os.path.isdir(rates_csv_dir):
-        return pin_level_period_vargp(rows, {})
+        return pin_level_period_vargp(rows, {}, plans_on_file=())
     shapes = {
         field_name: scan_factor_grid(rates_csv_dir, table, prefix)
         for field_name, (table, prefix) in VARIATION_CODE_SOURCES.items()
     }
     if not any(shapes.values()):
-        return pin_level_period_vargp(rows, {})
+        return pin_level_period_vargp(rows, {}, plans_on_file=())
 
     touched: dict[str, dict] = {}
     out = []
@@ -1281,9 +1281,14 @@ def apply_variation_codes_from_emitted_rates(
                 "UPDATE_REASON": "Issue A7 variation code from emitted factor grid",
             }
         out.append(r)
-    # Level-period plans stay at VARGP 2 after this refresh, including when the
-    # attained-age manifest would otherwise write 3.
-    return pin_level_period_vargp(out, touched)
+    # Level-period plans with a real QuikGps grid stay at VARGP 2, including when
+    # the attained-age manifest would otherwise write 3. A plan with no gross
+    # premium rows keeps the code chosen above (4 when the table is not on file).
+    on_file = {
+        plan for plan, shape in shapes["VARGP"].items()
+        if shape is not None and shape.real_rows
+    }
+    return pin_level_period_vargp(out, touched, plans_on_file=on_file)
 
 
 def enrich_quikplan_rows(

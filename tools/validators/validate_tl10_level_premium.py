@@ -8,7 +8,9 @@ Checks, against QLA_Migration/Output by default:
   (a) quikplan VARGP is 2 for the three plans
   (b) each renewal block is level, and its value is the rate at the block's
       start age (the issue-age row for that age, policy-year index 0)
-  (c) every issue age that has a source rate extends past the first renewal
+  (c) every issue age extends past the first renewal when the source has a
+      rate at that renewal age (issue age + R). A row that stops earlier
+      because the source series ends is a WARNING, not a failure
   (d) the gold cells below, matched exactly
   (e) with --baseline DIR (a pre-change Output/rates folder): every other
       plan's QuikGps rows and every other rates file are byte-identical, and
@@ -134,7 +136,8 @@ def _check_vargp(quikplan_rows: list[dict], failures: list[str]) -> None:
             failures.append(f"(a) {plan} VARGP={got!r}, expected '2'")
 
 
-def _check_blocks(slices: dict, periods: dict[str, int], failures: list[str]) -> None:
+def _check_blocks(slices: dict, periods: dict[str, int], failures: list[str],
+                  warnings: list[str] | None = None) -> None:
     present = {key[0] for key in slices}
     for plan in PLANS:
         if plan not in present:
@@ -167,10 +170,18 @@ def _check_blocks(slices: dict, periods: dict[str, int], failures: list[str]) ->
                         )
             block += period
         if 0 in cells and max_index < period:
-            failures.append(
+            renewal_age = issue_age + period
+            renewal = slices.get((plan, key[1], renewal_age))
+            message = (
                 f"(c) {plan} issue age {issue_age} stops at index {max_index}, "
                 f"before the renewal at index {period}"
             )
+            if renewal and renewal.get(0):
+                failures.append(message)
+            else:
+                (warnings if warnings is not None else []).append(
+                    f"WARNING {message}; source has no rate at age {renewal_age}"
+                )
 
 
 def _check_gold(slices: dict, failures: list[str]) -> None:
@@ -282,8 +293,11 @@ def _check_baseline(rates_dir: Path, baseline_dir: Path, slices: dict, periods: 
                 )
 
 
-def validate(output_dir: Path, baseline_dir: Path | None = None) -> list[str]:
+def validate(output_dir: Path, baseline_dir: Path | None = None,
+             warnings: list[str] | None = None) -> list[str]:
     failures: list[str] = []
+    if warnings is None:
+        warnings = []
     output_dir = Path(output_dir)
     plan_path = output_dir / "quikplan.csv"
     rates_dir = output_dir / "rates"
@@ -302,7 +316,7 @@ def validate(output_dir: Path, baseline_dir: Path | None = None) -> list[str]:
 
     _check_vargp(_read_csv(plan_path), failures)
     slices = _slices(_read_csv(gps_path), set(PLANS))
-    _check_blocks(slices, periods, failures)
+    _check_blocks(slices, periods, failures, warnings)
     _check_gold(slices, failures)
     if baseline_dir is not None:
         _check_baseline(rates_dir, Path(baseline_dir), slices, periods, failures)
@@ -315,11 +329,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--baseline", type=Path, default=None,
                         help="Pre-change Output/rates folder")
     args = parser.parse_args(argv)
-    failures = validate(args.output_dir, args.baseline)
+    warnings: list[str] = []
+    failures = validate(args.output_dir, args.baseline, warnings)
     print("Level renewal-period gross premium")
     print(f"  output: {args.output_dir}")
     if args.baseline is not None:
         print(f"  baseline: {args.baseline}")
+    for warning in warnings[:40]:
+        print(f"  - {warning}")
+    if len(warnings) > 40:
+        print(f"  ... {len(warnings) - 40} more warnings")
     if failures:
         print("RESULT: FAIL")
         for failure in failures[:40]:

@@ -365,8 +365,12 @@ def run(config_path, repo_root):
     res.quikuint_enabled = bool(cfg.get("iswl_phase5", {}).get("quikuint_enabled", False))
     res.quikissc_enabled = bool(cfg.get("iswl_phase6", {}).get("quikissc_enabled", False))
     pr_suppress = PA._iswl_bp_suppress_plans(cfg)
-    level_periods = LPP.renewal_periods(cfg)
-    level_hiage = LPP.load_hiage(repo_root, level_periods)
+    if LPP.level_period_enabled():
+        level_periods = LPP.renewal_periods(cfg)
+        level_hiage = LPP.load_hiage(repo_root, level_periods)
+    else:
+        level_periods = {}
+        level_hiage = {}
 
     def _track(t):
         res.row_status[t["status"]] += 1

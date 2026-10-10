@@ -224,17 +224,34 @@ def test_first_block_matches_the_slot_axis_winner(tmp_path, monkeypatch):
     assert slot == 1.25
 
 
-def test_hiage_from_staged_quikplan_when_output_is_absent():
-    output = ROOT / "QLA_Migration" / "Output" / "quikplan.csv"
+def test_hiage_comes_from_staged_quikplan():
     ages = load_hiage(str(ROOT), DEFAULT_RENEWAL_PERIODS)
-    if output.is_file():
-        assert set(DEFAULT_RENEWAL_PERIODS) <= set(ages)
-    else:
-        assert ages == {"5L0110": 85, "5L0510": 85, "5L075Y": 85}
+    assert ages == {"5L0110": 85, "5L0510": 85, "5L075Y": 85}
+
+
+def test_load_hiage_prefers_staged_over_a_previous_output(tmp_path):
+    staged = tmp_path / "plan_governance" / "staged"
+    output = tmp_path / "QLA_Migration" / "Output"
+    staged.mkdir(parents=True)
+    output.mkdir(parents=True)
+    header = "PLAN,HIAGE\n"
+    (staged / "quikplan_staged.csv").write_text(
+        header + "5L0110,85\n5L0510,85\n5L075Y,85\n", encoding="utf-8",
+    )
+    (output / "quikplan.csv").write_text(
+        header + "5L0110,40\n5L0510,40\n5L075Y,40\n", encoding="utf-8",
+    )
+    assert load_hiage(str(tmp_path), DEFAULT_RENEWAL_PERIODS) == {
+        "5L0110": 85, "5L0510": 85, "5L075Y": 85,
+    }
 
 
 def test_vargp_pin_survives_variation_refresh_and_auto_apply(tmp_path, monkeypatch):
     monkeypatch.delenv("QLA_TL10_LEVEL_PERIOD_PR", raising=False)
+    monkeypatch.setattr(
+        "qla_core.level_period_premium.plans_with_quikgps",
+        lambda root=None: {"5L0110", "5L0510", "5L075Y"},
+    )
     rates = tmp_path / "rates"
     rates.mkdir()
     columns = ["PLAN", "AGE", "CNTL"] + [f"GP{i}" for i in range(10)]
@@ -311,7 +328,7 @@ def _write_factor_csv(path, table_rows):
         writer.writerows(table_rows)
 
 
-def _build_output(root: Path, monkeypatch, switch=None):
+def _build_output(root: Path, monkeypatch, switch=None, ages=range(15, 100), hiage=None):
     slices = (
         ("L01", "5L0110", "F", "P"),
         ("L01", "5L0110", "M", "P"),
@@ -320,13 +337,14 @@ def _build_output(root: Path, monkeypatch, switch=None):
     )
     records = []
     for coverage, plan, sex, uw in slices:
-        for age in range(15, 100):
+        for age in ages:
             records.append((coverage, sex, "1", uw, age, _gold_value(plan, sex, uw, age)))
     path = root / "pa.csv"
     path.parent.mkdir(parents=True, exist_ok=True)
     _write_pa(path, records)
     mapping = {"L01": "5L0110", "L05": "5L0510", "L07": "5L075Y"}
-    hiage = {"5L0110": 85, "5L0510": 85, "5L075Y": 85}
+    if hiage is None:
+        hiage = {"5L0110": 85, "5L0510": 85, "5L075Y": 85}
     rows = _run(path, mapping, None, hiage, monkeypatch, switch=switch)
     scoped = [row for row in rows if row.get("status") == "IN_SCOPE"]
     grids, _collisions, _caps = build_factor_grid(scoped, LoaderConfig())
@@ -345,7 +363,8 @@ def test_validator_accepts_synthetic_grid_and_baseline(tmp_path, monkeypatch):
     extra = b"PLAN,AGE\nOTHR01,00\n"
     (rates / "QuikNps.csv").write_bytes(extra)
     (baseline / "QuikNps.csv").write_bytes(extra)
-    other = b"OTHR01,30,00,1.00,,,,,,,,F,PR,00,0000,00,19000101\n"
+    other = b"OTHR01,30,00,1.00,,,,,,,,,,F,PR,00,0000,00,19000101\n"
+    assert len(other.decode().rstrip("\n").split(",")) == 19
     for folder in (rates, baseline):
         with (folder / "QuikGps.csv").open("ab") as handle:
             handle.write(other)
@@ -377,3 +396,240 @@ def test_gold_amounts_format_as_the_validator_text():
         got, fits, _reduced = S.format_factor(number)
         assert fits
         assert got == text
+
+
+def test_shared_slot_segment_fills_both_allow_listed_plans(tmp_path, monkeypatch):
+    """Issue #158: one SEQ-1 segment owned by two plans must fill both grids."""
+    monkeypatch.delenv("QLA_PR_SEGMENT_SLOT_OWNERSHIP", raising=False)
+    monkeypatch.delenv("QLA_TL10_LEVEL_PERIOD_PR", raising=False)
+    path = tmp_path / "pa.csv"
+    _write_pa(path, _age_rows("SEG", "M", "P", range(20, 41), lambda age: float(age)))
+    resolver = SegmentResolver(
+        {},
+        {},
+        {"COV10": "TPLNA", "COV05": "TPLNB"},
+        slot_owners={(1, "SEG"): ["COV10", "COV05"]},
+    )
+    rows = list(transform_paagerat_pr(
+        str(path), resolver, LoaderConfig(),
+        level_periods={"TPLNA": 10, "TPLNB": 10},
+        hiage_by_plan={"TPLNA": 25, "TPLNB": 25},
+    ))
+    left = _cells(rows, "TPLNA")
+    right = _cells(rows, "TPLNB")
+    assert left == right
+    assert {age for _gender, _uw, age in left} == {f"{n:02d}" for n in range(20, 26)}
+    issue20 = left[("M", "PR", "20")]
+    assert [issue20[k] for k in range(10)] == [20.0] * 10
+    assert [issue20[k] for k in range(10, 20)] == [30.0] * 10
+    counts = {}
+    for row in rows:
+        if row.get("status") == "IN_SCOPE":
+            counts[row["plan"]] = counts.get(row["plan"], 0) + 1
+            assert row["age_capped"] is False
+            assert row["original_age"] == row["age"]
+    assert counts["TPLNA"] == counts["TPLNB"] > 0
+
+
+def test_expanded_cell_is_not_reported_as_age_capped():
+    from qla_core.level_period_premium import _cell_row
+
+    out = _cell_row(
+        {
+            "age": "99", "cntl": "09", "col": 9, "ql_duration": 99,
+            "attained_age_slot": True, "value": 8.0, "raw_value": "8.00",
+            "age_capped": True, "original_age": "101", "plan": "TPLN10",
+        },
+        29, 0,
+    )
+    assert out["age"] == "29"
+    assert out["age_capped"] is False
+    assert out["original_age"] == "29"
+    assert out["attained_age_slot"] is False
+
+
+def test_hiage_missing_or_below_lowest_uses_highest_source_age(tmp_path, monkeypatch, caplog):
+    import logging
+
+    path = tmp_path / "pa.csv"
+    _write_pa(path, _age_rows("SEG", "M", "P", range(30, 51), lambda age: age))
+    caplog.set_level(logging.WARNING)
+    for hiage in ({"TPLN10": 0}, {"TPLN10": 10}, {}):
+        caplog.clear()
+        rows = _run(path, {"SEG": "TPLN10"}, {"TPLN10": 10}, hiage, monkeypatch)
+        cells = _cells(rows, "TPLN10")
+        assert ("M", "PR", "30") in cells
+        assert ("M", "PR", "50") in cells
+        assert "TPLN10" in caplog.text
+    capped = _run(path, {"SEG": "TPLN10"}, {"TPLN10": 10}, {"TPLN10": 40}, monkeypatch)
+    assert ("M", "PR", "40") in _cells(capped, "TPLN10")
+    assert ("M", "PR", "50") not in _cells(capped, "TPLN10")
+
+
+def test_empty_period_map_is_honored_and_bad_entries_warn(caplog):
+    import logging
+
+    assert renewal_periods({"paagerat_pr_level_period": {}}) == {}
+    caplog.set_level(logging.WARNING)
+    got = renewal_periods({
+        "paagerat_pr_level_period": {"TPLN": "ten", "TPLN5": 5, "ZERO": 0, "_note": "skip"},
+    })
+    assert got == {"TPLN5": 5}
+    assert "ten" in caplog.text
+    assert "ZERO" in caplog.text
+    assert renewal_periods({"paagerat_pr_level_period": "nope"}) == {}
+
+
+def test_renewal_periods_cache_skips_repeat_config_reads(monkeypatch):
+    import qla_core.level_period_premium as LPP
+
+    LPP._DEFAULT_PERIODS = None
+    calls = {"n": 0}
+    real = LPP.load_pipeline_config
+
+    def counting(root=None):
+        calls["n"] += 1
+        return real(root)
+
+    monkeypatch.setattr(LPP, "load_pipeline_config", counting)
+    try:
+        assert LPP.renewal_periods() == dict(DEFAULT_RENEWAL_PERIODS)
+        assert calls["n"] == 1
+        LPP.pin_level_period_vargp_row({"PLAN": "5L0110", "VARGP": "4"})
+        LPP.pin_level_period_vargp_row({"PLAN": "5L0510", "VARGP": "4"})
+        assert calls["n"] == 1
+    finally:
+        LPP._DEFAULT_PERIODS = None
+
+
+def test_vargp_pin_leaves_not_on_file_when_quikgps_is_absent(monkeypatch):
+    monkeypatch.delenv("QLA_TL10_LEVEL_PERIOD_PR", raising=False)
+    monkeypatch.setattr(
+        "qla_core.level_period_premium.plans_with_quikgps",
+        lambda root=None: set(),
+    )
+    recommended = apply_variation_recommendations(
+        {"PLAN": "5L0110", "VARGP": "4", "VARDB": "0"},
+        {"5L0110": {"Recommended_VARGP": "3", "Recommended_VARDB": "0"}},
+        True,
+    )
+    assert recommended["VARGP"] == "3"
+    assert recommended["VARDB"] == "0"
+    untouched = apply_variation_recommendations(
+        {"PLAN": "5L0110", "VARGP": "4", "VARDB": "0"},
+        None,
+        False,
+    )
+    assert untouched["VARGP"] == "4"
+    frame = pin_level_period_vargp_frame(__import__("pandas").DataFrame([
+        {"PLAN": "5L0510", "VARGP": "4", "HIAGE": "85"},
+    ]))
+    assert frame.at[0, "VARGP"] == "4"
+    assert frame.at[0, "HIAGE"] == "85"
+
+
+def _write_quikplan(path: Path):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(["PLAN", "VARGP", "HIAGE"])
+        for plan in ("5L0110", "5L0510", "5L075Y"):
+            writer.writerow([plan, "2", "85"])
+
+
+def test_validator_warns_when_source_ends_below_hiage_plus_period(tmp_path, monkeypatch):
+    output = tmp_path / "Output"
+    rows = _build_output(tmp_path / "short", monkeypatch, ages=range(15, 91))
+    _write_factor_csv(output / "rates" / "QuikGps.csv", rows)
+    _write_quikplan(output / "quikplan.csv")
+    module = _validator()
+    warnings = []
+    assert module.validate(output, warnings=warnings) == []
+    text = "\n".join(warnings)
+    assert "issue age 81" in text
+    assert "issue age 85" in text
+    assert "issue age 80" not in text
+
+    seg = ("M", "PR", "00", "", "", "")
+    periods = {"5L0110": 10, "5L0510": 10, "5L075Y": 5}
+    slices = {}
+    for plan, period in periods.items():
+        slices[(plan, seg, 20)] = {0: "1.00", 1: "1.00"}
+        slices[(plan, seg, 20 + period)] = {i: "9.00" for i in range(period + 1)}
+    failures = []
+    warned = []
+    module._check_blocks(slices, periods, failures, warned)
+    assert failures
+    assert all(item.startswith("(c)") for item in failures)
+    assert warned == []
+
+
+def test_rate_pipeline_keeps_level_plans_out_of_the_slot_set(tmp_path, monkeypatch):
+    import qla_core.plan_source_paths as PSP
+    from qla_core.rate_pipeline import run
+
+    root = tmp_path / "repo"
+    root.mkdir()
+    records = [
+        (cov, "M", "1", uw, age, float(age))
+        for cov, uw in (("L01", "P"), ("L05", "P"), ("L07", "S"), ("ART", "P"))
+        for age in (40, 50, 60)
+    ]
+    _write_pa(root / "pa.csv", records)
+    (root / "pcovrsgt.csv").write_text(
+        "SEGT_ID,COVERAGE_ID,SEGT_FLAG,SEQ\n"
+        "L01,L01,Y,1\nL05,L05,Y,1\nL07,L07,Y,1\nART,ART,Y,1\n",
+        encoding="utf-8",
+    )
+    (root / "pcovr.csv").write_text(
+        "COVERAGE_ID,DESCRIPTION\nL01,L01\nL05,L05\nL07,L07\nART,ART\n",
+        encoding="utf-8",
+    )
+    (root / "rt.csv").write_text(
+        "COVERAGE_ID,TYPE_CODE,AGE,SEX,BAND,UNDERWRITING_CLASS,DURATION,VALUE\n",
+        encoding="utf-8",
+    )
+    cfg = {
+        "source_rate_extract": str(root / "rt.csv"),
+        "plan_form_crosswalk": str(root / "missing.xlsx"),
+        "pcovrsgt_csv": str(root / "pcovrsgt.csv"),
+        "pcovr_csv": str(root / "pcovr.csv"),
+        "paagerat_pr_extract": str(root / "pa.csv"),
+        "issue40_cv_inheritance": {"enabled": False},
+        "issue42_pdage_missfill": {"enabled": False},
+        "non_cv_rate_inheritance": {"enabled": False},
+        "shared_rate_candidates": {"enabled": False},
+        "psubsseg_substitution": {"enabled": False},
+        "paagerat_pr_level_period": {"5L0110": 10, "5L0510": 10, "5L075Y": 5},
+    }
+    cfg_path = root / "rate_loader_config.json"
+    cfg_path.write_text(json.dumps(cfg), encoding="utf-8")
+    cov2plan = {"L01": "5L0110", "L05": "5L0510", "L07": "5L075Y", "ART": "5667AT"}
+    monkeypatch.setattr(
+        "qla_core.rate_pipeline.L.load_plan_crosswalk",
+        lambda path: (dict(cov2plan), {}),
+    )
+    monkeypatch.setattr(PSP, "paage_extract", lambda log=None: "")
+    monkeypatch.setattr(PSP, "paagerat_extract", lambda log=None: "")
+    monkeypatch.setattr(PSP, "pdage_extract", lambda log=None: "")
+    monkeypatch.setattr(PSP, "rate_table_extract", lambda: "")
+    monkeypatch.delenv("QLA_TL10_LEVEL_PERIOD_PR", raising=False)
+    monkeypatch.delenv("QLA_PR_SEGMENT_SLOT_OWNERSHIP", raising=False)
+
+    res = run(str(cfg_path), str(root))
+    slot = set(res.attained_age_slot_plans.get("QuikGps", ()))
+    assert "5667AT" in slot
+    assert not ({"5L0110", "5L0510", "5L075Y"} & slot)
+    ages = {key[1] for key in res.grids["QuikGps"] if key[0] == "5L0110"}
+    assert "40" in ages
+    assert "00" not in ages
+
+    def _forbidden(*_args, **_kwargs):
+        raise AssertionError("level-period lookup ran while the kill switch was off")
+
+    monkeypatch.setenv("QLA_TL10_LEVEL_PERIOD_PR", "0")
+    monkeypatch.setattr("qla_core.rate_pipeline.LPP.renewal_periods", _forbidden)
+    monkeypatch.setattr("qla_core.rate_pipeline.LPP.load_hiage", _forbidden)
+    off = run(str(cfg_path), str(root))
+    off_slot = set(off.attained_age_slot_plans.get("QuikGps", ()))
+    assert {"5L0110", "5L0510", "5L075Y", "5667AT"} <= off_slot

@@ -18,12 +18,20 @@ on any non-PAAGERAT cell). A lookup age with no source rate is left blank.
 
 ``QLA_TL10_LEVEL_PERIOD_PR=0/false/no/off`` restores the attained-age slot axis
 and leaves VARGP alone.
+
+``QLA_PR_SEGMENT_SLOT_OWNERSHIP=0`` combined with this feature is unsupported.
+Slot ownership is what gives one premium segment to every plan that carries it
+at SEQ 1. Turning that off while level-period expansion is on sends the shared
+segment to a single parent, so the other plan never receives a grid.
 """
 from __future__ import annotations
 
 import csv
 import json
+import logging
 import os
+
+logger = logging.getLogger(__name__)
 
 from qla_core import rate_dbf_schema as S
 from qla_core.rate_factor_loader import build_factor_grid
@@ -39,11 +47,16 @@ DEFAULT_RENEWAL_PERIODS = {
     "5L075Y": 5,
 }
 
+# Staged plan setup wins. Output/quikplan.csv is a previous conversion and must
+# not change the issue-age ceiling of the grid being built.
 _QUIKPLAN_CANDIDATES = (
-    ("QLA_Migration", "Output", "quikplan.csv"),
     ("plan_governance", "staged", "quikplan_staged.csv"),
     ("plan_governance", "staged", "quikplan.csv"),
+    ("QLA_Migration", "Output", "quikplan.csv"),
 )
+
+_DEFAULT_PERIODS = None
+_GPS_CACHE = {"stamp": None, "plans": frozenset()}
 
 
 def repo_root() -> str:
@@ -74,6 +87,10 @@ def load_pipeline_config(root: str | None = None) -> dict:
 def _as_periods(raw) -> dict[str, int]:
     out: dict[str, int] = {}
     if not isinstance(raw, dict):
+        logger.warning(
+            "%s is %s, not a map; no level-period plans",
+            CONFIG_KEY, type(raw).__name__,
+        )
         return out
     for plan, years in raw.items():
         name = str(plan).strip()
@@ -82,20 +99,36 @@ def _as_periods(raw) -> dict[str, int]:
         try:
             period = int(years)
         except (TypeError, ValueError):
+            logger.warning("%s %s=%r is not an integer; skipped", CONFIG_KEY, name, years)
             continue
-        if period > 0:
-            out[name] = period
+        if period <= 0:
+            logger.warning("%s %s=%r is not a positive period; skipped", CONFIG_KEY, name, years)
+            continue
+        out[name] = period
     return out
 
 
+def _periods_from_cfg(cfg) -> dict[str, int]:
+    """A present key replaces the defaults, including an explicit empty map."""
+    if not isinstance(cfg, dict) or CONFIG_KEY not in cfg:
+        return dict(DEFAULT_RENEWAL_PERIODS)
+    return _as_periods(cfg.get(CONFIG_KEY))
+
+
 def renewal_periods(cfg: dict | None = None) -> dict[str, int]:
-    """Per-plan renewal period. Config wins; otherwise the in-code defaults."""
+    """Per-plan renewal period.
+
+    A missing config key uses the in-code defaults. A present key replaces them,
+    and an empty map turns the feature off. The no-argument lookup is cached so
+    a quikplan refresh does not re-read the config once per row. Unparseable
+    entries are skipped with a warning and do not restore the defaults.
+    """
+    global _DEFAULT_PERIODS
     if cfg is None:
-        cfg = load_pipeline_config()
-    parsed = _as_periods((cfg or {}).get(CONFIG_KEY))
-    if parsed:
-        return parsed
-    return dict(DEFAULT_RENEWAL_PERIODS)
+        if _DEFAULT_PERIODS is None:
+            _DEFAULT_PERIODS = _periods_from_cfg(load_pipeline_config())
+        return dict(_DEFAULT_PERIODS)
+    return _periods_from_cfg(cfg)
 
 
 def _parse_age(raw) -> int | None:
@@ -108,8 +141,57 @@ def _parse_age(raw) -> int | None:
         return None
 
 
+def _quikgps_csv(root: str) -> str | None:
+    directory = os.path.join(root, "QLA_Migration", "Output", "rates")
+    if not os.path.isdir(directory):
+        return None
+    for name in os.listdir(directory):
+        if name.lower() == "quikgps.csv":
+            return os.path.join(directory, name)
+    return None
+
+
+def _scan_quikgps(path: str) -> frozenset:
+    """Plans with a non-zero QuikGps cell. Zeros do not count as a rate on file."""
+    found = set()
+    with open(path, newline="", encoding="utf-8-sig", errors="replace") as handle:
+        for row in csv.DictReader(handle):
+            plan = (row.get("PLAN") or "").strip()
+            if not plan or plan in found:
+                continue
+            for index in range(S.N_DURATION_COLS):
+                text = (row.get(f"GP{index}") or "").strip()
+                if not text:
+                    continue
+                try:
+                    value = float(text)
+                except ValueError:
+                    continue
+                if value != 0:
+                    found.add(plan)
+                    break
+    return frozenset(found)
+
+
+def plans_with_quikgps(root: str | None = None) -> set[str]:
+    """Plans that currently have a real QuikGps grid. Cached on file stamp."""
+    base = root or repo_root()
+    path = _quikgps_csv(base)
+    if path and os.path.isfile(path):
+        stat = os.stat(path)
+        stamp = (path, stat.st_mtime_ns, stat.st_size)
+    else:
+        stamp = (path, None, None)
+    if _GPS_CACHE["stamp"] == stamp:
+        return set(_GPS_CACHE["plans"])
+    plans = _scan_quikgps(path) if path and os.path.isfile(path) else frozenset()
+    _GPS_CACHE["stamp"] = stamp
+    _GPS_CACHE["plans"] = plans
+    return set(plans)
+
+
 def load_hiage(root: str | None, plans) -> dict[str, int]:
-    """PLAN -> quikplan HIAGE. Output quikplan wins over the staged plan file."""
+    """PLAN -> quikplan HIAGE. Staged quikplan wins over Output/quikplan.csv."""
     wanted = {str(p).strip() for p in plans if str(p).strip()}
     found: dict[str, int] = {}
     base = root or repo_root()
@@ -159,7 +241,8 @@ def _collapse_attained(rows: list[dict]) -> dict[tuple, dict[int, dict]]:
             value, _raw, lineno = cell[0], cell[1], cell[2]
             matches = [
                 row for row in by_lineno.get(lineno, [])
-                if abs(float(row["value"]) - float(value)) < 1e-9
+                if row.get("plan") == plan
+                and abs(float(row["value"]) - float(value)) < 1e-9
             ]
             if not matches:
                 continue
@@ -176,6 +259,8 @@ def _cell_row(src: dict, issue_age: int, index: int) -> dict:
     out = dict(src)
     cntl, col = S.duration_to_cntl_col(index)
     out["age"] = f"{issue_age:02d}"
+    out["original_age"] = out["age"]
+    out["age_capped"] = False
     out["cntl"] = cntl
     out["col"] = col
     out["ql_duration"] = index
@@ -213,6 +298,7 @@ def reshape_pr_stream(source_rows, periods: dict, hiage_by_plan: dict | None = N
             yield row
 
     collapsed = _collapse_attained(buffered)
+    warned_hiage = set()
     for group in sorted(collapsed):
         rates = collapsed[group]
         if not rates:
@@ -221,10 +307,18 @@ def reshape_pr_stream(source_rows, periods: dict, hiage_by_plan: dict | None = N
         period = period_of[plan]
         low = min(rates)
         high_src = max(rates)
-        hiage = hiage_by_plan.get(plan)
-        top_issue = high_src if hiage is None else min(int(hiage), high_src)
-        if top_issue < low:
-            continue
+        cap = _parse_age(hiage_by_plan.get(plan))
+        if cap is None or cap <= 0 or cap < low:
+            top_issue = high_src
+            if plan not in warned_hiage:
+                warned_hiage.add(plan)
+                logger.warning(
+                    "HIAGE %s for %s is missing or below the lowest rated age %s; "
+                    "using highest source age %s",
+                    "missing" if cap is None else cap, plan, low, high_src,
+                )
+        else:
+            top_issue = min(cap, high_src)
         for issue_age in range(low, top_issue + 1):
             index = 0
             while index <= S.MAX_AGE and (issue_age + index) <= high_src:
@@ -235,8 +329,14 @@ def reshape_pr_stream(source_rows, periods: dict, hiage_by_plan: dict | None = N
                 index += 1
 
 
-def pin_level_period_vargp(rows, touched=None):
-    """Force VARGP 2 on the level-period plans. No other field moves.
+def pin_level_period_vargp(rows, touched=None, plans_on_file=None):
+    """Force VARGP 2 on level-period plans that have a real QuikGps grid.
+
+    A plan with no gross-premium rows keeps its current VARGP (4 when the table
+    is not on file). No other field moves.
+
+    ``plans_on_file`` is the set of plans the caller already observed. ``None``
+    reads QuikGps once (cached on the file stamp). An empty set pins nothing.
 
     Returns ``(rows, touched)``. A disabled kill switch returns the rows unchanged.
     """
@@ -244,11 +344,16 @@ def pin_level_period_vargp(rows, touched=None):
     if not level_period_enabled():
         return [dict(row) for row in rows], out_touched
     plans = set(renewal_periods())
+    if plans_on_file is None:
+        on_file = plans_with_quikgps()
+    else:
+        on_file = {str(plan).strip() for plan in plans_on_file}
+    eligible = plans & on_file
     out = []
     for row in rows:
         copied = dict(row)
         plan = (copied.get("PLAN") or "").strip()
-        if plan in plans and (copied.get("VARGP") or "").strip() != VARGP_LEVEL_PERIOD:
+        if plan in eligible and (copied.get("VARGP") or "").strip() != VARGP_LEVEL_PERIOD:
             copied["VARGP"] = VARGP_LEVEL_PERIOD
             already = plan in out_touched
             base = dict(out_touched.get(plan) or {"PLAN": plan})
@@ -267,8 +372,8 @@ def pin_level_period_vargp_row(row: dict) -> dict:
     return rows[0]
 
 
-def pin_level_period_vargp_frame(df):
-    """Set VARGP to 2 on a quikplan frame. Other columns stay as they are."""
+def pin_level_period_vargp_frame(df, plans_on_file=None):
+    """Set VARGP to 2 on rows that have a real QuikGps grid. Other columns stay."""
     if df is None or getattr(df, "empty", True):
         return df
     columns = getattr(df, "columns", [])
@@ -277,8 +382,13 @@ def pin_level_period_vargp_frame(df):
     if not level_period_enabled():
         return df
     plans = set(renewal_periods())
+    if plans_on_file is None:
+        on_file = plans_with_quikgps()
+    else:
+        on_file = {str(plan).strip() for plan in plans_on_file}
+    eligible = plans & on_file
     for idx in df.index:
         plan = str(df.at[idx, "PLAN"] or "").strip()
-        if plan in plans and str(df.at[idx, "VARGP"] or "").strip() != VARGP_LEVEL_PERIOD:
+        if plan in eligible and str(df.at[idx, "VARGP"] or "").strip() != VARGP_LEVEL_PERIOD:
             df.at[idx, "VARGP"] = VARGP_LEVEL_PERIOD
     return df
